@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,21 +7,22 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class PlaroveneBlaster : ModItem
     {
-				public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Plarovene Blaster");
-			Tooltip.SetDefault("Relic");
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Plarovene Blaster");
+            Tooltip.SetDefault("Relic");
+        }
+
         public override void SetDefaults()
         {
-			item.crit = 20;
+            item.crit = 20;
             item.damage = 56;
             item.ranged = true;
             item.width = 60;
             item.height = 32;
             item.useTime = 24;
             item.useAnimation = 24;
-			item.UseSound = SoundID.Item14;
+            item.UseSound = SoundID.Item14;
             item.useStyle = 4;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 8;
