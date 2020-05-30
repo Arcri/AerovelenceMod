@@ -33,34 +33,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		public override void AI()
 		{
 			npc.rotation += npc.velocity.X * 0.05f;
-			{
-				int attackcounter = npc.ai[0];
-				attackcounter++;
-				if (attackcounter == //insert time here)
-				{
-					var posArray = new Vector2[num];
-					float spread = (float)(angle * 1);
-					float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-					double baseAngle = System.Math.Atan2(speedX, speedY);
-					double randomAngle;
-						for (int i = 0; i < num; ++i)
-						{
-							randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-							posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
-						}
-					return (Vector2[])posArray;
-				}
-	
-						public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-				{
-					Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
-					for (int i = 0; i < 5; ++i)
-					{
-						Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
-					}
-					return false;
-				}
-			}
 		}
 	}
 }
