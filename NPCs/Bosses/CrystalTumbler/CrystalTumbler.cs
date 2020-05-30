@@ -28,7 +28,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             npc.buffImmune[24] = true;
         }
 
-        /*public override void AI()
+        public override void AI()
         {
             npc.rotation += npc.velocity.X * 0.05f;
             {
@@ -59,6 +59,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                 Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
             }
             return false;
-        }*/
+        }
     }
 }
