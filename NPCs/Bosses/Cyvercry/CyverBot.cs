@@ -3,9 +3,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Linq;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
 {
@@ -18,13 +15,15 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         internal float ChargeSpeedMax;
         internal float ShotSpeed;
         internal const float rotationChangeConstant = 0.125f;
-        int timer = 0;
-        int t = 0;
+        private int timer = 0;
+        private int t = 0;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cyver Bot"); //DONT Change me
             Main.npcFrameCount[npc.type] = 4;
         }
+
         public override void SetDefaults()
         {
             npc.lifeMax = 320; //Change me
@@ -40,53 +39,55 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             npc.DeathSound = SoundID.NPCDeath14;
             npc.value = Item.buyPrice(0, 0, 24, 48); //Change me
         }
+
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = 360; //Change me
             npc.damage = 20;
         }
-		public override void AI()
+
+        public override void AI()
         {
-            var player = Main.player[npc.target];			
+            var player = Main.player[npc.target];
             Vector2 distanceNorm = player.position - npc.position;
             distanceNorm.Normalize();
             npc.ai[0]++;
-			float optimalRotation = (float)Math.Atan2(player.position.Y - npc.position.Y, player.position.X - npc.position.X) - 3.14159265f;
+            float optimalRotation = (float)Math.Atan2(player.position.Y - npc.position.Y, player.position.X - npc.position.X) - 3.14159265f;
             npc.rotation = optimalRotation;
-			int DirectionValue = npc.Center.X < player.Center.X ? -1 : 1;
+            int DirectionValue = npc.Center.X < player.Center.X ? -1 : 1;
             Vector2 optimal = new Vector2();
             if (npc.ai[0] % 256 == 0)
             {
                 Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, 438, 30, 0f, Main.myPlayer, 0f, 0f);
             }
-			if (player.position.Y > npc.position.Y)
-			{
-				if (npc.velocity.Y < 6)
-				{
-					npc.velocity.Y += 0.175f;
-				}
-			}
-			else
-			{
-				if (npc.velocity.Y > -6)
-				{
-					npc.velocity.Y -= 0.2f;
-				}
-			}
-			if (player.position.X > npc.position.X)
-			{
-				if (npc.velocity.X < 6)
-				{
-					npc.velocity.X += 0.2f;
-				}
-			}
-			else
-			{
-				if (npc.velocity.X > -6)
-				{
-					npc.velocity.X -= 0.2f;
-				}
-			}
+            if (player.position.Y > npc.position.Y)
+            {
+                if (npc.velocity.Y < 6)
+                {
+                    npc.velocity.Y += 0.175f;
+                }
+            }
+            else
+            {
+                if (npc.velocity.Y > -6)
+                {
+                    npc.velocity.Y -= 0.2f;
+                }
+            }
+            if (player.position.X > npc.position.X)
+            {
+                if (npc.velocity.X < 6)
+                {
+                    npc.velocity.X += 0.2f;
+                }
+            }
+            else
+            {
+                if (npc.velocity.X > -6)
+                {
+                    npc.velocity.X -= 0.2f;
+                }
+            }
             npc.TargetClosest(false);
             if (player.dead)
             {
@@ -107,10 +108,11 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     npc.active = false;
                 }
             }
-		}
-		public override void FindFrame(int frameHeight)
-		{
-			npc.frame.Y = frameHeight * t;
-		}
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            npc.frame.Y = frameHeight * t;
+        }
     }
 }
