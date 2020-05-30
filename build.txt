@@ -1,0 +1,4 @@
+author = Arcri, TraoX
+version = 1.7.40
+displayName = [c/00edff:Aerovelence]
+homepage = https://discord.gg/wZqQ7g5
