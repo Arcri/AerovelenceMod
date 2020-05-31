@@ -24,19 +24,24 @@ namespace AerovelenceMod
 {
     public class AeroPlayer : ModPlayer
     {
-        public bool fruit1;
-        public bool fruit2;
-        public bool fruit3;
+        public bool SoulFig;
+        public bool KnowledgeFruit;
+        public bool DevilsBounty;
 		
         public bool QueensStinger;
         public bool EmeraldEmpoweredGem;
         public bool midasCrown;
+		public static bool AdobeHelmet;
+		
+		public static bool Setbonus = false;
 
         public override void Initialize()
 		{
-            fruit1 = false;
-            fruit2 = false;
-            fruit3 = false;
+            SoulFig = false;
+            KnowledgeFruit = false;
+            DevilsBounty = false;
+			Setbonus = false;
+			AdobeHelmet = false;
 			
             midasCrown = false;
             EmeraldEmpoweredGem = false;
@@ -59,20 +64,24 @@ namespace AerovelenceMod
                 target.AddBuff(BuffID.Midas, 900, false);
             }
 		}
+		public override void ResetEffects()
+        {
+			Setbonus = false;
+		}
         public override TagCompound Save()
         {
             List<string> list = new List<string>();
-            if (fruit1)
+            if (SoulFig)
             {
-                list.Add("fruit1");
+                list.Add("SoulFig");
             }
-            if (fruit2)
+            if (KnowledgeFruit)
             {
-                list.Add("fruit1");
+                list.Add("SoulFig");
             }
-            if (fruit3)
+            if (DevilsBounty)
             {
-                list.Add("fruit3");
+                list.Add("DevilsBounty");
             }
             return new TagCompound
             {
@@ -85,9 +94,9 @@ namespace AerovelenceMod
         public override void Load(TagCompound tag)
         {
             IList<string> list = tag.GetList<string>("perm");
-            fruit1 = list.Contains("fruit1");
-            fruit2 = list.Contains("fruit2");
-            fruit3 = list.Contains("fruit3");
+            SoulFig = list.Contains("SoulFig");
+            KnowledgeFruit = list.Contains("KnowledgeFruit");
+            DevilsBounty = list.Contains("DevilsBounty");
         }
         public override void LoadLegacy(BinaryReader reader)
         {
@@ -95,14 +104,14 @@ namespace AerovelenceMod
             if (num == 0)
             {
                 BitsByte bitsByte = reader.ReadByte();
-                fruit1 = bitsByte[0];
-                fruit2 = bitsByte[1];
-                fruit3 = bitsByte[2];
+                SoulFig = bitsByte[0];
+                KnowledgeFruit = bitsByte[1];
+                DevilsBounty = bitsByte[2];
             }
         }
         public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            switch ((fruit1 ? 1 : 0) + (fruit2 ? 1 : 0) + (fruit3 ? 1 : 0))
+            switch ((SoulFig ? 1 : 0) + (KnowledgeFruit ? 1 : 0) + (DevilsBounty ? 1 : 0))
             {
                 case 1:
                     Main.heart2Texture = mod.GetTexture("ExtraTextures/Heart2");
@@ -137,7 +146,7 @@ namespace AerovelenceMod
         }
         public override void PostUpdateMiscEffects()
         {
-            player.statLifeMax2 += (fruit1 ? 50 : 0) + (fruit2 ? 50 : 0) + (fruit3 ? 50 : 0);
+            player.statLifeMax2 += (SoulFig ? 50 : 0) + (KnowledgeFruit ? 50 : 0) + (DevilsBounty ? 50 : 0);
         }
     }
 }

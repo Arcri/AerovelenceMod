@@ -33,7 +33,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		}
 	}
 }
-        public override void AI()
+        /*public override void AI()
         {
             npc.rotation += npc.velocity.X * 0.05f;
             {
@@ -66,4 +66,4 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             return false;
         }
     }
-}
+}*/

@@ -1,96 +1,84 @@
-using Microsoft.Xna.Framework;
 using System;
+using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Items.Weapons.Melee;
+using AerovelenceMod.Items.Weapons.Ranged;
+using AerovelenceMod.Items.Ores.PreHM.Frost;
 
 namespace AerovelenceMod.NPCs.Bosses.Snowrium
 {
-    [AutoloadBossHead]
+	[AutoloadBossHead]
     public class Snowrium : ModNPC
     {
         public override void SetDefaults()
         {
-            npc.aiStyle = 62;  //5 is the flying AI
+            npc.aiStyle = 5;  //5 is the flying AI
             npc.lifeMax = 4800;   //boss life
             npc.damage = 32;  //boss damage
             npc.defense = 24;    //boss defense
-            animationType = NPCID.DemonEye;
+			animationType = NPCID.DemonEye;
             npc.knockBackResist = 0f;
             npc.width = 130;
             npc.height = 98;
-            Main.npcFrameCount[npc.type] = 4;    //boss frame/animation
+            Main.npcFrameCount[npc.type] = 4;    //boss frame/animation 
             npc.value = Item.buyPrice(0, 40, 75, 45);
             npc.npcSlots = 1f;
-            npc.boss = true;
+            npc.boss = true;  
             npc.lavaImmune = true;
             npc.noGravity = true;
             npc.noTileCollide = true;
             npc.HitSound = SoundID.NPCHit5;
-            npc.DeathSound = SoundID.NPCDeath1;
+	        npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
+	public override void NPCLoot()
+		{
+			if (Main.expertMode)
+			{
+			Item.NewItem(npc.getRect(), ModContent.ItemType<SnowriumBag>());
+		}
+		switch (Main.rand.Next(6))
+		{
+			case 0:
+			Item.NewItem(npc.getRect(), ModContent.ItemType<IcySaber>());
+			break;
 
-        public override void NPCLoot()
-        {
-            if (Main.expertMode)
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("SnowriumBag"));
-            }
-            switch (Main.rand.Next(6))
-            {
-                case 0:
-                    Item.NewItem(npc.getRect(), mod.ItemType("IcySaber"));
-                    break;
+			case 1:
+			Item.NewItem(npc.getRect(), ModContent.ItemType<CrystalArch>());
+			break;
 
-                case 1:
-                    Item.NewItem(npc.getRect(), mod.ItemType("CrystalArch"));
-                    break;
-
-                case 2:
-                    Item.NewItem(npc.getRect(), mod.ItemType("DeepFreeze"));
-                    break;
-
-                case 3:
-                    Item.NewItem(npc.getRect(), mod.ItemType("CryoBall"));
-                    break;
-
-                case 4:
-                    Item.NewItem(npc.getRect(), mod.ItemType("Snowball"));
-                    break;
-
-                case 5:
-                    Item.NewItem(npc.getRect(), mod.ItemType("FrozenBliss"));
-                    break;
-            }
-            Item.NewItem(npc.getRect(), mod.ItemType("FrostShard"), Main.rand.Next(10) + 10);
-        }
-
+			case 2:
+			Item.NewItem(npc.getRect(), ModContent.ItemType<DeepFreeze>());
+			break;
+		}
+		Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<FrostShard>(), Main.rand.Next(10) + 10);
+	}
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = (int)(npc.lifeMax * 0.579f * bossLifeScale);  //boss life scale in expertmode
             npc.damage = (int)(npc.damage * 0.6f);  //boss damage increase in expermode
         }
+		public override void OnHitPlayer(Player player, int damage, bool crit) {
+			if (Main.expertMode || Main.rand.NextBool()) {
+				player.AddBuff(44, 600, true);
+			}
 
-        public override void OnHitPlayer(Player player, int damage, bool crit)
+		}
+		public override void AI()
         {
-            if (Main.expertMode || Main.rand.NextBool())
-            {
-                player.AddBuff(44, 600, true);
-            }
-        }
-
-        public override void AI()
-        {
-            if (!Main.player[Main.myPlayer].ZoneSnow)
-            {
-                npc.defense = 999999;
-            }
-            else if (Main.player[Main.myPlayer].ZoneSnow)
-            {
-                npc.defense = 24;
-            }
+			if (!Main.player[Main.myPlayer].ZoneSnow)
+			{
+				npc.defense = 999999;
+			} 
+			else if (Main.player[Main.myPlayer].ZoneSnow)
+			{
+				npc.defense = 24;
+			}
             npc.ai[0]++;
             Player P = Main.player[npc.target];
             if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead || !Main.player[npc.target].active)
@@ -98,7 +86,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 npc.TargetClosest(true);
             }
             npc.netUpdate = true;
-
+ 
             npc.ai[1]++;
             if (npc.ai[1] >= 150)  // 230 is projectile fire rate
             {
@@ -112,7 +100,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 npc.ai[1] = 0;
             }
             if (npc.ai[0] % 400 == 3)  //Npc spown rate
-
+ 
             {
                 NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, 184);  //NPC name
             }

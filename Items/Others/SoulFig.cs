@@ -28,9 +28,10 @@ namespace AerovelenceMod.Items.Others
 		}
 
 		public override bool CanUseItem(Player player)
+
 		{
-			AeroPlayer modPlayer = GetModPlayer<AeroPlayer>();
-			return !modPlayer.fruit1 && player.statLifeMax >= 500;
+			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
+			return !modPlayer.SoulFig && player.statLifeMax >= 500;
 		}
 
 		public override bool UseItem(Player player)
@@ -42,8 +43,7 @@ namespace AerovelenceMod.Items.Others
 				{
 					player.HealEffect(50, true);
 				}
-                AeroPlayer modPlayer = GetModPlayer<AeroPlayer>();
-				modPlayer.fruit1 = true;
+                player.GetModPlayer<AeroPlayer>().SoulFig = true;
 			}
 			return true;
 		}

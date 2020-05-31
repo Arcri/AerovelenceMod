@@ -24,7 +24,6 @@ namespace AerovelenceMod.Items.Accessories
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
 			player.GetModPlayer<AeroPlayer>().QueensStinger = true;
-            modPlayer.QueensStinger = true;
         }
     }
 }
