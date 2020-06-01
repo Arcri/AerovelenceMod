@@ -13,7 +13,6 @@ namespace AerovelenceMod.NPCs.Cave
 		public override void SetStaticDefaults()
 		{
 	        DisplayName.SetDefault("Cave Snail");
-            Main.npcFrameCount[npc.type] = 5;
 		}
         public override void SetDefaults()
         {
