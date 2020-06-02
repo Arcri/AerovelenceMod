@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Accessories
         {
 			player.jumpSpeedBoost += 2f;
             AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
-            modPlayer.midasCrown = true;
+            modPlayer.MidasCrown = true;
             player.AddBuff(75, 900, false);
         }
     }
