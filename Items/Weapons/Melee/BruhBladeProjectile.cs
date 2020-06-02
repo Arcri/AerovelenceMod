@@ -17,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             projectile.friendly = true;
             projectile.penetrate = -1;
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 1000f;
+            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 10000f;
             ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 24f;
         }
         public override void AI()

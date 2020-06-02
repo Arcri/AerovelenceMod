@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,8 +16,8 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             npc.damage = 32;  //boss damage
             npc.defense = 24;    //boss defense
             npc.knockBackResist = 0f;
-            npc.width = 116;
-            npc.height = 120;
+            npc.width = 112;
+            npc.height = 124;
             npc.value = Item.buyPrice(0, 40, 75, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
@@ -27,19 +28,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
         }
-		public override void AI()
-		{
-			npc.rotation += npc.velocity.X * 0.05f;
-		}
-	}
-}
+        public override void AI()
+        {
+            npc.rotation += npc.velocity.X * 0.05f;
+        }
         /*public override void AI()
         {
             npc.rotation += npc.velocity.X * 0.05f;
             {
                 int attackcounter = npc.ai[0];
                 attackcounter++;
-                if (attackcounter == //insert time here)
+                if (attackcounter == 1)
 
                 {
                     var posArray = new Vector2[num];
@@ -54,9 +53,11 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                     }
                     return (Vector2[])posArray;
                 }
+            }
+        }
 
 
-                        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
             for (int i = 0; i < 5; ++i)
@@ -65,5 +66,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             }
             return false;
         }
+
+        private Vector2[] randomSpread(float speedX, float speedY, int v1, int v2)
+        {
+            throw new NotImplementedException();
+        }*/
     }
-}*/
+}
