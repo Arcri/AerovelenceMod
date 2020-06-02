@@ -1,24 +1,12 @@
-using System.IO;
-using System;
-using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
-using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
 using Terraria.ModLoader.IO;
-using System.Reflection;
-using Terraria.Utilities;
-using System.Runtime.Serialization.Formatters.Binary;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.DataStructures;
-using Terraria.GameInput;
-using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.Localization;
-using AerovelenceMod;
 
 namespace AerovelenceMod
 {
@@ -27,50 +15,59 @@ namespace AerovelenceMod
         public bool SoulFig;
         public bool KnowledgeFruit;
         public bool DevilsBounty;
-		
+
         public bool QueensStinger;
         public bool EmeraldEmpoweredGem;
-        public bool midasCrown;
-		public static bool AdobeHelmet;
-		
-		public static bool Setbonus = false;
+        public bool MidasCrown;
+        public static bool AdobeHelmet;
+
+        public static bool Setbonus = false;
+
+        private Texture2D originalHeartTexture;
+        private Texture2D originalManaTexture;
 
         public override void Initialize()
-		{
+        {
             SoulFig = false;
             KnowledgeFruit = false;
             DevilsBounty = false;
-			Setbonus = false;
-			AdobeHelmet = false;
-			
-            midasCrown = false;
+            Setbonus = false;
+            AdobeHelmet = false;
+
+            MidasCrown = false;
             EmeraldEmpoweredGem = false;
             QueensStinger = false;
         }
+
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
             if (QueensStinger)
             {
                 if (proj.type != 181)
-                    if (Main.rand.Next(9) == 0) //  1 in 10 chance
-                    Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, 181, 3, 2, player.whoAmI);
+                    if (Main.rand.NextBool(10)) //  1 in 10 chance
+                        Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, player.whoAmI);
             }
             if (EmeraldEmpoweredGem)
             {
                 target.AddBuff(39, 40, false);
             }
-            if (midasCrown)
+            if (MidasCrown)
             {
                 target.AddBuff(BuffID.Midas, 900, false);
             }
-		}
-		public override void ResetEffects()
+        }
+
+        public override void ResetEffects()
         {
-			Setbonus = false;
-		}
+            Setbonus = false;
+        }
+
         public override TagCompound Save()
         {
             List<string> list = new List<string>();
+
+            ResetResourceTextures();
+
             if (SoulFig)
             {
                 list.Add("SoulFig");
@@ -91,13 +88,17 @@ namespace AerovelenceMod
                 }
             };
         }
+
         public override void Load(TagCompound tag)
         {
+            SetOriginalResourceTextures();
+
             IList<string> list = tag.GetList<string>("perm");
             SoulFig = list.Contains("SoulFig");
             KnowledgeFruit = list.Contains("KnowledgeFruit");
             DevilsBounty = list.Contains("DevilsBounty");
         }
+
         public override void LoadLegacy(BinaryReader reader)
         {
             int num = reader.ReadInt32();
@@ -109,24 +110,12 @@ namespace AerovelenceMod
                 DevilsBounty = bitsByte[2];
             }
         }
-        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+
+        public override void PreUpdate()
         {
-            switch ((SoulFig ? 1 : 0) + (KnowledgeFruit ? 1 : 0) + (DevilsBounty ? 1 : 0))
-            {
-                case 1:
-                    Main.heart2Texture = mod.GetTexture("ExtraTextures/Heart2");
-                    break;
-                case 2:
-                    Main.heart2Texture = mod.GetTexture("ExtraTextures/Heart3");
-                    break;
-                case 3:
-                    Main.heart2Texture = mod.GetTexture("ExtraTextures/Heart4");
-                    break;
-                default:
-                    Main.heart2Texture = mod.GetTexture("ExtraTextures/HeartOriginal");
-                    break;
-            }
+            SetResourceTexturesBasedOnModPowerups();
         }
+
         public bool bossPresent
         {
             get
@@ -134,6 +123,7 @@ namespace AerovelenceMod
                 return Main.npc.ToList().Any(npc => npc.boss & npc.active);
             }
         }
+
         public NPC GetFarthestBoss
         {
             get
@@ -144,9 +134,51 @@ namespace AerovelenceMod
                 return bosses[0];
             }
         }
+
         public override void PostUpdateMiscEffects()
         {
             player.statLifeMax2 += (SoulFig ? 50 : 0) + (KnowledgeFruit ? 50 : 0) + (DevilsBounty ? 50 : 0);
+        }
+
+        /// <summary>
+        /// Resets vanilla resource textures to their defaults.
+        /// </summary>
+        private void ResetResourceTextures()
+        {
+            Main.heart2Texture = originalHeartTexture;
+            Main.manaTexture = originalManaTexture;
+        }
+
+        /// <summary>
+        /// Only call this in ModPlayer.Load().
+        /// </summary>
+        private void SetOriginalResourceTextures()
+        {
+            originalHeartTexture = Main.heart2Texture;
+            originalManaTexture = Main.manaTexture;
+        }
+
+        /// <summary>
+        /// Sets resource textures based on the players consumed mod powerups
+        /// </summary>
+        private void SetResourceTexturesBasedOnModPowerups()
+        {
+            int heartTextureControl = (SoulFig ? 1 : 0) + (KnowledgeFruit ? 1 : 0) + (DevilsBounty ? 1 : 0);
+
+            switch (heartTextureControl)
+            {
+                case 1:
+                    Main.heart2Texture = mod.GetTexture("ExtraTextures/SoulFigHeart");
+                    break;
+                case 2:
+                    Main.heart2Texture = mod.GetTexture("ExtraTextures/KnowledgeFruitHeart");
+                    break;
+                case 3:
+                    Main.heart2Texture = mod.GetTexture("ExtraTextures/DevilsBountyHeart");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
