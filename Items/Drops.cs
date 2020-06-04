@@ -58,13 +58,6 @@ class MyGlobalNPC : GlobalNPC
 				Item.NewItem(npc.getRect(), mod.ItemType("CthulhusWrath"));
 				}
 			}
-			if(npc.type == NPCID.BlueSlime)
-			{
-				if (Main.rand.Next(1001) == 0)
-				{
-				Item.NewItem(npc.getRect(), mod.ItemType("SlimyKnife"));
-				}
-			}
 			if(npc.type == NPCID.KingSlime)
 			{
 				if (Main.rand.Next(101) == 0)

@@ -11,10 +11,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
     {
         public override void SetDefaults()
         {
-            npc.aiStyle = 26;  //5 is the flying AI
-            npc.lifeMax = 4800;   //boss life
-            npc.damage = 32;  //boss damage
-            npc.defense = 24;    //boss defense
+            npc.aiStyle = -1;
+            npc.lifeMax = 4800;
+            npc.damage = 32;
+            npc.defense = 24;
             npc.knockBackResist = 0f;
             npc.width = 112;
             npc.height = 124;
@@ -30,46 +30,23 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
         }
         public override void AI()
         {
-            npc.rotation += npc.velocity.X * 0.05f;
-        }
-        /*public override void AI()
-        {
-            npc.rotation += npc.velocity.X * 0.05f;
+            npc.TargetClosest(true);
+            var player = Main.player[npc.target];
+            if (player.position.X > npc.position.X)
             {
-                int attackcounter = npc.ai[0];
-                attackcounter++;
-                if (attackcounter == 1)
-
+                if (npc.velocity.X < 5)
                 {
-                    var posArray = new Vector2[num];
-                    float spread = (float)(angle * 1);
-                    float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-                    double baseAngle = System.Math.Atan2(speedX, speedY);
-                    double randomAngle;
-                    for (int i = 0; i < num; ++i)
-                    {
-                        randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-                        posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
-                    }
-                    return (Vector2[])posArray;
+                    npc.velocity.X += 0.1f;
                 }
             }
-        }
-
-
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
-            for (int i = 0; i < 5; ++i)
+            if (player.position.X < npc.position.X)
             {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                if (npc.velocity.X > -5)
+                {
+                    npc.velocity.X -= 0.1f;
+                }
             }
-            return false;
+            npc.rotation += npc.velocity.X * 0.013f;
         }
-
-        private Vector2[] randomSpread(float speedX, float speedY, int v1, int v2)
-        {
-            throw new NotImplementedException();
-        }*/
     }
 }

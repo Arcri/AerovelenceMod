@@ -1,5 +1,4 @@
 using AerovelenceMod.Dusts;
-using AerovelenceMod.Blocks.FrostDungeon.Furniture;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -7,6 +6,7 @@ using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.Localization;
 using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
@@ -70,6 +70,32 @@ namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
 			player.noThrow = 2;
 			player.showItemIcon = true;
 			player.showItemIcon2 = ItemType<KelvinDoor>();
+		}
+
+        [System.Obsolete]
+        public override void RightClick(int i, int j)
+		{
+			if (Main.LocalPlayer.HasItem(mod.ItemType("KelvinChestKey")))
+			{
+				Main.LocalPlayer.ConsumeItem(mod.ItemType("KelvinChestKey"));
+				Main.PlaySound(SoundID.Unlock, Main.LocalPlayer.Center);
+				Dust.NewDust(new Vector2(i * 16, j * 16), 1, 3, mod.DustType("Sparkle"));
+			}
+			Tile tile = Main.tile[i, j];
+			int topY = j - tile.frameY / 18 % 3;
+			short frameAdjustment = (short)(tile.frameX > 0 ? -18 : 18);
+			Main.tile[i, topY].frameX += frameAdjustment;
+			Main.tile[i, topY + 1].frameX += frameAdjustment;
+			Main.tile[i, topY + 2].frameX += frameAdjustment;
+			NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
+            {
+                _ = Main.tile[i, j];
+                int width = 16;
+				int offsetY = 0;
+				int height = 16;
+				TileLoader.SetDrawPositions(i, j, ref width, ref offsetY, ref height);
+				var flameTexture = mod.GetTexture("Blocks/FrostDungeon/Furniture/KelvinDoorClosed"); // We could also reuse Main.FlameTexture[] textures, but using our own texture is nice.
+			}
 		}
 	}
 }

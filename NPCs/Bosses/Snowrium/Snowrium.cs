@@ -5,9 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Items.Weapons.Melee;
-using AerovelenceMod.Items.Weapons.Ranged;
-using AerovelenceMod.Items.Ores.PreHM.Frost;
 
 namespace AerovelenceMod.NPCs.Bosses.Snowrium
 {
@@ -34,29 +31,40 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             npc.HitSound = SoundID.NPCHit5;
 	        npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
 	public override void NPCLoot()
 		{
 			if (Main.expertMode)
 			{
-			Item.NewItem(npc.getRect(), ModContent.ItemType<SnowriumBag>());
+			Item.NewItem(npc.getRect(), mod.ItemType("SnowriumBag"));
 		}
 		switch (Main.rand.Next(6))
 		{
 			case 0:
-			Item.NewItem(npc.getRect(), ModContent.ItemType<IcySaber>());
+			Item.NewItem(npc.getRect(), mod.ItemType("IcySaber"));
 			break;
 
 			case 1:
-			Item.NewItem(npc.getRect(), ModContent.ItemType<CrystalArch>());
+			Item.NewItem(npc.getRect(), mod.ItemType("CrystalArch"));
 			break;
 
 			case 2:
-			Item.NewItem(npc.getRect(), ModContent.ItemType<DeepFreeze>());
+			Item.NewItem(npc.getRect(), mod.ItemType("DeepFreeze"));
+			break;
+			
+			case 3:
+			Item.NewItem(npc.getRect(), mod.ItemType("CryoBall"));
+			break;
+			
+			case 4:
+			Item.NewItem(npc.getRect(), mod.ItemType("Snowball"));
+			break;
+			
+			case 5:
+			Item.NewItem(npc.getRect(), mod.ItemType("FrozenBliss"));
 			break;
 		}
-		Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<FrostShard>(), Main.rand.Next(10) + 10);
+		Item.NewItem(npc.getRect(), mod.ItemType("FrostShard"), Main.rand.Next(10) + 10);
 	}
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
@@ -71,11 +79,11 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 		}
 		public override void AI()
         {
-			if (!Main.player[Main.myPlayer].ZoneSnow)
+			if (!Main.player[Main.myPlayer].ZoneSnow || Main.dayTime)
 			{
 				npc.defense = 999999;
 			} 
-			else if (Main.player[Main.myPlayer].ZoneSnow)
+			else if (Main.player[Main.myPlayer].ZoneSnow && !Main.dayTime)
 			{
 				npc.defense = 24;
 			}
