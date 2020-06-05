@@ -34,6 +34,17 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = 389;
             item.shootSpeed = 18f;
         }
+		
+		
+		
+		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		{
+			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(3));
+			speedX = perturbedSpeed.X;
+			speedY = perturbedSpeed.Y;
+			return true;
+		}
+		
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
