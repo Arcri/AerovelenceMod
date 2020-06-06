@@ -8,7 +8,7 @@ namespace AerovelenceMod.Systems.ShieldSystem
 {
 	public class ShieldTestItem : ModItem
 	{
-		public override string Texture => "Item_" + ItemID.GhostMask;
+		public override string Texture => "/Item_" + ItemID.GhostMask;
 
 		public override void SetDefaults()
 		{
