@@ -10,11 +10,14 @@ namespace AerovelenceMod.Systems.ShieldSystem
 			Player player = Main.player[Main.myPlayer];
 			Shield shield = player.GetModPlayer<ShieldPlayer>().shield;
 
-			if (shield == null)
+			if (shield == null || player.dead)
 				return;
 
-			if (projectile.Hitbox.Distance(player.Center) >= 50) // Todo: Get the correct number to sync with the sprite
+			if (projectile.Hitbox.Distance(player.Center) <= 30) // Todo: Get the correct number to sync with the sprite
+			{
+				Main.NewText("bye bye"); // Todo: Remove
 				shield.OnProjCollision(projectile);
+			}
 		}
 	}
 }

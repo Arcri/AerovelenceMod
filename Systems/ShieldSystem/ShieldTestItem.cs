@@ -14,6 +14,7 @@ namespace AerovelenceMod.Systems.ShieldSystem
 		{
 			item.useTime = item.useAnimation = 30; // Swings once every 30 frames
 			item.Size = new Vector2(20, 20); // The hitbox for this weapon if it swings
+			item.useStyle = ItemUseStyleID.EatingUsing;
 			item.autoReuse = false;
 		}
 
