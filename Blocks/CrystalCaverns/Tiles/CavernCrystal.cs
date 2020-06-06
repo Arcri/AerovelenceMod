@@ -16,6 +16,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileMerge[Type][ModContent.TileType<CavernStone>()] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
+			AddMapEntry(new Color(115, 230, 250));
 			dustType = 59;
 			soundType = SoundID.Tink;
 			drop = ModContent.ItemType<CavernCrystalItem>();
