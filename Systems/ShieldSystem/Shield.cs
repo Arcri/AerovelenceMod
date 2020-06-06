@@ -14,7 +14,7 @@ namespace AerovelenceMod.Systems.ShieldSystem
 
 		public void OnProjCollision(Projectile proj)
 		{
-			ShieldHelper.PlayShieldAnimation(player, 0f); // Todo: Rotation
+			//ShieldHelper.PlayShieldAnimation(player, 0f); // Todo: Rotation
 			CollisionAI(proj);
 		}
 
