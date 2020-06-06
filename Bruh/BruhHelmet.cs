@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Items.Projectiles;
 
 namespace AerovelenceMod.Bruh
 {
-	[AutoloadEquip(EquipType.Head)]
+    [AutoloadEquip(EquipType.Head)]
     public class BruhHelmet : ModItem
     {
         public override void SetStaticDefaults()
@@ -25,10 +21,6 @@ namespace AerovelenceMod.Bruh
 			player.meleeDamage += 0.100f;
 			player.moveSpeed += 500.75f;
 			player.maxRunSpeed *= 5.0f;
-			if (!AeroPlayer.Setbonus)
-			{
-				Projectile.NewProjectile(player.Center, player.velocity, ModContent.ProjectileType<IcyElementalist>(), 1, 1);
-			}
 		} 	
         public override void SetDefaults()
         {

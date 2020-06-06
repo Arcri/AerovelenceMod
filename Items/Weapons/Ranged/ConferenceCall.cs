@@ -1,4 +1,5 @@
 using System;
+using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,35 +9,35 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class ConferenceCall : ModItem
     {
-		public override Vector2? HoldoutOffset()
-		{
-			return new Vector2(-6, 0);
-		}
-				public override void SetStaticDefaults()
+			public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Conference Call");
 			Tooltip.SetDefault("Let's just ping everyone all at once");
 		}
+
         public override void SetDefaults()
         {
-			item.crit = 8;
-            item.damage = 35;
-            item.ranged = true;
-            item.width = 68;
-            item.height = 22;
-            item.useTime = 32;
-            item.useAnimation = 32;
-			item.UseSound = SoundID.Item36;
+			item.crit = 11;
+            item.damage = 464;
+            item.magic = true;
+            item.width = 60;
+            item.height = 32; 
+            item.useTime = 34;
+            item.useAnimation = 34;
             item.useStyle = 5;
             item.noMelee = true; //so the item's animation doesn't do damage
-            item.knockBack = 8;
+            item.knockBack = 13;
             item.value = 10000;
-            item.rare = 8;
+            item.rare = 11;
             item.autoReuse = true;
-            item.shoot = AmmoID.Bullet;
-			item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 24f;
+            item.shoot = mod.ProjectileType("ShatteredSoul");
+            item.shootSpeed = 32f;
         }
+		
+		public override Vector2? HoldoutOffset()
+		{
+			return new Vector2(-6, 0);
+		}
 		public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];

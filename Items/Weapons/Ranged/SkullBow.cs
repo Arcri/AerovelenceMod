@@ -28,9 +28,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = 5;
             item.knockBack = 4;
             item.value = 10000;
-            item.rare = 11;
-			item.shoot = AmmoID.Arrow;
-			item.useAmmo = AmmoID.Arrow;
+            item.rare = ItemRarityID.Purple;
+			item.shoot = ProjectileID.Bone;
+			item.useAmmo = 154;
             item.autoReuse = true;
         }
 		

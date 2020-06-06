@@ -19,7 +19,7 @@ namespace AerovelenceMod
         public bool KnowledgeFruit;
         public bool DevilsBounty;
 
-		public bool SoulFire;
+        public bool SoulFire;
         public bool badHeal;
 
         public bool QueensStinger;
@@ -94,7 +94,8 @@ namespace AerovelenceMod
             badHeal = false;
         }
 
-              public static readonly PlayerLayer MiscEffects = new PlayerLayer("ExampleMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo) {
+        public static readonly PlayerLayer MiscEffects = new PlayerLayer("ExampleMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
+        {
             if (drawInfo.shadow != 0f)
             {
                 return;

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Items.Projectiles;
 
 namespace AerovelenceMod.Items.Ores.PreHM.Adobe
 {
@@ -23,10 +22,6 @@ namespace AerovelenceMod.Items.Ores.PreHM.Adobe
 		{
 			player.setBonus = "Potato";
 			player.AddBuff(BuffID.Ravens, -1);
-			if (!AeroPlayer.Setbonus)
-			{
-				Projectile.NewProjectile(player.Center, player.velocity, ModContent.ProjectileType<IcyElementalist>(), 1, 1);
-			}
 		} 	
         public override void SetDefaults()
         {

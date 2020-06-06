@@ -23,8 +23,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.ranged = true;
             item.width = 60;
             item.height = 32;
-            item.useTime = 3;
-			item.useAnimation = 6;
+		 	item.useAnimation = 12;
+			item.useTime = 2;
+			item.reuseDelay = 14;
             item.useStyle = 5;
             item.noMelee = true;
             item.knockBack = 8;
@@ -32,7 +33,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.rare = 1;
             item.autoReuse = true;
             item.shoot = 389;
-            item.shootSpeed = 18f;
+            item.shootSpeed = 15f;
         }
 		
 		

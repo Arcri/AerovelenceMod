@@ -29,9 +29,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = 10000;
             item.rare = 11;
             item.autoReuse = true;
-            item.shoot = 389;
+            item.shoot = 125;
             item.shootSpeed = 32f;
         }
+		
+		public override Vector2? HoldoutOffset()
+		{
+			return new Vector2(-6, 0);
+		}
 		
 		public override Color? GetAlpha(Color lightColor)
 		{

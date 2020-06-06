@@ -2,8 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
+using AerovelenceMod.Items.Placeble.FrostDungeon;
 
 namespace AerovelenceMod.Blocks.FrostDungeon.Tiles
 {

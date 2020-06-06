@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Blocks.FrostDungeon.Tiles
+namespace AerovelenceMod.Items.Placeble.FrostDungeon
 {
     public class SubzeroBrickItem : ModItem
     {
