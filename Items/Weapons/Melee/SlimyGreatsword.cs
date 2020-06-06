@@ -23,11 +23,11 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.height = 80; 
             item.useTime = 20;
             item.useAnimation = 20;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 5;
 			item.value = Item.sellPrice(0, 0, 42, 21);
             item.value = 10000;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = false;
         }
     }

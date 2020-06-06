@@ -23,13 +23,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 50;
             item.useAnimation = 50;
 			item.UseSound = SoundID.Item11;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = false;
-            item.shoot = 281;
+            item.shoot = ProjectileID.ExplosiveBunny;
             item.shootSpeed = 24f;
         }
 		public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)

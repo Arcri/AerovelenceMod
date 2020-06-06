@@ -22,11 +22,11 @@ namespace AerovelenceMod.Items.Ores.PreHM.Adobe
             item.height = 40;
             item.useTime = 20;
 			item.useAnimation = 20;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
             item.shoot = AmmoID.Arrow;
 			item.useAmmo = AmmoID.Arrow;

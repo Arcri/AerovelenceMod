@@ -88,7 +88,7 @@ namespace AerovelenceMod.NPCs.Bosses.SkyWraith
             npc.TargetClosest(false);
             var player = Main.player[npc.target];
             Vector2 dist = player.position - npc.position;
-            if (Main.netMode != 1 && !segmentsCreated)
+            if (Main.netMode != NetmodeID.MultiplayerClient && !segmentsCreated)
             {
                 npc.ai[3] = (float)npc.whoAmI;
                 npc.realLife = npc.whoAmI;
@@ -109,7 +109,7 @@ namespace AerovelenceMod.NPCs.Bosses.SkyWraith
                     Main.npc[spawned].ai[1] = (float)currentSegment;
                     Main.npc[spawned].ai[3] = (float)npc.whoAmI;
                     Main.npc[currentSegment].localAI[0] = spawned;
-                    NetMessage.SendData(23, -1, -1, null, spawned, 0f, 0f, 0f, 0, 0, 0);
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, spawned, 0f, 0f, 0f, 0, 0, 0);
                     currentSegment = spawned;
                 }
                 segmentsCreated = true;
@@ -222,7 +222,7 @@ namespace AerovelenceMod.NPCs.Bosses.SkyWraith
                     {
                         if (phaseTimer % 180 == 0)
                         {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, 465, 18, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ProjectileID.CultistBossLightningOrb, 18, 0);
                         }
                         if (Vector2.Distance(player.Center, npc.Center) > 40)
                         {
@@ -250,7 +250,7 @@ namespace AerovelenceMod.NPCs.Bosses.SkyWraith
                     {
                         if (phaseTimer % 100 == 0)
                         {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, 465, 18, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ProjectileID.CultistBossLightningOrb, 18, 0);
                         }
                         Vector2 distnorm = player.Center - npc.Center;
                         distnorm.Normalize();

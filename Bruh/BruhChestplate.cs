@@ -18,7 +18,7 @@ namespace AerovelenceMod.Bruh
             item.width = 30;
             item.height = 18;
             item.value = 10;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.defense = 160;
         }
 

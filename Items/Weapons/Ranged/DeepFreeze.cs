@@ -22,11 +22,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32;
             item.useTime = 13;
 			item.useAnimation = 13;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = AmmoID.Bullet;
 			item.useAmmo = AmmoID.Bullet;
@@ -34,7 +34,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			Projectile.NewProjectile(position.X, position.Y, speedX, speedY, 285, damage, knockBack, player.whoAmI);
+			Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.NanoBullet, damage, knockBack, player.whoAmI);
 			return false;
 		}
     }

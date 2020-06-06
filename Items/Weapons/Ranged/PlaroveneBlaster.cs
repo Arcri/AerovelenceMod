@@ -24,13 +24,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 24;
             item.useAnimation = 24;
 			item.UseSound = SoundID.Item14;
-            item.useStyle = 4;
+            item.useStyle = ItemUseStyleID.HoldingUp;
             item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = 606;
+            item.shoot = ProjectileID.ScutlixLaser;
             item.shootSpeed = 82f;
         }
 		public override Color? GetAlpha(Color lightColor)

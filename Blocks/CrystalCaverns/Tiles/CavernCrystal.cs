@@ -17,7 +17,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
 			dustType = 59;
-			soundType = 21;
+			soundType = SoundID.Tink;
 			drop = ModContent.ItemType<CavernCrystalItem>();
 		}
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)   //light colors

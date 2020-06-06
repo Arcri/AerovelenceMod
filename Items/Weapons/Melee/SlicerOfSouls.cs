@@ -23,15 +23,15 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useTime = 10;
             item.useAnimation = 10;
 			item.UseSound = SoundID.Item1;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 0, 63, 20);
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
         }
 		public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
-            if(target.type == 6)
+            if(target.type == NPCID.EaterofSouls)
             {
                 damage = damage * 3;
             }

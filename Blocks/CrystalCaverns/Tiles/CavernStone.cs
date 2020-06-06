@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using AerovelenceMod.Items.Placeble.CrystalCaverns;
+using Terraria.ID;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
@@ -15,7 +16,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
 			dustType = 59;
-			soundType = 21;
+			soundType = SoundID.Tink;
 			drop = ModContent.ItemType<CavernStoneItem>();
 
         }

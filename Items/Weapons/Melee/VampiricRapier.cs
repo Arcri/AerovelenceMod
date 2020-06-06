@@ -24,10 +24,10 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useTime = 11;
             item.useAnimation = 11;
 			item.UseSound = SoundID.Item1;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
         }
 		

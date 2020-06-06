@@ -1,18 +1,16 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Localization;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Items.Placeble.CrystalCaverns
 {
     public class CavernCrystalItem : ModItem
     {
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Cavern Crystal");
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Cavern Crystal");
+        }
+
         public override void SetDefaults()
         {
             item.width = 16;
@@ -22,8 +20,8 @@ namespace AerovelenceMod.Items.Placeble.CrystalCaverns
             item.autoReuse = true;
             item.useAnimation = 15;
             item.useTime = 10;
-            item.useStyle = 1;
-			item.value = Item.sellPrice(0, 0, 0, 0);
+            item.useStyle = ItemUseStyleID.SwingThrow;
+            item.value = Item.sellPrice(0, 0, 0, 0);
             item.createTile = mod.TileType("CavernCrystal"); //put your CustomBlock Tile name
         }
     }

@@ -18,7 +18,7 @@ namespace AerovelenceMod.Items.Weapons.ProjectileItem.Bullet
             item.width = 12;
             item.height = 12;
             item.knockBack = 4;
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
 			item.maxStack = 999;
 			item.consumable = true;
             item.shoot = mod.ProjectileType("ShadowdustBullet");
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Items.Weapons.ProjectileItem.Bullet
             ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.MusketBall, 100);
             recipe.SetResult(this, 100);
-            recipe.AddTile(134);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.AddRecipe();
         }
     }

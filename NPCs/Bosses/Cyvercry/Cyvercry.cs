@@ -108,10 +108,10 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     i3++;
                     if (i % 5 == 0)
                     {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 5, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 5, 0, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, -5, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -5, 0, 438, 40, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 5, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 5, 0, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, -5, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -5, 0, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
                     }
                     if (i > 25)
                     {
@@ -124,10 +124,10 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 i4++;
                 if (i4 % 12 == 0)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 5, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 5, 0, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, -5, 438, 40, 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -5, 0, 438, 40, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 5, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 5, 0, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, -5, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -5, 0, ProjectileID.RayGunnerLaser, 40, 0f, Main.myPlayer, 0f, 0f);
                 }
             }
             if (half)
@@ -138,19 +138,19 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             {
                 if (Main.rand.Next(2) == 0)
                 {
-                    int shot = Projectile.NewProjectile(player.position.X - 1000, player.position.Y + Main.rand.Next(-100, 100), 4, 0, 592, 30, 0f, Main.myPlayer, 0f, 0f);
+                    int shot = Projectile.NewProjectile(player.position.X - 1000, player.position.Y + Main.rand.Next(-100, 100), 4, 0, ProjectileID.MartianWalkerLaser, 30, 0f, Main.myPlayer, 0f, 0f);
                     Main.projectile[shot].tileCollide = false;
                 }
                 else
                 {
-                    int shot = Projectile.NewProjectile(player.position.X + 1000, player.position.Y + Main.rand.Next(-100, 100), -4, 0, 592, 30, 0f, Main.myPlayer, 0f, 0f);
+                    int shot = Projectile.NewProjectile(player.position.X + 1000, player.position.Y + Main.rand.Next(-100, 100), -4, 0, ProjectileID.MartianWalkerLaser, 30, 0f, Main.myPlayer, 0f, 0f);
                     Main.projectile[shot].tileCollide = false;
                 }
                 rain = 0;
             }
             if (npc.ai[0] % 68 == 0 && !frozen)
             {
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, 438, 24, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.RayGunnerLaser, 24, 0f, Main.myPlayer, 0f, 0f);
             }
             if (spawn >= 550)
             {

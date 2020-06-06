@@ -25,12 +25,12 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.useTime = 8;
             item.useAnimation = 8;
 			item.UseSound = SoundID.Item20;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = 85;
+            item.shoot = ProjectileID.Flames;
             item.shootSpeed = 12f;
 		}
 		

@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 12;
             item.useAnimation = 12;
 			item.UseSound = SoundID.Item5;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 4;
             item.value = 10000;
             item.rare = ItemRarityID.Purple;

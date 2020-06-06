@@ -1,4 +1,3 @@
-using AerovelenceMod;
 using AerovelenceMod.NPCs;
 using Terraria;
 using Terraria.ModLoader;

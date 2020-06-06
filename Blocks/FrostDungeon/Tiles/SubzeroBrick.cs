@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using AerovelenceMod.Items.Placeble.FrostDungeon;
+using Terraria.ID;
 
 namespace AerovelenceMod.Blocks.FrostDungeon.Tiles
 {
@@ -17,7 +18,7 @@ namespace AerovelenceMod.Blocks.FrostDungeon.Tiles
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
 			dustType = 59;
-			soundType = 21;
+			soundType = SoundID.Tink;
 			drop = ModContent.ItemType<SubzeroBrickItem>();
 			
             AddMapEntry(new Color(076, 235, 228), Language.GetText("Subzero Brick")); // localized text for "Metal Bar"

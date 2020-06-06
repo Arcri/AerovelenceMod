@@ -21,10 +21,10 @@ namespace AerovelenceMod.Items.Others
 			item.height = 20;
 			item.useAnimation = 30;
 			item.useTime = 30;
-			item.useStyle = 4;
+			item.useStyle = ItemUseStyleID.HoldingUp;
 			item.UseSound = SoundID.Item4;
 			item.consumable = true;
-			item.rare = 9;
+			item.rare = ItemRarityID.Cyan;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -51,9 +51,9 @@ namespace AerovelenceMod.Items.Others
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(1291, 1);
-            modRecipe.AddIngredient(3467, 25);
-            modRecipe.AddTile(134);
+			modRecipe.AddIngredient(ItemID.LifeFruit, 1);
+            modRecipe.AddIngredient(ItemID.LunarBar, 25);
+            modRecipe.AddTile(TileID.MythrilAnvil);
             modRecipe.SetResult(this, 1);
 			modRecipe.AddRecipe();
 		}

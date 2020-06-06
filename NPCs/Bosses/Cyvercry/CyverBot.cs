@@ -58,7 +58,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             Vector2 optimal = new Vector2();
             if (npc.ai[0] % 256 == 0)
             {
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, 438, 30, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.RayGunnerLaser, 30, 0f, Main.myPlayer, 0f, 0f);
             }
             if (player.position.Y > npc.position.Y)
             {

@@ -23,11 +23,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32;
             item.useTime = 17;
 			item.useAnimation = 17;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 6, 10, 0);
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("SnowballProjectile");
@@ -36,9 +36,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void AddRecipes()  //How to craft this item
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(75, 10);
-			recipe.AddIngredient(182, 3);
-            recipe.AddIngredient(22, 4);
+            recipe.AddIngredient(ItemID.FallenStar, 10);
+			recipe.AddIngredient(ItemID.Diamond, 3);
+            recipe.AddIngredient(ItemID.IronBar, 4);
             recipe.AddTile(TileID.Anvils);   //at work bench
             recipe.SetResult(this);
             recipe.AddRecipe();
@@ -71,7 +71,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			{
 				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 65, projectile.oldVelocity.X * 0.2f, projectile.oldVelocity.Y * 0.2f);
 			}
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
+            Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
         }
     }
 }

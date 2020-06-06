@@ -23,13 +23,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32; 
             item.useTime = 34;
             item.useAnimation = 34;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 13;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = 125;
+            item.shoot = ProjectileID.RubyBolt;
             item.shootSpeed = 32f;
         }
 		

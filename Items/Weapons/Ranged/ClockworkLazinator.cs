@@ -26,13 +26,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		 	item.useAnimation = 12;
 			item.useTime = 2;
 			item.reuseDelay = 14;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
-			item.rare = 1;
+			item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
-            item.shoot = 389;
+            item.shoot = ProjectileID.MiniRetinaLaser;
             item.shootSpeed = 15f;
         }
 		

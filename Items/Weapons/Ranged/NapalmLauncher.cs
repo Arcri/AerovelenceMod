@@ -24,13 +24,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 12;
             item.useAnimation = 12;
 			item.UseSound = SoundID.Item11;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = 85;
+            item.shoot = ProjectileID.Flames;
             item.shootSpeed = 10f;
         }
 

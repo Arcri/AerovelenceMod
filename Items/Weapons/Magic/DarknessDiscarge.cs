@@ -26,24 +26,24 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.useTime = 12;
             item.useAnimation = 12;
 			item.UseSound = SoundID.Item21;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
-			item.shoot = 585;
+			item.shoot = ProjectileID.ClothiersCurse;
 			item.shootSpeed = 18f;
         }
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
 			if (i == 1)
 			{
-				Projectile.NewProjectile(position.X, position.Y, speedX, speedY, 497, damage, knockBack, player.whoAmI);				
+				Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.ShadowFlameKnife, damage, knockBack, player.whoAmI);				
 			}
 			if (i >= 2)
 			{
 				i = 0;
-				Projectile.NewProjectile(position.X, position.Y, speedX * 2, speedY * 2, 496, damage, knockBack, player.whoAmI);
+				Projectile.NewProjectile(position.X, position.Y, speedX * 2, speedY * 2, ProjectileID.ShadowFlame, damage, knockBack, player.whoAmI);
 			}
 			i++;
             return true;

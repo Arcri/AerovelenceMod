@@ -4,6 +4,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
+using Terraria.ID;
 
 namespace AerovelenceMod.Items.Ores.PreHM.Adobe
 {
@@ -19,7 +20,7 @@ namespace AerovelenceMod.Items.Ores.PreHM.Adobe
             Main.tileLighted[Type] = false;
             drop = ModContent.ItemType<AdobeOreItem>();
 			dustType = 10;
-			soundType = 21;
+			soundType = SoundID.Tink;
 			
 			
             AddMapEntry(new Color(070, 036, 039), Language.GetText("Adobe Slab")); // localized text for "Metal Bar"

@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace AerovelenceMod.Bruh
 {
@@ -27,7 +28,7 @@ namespace AerovelenceMod.Bruh
             item.width = 22;
             item.height = 22;
             item.value = 10;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.defense = 150;
         }
 

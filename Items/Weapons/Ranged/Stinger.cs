@@ -27,11 +27,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 20;
             item.useAnimation = 20;
 			item.UseSound = SoundID.Item5;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 4;
             item.value = 10000;
-            item.rare = 2;
-			item.shoot = 249;
+            item.rare = ItemRarityID.Green;
+			item.shoot = ProjectileID.StyngerShrapnel;
             item.autoReuse = true;
         }
     }

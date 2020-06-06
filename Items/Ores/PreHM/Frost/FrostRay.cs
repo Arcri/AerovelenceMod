@@ -25,11 +25,11 @@ namespace AerovelenceMod.Items.Ores.PreHM.Frost
             item.height = 32;
             item.useTime = 24;
 			item.useAnimation = 24;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("ShadowbeamStaffCloneProjectile");
             item.shootSpeed = 16f;

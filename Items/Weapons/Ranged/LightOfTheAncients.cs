@@ -23,11 +23,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32; 
             item.useTime = 18;
             item.useAnimation = 18;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 3;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = AmmoID.Bullet;
 			item.useAmmo = AmmoID.Bullet;

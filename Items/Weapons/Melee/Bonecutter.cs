@@ -22,10 +22,10 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useTime = 19;
             item.useAnimation = 19;
             item.UseSound = SoundID.Item1;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
@@ -38,7 +38,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(706, 12);
+            recipe.AddIngredient(ItemID.PlatinumBar, 12);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

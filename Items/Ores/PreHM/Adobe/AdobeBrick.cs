@@ -33,7 +33,7 @@ namespace AerovelenceMod.Items.Ores.PreHM.Adobe
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<AdobeOreItem>(), 5);
-			recipe.AddIngredient(706, 1);
+			recipe.AddIngredient(ItemID.PlatinumBar, 1);
             recipe.AddTile(TileID.Furnaces);
             recipe.SetResult(this);
             recipe.AddRecipe();

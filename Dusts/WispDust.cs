@@ -18,7 +18,6 @@ namespace AerovelenceMod.Dusts
 			dust.position += dust.velocity;
 			dust.rotation += dust.velocity.X * 0.15f;
 			dust.scale *= 0.99f;
-			float light = 0.35f * dust.scale;
 			Lighting.AddLight(dust.position, 0, 1f, 1f);
 			if (dust.scale < 0.5f)
 			{

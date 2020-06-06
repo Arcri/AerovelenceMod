@@ -22,12 +22,12 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.height = 32;
             item.useTime = 24;
 			item.useAnimation = 24;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = 119;
+            item.shoot = ProjectileID.FrostBoltSword;
             item.shootSpeed = 8f;
         }
     }

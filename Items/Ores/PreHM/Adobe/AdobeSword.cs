@@ -23,10 +23,10 @@ namespace AerovelenceMod.Items.Ores.PreHM.Adobe
             item.useTime = 25;
             item.useAnimation = 25;
             item.UseSound = SoundID.Item1;
-            item.useStyle = 1;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 3;
             item.value = Item.sellPrice(0, 0, 40, 0);
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = false;
         }
 		public override void AddRecipes()  //How to craft this gun

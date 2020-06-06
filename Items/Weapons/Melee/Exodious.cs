@@ -23,12 +23,12 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useTime = 24;
             item.useAnimation = 24;
 			item.UseSound = SoundID.Item1;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
 			item.noUseGraphic = true;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("ExodiousProjectile");
             item.shootSpeed = 2f;

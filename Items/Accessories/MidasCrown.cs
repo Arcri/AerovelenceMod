@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Accessories
             item.width = 32;
             item.height = 32;
             item.value = 60000;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {

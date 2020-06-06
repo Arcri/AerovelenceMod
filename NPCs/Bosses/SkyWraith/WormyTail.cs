@@ -54,7 +54,7 @@ namespace AerovelenceMod.NPCs.Bosses.SkyWraith
                     npc.Center.Y,
                     new Random().Next(-1, 2) * 8,
                     new Random().Next(-1, 2) * 8,
-                    440,
+                    ProjectileID.LaserMachinegunLaser,
                     40, 16, Main.myPlayer);
                 Main.projectile[ball].friendly = false;
                 Main.projectile[ball].hostile = true;

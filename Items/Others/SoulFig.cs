@@ -1,8 +1,6 @@
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod;
 
 namespace AerovelenceMod.Items.Others
 {
@@ -12,7 +10,7 @@ namespace AerovelenceMod.Items.Others
 		{
 			DisplayName.SetDefault("Soul Fig");
 			Tooltip.SetDefault("Permanently increases maximum life by 50\n" +
-                "You must have 500 max life or more to eat this item.");
+				"You must have 500 max life or more to eat this item.");
 		}
 
 		public override void SetDefaults()
@@ -21,14 +19,13 @@ namespace AerovelenceMod.Items.Others
 			item.height = 20;
 			item.useAnimation = 30;
 			item.useTime = 30;
-			item.useStyle = 4;
+			item.useStyle = ItemUseStyleID.HoldingUp;
 			item.UseSound = SoundID.Item4;
 			item.consumable = true;
-			item.rare = 7;
+			item.rare = ItemRarityID.Lime;
 		}
 
 		public override bool CanUseItem(Player player)
-
 		{
 			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
 			return !modPlayer.SoulFig && player.statLifeMax >= 500;
@@ -43,7 +40,7 @@ namespace AerovelenceMod.Items.Others
 				{
 					player.HealEffect(50, true);
 				}
-                player.GetModPlayer<AeroPlayer>().SoulFig = true;
+				player.GetModPlayer<AeroPlayer>().SoulFig = true;
 			}
 			return true;
 		}
@@ -51,10 +48,10 @@ namespace AerovelenceMod.Items.Others
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(1291, 1);
-            modRecipe.AddIngredient(1508, 35);
-            modRecipe.AddIngredient(12, 100);
-            modRecipe.AddTile(134);
+			modRecipe.AddIngredient(ItemID.LifeFruit, 1);
+			modRecipe.AddIngredient(ItemID.Ectoplasm, 35);
+			modRecipe.AddIngredient(ItemID.CopperOre, 100);
+			modRecipe.AddTile(TileID.MythrilAnvil);
 			modRecipe.SetResult(this, 1);
 			modRecipe.AddRecipe();
 		}
