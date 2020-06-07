@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Placeble.CrystalCaverns
 {
-    public class CavernStalactiteItem : ModItem
+    public class CavernCrystalItem : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace AerovelenceMod.Items.Placeble.CrystalCaverns
         public override void SetDefaults()
         {
 			item.CloneDefaults(ItemID.DartTrap);
-            item.createTile = mod.TileType("CavernStalactite"); //put your CustomBlock Tile name
+            item.createTile = mod.TileType("CavernCrystal"); //put your CustomBlock Tile name
         }
     }
 }

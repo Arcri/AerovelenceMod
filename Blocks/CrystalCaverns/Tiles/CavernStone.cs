@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using AerovelenceMod.Items.Placeble.CrystalCaverns;
 using Terraria.ID;
+using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
