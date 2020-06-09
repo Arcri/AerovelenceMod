@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.Utilities;
+
+namespace AerovelenceMod.Items.BossSummons
+{
+    public class AncientGeode : ModItem
+    {
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Ancient Geode");
+			Tooltip.SetDefault("Summons the Crystal Tumbler");
+		}
+        public override void SetDefaults()
+        {
+            item.width = 28;
+            item.height = 28;
+            item.value = 100;
+            item.rare = 3;
+            item.useAnimation = 30;
+            item.useTime = 30;
+			item.maxStack = 999;
+            item.useStyle = 4;
+            item.consumable = true;
+        }
+        public override bool CanUseItem(Player player)
+        {
+            return !NPC.AnyNPCs(mod.NPCType("CrystalTumbler"));
+        }
+        public override bool UseItem(Player player)
+        {
+			{
+				NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("CrystalTumbler"));   //boss spawn
+			}
+            Main.PlaySound(15, (int)player.position.X, (int)player.position.Y, 0);
+            return true;
+        }
+    }
+}

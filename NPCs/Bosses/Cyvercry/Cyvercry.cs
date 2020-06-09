@@ -84,8 +84,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.scale,
                 npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, //adjust this according to the sprite
                 0f
-            );
-        }
+                );
+		}
 
         public override void AI()
         {

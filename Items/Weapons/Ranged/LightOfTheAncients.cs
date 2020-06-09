@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Projectiles;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
@@ -29,8 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = 10000;
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.shoot = AmmoID.Bullet;
-			item.useAmmo = AmmoID.Bullet;
+            item.shoot = ModContent.ProjectileType<TumblerSpike1>();
             item.shootSpeed = 24f;
         }
     }

@@ -14,6 +14,8 @@ using Terraria.ModLoader.IO;
 using Terraria.World.Generation;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles;
+using AerovelenceMod.Blocks.CrystalCaverns.Walls;
 
 namespace AerovelenceMod.World
 {
@@ -550,18 +552,18 @@ namespace AerovelenceMod.World
 						switch (_CrystalCaveshape[y, x]) 
 						{
 							case 1:
-                                tile.type = 117;
-								tile.wall = 28;
+                                tile.type = (ushort)ModContent.TileType<CavernStone>();
+                                tile.wall = (ushort)ModContent.WallType<CavernWall>();
                                 tile.active(true);
                                 break;
                             case 2:
-                                tile.type = 385;
-								tile.wall = 28;
+                                tile.type = (ushort)ModContent.TileType<CavernCrystal>();
+								tile.wall = (ushort)ModContent.WallType<CavernWall>();
                                 tile.active(true);
                                 break;
                             case 3:
                                 //WorldGen.KillWall(i, j);
-								tile.wall = 28;
+								tile.wall = (ushort)ModContent.WallType<CavernWall>();
                                 tile.active(false);
                                 break;
 						}
