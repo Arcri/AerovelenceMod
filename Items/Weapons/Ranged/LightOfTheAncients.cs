@@ -27,10 +27,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 3, 50, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<TumblerSpike1>();
+            item.shoot = ProjectileID.Bullet;
             item.shootSpeed = 24f;
         }
     }

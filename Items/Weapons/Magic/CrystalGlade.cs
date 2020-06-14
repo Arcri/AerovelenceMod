@@ -19,6 +19,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.crit = 11;
             item.damage = 97;
             item.magic = true;
+			item.mana = 5;
             item.width = 28;
             item.height = 30;
             item.useTime = 7;
@@ -27,8 +28,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+			item.value = Item.sellPrice(0, 20, 50, 0);
+			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = ProjectileID.CrystalLeafShot;
             item.shootSpeed = 14f;

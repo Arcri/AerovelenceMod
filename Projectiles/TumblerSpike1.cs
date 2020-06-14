@@ -26,7 +26,7 @@ namespace AerovelenceMod.Projectiles
 		{
 			t++;
 			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Blue, 1);
+			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Black, 1);
 			Main.dust[dust1].velocity /= 2f;
 			if (t > 25)
 			{

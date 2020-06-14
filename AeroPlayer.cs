@@ -19,6 +19,10 @@ namespace AerovelenceMod
 		public bool KnowledgeFruit;
 		public bool DevilsBounty;
 
+
+		public bool ZoneCrystalCaverns;
+
+
 		public bool SoulFire;
 		public bool badHeal;
 
@@ -44,6 +48,9 @@ namespace AerovelenceMod
 			EmeraldEmpoweredGem = false;
 			QueensStinger = false;
 		}
+
+
+
 
 		public override void UpdateDead()
 		{
@@ -88,6 +95,12 @@ namespace AerovelenceMod
 			}
 		}
 
+
+		public override void UpdateBiomes()
+		{
+			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
+		}
+
 		public override void ResetEffects()
 		{
 			Setbonus = false;
@@ -118,6 +131,35 @@ namespace AerovelenceMod
 				}
 			}
 		});
+
+		public override void CopyCustomBiomesTo(Player other)
+		{
+			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
+			modOther.ZoneCrystalCaverns = ZoneCrystalCaverns;
+		}
+
+		public override void SendCustomBiomes(BinaryWriter writer)
+		{
+			BitsByte flags = new BitsByte();
+			flags[0] = ZoneCrystalCaverns;
+			writer.Write(flags);
+		}
+
+		public override void ReceiveCustomBiomes(BinaryReader reader)
+		{
+			BitsByte flags = reader.ReadByte();
+			ZoneCrystalCaverns = flags[0];
+		}
+
+
+
+		public override bool CustomBiomesMatch(Player other)
+		{
+			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
+			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns;
+		}
+
+
 
 
 		public override TagCompound Save()

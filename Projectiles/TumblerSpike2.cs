@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using AerovelenceMod.Dusts;
 
 namespace AerovelenceMod.Projectiles
 {
@@ -26,7 +27,7 @@ namespace AerovelenceMod.Projectiles
 		{
 			t++;
 			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Blue, 1);
+			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Sparkle>(), projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
 			Main.dust[dust1].velocity /= 2f;
 			if (t > 25)
 			{

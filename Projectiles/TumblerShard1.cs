@@ -14,8 +14,8 @@ namespace AerovelenceMod.Projectiles
 		{
 			projectile.aiStyle = 1;
 			projectile.penetrate = -1;
-			projectile.width = 44;
-			projectile.height = 44;
+			projectile.width = 14;
+			projectile.height = 18;
 			projectile.alpha =  0;
 			projectile.damage = 6;
 			projectile.friendly = false;

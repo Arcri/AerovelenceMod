@@ -24,12 +24,22 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 0.2f;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Green;
             item.UseSound = SoundID.Item11;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("MallowBullet");
             item.shootSpeed = 10f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("Wood", 15);
+            recipe.AddIngredient(ItemID.IronBar, 4);
+            recipe.AddIngredient(ItemID.Marshmallow, 5);
+            recipe.AddTile(TileID.WorkBenches);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

@@ -2,11 +2,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.NPCs.Bosses.Snowrium
+namespace AerovelenceMod.Items.BossBags
 {
-	public class SnowriumBag : ModItem
+	public class CrystalTumblerBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("Snowrium");
+		public override int BossBagNPC => mod.NPCType("CrystalTumbler");
 
 		public override void SetStaticDefaults()
 		{
@@ -31,34 +31,27 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 
 		public override void OpenBossBag(Player player)
 		{
+			player.QuickSpawnItem(mod.ItemType("PrismaticSoul"));
+			player.QuickSpawnItem(ItemID.GoldCoin, 9);
+			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
+
 			int drop = Main.rand.Next(7);
 
 			player.TryGettingDevArmor();
 
-			switch (drop)
+			switch (Main.rand.Next(4))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("IcySaber"));
+					player.QuickSpawnItem(mod.ItemType("CrystallineQuadShot"));
 					break;
 				case 1:
-					player.QuickSpawnItem(mod.ItemType("CryoBall"));
+					player.QuickSpawnItem(mod.ItemType("PrismPiercer"));
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("Snowball"));
+					player.QuickSpawnItem(mod.ItemType("DiamondDuster"));
 					break;
 				case 3:
-					player.QuickSpawnItem(mod.ItemType("CrystalArch"));
-					break;
-				case 4:
-					player.QuickSpawnItem(mod.ItemType("DeepFreeze"));
-					break;
-				case 5:
-					player.QuickSpawnItem(mod.ItemType("FrozenBliss"));
-					break;
-				case 6:
-					player.QuickSpawnItem(mod.ItemType("FragileIceCrystal"));
-					break;
-				default:
+					player.QuickSpawnItem(mod.ItemType("PrismThrasher"));
 					break;
 			}
 		}

@@ -27,22 +27,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 6, 10, 0);
-            item.rare = ItemRarityID.Pink;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("SnowballProjectile");
             item.shootSpeed = 5f;
 		}
-		public override void AddRecipes()  //How to craft this item
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 10);
-			recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddIngredient(ItemID.IronBar, 4);
-            recipe.AddTile(TileID.Anvils);   //at work bench
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }
     }
 }
 	

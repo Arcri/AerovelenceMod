@@ -10,7 +10,7 @@ namespace AerovelenceMod.Dusts
 			dust.velocity *= 0.4f;
 			dust.noGravity = true;
 			dust.noLight = true;
-			dust.scale *= 1.5f;
+			dust.scale *= 0.99f;
 		}
 
 		public override bool Update(Dust dust)
@@ -19,7 +19,7 @@ namespace AerovelenceMod.Dusts
 			dust.rotation += dust.velocity.X * 0.15f;
 			dust.scale *= 0.99f;
 			float light = 0.35f * dust.scale;
-			Lighting.AddLight(dust.position, light, light, light);
+			Lighting.AddLight(dust.position, 0.0f, 0.4f, 0.6f);
 			if (dust.scale < 0.5f)
 			{
 				dust.active = false;

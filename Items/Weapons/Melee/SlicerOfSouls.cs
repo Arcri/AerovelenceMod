@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 63, 20);
+            item.value = Item.sellPrice(0, 0, 65, 20);
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
         }

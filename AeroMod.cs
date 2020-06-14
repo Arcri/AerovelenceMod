@@ -1,4 +1,5 @@
 using AerovelenceMod.Systems;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod
@@ -18,6 +19,20 @@ namespace AerovelenceMod
 		{
 			Textures?.Unload();
 			Textures = null;
+		}
+
+
+		public override void UpdateMusic(ref int music, ref MusicPriority priority)
+		{
+			if (Main.myPlayer == -1 || Main.gameMenu || !Main.LocalPlayer.active)
+			{
+				return;
+			}
+			if (Main.LocalPlayer.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
+			{
+				music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
+				priority = MusicPriority.BiomeLow;
+			}
 		}
 	}
 }

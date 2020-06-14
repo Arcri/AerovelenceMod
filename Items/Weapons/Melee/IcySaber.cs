@@ -8,7 +8,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class IcySaber : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Icy Saber");
 		}
@@ -24,8 +24,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.useAnimation = 24;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+            item.value = Item.sellPrice(0, 7, 50, 0);
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = ProjectileID.FrostBoltSword;
             item.shootSpeed = 8f;

@@ -9,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class NapalmLauncher : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Napalm Launcher");
 			Tooltip.SetDefault("The sun god's flame, encapsuled into something usable");
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 8;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 11, 40, 0);
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = ProjectileID.Flames;

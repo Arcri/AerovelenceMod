@@ -11,15 +11,15 @@ namespace AerovelenceMod.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fragile Ice Crystal");
-			Tooltip.SetDefault("-5 defence.\n15% inceased damage.\nExpert.");
+			Tooltip.SetDefault("Gain 15% inceased damage at the cost of your defense\nExpert");
 		}
         public override void SetDefaults()
         {
 			item.accessory = true;
             item.width = 32;
             item.height = 32;
-            item.value = 10000;
-            item.rare = -12;
+			item.value = Item.sellPrice(0, 5, 0, 0);
+			item.rare = -12;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{

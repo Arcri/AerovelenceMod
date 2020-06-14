@@ -29,7 +29,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.UseSound = SoundID.Item5;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 4;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 0, 35, 20);
             item.rare = ItemRarityID.Green;
 			item.shoot = ProjectileID.StyngerShrapnel;
             item.autoReuse = true;

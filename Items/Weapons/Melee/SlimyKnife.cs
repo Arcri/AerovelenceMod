@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,26 +9,51 @@ namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class SlimyKnife : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slimy Knife");
 			Tooltip.SetDefault("Relic");
 		}
-        public override void SetDefaults()
-        {
+		public override void SetDefaults()
+		{
 			item.crit = 20;
-            item.damage = 16;
-            item.melee = true;
-            item.width = 32;
-            item.height = 32;
-            item.useTime = 6;
-            item.useAnimation = 6;
+			item.damage = 16;
+			item.melee = true;
+			item.width = 32;
+			item.height = 32;
+			item.useTime = 6;
+			item.useAnimation = 6;
 			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-        }
-    }
+			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.knockBack = 4;
+			item.value = Item.sellPrice(0, 2, 50, 0);
+			item.rare = ItemRarityID.Purple;
+			item.autoReuse = true;
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
+			tooltips.Add(line);
+
+			line = new TooltipLine(mod, "SlimyKnife", "Legendary item")
+			{
+				overrideColor = new Color(255, 241, 000)
+			};
+			tooltips.Add(line);
+			foreach (TooltipLine line2 in tooltips)
+			{
+				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				{
+					line2.overrideColor = new Color(255, 132, 000);
+				}
+			}
+			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
+		}
+	}
 }

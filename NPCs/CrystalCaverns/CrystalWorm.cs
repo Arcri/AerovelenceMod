@@ -1,3 +1,4 @@
+using AerovelenceMod.Dusts;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -30,6 +31,19 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 		{
 			base.Init();
 			head = true;
+		}
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			if (npc.life <= 0)
+			{
+				for (int k = 0; k < 20; k++)
+				{
+					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+				}
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
+			}
 		}
 
 		private int attackCounter;
@@ -81,6 +95,18 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 			npc.lifeMax = 200;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			if (npc.life <= 0)
+			{
+				for (int k = 0; k < 20; k++)
+				{
+					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+				}
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreBody"), 1f);
+			}
+		}
 	}
 
 	internal class CrystalWormTail : CrystalWorm
@@ -104,6 +130,18 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 		{
 			base.Init();
 			tail = true;
+		}
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			if (npc.life <= 0)
+			{
+				for (int k = 0; k < 20; k++)
+				{
+					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+				}
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreTail"), 1f);
+			}
 		}
 	}
 

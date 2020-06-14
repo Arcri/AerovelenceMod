@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useAnimation = 20;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 5;
-			item.value = Item.sellPrice(0, 0, 42, 21);
+			item.value = Item.sellPrice(0, 0, 40, 20);
             item.value = 10000;
             item.rare = ItemRarityID.Blue;
             item.autoReuse = false;

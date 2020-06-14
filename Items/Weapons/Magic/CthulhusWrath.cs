@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -13,29 +14,73 @@ namespace AerovelenceMod.Items.Weapons.Magic
 		{
 			Item.staff[item.type] = true;
 			DisplayName.SetDefault("Cthulhus Wrath");
-			Tooltip.SetDefault("Unrivaled until you showed up. It's angered essence is trapped.");
+			Tooltip.SetDefault("It's angered essence is trapped.");
 		}
         public override void SetDefaults()
         {
-			item.crit = 7;
+            item.crit = 7;
             item.damage = 16;
             item.magic = true;
+			item.mana = 5;
             item.width = 36;
             item.height = 36;
             item.useTime = 8;
             item.useAnimation = 8;
-			item.UseSound = SoundID.Item20;
+            item.UseSound = SoundID.Item20;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+			item.value = Item.sellPrice(0, 5, 30, 0);
+			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = ProjectileID.Flames;
             item.shootSpeed = 12f;
+        }
+
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
+
+		public override bool CanUseItem(Player player)
+		{
+			if (player.altFunctionUse == 2)
+			{
+				item.useStyle = ItemUseStyleID.HoldingOut;
+				item.useTime = 70;
+				item.useAnimation = 70;
+				item.damage = 35;
+				item.mana = 0;
+			}
+			else
+			{
+				item.useStyle = ItemUseStyleID.HoldingOut;
+				item.useTime = 12;
+				item.useAnimation = 12;
+				item.damage = 16;
+				item.mana = 5;
+				item.shoot = ProjectileID.Flames;
+				item.shootSpeed = 12f;
+			}
+			return base.CanUseItem(player);
 		}
-		
-		
-		public override Color? GetAlpha(Color lightColor)
+
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+			if (player.altFunctionUse == 2)
+					if (player.direction == 1)
+					{
+					player.velocity.X += 10;
+					}
+					else
+					{
+					player.velocity.X -= 10;
+					}
+			return true;
+        }
+
+
+        public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
 		}

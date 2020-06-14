@@ -21,6 +21,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.crit = 11;
             item.damage = 82;
             item.magic = true;
+            item.mana = 20;
             item.width = 28;
             item.height = 30;
             item.useTime = 65;
@@ -29,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 10, 50, 0);
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("HomingWisp");

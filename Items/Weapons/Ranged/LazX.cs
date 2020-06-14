@@ -9,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class LazX : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Laz-X");
 			Tooltip.SetDefault("Forged from the finest metals");
@@ -23,11 +23,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32; 
             item.useTime = 34;
             item.useAnimation = 34;
+			item.UseSound = SoundID.Item68;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 13;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+			item.value = Item.sellPrice(0, 10, 75, 0);
+			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = ProjectileID.RubyBolt;
             item.shootSpeed = 32f;

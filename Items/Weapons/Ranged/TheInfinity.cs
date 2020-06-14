@@ -10,7 +10,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Infinity");
-            Tooltip.SetDefault("NEVER RELOAD");
+            Tooltip.SetDefault("'NEVER RELOAD'\nThis weapon can be very useful, if you know how to use it");
         }
         public override void SetDefaults()
         {
@@ -23,7 +23,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 0.2f;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 1, 50, 0);
             item.rare = ItemRarityID.Green;
             item.UseSound = SoundID.Item11;
             item.autoReuse = true;

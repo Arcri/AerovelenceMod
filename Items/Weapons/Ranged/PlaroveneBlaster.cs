@@ -9,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class PlaroveneBlaster : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Plarovene Blaster");
 			Tooltip.SetDefault("I don't know what Plarovene means but that's what the box said");
@@ -33,6 +33,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = ProjectileID.ScutlixLaser;
             item.shootSpeed = 82f;
         }
+
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;

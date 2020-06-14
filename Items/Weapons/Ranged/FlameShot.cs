@@ -8,9 +8,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class FlameShot : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Flame Shot");
+			DisplayName.SetDefault("Flameshot");
 		}
         public override void SetDefaults()
         {
@@ -23,9 +23,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 22;
 			item.useAnimation = 22;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 4;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 2, 50, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = AmmoID.Arrow;

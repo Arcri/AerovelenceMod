@@ -9,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class VampiricRapier : ModItem
     {
-				public override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Vampiric Rapier");
 			Tooltip.SetDefault("Must've been a previous traveller's...");
@@ -26,8 +26,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+			item.value = Item.sellPrice(0, 10, 50, 0);
+			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
         }
 		
@@ -39,7 +39,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
             p.statLife += healingAmount;
             p.HealEffect(healingAmount, true);
         }
-				public override Color? GetAlpha(Color lightColor)
+
+		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
 		}

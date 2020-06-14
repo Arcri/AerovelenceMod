@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
 			item.crit = 11;
-            item.damage = 464;
-            item.magic = true;
+            item.damage = 55;
+            item.ranged = true;
             item.width = 60;
             item.height = 32; 
             item.useTime = 34;
@@ -27,8 +27,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 13;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+            item.value = Item.sellPrice(0, 15, 50, 20);
+            item.rare = ItemRarityID.Lime;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("ShatteredSoul");
             item.shootSpeed = 32f;
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
                 randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
                 posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
             }
-            return (Vector2[])posArray;
+            return posArray;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

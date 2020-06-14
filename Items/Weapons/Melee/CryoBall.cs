@@ -17,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.channel = true;		
 			item.crit = 20;
             item.damage = 20;
-            item.ranged = true;
+            item.melee = true;
             item.width = 32;
             item.height = 32;
             item.useTime = 24;
@@ -27,8 +27,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.noMelee = true;
 			item.noUseGraphic = true;
             item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Pink;
+            item.value = Item.sellPrice(0, 3, 75, 0);
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("CryoBallProjectile");
             item.shootSpeed = 2f;

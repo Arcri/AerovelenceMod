@@ -23,7 +23,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 4;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Green;
             item.UseSound = SoundID.Item11;
             item.autoReuse = true;

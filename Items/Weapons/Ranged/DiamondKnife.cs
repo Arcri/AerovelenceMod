@@ -26,7 +26,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true; //so the item's animation doesn't do damage
             item.knockBack = 4;
-            item.value = Item.sellPrice(0, 25, 0, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.noUseGraphic = true;

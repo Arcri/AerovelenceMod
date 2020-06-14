@@ -21,6 +21,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.crit = 11;
             item.damage = 37;
             item.magic = true;
+            item.mana = 10;
             item.width = 28;
             item.height = 30;
             item.useTime = 20;
@@ -29,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 1, 10, 0);
             item.rare = ItemRarityID.LightRed;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("BallOfFire");
