@@ -1,4 +1,5 @@
 using AerovelenceMod.Dusts;
+using AerovelenceMod.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -29,6 +30,10 @@ namespace AerovelenceMod
 		public bool QueensStinger;
 		public bool EmeraldEmpoweredGem;
 		public bool MidasCrown;
+
+		public bool FrostMelee;
+		public bool FrostProjectile;
+		public bool FrostMinion;
 		public static bool AdobeHelmet;
 
 		public static bool Setbonus = false;
@@ -42,6 +47,9 @@ namespace AerovelenceMod
 			KnowledgeFruit = false;
 			DevilsBounty = false;
 			Setbonus = false;
+
+			FrostMelee = false;
+			FrostProjectile = false;
 			AdobeHelmet = false;
 
 			MidasCrown = false;
@@ -56,6 +64,15 @@ namespace AerovelenceMod
 		{
 			SoulFire = false;
 			badHeal = false;
+		}
+
+		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+		{
+			if (FrostMelee)
+			{
+				if (Main.rand.NextBool(2)) //  50% chance
+					target.AddBuff(BuffID.Frostburn, 120, false);
+			}
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
@@ -74,6 +91,9 @@ namespace AerovelenceMod
 			{
 				target.AddBuff(BuffID.Midas, 900, false);
 			}
+			if (FrostProjectile)
+				if (Main.rand.NextBool(2)) //  50% chance
+					target.AddBuff(BuffID.Frostburn, 120, false);
 		}
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -104,7 +124,10 @@ namespace AerovelenceMod
 		public override void ResetEffects()
 		{
 			Setbonus = false;
+			FrostMinion = false;
+			FrostMelee = false;
 			badHeal = false;
+			QueensStinger = false;
 		}
 
 		public static readonly PlayerLayer MiscEffects = new PlayerLayer("ExampleMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
@@ -157,6 +180,15 @@ namespace AerovelenceMod
 		{
 			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
 			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns;
+		}
+
+		public override Texture2D GetMapBackgroundImage()
+		{
+			if (ZoneCrystalCaverns)
+			{
+				return mod.GetTexture("CrystalCavernsMapBackground");
+			}
+			return null;
 		}
 
 

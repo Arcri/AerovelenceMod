@@ -23,11 +23,11 @@ namespace AerovelenceMod.Items.BossSummons
             item.width = 28;
             item.height = 28;
             item.value = 100;
-            item.rare = 3;
+            item.rare = ItemRarityID.Orange;
             item.useAnimation = 30;
             item.useTime = 30;
 			item.maxStack = 999;
-            item.useStyle = 4;
+            item.useStyle = ItemUseStyleID.HoldingUp;
             item.consumable = true;
         }
         public override bool CanUseItem(Player player)
@@ -39,7 +39,7 @@ namespace AerovelenceMod.Items.BossSummons
 			{
 				NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("CrystalTumbler"));   //boss spawn
 			}
-            Main.PlaySound(15, (int)player.position.X, (int)player.position.Y, 0);
+            Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
             return true;
         }
     }

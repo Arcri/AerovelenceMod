@@ -35,7 +35,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddIngredient(ItemID.IronBar, 4);
+            recipe.AddRecipeGroup("IronBar", 4);
             recipe.AddIngredient(ItemID.Marshmallow, 5);
             recipe.AddTile(TileID.WorkBenches);
             recipe.SetResult(this);

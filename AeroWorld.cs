@@ -1,6 +1,8 @@
 using AerovelenceMod;
 using AerovelenceMod.Blocks.CrystalCaverns.Tiles;
+using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -22,5 +24,5 @@ namespace AerovelenceMod
 			AeroPlayer modPlayer = Main.LocalPlayer.GetModPlayer<AeroPlayer>();
 			cavernTiles = 0;
 		}
-	}
+    }
 }

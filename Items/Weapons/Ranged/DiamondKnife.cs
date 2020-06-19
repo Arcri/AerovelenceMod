@@ -24,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 17;
 			item.useAnimation = 17;
             item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Pink;
@@ -33,13 +33,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = mod.ProjectileType("DiamondKnifeProjectile");
             item.shootSpeed = 16f;
 		}
-		public override void AddRecipes()  //How to craft this item
+		public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.FallenStar, 10);
 			recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddIngredient(ItemID.IronBar, 4);
-            recipe.AddTile(TileID.Anvils);   //at work bench
+            recipe.AddRecipeGroup("IronBar", 3);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

@@ -35,13 +35,15 @@ namespace AerovelenceMod.Items.Ores.PreHM.Frost
 			Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.BallofFrost, damage, knockBack, player.whoAmI);
 			return false;
         }
-		public override void AddRecipes()  //How to craft this gun
+        public override void AddRecipes()  //How to craft this gun
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostBar>(), 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 6);
+            modRecipe.AddIngredient(ItemID.IceBlock, 25);
+            modRecipe.AddIngredient(ItemID.HellstoneBar, 6);
+            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.SetResult(this, 1);
+            modRecipe.AddRecipe();
         }
     }
 }

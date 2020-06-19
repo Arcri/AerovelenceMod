@@ -35,15 +35,17 @@ namespace AerovelenceMod.Items.Ores.PreHM.Frost
             item.shootSpeed = 16f;
         }
 
-		public override void AddRecipes()  //How to craft this item
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<FrostBar>(), 12);
-            recipe.AddTile(TileID.Anvils);   //at work bench
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }
-    }
+		public override void AddRecipes()  //How to craft this gun
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
+			modRecipe.AddIngredient(ItemID.IceBlock, 30);
+			modRecipe.AddIngredient(ItemID.HellstoneBar, 8);
+			modRecipe.AddTile(TileID.Anvils);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
+		}
+	}
 		class ShadowbeamStaffCloneProjectile : ModProjectile
 	{
 		public override void SetDefaults()

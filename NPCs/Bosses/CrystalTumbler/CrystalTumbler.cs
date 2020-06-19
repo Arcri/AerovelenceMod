@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework.Graphics;
+using AerovelenceMod.Dusts;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma for jump code
 {
@@ -65,9 +66,26 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
                 0f
                 );
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int k = 0; k < 20; k++)
+                {
+                    Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+                }
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore1"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore2"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore3"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore4"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore5"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore6"), 1f);
+            }
+        }
 
 
-        public override void AI()
+
+    public override void AI()
         {
 
             t++;

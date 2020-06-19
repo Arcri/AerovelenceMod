@@ -1,4 +1,6 @@
 using AerovelenceMod.Systems;
+using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -21,6 +23,21 @@ namespace AerovelenceMod
 			Textures = null;
 		}
 
+		public override void Close()
+		{
+			var slots = new int[] {
+				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns")
+			};
+			foreach (var slot in slots)
+			{
+				if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
+				{
+					Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
+				}
+			}
+
+			base.Close();
+		}
 
 		public override void UpdateMusic(ref int music, ref MusicPriority priority)
 		{
@@ -28,10 +45,11 @@ namespace AerovelenceMod
 			{
 				return;
 			}
-			if (Main.LocalPlayer.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
+			Player player = Main.LocalPlayer;
+			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
 			{
-				music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
-				priority = MusicPriority.BiomeLow;
+				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
+				priority = MusicPriority.BiomeMedium;
 			}
 		}
 	}
