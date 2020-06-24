@@ -15,7 +15,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 		public override void SetDefaults()
 		{
 			Main.tileSolid[Type] = true;
-			//SetModTree(new PrismTree());
+			SetModTree(new CrystalTree());
 			Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
 			Main.tileBlendAll[this.Type] = true;
 			Main.tileMergeDirt[Type] = true;
@@ -72,11 +72,11 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 
 		}
 
-		/*public override int SaplingGrowthType(ref int style)
+		public override int SaplingGrowthType(ref int style)
 		{
 			style = 0;
-			return mod.TileType("PrismSapling");
-		}*/
+			return mod.TileType("CrystalSapling");
+		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
