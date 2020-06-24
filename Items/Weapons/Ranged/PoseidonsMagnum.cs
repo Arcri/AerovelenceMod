@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using AerovelenceMod.Projectiles;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
@@ -59,7 +60,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			recipe.AddIngredient(ItemID.VenusMagnum, 1);
 			recipe.AddIngredient(ItemID.FragmentVortex, 12);
 			recipe.AddIngredient(ItemID.Starfish, 15);
-			recipe.AddIngredient(mod.ItemType("OceanEssense"), 7);
 			recipe.AddIngredient(ItemID.LunarBar, 8);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

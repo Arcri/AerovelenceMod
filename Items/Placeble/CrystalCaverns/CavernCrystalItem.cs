@@ -8,7 +8,7 @@ namespace AerovelenceMod.Items.Placeble.CrystalCaverns
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cavern Crystaleeee");
+            DisplayName.SetDefault("Cavern Crystal");
         }
 
         public override void SetDefaults()

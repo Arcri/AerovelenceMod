@@ -37,35 +37,22 @@ namespace ExampleMod.Backgrounds
 
 		public override int ChooseFarTexture()
 		{
+			if (Main.hardMode)
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgHardmodeFar");
 			return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceFar");
 		}
 
-		private static int SurfaceFrameCounter;
-		private static int SurfaceFrame;
 		public override int ChooseMiddleTexture()
 		{
-			if (++SurfaceFrameCounter > 12)
-			{
-				SurfaceFrame = (SurfaceFrame + 1) % 4;
-				SurfaceFrameCounter = 0;
-			}
-			switch (SurfaceFrame)
-			{
-				case 0:
-					return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceMid0");
-				case 1:
-					return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceMid1");
-				case 2:
-					return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceMid2");
-				case 3:
-					return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceMid3");
-				default:
-					return -1;
-			}
+			if (Main.hardMode)
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgHardmodeMid0");
+			return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceMid0");
 		}
 
 		public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
 		{
+			if (Main.hardMode)
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgHardmodeClose");
 			return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceClose");
 		}
 	}

@@ -17,12 +17,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
 			item.crit = 11;
-            item.damage = 464;
+            item.damage = 211;
             item.magic = true;
             item.width = 60;
             item.height = 32; 
-            item.useTime = 34;
-            item.useAnimation = 34;
+            item.useTime = 70;
+            item.useAnimation = 70;
 			item.UseSound = SoundID.Item68;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true; //so the item's animation doesn't do damage

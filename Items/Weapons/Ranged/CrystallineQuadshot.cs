@@ -50,11 +50,22 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Vector2[] speeds = RandomSpread(speedX, speedY, 5, 5);
-            for (int i = 0; i < 4; ++i)
+            float numberProjectiles = 2 + Main.rand.Next(1);
+            float rotation = MathHelper.ToRadians(20);
+            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
+            for (int i = 0; i < numberProjectiles; i++)
             {
-                type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<RockShard>(), ModContent.ProjectileType<CrystalShard>() });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
+                float scale = 1f - (Main.rand.NextFloat() * .3f);
+                if (i == 1)
+                {
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
+                    type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<RockShard>(), ModContent.ProjectileType<CrystalShard>() });
+                }
+                else
+                {
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
+                }
             }
             return false;
         }

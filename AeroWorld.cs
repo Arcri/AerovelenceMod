@@ -16,7 +16,7 @@ namespace AerovelenceMod
 
 		public override void TileCountsAvailable(int[] tileCounts)
 		{
-			cavernTiles = tileCounts[TileType<CavernStone>()];
+			cavernTiles = tileCounts[TileType<CavernStone>()] + tileCounts[TileType<CrystalGrass>()] + tileCounts[TileType<CrystalDirt>()] + tileCounts[TileType<CavernCrystal>()];
 		}
 
 		public override void ResetNearbyTileEffects()

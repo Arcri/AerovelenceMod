@@ -13,6 +13,9 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 			mineResist = 2.5f;
 			minPick = 59;
             Main.tileSolid[Type] = true;
+            Main.tileMerge[Type][mod.TileType("CrystalDirt")] = true;
+            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
+            Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;

@@ -30,6 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 11, 40, 0);
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
+            item.useAmmo = AmmoID.Gel; 
             item.shoot = ProjectileID.Flames;
             item.shootSpeed = 10f;
         }

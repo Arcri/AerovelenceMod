@@ -23,14 +23,10 @@ namespace AerovelenceMod.Projectiles
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
             projectile.extraUpdates = 1;
-            aiType = ProjectileID.Bullet;
+            projectile.aiStyle = 1;
         }
         public override void Kill(int timeLeft)
         {
-            for (int i = 0; i < 15; i++)
-			{
-				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 65, projectile.oldVelocity.X * 0.6f, projectile.oldVelocity.Y * 0.1f);
-			}
             Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
         }
     }

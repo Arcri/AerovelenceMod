@@ -187,19 +187,19 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter++;
-            if (npc.frameCounter < 10)
+            if (npc.frameCounter < 0)
             {
                 npc.frame.Y = Frame_Snowrium_1 * frameHeight;
             }
-            else if (npc.frameCounter < 20)
+            else if (npc.frameCounter < 10)
             {
                 npc.frame.Y = Frame_Snowrium_2 * frameHeight;
             }
-            else if (npc.frameCounter < 30)
+            else if (npc.frameCounter < 20)
             {
                 npc.frame.Y = Frame_Snowrium_3 * frameHeight;
             }
-            else if (npc.frameCounter < 40)
+            else if (npc.frameCounter < 30)
             {
                 npc.frame.Y = Frame_Snowrium_4 * frameHeight;
             }
@@ -211,19 +211,19 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             {
                 
 
-                if (npc.frameCounter < 10)
+                if (npc.frameCounter < 50)
                 {
                     npc.frame.Y = Frame_Snowrium_5 * frameHeight;
                 }
-                else if (npc.frameCounter < 20)
+                else if (npc.frameCounter < 60)
                 {
                     npc.frame.Y = Frame_Snowrium_6 * frameHeight;
                 }
-                else if (npc.frameCounter < 30)
+                else if (npc.frameCounter < 70)
                 {
                     npc.frame.Y = Frame_Snowrium_7 * frameHeight;
                 }
-                else if (npc.frameCounter < 40)
+                else if (npc.frameCounter < 80)
                 {
                     npc.frame.Y = Frame_Snowrium_8 * frameHeight;
                 }

@@ -3,6 +3,7 @@ using AerovelenceMod.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Items.Weapons.ProjectileItem.Bullet;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
@@ -28,6 +29,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.rare = ItemRarityID.Green;
             item.UseSound = SoundID.Item11;
             item.autoReuse = false;
+            item.useAmmo = ModContent.ItemType<ProjectileItem.Bullet.MallowBullet>();
             item.shoot = mod.ProjectileType("MallowBullet");
             item.shootSpeed = 10f;
         }

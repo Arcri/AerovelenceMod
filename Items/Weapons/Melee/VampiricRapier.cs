@@ -12,12 +12,12 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Vampiric Rapier");
-			Tooltip.SetDefault("Must've been a previous traveller's...");
+			Tooltip.SetDefault("`Must've been a previous traveller's`");
 		}
         public override void SetDefaults()
         {
 			item.crit = 20;
-            item.damage = 33;
+            item.damage = 25;
             item.ranged = true;
             item.width = 124;
             item.height = 88;
@@ -35,7 +35,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
             Player p = Main.player[Main.myPlayer];
-            int healingAmount = damage / 20;
+            int healingAmount = damage / 15;
             p.statLife += healingAmount;
             p.HealEffect(healingAmount, true);
         }

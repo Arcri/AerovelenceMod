@@ -11,8 +11,7 @@ namespace AerovelenceMod.Items.Others
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Clock of Life");
-			Tooltip.SetDefault("Permanently increases maximum life by 50\n" +
-				"You must have 500 max life or more to eat this item.");
+			Tooltip.SetDefault("Changes the time to day if the moon is up, and vice versa");
 		}
 
 		public override void SetDefaults()
@@ -22,6 +21,7 @@ namespace AerovelenceMod.Items.Others
 			item.useAnimation = 30;
 			item.useTime = 30;
 			item.useStyle = ItemUseStyleID.HoldingUp;
+			item.mana = 100;
 			item.UseSound = SoundID.Item4;
 			item.consumable = false;
 			item.rare = ItemRarityID.Cyan;
@@ -40,13 +40,13 @@ namespace AerovelenceMod.Items.Others
 			if (Main.dayTime != true)
             {
 				Main.dayTime = true;
-				Main.time = 27000.0;
+				Main.time = 0;
             }
 			else
             {
 				Main.dayTime = false;
-				Main.time = 52000.0;
-            }
+				Main.time = 0; // 27000.0;
+			}
 			return true;
 		}
 

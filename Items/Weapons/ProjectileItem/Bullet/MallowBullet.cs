@@ -26,5 +26,14 @@ namespace AerovelenceMod.Items.Weapons.ProjectileItem.Bullet
             item.value = Item.sellPrice(0, 0, 1, 10);
             item.ammo = AmmoID.Bullet;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ItemID.MusketBall, 50);
+            modRecipe.AddIngredient(ItemID.Marshmallow, 1);
+            modRecipe.AddTile(TileID.WorkBenches);
+            modRecipe.SetResult(this, 50);
+            modRecipe.AddRecipe();
+        }
     }
 }

@@ -38,6 +38,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
             npc.lavaImmune = true;
             npc.noGravity = false;
             npc.noTileCollide = false;
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
             npc.HitSound = SoundID.NPCHit41;
             npc.DeathSound = SoundID.NPCDeath44;
         }
