@@ -18,7 +18,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            AddMapEntry(new Color(065, 065, 085));
+            AddMapEntry(new Color(102, 108, 117));
             dustType = 59;
             soundType = SoundID.Tink;
             drop = mod.ItemType("Crystal Grass");

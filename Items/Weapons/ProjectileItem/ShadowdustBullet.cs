@@ -3,7 +3,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Weapons.ProjectileItem.Bullet
+namespace AerovelenceMod.Items.Weapons.ProjectileItem
 {
     public class ShadowdustBullet : ModItem
     {

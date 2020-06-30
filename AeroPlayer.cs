@@ -121,6 +121,8 @@ namespace AerovelenceMod
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
 		}
 
+
+
 		public override void ResetEffects()
 		{
 			Setbonus = false;
@@ -168,6 +170,8 @@ namespace AerovelenceMod
 			writer.Write(flags);
 		}
 
+
+
 		public override void ReceiveCustomBiomes(BinaryReader reader)
 		{
 			BitsByte flags = reader.ReadByte();
@@ -190,7 +194,6 @@ namespace AerovelenceMod
 			}
 			return null;
 		}
-
 
 
 
@@ -241,6 +244,8 @@ namespace AerovelenceMod
 			SetResourceTexturesBasedOnModPowerups();
 		}
 
+
+
 		public static bool BossPresent => Main.npc.ToList().Any(npc => npc.boss && npc.active);
 
 		public NPC GetFarthestBoss
@@ -253,6 +258,7 @@ namespace AerovelenceMod
 				return bosses[0];
 			}
 		}
+
 
 		public override void PostUpdateMiscEffects()
 		{
@@ -297,6 +303,7 @@ namespace AerovelenceMod
 					Main.heart2Texture = mod.GetTexture("ExtraTextures/DevilsBountyHeart");
 					break;
 				default:
+					Main.heart2Texture = originalHeartTexture;
 					break;
 			}
 		}

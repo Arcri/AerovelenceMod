@@ -123,5 +123,11 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/DarkseaAnglerTail"), 1f);
             }
         }
+
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns && spawnInfo.water ? 1f : 0f;
+        }
     }
 }

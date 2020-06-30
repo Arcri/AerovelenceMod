@@ -5,6 +5,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using AerovelenceMod.Dusts;
+using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
@@ -21,7 +24,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			//Main.tileLighted[Type] = true;
-			AddMapEntry(new Color(0, 255, 167));
+			AddMapEntry(new Color(099, 155, 255));
 			drop = mod.ItemType("CrystalDirt");
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
@@ -30,7 +33,17 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 		}
 
 
-        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+
+		public override void FloorVisuals(Player player)
+		{
+			Vector2 playerPosition = player.Center + new Vector2(-7, player.height / 3);
+			if (player.velocity.X != 0)
+			{
+				Dust.NewDust(playerPosition, 16, 1, ModContent.DustType<CrystalLeaves>(), 0, 0.15f);
+			}
+		}
+
+		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
      	{
 			fail = true;
 			if (Type == ModContent.TileType<CrystalGrass>())
@@ -51,7 +64,6 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 			if (TileObject.Place(toBePlaced) && !mute)
 			{
 				WorldGen.SquareTileFrame(x, y, true);
-				//   Main.PlaySound(0, x * 16, y * 16, 1, 1f, 0f);
 			}
 			return false;
 		}

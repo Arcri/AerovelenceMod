@@ -52,17 +52,23 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Flora
 			spriteEffects = SpriteEffects.FlipHorizontally;
 	}
 
-	public override bool Drop(int i, int j)
-	{
-		PlantStage stage = GetStage(i, j);
+		public override bool Drop(int i, int j)
+		{
+			PlantStage stage = GetStage(i, j);
 
 
-		if (stage == PlantStage.Grown)
-			Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
-			Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticAsterItem>());
+			if (stage == PlantStage.Grown)
+			{
+				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
+				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticAsterItem>());
+			}
 
-			return false;
-	}
+			else if (stage != PlantStage.Grown)
+			{
+				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
+			}
+			return true;
+		}
 
 	public override void RandomUpdate(int i, int j)
 	{

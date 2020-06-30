@@ -11,7 +11,16 @@ namespace AerovelenceMod
 	public class AeroWorld : ModWorld
 	{
 		public static int cavernTiles;
+		public static float rotationTime = 0;
 
+		public override void PreUpdate()
+		{
+			rotationTime += (float)Math.PI / 65;
+			if (rotationTime >= Math.PI * 3)
+			{
+				rotationTime = 0;
+			}
+		}
 
 
 		public override void TileCountsAvailable(int[] tileCounts)
