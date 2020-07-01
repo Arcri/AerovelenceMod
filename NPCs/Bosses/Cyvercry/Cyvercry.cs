@@ -30,7 +30,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cyvercry"); //DONT Change me
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[npc.type] = 5;
         }
 
         public override bool CheckActive()
