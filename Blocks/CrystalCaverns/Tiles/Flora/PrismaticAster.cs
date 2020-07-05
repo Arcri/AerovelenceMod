@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
-using AerovelenceMod.Items.Placeble.CrystalCaverns.Flora;
+using AerovelenceMod.Items.Placeable.CrystalCaverns.Flora;
 using AerovelenceMod.Items.Others.Alchemical;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Flora

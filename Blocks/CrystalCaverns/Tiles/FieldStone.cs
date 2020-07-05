@@ -1,6 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
-using AerovelenceMod.Items.Placeble.CrystalCaverns;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 

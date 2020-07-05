@@ -1,4 +1,3 @@
-
 using AerovelenceMod.Dusts;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
@@ -22,7 +21,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 
 		public override int DropWood()
 		{
-			return ItemType <Items.Placeble.CrystalCaverns.Glimmerwood>();
+			return ItemType <Items.Placeable.CrystalCaverns.Glimmerwood>();
 		}
 
 		public override Texture2D GetTexture()

@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using AerovelenceMod.Blocks.FrostDungeon.Furniture;
+using AerovelenceMod.Items.Placeable.FrostDungeon;
 
 namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
 {
@@ -45,7 +46,7 @@ namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Containers };
 			chest = "Kelvin Chest";
-			chestDrop = ItemType<Blocks.FrostDungeon.Furniture.KelvinChestItem>();
+			chestDrop = ItemType<KelvinChestItem>();
 		}
 
 		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);
@@ -150,7 +151,7 @@ namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
 			{
 				if (isLocked)
 				{
-					int key = ItemType<Blocks.FrostDungeon.Furniture.KelvinChestKey>();
+					int key = ItemType<KelvinChestKey>();
 					if (player.ConsumeItem(key) && Chest.Unlock(left, top))
 					{
 						if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -210,9 +211,9 @@ namespace AerovelenceMod.Blocks.FrostDungeon.Furniture
 				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Kelvin Chest";
 				if (player.showItemIconText == "Kelvin Chest")
 				{
-					player.showItemIcon2 = ItemType<Blocks.FrostDungeon.Furniture.KelvinChestItem>();
+					player.showItemIcon2 = ItemType<KelvinChestItem>();
 					if (Main.tile[left, top].frameX / 36 == 1)
-						player.showItemIcon2 = ItemType<Blocks.FrostDungeon.Furniture.KelvinChestKey>();
+						player.showItemIcon2 = ItemType<KelvinChestKey>();
 					player.showItemIconText = "";
 				}
 			}
