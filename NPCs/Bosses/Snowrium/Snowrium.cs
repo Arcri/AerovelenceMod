@@ -41,6 +41,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
             bossBag = ModContent.ItemType<SnowriumBag>();
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
 
 

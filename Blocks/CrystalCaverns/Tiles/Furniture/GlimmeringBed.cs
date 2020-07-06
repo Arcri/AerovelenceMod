@@ -21,7 +21,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			TileObjectData.addTile(Type);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Bed");
-			AddMapEntry(new Color(200, 200, 200), name);
+			AddMapEntry(new Color(068, 077, 098), name);
 			dustType = DustType<Sparkle>();
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Beds };

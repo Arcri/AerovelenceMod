@@ -29,7 +29,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
 			TileObjectData.addTile(Type);
 
-			AddMapEntry(new Color(253, 221, 3), Language.GetText("MapObject.FloorLamp"));
+			AddMapEntry(new Color(099, 155, 255), Language.GetText("MapObject.GlimmeringLamp"));
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)

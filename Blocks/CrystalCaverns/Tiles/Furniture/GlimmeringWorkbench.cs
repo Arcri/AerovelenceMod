@@ -24,7 +24,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Workbench");
 			dustType = ModContent.DustType<Sparkle>();
-			AddMapEntry(new Color(179, 146, 107), name);
+			AddMapEntry(new Color(068, 077, 098), name);
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.WorkBenches };
 		}

@@ -30,7 +30,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Chair");
 			dustType = DustType<Sparkle>();
-			AddMapEntry(new Color(200, 200, 200), name);
+			AddMapEntry(new Color(068, 077, 098), name);
 			dustType = DustType<WispDust>();
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Chairs };

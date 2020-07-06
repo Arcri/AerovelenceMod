@@ -86,127 +86,125 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
 
 
 
-    public override void AI()
+        public override void AI()
         {
 
             t++;
             Time++;
             LifePercentLeft = -(npc.life / npc.lifeMax) + 1f;
-            npc.TargetClosest(true);
             var player = Main.player[npc.target];
-            if (player.Center.X > npc.Center.X)
+            if (player.active || !player.dead)
             {
-                if (npc.velocity.X < 2 * (LifePercentLeft + 1))
-                {
-                    npc.velocity.X += (0.075f * (LifePercentLeft + 1));
-                }
-            }
-            if (player.Center.X < npc.Center.X)
-            {
-                if (npc.velocity.X > -2 * (LifePercentLeft + 1))
-                {
-                    npc.velocity.X -= (0.075f * (LifePercentLeft + 1));
+                npc.TargetClosest(true);
 
+                if (player.Center.X > npc.Center.X)
+                {
+                    if (npc.velocity.X < 2 * (LifePercentLeft + 1))
+                    {
+                        npc.velocity.X += (0.075f * (LifePercentLeft + 1));
+                    }
                 }
-            }
-            npc.rotation += npc.velocity.X * 0.025f;
-            if (t % 255 == 0)
-            {
-                npc.velocity.Y -= 10;
-            }
-            else if (t % 215 == 10)
-            {
-                Vector2 offset = new Vector2(0, -100);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike2>(), 8, 1f, Main.myPlayer);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
-            }
-            if (t % 150 == 10)
-            {
-                Vector2 offset = new Vector2(0, -100);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard2>(), 5, 1f, Main.myPlayer);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
-            }
-            if (npc.life < 800 && npc.life > 201)
-                if (t % 70 == 0)
+                if (player.Center.X < npc.Center.X)
+                {
+                    if (npc.velocity.X > -2 * (LifePercentLeft + 1))
+                    {
+                        npc.velocity.X -= (0.075f * (LifePercentLeft + 1));
+
+                    }
+                }
+
+                npc.rotation += npc.velocity.X * 0.025f;
+                if (t % 255 == 0)
+                {
+                    npc.velocity.Y -= 10;
+                }
+                else if (t % 215 == 10)
+                {
+                    Vector2 offset = new Vector2(0, -100);
+                    Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
+                    Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike2>(), 8, 1f, Main.myPlayer);
+                    Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
+                }
+                if (t % 150 == 10)
                 {
                     Vector2 offset = new Vector2(0, -100);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
+                    Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard2>(), 5, 1f, Main.myPlayer);
+                    Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                 }
-            if (t % 350 == 0)
-            {
-                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("CrystalWormHead"));
-            }
-            if (Main.expertMode)
-            {
-                if (npc.life < 1600)
-                    if (t % 250 == 0)
+                if (npc.life < 800 && npc.life > 201)
+                    if (t % 70 == 0)
                     {
                         Vector2 offset = new Vector2(0, -100);
-                        Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
-                        Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                        Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                     }
-            }
-            if (Time >= Max)
-            {
-                Time = 0;
-            }
+                if (t % 350 == 0)
+                {
+                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("CrystalWormHead"));
+                }
+                if (Main.expertMode)
+                {
+                    if (npc.life < 1600)
+                        if (t % 250 == 0)
+                        {
+                            Vector2 offset = new Vector2(0, -100);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                        }
+                }
+                if (Time >= Max)
+                {
+                    Time = 0;
+                }
 
-            if ((npc.Center.Y - player.Center.Y) < -150)
-            {
-                i++;
+                if ((npc.Center.Y - player.Center.Y) < -150)
+                {
+                    i++;
+                }
+                else
+                {
+                    i = 0;
+                }
+                if (i % 50 == 0)
+                {
+                    npc.noTileCollide = true;
+                }
+                if (i % 50 == 10 || i == 0)
+                {
+                    npc.noTileCollide = false;
+                }
             }
-            else
-            {
-                i = 0;
-            }
-            if (i % 50 == 0)
+            if (!player.active || player.dead)
             {
                 npc.noTileCollide = true;
-            }
-            if (i % 50 == 10 || i == 0)
-            {
-                npc.noTileCollide = false;
+                npc.TargetClosest(false);
+                npc.velocity.Y = 20f;
+                if (npc.timeLeft > 10)
+                {
+                    npc.timeLeft = 10;
+                }
             }
         }
-            private void Move(Vector2 offset)
+        private void Move(Vector2 offset)
+        {
+            speed = 5f;
+            Vector2 moveTo = player.Center + offset;
+            Vector2 move = moveTo - npc.Center;
+            float magnitude = Magnitude(move);
+            if (magnitude > speed)
             {
-                speed = 5f;
-                Vector2 moveTo = player.Center + offset;
-                Vector2 move = moveTo - npc.Center;
-                float magnitude = Magnitude(move);
-                if (magnitude > speed)
-                {
-                    move *= speed / magnitude;
-                }
-                float turnResistance = 2f;
-                move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
-                magnitude = Magnitude(move);
-                if (magnitude > speed)
-                {
-                    move *= speed / magnitude;
-                }
-                npc.velocity = move;
+                move *= speed / magnitude;
             }
+            float turnResistance = 2f;
+            move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
+            magnitude = Magnitude(move);
+            if (magnitude > speed)
+            {
+                move *= speed / magnitude;
+            }
+            npc.velocity = move;
+        }
 
-            private void DespawnHandler()
-            {
-                if (!player.active || player.dead)
-                {
-                    npc.TargetClosest(false);
-                    player = Main.player[npc.target];
-                    if (!player.active || player.dead)
-                    {
-                        npc.velocity = new Vector2(0f, -10f);
-                        if (npc.timeLeft > 10)
-                        {
-                            npc.timeLeft = 10;
-                        }
-                        return;
-                    }
-                }
-            }
         private float Magnitude(Vector2 mag)
         {
             return (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);

@@ -19,6 +19,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newTile.Height = 4;
 			dustType = ModContent.DustType<Sparkle>();
 			TileObjectData.newTile.Width = 3;
+			AddMapEntry(new Color(068, 077, 098));
 			TileObjectData.newTile.CoordinateHeights = new int[]
 			{
 				16,

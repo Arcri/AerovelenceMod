@@ -34,7 +34,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			TileObjectData.addTile(Type);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Chest");
-			AddMapEntry(new Color(60, 150, 40), name, MapChestName);
+			AddMapEntry(new Color(068, 077, 098), name, MapChestName);
 			dustType = ModContent.DustType<Sparkle>();
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Containers };

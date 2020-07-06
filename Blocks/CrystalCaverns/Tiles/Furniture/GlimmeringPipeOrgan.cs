@@ -19,7 +19,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
             TileObjectData.addTile(Type);
             dustType = DustType<Sparkle>();
             adjTiles = new int[] { TileID.Pianos };
-            AddMapEntry(new Color(051, 045, 159));
+            AddMapEntry(new Color(068, 077, 098));
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {

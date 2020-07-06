@@ -30,7 +30,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Lantern");
-			AddMapEntry(new Color(179, 146, 107), name);
+			AddMapEntry(new Color(099, 155, 255), name);
 			adjTiles = new int[] { TileID.Torches };
 		}
 

@@ -30,7 +30,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newTile.LavaDeath = true;
 			TileObjectData.addTile(Type);
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-			AddMapEntry(new Color(179, 146, 107));
+			AddMapEntry(new Color(068, 077, 098));
 			dustType = ModContent.DustType<Sparkle>();
 			drop = ModContent.ItemType<GlimmerwoodPlatformItem>();
 			disableSmartCursor = true;

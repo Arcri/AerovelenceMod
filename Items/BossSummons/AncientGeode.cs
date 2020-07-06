@@ -32,7 +32,7 @@ namespace AerovelenceMod.Items.BossSummons
         }
         public override bool CanUseItem(Player player)
         {
-            return !NPC.AnyNPCs(mod.NPCType("CrystalTumbler"));
+            return player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns && !NPC.AnyNPCs(mod.NPCType("CrystalTumbler"));
         }
         public override bool UseItem(Player player)
         {
