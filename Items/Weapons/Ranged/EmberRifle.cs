@@ -28,11 +28,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.height = 32; 
             item.useTime = 28;
             item.useAnimation = 28;
-            item.useStyle = 5;
+            item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 6;
+            item.rare = ItemRarityID.LightPurple;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("EmberRifleProj");
             item.shootSpeed = 36f;

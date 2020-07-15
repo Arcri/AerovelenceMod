@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -40,8 +38,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             return true;
         }
-
-
 		public override bool CanUseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)

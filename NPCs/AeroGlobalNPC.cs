@@ -17,7 +17,30 @@ namespace AerovelenceMod.NPCs
 		{
 			SoulFire = false;
 		}
-		public override void DrawEffects(NPC npc, ref Color drawColor)
+
+
+        public override bool CheckDead(NPC npc)
+        {
+			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
+			{
+				for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY * 13) * 2E-05); k++)
+				{
+					int EEXX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
+					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
+					if (Main.tile[EEXX, WHHYY] != null)
+					{
+						if (Main.tile[EEXX, WHHYY].active())
+						{
+							WorldGen.OreRunner(EEXX, WHHYY, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("PhanticOreBlock"));
+						}
+					}
+				}
+				Main.NewText("Phantom stones formed in the caves!", 180, 60, 140);
+			}
+			return true;
+		}
+
+        public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
 			if (SoulFire)
 			{

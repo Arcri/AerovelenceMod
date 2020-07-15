@@ -1,5 +1,3 @@
-using System;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,6 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bonecutter");
+            Tooltip.SetDefault("Does more damage to skeletons");
         }
         public override void SetDefaults()
         {
@@ -32,7 +31,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
             if(target.type == NPCID.Skeleton)
             {
-                damage = damage * 3;
+                damage *= 3;
             }
         }
 		public override void AddRecipes()

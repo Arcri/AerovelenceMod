@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,23 +7,23 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class BunnyCannon : ModItem
     {
-				public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Bunny Cannon");
-			Tooltip.SetDefault("Killing bunnies is cruel period.");
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Bunny Cannon");
+            Tooltip.SetDefault("Killing bunnies is cruel period.");
+        }
         public override void SetDefaults()
         {
-			item.crit = 20;
+            item.crit = 20;
             item.damage = 8;
             item.ranged = true;
             item.width = 32;
             item.height = 32;
             item.useTime = 50;
             item.useAnimation = 50;
-			item.UseSound = SoundID.Item11;
+            item.UseSound = SoundID.Item11;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
             item.rare = ItemRarityID.Purple;
@@ -32,7 +31,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = ProjectileID.ExplosiveBunny;
             item.shootSpeed = 24f;
         }
-		public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
+        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.005);

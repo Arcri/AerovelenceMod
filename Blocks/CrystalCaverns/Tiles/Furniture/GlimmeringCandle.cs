@@ -37,6 +37,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			Item.NewItem(i * 16, j * 16, 16, 48, ItemType<Items.Placeable.CrystalCaverns.GlimmeringCandleItem>());
 		}
 
+        [System.Obsolete]
         public override void RightClick(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];

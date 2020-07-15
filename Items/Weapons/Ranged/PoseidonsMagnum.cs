@@ -2,11 +2,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using AerovelenceMod.Projectiles;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
-	public class PoseidonsMagnum : ModItem
+    public class PoseidonsMagnum : ModItem
 	{
 		public override void SetStaticDefaults() 
 		{
@@ -22,17 +21,17 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.height = 32;
 			item.useTime = 23;
 			item.useAnimation = 23;
-			item.useStyle = 5;
+			item.useStyle = ItemUseStyleID.HoldingOut;
 			item.knockBack = 3;
 			item.value = 100000;
-			item.rare = 11;
+			item.rare = ItemRarityID.Purple;
 			item.UseSound = SoundID.Item41;
 			item.autoReuse = false;
 			item.shoot = mod.ProjectileType("PoseidonStream");
 			item.shootSpeed = 34f;
 		}
 		
-		public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 
         {
 			if (Main.rand.Next(100) <= 20)
@@ -40,7 +39,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 				for (int i = 0; i < 1; i++)
 				{
 					Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f)); 
-					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 0.4f, perturbedSpeed.Y * 0.4f, 409, damage, knockBack, player.whoAmI);
+					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 0.4f, perturbedSpeed.Y * 0.4f, ProjectileID.Typhoon, damage, knockBack, player.whoAmI);
 				}
             }
 			else {

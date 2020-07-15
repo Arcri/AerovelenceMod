@@ -1,4 +1,4 @@
-author = Arcri, TraoX
-version = 1.7.40
+author = Arcri and the Aerovelence Dev team
+version = 1.0
 displayName = [c/00edff:Aerovelence]
-homepage = https://discord.gg/wZqQ7g5
+homepage = https://discord.gg/QwqqZzc

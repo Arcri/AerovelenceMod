@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -25,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAnimation = 12;
 			item.UseSound = SoundID.Item11;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 8;
             item.value = Item.sellPrice(0, 11, 40, 0);
             item.rare = ItemRarityID.Purple;
@@ -35,7 +34,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shootSpeed = 10f;
         }
 
-        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
+        public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.075);
@@ -47,12 +46,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
                 randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
                 posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
             }
-            return (Vector2[])posArray;
+            return posArray;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
+            Vector2[] speeds = RandomSpread(speedX, speedY, 3, 3);
             for (int i = 0; i < 3; ++i)
             {
                 Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
@@ -67,7 +66,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			// Here we add a tooltipline that will later be removed, showcasing how to remove tooltips from an item
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
@@ -83,9 +81,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 					line2.overrideColor = new Color(255, 132, 000);
 				}
 			}
-
-			// Here we will remove all tooltips whose title end with ':RemoveMe'
-			// One like that is added at the start of this method
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
 		}
 	}

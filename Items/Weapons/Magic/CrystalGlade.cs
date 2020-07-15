@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -34,8 +33,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.shoot = ProjectileID.CrystalLeafShot;
             item.shootSpeed = 14f;
 		}
-		
-		
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;

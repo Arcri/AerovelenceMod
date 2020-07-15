@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -25,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAnimation = 70;
 			item.UseSound = SoundID.Item68;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 13;
 			item.value = Item.sellPrice(0, 10, 75, 0);
 			item.rare = ItemRarityID.Purple;

@@ -1,11 +1,10 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.NPCs.Bosses.Snowrium.Projectiles;
 
 namespace AerovelenceMod.Items.Weapons.Melee
 {
-	public class CavernMauler : ModItem
+    public class CavernMauler : ModItem
 	{
         public override void SetStaticDefaults()
         {

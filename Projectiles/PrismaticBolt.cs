@@ -33,14 +33,13 @@ namespace AerovelenceMod.Projectiles
         public override void AI()
         {
             TimeLeft++;
-            projectile.velocity.Y *= 0.8f;
 
             projectile.ai[1] += 0.1f;
             projectile.rotation = projectile.velocity.ToRotation() + 1.57f;
 
             float cos = 1 + (float)Math.Cos(projectile.ai[1]);
             float sin = 1 + (float)Math.Sin(projectile.ai[1]);
-            Color color = new Color(0.5f + cos * 0.2f, 0.5f, 0.5f + sin * 0.01f);
+            Color color = new Color(0.5f + cos * 0.2f, 0.8f, 0.5f + sin * 0.25f);
             Lighting.AddLight(projectile.Center, color.ToVector3() * 0.6f);
 
             Dust d = Dust.NewDustPerfect(projectile.Center, 264, -projectile.velocity * 0.5f, 0, color, 1.4f);

@@ -1,5 +1,3 @@
-using AerovelenceMod.Projectiles;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -7,14 +5,13 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Items.Weapons.Melee
 {
-	public class CavernousImpaler : ModItem
+    public class CavernousImpaler : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cavernous Impaler");
 			Tooltip.SetDefault("Fires a crystal that explodes on impact");
 		}
-
 		public override void SetDefaults()
 		{
 			item.damage = 40;
@@ -36,8 +33,6 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.UseSound = SoundID.Item1;
 			item.shoot = ProjectileType<CavernousImpalerProjectile>();
 		}
-
-
 		public override bool CanUseItem(Player player)
 		{
 			return player.ownedProjectileCounts[item.shoot] < 1;

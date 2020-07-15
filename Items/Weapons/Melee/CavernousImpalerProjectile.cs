@@ -1,4 +1,3 @@
-using AerovelenceMod.Blocks.CrystalCaverns.Tiles;
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
@@ -8,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Items.Weapons.Melee
 {
-	public class CavernousImpalerProjectile : ModProjectile
+    public class CavernousImpalerProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

@@ -37,10 +37,21 @@ namespace ExampleMod.Backgrounds
 
 		public override int ChooseFarTexture()
 		{
-			if (Main.hardMode)
+			if (Main.dayTime)
+			{
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgWeatherStorm");
+			}
+			else if (Main.hardMode)
+			{
 				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgHardmodeFar");
-			return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceFar");
+			}
+			else
+			{
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceFar");
+			}
 		}
+
+
 
 		public override int ChooseMiddleTexture()
 		{

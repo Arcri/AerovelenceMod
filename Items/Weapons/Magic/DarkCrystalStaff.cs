@@ -3,9 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
-using AerovelenceMod;
-using AerovelenceMod.Items.Ores.PreHM.Frost;
-using System;
+using AerovelenceMod.Items.Weapons.Ranged;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {
@@ -15,31 +13,37 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Dark Crystal Staff");
-            Tooltip.SetDefault("Shoots a large shard of crystal\nRight click to shoot an even bigger crystal that explodes into dark shards");
+            Tooltip.SetDefault("Fires a lightning bolt");
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 82;
+            item.crit = 3;
+            item.damage = 15;
             item.magic = true;
             item.mana = 20;
-            item.width = 28;
-            item.height = 30;
-            item.useTime = 65;
-            item.useAnimation = 65;
+            item.width = 64;
+            item.height = 64;
+            item.useTime = 35;
+            item.useAnimation = 35;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Purple;
+            item.knockBack = 5;
+            item.value = Item.sellPrice(0, 1, 15, 0);
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.shoot = ProjectileID.HolyArrow;
-            item.shootSpeed = 40f;
+            item.shoot = ModContent.ProjectileType<InvisibleProj>();
+            item.shootSpeed = 11f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            throw new NotImplementedException();
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(1));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
+            {
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<SkylightProjectile>(), damage * 1, knockBack, player.whoAmI);
+            }
+            return true;
         }
     }
 }

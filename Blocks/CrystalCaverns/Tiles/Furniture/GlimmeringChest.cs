@@ -77,7 +77,8 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			Chest.DestroyChest(i, j);
 		}
 
-		public override void RightClick(int i, int j)
+        [Obsolete]
+        public override void RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];

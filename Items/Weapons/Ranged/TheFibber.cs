@@ -1,7 +1,5 @@
-using System;
 using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,18 +30,18 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 21;
             item.useAnimation = 21;
             item.UseSound = SoundID.Item36;
-            item.useStyle = 5;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = 8;
+            item.rare = ItemRarityID.Yellow;
             item.autoReuse = true;
             item.shoot = AmmoID.Bullet;
             item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 24f;
         }
 
-        public override void AddRecipes()  //How to craft this gun
+        public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
             modRecipe.AddIngredient(ModContent.ItemType<EmberFragment>(), 6);

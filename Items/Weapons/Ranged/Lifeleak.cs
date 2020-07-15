@@ -1,9 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {

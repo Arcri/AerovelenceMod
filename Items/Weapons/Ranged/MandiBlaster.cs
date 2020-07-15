@@ -1,5 +1,3 @@
-using System;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mandi-Blaster");
-			Tooltip.SetDefault("My name is Jim... But people call me Jim!");
+			Tooltip.SetDefault("'My name is Jim, But people call me Jim!'");
 		}
         public override void SetDefaults()
         {
@@ -24,7 +22,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useTime = 26;
             item.useAnimation = 26;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 1, 25, 0);
             item.rare = ItemRarityID.Green;

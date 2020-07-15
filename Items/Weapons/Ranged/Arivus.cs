@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -49,14 +48,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
                 float scale = 1f - (Main.rand.NextFloat() * .3f);
                 if (i == 1)
                 {
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 3, perturbedSpeed.Y * 3, type, damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("VoidBolt"), damage, knockBack, player.whoAmI);
                     Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("PrismaticBolt"), damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 4, perturbedSpeed.Y * 4, type, damage, knockBack, player.whoAmI);
                 }
                 else
                 {
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 5, perturbedSpeed.Y * 5, type, damage, knockBack, player.whoAmI);
                 }
             }
             return false;

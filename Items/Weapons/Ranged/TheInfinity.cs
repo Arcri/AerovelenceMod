@@ -31,7 +31,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shootSpeed = 8f;
             item.useAmmo = AmmoID.Bullet;
         }
-
         public override bool ConsumeAmmo(Terraria.Player player)
         {
             return false;
@@ -41,7 +40,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             return new Vector2(3, -2);
         }
-
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Vector2 muzzleOffset = new Vector2(-7, -8);

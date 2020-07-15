@@ -1,5 +1,3 @@
-using System;
-using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -9,23 +7,23 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class ConferenceCall : ModItem
     {
-			public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Conference Call");
-			Tooltip.SetDefault("Let's just ping everyone all at once");
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Conference Call");
+            Tooltip.SetDefault("Let's just ping everyone all at once");
+        }
 
         public override void SetDefaults()
         {
-			item.crit = 11;
+            item.crit = 11;
             item.damage = 55;
             item.ranged = true;
             item.width = 60;
-            item.height = 32; 
+            item.height = 32;
             item.useTime = 34;
             item.useAnimation = 34;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            item.noMelee = true;
             item.knockBack = 13;
             item.value = Item.sellPrice(0, 15, 50, 20);
             item.rare = ItemRarityID.Lime;
@@ -33,12 +31,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = mod.ProjectileType("ShatteredSoul");
             item.shootSpeed = 32f;
         }
-		
-		public override Vector2? HoldoutOffset()
-		{
-			return new Vector2(-6, 0);
-		}
-		public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-6, 0);
+        }
+        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.0125);
@@ -52,7 +49,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             }
             return posArray;
         }
-
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Vector2[] speeds = randomSpread(speedX, speedY, 10, 10);

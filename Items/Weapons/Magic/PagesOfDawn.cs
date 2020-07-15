@@ -2,9 +2,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
-using AerovelenceMod;
-using AerovelenceMod.Items.Ores.PreHM.Frost;
 using System;
 
 namespace AerovelenceMod.Items.Weapons.Magic

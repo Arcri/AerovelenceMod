@@ -1,5 +1,6 @@
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Weapons.Melee;
+using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -31,12 +32,13 @@ namespace AerovelenceMod
 		public bool EmeraldEmpoweredGem;
 		public bool MidasCrown;
 
+		public bool AdobeHelmet;
+		public bool PhanticBonus;
 		public bool FrostMelee;
 		public bool FrostProjectile;
 		public bool FrostMinion;
-		public static bool AdobeHelmet;
+		public bool BurnshockArmorBonus;
 
-		public static bool Setbonus = false;
 
 		private Texture2D originalHeartTexture;
 		private Texture2D originalManaTexture;
@@ -46,11 +48,15 @@ namespace AerovelenceMod
 			SoulFig = false;
 			KnowledgeFruit = false;
 			DevilsBounty = false;
-			Setbonus = false;
 
+			
+
+			AdobeHelmet = false;
+			PhanticBonus = false;
 			FrostMelee = false;
 			FrostProjectile = false;
-			AdobeHelmet = false;
+			FrostMinion = false;
+			BurnshockArmorBonus = false;
 
 			MidasCrown = false;
 			EmeraldEmpoweredGem = false;
@@ -72,6 +78,40 @@ namespace AerovelenceMod
 			{
 				if (Main.rand.NextBool(2)) //  50% chance
 					target.AddBuff(BuffID.Frostburn, 120, false);
+			}
+		}
+
+        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        {
+			if (PhanticBonus)
+            {
+				if (damage > 10)
+                {
+					Vector2 offset = new Vector2(0, -100);
+					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
+				}
+            }
+			if (BurnshockArmorBonus)
+            {
+				if (damage > 15)
+                {
+					Vector2 offset = new Vector2(0, -0);
+					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
+					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
+					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
+				}
+            }
+		}
+
+        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+		{
+			if (PhanticBonus)
+			{
+				if (damage > 10)
+				{
+					Vector2 offset = new Vector2(0, -100);
+					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
+				}
 			}
 		}
 
@@ -116,6 +156,7 @@ namespace AerovelenceMod
 		}
 
 
+
 		public override void UpdateBiomes()
 		{
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
@@ -125,25 +166,28 @@ namespace AerovelenceMod
 
 		public override void ResetEffects()
 		{
-			Setbonus = false;
-			FrostMinion = false;
+			AdobeHelmet = false;
+			FrostProjectile = false;
 			FrostMelee = false;
+			FrostMinion = false;
+			PhanticBonus = false;
+			BurnshockArmorBonus = false;
 			badHeal = false;
 			QueensStinger = false;
 		}
 
-		public static readonly PlayerLayer MiscEffects = new PlayerLayer("ExampleMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
+		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)
 			{
 				return;
 			}
 			Player drawPlayer = drawInfo.drawPlayer;
-			Mod mod = ModLoader.GetMod("ExampleMod");
+			Mod mod = ModLoader.GetMod("AerovelenceMod");
 			AeroPlayer modPlayer = drawPlayer.GetModPlayer<AeroPlayer>();
 			if (modPlayer.badHeal)
 			{
-				Texture2D texture = mod.GetTexture("Buffs/Skull");
+				Texture2D texture = mod.GetTexture("Buffs/SoulFire");
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
 				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);

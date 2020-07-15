@@ -2,10 +2,6 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
-using AerovelenceMod;
-using AerovelenceMod.Items.Ores.PreHM.Frost;
-using System.Drawing.Text;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {
@@ -39,8 +35,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
     }
 }
-
-
 namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class HailProjectile : ModProjectile
@@ -71,7 +65,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
     }
 }
-
 namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class HailIcicle : ModProjectile
@@ -94,6 +87,5 @@ namespace AerovelenceMod.Items.Weapons.Magic
             projectile.velocity.Y += 3;
             projectile.rotation += projectile.velocity.X * 0.01f;
         }
-
     }
 }

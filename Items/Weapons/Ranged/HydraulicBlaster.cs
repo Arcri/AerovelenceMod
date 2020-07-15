@@ -63,7 +63,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
                 randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
                 posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
             }
-            return (Vector2[])posArray;
+            return posArray;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

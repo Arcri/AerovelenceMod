@@ -2,7 +2,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
-using System.Diagnostics.Tracing;
 
 namespace AerovelenceMod.Items.Weapons.Melee
 {
