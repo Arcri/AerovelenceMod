@@ -123,6 +123,16 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 
         public override void AI()
         {
+            if (!player.active || player.dead)
+            {
+                npc.noTileCollide = true;
+                npc.TargetClosest(false);
+                npc.velocity.Y = -20f;
+                if (npc.timeLeft > 10)
+                {
+                    npc.timeLeft = 10;
+                }
+            }
             if (npc.life <= npc.lifeMax / 2)
             {
                 Phase2 = true;
