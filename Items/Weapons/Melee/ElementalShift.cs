@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Elemental Shift");
-			Tooltip.SetDefault("The great sword of the slimes.");
+			Tooltip.SetDefault("Fires elemental scythes when swung");
 		}
         public override void SetDefaults()
         {
@@ -28,7 +28,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.value = Item.sellPrice(0, 0, 40, 20);
             item.value = 10000;
             item.autoReuse = true;
-            item.rare = ItemRarityID.Blue;
+            item.rare = ItemRarityID.Orange;
             item.shoot = item.shoot = mod.ProjectileType("ElementScythe");
             item.shootSpeed = 5f;
             item.autoReuse = false;

@@ -1,13 +1,11 @@
 using AerovelenceMod.Systems;
-using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod
 {
-	// Todo: Convert mod.XType to the new ModContent system
-	public class AeroMod : Mod
+    // Todo: Convert mod.XType to the new ModContent system
+    public class AeroMod : Mod
 	{
 		public static TextureManager Textures { get; private set; } = null;
 

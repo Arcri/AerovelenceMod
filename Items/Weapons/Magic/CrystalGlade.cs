@@ -30,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.value = Item.sellPrice(0, 20, 50, 0);
 			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = ProjectileID.CrystalLeafShot;
+			item.shoot = ModContent.ProjectileType<CrystalGladeProj>();
             item.shootSpeed = 14f;
 		}
 		public override Color? GetAlpha(Color lightColor)
@@ -58,4 +58,22 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
 		}
     }
+}
+
+namespace AerovelenceMod.Items.Weapons.Magic
+{
+	public class CrystalGladeProj : ModProjectile
+	{
+		public override void SetDefaults()
+		{
+			projectile.aiStyle = 227;
+			projectile.width = 18;
+			projectile.height = 38;
+			projectile.alpha = 0;
+			projectile.penetrate = 4;
+			projectile.friendly = true;
+			projectile.tileCollide = true;
+			projectile.ignoreWater = false;
+		}
+	}
 }

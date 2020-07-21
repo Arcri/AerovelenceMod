@@ -3,14 +3,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Bruh
+namespace AerovelenceMod.Items.Armor.PostML.Shadowreaper
 {
 	[AutoloadEquip(EquipType.Legs)]
-    public class BruhLeggings : ModItem
+    public class ShadowreaperLeggings : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bruh Leggings");
+            DisplayName.SetDefault("Shadowreaper Leggings");
             Tooltip.SetDefault("500% increased movement speed");
         }
         public override void SetDefaults()

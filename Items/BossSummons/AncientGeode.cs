@@ -37,8 +37,8 @@ namespace AerovelenceMod.Items.BossSummons
         public override bool UseItem(Player player)
         {
 			{
-				NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("CrystalTumbler"));   //boss spawn
-			}
+                NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("CrystalTumbler"), 0, 0f, 0f, 0f, 0f, 255);
+            }
             Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
             return true;
         }

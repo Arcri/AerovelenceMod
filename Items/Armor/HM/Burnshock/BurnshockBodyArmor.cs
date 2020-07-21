@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Orange;
-            item.defense = 19;
+            item.defense = 20;
         }
         public override void UpdateEquip(Player player)
         {

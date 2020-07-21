@@ -2,9 +2,9 @@ using AerovelenceMod;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod
+namespace AerovelenceMod.Backgrounds 
 {
-    public class StormEventHandler : ModPlayer
-    {
-    }
+	public class StormEventHandler : ModPlayer
+	{
+	}
 }

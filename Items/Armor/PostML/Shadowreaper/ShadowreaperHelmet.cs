@@ -2,19 +2,19 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace AerovelenceMod.Bruh
+namespace AerovelenceMod.Items.Armor.PostML.Shadowreaper
 {
     [AutoloadEquip(EquipType.Head)]
-    public class BruhHelmet : ModItem
+    public class ShadowreaperHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bruh Helmet");
+            DisplayName.SetDefault("Shadowreaper Helmet");
             Tooltip.SetDefault("50% increased damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return body.type == ModContent.ItemType<BruhChestplate>() && legs.type == ModContent.ItemType<BruhLeggings>() && head.type == ModContent.ItemType<BruhHelmet>();
+			return body.type == ModContent.ItemType<ShadowreaperChestplate>() && legs.type == ModContent.ItemType<ShadowreaperLeggings>() && head.type == ModContent.ItemType<ShadowreaperHelmet>();
 		}
 		public override void UpdateArmorSet(Player player)
 		{

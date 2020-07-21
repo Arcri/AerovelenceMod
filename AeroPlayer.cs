@@ -24,7 +24,6 @@ namespace AerovelenceMod
 
 		public bool ZoneCrystalCaverns;
 
-
 		public bool SoulFire;
 		public bool badHeal;
 
@@ -38,6 +37,9 @@ namespace AerovelenceMod
 		public bool FrostProjectile;
 		public bool FrostMinion;
 		public bool BurnshockArmorBonus;
+
+		public bool NeutronMinion = true;
+		public bool StarDrone = true;
 
 
 		private Texture2D originalHeartTexture;
@@ -156,7 +158,6 @@ namespace AerovelenceMod
 		}
 
 
-
 		public override void UpdateBiomes()
 		{
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
@@ -174,6 +175,8 @@ namespace AerovelenceMod
 			BurnshockArmorBonus = false;
 			badHeal = false;
 			QueensStinger = false;
+			NeutronMinion = false;
+			StarDrone = false;
 		}
 
 		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)

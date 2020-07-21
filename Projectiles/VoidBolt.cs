@@ -10,6 +10,13 @@ namespace AerovelenceMod.Projectiles
 {
     public class VoidBolt : ModProjectile
     {
+        public float WaveAmplitude = 175f;
+        public float WaveMagnitude = .05f;
+        private const float Speed = 7f;
+        private int Timer = 0;
+
+
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Bolt");
@@ -31,9 +38,30 @@ namespace AerovelenceMod.Projectiles
 
         private int TimeLeft = 0;
 
+
+        private double GetDirection()
+        {
+            float degreeAngle;
+
+            if (projectile.direction > 0) degreeAngle = 180f;
+            else degreeAngle = 0f;
+
+            return MathHelper.ToRadians(degreeAngle);
+        }
+
+
+
         public override void AI()
         {
             {
+
+                float yPos = (float)Math.Sin(GetDirection());
+                float xPos = (float)Math.Cos(GetDirection());
+                float wobble = WaveAmplitude * (float)Math.Cos(Timer++ * WaveMagnitude) * WaveMagnitude;
+                projectile.velocity.Y += -yPos * Speed + xPos * wobble;
+                projectile.velocity.X += xPos * Speed - yPos * wobble;
+
+
                 TimeLeft++;
                 projectile.ai[1] += 0.1f;
                 projectile.rotation = projectile.velocity.ToRotation() + 1.57f;
@@ -82,11 +110,6 @@ namespace AerovelenceMod.Projectiles
                     AdjustMagnitude(ref move);
                     projectile.velocity = (5 * projectile.velocity + move) / 6f;
                     AdjustMagnitude(ref projectile.velocity);
-                }
-                if (projectile.alpha <= 30)
-                {
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<RainbowDust>());
-                    Main.dust[dust].velocity *= 1f;
                 }
             }
         }

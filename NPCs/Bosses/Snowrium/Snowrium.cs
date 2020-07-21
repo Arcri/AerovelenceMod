@@ -32,23 +32,20 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         private int h;
         public float hhhh;
 
-        /* todo:
-* new snowrium frame code
-*/
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 8;    //boss frame/animation 
+            Main.npcFrameCount[npc.type] = 10;    //boss frame/animation 
         }
-
         public override void SetDefaults()
         {
             npc.aiStyle = -1;  //5 is the flying AI
-            npc.lifeMax = 9000;   //boss life
+            npc.lifeMax = 9500;   //boss life
             npc.damage = 32;  //boss damage
-            npc.defense = 24;    //boss defense
+            npc.defense = 9;    //boss defense
+            npc.alpha = 0;
             npc.knockBackResist = 0f;
-            npc.width = 87;
-            npc.height = 87;
+            npc.width = 188;
+            npc.height = 182;
             npc.value = Item.buyPrice(0, 5, 75, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
@@ -62,28 +59,12 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
 
-
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             Texture2D texture = mod.GetTexture("NPCs/Bosses/Snowrium/Glowmask");
-            Vector2 drawPos = npc.Center + new Vector2(0, npc.gfxOffY) - Main.screenPosition;
-            //keep an eye on the width and height when doing this. It matters
-            spriteBatch.Draw
-            (
-                texture,
-                drawPos,
-                new Rectangle(0, 0, texture.Width, texture.Height),
-                Color.White,
-                npc.rotation,
-                texture.Size() * 0.5f,
-                npc.scale,
-                npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, //adjust this according to the sprite
-                0f
-                );
+
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
-
-
-
         public override void NPCLoot()
         {
             if (Main.expertMode)
@@ -114,16 +95,15 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 }
             }
         }
-
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 10000;  //boss life scale in expertmode
+            npc.lifeMax = 11500;  //boss life scale in expertmode
             npc.damage = 40;  //boss damage increase in expermode
         }
-
         public override void AI()
         {
-            if (!player.active || player.dead)
+            var player = Main.player[npc.target];
+            if (player.dead || !player.active)
             {
                 npc.noTileCollide = true;
                 npc.TargetClosest(false);
@@ -146,28 +126,23 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             }
             npc.TargetClosest(true);
             Vector2 vector8 = new Vector2(npc.position.X + (npc.width * 0.5f), npc.position.Y + (npc.height * 0.5f));
-            var player = Main.player[npc.target];
             Vector2 move = player.position - npc.Center;
             if (!Phase2)
             {
                 progTimer1++;
                 if (progTimer1 >= 0 && progTimer1 < 360)
                 {
-
                     // follows player from the top and shoots a blast of icy spikes
                     npc.rotation = 0;
                     npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
                     npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
 
                     int type = mod.ProjectileType("IcySpike");
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                    int damage = Main.expertMode ? 8 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     float speedX = 10f;
                     float speedY = 10f;
                     Vector2 position = npc.Center;
-
-
                     shootTimer++;
-
                     if (shootTimer >= 90)
                     {
                         Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(0));
@@ -203,7 +178,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         if (stobit >= 40)
                         {
                             float Speed = 7f;
-                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int damage = Main.expertMode ? 11 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             int type = mod.ProjectileType("IceBlast");
                             float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
                             Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
@@ -215,9 +190,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         npc.velocity.Y = 0;
                         npc.velocity.X = -15f;
                     }
-
                 }
-
                 if (progTimer1 >= 660 && progTimer1 < 1260)
                 {
                     // normal follow player and shoots a spead (3) icy bolt
@@ -238,7 +211,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         moving *= speed / magnitude;
                     }
                     npc.velocity = moving;
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                    int damage = Main.expertMode ? 7 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     Vector2 position = npc.Center;
                     int type = mod.ProjectileType("IceBolt");
                     float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
@@ -281,7 +254,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     if (npc.ai[1] >= 30)
                     {
                         float Speed = 4f;
-                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        int damage = Main.expertMode ? 9 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         int type = mod.ProjectileType("IceBlast");
                         float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
                         Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
@@ -295,7 +268,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     shootTimer3++;
                     int type = mod.ProjectileType("IceBolt");
                     npc.rotation += 0.1f;
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                    int damage = Main.expertMode ? 8 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     float speedX = 7f;
                     float speedY = 7f;
                     Vector2 position = npc.Center;
@@ -305,21 +278,12 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
                         shootTimer3 = 0;
                     }
-
                 }
                 if (progTimer1 >= 2160)
                 {
                     progTimer1 = 0;
                 }
-
             }
-
-
-
-
-
-
-
             if (Phase2)
             {
                 progTimer2++;
@@ -331,14 +295,11 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
 
                     int type = mod.ProjectileType("IcySpike");
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                    int damage = Main.expertMode ? 15 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     float speedX = 10f;
                     float speedY = 10f;
                     Vector2 position = npc.Center;
-
-
                     shootTimer5++;
-
                     if (shootTimer5 >= 90)
                     {
                         Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(0));
@@ -374,7 +335,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         if (stobit2 >= 20)
                         {
                             float Speed = 7f;
-                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int damage = Main.expertMode ? 9 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             int type = ProjectileID.FrostBlastHostile;
                             float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
                             Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
@@ -440,8 +401,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 
                         }
                     }
-
-
                 }
                 if (progTimer2 >= 1231 && progTimer2 < 1471)
                 {
@@ -519,17 +478,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
         public override void HitEffect(int hitDirection, double damage)
         {
             for (int i = 0; i < 10; i++)
@@ -542,63 +490,56 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
         }
-
-
-
-
-
-        private const int Frame_Snowrium_1 = 1;
-        private const int Frame_Snowrium_2 = 2;
-        private const int Frame_Snowrium_3 = 3;
-        private const int Frame_Snowrium_4 = 4;
-        private const int Frame_Snowrium_5 = 5;
-        private const int Frame_Snowrium_6 = 6;
-        private const int Frame_Snowrium_7 = 7;
-        private const int Frame_Snowrium_8 = 8;
-
-
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter++;
-            if (npc.frameCounter < 0)
             {
-                npc.frame.Y = Frame_Snowrium_1 * frameHeight;
-            }
-            else if (npc.frameCounter < 10)
-            {
-                npc.frame.Y = Frame_Snowrium_2 * frameHeight;
-            }
-            else if (npc.frameCounter < 20)
-            {
-                npc.frame.Y = Frame_Snowrium_3 * frameHeight;
-            }
-            else if (npc.frameCounter < 30)
-            {
-                npc.frame.Y = Frame_Snowrium_4 * frameHeight;
-            }
-            else
-            {
-                npc.frameCounter = 0;
+                if (npc.frameCounter < 5)
+                {
+                    npc.frame.Y = 0 * frameHeight;
+                }
+                else if (npc.frameCounter < 10)
+                {
+                    npc.frame.Y = 1 * frameHeight;
+                }
+                else if (npc.frameCounter < 15)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else if (npc.frameCounter < 20)
+                {
+                    npc.frame.Y = 3 * frameHeight;
+                }
+                else if (npc.frameCounter < 25)
+                {
+                    npc.frame.Y = 4 * frameHeight;
+                }
+                else
+                {
+                    npc.frameCounter = 0;
+                }
             }
             if (npc.life <= npc.lifeMax / 2)
             {
-
-
-                if (npc.frameCounter < 50)
+                if (npc.frameCounter < 5)
                 {
-                    npc.frame.Y = Frame_Snowrium_5 * frameHeight;
+                    npc.frame.Y = 5 * frameHeight;
                 }
-                else if (npc.frameCounter < 60)
+                else if (npc.frameCounter < 10)
                 {
-                    npc.frame.Y = Frame_Snowrium_6 * frameHeight;
+                    npc.frame.Y = 6 * frameHeight;
                 }
-                else if (npc.frameCounter < 70)
+                else if (npc.frameCounter < 15)
                 {
-                    npc.frame.Y = Frame_Snowrium_7 * frameHeight;
+                    npc.frame.Y = 7 * frameHeight;
                 }
-                else if (npc.frameCounter < 80)
+                else if (npc.frameCounter < 20)
                 {
-                    npc.frame.Y = Frame_Snowrium_8 * frameHeight;
+                    npc.frame.Y = 8 * frameHeight;
+                }
+                else if (npc.frameCounter < 25)
+                {
+                    npc.frame.Y = 9 * frameHeight;
                 }
                 else
                 {
@@ -606,7 +547,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 }
             }
         }
-
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             scale = 1.5f;
@@ -623,20 +563,26 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         {
             Main.npcFrameCount[npc.type] = 3;
         }
-
         public override void SetDefaults()
         {
             npc.CloneDefaults(NPCID.IceElemental);
             npc.width = 46;
             npc.height = 31;
             npc.damage = 7;
-            npc.defense = 6;
-            npc.lifeMax = 30;
+            npc.defense = 2;
+            npc.lifeMax = 100;
             npc.knockBackResist = 0.5f;
 
         }
-
-
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        {
+            npc.width = 46;
+            npc.height = 31;
+            npc.damage = 10;
+            npc.defense = 3;
+            npc.lifeMax = 175;
+            npc.knockBackResist = 0.5f;
+        }
         public override void HitEffect(int hitDirection, double damage)
         {
             for (int i = 0; i < 10; i++)
@@ -666,6 +612,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         {
             projectile.width = 52;
             projectile.height = 30;
+            projectile.damage = 15;
             projectile.friendly = false;
             projectile.hostile = true;
             projectile.penetrate = 1;
@@ -724,6 +671,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         {
             projectile.width = 34;
             projectile.height = 34;
+            projectile.damage = 30;
             projectile.friendly = false;
             projectile.hostile = true;
             projectile.penetrate = 1;
@@ -731,12 +679,13 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
         }
+
         public override void AI()
         {
 
             Dust dust;
             Vector2 position = projectile.Center;
-            dust = Main.dust[Terraria.Dust.NewDust(position, projectile.width, projectile.height, DustID.AncientLight, 0f, 0f, 255)];
+            dust = Main.dust[Dust.NewDust(position, projectile.width, projectile.height, DustID.AncientLight, 0f, 0f, 255)];
             dust.noGravity = true;
 
 
@@ -774,6 +723,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         {
             projectile.width = 20;
             projectile.height = 12;
+            projectile.damage = 30;
             projectile.friendly = false;
             projectile.hostile = true;
             projectile.penetrate = 1;
@@ -835,6 +785,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             projectile.CloneDefaults(ProjectileID.FrostBlastHostile);
             projectile.friendly = false;
             projectile.hostile = true;
+            projectile.damage = 25;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             aiType = ProjectileID.FrostBlastHostile;

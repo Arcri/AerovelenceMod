@@ -13,7 +13,7 @@ namespace AerovelenceMod.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Electricity Spark");
-            
+            Main.projFrames[projectile.type] = 4;
         }
 
         public override void SetDefaults()
@@ -21,7 +21,6 @@ namespace AerovelenceMod.Projectiles
             projectile.width = 32;
             projectile.height = 14;
             projectile.aiStyle = 0;
-            Main.projFrames[projectile.type] = 4;
             projectile.friendly = true;
             projectile.magic = true;
             projectile.penetrate = 5;

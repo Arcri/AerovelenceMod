@@ -3,14 +3,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Bruh
+namespace AerovelenceMod.Items.Armor.PostML.Shadowreaper
 {
 	[AutoloadEquip(EquipType.Body)]
-    public class BruhChestplate : ModItem
+    public class ShadowreaperChestplate : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bruh Chestplate");
+            DisplayName.SetDefault("Shadowreaper Chestplate");
             Tooltip.SetDefault("15% increased critical damage");
         }
         public override void SetDefaults()

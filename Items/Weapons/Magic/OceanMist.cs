@@ -10,7 +10,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Ocean Mist");
-            Tooltip.SetDefault("Summons a cloud of ocean mist that rains down harmful mist");
+            Tooltip.SetDefault("Rains down harmful ocean mist");
         }
         public override void SetDefaults()
         {

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
+namespace AerovelenceMod.NPCs.Bosses.Cyvercry
 {
     public class CyverBot : ModNPC
     {
@@ -20,29 +20,29 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Bot"); //DONT Change me
+            DisplayName.SetDefault("Cyver Bot");
             Main.npcFrameCount[npc.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            npc.lifeMax = 320; //Change me
+            npc.lifeMax = 320;
             npc.damage = 16;
-            npc.defense = 12; //Change me
-            npc.width = 50; //Change me
-            npc.height = 50; //Change me
-            npc.aiStyle = 5;
+            npc.defense = 12;
+            npc.width = 66;
+            npc.height = 36;
+            npc.aiStyle = -1;
             npc.boss = false;
             npc.noGravity = true;
             npc.noTileCollide = true;
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath14;
-            npc.value = Item.buyPrice(0, 0, 24, 48); //Change me
+            npc.value = Item.buyPrice(0, 0, 24, 48);
         }
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 360; //Change me
+            npc.lifeMax = 360;
             npc.damage = 20;
         }
 
@@ -112,7 +112,29 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = frameHeight * t;
+            npc.frameCounter++;
+            {
+                if (npc.frameCounter < 10)
+                {
+                    npc.frame.Y = 0 * frameHeight;
+                }
+                else if (npc.frameCounter < 15)
+                {
+                    npc.frame.Y = 1 * frameHeight;
+                }
+                else if (npc.frameCounter < 20)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else if (npc.frameCounter < 25)
+                {
+                    npc.frame.Y = 3 * frameHeight;
+                }
+                else
+                {
+                    npc.frameCounter = 0;
+                }
+            }
         }
     }
 }

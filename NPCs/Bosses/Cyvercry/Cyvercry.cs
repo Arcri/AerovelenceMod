@@ -65,7 +65,33 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = frameHeight * (int)npc.ai[1];
+            npc.frameCounter++;
+            {
+                if (npc.frameCounter < 10)
+                {
+                    npc.frame.Y = 0 * frameHeight;
+                }
+                else if (npc.frameCounter < 15)
+                {
+                    npc.frame.Y = 1 * frameHeight;
+                }
+                else if (npc.frameCounter < 20)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else if (npc.frameCounter < 25)
+                {
+                    npc.frame.Y = 3 * frameHeight;
+                }
+                else if (npc.frameCounter < 30)
+                {
+                    npc.frame.Y = 4 * frameHeight;
+                }
+                else
+                {
+                    npc.frameCounter = 0;
+                }
+            }
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)

@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Armor.HM.Starburst
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Orange;
-            item.defense = 19;
+            item.defense = 16;
         }
         public override void UpdateEquip(Player player)
         {
