@@ -27,14 +27,11 @@ namespace AerovelenceMod.Items.BossSummons
         }
         public override bool CanUseItem(Player player)
         {
-            if (!Main.dayTime)
-            {
-                return player.ZoneSnow && !NPC.AnyNPCs(mod.NPCType("Snowrium"));
-            }
-            return true;
+            return !NPC.AnyNPCs(mod.NPCType("Snowrium"));
         }
         public override bool UseItem(Player player)
         {
+            if (player.ZoneSnow)
             {
                 NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Snowrium"));
             }

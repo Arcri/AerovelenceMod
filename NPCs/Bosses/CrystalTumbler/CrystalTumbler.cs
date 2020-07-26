@@ -6,21 +6,29 @@ using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Dusts;
+using AerovelenceMod.Items.BossBags;
+using System.Linq;
+using IL.Terraria.DataStructures;
 
-namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma for jump code
+namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
     [AutoloadBossHead]
     public class CrystalTumbler : ModNPC
     {
         private Player player;
+        
         private float speed;
         float LifePercentLeft;
         int t;
         int i;
-        int FlyUpwardTime = 5;
-        int Time = 10;
+        public bool P;
+        public int spinTimer;
+        public bool Phase2;
+        int Time = 1;
+        int FlyUpwardTime = 25;
         int RotationTime = 10;
-        int TotalRotations = 5;
+        int rotationalSpeed = 2;
+        int TotalRotations = 3;
         int Max = 10;
 
         public override void SetDefaults()
@@ -30,14 +38,15 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
             npc.damage = 12;
             npc.defense = 8;
             npc.knockBackResist = 0f;
-            npc.width = 122;
-            npc.height = 126;
+            npc.width = 120;
+            npc.height = 128;
             npc.value = Item.buyPrice(0, 5, 60, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
             npc.lavaImmune = true;
             npc.noGravity = false;
             npc.noTileCollide = false;
+            bossBag = ModContent.ItemType<CrystalTumblerBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
             npc.HitSound = SoundID.NPCHit41;
             npc.DeathSound = SoundID.NPCDeath44;
@@ -53,7 +62,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
         {
             Texture2D texture = mod.GetTexture("NPCs/Bosses/CrystalTumbler/Glowmask");
             Vector2 drawPos = npc.Center + new Vector2(0, npc.gfxOffY) - Main.screenPosition;
-            //keep an eye on the width and height when doing this. It matters
             spriteBatch.Draw
             (
                 texture,
@@ -63,9 +71,40 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
                 npc.rotation,
                 texture.Size() * 0.5f,
                 npc.scale,
-                npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, //adjust this according to the sprite
+                npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0f
                 );
+        }
+
+        public override void NPCLoot()
+        {
+            if (Main.expertMode)
+            {
+                npc.DropBossBags();
+            }
+            if (!Main.expertMode)
+            {
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.HealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostShard"), Main.rand.Next(10, 20), false, 0, false, false);
+                switch (Main.rand.Next(5))
+                {
+                    case 0:
+                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystalArch"), 1, false, 0, false, false);
+                        break;
+                    case 1:
+                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DeepFreeze"), 1, false, 0, false, false);
+                        break;
+                    case 2:
+                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("IcySaber"), 1, false, 0, false, false);
+                        break;
+                    case 3:
+                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CryoBall"), 1, false, 0, false, false);
+                        break;
+                    case 4:
+                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Snowball"), 1, false, 0, false, false);
+                        break;
+                }
+            }
         }
         public override void HitEffect(int hitDirection, double damage)
         {
@@ -88,13 +127,22 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
 
         public override void AI()
         {
-
             t++;
             Time++;
-            LifePercentLeft = -(npc.life / npc.lifeMax) + 1f;
             var player = Main.player[npc.target];
+            Vector2 delta = player.Center - npc.Center;
+            float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
+            Vector2 offset = new Vector2(0, -100);
+            Vector2 offsetLightning = new Vector2(0, -500);
+            Vector2 LightningTarget = player.Center;
+            Vector2 move = player.position - npc.Center;
+            LifePercentLeft = -(npc.life / npc.lifeMax) + 1f;
             if (player.active || !player.dead)
             {
+                if (npc.life <= npc.lifeMax / 2)
+                {
+                    Phase2 = true;
+                }
                 npc.TargetClosest(true);
 
                 if (player.Center.X > npc.Center.X)
@@ -114,48 +162,61 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
                 }
 
                 npc.rotation += npc.velocity.X * 0.025f;
-                if (t % 255 == 0)
+                if (t % 250 == 0)
                 {
-                    npc.velocity.Y -= 10;
+
+                    npc.velocity.Y -= Main.rand.Next(12) + 7;
+                    for (int num325 = 0; num325 < 20; num325++)
+                        Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
                 }
-                else if (t % 215 == 10)
+                /*if (spinTimer >= 0 && spinTimer < 240)
                 {
-                    Vector2 offset = new Vector2(0, -100);
+                    // Rise for a bit.
+                    if (Time < FlyUpwardTime)
+                    {
+                        npc.noTileCollide = npc.noGravity = true;
+                        npc.velocity = Vector2.Lerp(npc.velocity, Vector2.UnitY * -12, 0.2f); // Quickly rise upward (but don't stop all movement and rise immediately)
+                    }
+                    // Redirect towards the target before spinning.
+                    if (Time == FlyUpwardTime)
+                    {
+                        npc.velocity = npc.DirectionTo(player.Center) * rotationalSpeed;
+                    }
+                    // And spin around.
+                    if (Time > FlyUpwardTime && Time < RotationTime + FlyUpwardTime)
+                    {
+                        npc.velocity = npc.velocity.RotatedBy(MathHelper.TwoPi / RotationTime * TotalRotations);
+                    }
+                    if (Time >= Max)
+                    {
+                        Time = 0;
+                    }
+                    // After time is >= RotationTime + FlyUpwardTime, do nothing for a bit and let the lunge happen. Maybe decelerate at the end. Be sure to change npc.noTileCollide and npc.noGravity back to normal.
+                }
+                */
+                if (t % Main.rand.Next(190, 215) == 10)
+                {
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike2>(), 8, 1f, Main.myPlayer);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
+                    npc.netUpdate = true;
                 }
-                if (t % 150 == 10)
+                /*
+                if (t % Main.rand.Next(130, 150) == 10)
                 {
                     Vector2 offset = new Vector2(0, -100);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard2>(), 5, 1f, Main.myPlayer);
                     Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
+                    npc.netUpdate = true;
                 }
                 if (npc.life < 800 && npc.life > 201)
                     if (t % 70 == 0)
                     {
                         Vector2 offset = new Vector2(0, -100);
                         Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
-                    }
-                if (t % 350 == 0)
-                {
-                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("CrystalWormHead"));
-                }
-                if (Main.expertMode)
-                {
-                    if (npc.life < 1600)
-                        if (t % 250 == 0)
-                        {
-                            Vector2 offset = new Vector2(0, -100);
-                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
-                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
-                        }
-                }
-                if (Time >= Max)
-                {
-                    Time = 0;
-                }
+                        npc.netUpdate = true;
+                    }*/
 
                 if ((npc.Center.Y - player.Center.Y) < -150)
                 {
@@ -173,18 +234,64 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler //credit to Dominic Karma fo
                 {
                     npc.noTileCollide = false;
                 }
-            }
-            if (!player.active || player.dead)
-            {
-                npc.noTileCollide = true;
-                npc.TargetClosest(false);
-                npc.velocity.Y = 20f;
-                if (npc.timeLeft > 10)
+                if (Phase2)
                 {
-                    npc.timeLeft = 10;
+
+                    if (magnitude > 0)
+                    {
+                        delta *= 8f / magnitude;
+                    }
+                    else
+                    {
+                        delta = new Vector2(0f, 15f);
+                    }
+                    if (t % 250 == 0)
+                    {
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
+                        npc.netUpdate = true;
+                    }
+                    if (t % 50 == 0)
+                    {
+
+                    }
+                    if (Main.expertMode)
+                    {
+                        if (t % 250 == 0)
+                        {
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                            npc.netUpdate = true;
+                        }
+                        /*if (t % 275 == 0)
+                        {
+                            if (player.position.X > npc.position.X)
+                            {
+                                npc.velocity.X = ((10 * npc.velocity.X + move.X + 10) / 5f);
+                            }
+                            else if (player.position.X < npc.position.X)
+                            {
+                                npc.velocity.X = ((10 * npc.velocity.X + move.X - 10) / 5f);
+                            }*/
+                    }
+                }
+                if (t % 50 == 0)    
+                {
+                    Projectile.NewProjectile(player.Center - new Vector2(0, 16f * 5f), new Vector2(0f, 0f), ProjectileID.CultistBossLightningOrbArc, 10, 3f, Main.myPlayer, BuffID.OnFire, -0f);
+                }
+
+                if (!player.active || player.dead)
+                {
+                    npc.noTileCollide = true;
+                    npc.TargetClosest(false);
+                    npc.velocity.Y = 20f;
+                    if (npc.timeLeft > 10)
+                    {
+                        npc.timeLeft = 10;
+                    }
                 }
             }
         }
+
         private void Move(Vector2 offset)
         {
             speed = 5f;

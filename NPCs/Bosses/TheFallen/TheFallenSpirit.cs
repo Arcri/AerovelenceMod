@@ -10,7 +10,7 @@ using AerovelenceMod.Dusts;
 namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jump code
 {
     [AutoloadBossHead]
-    public class TheFallen : ModNPC
+    public class TheFallenSpirit : ModNPC
     {
         private Player player;
         private float speed;
@@ -58,7 +58,6 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jum
                 {
                     Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
                 }
-                NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, ModContent.NPCType<TheFallenSpirit>());
             }
         }
 
