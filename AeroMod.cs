@@ -1,4 +1,4 @@
-using AerovelenceMod.Systems;
+//using AerovelenceMod.Systems;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -7,7 +7,7 @@ namespace AerovelenceMod
     // Todo: Convert mod.XType to the new ModContent system
     public class AeroMod : Mod
 	{
-		public static TextureManager Textures { get; private set; } = null;
+		/*public static TextureManager Textures { get; private set; } = null;
 
 		public override void Load()
 		{
@@ -19,7 +19,7 @@ namespace AerovelenceMod
 		{
 			Textures?.Unload();
 			Textures = null;
-		}
+		}*/
 
 		public override void Close()
 		{
