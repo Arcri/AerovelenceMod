@@ -15,17 +15,22 @@ namespace AerovelenceMod.Buffs
             Main.buffNoTimeDisplay[Type] = true;
         }
 
-        public override void Update(Player player, ref int buffIndex)
-        {
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<ShockburnDrone>()] > 0)
-            {
-                player.buffTime[buffIndex] = 18000;
-            }
-            else
-            {
-                player.DelBuff(buffIndex);
-                buffIndex--;
-            }
-        }
-    }
+		public override void Update(Player player, ref int buffIndex)
+		{
+			AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+			if (player.ownedProjectileCounts[ModContent.ProjectileType<ShockburnDrone>()] > 0)
+			{
+				modPlayer.StarDrone = true;
+			}
+
+			if (!modPlayer.StarDrone)
+			{
+				player.DelBuff(buffIndex);
+				buffIndex--;
+				return;
+			}
+
+			player.buffTime[buffIndex] = 18000;
+		}
+	}
 }

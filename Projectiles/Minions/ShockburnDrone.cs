@@ -17,6 +17,7 @@ namespace AerovelenceMod.Projectiles.Minions
         {
 			DisplayName.SetDefault("Star Drone");
 			Main.projFrames[projectile.type] = 5;
+			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 		}
         public override void SetDefaults()
 		{
@@ -26,13 +27,23 @@ namespace AerovelenceMod.Projectiles.Minions
 			projectile.minion = true;
 			projectile.friendly = true;
 			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
+			projectile.tileCollide = true;
 			projectile.netImportant = true;
 			aiType = ProjectileID.Spazmamini;
 			projectile.alpha = 0;
 			projectile.penetrate = -10;
+			projectile.timeLeft = 18000;
 			projectile.minionSlots = 1;
 		}
+
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			if (projectile.penetrate == 0)
+				projectile.Kill();
+
+			return false;
+		}
+
 		public override bool? CanCutTiles()
 		{
 			return true;

@@ -320,7 +320,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             {
                 npc.noGravity = false;
                 npc.TargetClosest(true);
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (npc.velocity.X == 0f && !(npc.velocity.Y < 0f) && !((double)npc.velocity.Y > 0.3))
                     {

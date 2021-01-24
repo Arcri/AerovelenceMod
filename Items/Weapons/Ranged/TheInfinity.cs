@@ -27,7 +27,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.rare = ItemRarityID.Green;
             item.UseSound = SoundID.Item11;
             item.autoReuse = true;
-            item.shoot = ProjectileID.PurificationPowder;
+            item.shoot = ProjectileID.Bullet;
             item.shootSpeed = 8f;
             item.useAmmo = AmmoID.Bullet;
         }

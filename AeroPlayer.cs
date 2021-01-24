@@ -25,6 +25,7 @@ namespace AerovelenceMod
 		public bool ZoneCrystalCaverns;
 
 		public bool SoulFire;
+		public bool Electrified;
 		public bool badHeal;
 
 		public bool QueensStinger;
@@ -38,8 +39,8 @@ namespace AerovelenceMod
 		public bool FrostMinion;
 		public bool BurnshockArmorBonus;
 
-		public bool NeutronMinion = true;
-		public bool StarDrone = true;
+		public bool NeutronMinion = false;
+		public bool StarDrone = false;
 
 
 		private Texture2D originalHeartTexture;
@@ -72,6 +73,7 @@ namespace AerovelenceMod
 		{
 			SoulFire = false;
 			badHeal = false;
+			Electrified = false;
 		}
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
@@ -155,6 +157,21 @@ namespace AerovelenceMod
 				b *= 0.7f;
 				fullBright = true;
 			}
+			if (Electrified)
+			{
+				if (Main.rand.NextBool(4) && drawInfo.shadow == 0f)
+				{
+					int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4, player.height + 4, DustID.AncientLight, player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100, default, 3f);
+					Main.dust[dust].noGravity = true;
+					Main.dust[dust].velocity *= 1.8f;
+					Main.dust[dust].velocity.Y -= 0.5f;
+					Main.playerDrawDust.Add(dust);
+				}
+				r *= 0.0f;
+				g *= 0.2f;
+				b *= 0.7f;
+				fullBright = true;
+			}
 		}
 
 
@@ -191,6 +208,20 @@ namespace AerovelenceMod
 			if (modPlayer.badHeal)
 			{
 				Texture2D texture = mod.GetTexture("Buffs/SoulFire");
+				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
+				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
+				Main.playerDrawData.Add(data);
+				for (int k = 0; k < 2; k++)
+				{
+					int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, DustType<Smoke>(), 0f, 0f, 0, Color.Black);
+					Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+					Main.playerDrawDust.Add(dust);
+				}
+			}
+			if (modPlayer.Electrified)
+			{
+				Texture2D texture = mod.GetTexture("Buffs/Electrified");
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
 				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
