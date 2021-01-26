@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.NPCs.Bosses.Snowrium;
 using System.Runtime.InteropServices;
 using Terraria;
@@ -42,8 +43,9 @@ namespace AerovelenceMod.Items.BossSummons
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.SnowBlock, 25);
             recipe.AddIngredient(ItemID.HellstoneBar, 1);
+            recipe.AddIngredient(ItemID.SnowBlock, 25);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 3);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

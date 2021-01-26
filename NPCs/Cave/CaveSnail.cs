@@ -71,5 +71,9 @@ namespace AerovelenceMod.NPCs.Cave
                 npc.frameCounter = 0;
             }
         }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.player.ZoneRockLayerHeight ? .2f : 0f;
+        }
     }
 }

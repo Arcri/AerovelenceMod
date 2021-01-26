@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.crit = 20;
             item.damage = 15;
             item.ranged = true;
-            item.width = 32;
-            item.height = 32;
+            item.width = 50;
+            item.height = 20;
             item.useTime = 50;
             item.useAnimation = 50;
             item.UseSound = SoundID.Item68;
@@ -31,6 +31,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.autoReuse = false;
             item.shoot = ModContent.ProjectileType<CrystalShard>();
             item.shootSpeed = 24f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-6, 0);
         }
 
         public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)

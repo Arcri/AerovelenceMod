@@ -20,8 +20,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.damage = 49;
             item.ranged = true;
             item.mana = 12;
-            item.width = 60;
-            item.height = 32;
+            item.width = 44;
+            item.height = 46;
             item.useTime = 14;
 			item.useAnimation = 14;
             item.useStyle = ItemUseStyleID.HoldingOut;

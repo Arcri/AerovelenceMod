@@ -20,8 +20,8 @@ namespace AerovelenceMod.Items.Weapons.Summoning
             item.mana = 8;
             item.damage = 26;
             item.useStyle = ItemUseStyleID.SwingThrow;
-            item.width = 32;
-            item.height = 32;
+            item.width = 64;
+            item.height = 64;
             item.useTime = 16;
             item.useAnimation = 16;
             item.noMelee = true;

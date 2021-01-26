@@ -1,5 +1,5 @@
 using AerovelenceMod.Blocks.Ores;
-using AerovelenceMod.Items.Tiles;
+using AerovelenceMod.Items.Placeable.Ores;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Others.Crafting
 {
-	public class BurnshockBar : ModItem
+    public class BurnshockBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

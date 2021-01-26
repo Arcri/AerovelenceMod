@@ -41,6 +41,7 @@ namespace AerovelenceMod
 
 		public bool NeutronMinion = false;
 		public bool StarDrone = false;
+		public bool Minicry = false;
 
 
 		private Texture2D originalHeartTexture;
@@ -194,6 +195,7 @@ namespace AerovelenceMod
 			QueensStinger = false;
 			NeutronMinion = false;
 			StarDrone = false;
+			Minicry = false;
 		}
 
 		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)

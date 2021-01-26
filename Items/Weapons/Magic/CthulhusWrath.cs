@@ -20,8 +20,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.damage = 16;
             item.magic = true;
 			item.mana = 5;
-            item.width = 36;
-            item.height = 36;
+            item.width = 40;
+            item.height = 40;
             item.useTime = 8;
             item.useAnimation = 8;
             item.UseSound = SoundID.Item20;

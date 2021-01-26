@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ID;
-using AerovelenceMod.Items.Tiles;
+using AerovelenceMod.Items.Placeable.Ores;
 
 namespace AerovelenceMod.Blocks.Ores
 {

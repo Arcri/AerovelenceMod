@@ -20,8 +20,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 9;
 			item.damage = 52;
 			item.ranged = true;
-			item.width = 60;
-			item.height = 32;
+			item.width = 74;
+			item.height = 34;
 			item.useAnimation = 12;
 			item.useTime = 2;
 			item.reuseDelay = 14;
@@ -33,6 +33,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.autoReuse = true;
 			item.shoot = ProjectileID.MiniRetinaLaser;
 			item.shootSpeed = 15f;
+		}
+		public override Vector2? HoldoutOffset()
+		{
+			return new Vector2(-10, 0);
 		}
 
 

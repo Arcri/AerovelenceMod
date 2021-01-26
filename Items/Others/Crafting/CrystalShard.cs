@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Others.Crafting
         {
             item.value = Item.sellPrice(0, 0, 2, 35);
             item.maxStack = 999;
-            item.width = 18;
-            item.height = 18;
+            item.width = 30;
+            item.height = 28;
             item.rare = ItemRarityID.LightRed;
         }
     }

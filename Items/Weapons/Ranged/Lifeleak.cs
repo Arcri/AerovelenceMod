@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 8;
             item.damage = 28;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32; 
+            item.width = 72;
+            item.height = 28; 
             item.useTime = 18;
             item.useAnimation = 18;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -30,6 +30,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.autoReuse = true;
             item.shoot = ProjectileID.Bullet;
             item.shootSpeed = 24f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-8, 0);
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

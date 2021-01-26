@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.crit = 20;
 			item.damage = 16;
 			item.melee = true;
-			item.width = 32;
-			item.height = 32;
+			item.width = 36;
+			item.height = 38;
 			item.useTime = 6;
 			item.useAnimation = 6;
 			item.UseSound = SoundID.Item1;

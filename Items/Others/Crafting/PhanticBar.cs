@@ -1,12 +1,12 @@
 using AerovelenceMod.Blocks.Ores;
-using AerovelenceMod.Items.Tiles;
+using AerovelenceMod.Items.Placeable.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Others.Crafting
 {
-	public class PhanticBar : ModItem
+    public class PhanticBar : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -17,6 +17,8 @@ namespace AerovelenceMod.Items.Others.Crafting
 		{
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.useTurn = true;
+			item.width = 32;
+			item.height = 24;
 			item.useAnimation = 15;
 			item.useTime = 10;
 			item.autoReuse = true;

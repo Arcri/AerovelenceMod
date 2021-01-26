@@ -16,8 +16,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			item.crit = 5;
             item.damage = 44;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 20;
+            item.height = 26;
             item.useTime = 17;
 			item.useAnimation = 17;
             item.useStyle = ItemUseStyleID.SwingThrow;
@@ -42,8 +42,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 		}
         public override void SetDefaults()
         {
-            projectile.width = 2;
-            projectile.height = 20;
+            projectile.width = 20;
+            projectile.height = 26;
             projectile.aiStyle = 16;
             projectile.friendly = true;
             projectile.ranged = true;

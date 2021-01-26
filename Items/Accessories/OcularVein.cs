@@ -16,8 +16,8 @@ namespace AerovelenceMod.Items.Accessories
         public override void SetDefaults()
         {
 			item.accessory = true;
-            item.width = 32;
-            item.height = 32;
+            item.width = 30;
+            item.height = 14;
             item.value = 10000;
             item.rare = ItemRarityID.Green;
         }

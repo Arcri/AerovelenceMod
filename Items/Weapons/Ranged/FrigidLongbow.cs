@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.crit = 20;
             item.damage = 18;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 24;
+            item.height = 42;
             item.useTime = 25;
             item.useAnimation = 25;
             item.useStyle = ItemUseStyleID.HoldingOut;

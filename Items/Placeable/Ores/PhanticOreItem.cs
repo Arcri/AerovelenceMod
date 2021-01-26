@@ -2,13 +2,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Tiles
+namespace AerovelenceMod.Items.Placeable.Ores
 {
-    public class AdobeOreItem : ModItem
+    public class PhanticOreItem : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Adobe Slab");
+			DisplayName.SetDefault("Phantic Ore");
 		}
         public override void SetDefaults()
         {
@@ -20,8 +20,8 @@ namespace AerovelenceMod.Items.Tiles
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 9, 0);
-            item.createTile = mod.TileType("AdobeOreBlock"); //put your CustomBlock Tile name
+			item.value = Item.sellPrice(0, 0, 12, 0);
+            item.createTile = mod.TileType("PhanticOreBlock");
         }
     }
 }

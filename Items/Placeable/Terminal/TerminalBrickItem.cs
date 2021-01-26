@@ -1,27 +1,27 @@
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ID;
 
-namespace AerovelenceMod.Items.Tiles
+namespace AerovelenceMod.Items.Placeable.Terminal
 {
-    public class PhanticOreItem : ModItem
+    public class TerminalBrickItem : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Phantic Ore");
+			DisplayName.SetDefault("Terminal Brick");
 		}
         public override void SetDefaults()
         {
-            item.width = 12;
-            item.height = 12;
+            item.width = 16;
+            item.height = 16;
             item.maxStack = 999;
             item.useTurn = true;
             item.autoReuse = true;
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 12, 0);
-            item.createTile = mod.TileType("PhanticOreBlock");
+			item.value = Item.sellPrice(0, 0, 9, 0);
+            item.createTile = mod.TileType("TerminalBrick"); //put your CustomBlock Tile name
         }
     }
 }

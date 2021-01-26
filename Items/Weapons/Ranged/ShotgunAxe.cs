@@ -76,7 +76,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			}
 			return base.CanUseItem(player);
 		}
-
+		public override Vector2? HoldoutOffset()
+		{
+			return new Vector2(-4, 0);
+		}
 
 		public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
 		{

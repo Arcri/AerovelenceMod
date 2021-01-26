@@ -15,8 +15,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             item.damage = 6;
             item.ranged = true;
-            item.width = 20;
-            item.height = 10;
+            item.width = 58;
+            item.height = 24;
             item.useTime = 25;
             item.useAnimation = 5;
             item.useStyle = ItemUseStyleID.HoldingOut;

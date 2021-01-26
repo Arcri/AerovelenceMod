@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Tools
 		{
 			item.damage = 40;
 			item.melee = true;
-			item.width = 20;
-			item.height = 12;
+			item.width = 52;
+			item.height = 18;
 			item.useTime = 7;
 			item.useAnimation = 25;
 			item.channel = true;
@@ -41,8 +41,8 @@ namespace AerovelenceMod.Items.Tools
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 22;
-			projectile.height = 22;
+			projectile.width = 18;
+			projectile.height = 52;
 			projectile.aiStyle = 20;
 			projectile.friendly = true;
 			projectile.penetrate = -1;

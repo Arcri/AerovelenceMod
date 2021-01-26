@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 11;
             item.damage = 211;
             item.magic = true;
-            item.width = 60;
-            item.height = 32; 
+            item.width = 70;
+            item.height = 28; 
             item.useTime = 70;
             item.useAnimation = 70;
 			item.UseSound = SoundID.Item68;

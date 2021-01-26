@@ -19,8 +19,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 8;
             item.damage = 132;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 66;
+            item.height = 20;
             item.useTime = 31;
 			item.useAnimation = 31;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -29,8 +29,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 25, 0, 0);
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
-            item.shoot = mod.ProjectileType("MarkLaser");
+            item.shoot = ProjectileID.LaserMachinegunLaser;//mod.ProjectileType("MarkLaser");
             item.shootSpeed = 25f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-8, 0);
         }
     }
 }
@@ -42,7 +46,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             projectile.width = 6;
-            projectile.height = 46;
+            projectile.height = 10;
             projectile.friendly = true;
             projectile.penetrate = 1;
             projectile.hostile = false;
@@ -56,6 +60,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override void AI()
         {
+            Lighting.AddLight(projectile.Center, 0f, 0.25f, 1f);
+            Dust.NewDust(projectile.position + projectile.velocity, 0, 0, 229, 0, 0);
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)

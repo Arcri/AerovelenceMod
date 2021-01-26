@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Tools
 
 		public override void SetDefaults()
 		{
-			item.width = 20;
-			item.height = 20;
+			item.width = 28;
+			item.height = 50;
 			item.useAnimation = 30;
 			item.useTime = 30;
 			item.useStyle = ItemUseStyleID.HoldingUp;

@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.crit = 11;
             item.damage = 57;
             item.ranged = true;
-            item.width = 28;
-            item.height = 30;
+            item.width = 20;
+            item.height = 22;
             item.useTime = 30;
             item.useAnimation = 30;
             item.noUseGraphic = true;

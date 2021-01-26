@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Weapons.ProjectileItem
         {
             item.damage = 6;
             item.ranged = true;
-            item.width = 12;
-            item.height = 12;
+            item.width = 18;
+            item.height = 38;
             item.knockBack = 4;
             item.rare = ItemRarityID.Pink;
 			item.maxStack = 999;

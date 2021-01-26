@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Others.Crafting
         public override void SetDefaults()
         {
 			item.maxStack = 999;
-            item.width = 18;
-            item.height = 18;
+            item.width = 16;
+            item.height = 22;
             item.value = 10;
             item.rare = ItemRarityID.Green;
         }

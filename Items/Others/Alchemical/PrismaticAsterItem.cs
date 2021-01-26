@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Others.Alchemical
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 22;
+            item.width = 20;
+            item.height = 34;
             item.value = 1000;
             item.rare = ItemRarityID.Orange;
 

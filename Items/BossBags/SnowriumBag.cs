@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.BossBags
 		{
 			item.maxStack = 999;
 			item.consumable = true;
-			item.width = 24;
-			item.height = 24;
+			item.width = 42;
+			item.height = 32;
 			item.rare = ItemRarityID.Purple;
 			item.expert = true;
 		}

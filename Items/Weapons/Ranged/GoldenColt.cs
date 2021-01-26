@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,8 +17,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 6;
             item.damage = 16;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32; 
+            item.width = 40;
+            item.height = 18; 
             item.useTime = 26;
             item.useAnimation = 26;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -29,6 +30,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shoot = AmmoID.Bullet;
 			item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 24f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-2, 0);
         }
         public override void AddRecipes()
         {

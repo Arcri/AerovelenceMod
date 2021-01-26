@@ -19,8 +19,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			item.crit = 8;
             item.damage = 32;
             item.melee = true;
-            item.width = 72;
-            item.height = 74;
+            item.width = 64;
+            item.height = 64;
             item.useTime = 17;
 			item.useAnimation = 17;
             item.useStyle = ItemUseStyleID.SwingThrow;

@@ -21,22 +21,22 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine //Change me
         }
         public override void SetDefaults()
         {
-            npc.lifeMax = 37000; //Change me
+            npc.lifeMax = 37000;
             npc.damage = 145;
-            npc.defense = 15; //Change me
+            npc.defense = 15;
             npc.knockBackResist = 0f;
-            npc.width = 42; //Change me
-            npc.height = 42; //Change me
+            npc.width = 42;
+            npc.height = 42;
             npc.aiStyle = -1;
             npc.noGravity = true;
             npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit4; //Change me if you want (Rock hit sound)
-            npc.DeathSound = SoundID.NPCDeath20; //Change me if you want (Heavy grunt sound)
-            npc.value = Item.buyPrice(0, 0, 0, 0); //Change me
+            npc.HitSound = SoundID.NPCHit4;
+            npc.DeathSound = SoundID.NPCDeath20;
+            npc.value = Item.buyPrice(0, 0, 0, 0);
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 49000; //Change me
+            npc.lifeMax = 49000;
             npc.damage = 200;
         }
         public override void AI()
@@ -266,7 +266,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine //Change me
         {
             return false;
         }
-        public override void PostDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             int index = NPC.FindFirstNPC(mod.NPCType("CursedMachine"));
             if (index != -1)
@@ -274,30 +274,30 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine //Change me
                 if (Main.npc[index].life >= (int)(Main.npc[index].lifeMax * 0.4f))
                 {
                     int i = npc.whoAmI;
-                    Vector2 vector2 = new Vector2(Main.npc[i].position.X + (float)(Main.npc[i].width / 2), Main.npc[i].position.Y + (float)(Main.npc[i].height / 2));
+                    Vector2 vector2 = new Vector2(Main.npc[i].position.X + Main.npc[i].width / 2, Main.npc[i].position.Y + Main.npc[i].height / 2);
                     float num6 = Main.npc[index].Center.X - vector2.X;
                     float num7 = Main.npc[index].Center.Y - vector2.Y;
-                    float rotation2 = (float)Math.Atan2((double)num7, (double)num6) - 1.57f;
+                    float rotation2 = (float)Math.Atan2(num7, num6) - 1.57f;
                     bool flag3 = true;
                     while (flag3)
                     {
                         int num8 = 16;
                         int num9 = 32;
-                        float num10 = (float)Math.Sqrt((double)(num6 * num6 + num7 * num7));
-                        if (num10 < (float)num9)
+                        float num10 = (float)Math.Sqrt(num6 * num6 + num7 * num7);
+                        if (num10 < num9)
                         {
                             num8 = (int)num10 - num9 + num8;
                             flag3 = false;
                         }
-                        num10 = (float)num8 / num10;
+                        num10 = num8 / num10;
                         num6 *= num10;
                         num7 *= num10;
                         vector2.X += num6;
                         vector2.Y += num7;
                         num6 = Main.npc[index].Center.X - vector2.X;
                         num7 = Main.npc[index].Center.Y - vector2.Y;
-                        Microsoft.Xna.Framework.Color color2 = Lighting.GetColor((int)vector2.X / 16, (int)(vector2.Y / 16f));
-                        Main.spriteBatch.Draw(mod.GetTexture("NPCs/Bosses/CursedMachine/CursedChain"), new Vector2(vector2.X - Main.screenPosition.X, vector2.Y - Main.screenPosition.Y), new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(0, 0, 30, num8)), color2, rotation2, new Vector2((float)30 * 0.5f, (float)26 * 0.5f), 1f, SpriteEffects.None, 0f);
+                        Color color2 = Lighting.GetColor((int)vector2.X / 16, (int)(vector2.Y / 16f));
+                        Main.spriteBatch.Draw(mod.GetTexture("NPCs/Bosses/CursedMachine/CursedChain"), new Vector2(vector2.X - Main.screenPosition.X, vector2.Y - Main.screenPosition.Y), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, 30, num8)), color2, rotation2, new Vector2(30 * 0.5f, 26 * 0.5f), 1f, SpriteEffects.None, 0f);
                     }
                 }
             }

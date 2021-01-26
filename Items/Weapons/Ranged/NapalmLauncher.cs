@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.crit = 11;
             item.damage = 125;
             item.ranged = true;
-            item.width = 124;
-            item.height = 88;
+            item.width = 92;
+            item.height = 30;
             item.useTime = 12;
             item.useAnimation = 12;
 			item.UseSound = SoundID.Item11;
@@ -32,6 +32,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAmmo = AmmoID.Gel; 
             item.shoot = ProjectileID.Flames;
             item.shootSpeed = 10f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-4, 0);
         }
 
         public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)

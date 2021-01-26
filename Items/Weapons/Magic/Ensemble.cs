@@ -19,8 +19,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.crit = 12;
             item.damage = 45;
             item.magic = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 46;
+            item.height = 46;
             item.useTime = 2;
 			item.useAnimation = 2;
             item.useStyle = ItemUseStyleID.HoldingOut;

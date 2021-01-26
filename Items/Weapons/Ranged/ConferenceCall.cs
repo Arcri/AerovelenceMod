@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.crit = 11;
             item.damage = 55;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 84;
+            item.height = 22;
             item.useTime = 34;
             item.useAnimation = 34;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -33,7 +33,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override Vector2? HoldoutOffset()
         {
-            return new Vector2(-6, 0);
+            return new Vector2(-8, 0);
         }
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {

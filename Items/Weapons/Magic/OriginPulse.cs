@@ -19,8 +19,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.crit = 8;
             item.damage = 49;
             item.ranged = true;
-            item.width = 60;
-            item.height = 32;
+            item.width = 36;
+            item.height = 42;
             item.useTime = 14;
 			item.useAnimation = 14;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -43,8 +43,8 @@ namespace AerovelenceMod.Items.Weapons.Magic
         int t;
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
+            projectile.width = 14;
+            projectile.height = 36;
             projectile.friendly = true;
             projectile.penetrate = 5;
             projectile.hostile = false;
