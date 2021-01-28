@@ -7,21 +7,16 @@ using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Dusts;
 
-namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jump code
+namespace AerovelenceMod.NPCs.Bosses.TheFallen
 {
     [AutoloadBossHead]
     public class TheFallenSpirit : ModNPC
     {
-        private Player player;
-        private float speed;
-        float LifePercentLeft;
         int t;
-        int i;
-        int FlyUpwardTime = 5;
-        int Time = 10;
-        int RotationTime = 10;
-        int TotalRotations = 5;
-        int Max = 10;
+        public override void SetStaticDefaults()
+        {
+            Main.npcFrameCount[npc.type] = 10;    //boss frame/animation 
+        }
 
         public override void SetDefaults()
         {
@@ -30,15 +25,15 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jum
             npc.damage = 12;
             npc.defense = 8;
             npc.knockBackResist = 0f;
-            npc.width = 122;
-            npc.height = 126;
+            npc.width = 386;
+            npc.height = 216;
             npc.value = Item.buyPrice(0, 5, 60, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
             npc.lavaImmune = true;
             npc.noGravity = true;
             npc.noTileCollide = false;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen");
             npc.HitSound = SoundID.NPCHit41;
             npc.DeathSound = SoundID.NPCDeath44;
         }
@@ -61,6 +56,74 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jum
             }
         }
 
+
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            Texture2D texture = mod.GetTexture("NPCs/Bosses/TheFallen/Glowmask");
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+
+            Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width * 0.5f, npc.height * 0.5f);
+            for (int k = 0; k < npc.oldPos.Length; k++)
+            {
+                Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
+                Color color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+            }
+            return true;
+        }
+        public override void FindFrame(int frameHeight)
+        {
+            npc.frameCounter++;
+            {
+                if (npc.frameCounter < 10)
+                {
+                    npc.frame.Y = 0 * frameHeight;
+                }
+                else if (npc.frameCounter < 15)
+                {
+                    npc.frame.Y = 1 * frameHeight;
+                }
+                else if (npc.frameCounter < 20)
+                {
+                    npc.frame.Y = 2 * frameHeight;
+                }
+                else if (npc.frameCounter < 25)
+                {
+                    npc.frame.Y = 3 * frameHeight;
+                }
+                else if (npc.frameCounter < 30)
+                {
+                    npc.frame.Y = 4 * frameHeight;
+                }
+                else if (npc.frameCounter < 35)
+                {
+                    npc.frame.Y = 5 * frameHeight;
+                }
+                else if (npc.frameCounter < 40)
+                {
+                    npc.frame.Y = 6 * frameHeight;
+                }
+                else if (npc.frameCounter < 45)
+                {
+                    npc.frame.Y = 7 * frameHeight;
+                }
+                else if (npc.frameCounter < 50)
+                {
+                    npc.frame.Y = 8 * frameHeight;
+                }
+                else if (npc.frameCounter < 55)
+                {
+                    npc.frame.Y = 9 * frameHeight;
+                }
+                else
+                {
+                    npc.frameCounter = 0;
+                }
+            }
+        }
 
 
         public override void AI()

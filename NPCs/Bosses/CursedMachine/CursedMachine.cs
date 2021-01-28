@@ -41,6 +41,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath1;
             npc.value = Item.buyPrice(3, 0, 0, 0);
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine");
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {

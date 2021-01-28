@@ -88,7 +88,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
         public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit)
         {
-            target.AddBuff(BuffID.Electrified, 2);
+            target.AddBuff(BuffID.Electrified, 500);
         }
 
         public override void AI()

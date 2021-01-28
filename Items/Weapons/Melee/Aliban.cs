@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -83,6 +84,25 @@ namespace AerovelenceMod.Items.Weapons.Melee
             }
             Main.PlaySound(SoundID.Item10);
             return true;
+        }
+        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Texture2D texture = mod.GetTexture("Items/Weapons/Melee/AlibanProj_Glow");
+            spriteBatch.Draw(
+                texture,
+                new Vector2
+                (
+                    projectile.Center.Y - Main.screenPosition.X,
+                    projectile.Center.X - Main.screenPosition.Y
+                ),
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                Color.White,
+                projectile.rotation,
+                texture.Size(),
+                projectile.scale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 }

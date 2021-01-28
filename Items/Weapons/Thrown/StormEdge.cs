@@ -1,5 +1,6 @@
 using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -90,5 +91,25 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 		}
-	}
+
+        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+			Texture2D texture = mod.GetTexture("Items/Weapons/Thrown/StormEdgeProjectile_GlowMask");
+			spriteBatch.Draw(
+				texture,
+				new Vector2
+				(
+					projectile.Center.Y - Main.screenPosition.X,
+					projectile.Center.X - Main.screenPosition.Y
+				),
+				new Rectangle(0, 0, texture.Width, texture.Height),
+				Color.White,
+				projectile.rotation,
+				texture.Size(),
+				projectile.scale,
+				SpriteEffects.None,
+				0f
+			);
+        }
+    }
 }

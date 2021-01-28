@@ -9,7 +9,9 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Entourage Crusher");
-		}
+            Tooltip.SetDefault("Hitting an enemy causes an energy sweep");
+            Tooltip.SetDefault("'Can clear a room in seconds'");
+        }
         public override void SetDefaults()
         {
 			item.value = Item.sellPrice(0, 25, 0, 0);

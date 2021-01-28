@@ -1,25 +1,49 @@
 //using AerovelenceMod.Systems;
+using AerovelenceMod.Items.BossSummons;
+using AerovelenceMod.Items.Weapons.Magic;
+using AerovelenceMod.Items.Weapons.Melee;
+using AerovelenceMod.Items.Weapons.Ranged;
+using AerovelenceMod.Items.Weapons.Thrown;
+using AerovelenceMod.World;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.World.Generation;
 
 namespace AerovelenceMod
 {
-    // Todo: Convert mod.XType to the new ModContent system
-    public class AeroMod : Mod
+	public class AeroMod : Mod
 	{
-		/*public static TextureManager Textures { get; private set; } = null;
+		// Todo: Convert mod.XType to the new ModContent system
 
-		public override void Load()
+
+		public override void PostSetupContent()
 		{
-			Textures = new TextureManager(this);
-			Textures.Load();
+			Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+			if (bossChecklist != null)
+			{
+
+				bossChecklist.Call("AddBossWithInfo", "Crystal Tumbler", 0.5f, (Func<bool>)(() => AeroWorld.downedCrystalTumbler), "Use a [i:" + ItemType("AncientGeode") + "] in the Crystal Caverns");
+				bossChecklist.Call("AddBossWithInfo", "Snowrium", 5.5f, (Func<bool>)(() => AeroWorld.downedSnowrium), "Use a [i:" + ItemType("GlowingSnow") + "] at night in the snow biome");
+				bossChecklist.Call("AddBossWithInfo", "Cyvercry", 9.5f, (Func<bool>)(() => AeroWorld.downedCyvercry), "Use a [i:" + ItemType("ObsidianEye") + "] at night");
+
+
+
+				bossChecklist.Call("AddToBossLoot", "AerovelenceMod", "Crystal Tumbler", new List<int> { ModContent.ItemType<DiamondDuster>(), ModContent.ItemType<DarkCrystalStaff>(), ModContent.ItemType<CavernMauler>(), ModContent.ItemType<CavernousImpaler>(), ModContent.ItemType<PrismThrasher>(), ModContent.ItemType<CrystallineQuadshot>(), ModContent.ItemType<PrismPiercer>(), ModContent.ItemType<PrismaticPulsar>() });
+				bossChecklist.Call("AddToBossSpawnItems", "AerovelenceMod", "Crystal Tumbler", new List<int> { ModContent.ItemType<AncientGeode>() });
+			}
 		}
 
-		public override void Unload()
-		{
-			Textures?.Unload();
-			Textures = null;
-		}*/
+
+
+
+
+
+
+
+
+
 
 		public override void Close()
 		{
@@ -49,6 +73,16 @@ namespace AerovelenceMod
 				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
 				priority = MusicPriority.BiomeMedium;
 			}
+		}
+		public static AeroMod Instance { get; private set; }
+		public override void Load()
+		{
+			Instance = this;
+		}
+
+		public override void Unload()
+		{
+			Instance = null;
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 0, 55, 0);
             item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+            item.autoReuse = false;
             item.shoot = AmmoID.Bullet;
 			item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 24f;

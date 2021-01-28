@@ -25,5 +25,14 @@ namespace AerovelenceMod.Items.Accessories
         {
 			player.lifeRegen =+ 1;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.FallenStar, 3);
+            recipe.AddIngredient(ItemID.Ruby, 10);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }

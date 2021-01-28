@@ -94,24 +94,25 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             }
         }
 
+
+
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             Texture2D texture = mod.GetTexture("NPCs/Bosses/Cyvercry/Glowmask");
-            Vector2 drawPos = npc.Center + new Vector2(0, npc.gfxOffY) - Main.screenPosition;
-            //keep an eye on the width and height when doing this. It matters
-            spriteBatch.Draw
-            (
-                texture,
-                drawPos,
-                new Rectangle(0, 0, texture.Width, texture.Height),
-                Color.White,
-                npc.rotation,
-                texture.Size() * 0.5f,
-                npc.scale,
-                npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, //adjust this according to the sprite
-                0f
-                );
-		}
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+
+            Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width * 0.5f, npc.height * 0.5f);
+            for (int k = 0; k < npc.oldPos.Length; k++)
+            {
+                Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
+                Color color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+            }
+            return true;
+        }
 
         public override void AI()
         {

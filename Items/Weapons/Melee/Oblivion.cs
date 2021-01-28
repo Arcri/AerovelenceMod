@@ -1,4 +1,5 @@
 using AerovelenceMod.Items.Others.Crafting;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -7,6 +8,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class Oblivion : ModItem
     {
+        public bool NPCHit;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Oblivion");
@@ -14,7 +16,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void SetDefaults()
         {
             item.crit = 6;
-            item.damage = 16;
+            item.damage = 57;
             item.melee = true;
             item.width = 60;
             item.height = 68;
@@ -22,10 +24,62 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useAnimation = 25;
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 0, 40, 0);
+            item.knockBack = 7;
+            item.shoot = ProjectileID.FlamingArrow;
+            item.shootSpeed = 60f;
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+            item.autoReuse = true;
+        }
+        public override bool UseItem(Player player)
+        {
+            player.direction = (Main.MouseWorld.X - player.Center.X > 0) ? 1 : -1;
+            return true;
+        }
+
+
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            type = ModContent.ProjectileType<OblivionsWrath>();
+            {
+                for (int i = -4; i < 4; i++)
+                {
+                    position = Main.MouseWorld + new Vector2(i * 20, -850);
+                    Vector2 velocity = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero).RotatedByRandom(0.05f) * item.shootSpeed;
+                    Projectile.NewProjectile(position, velocity, type, damage, knockBack, player.whoAmI);
+                }
+                return false;
+            }
+        }
+    }
+}
+
+namespace AerovelenceMod.Items.Weapons.Melee
+{
+    public class OblivionsWrath : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Oblivion's Wrath");
+        }
+        public override void SetDefaults()
+        {
+            projectile.width = 1;
+            projectile.height = 1;
+            drawOffsetX = -45;
+            drawOriginOffsetY = 0;
+            drawOriginOffsetX = 23;
+            projectile.aiStyle = -1;
+            projectile.friendly = true;
+            projectile.penetrate = 5;
+            projectile.melee = true;
+            projectile.tileCollide = true;
+        }
+
+        public override void AI()
+        {
+            projectile.rotation = projectile.velocity.ToRotation();
+                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 242);
         }
     }
 }

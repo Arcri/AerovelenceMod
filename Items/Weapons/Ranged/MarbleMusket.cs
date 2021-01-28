@@ -28,7 +28,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 0, 55, 40);
             item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+            item.autoReuse = false;
             item.shoot = ModContent.ProjectileType<MarbleBlast>();
             item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 24f;

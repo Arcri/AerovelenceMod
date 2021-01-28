@@ -31,12 +31,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.value = 10000;
 			item.rare = ItemRarityID.Blue;
 			item.autoReuse = true;
-			item.shoot = ProjectileID.Bullet;
+			item.UseSound = SoundID.Item31;
+			item.shoot = AmmoID.Bullet;
+			item.useAmmo = AmmoID.Bullet;
 			item.shootSpeed = 15f;
 		}
 		public override Vector2? HoldoutOffset()
 		{
-			return new Vector2(-14, 0);
+			return new Vector2(-16, 0);
 		}
 
 

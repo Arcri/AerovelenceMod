@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -56,6 +58,25 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             {
                 Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
             }
+        }
+        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Texture2D texture = mod.GetTexture("Items/Weapons/Thrown/CyverthrowProj_Glow");
+            spriteBatch.Draw(
+                texture,
+                new Vector2
+                (
+                    projectile.Center.Y - Main.screenPosition.X,
+                    projectile.Center.X - Main.screenPosition.Y
+                ),
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                Color.White,
+                projectile.rotation,
+                texture.Size(),
+                projectile.scale,
+                SpriteEffects.None,
+                0f
+            );
         }
 
     }

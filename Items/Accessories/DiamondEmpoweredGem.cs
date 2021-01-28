@@ -29,5 +29,14 @@ namespace AerovelenceMod.Items.Accessories
 			player.rangedDamage += 0.1f;
 			player.thrownDamage += 0.1f;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.FallenStar, 3);
+            recipe.AddIngredient(ItemID.Diamond, 10);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }
