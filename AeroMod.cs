@@ -7,7 +7,9 @@ using AerovelenceMod.Items.Weapons.Thrown;
 using AerovelenceMod.World;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
 
@@ -35,7 +37,20 @@ namespace AerovelenceMod
 			}
 		}
 
+		public override void Load()
+		{
+			Instance = this;
+			if (Main.netMode != NetmodeID.Server)
+			{
 
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
+			}
+		}
 
 
 
@@ -75,10 +90,6 @@ namespace AerovelenceMod
 			}
 		}
 		public static AeroMod Instance { get; private set; }
-		public override void Load()
-		{
-			Instance = this;
-		}
 
 		public override void Unload()
 		{

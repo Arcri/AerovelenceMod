@@ -89,6 +89,7 @@ namespace AerovelenceMod
 			downedCyvercry = flags[2];
 		}
 
+
 		public override void PreUpdate()
 		{
 			rotationTime += (float)Math.PI / 65;
