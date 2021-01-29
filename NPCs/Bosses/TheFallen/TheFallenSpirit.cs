@@ -21,9 +21,9 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen
         public override void SetDefaults()
         {
             npc.aiStyle = -1;
-            npc.lifeMax = 1600;
+            npc.lifeMax = 50000;
             npc.damage = 12;
-            npc.defense = 8;
+            npc.defense = 55;
             npc.knockBackResist = 0f;
             npc.width = 386;
             npc.height = 216;
@@ -40,8 +40,8 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 3200;  //boss life scale in expertmode
-            npc.damage = 20;  //boss damage increase in expermode
+            npc.lifeMax = 67500;  //boss life scale in expertmode
+            npc.damage = 88;  //boss damage increase in expermode
         }
 
 
