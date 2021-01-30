@@ -1,9 +1,16 @@
+using AerovelenceMod.Items.Armor.Vanity;
+using AerovelenceMod.Items.BossBags;
+using AerovelenceMod.Items.Placeable.Trophies;
+using AerovelenceMod.Items.Weapons.Magic;
+using AerovelenceMod.Items.Weapons.Melee;
+using AerovelenceMod.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
 {
@@ -50,6 +57,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             npc.boss = true;
             npc.noGravity = true;
             npc.noTileCollide = true;
+            bossBag = ModContent.ItemType<CyvercryBag>();
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath14;
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry");
@@ -92,6 +100,44 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     npc.frameCounter = 0;
                 }
             }
+        }
+        public override void NPCLoot()
+        {
+            if (Main.expertMode)
+            {
+                npc.DropBossBags();
+            }
+            if(!Main.expertMode)
+            {
+                if (Main.rand.NextBool(7))
+                {
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<CyvercryMask>());
+                }
+                if (Main.rand.NextBool(10))
+                {
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<CyvercryTrophy>());
+                }
+                if (Main.rand.NextBool(4) && !Main.expertMode)
+                {
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<CyverCannon>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<Cyverthrow>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<DarknessDischarge>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<Oblivion>());
+                }
+            }
+            if (!AeroWorld.downedCyvercry)
+            {
+                AeroWorld.downedCyvercry = true;
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    NetMessage.SendData(MessageID.WorldData);
+                }
+            }
+        }
+
+        public override void BossLoot(ref string name, ref int potionType)
+        {
+            potionType = ItemID.GreaterHealingPotion;
         }
 
 

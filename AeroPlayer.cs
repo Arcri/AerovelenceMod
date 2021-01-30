@@ -38,6 +38,7 @@ namespace AerovelenceMod
 		public bool FrostProjectile;
 		public bool FrostMinion;
 		public bool BurnshockArmorBonus;
+		public bool SpiritCultistBonus = false;
 
 		public bool NeutronMinion = false;
 		public bool StarDrone = false;
@@ -57,6 +58,7 @@ namespace AerovelenceMod
 
 			AdobeHelmet = false;
 			PhanticBonus = false;
+			SpiritCultistBonus = false;
 			FrostMelee = false;
 			FrostProjectile = false;
 			FrostMinion = false;
@@ -67,10 +69,17 @@ namespace AerovelenceMod
 			QueensStinger = false;
 		}
 
+        public override void PreUpdate()
+        {
+			SetResourceTexturesBasedOnModPowerups();
+			if (SpiritCultistBonus && player.velocity.X != 0)
+			{
+				Projectile.NewProjectile(player.position.X, player.position.Y, 0f, 0f, ProjectileType<SpiritTrail>(), 35, 0f, player.whoAmI);
+			}
+		}
 
 
-
-		public override void UpdateDead()
+        public override void UpdateDead()
 		{
 			SoulFire = false;
 			badHeal = false;
@@ -137,8 +146,21 @@ namespace AerovelenceMod
 				target.AddBuff(BuffID.Midas, 900, false);
 			}
 			if (FrostProjectile)
+			{
 				if (Main.rand.NextBool(2)) //  50% chance
+				{
 					target.AddBuff(BuffID.Frostburn, 120, false);
+				}
+			}
+		
+			if (SpiritCultistBonus && proj.magic && !target.boss)
+			{
+				if (target.FindBuffIndex(mod.BuffType("LiftedSpiritsDebuff")) < 1)
+				{
+					target.velocity.Y -= 20;
+				}
+				target.AddBuff(mod.BuffType("LiftedSpiritsDebuff"), 210, false);
+			}
 		}
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -181,9 +203,7 @@ namespace AerovelenceMod
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
 		}
 
-
-
-		public override void ResetEffects()
+        public override void ResetEffects()
 		{
 			AdobeHelmet = false;
 			FrostProjectile = false;
@@ -191,6 +211,7 @@ namespace AerovelenceMod
 			FrostMinion = false;
 			PhanticBonus = false;
 			BurnshockArmorBonus = false;
+			SpiritCultistBonus = false;
 			badHeal = false;
 			QueensStinger = false;
 			NeutronMinion = false;
@@ -317,11 +338,6 @@ namespace AerovelenceMod
 				KnowledgeFruit = bitsByte[1];
 				DevilsBounty = bitsByte[2];
 			}
-		}
-
-		public override void PreUpdate()
-		{
-			SetResourceTexturesBasedOnModPowerups();
 		}
 
 
