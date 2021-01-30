@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Weapons.Thrown
+namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class FrostHydrasThrow : ModItem
     {
@@ -35,7 +35,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
     }
 }
 
-namespace AerovelenceMod.Items.Weapons.Thrown
+namespace AerovelenceMod.Items.Weapons.Melee
 {
 
     public class FrostHydrasThrowProjectile : ModProjectile

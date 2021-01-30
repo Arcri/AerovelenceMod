@@ -7,26 +7,32 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Aerovelence.Items.Weapons.Magic
+namespace AerovelenceMod.Items.Weapons.Magic
 
-{
+{ 
 	public class DarknessDischarge : ModItem
 	{
-
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+			DisplayName.SetDefault("Darkness Discharge");
+			Tooltip.SetDefault("Casts discharge blades that fire towards your cursor");
+        }
+        public override void SetDefaults()
 		{
-			item.damage = 20;
+			item.damage = 50;
+			item.crit = 8;
 			item.magic = true;
 			item.mana = 12;
 			item.width = 36;
+			item.magic = true;
 			item.height = 38;
 			item.useTime = 25;
 			item.useAnimation = 25;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			item.useStyle = ItemUseStyleID.HoldingUp;
 			item.noMelee = true;
 			item.knockBack = 5;
 			item.value = 10000;
-			item.rare = ItemRarityID.Green;
+			item.rare = ItemRarityID.Lime;
 			item.UseSound = SoundID.Item20;
 			item.autoReuse = true;
 			item.shoot = ModContent.ProjectileType<DischargeBlade>();
@@ -66,9 +72,9 @@ namespace Aerovelence.Items.Weapons.Magic
 
 			if (Main.rand.NextFloat() < 0.8289474f)
 			{
-				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, 113, 0f, 0f, 0, new Color(255, 50, 0), 1.118421f);
+				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, 164, 0f, 0f, 0, new Color(155, 0, 124), 1.118421f);
 				Dust dust = Main.dust[dustIndex];
-				dust.shader = GameShaders.Armor.GetSecondaryShader(38, Main.LocalPlayer);
+				dust.shader = GameShaders.Armor.GetSecondaryShader(0, Main.LocalPlayer);
 				dust.noGravity = true;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
@@ -114,8 +120,8 @@ namespace Aerovelence.Items.Weapons.Magic
 
 			for (int i = 0; i < 10; i++)
 			{
-				int dustType = 220;
-				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, new Color(255, 0, 0));
+				int dustType = 164;
+				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, new Color(155, 0, 124));
 				Dust dust = Main.dust[dustIndex];
 				dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
 				dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;

@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Weapons.Thrown
+namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class Ornament : ModItem
     {
@@ -46,7 +46,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
     }
 }
 
-namespace AerovelenceMod.Items.Weapons.Thrown
+namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class OrnamentProjectileGreen : ModProjectile
     {
@@ -73,7 +73,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
     }
 }
 
-namespace AerovelenceMod.Items.Weapons.Thrown
+namespace AerovelenceMod.Items.Weapons.Melee
 {
     public class OrnamentProjectileRed : ModProjectile
     {
