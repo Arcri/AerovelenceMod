@@ -234,6 +234,16 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 nextAttack = -1;
                 runOncePhase2 = false;
             }
+            if(Main.dayTime)
+            {
+                npc.rotation = (npc.Center - player.Center).ToRotation();
+                npc.velocity.Y -= 0.09f;
+                if(npc.position.Y <= 16 * 35) //checking for top of the world practically
+                {
+                    npc.active = false;
+                }
+                return;
+            }
             if(ai5 > 30)
             {
                 npc.velocity *= 0.8f;
