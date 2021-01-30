@@ -70,6 +70,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             drawOffsetX = -45;
             projectile.alpha = 255;
             drawOriginOffsetY = 0;
+            projectile.damage = 65;
             drawOriginOffsetX = 23;
             projectile.aiStyle = -1;
             projectile.friendly = true;

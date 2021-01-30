@@ -14,41 +14,41 @@ namespace AerovelenceMod.Items.BossSummons
             DisplayName.SetDefault("Obsidian Eye");
             Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'");
         }
-        public override void SetDefaults()
-        {
-            item.width = 44;
-            item.height = 26;
-            item.value = 100;
-            item.rare = ItemRarityID.Blue;
-            item.useAnimation = 30;
-            item.useTime = 30;
-            item.maxStack = 999;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.consumable = true;
-        }
-        public override bool CanUseItem(Player player)
-        {
-            return !NPC.AnyNPCs(mod.NPCType("Cyvercry"));
-        }
-        public override bool UseItem(Player player)
-        {
-            if (player.ZoneSnow)
-            {
-                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Cyvercry"));
-            }
-            Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
-            return true;
-        }
+		public override void SetDefaults()
+		{
+			item.width = 20;
+			item.height = 20;
+			item.maxStack = 20;
+			item.rare = ItemRarityID.Cyan;
+			item.useAnimation = 45;
+			item.useTime = 45;
+			item.useStyle = ItemUseStyleID.HoldingUp;
+			item.UseSound = SoundID.Item44;
+			item.consumable = true;
+		}
 
-        public override void AddRecipes()
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HellstoneBar, 1);
-            recipe.AddIngredient(ItemID.SnowBlock, 25);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 3);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }
-    }
+		// We use the CanUseItem hook to prevent a player from using this item while the boss is present in the world.
+		public override bool CanUseItem(Player player)
+		{
+			// "player.ZoneUnderworldHeight" could also be written as "player.position.Y / 16f > Main.maxTilesY - 200"
+			return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<NPCs.Bosses.Cyvercry.Cyvercry>());
+		}
+
+		public override bool UseItem(Player player)
+		{
+			NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<NPCs.Bosses.Cyvercry.Cyvercry>());
+			Main.PlaySound(SoundID.Roar, player.position, 0);
+			return true;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.SoulofNight, 5);
+			recipe.AddIngredient(ItemID.HallowedBar, 5);
+			recipe.AddTile(TileID.MythrilAnvil);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+	}
 }

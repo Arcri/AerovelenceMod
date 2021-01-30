@@ -67,8 +67,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void AI()
 		{
 			Player player = Main.player[projectile.owner];
-			float num = (float)Math.PI / 2f;
-			Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
+            Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
 			{
 				projectile.ai[0] += 1f;
 				int num2 = 0;

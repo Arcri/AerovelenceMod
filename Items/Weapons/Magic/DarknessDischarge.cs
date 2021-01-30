@@ -26,7 +26,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.width = 36;
 			item.magic = true;
 			item.height = 38;
-			item.useTime = 25;
+			item.useTime = 17;
 			item.useAnimation = 25;
 			item.useStyle = ItemUseStyleID.HoldingUp;
 			item.noMelee = true;
