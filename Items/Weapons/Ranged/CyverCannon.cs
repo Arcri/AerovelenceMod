@@ -196,11 +196,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 	{
 		int t;
 		public int i;
+		public int counter = 0;
 		public override void SetDefaults()
 		{
 			projectile.width = 5;
 			projectile.height = 5;
 			projectile.friendly = true;
+			projectile.alpha = 255;
 			projectile.extraUpdates = 2;
 			projectile.scale = 1f;
 			projectile.timeLeft = 600;
@@ -215,11 +217,15 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			int num294 = Main.rand.Next(3, 7);
 			for (int num295 = 0; num295 < num294; num295++)
 			{
-				int num296 = Dust.NewDust(base.projectile.Center - projectile.velocity / 2f, 0, 0, 242, 0f, 0f, 100, default(Color), 2.1f);
-				Dust dust105 = Main.dust[num296];
-				Dust dust2 = dust105;
-				dust2.velocity *= 2f;
-				Main.dust[num296].noGravity = true;
+				counter++;
+				if (counter >= 17)
+				{
+					int num296 = Dust.NewDust(base.projectile.Center - projectile.velocity / 2f, 0, 0, 242, 0f, 0f, 100, default(Color), 2.1f);
+					Dust dust105 = Main.dust[num296];
+					Dust dust2 = dust105;
+					dust2.velocity *= 2f;
+					Main.dust[num296].noGravity = true;
+				}
 			}
 			if (projectile.ai[1] != 1f)
 			{
@@ -311,7 +317,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			if (projectile.alpha <= 30)
 			{
 				int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 242);
-				Main.dust[dust].velocity *= 1f;
+				Main.dust[dust].velocity *= 0.1f;
+				Main.dust[dust].noGravity = true;
 			}
 		}
 
