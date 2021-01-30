@@ -234,7 +234,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 nextAttack = -1;
                 runOncePhase2 = false;
             }
-            if(Main.dayTime)
+            if(Main.dayTime || player.dead)
             {
                 npc.rotation = (npc.Center - player.Center).ToRotation();
                 npc.velocity.Y -= 0.09f;
