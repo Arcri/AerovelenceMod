@@ -11,13 +11,11 @@ namespace AerovelenceMod.Items.Accessories
 	[AutoloadEquip(EquipType.Shield)]
 	public class EnergyShield : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("This is a modded accessory." +
 				"\nDouble tap in any cardinal direction to do a dash!");
 		}
-
 		public override void SetDefaults()
 		{
 			item.defense = 2;
@@ -30,7 +28,6 @@ namespace AerovelenceMod.Items.Accessories
 			item.rare = ItemRarityID.Blue;
 			item.value = Item.sellPrice(silver: 60);
 		}
-
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			EnergyShieldPlayer mp = player.GetModPlayer<EnergyShieldPlayer>();
@@ -40,75 +37,73 @@ namespace AerovelenceMod.Items.Accessories
 			Rectangle rectangle = new Rectangle((int)(player.position.X + player.velocity.X * 0.5 - 4.0), (int)(player.position.Y + player.velocity.Y * 0.5 - 4.0), player.width + 8, player.height + 8);
 			for (int i = 0; i < 200; i++)
 			{
-				if (!Main.npc[i].active || Main.npc[i].dontTakeDamage || Main.npc[i].friendly)
+				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && player.eocHit != i)
 				{
-					continue;
+					NPC nPC = Main.npc[i];
+					Rectangle rect = nPC.getRect();
+					if (rectangle.Intersects(rect) && (nPC.noTileCollide || player.CanHit(nPC)))
+					{
+						float num = 30f * player.meleeDamage;
+						float num2 = 9f;
+						bool crit = false;
+						if (player.kbGlove)
+						{
+							num2 *= 2f;
+						}
+						if (player.kbBuff)
+						{
+							num2 *= 1.5f;
+						}
+						if (Main.rand.Next(100) < player.meleeCrit)
+						{
+							crit = true;
+						}
+						int num3 = player.direction;
+						if (player.whoAmI == Main.myPlayer)
+						{
+							player.ApplyDamageToNPC(nPC, (int)num, num2, num3, crit);
+							nPC.AddBuff(BuffID.ShadowFlame, 360);
+						}
+						player.eocDash = 10;
+						player.dashDelay = 30;
+						player.velocity.X = -num3 * 9;
+						player.velocity.Y = -4f;
+						player.immune = true;
+						player.immuneNoBlink = true;
+						player.immuneTime = 4;
+						player.eocHit = i;
+					}
 				}
-				NPC nPC = Main.npc[i];
-				Rectangle rect = nPC.getRect();
-				if (rectangle.Intersects(rect) && (nPC.noTileCollide || player.CanHit(nPC)))
-				{
-					float num = 30f * player.meleeDamage;
-					float num2 = 9f;
-					bool crit = false;
-					if (player.kbGlove)
-					{
-						num2 *= 2f;
-					}
-					if (player.kbBuff)
-					{
-						num2 *= 1.5f;
-					}
-					if (Main.rand.Next(100) < player.meleeCrit)
-					{
-						crit = true;
-					}
-					int num3 = player.direction;
-					if (player.whoAmI == Main.myPlayer)
-					{
-						player.ApplyDamageToNPC(nPC, (int)num, num2, num3, crit);
-					}
-					player.eocDash = 10;
-					player.dashDelay = 30;
-					player.velocity.X = -num3 * 9;
-					player.velocity.Y = -4f;
-					player.immune = true;
-					player.immuneNoBlink = true;
-					player.immuneTime = 4;
-					player.eocHit = i;
-				}
-
-				else if ((!player.controlLeft || !(player.velocity.X < 0f)) && (!player.controlRight || !(player.velocity.X > 0f)))
-				{
-					player.velocity.X *= 0.95f;
-				}
-				
-				player.eocDash = mp.DashTimer;
-				player.armorEffectDrawShadowEOCShield = true;
-
-				if (mp.DashTimer == EnergyShieldPlayer.MAX_DASH_TIMER)
-				{
-					Vector2 newVelocity = player.velocity;
-
-					if ((mp.DashDir == EnergyShieldPlayer.DashUp && player.velocity.Y > -mp.DashVelocity) || (mp.DashDir == EnergyShieldPlayer.DashDown && player.velocity.Y < mp.DashVelocity))
-					{
-						float dashDirection = mp.DashDir == EnergyShieldPlayer.DashDown ? 1 : -1.3f;
-						newVelocity.Y = dashDirection * mp.DashVelocity;
-					}
-					else if ((mp.DashDir == EnergyShieldPlayer.DashLeft && player.velocity.X > -mp.DashVelocity) || (mp.DashDir == EnergyShieldPlayer.DashRight && player.velocity.X < mp.DashVelocity))
-					{
-						int dashDirection = mp.DashDir == EnergyShieldPlayer.DashRight ? 1 : -1;
-						newVelocity.X = dashDirection * mp.DashVelocity;
-					}
-
-					player.velocity = newVelocity;
-				}
-
-				
-
-
 			}
-			Dust.NewDust(player.position, player.width, player.height, 6, player.velocity.X * 0.2f, player.velocity.Y * 0.2f, 100, default, 1.9f);
+			player.eocDash = mp.DashTimer;
+			player.armorEffectDrawShadowEOCShield = true;
+			if (mp.DashTimer == EnergyShieldPlayer.MAX_DASH_TIMER) //activates at the start of the dash
+			{
+				Vector2 newVelocity = player.velocity;
+
+				if ((mp.DashDir == EnergyShieldPlayer.DashUp && player.velocity.Y > -mp.DashVelocity) || (mp.DashDir == EnergyShieldPlayer.DashDown && player.velocity.Y < mp.DashVelocity))
+				{
+					float dashDirection = mp.DashDir == EnergyShieldPlayer.DashDown ? 1f : -1.3f;
+					newVelocity.Y = dashDirection * mp.DashVelocity;
+				}
+				else if ((mp.DashDir == EnergyShieldPlayer.DashLeft && player.velocity.X > -mp.DashVelocity) || (mp.DashDir == EnergyShieldPlayer.DashRight && player.velocity.X < mp.DashVelocity))
+				{
+					float dashDirection = mp.DashDir == EnergyShieldPlayer.DashRight ? 1f : -1f;
+					newVelocity.X = dashDirection * mp.DashVelocity;
+				}
+				player.velocity = newVelocity;
+			}
+
+			Dust dust = Dust.NewDustDirect(player.position + new Vector2(0, 32), player.width, player.height - 32, DustID.Shadowflame, player.velocity.X * 0.2f, player.velocity.Y * 0.2f, 100, default, 1.9f);
+			dust.noGravity = true;
+			dust.velocity *= 0.4f;
+			dust.scale *= 1.2f;
+			if (mp.DashDir == EnergyShieldPlayer.DashUp || mp.DashDir == EnergyShieldPlayer.DashDown)
+				player.maxFallSpeed += 6;
+			if (mp.DashDir == EnergyShieldPlayer.DashUp) //make player fall faster after upwards dash to prevent infinite upwards dashes
+			{
+				player.gravity += 0.36f;
+			}
 			mp.DashTimer--;
 			mp.DashDelay--;
 			if (mp.DashDelay == 0)
@@ -116,6 +111,7 @@ namespace AerovelenceMod.Items.Accessories
 				mp.DashDelay = EnergyShieldPlayer.MAX_DASH_DELAY;
 				mp.DashTimer = EnergyShieldPlayer.MAX_DASH_TIMER;
 				mp.DashActive = false;
+				player.eocHit = -1;
 			}
 		}
 	}
@@ -134,17 +130,9 @@ namespace AerovelenceMod.Items.Accessories
 			public int DashDelay = MAX_DASH_DELAY;
 			public int DashTimer = MAX_DASH_TIMER;
 
-			public readonly float DashVelocity = 10f;
+			public readonly float DashVelocity = 14f;
 			public static readonly int MAX_DASH_DELAY = 50;
 			public static readonly int MAX_DASH_TIMER = 35;
-
-			public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
-			{
-				if (DashActive) target.AddBuff(BuffID.ShadowFlame, 180);
-			}
-
-
-
 			public override void ResetEffects()
 			{
 				bool dashAccessoryEquipped = false;

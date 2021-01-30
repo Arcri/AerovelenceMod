@@ -156,18 +156,6 @@ namespace AerovelenceMod.Items
 					Item.NewItem(npc.getRect(), mod.ItemType("Stinger"));
 				}
 			}
-			if (npc.type == mod.NPCType("Cyvercry"))
-			{
-				int i = Main.rand.Next(2);
-				if (i == 0)
-				{
-					Item.NewItem(npc.getRect(), mod.ItemType("DarknessDischarge"));
-				}
-				else if (i == 1)
-				{
-					Item.NewItem(npc.getRect(), mod.ItemType("Cyverthrow"));
-				}
-			}
 		}
 	}
 }
