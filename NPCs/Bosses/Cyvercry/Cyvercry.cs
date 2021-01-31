@@ -30,9 +30,9 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         }
         public override void SetDefaults()
         {
-            npc.lifeMax = 46000;
-            npc.damage = 18;
-            npc.defense = 12;
+            npc.lifeMax = 37500;
+            npc.damage = 60;
+            npc.defense = 20;
             npc.knockBackResist = 0f;
             npc.width = 180;
             npc.height = 100;
@@ -47,9 +47,9 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 54000;
-            npc.damage = 22;
-            npc.defense = 18;
+            npc.lifeMax = 41500;
+            npc.damage = 85;
+            npc.defense = 20;
         }
         public override void FindFrame(int frameHeight)
         {
@@ -213,7 +213,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         float speed = 12;
         public override void AI()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
                 npc.netUpdate = true;
             Player player = Main.player[npc.target];
             npc.spriteDirection = -1;
@@ -329,7 +329,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.velocity += 0.4f * goTo * (speed + distance * 0.01f);
                 if(ai1 % 30 == 0 && ai1 >= -90 && ai1 <= 0)
                 {
-                    Main.PlaySound(2, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
+                    Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
                     FireLaser(ProjectileID.DeathLaser);
                 }
 
@@ -412,7 +412,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                         {
                             npc.Center = player.Center + new Vector2(1256, 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                             ai3++;
-                            Main.PlaySound(2, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
+                            Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
                             FireLaser(ModContent.ProjectileType<ShadowCyvercry>(), 20, 0, 0, !runOncePhase2 ? -1 : 0);
                         }
                     }
@@ -446,7 +446,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.velocity += toPlayer * 0.8f;
                 if (ai2 > 3)
                 {
-                    Main.PlaySound(2, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
+                    Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
                     FireLaser(ModContent.ProjectileType<LaserExplosionBall>(), 3f, 3f);
                     nextAttack = -1;
                     ai1 = 0;
@@ -496,7 +496,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.velocity += toPlayer * 0.8f;
                 if (ai2 > 3)
                 {
-                    Main.PlaySound(2, (int)npc.Center.X, (int)npc.Center.Y, 44, 1.25f);
+                    Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 44, 1.25f);
                     int type = DustID.Electric;
                     if (ai5 == 30)
                         type = 235;
@@ -513,7 +513,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     }
                     for(int i = 0; i < 2 + (Main.expertMode ? 1 : 0) + (!runOncePhase2 ? 1 : 0); i++)
                     {
-                        if(Main.netMode != 1)
+                        if(Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int num = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y + 20, ModContent.NPCType<CyverBot>(), 0, player.whoAmI, 0, !runOncePhase2 ? -1 : 0);
                             NPC bot = Main.npc[num];
@@ -571,7 +571,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     for (int i = 0; i < 3 + (Main.expertMode ? 1 : 0); i++)
                     {
                         Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(240, 600), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int damage = npc.damage / 2;
                             if (Main.expertMode)
@@ -614,7 +614,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             {
                 damage = (int)(damage / Main.expertDamage);
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
             }
@@ -639,7 +639,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             ai3 = 0;
             ai4 = 0;
             hasDoneDrop = true;
-            if(Main.netMode != 1)
+            if(Main.netMode != NetmodeID.MultiplayerClient)
                 npc.netUpdate = true;
         }
     }
@@ -656,6 +656,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.height = 48;
             projectile.timeLeft = 540;
             projectile.penetrate = -1;
+            projectile.damage = 120;
             projectile.friendly = false;
             projectile.hostile = true;
             projectile.tileCollide = true;
@@ -722,6 +723,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.timeLeft = 240;
             projectile.penetrate = -1;
             projectile.friendly = false;
+            projectile.damage = 80;
             projectile.hostile = true;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
@@ -764,6 +766,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.penetrate = -1;
             projectile.friendly = false;
             projectile.hostile = true;
+            projectile.damage = 54;
             projectile.tileCollide = true;
             projectile.ignoreWater = true;
             //projectile.netImportant = true;
@@ -785,8 +788,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         }
         public override void Kill(int timeLeft)
         {
-            Main.PlaySound(2, (int)projectile.Center.X, (int)projectile.Center.Y, 12, 1f);
-            if (Main.netMode != 1)
+            Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 12, 1f);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < 360; i += 20)
                 {
@@ -811,6 +814,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.penetrate = -1;
             projectile.friendly = false;
             projectile.hostile = false;
+            projectile.damage = 56;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             //projectile.netImportant = true;
@@ -829,7 +833,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.rotation = MathHelper.ToRadians(90) + projectile.velocity.ToRotation();
             if (projectile.timeLeft == 420)
             {
-                Main.PlaySound(2, (int)projectile.Center.X, (int)projectile.Center.Y, 71, 0.75f);
+                Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 71, 0.75f);
                 for (int i = 0; i < 360; i += 5)
                 {
                     Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
