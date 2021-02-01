@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -32,6 +33,22 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.shoot = item.shoot = mod.ProjectileType("ElementScythe");
             item.shootSpeed = 5f;
             item.autoReuse = false;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 15);
+            recipe.AddIngredient(ItemID.HellstoneBar, 15);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 5);
+            recipe.AddIngredient(ItemID.Fireblossom, 10);
+            recipe.AddIngredient(ItemID.Daybloom, 10);
+            recipe.AddIngredient(ItemID.Waterleaf, 10);
+            recipe.AddIngredient(ItemID.Moonglow, 10);
+            recipe.AddIngredient(ItemID.Shiverthorn, 10);
+            recipe.AddIngredient(ItemID.Deathweed, 10);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

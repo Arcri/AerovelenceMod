@@ -72,7 +72,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 			delayBetween = 45;
 			for(int i = 0; i < 3; i++)
             {
-				if(Main.netMode != 1)
+				if(Main.netMode != NetmodeID.MultiplayerClient)
 				{
 					int damage2 = npc.damage / 2;
 					if (Main.expertMode)
@@ -108,7 +108,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 						dust2.noGravity = true;
 					}
 				}
-				if(ai >= immuneTimeLength + 20)
+				if(ai >= -immuneTimeLength + 20)
 				{
 					defending = true;
 				}
@@ -203,9 +203,9 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 			}
 			base.FindFrame(frameHeight);
         }
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .1f : 0f;
-        }
-    }
+		public override float SpawnChance(NPCSpawnInfo spawnInfo)
+		{
+			return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .2f : 0f;
+		}
+	}
 }

@@ -19,11 +19,11 @@ namespace AerovelenceMod.World
 
 		////////////////
 
-		public WormGenPass() : base( "Generating Snaking Caves", 1f ) { }
+		public WormGenPass() : base( "Generating Crystal Caverns", 1f ) { }
 
 
 		public override void Apply( GenerationProgress progress ) {
-			progress.Message = "Generating Snaking Caves";   //Lang.gen[76].Value+"..Thin Ice"
+			progress.Message = "Generating Crystal Caverns";   //Lang.gen[76].Value+"..Thin Ice"
 
 			int pad = WormGenPass.PaddingDistance;
 			int tileX = WorldGen.genRand.Next( pad, Main.maxTilesX - pad );

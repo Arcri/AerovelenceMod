@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Projectiles
+namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
 	public class TumblerHomingShard : ModProjectile
 	{

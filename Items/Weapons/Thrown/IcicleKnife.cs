@@ -1,3 +1,5 @@
+using AerovelenceMod.Items.Others.Crafting;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -15,8 +17,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         public override void SetDefaults()
         {
 			item.UseSound = SoundID.Item1;
-			item.crit = 8;
-            item.damage = 12;
+			item.crit = 5;
+            item.damage = 16;
             item.melee = true;
             item.width = 60;
             item.height = 32;
@@ -24,6 +26,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			item.useAnimation = 17;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true;
+            item.consumable = true;
+            item.maxStack = 999;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Pink;
@@ -35,11 +39,10 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 		public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 10);
-			recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddRecipeGroup("IronBar", 3);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 5);
+            recipe.AddRecipeGroup("IronBar", 1);
             recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
+            recipe.SetResult(this, 50);
             recipe.AddRecipe();
         }
     }
@@ -63,6 +66,15 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.tileCollide = true;
             projectile.ignoreWater = true;
             projectile.aiStyle = 2;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            for (int k = 0; k < 5; k++)
+            {
+                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 67, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+            }
+            Main.PlaySound(SoundID.Item10);
+            return true;
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {

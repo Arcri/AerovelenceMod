@@ -35,6 +35,17 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             return false;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
+            modRecipe.AddIngredient(ItemID.Diamond, 5);
+            modRecipe.AddIngredient(ItemID.IllegalGunParts, 1);
+            modRecipe.AddIngredient(ItemID.FlintlockPistol, 1);
+            modRecipe.AddTile(TileID.Hellforge);
+            modRecipe.SetResult(this);
+            modRecipe.AddRecipe();
+        }
 
         public override Vector2? HoldoutOffset()
         {

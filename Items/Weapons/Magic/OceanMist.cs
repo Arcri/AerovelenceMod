@@ -10,18 +10,18 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Ocean Mist");
-            Tooltip.SetDefault("Rains down harmful ocean mist");
+            Tooltip.SetDefault("Shoots a jet of Water");
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 15;
+            item.crit = 2;
+            item.damage = 12;
             item.magic = true;
-            item.mana = 7;
+            item.mana = 5;
             item.width = 40;
             item.height = 38;
-            item.useTime = 17;
-            item.useAnimation = 17;
+            item.useTime = 18;
+            item.useAnimation = 18;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -31,6 +31,16 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.autoReuse = true;
             item.shoot = ProjectileID.WaterStream;
             item.shootSpeed = 13f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.Seashell, 3);
+            recipe.AddIngredient(ItemID.Starfish, 5);
+            recipe.AddRecipeGroup("IronBar", 5);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

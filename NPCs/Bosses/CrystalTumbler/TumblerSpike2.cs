@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using AerovelenceMod.Dusts;
 
-namespace AerovelenceMod.Projectiles
+namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
 	public class TumblerSpike2 : ModProjectile
 	{

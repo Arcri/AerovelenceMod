@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
 
@@ -26,15 +27,25 @@ namespace AerovelenceMod
 			if (bossChecklist != null)
 			{
 
-				bossChecklist.Call("AddBossWithInfo", "Crystal Tumbler", 0.5f, (Func<bool>)(() => AeroWorld.downedCrystalTumbler), "Use a [i:" + ItemType("AncientGeode") + "] in the Crystal Caverns");
+				bossChecklist.Call("AddBossWithInfo", "Crystal Tumbler", 0.5f, (Func<bool>)(() => AeroWorld.downedCrystalTumbler), "Use a [i:" + ItemType("LargeGeode") + "] in the Crystal Caverns");
 				bossChecklist.Call("AddBossWithInfo", "Snowrium", 5.5f, (Func<bool>)(() => AeroWorld.downedSnowrium), "Use a [i:" + ItemType("GlowingSnow") + "] at night in the snow biome");
 				bossChecklist.Call("AddBossWithInfo", "Cyvercry", 9.5f, (Func<bool>)(() => AeroWorld.downedCyvercry), "Use a [i:" + ItemType("ObsidianEye") + "] at night");
 
 
 
 				bossChecklist.Call("AddToBossLoot", "AerovelenceMod", "Crystal Tumbler", new List<int> { ModContent.ItemType<DiamondDuster>(), ModContent.ItemType<DarkCrystalStaff>(), ModContent.ItemType<CavernMauler>(), ModContent.ItemType<CavernousImpaler>(), ModContent.ItemType<PrismThrasher>(), ModContent.ItemType<CrystallineQuadshot>(), ModContent.ItemType<PrismPiercer>(), ModContent.ItemType<PrismaticPulsar>() });
-				bossChecklist.Call("AddToBossSpawnItems", "AerovelenceMod", "Crystal Tumbler", new List<int> { ModContent.ItemType<AncientGeode>() });
+				bossChecklist.Call("AddToBossSpawnItems", "AerovelenceMod", "Crystal Tumbler", new List<int> { ModContent.ItemType<LargeGeode>() });
 			}
+		}
+
+		public override void AddRecipeGroups()
+		{
+			RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
+			{
+		ItemID.SilverBar,
+		ItemID.TungstenBar
+			});
+			RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
 		}
 
 		public override void Load()

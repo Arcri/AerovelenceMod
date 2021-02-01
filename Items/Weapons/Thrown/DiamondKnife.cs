@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -62,6 +63,15 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.tileCollide = true;
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            for (int k = 0; k < 5; k++)
+            {
+                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 132, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+            }
+            Main.PlaySound(SoundID.Item10);
+            return true;
         }
         public override void AI()
         {

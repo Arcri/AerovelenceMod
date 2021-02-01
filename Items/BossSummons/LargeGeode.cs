@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -11,11 +13,11 @@ using Terraria.Utilities;
 
 namespace AerovelenceMod.Items.BossSummons
 {
-    public class AncientGeode : ModItem
+    public class LargeGeode : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Ancient Geode");
+			DisplayName.SetDefault("Large Geode");
 			Tooltip.SetDefault("Summons the Crystal Tumbler");
 		}
         public override void SetDefaults()
@@ -41,6 +43,16 @@ namespace AerovelenceMod.Items.BossSummons
             }
             Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
             return true;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("IronBar", 1);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 15);
+            recipe.AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

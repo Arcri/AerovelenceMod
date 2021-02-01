@@ -25,56 +25,63 @@ namespace AerovelenceMod.Items
 			}
 			if (npc.type == NPCID.SkeletronPrime)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("LazX"));
 				}
 			}
 			if (npc.type == NPCID.PrimeLaser)
 			{
-				if (Main.rand.Next(201) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("LazX"));
 				}
 			}
 			if (npc.type == NPCID.Retinazer)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("ClockworkLazinator"));
 				}
 			}
 			if (npc.type == NPCID.Plantera)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("CrystalGlade"));
 				}
 			}
 			if (npc.type == NPCID.EyeofCthulhu)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("CthulhusWrath"));
 				}
 			}
 			if (npc.type == NPCID.KingSlime)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("SlimyKnife"));
 				}
 			}
+			if (npc.type == NPCID.QueenBee)
+			{
+				if (Main.rand.Next(51) == 0)
+				{
+					Item.NewItem(npc.getRect(), mod.ItemType("BookOfBees"));
+				}
+			}
 			if (npc.type == NPCID.SkeletronHead)
 			{
-				if (Main.rand.Next(101) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("SkullBow"));
 				}
 			}
 			if (npc.type == NPCID.Golem)
 			{
-				if (Main.rand.Next(151) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("NapalmLauncher"));
 				}
@@ -100,6 +107,17 @@ namespace AerovelenceMod.Items
 					Item.NewItem(npc.getRect(), mod.ItemType("FAMASTER"));
 				}
 			}
+
+
+			if (npc.type == NPCID.IceSlime || npc.type == NPCID.SpikedIceSlime || npc.type == NPCID.IceBat || npc.type == NPCID.UndeadViking || npc.type == NPCID.CyanBeetle)
+			{
+				if (Main.rand.Next(16) == 0)
+				{
+					Item.NewItem(npc.getRect(), mod.ItemType("FrostShard"));
+				}
+			}
+
+
 			if (npc.type == NPCID.WalkingAntlion)
 			{
 				if (Main.rand.Next(26) == 0)
@@ -116,7 +134,7 @@ namespace AerovelenceMod.Items
 			}
 			if (npc.type == NPCID.Poltergeist)
 			{
-				if (Main.rand.Next(201) == 0)
+				if (Main.rand.Next(51) == 0)
 				{
 					Item.NewItem(npc.getRect(), mod.ItemType("Miasmi"));
 				}

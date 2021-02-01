@@ -33,8 +33,8 @@ namespace AerovelenceMod.Items.Others.Crafting
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<AdobeOreItem>(), 5);
-			recipe.AddIngredient(ItemID.PlatinumBar, 1);
-            recipe.AddTile(TileID.Furnaces);
+			recipe.AddRecipeGroup("AerovelenceMod:SilverBars", 1);
+			recipe.AddTile(TileID.Furnaces);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

@@ -2,6 +2,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
+using AerovelenceMod.Items.Others.Crafting;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {
@@ -11,12 +13,12 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Electro-bolt");
-            Tooltip.SetDefault("Shoots a bolt of electrically charged water\nGets faster every time it hits a block");
+            Tooltip.SetDefault("Shoots a bolt of electricity\nGets faster every time it hits a block");
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 35;
+            item.crit = 4;
+            item.damage = 26;
             item.magic = true;
             item.mana = 12;
             item.width = 38;
@@ -32,6 +34,19 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<ElectricitySpark>();
             item.shootSpeed = 5f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.CopperBar, 3);
+            recipe.AddIngredient(ItemID.HellstoneBar, 3);
+            recipe.AddIngredient(ItemID.Obsidian, 10);
+            recipe.AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 15);
+            recipe.AddRecipeGroup("IronBar", 5);
+            recipe.AddTile(TileID.Bookcases);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }
