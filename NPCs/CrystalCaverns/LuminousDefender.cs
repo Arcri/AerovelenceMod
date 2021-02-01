@@ -1,4 +1,8 @@
+using AerovelenceMod.Dusts;
+using AerovelenceMod.Projectiles;
+using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,7 +15,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Luminous Defender");
-			Main.npcFrameCount[npc.type] = 20;
+			Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.GraniteGolem];
 		}
         public override void SetDefaults()
         {
@@ -28,107 +32,177 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.value = Item.buyPrice(0, 0, 4, 0);
             npc.buffImmune[20] = true;
             npc.buffImmune[24] = true;
+			animationType = 0;
         }
-
-        public override void AI()
+        public override void SendExtraAI(BinaryWriter writer)
         {
-			int num = 200;
+			writer.Write(ai);
+			writer.Write(defending);
+        }
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+			ai = reader.ReadSingle();
+			defending = reader.ReadBoolean();
+        }
+        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        {
+			if(defending)
 			{
-				int num8 = 300;
-				int num9 = 120;
-				npc.dontTakeDamage = false;
-				if (npc.ai[2] < 0f)
-				{
-					npc.dontTakeDamage = true;
-					npc.ai[2] += 1f;
-                    npc.velocity.X *= 0.9f;
-					if (Math.Abs(npc.velocity.X) < 0.001)
-					{
-                        npc.velocity.X = 0.001f * npc.direction;
-					}
-					if (Math.Abs(npc.velocity.Y) > 1f)
-					{
-						npc.ai[2] += 10f;
-					}
-					if (npc.ai[2] >= 0f)
-					{
-						npc.netUpdate = true;
-                        npc.velocity.X += npc.direction * 0.3f;
-					}
-					return;
-				}
-				if (npc.ai[2] < num8)
-				{
-					if (npc.justHit)
-					{
-						npc.ai[2] += 15f;
-					}
-					npc.ai[2] += 1f;
-				}
-				else if (npc.velocity.Y == 0f)
-				{
-					npc.ai[2] = -num9;
-					npc.netUpdate = true;
-				}
+				if (delayBetween <= 0)
+					FireShards(player.whoAmI);
+				damage -= 20;
+				if (damage < 2)
+					damage = 1;
+			};
+        }
+        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			if (defending)
+			{
+				if(delayBetween <= 0)
+					FireShards(projectile.owner);
+				damage -= 20;
+				if (damage < 2)
+					damage = 1;
 			}
-			{
-				if (npc.velocity.Y == 0f)
+        }
+		public void FireShards(int player)
+        {
+			Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 101, 1.1f);
+			delayBetween = 45;
+			for(int i = 0; i < 3; i++)
+            {
+				if(Main.netMode != 1)
 				{
-					if (npc.direction == 1)
+					int damage2 = npc.damage / 2;
+					if (Main.expertMode)
 					{
-						npc.spriteDirection = 1;
+						damage2 = (int)(damage2 / Main.expertDamage);
 					}
-					if (npc.direction == -1)
+					Projectile.NewProjectile(new Vector2(npc.Center.X, npc.position.Y), new Vector2(0, -Main.rand.NextFloat(5, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-10, 10) + (-20 + 20 * i))), ModContent.ProjectileType<LuminousShard>(), damage2, 3, Main.myPlayer, player);
+                }
+            }
+        }
+		bool defending = false;
+        float ai = 0;
+		float delayBetween = 0;
+        public override bool PreAI()
+        {
+			npc.TargetClosest(true);
+			int untilImmune = 300;
+			int immuneTimeLength = 120;
+			defending = false; 
+			if(delayBetween > 0)
+				delayBetween--;
+			if (ai < 0f)
+			{
+				if(ai == -immuneTimeLength)
+                {
+					for (int i = 0; i < 360; i += 12)
 					{
-						npc.spriteDirection = -1;
+						Vector2 circular = new Vector2(96, 0).RotatedBy(MathHelper.ToRadians(i));
+						Dust dust2 = Dust.NewDustDirect(npc.Center - new Vector2(5) + circular, 0, 0, ModContent.DustType<WispDust>(), 0, 0, npc.alpha);
+						dust2.velocity *= 0.15f;
+						dust2.velocity += -circular * 0.08f;
+						dust2.scale = 2.25f;
+						dust2.noGravity = true;
 					}
-					if (npc.ai[2] < 0f)
+				}
+				if(ai >= immuneTimeLength + 20)
+				{
+					defending = true;
+				}
+				ai += 1f;
+                npc.velocity.X *= 0.9f;
+				if (Math.Abs(npc.velocity.X) < 0.001)
+				{
+                    npc.velocity.X = 0.001f * npc.direction;
+				}
+				if (Math.Abs(npc.velocity.Y) > 1f)
+				{
+					ai += 10f;
+				}
+				if (ai >= 0f)
+				{
+					npc.netUpdate = true;
+                    npc.velocity.X += npc.direction * 0.3f;
+				}
+				return false;
+			}
+			if (ai < untilImmune)
+			{
+				if (npc.justHit)
+				{
+					ai += 15f; //increase immune timer by 15 when hit
+				}
+				ai += 1f; //increases immune timer rapidly, 60 / second
+			}
+			else if (Math.Abs(npc.velocity.Y) <= 0.1f)
+			{
+				ai = -immuneTimeLength;
+				npc.netUpdate = true;
+			}
+			return true;
+		}
+        public override void FindFrame(int frameHeight)
+        {
+			if (npc.velocity.Y == 0f)
+			{
+				if (npc.direction == 1)
+				{
+					npc.spriteDirection = 1;
+				}
+				if (npc.direction == -1)
+				{
+					npc.spriteDirection = -1;
+				}
+				if (ai < 0f)
+				{
+					npc.frameCounter += 1.0;
+					if (npc.frameCounter > 3.0)
 					{
-						npc.frameCounter += 1.0;
-						if (npc.frameCounter > 3.0)
-						{
-							npc.frame.Y += num;
-							npc.frameCounter = 0.0;
-						}
-						if (npc.frame.Y >= Main.npcFrameCount[npc.type] * num)
-						{
-							npc.frame.Y = num * 11;
-						}
-						else if (npc.frame.Y < num * 11)
-						{
-							npc.frame.Y = num * 11;
-						}
+						npc.frame.Y += frameHeight;
+						npc.frameCounter = 0.0;
 					}
-					else if (npc.velocity.X == 0f)
+					if (npc.frame.Y >= Main.npcFrameCount[npc.type] * frameHeight)
 					{
-						npc.frameCounter += 1.0;
-						npc.frame.Y = 0;
+						npc.frame.Y = frameHeight * 11;
 					}
-					else
+					else if (npc.frame.Y < frameHeight * 11)
 					{
-						npc.frameCounter += 0.2f + Math.Abs(npc.velocity.X);
-						if (npc.frameCounter > 8.0)
-						{
-							npc.frame.Y += num;
-							npc.frameCounter = 0.0;
-						}
-						if (npc.frame.Y / num >= Main.npcFrameCount[npc.type] - 10)
-						{
-							npc.frame.Y = num * 2;
-						}
-						else if (npc.frame.Y / num < 2)
-						{
-							npc.frame.Y = num * 2;
-						}
+						npc.frame.Y = frameHeight * 11;
 					}
+				}
+				else if (npc.velocity.X == 0f)
+				{
+					npc.frameCounter += 1.0;
+					npc.frame.Y = 0;
 				}
 				else
 				{
-					npc.frameCounter = 0.0;
-					npc.frame.Y = num;
+					npc.frameCounter += 0.2f + Math.Abs(npc.velocity.X);
+					if (npc.frameCounter > 8.0)
+					{
+						npc.frame.Y += frameHeight;
+						npc.frameCounter = 0.0;
+					}
+					if (npc.frame.Y / frameHeight >= Main.npcFrameCount[npc.type] - 10)
+					{
+						npc.frame.Y = frameHeight * 2;
+					}
+					else if (npc.frame.Y / frameHeight < 2)
+					{
+						npc.frame.Y = frameHeight * 2;
+					}
 				}
 			}
-		}
+			else
+			{
+				npc.frameCounter = 0.0;
+				npc.frame.Y = frameHeight;
+			}
+			base.FindFrame(frameHeight);
+        }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .1f : 0f;

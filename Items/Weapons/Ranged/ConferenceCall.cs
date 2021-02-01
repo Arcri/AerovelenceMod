@@ -12,7 +12,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             DisplayName.SetDefault("Conference Call");
             Tooltip.SetDefault("Let's just ping everyone all at once");
         }
-
         public override void SetDefaults()
         {
             item.crit = 11;
@@ -28,8 +27,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 15, 50, 20);
             item.rare = ItemRarityID.Lime;
             item.autoReuse = true;
+            item.UseSound = SoundID.Item36;
             item.shoot = mod.ProjectileType("ShatteredSoul");
-            item.shootSpeed = 32f;
+            item.shootSpeed = 10f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -54,7 +54,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             Vector2[] speeds = randomSpread(speedX, speedY, 10, 10);
             for (int i = 0; i < 10; ++i)
             {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(position.X, position.Y, speeds[i].X * Main.rand.NextFloat(0.9f, 1.1f), speeds[i].Y * Main.rand.NextFloat(0.9f, 1.1f), type, damage, knockBack, player.whoAmI);
             }
             return false;
         }

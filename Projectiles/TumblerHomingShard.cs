@@ -47,11 +47,10 @@ namespace AerovelenceMod.Projectiles
 			Vector2 move = Vector2.Zero;
 			float distance = 400f;
 			bool target = false;
-			for (int k = 0; k < 200; k++)
+			for (int k = 0; k < Main.player.Length; k++)
 			{
-
-					Vector2 newMove = Main.player[k].Center - projectile.Center;
-					float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
+				Vector2 newMove = Main.player[k].Center - projectile.Center;
+				float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
 				if (distanceTo < distance)
 				{
 					move = newMove;

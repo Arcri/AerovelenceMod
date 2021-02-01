@@ -817,13 +817,13 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             projectile.damage = 56;
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
+            projectile.extraUpdates = 1;
             //projectile.netImportant = true;
         }
         public override Color? GetAlpha(Color lightColor)
         {
             return Color.White;
         }
-        Vector2 initialVelocity = Vector2.Zero;
         public override bool ShouldUpdatePosition()
         {
             return projectile.timeLeft <= 420;
@@ -853,7 +853,6 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     toPlayer = toPlayer.SafeNormalize(Vector2.Zero) * 12;
                     projectile.velocity = -toPlayer;
                 }
-                projectile.extraUpdates = 1;
             }
             else
             {
@@ -862,10 +861,6 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.1f;
                 Main.dust[dust].scale *= 0.75f;
-            }
-            if (initialVelocity == Vector2.Zero)
-            {
-                initialVelocity = projectile.velocity;
             }
             Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 1.8f / 255f, (255 - projectile.alpha) * 0.0f / 255f, (255 - projectile.alpha) * 0.0f / 255f);
             if (projectile.timeLeft <= 25)
