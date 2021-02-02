@@ -19,22 +19,38 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.ranged = true;
             item.width = 60;
             item.height = 32;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 65;
+            item.useAnimation = 65;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
             item.value = 10000;
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 8f;
+            item.shoot = mod.ProjectileType("ShiningShooterProj");
+            item.shootSpeed = 6f;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+    }
+}
+
+
+
+namespace AerovelenceMod.Items.Weapons.Ranged
+{
+    public class ShiningShooterProj : ModProjectile
+    {
+        public override void SetDefaults()
         {
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FrostArrow, damage, knockBack, player.whoAmI);
-            return false;
+            projectile.width = 20;
+            projectile.height = 40;
+            projectile.friendly = true;
+            projectile.penetrate = 3;
+            projectile.hostile = false;
+            projectile.ranged = true;
+            projectile.tileCollide = true;
+            projectile.ignoreWater = true;
+            projectile.timeLeft = 300;
+            projectile.aiStyle = 1;
         }
     }
 }

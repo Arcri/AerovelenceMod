@@ -32,7 +32,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("CrystalKunaiProj");
-            item.shootSpeed = 10f;
+            item.shootSpeed = 8f;
 		}
     }
 }
@@ -56,30 +56,12 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.ignoreWater = true;
             projectile.aiStyle = 1;
         }
-        public bool IsStickingToTarget
-        {
-            get => projectile.ai[0] == 1f;
-            set => projectile.ai[0] = value ? 1f : 0f;
-        }
-
-        // Index of the current target
-        public int TargetWhoAmI
-        {
-            get => (int)projectile.ai[1];
-            set => projectile.ai[1] = value;
-        }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             int index = Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
             Main.projectile[index].rotation = (float)(projectile.rotation + 3.14);
             projectile.Kill();
             return true;
-        }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            int index = Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
-            Main.projectile[index].rotation = (float)(projectile.rotation + 3.14);
-            projectile.Kill();
         }
     }
 }

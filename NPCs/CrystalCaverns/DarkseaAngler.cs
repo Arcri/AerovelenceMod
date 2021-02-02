@@ -1,5 +1,7 @@
 using AerovelenceMod.Dusts;
 using Microsoft.Xna.Framework;
+using System;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,14 +37,77 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.DeathSound = SoundID.NPCDeath1;
         }
 
-
-
-        public override void AI()
+        public override void SendExtraAI(BinaryWriter writer)
         {
-            if (t % 100 == 100)
+            writer.Write(ai);
+            writer.Write(IsElectricityActive);
+        }
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            ai = reader.ReadSingle();
+            IsElectricityActive = reader.ReadBoolean();
+        }
+
+        bool IselectricityActive = false;
+        float ai = 0;
+        float delayBetween = 0;
+        public override bool PreAI()
+        {
+            npc.TargetClosest(true);
+            int untilImmune = 300;
+            int immuneTimeLength = 120;
+            IselectricityActive = false;
+            if (delayBetween > 0)
+                delayBetween--;
+            if (ai < 0f)
             {
-                bool IsElectricityActive = true;
+                if (ai == -immuneTimeLength)
+                {
+                    for (int i = 0; i < 360; i += 12)
+                    {
+                        Vector2 circular = new Vector2(96, 0).RotatedBy(MathHelper.ToRadians(i));
+                        Dust dust2 = Dust.NewDustDirect(npc.Center - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, npc.alpha);
+                        dust2.velocity *= 0.15f;
+                        dust2.velocity += -circular * 0.08f;
+                        dust2.scale = 2.25f;
+                        dust2.noGravity = true;
+                    }
+                }
+                if (ai >= -immuneTimeLength + 20)
+                {
+                    IselectricityActive = true;
+                }
+                ai += 1f;
+                npc.velocity.X *= 0.9f;
+                if (Math.Abs(npc.velocity.X) < 0.001)
+                {
+                    npc.velocity.X = 0.001f * npc.direction;
+                }
+                if (Math.Abs(npc.velocity.Y) > 1f)
+                {
+                    ai += 10f;
+                }
+                if (ai >= 0f)
+                {
+                    npc.netUpdate = true;
+                    npc.velocity.X += npc.direction * 0.3f;
+                }
+                return false;
             }
+            if (ai < untilImmune)
+            {
+                if (npc.justHit)
+                {
+                    ai += 15f; //increase immune timer by 15 when hit
+                }
+                ai += 1f; //increases immune timer rapidly, 60 / second
+            }
+            else if (Math.Abs(npc.velocity.Y) <= 0.1f)
+            {
+                ai = -immuneTimeLength;
+                npc.netUpdate = true;
+            }
+            return true;
         }
 
 
@@ -50,61 +115,65 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 
 
 
-        private const int Frame_DarkseaAngler_1 = 1;
-        private const int Frame_DarkseaAngler_2 = 2;
-        private const int Frame_DarkseaAngler_3 = 3;
-        private const int Frame_DarkseaAngler_4 = 4;
-        private const int Frame_DarkseaAngler_5 = 5;
-        private const int Frame_DarkseaAngler_6 = 6;
-        private const int Frame_DarkseaAngler_7 = 7;
-        private const int Frame_DarkseaAngler_8 = 8;
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
-            t++;
-            if (npc.frameCounter < 10)
+            if (npc.velocity.Y == 0f)
             {
-                npc.frame.Y = Frame_DarkseaAngler_1 * frameHeight;
-            }
-            else if (npc.frameCounter < 20)
-            {
-                npc.frame.Y = Frame_DarkseaAngler_2 * frameHeight;
-            }
-            else if (npc.frameCounter < 30)
-            {
-                npc.frame.Y = Frame_DarkseaAngler_3 * frameHeight;
-            }
-            else if (npc.frameCounter < 30)
-            {
-                npc.frame.Y = Frame_DarkseaAngler_4 * frameHeight;
-            }
-            else
-            {
-                npc.frameCounter = 0;
-            }
-            if (t % 100 == 1)
-                if (npc.frameCounter < 10)
+                if (npc.direction == 1)
                 {
-                    npc.frame.Y = Frame_DarkseaAngler_5 * frameHeight;
+                    npc.spriteDirection = 1;
                 }
-                else if (npc.frameCounter < 20)
+                if (npc.direction == -1)
                 {
-                    npc.frame.Y = Frame_DarkseaAngler_6 * frameHeight;
+                    npc.spriteDirection = -1;
                 }
-                else if (npc.frameCounter < 30)
+                if (ai < 0f)
                 {
-                    npc.frame.Y = Frame_DarkseaAngler_7 * frameHeight;
+                    npc.frameCounter += 1.0;
+                    if (npc.frameCounter > 3.0)
+                    {
+                        npc.frame.Y += frameHeight;
+                        npc.frameCounter = 0.0;
+                    }
+                    if (npc.frame.Y >= Main.npcFrameCount[npc.type] * frameHeight)
+                    {
+                        npc.frame.Y = frameHeight * 5;
+                    }
+                    else if (npc.frame.Y < frameHeight * 5)
+                    {
+                        npc.frame.Y = frameHeight * 5;
+                    }
                 }
-                else if (npc.frameCounter < 30)
+                else if (npc.velocity.X == 0f)
                 {
-                    npc.frame.Y = Frame_DarkseaAngler_8 * frameHeight;
+                    npc.frameCounter += 1.0;
+                    npc.frame.Y = 0;
                 }
                 else
                 {
-                    npc.frameCounter = 0;
+                    npc.frameCounter += 0.2f + Math.Abs(npc.velocity.X);
+                    if (npc.frameCounter > 2.0)
+                    {
+                        npc.frame.Y += frameHeight;
+                        npc.frameCounter = 0.0;
+                    }
+                    if (npc.frame.Y / frameHeight >= Main.npcFrameCount[npc.type] - 4)
+                    {
+                        npc.frame.Y = frameHeight * 2;
+                    }
+                    else if (npc.frame.Y / frameHeight < 2)
+                    {
+                        npc.frame.Y = frameHeight * 2;
+                    }
                 }
-
+            }
+            else
+            {
+                npc.frameCounter = 0.0;
+                npc.frame.Y = frameHeight;
+            }
+            base.FindFrame(frameHeight);
         }
 
 

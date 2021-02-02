@@ -107,6 +107,13 @@ namespace AerovelenceMod.Items
 					Item.NewItem(npc.getRect(), mod.ItemType("FAMASTER"));
 				}
 			}
+			if (npc.type == mod.NPCType("LuminousDefender"))
+			{
+				if (Main.rand.Next(6) == 0)
+				{
+					Item.NewItem(npc.getRect(), mod.ItemType("LustrousCrystal"));
+				}
+			}
 
 
 			if (npc.type == NPCID.IceSlime || npc.type == NPCID.SpikedIceSlime || npc.type == NPCID.IceBat || npc.type == NPCID.UndeadViking || npc.type == NPCID.CyanBeetle)

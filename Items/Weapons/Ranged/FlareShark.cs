@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
-    public class FlareCannon : ModItem
+    public class FlareShark : ModItem
     {
         public override void SetStaticDefaults()
         {
