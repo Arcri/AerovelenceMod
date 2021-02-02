@@ -69,14 +69,6 @@ namespace AerovelenceMod
 			QueensStinger = false;
 		}
 
-        public override void PreUpdate()
-        {
-			SetResourceTexturesBasedOnModPowerups();
-			if (SpiritCultistBonus && player.velocity.X != 0)
-			{
-				Projectile.NewProjectile(player.position.X, player.position.Y, 0f, 0f, ProjectileType<SpiritTrail>(), 35, 0f, player.whoAmI);
-			}
-		}
 
 
         public override void UpdateDead()
@@ -103,16 +95,6 @@ namespace AerovelenceMod
                 {
 					Vector2 offset = new Vector2(0, -100);
 					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
-				}
-            }
-			if (BurnshockArmorBonus)
-            {
-				if (damage > 15)
-                {
-					Vector2 offset = new Vector2(0, -0);
-					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
-					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
-					Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 6, 1f, Main.myPlayer);
 				}
             }
 		}

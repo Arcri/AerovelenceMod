@@ -14,7 +14,11 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             mineResist = 2.5f;
             minPick = 59;
             Main.tileSolid[Type] = true;
-            Main.tileMerge[Type][ModContent.TileType<CavernStone>()] = true;
+            Main.tileMergeDirt[Type] = true;
+            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
+            Main.tileMerge[Type][mod.TileType("CavernCrystal")] = true;
+            Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
+            Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(115, 230, 250));
@@ -25,7 +29,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0.0f;
-            g = 0.5f;
+            g = 0.6f;
             b = 0.9f;
         }
     }

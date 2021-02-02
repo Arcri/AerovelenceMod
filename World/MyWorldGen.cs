@@ -1,4 +1,6 @@
-using System;
+using AerovelenceMod.World.WormCaveGen;
+using AerovelenceMod.World.WormCaveGen.CrystalCaves;
+using AerovelenceMod.World.WormCaveGen.WormCaveGen;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.World.Generation;
@@ -6,7 +8,7 @@ using Terraria.World.Generation;
 
 namespace AerovelenceMod.World
 {
-	public partial class WormGenPass : GenPass {
+    public partial class WormGenPass : GenPass {
 		public delegate WormNode WormNodeGenerator( IList<WormNode> nodes, int maxNodes, int originTileX, int originTileY );
 
 

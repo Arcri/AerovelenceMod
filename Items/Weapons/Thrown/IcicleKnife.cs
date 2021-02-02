@@ -80,5 +80,19 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         {
             target.AddBuff(BuffID.Frostburn, 60);
         }
+        public override void Kill(int timeLeft)
+        {
+            if (projectile.owner == Main.myPlayer)
+            {
+                int item =
+                Main.rand.NextBool(18)
+                    ? Item.NewItem(projectile.getRect(), ModContent.ItemType<IcicleKnife>())
+                    : 0;
+                if (Main.netMode == NetmodeID.MultiplayerClient && item >= 0)
+                {
+                    NetMessage.SendData(MessageID.SyncItem, -1, -1, null, item, 1f);
+                }
+            }
+        }
     }
 }

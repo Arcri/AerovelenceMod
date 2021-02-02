@@ -10,13 +10,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Infinity");
-            Tooltip.SetDefault("'NEVER RELOAD'\nThis weapon can be very useful, if you know how to use it");
+            Tooltip.SetDefault("Infinite ammo at the price of mana\n'NEVER RELOAD'");
         }
         public override void SetDefaults()
         {
             item.damage = 3;
             item.ranged = true;
             item.width = 62;
+            item.mana = 5;
             item.height = 32;
             item.useTime = 5;
             item.useAnimation = 5;

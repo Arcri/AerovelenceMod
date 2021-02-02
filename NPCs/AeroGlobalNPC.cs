@@ -1,4 +1,5 @@
 using AerovelenceMod.Dusts;
+using AerovelenceMod.Items.Weapons.Thrown;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -13,15 +14,16 @@ namespace AerovelenceMod.NPCs
 		
 		public bool SoulFire;
 		public bool Electrified;
+		public bool CrystalKunai;
 
 		public override void ResetEffects(NPC npc)
 		{
 			SoulFire = false;
 			Electrified = false;
+			CrystalKunai = false;
 		}
 
-
-        public override bool CheckDead(NPC npc)
+		public override bool CheckDead(NPC npc)
         {
 			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
 			{
@@ -42,7 +44,7 @@ namespace AerovelenceMod.NPCs
 			return true;
 		}
 
-        public override void DrawEffects(NPC npc, ref Color drawColor)
+		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
 			if (SoulFire)
 			{

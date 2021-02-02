@@ -122,6 +122,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore4"), 1f);
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore5"), 1f);
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore6"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore7"), 1f);
             }
         }
 
@@ -139,6 +140,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             Vector2 LightningTarget = player.Center;
             Vector2 move = player.position - npc.Center;
             LifePercentLeft = -(npc.life / npc.lifeMax) + 1f;
+            Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
             if (player.active || !player.dead)
             {
                 if (npc.life <= npc.lifeMax / 2)

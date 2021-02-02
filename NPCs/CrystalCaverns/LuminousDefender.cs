@@ -34,7 +34,23 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.buffImmune[24] = true;
 			animationType = 0;
         }
-        public override void SendExtraAI(BinaryWriter writer)
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			if (npc.life <= 0)
+			{
+				for (int k = 0; k < 20; k++)
+				{
+					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+				}
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore1"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore2"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore3"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore4"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore5"), 1f);
+			}
+		}
+		public override void SendExtraAI(BinaryWriter writer)
         {
 			writer.Write(ai);
 			writer.Write(defending);

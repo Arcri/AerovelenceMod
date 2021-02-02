@@ -1,3 +1,5 @@
+using AerovelenceMod.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +28,18 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.HitSound = SoundID.NPCHit41;
             npc.DeathSound = SoundID.NPCDeath44;
         }
-
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int k = 0; k < 20; k++)
+                {
+                    Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+                }
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumbleRockV2Gore1"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumbleRockV2Gore2"), 1f);
+            }
+        }
         public override void AI()
         {
             npc.rotation += npc.velocity.X * 0.05f;
