@@ -37,8 +37,18 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            player.statLife -= 1;
+                player.statLife -= 5;
             return true;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ItemID.IronBar, 15);
+            modRecipe.AddIngredient(ItemID.IllegalGunParts, 1);
+            modRecipe.AddIngredient(ItemID.LifeCrystal, 5);
+            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.SetResult(this, 1);
+            modRecipe.AddRecipe();
         }
     }
 }
