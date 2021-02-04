@@ -39,9 +39,9 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class CrystalGrowingKitProj : ModProjectile
     {
-		public bool e;
-		public float rot = 0.5f;
-		public int i;
+        public bool e;
+        public float rot = 0.5f;
+        public int i;
         public override void SetDefaults()
         {
             projectile.width = 28;
@@ -55,10 +55,13 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
         }
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            int index = Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
-            Main.PlaySound(SoundID.Shatter, projectile.position);
+            int spawnX = (int)(projectile.Center.X / 16) * 16;
+            int spawnY = (int)((projectile.position.Y + projectile.height) / 16) * 16;
+            int index = Projectile.NewProjectile(spawnX, spawnY, projectile.velocity.X, projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+        Main.PlaySound(SoundID.Shatter, projectile.position);
             projectile.Kill();
             return true;
         }

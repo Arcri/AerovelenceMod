@@ -7,12 +7,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
-    public class MarbleMusket : ModItem
+    public class GraniteCannon : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Marble Musket");
-			Tooltip.SetDefault("Fires a chunk of slow-travelling marble");
+			DisplayName.SetDefault("Granite Cannon");
+			Tooltip.SetDefault("To be determined");
 		}
         public override void SetDefaults()
         {
@@ -42,7 +42,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		{
 			if (type == ProjectileID.Bullet)
 			{
-				type = ModContent.ProjectileType<MarbleBullet>();
+				type = ModContent.ProjectileType<GraniteBullet>();
 			}
 			return true;
 		}
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.Marble, 45);
+            modRecipe.AddIngredient(ItemID.Granite, 45);
             modRecipe.AddRecipeGroup("IronBar", 5);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
@@ -62,11 +62,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
-	public class MarbleBullet : ModProjectile
+	public class GraniteBullet : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Marble Bullet");
+			DisplayName.SetDefault("Granite Bullet");
 			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
 			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
 		}

@@ -1,14 +1,12 @@
+using AerovelenceMod.Dusts;
+using AerovelenceMod.Items.BossBags;
+using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
-using Microsoft.Xna.Framework.Graphics;
-using AerovelenceMod.Dusts;
-using AerovelenceMod.Items.BossBags;
-using System.Linq;
-using IL.Terraria.DataStructures;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
@@ -16,7 +14,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
     public class CrystalTumbler : ModNPC
     {
         private Player player;
-        
+
         private float speed;
         float LifePercentLeft;
         int t;
@@ -24,9 +22,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
         public bool P;
         public int spinTimer;
         public bool Phase2;
-        int Time = 1;
-        int FlyUpwardTime = 25;
-        int RotationTime = 10;
+        int Time = 0;
+        int cheeseCheck;
+        int FlyUpwardTime = 20;
+        int RotationTime = (int)2.5 * 60;
         int rotationalSpeed = 2;
         int TotalRotations = 3;
         int Max = 10;
@@ -131,11 +130,12 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
         public override void AI()
         {
             t++;
-            Time++;
+
             var player = Main.player[npc.target];
             Vector2 delta = player.Center - npc.Center;
             float magnitude = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
             Vector2 offset = new Vector2(0, -100);
+
             Vector2 offsetLightning = new Vector2(0, -500);
             Vector2 LightningTarget = player.Center;
             Vector2 move = player.position - npc.Center;
@@ -143,146 +143,154 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
             if (player.active || !player.dead)
             {
-                if (npc.life <= npc.lifeMax / 2)
+                if (Vector2.Distance(npc.Center, player.Center) <= 500)
                 {
-                    Phase2 = true;
-                }
-                npc.TargetClosest(true);
+                    npc.noTileCollide = npc.noGravity = false;
+                    if (npc.life <= npc.lifeMax / 2)
+                    {
+                        Phase2 = true;
+                    }
+                    npc.TargetClosest(true);
 
-                if (player.Center.X > npc.Center.X)
-                {
-                    if (npc.velocity.X < 2 * (LifePercentLeft + 1))
+                    if (player.Center.X > npc.Center.X)
                     {
-                        npc.velocity.X += (0.075f * (LifePercentLeft + 1));
+                        if (npc.velocity.X < 2 * (LifePercentLeft + 1))
+                        {
+                            npc.velocity.X += (0.075f * (LifePercentLeft + 1));
+                        }
                     }
-                }
-                if (player.Center.X < npc.Center.X)
-                {
-                    if (npc.velocity.X > -2 * (LifePercentLeft + 1))
+                    if (player.Center.X < npc.Center.X)
                     {
-                        npc.velocity.X -= (0.075f * (LifePercentLeft + 1));
+                        if (npc.velocity.X > -2 * (LifePercentLeft + 1))
+                        {
+                            npc.velocity.X -= (0.075f * (LifePercentLeft + 1));
 
+                        }
                     }
-                }
 
-                npc.rotation += npc.velocity.X * 0.025f;
-                if (t % 250 == 0)
-                {
+                    npc.rotation += npc.velocity.X * 0.025f;
+                    if (t % 250 == 0)
+                    {
 
-                    npc.velocity.Y -= Main.rand.Next(12) + 7;
-                    for (int num325 = 0; num325 < 20; num325++)
-                        Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
-                }
-                /*if (spinTimer >= 0 && spinTimer < 240)
-                {
-                    // Rise for a bit.
-                    if (Time < FlyUpwardTime)
-                    {
-                        npc.noTileCollide = npc.noGravity = true;
-                        npc.velocity = Vector2.Lerp(npc.velocity, Vector2.UnitY * -12, 0.2f); // Quickly rise upward (but don't stop all movement and rise immediately)
+                        npc.velocity.Y -= Main.rand.Next(12) + 7;
+                        for (int num325 = 0; num325 < 20; num325++)
+                            Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
                     }
-                    // Redirect towards the target before spinning.
-                    if (Time == FlyUpwardTime)
-                    {
-                        npc.velocity = npc.DirectionTo(player.Center) * rotationalSpeed;
-                    }
-                    // And spin around.
-                    if (Time > FlyUpwardTime && Time < RotationTime + FlyUpwardTime)
-                    {
-                        npc.velocity = npc.velocity.RotatedBy(MathHelper.TwoPi / RotationTime * TotalRotations);
-                    }
-                    if (Time >= Max)
-                    {
-                        Time = 0;
-                    }
-                    // After time is >= RotationTime + FlyUpwardTime, do nothing for a bit and let the lunge happen. Maybe decelerate at the end. Be sure to change npc.noTileCollide and npc.noGravity back to normal.
-                }
-                */
-                if (t % Main.rand.Next(190, 215) == 10)
-                {
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike2>(), 8, 1f, Main.myPlayer);
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
-                    npc.netUpdate = true;
-                }
-                /*
-                if (t % Main.rand.Next(130, 150) == 10)
-                {
-                    Vector2 offset = new Vector2(0, -100);
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard2>(), 5, 1f, Main.myPlayer);
-                    Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
-                    npc.netUpdate = true;
-                }
-                if (npc.life < 800 && npc.life > 201)
-                    if (t % 70 == 0)
+
+
+                    /*
+                    if (t % Main.rand.Next(130, 150) == 10)
                     {
                         Vector2 offset = new Vector2(0, -100);
                         Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
+                        Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard2>(), 5, 1f, Main.myPlayer);
+                        Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                         npc.netUpdate = true;
-                    }*/
+                    }
+                    if (npc.life < 800 && npc.life > 201)
+                        if (t % 70 == 0)
+                        {
+                            Vector2 offset = new Vector2(0, -100);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
+                            npc.netUpdate = true;
+                        }*/
 
-                if ((npc.Center.Y - player.Center.Y) < -150)
-                {
-                    i++;
-                }
-                else
-                {
-                    i = 0;
-                }
-                if (i % 50 == 0)
-                {
-                    npc.noTileCollide = true;
-                }
-                if (i % 50 == 10 || i == 0)
-                {
-                    npc.noTileCollide = false;
-                }
-                if (Phase2)
-                {
-
-                    if (magnitude > 0)
+                    if ((npc.Center.Y - player.Center.Y) < -150)
                     {
-                        delta *= 8f / magnitude;
+                        i++;
                     }
                     else
                     {
-                        delta = new Vector2(0f, 15f);
+                        i = 0;
                     }
-                    if (t % 250 == 0)
+                    if (i % 50 == 0)
                     {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
-                        npc.netUpdate = true;
+                        npc.noTileCollide = true;
                     }
-                    if (t % 50 == 0)
+                    if (i % 50 == 10 || i == 0)
+                    {
+                        npc.noTileCollide = false;
+                    }
+                    if (Phase2)
                     {
 
-                    }
-                    if (Main.expertMode)
-                    {
+                        if (magnitude > 0)
+                        {
+                            delta *= 8f / magnitude;
+                        }
+                        else
+                        {
+                            delta = new Vector2(0f, 15f);
+                        }
                         if (t % 250 == 0)
                         {
-                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
-                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
                             npc.netUpdate = true;
                         }
-                        /*if (t % 275 == 0)
+                        if (t % 50 == 0)
                         {
-                            if (player.position.X > npc.position.X)
+
+                        }
+                        if (Main.expertMode)
+                        {
+                            if (t % 250 == 0)
                             {
-                                npc.velocity.X = ((10 * npc.velocity.X + move.X + 10) / 5f);
+                                Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
+                                Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                                npc.netUpdate = true;
                             }
-                            else if (player.position.X < npc.position.X)
+                            /*if (t % 275 == 0)
                             {
-                                npc.velocity.X = ((10 * npc.velocity.X + move.X - 10) / 5f);
-                            }*/
+                                if (player.position.X > npc.position.X)
+                                {
+                                    npc.velocity.X = ((10 * npc.velocity.X + move.X + 10) / 5f);
+                                }
+                                else if (player.position.X < npc.position.X)
+                                {
+                                    npc.velocity.X = ((10 * npc.velocity.X + move.X - 10) / 5f);
+                                }*/
+                        }
+                    }
+                    /*if (t % 50 == 0)
+                    {
+                        Projectile.NewProjectile(player.Center - new Vector2(0, 16f * 5f), new Vector2(0f, 0f), ProjectileID.CultistBossLightningOrbArc, 10, 3f, Main.myPlayer, BuffID.OnFire, -0f);
+                    }*/
+                }
+                if (Vector2.Distance(npc.Center, player.Center) >= 500)
+                {
+                    cheeseCheck++;
+                    npc.rotation += npc.velocity.X * 0.025f;
+                    if (cheeseCheck >= 180)
+                    {
+                        Time++;
+                        // Rise for a bit.
+                        if (Time < FlyUpwardTime)
+                        {
+                            npc.noTileCollide = npc.noGravity = true;
+                            npc.velocity = Vector2.Lerp(npc.velocity, Vector2.UnitY * -12, 0.2f); // Quickly rise upward (but don't stop all movement and rise immediately)
+                        }
+                        // Redirect towards the target before spinning.
+                        if (Time == FlyUpwardTime)
+                        {
+                            npc.velocity = npc.DirectionTo(player.Center) * rotationalSpeed;
+                        }
+                        // And spin around.
+                        if (Time > FlyUpwardTime && Time < RotationTime + FlyUpwardTime)
+                        {
+                            npc.velocity = npc.velocity.RotatedBy(MathHelper.TwoPi / RotationTime * TotalRotations);
+                        }
+                        // After time is >= RotationTime + FlyUpwardTime, do nothing for a bit and let the lunge happen. Maybe decelerate at the end. Be sure to change npc.noTileCollide and npc.noGravity back to normal.
+                        if (t % Main.rand.Next(190, 215) == 10)
+                        {
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike2>(), 8, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(-2f + ((float)Main.rand.Next(20) / 10) - 1, -2f + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerSpike1>(), 6, 1f, Main.myPlayer);
+                            npc.netUpdate = true;
+                            Time = 0;
+                            cheeseCheck = 0;
+                        }
                     }
                 }
-                if (t % 50 == 0)    
-                {
-                    Projectile.NewProjectile(player.Center - new Vector2(0, 16f * 5f), new Vector2(0f, 0f), ProjectileID.CultistBossLightningOrbArc, 10, 3f, Main.myPlayer, BuffID.OnFire, -0f);
-                }
-
                 if (!player.active || player.dead)
                 {
                     npc.noTileCollide = true;

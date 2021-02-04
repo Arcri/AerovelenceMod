@@ -12,7 +12,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
         public override void SetDefaults()
         {
             mineResist = 2.5f;
-            minPick = 59;
+            minPick = 40;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
