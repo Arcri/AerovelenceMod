@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Greaves");
-            Tooltip.SetDefault("5% increased damage\n7% increased movement speed");
+            Tooltip.SetDefault("5% increased damage\n10% increased movement speed");
         }		
         public override void SetDefaults()
         {
@@ -21,13 +21,11 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
             item.rare = ItemRarityID.Orange;
             item.defense = 8;
         }
-
         public override void UpdateEquip(Player player)
         {
-			player.moveSpeed *= 1.20f;
-			player.rangedDamage *= 1.05f;
+			player.moveSpeed += 0.1f;
+			player.allDamage += 0.05f;
         }
-
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);

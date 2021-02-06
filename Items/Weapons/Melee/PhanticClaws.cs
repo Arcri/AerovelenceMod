@@ -1,4 +1,5 @@
 using AerovelenceMod.Items.Others.Crafting;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,7 +14,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void SetDefaults()
         {
 			item.crit = 4;
-            item.damage = 8;
+            item.damage = 9;
             item.melee = true;
             item.width = 20;
             item.height = 20;
@@ -21,9 +22,9 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useAnimation = 5;
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Blue;
+            item.knockBack = 4;
+            item.value = Item.sellPrice(0, 1, 0, 0);
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
         }
         public override void AddRecipes()

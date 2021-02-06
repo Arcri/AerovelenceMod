@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Seashine
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Seashine Leggings");
-            Tooltip.SetDefault("3% increased damage\n5% increased movement speed\n10% increased movement speed in water");
+            Tooltip.SetDefault("3% increased movement speed");
         }		
         public override void SetDefaults()
         {
@@ -19,21 +19,20 @@ namespace AerovelenceMod.Items.Armor.PreHM.Seashine
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Orange;
-            item.defense = 8;
+            item.defense = 2;
         }
 
         public override void UpdateEquip(Player player)
         {
-			player.moveSpeed *= 1.1f;
-			player.rangedDamage *= 1.05f;
+			player.moveSpeed += 0.03f;
         }
 
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 7);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
+            modRecipe.AddIngredient(ItemID.SandBlock, 20);
+            modRecipe.AddIngredient(ItemID.Seashell, 3);
+            modRecipe.AddIngredient(ItemID.Starfish, 3);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

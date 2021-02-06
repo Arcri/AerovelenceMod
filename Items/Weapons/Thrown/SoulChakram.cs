@@ -26,8 +26,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.noMelee = true;
 			item.noUseGraphic = true;
             item.knockBack = 3;
-            item.value = Item.sellPrice(0, 2, 45, 0);
-            item.rare = ItemRarityID.Orange;
+            item.value = Item.sellPrice(0, 1, 0, 0);
+            item.rare = ItemRarityID.Green;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("SoulChakramProjectile");
             item.UseSound = SoundID.Item1;

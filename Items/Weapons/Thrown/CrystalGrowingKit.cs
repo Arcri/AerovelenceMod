@@ -39,14 +39,15 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class CrystalGrowingKitProj : ModProjectile
     {
-		public bool e;
-		public float rot = 0.5f;
-		public int i;
+        public bool e;
+        public float rot = 0.5f;
+        public int i;
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 38;
+            projectile.width = 28;
+            projectile.height = 28;
             projectile.friendly = true;
+            projectile.aiStyle = 2;
             projectile.penetrate = 3;
             projectile.hostile = false;
             projectile.melee = true;
@@ -54,13 +55,14 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
         }
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            for (int k = 0; k < 5; k++)
-            {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 132, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
-            }
-            Main.PlaySound(SoundID.Item10);
+            int spawnX = (int)(projectile.Center.X / 16) * 16;
+            int spawnY = (int)((projectile.position.Y + projectile.height) / 16) * 16;
+            int index = Projectile.NewProjectile(spawnX, spawnY, projectile.velocity.X, projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+        Main.PlaySound(SoundID.Shatter, projectile.position);
+            projectile.Kill();
             return true;
         }
         public override void AI()
@@ -70,15 +72,44 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			{
 				int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
 			}
-			projectile.alpha += 2;
-			projectile.velocity *= 0.99f;
-			if (!e)
-			{
-				projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-				e = true;
-			}
-			projectile.rotation += rot;
-			rot *= 0.99f;
+			
+
+        }
+    }
+}
+
+namespace AerovelenceMod.Items.Weapons.Thrown
+{
+    public class CrystalGrowingKitField : ModProjectile
+    {
+        public int i;
+        public override void SetDefaults()
+        {
+            projectile.width = 66;
+            projectile.height = 26;
+            projectile.friendly = true;
+            projectile.penetrate = 3;
+            projectile.hostile = false;
+            projectile.melee = true;
+            projectile.alpha = 255;
+            projectile.tileCollide = true;
+            projectile.ignoreWater = true;
+            projectile.timeLeft = 500;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            projectile.velocity *= 0f;
+            return true;
+        }
+        public override void AI()
+        {
+            i++;
+            if (i % 2 == 0)
+            {
+                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+            }
+            projectile.alpha -= 2;
+            projectile.velocity *= 0.99f;
         }
     }
 }

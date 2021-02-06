@@ -17,6 +17,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.maxStack = 999;
             item.useTurn = true;
             item.autoReuse = true;
+            item.consumable = true;
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;

@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Hood");
-            Tooltip.SetDefault("10% increased magic damage\n7% increased magic critical strike chance\n10% less mana cost\n+40 max mana");
+            Tooltip.SetDefault("10% increased magic damage\n10% less mana cost\n+35 max mana");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -32,10 +32,9 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         }
 		public override void UpdateEquip(Player player)
         {
-            player.magicDamage *= 1.1f;
-            player.magicCrit += 7;
+            player.magicDamage += 0.1f;
             player.manaCost -= 0.1f;
-            player.statManaMax2 += 40;
+            player.statManaMax2 += 35;
         }
 
         public override void AddRecipes()

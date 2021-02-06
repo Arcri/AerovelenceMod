@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantic Helmet");
-            Tooltip.SetDefault("6% increased melee damage");
+            Tooltip.SetDefault("5% increased melee damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -27,18 +27,18 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
             item.width = 18;
             item.height = 18;
             item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 4;
+            item.rare = ItemRarityID.Green;
+            item.defense = 6;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.meleeDamage *= 0.6f;
+            player.meleeDamage += 0.5f;
         }
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 9);
-            modRecipe.AddIngredient(ItemID.ShadowScale, 10);
+            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
+            modRecipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 10);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

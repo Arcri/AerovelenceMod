@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Mask");
-            Tooltip.SetDefault("10% increased melee damage\n8% increased melee swing speed\n8% increased melee critical strike chance");
+            Tooltip.SetDefault("+1 minion slot\nIncreased minion knockback");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -36,7 +36,8 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         }
 		public override void UpdateEquip(Player player)
         {
-            player.maxMinions += 2;
+            player.maxMinions += 1;
+            player.minionKB += 0.1f;
         }
         public override void AddRecipes()
         {

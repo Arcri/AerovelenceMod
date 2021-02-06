@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantic Cuisses");
-            Tooltip.SetDefault("3% increased critical strike chance\n5% increased movement speed");
+            Tooltip.SetDefault("7% increased movement speed");
         }		
         public override void SetDefaults()
         {
@@ -19,20 +19,17 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Green;
-            item.defense = 4;
+            item.defense = 7;
         }
         public override void UpdateEquip(Player player)
         {
-			player.moveSpeed *= 1.19f;
-            player.magicCrit += 3;
-            player.meleeCrit += 3;
-            player.rangedCrit += 3;
+			player.moveSpeed += 0.07f;
         }
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 11);
-            modRecipe.AddIngredient(ItemID.ShadowScale, 6);
+            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 15);
+            modRecipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 15);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

@@ -19,7 +19,7 @@ namespace AerovelenceMod
 		public static bool downedSnowrium;
 		public static bool downedCyvercry;
 		public static int cavernTiles;
-		public static float rotationTime = 0;
+		public static int citadelTiles;
 
 		public override void Initialize()
 		{
@@ -27,7 +27,6 @@ namespace AerovelenceMod
 			downedSnowrium = false;
 			downedCyvercry = false;
 		}
-
 		public override TagCompound Save()
 		{
 			var downed = new List<string>();
@@ -44,14 +43,12 @@ namespace AerovelenceMod
 				["downed"] = downed,
 			};
 		}
-
 		public override void Load(TagCompound tag)
 		{
 			var downed = tag.GetList<string>("downed");
 			downedCrystalTumbler = downed.Contains("CrystalTumbler");
 			downedSnowrium = downed.Contains("Snowrium");
 		}
-
 		public override void LoadLegacy(BinaryReader reader)
 		{
 			int loadVersion = reader.ReadInt32();
@@ -82,17 +79,6 @@ namespace AerovelenceMod
 			downedSnowrium = flags[1];
 			downedCyvercry = flags[2];
 		}
-
-
-		public override void PreUpdate()
-		{
-			rotationTime += (float)Math.PI / 65;
-			if (rotationTime >= Math.PI * 3)
-			{
-				rotationTime = 0;
-			}
-		}
-
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
 			int idx = tasks.FindIndex(t => t.Name == "Underworld"); //Terrain
@@ -107,21 +93,16 @@ namespace AerovelenceMod
 
 			totalWeight += pass.Weight;
 		}
-
-
-
-
-
-
 		public override void TileCountsAvailable(int[] tileCounts)
 		{
 			cavernTiles = tileCounts[TileType<CavernStone>()] + tileCounts[TileType<CrystalGrass>()] + tileCounts[TileType<CrystalDirt>()] + tileCounts[TileType<CavernCrystal>()];
+			citadelTiles = tileCounts[TileType<CitadelStone>()];
 		}
-
 		public override void ResetNearbyTileEffects()
 		{
 			AeroPlayer modPlayer = Main.LocalPlayer.GetModPlayer<AeroPlayer>();
 			cavernTiles = 0;
+			citadelTiles = 0;
 		}
 	}
 }

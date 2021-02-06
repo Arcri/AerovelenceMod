@@ -1,10 +1,7 @@
-using System.IO;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
-using Microsoft.Xna.Framework;
 using Terraria.GameContent.Generation;
 
 namespace AerovelenceMod.World
@@ -21,13 +18,11 @@ namespace AerovelenceMod.World
             tasks.Insert(ShiniesIndex + 1, new PassLegacy("Filling the caves with glimmer", delegate (GenerationProgress progress)
             {
                 progress.Message = "Filling the caves with glimmer";
-                //Put your custom tile block name
-                for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 6E-05); k++)                                                                                                                                      //      |
+                for (int k = (int)(Main.maxTilesX * Main.maxTilesY * 15E-05) - 1; k >= 0; k--)                                                                                                                                      //      |
                 {                                                                                                                                                                                                                         //       |
-					WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)WorldGen.rockLayer, Main.maxTilesY), (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), mod.TileType("AdobeOreBlock"), false, 0f, 0f, false, true);
+                    WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)WorldGen.rockLayer, Main.maxTilesY), (double)WorldGen.genRand.Next(3, 15), WorldGen.genRand.Next(2, 15), mod.TileType("SlateOreBlock"), false, 0f, 0f, false, true);
                 }
             }));
         }
-
     }
 }

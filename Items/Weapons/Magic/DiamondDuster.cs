@@ -15,7 +15,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 6;
+            item.crit = 4;
             item.damage = 11;
             item.magic = true;
             item.mana = 15;
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("CrystalShard");
-            item.shootSpeed = 40f;
+            item.shootSpeed = 12f;
         }
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {

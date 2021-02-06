@@ -1,10 +1,8 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture;
 
 namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 {
@@ -24,15 +22,16 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 0, 0);
+            item.consumable = true;
+            item.value = Item.sellPrice(0, 0, 0, 0);
             item.createTile = mod.TileType("GlimmeringSofa"); //put your CustomBlock Tile name
         }
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 5);
-            modRecipe.AddIngredient(ItemID.Torch, 1);
-            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.AddIngredient(ItemType<Glimmerwood>(), 5);
+            modRecipe.AddIngredient(ItemID.Silk, 2);
+            modRecipe.AddTile(TileType<CrystallineFabricator>());
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
         }

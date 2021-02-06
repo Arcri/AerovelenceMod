@@ -10,7 +10,6 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
         public override void SetDefaults()
         {
             mineResist = 2.5f;
-            minPick = 59;
             Main.tileSolid[Type] = true;
             Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
             Main.tileMerge[Type][mod.TileType("CavernCrystal")] = true;
@@ -19,8 +18,8 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlendAll[Type] = true;
             Main.tileMergeDirt[Type] = true;
-            Main.tileBlockLight[Type] = false;
-            Main.tileLighted[Type] = false;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
             AddMapEntry(new Color(102, 108, 117));
             dustType = 116;
             soundType = SoundID.Tink;

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture;
 
 namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 {
@@ -21,6 +22,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.maxStack = 999;
             item.useTurn = true;
             item.autoReuse = true;
+            item.consumable = true;
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
@@ -32,7 +34,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             ModRecipe modRecipe = new ModRecipe(mod);
             modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 6);
             modRecipe.AddIngredient(ItemID.WaterBucket, 1);
-            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.AddTile(TileType<CrystallineFabricator>());
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
         }

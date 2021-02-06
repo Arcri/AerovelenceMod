@@ -15,6 +15,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
         {
 			item.CloneDefaults(ItemID.DartTrap);
             item.createTile = mod.TileType("CavernCrystal"); //put your CustomBlock Tile name
+            item.consumable = true;
         }
     }
 }

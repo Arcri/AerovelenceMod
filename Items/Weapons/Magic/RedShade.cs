@@ -24,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.noMelee = true;
             item.knockBack = 4;
             item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
             item.shoot = ProjectileID.Wasp;
             item.shootSpeed = 12f;

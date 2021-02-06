@@ -18,7 +18,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.lifeMax = 50;
             npc.damage = 20;
             npc.defense = 24;
-            npc.knockBackResist = 0f;
+            npc.knockBackResist = 1f;
             npc.width = 38;
             npc.height = 18;
             npc.value = Item.buyPrice(0, 0, 6, 0);

@@ -41,13 +41,26 @@ namespace AerovelenceMod
 
 		public override void AddRecipeGroups()
 		{
-			RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
 			{
-		ItemID.SilverBar,
-		ItemID.TungstenBar
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
+				{
+					ItemID.SilverBar,
+					ItemID.TungstenBar
+				});
+				RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
+
+			}
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
+			{
+				ItemID.ShadowScale,
+				ItemID.TissueSample
 			});
-			RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
+			RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
+			}
 		}
+
+
 
 		public override void Load()
 		{
@@ -72,7 +85,19 @@ namespace AerovelenceMod
 		public override void Close()
 		{
 			var slots = new int[] {
-				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns")
+				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"),
+				GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder")
+		};
+			foreach (var slot in slots)
+			{
+				if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
+				{
+					Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
+				}
+			}
+
+			{
+				GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder");
 			};
 			foreach (var slot in slots)
 			{
@@ -85,6 +110,8 @@ namespace AerovelenceMod
 			base.Close();
 		}
 
+
+
 		public override void UpdateMusic(ref int music, ref MusicPriority priority)
 		{
 			if (Main.myPlayer == -1 || Main.gameMenu || !Main.LocalPlayer.active)
@@ -95,6 +122,15 @@ namespace AerovelenceMod
 			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
 			{
 				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
+				priority = MusicPriority.BiomeMedium;
+			}
+			if (Main.myPlayer == -1 || Main.gameMenu || !Main.LocalPlayer.active)
+			{
+				return;
+			}
+			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCitadel)
+			{
+				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder");
 				priority = MusicPriority.BiomeMedium;
 			}
 		}

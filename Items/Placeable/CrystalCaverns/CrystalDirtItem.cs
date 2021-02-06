@@ -18,6 +18,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
         {
             item.width = 16;
             item.height = 16;
+            item.consumable = true;
             item.maxStack = 999;
             item.useTurn = true;
             item.autoReuse = true;

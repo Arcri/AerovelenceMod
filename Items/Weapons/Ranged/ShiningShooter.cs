@@ -14,8 +14,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
-            item.crit = 20;
-            item.damage = 27;
+            item.crit = 4;
+            item.damage = 12;
             item.ranged = true;
             item.width = 60;
             item.height = 32;
@@ -24,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
-            item.value = 10000;
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("ShiningShooterProj");

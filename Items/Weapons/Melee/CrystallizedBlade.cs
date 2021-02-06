@@ -1,4 +1,5 @@
 using AerovelenceMod.Items.Others.Crafting;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,6 +26,69 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.value = 10000;
             item.rare = ItemRarityID.Green;
             item.autoReuse = false;
+        }
+        public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
+        {
+            if (target.type == mod.NPCType("CrystalSlime"))
+            {
+                damage *= 3;
+            }
+            {
+                if (target.type == mod.NPCType("LuminousDefender"))
+                {
+                    damage *= 3;
+                }
+                {
+                    if (target.type == mod.NPCType("Tumblerock1"))
+                    {
+                        damage *= 3;
+                    }
+                    {
+                        if (target.type == mod.NPCType("Tumblerock2"))
+                        {
+                            damage *= 3;
+                        }
+                        {
+                            if (target.type == mod.NPCType("Tumblerock3"))
+                            {
+                                damage *= 3;
+                            }
+                            {
+                                if (target.type == mod.NPCType("Tumblerock4"))
+                                {
+                                    damage *= 3;
+                                }
+                                {
+                                    if (target.type == mod.NPCType("LuminoJelly"))
+                                    {
+                                        damage *= 3;
+                                    }
+                                    {
+                                        if (target.type == mod.NPCType("MinorCrystalSerpentHead"))
+                                        {
+                                            damage *= 3;
+                                        }
+                                        {
+                                            if (target.type == mod.NPCType("CrystalWormHead"))
+                                            {
+                                                damage *= 3;
+                                            }
+                                            {
+                                                if (target.type == mod.NPCType("DarkseaAngler"))
+                                                {
+                                                    damage *= 3;
+                                                }
+                                                {
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         public override void AddRecipes()
         {

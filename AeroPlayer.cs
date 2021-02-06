@@ -23,6 +23,7 @@ namespace AerovelenceMod
 
 
 		public bool ZoneCrystalCaverns;
+		public bool ZoneCrystalCitadel;
 
 		public bool SoulFire;
 		public bool Electrified;
@@ -45,14 +46,8 @@ namespace AerovelenceMod
 		public bool Minicry = false;
 
 
-		private Texture2D originalHeartTexture;
-		private Texture2D originalManaTexture;
-
 		public override void Initialize()
 		{
-			SoulFig = false;
-			KnowledgeFruit = false;
-			DevilsBounty = false;
 
 			
 
@@ -183,6 +178,7 @@ namespace AerovelenceMod
 		public override void UpdateBiomes()
 		{
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
+			ZoneCrystalCitadel = AeroWorld.citadelTiles > 50;
 		}
 
         public override void ResetEffects()
@@ -244,12 +240,14 @@ namespace AerovelenceMod
 		{
 			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
 			modOther.ZoneCrystalCaverns = ZoneCrystalCaverns;
+			modOther.ZoneCrystalCitadel = ZoneCrystalCitadel;
 		}
 
 		public override void SendCustomBiomes(BinaryWriter writer)
 		{
 			BitsByte flags = new BitsByte();
 			flags[0] = ZoneCrystalCaverns;
+			flags[1] = ZoneCrystalCitadel;
 			writer.Write(flags);
 		}
 
@@ -259,6 +257,7 @@ namespace AerovelenceMod
 		{
 			BitsByte flags = reader.ReadByte();
 			ZoneCrystalCaverns = flags[0];
+			ZoneCrystalCitadel = flags[1];
 		}
 
 
@@ -266,7 +265,7 @@ namespace AerovelenceMod
 		public override bool CustomBiomesMatch(Player other)
 		{
 			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
-			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns;
+			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns && ZoneCrystalCitadel == modOther.ZoneCrystalCitadel;
 		}
 
 		public override Texture2D GetMapBackgroundImage()
@@ -280,48 +279,6 @@ namespace AerovelenceMod
 
 
 
-		public override TagCompound Save()
-		{
-			List<string> list = new List<string>();
-
-			ResetResourceTextures();
-
-			if (SoulFig)
-				list.Add("SoulFig");
-
-			if (KnowledgeFruit)
-				list.Add("SoulFig");
-
-			if (DevilsBounty)
-				list.Add("DevilsBounty");
-
-			return new TagCompound
-			{
-				["perm"] = list
-			};
-		}
-
-		public override void Load(TagCompound tag)
-		{
-			SetOriginalResourceTextures();
-
-			IList<string> list = tag.GetList<string>("perm");
-			SoulFig = list.Contains("SoulFig");
-			KnowledgeFruit = list.Contains("KnowledgeFruit");
-			DevilsBounty = list.Contains("DevilsBounty");
-		}
-
-		public override void LoadLegacy(BinaryReader reader)
-		{
-			if (reader.ReadInt32() == 0)
-			{
-				BitsByte bitsByte = reader.ReadByte();
-				SoulFig = bitsByte[0];
-				KnowledgeFruit = bitsByte[1];
-				DevilsBounty = bitsByte[2];
-			}
-		}
-
 
 
 		public static bool BossPresent => Main.npc.ToList().Any(npc => npc.boss && npc.active);
@@ -334,55 +291,6 @@ namespace AerovelenceMod
 				List<NPC> npcList = Main.npc.ToList();
 				List<NPC> bosses = npcList.Where(npc => npc.boss && npc.active).Where(me => Vector2.Distance(me.Center, player.Center) == npcList.Where(npc => npc.boss && npc.active).Max(boss => Vector2.Distance(boss.Center, player.Center)) && me.active).ToList();
 				return bosses[0];
-			}
-		}
-
-
-		public override void PostUpdateMiscEffects()
-		{
-			player.statLifeMax2 += (SoulFig ? 50 : 0) + (KnowledgeFruit ? 50 : 0) + (DevilsBounty ? 50 : 0);
-		}
-
-		/// <summary>
-		/// Resets vanilla resource textures to their defaults.
-		/// </summary>
-		private void ResetResourceTextures()
-		{
-			Main.heart2Texture = originalHeartTexture;
-			Main.manaTexture = originalManaTexture;
-		}
-
-		/// <summary>
-		/// Only call this in ModPlayer.Load().
-		/// </summary>
-		private void SetOriginalResourceTextures()
-		{
-			originalHeartTexture = Main.heart2Texture;
-			originalManaTexture = Main.manaTexture;
-		}
-
-		/// <summary>
-		/// Sets resource textures based on the players consumed mod powerups
-		/// </summary>
-		private void SetResourceTexturesBasedOnModPowerups()
-		{
-			//TODO enum?
-			int heartTextureControl = (SoulFig ? 1 : 0) + (KnowledgeFruit ? 1 : 0) + (DevilsBounty ? 1 : 0);
-
-			switch (heartTextureControl)
-			{
-				case 1:
-					Main.heart2Texture = mod.GetTexture("ExtraTextures/SoulFigHeart");
-					break;
-				case 2:
-					Main.heart2Texture = mod.GetTexture("ExtraTextures/KnowledgeFruitHeart");
-					break;
-				case 3:
-					Main.heart2Texture = mod.GetTexture("ExtraTextures/DevilsBountyHeart");
-					break;
-				default:
-					Main.heart2Texture = originalHeartTexture;
-					break;
 			}
 		}
 	}
