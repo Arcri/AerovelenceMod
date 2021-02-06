@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Headgear");
-            Tooltip.SetDefault("10% increased ranged damage\n8% increased ranged critical strike chance");
+            Tooltip.SetDefault("10% increased ranged damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -32,8 +32,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         }
 		public override void UpdateEquip(Player player)
         {
-			player.rangedDamage *= 1.1f;
-            player.rangedCrit += 8;
+			player.rangedDamage += 0.1f;
         }
         public override void AddRecipes()
         {

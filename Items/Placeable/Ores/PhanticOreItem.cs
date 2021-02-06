@@ -18,6 +18,7 @@ namespace AerovelenceMod.Items.Placeable.Ores
             item.useTurn = true;
             item.autoReuse = true;
             item.useAnimation = 15;
+            item.consumable = true;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
 			item.value = Item.sellPrice(0, 0, 12, 0);

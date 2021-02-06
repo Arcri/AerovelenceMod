@@ -75,18 +75,13 @@ namespace AerovelenceMod.Projectiles
                             target = true;
                         }
                     }
-                     projectile.rotation += projectile.velocity.X * 0.099f;
+                    projectile.rotation += projectile.velocity.X * 0.099f;
                 }
                 if (target)
                 {
                     AdjustMagnitude(ref move);
                     projectile.velocity = (5 * projectile.velocity + move) / 6f;
                     AdjustMagnitude(ref projectile.velocity);
-                }
-                if (projectile.alpha <= 30)
-                {
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<RainbowDust>());
-                    Main.dust[dust].velocity *= 1f;
                 }
             }
         }
@@ -106,15 +101,7 @@ namespace AerovelenceMod.Projectiles
 
 
 
-        public override void Kill(int timeLeft)
-        {
-            Main.PlaySound(SoundID.Item10, projectile.position);
-            {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<RainbowDust>());
-                Main.dust[dust].noGravity = false;
-                Main.dust[dust].velocity *= 2.5f;
-            }
-        }
+
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {

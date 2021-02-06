@@ -23,6 +23,7 @@ namespace AerovelenceMod
 
 
 		public bool ZoneCrystalCaverns;
+		public bool ZoneCrystalCitadel;
 
 		public bool SoulFire;
 		public bool Electrified;
@@ -177,6 +178,7 @@ namespace AerovelenceMod
 		public override void UpdateBiomes()
 		{
 			ZoneCrystalCaverns = AeroWorld.cavernTiles > 50;
+			ZoneCrystalCitadel = AeroWorld.citadelTiles > 50;
 		}
 
         public override void ResetEffects()
@@ -238,12 +240,14 @@ namespace AerovelenceMod
 		{
 			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
 			modOther.ZoneCrystalCaverns = ZoneCrystalCaverns;
+			modOther.ZoneCrystalCitadel = ZoneCrystalCitadel;
 		}
 
 		public override void SendCustomBiomes(BinaryWriter writer)
 		{
 			BitsByte flags = new BitsByte();
 			flags[0] = ZoneCrystalCaverns;
+			flags[1] = ZoneCrystalCitadel;
 			writer.Write(flags);
 		}
 
@@ -253,6 +257,7 @@ namespace AerovelenceMod
 		{
 			BitsByte flags = reader.ReadByte();
 			ZoneCrystalCaverns = flags[0];
+			ZoneCrystalCitadel = flags[1];
 		}
 
 
@@ -260,7 +265,7 @@ namespace AerovelenceMod
 		public override bool CustomBiomesMatch(Player other)
 		{
 			AeroPlayer modOther = other.GetModPlayer<AeroPlayer>();
-			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns;
+			return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns && ZoneCrystalCitadel == modOther.ZoneCrystalCitadel;
 		}
 
 		public override Texture2D GetMapBackgroundImage()

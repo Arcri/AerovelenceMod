@@ -23,8 +23,16 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 			item.useTime = 10;
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.consumable = true;
+			item.consumable = true;
 			item.value = 150;
 			item.createTile = TileType<GlimmeringDoorClosed>();
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ItemType<Glimmerwood>(), 6);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
 		}
 	}
 }

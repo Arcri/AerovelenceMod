@@ -22,20 +22,13 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 			Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
 			Main.tileBlendAll[this.Type] = true;
 			Main.tileMergeDirt[Type] = true;
+			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			AddMapEntry(new Color(100, 155, 255));
 			drop = mod.ItemType("CrystalDirt");
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
 			TileID.Sets.NeedsGrassFramingDirt[Type] = mod.TileType("CrystalDirt");
-		}
-		public override void FloorVisuals(Player player)
-		{
-			Vector2 playerPosition = player.Center + new Vector2(-7, player.height / 3);
-			if (player.velocity.X != 0)
-			{
-				Dust.NewDust(playerPosition, 16, 1, ModContent.DustType<CrystalLeaves>(), 0, 0.15f);
-			}
 		}
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{

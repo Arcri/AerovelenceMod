@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantic Visage");
-            Tooltip.SetDefault("7% increased magic damage\n5% increased magic critical strike chance\n8% less mana cost\n+30 max mana");
+            Tooltip.SetDefault("5% increased magic damage\n+30 max mana");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -27,21 +27,19 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
             item.width = 22;
             item.height = 22;
             item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 2;
+            item.rare = ItemRarityID.Green;
+            item.defense = 3;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.magicDamage *= 1.17f;
-            player.magicCrit += 5;
-            player.manaCost -= 0.18f;
+            player.magicDamage += 0.05f;
             player.statManaMax2 += 30;
         }
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 9);
-            modRecipe.AddIngredient(ItemID.ShadowScale, 10);
+            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
+            modRecipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 10);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

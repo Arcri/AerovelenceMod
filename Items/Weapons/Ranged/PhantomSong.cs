@@ -15,8 +15,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
-            item.crit = 9;
-            item.damage = 26;
+            item.crit = 4;
+            item.damage = 23;
             item.ranged = true;
             item.width = 30;
             item.height = 54;
@@ -25,10 +25,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 4;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
+            item.value = Item.sellPrice(0, 1, 0, 0);
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
-            item.shoot = ProjectileID.PurificationPowder;
+            item.shoot = AmmoID.Arrow;
             item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 7f;
         }

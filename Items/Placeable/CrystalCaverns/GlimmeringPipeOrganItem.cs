@@ -1,10 +1,8 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture;
 
 namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 {
@@ -23,6 +21,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.autoReuse = true;
             item.useAnimation = 15;
             item.useTime = 10;
+            item.consumable = true;
             item.useStyle = ItemUseStyleID.SwingThrow;
 			item.value = Item.sellPrice(0, 0, 0, 0);
             item.createTile = mod.TileType("GlimmeringPipeOrgan"); //put your CustomBlock Tile name
@@ -30,10 +29,10 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 15);
+            modRecipe.AddIngredient(ItemType<Glimmerwood>(), 15);
             modRecipe.AddIngredient(ItemID.Bone, 4);
             modRecipe.AddIngredient(ItemID.Book, 1);
-            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.AddTile(TileType<CrystallineFabricator>());
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
         }

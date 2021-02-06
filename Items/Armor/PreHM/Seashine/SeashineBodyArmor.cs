@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Seashine
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Green;
-            item.defense = 10;
+            item.defense = 3;
         }
 
         public override void UpdateEquip(Player player)
@@ -27,15 +27,15 @@ namespace AerovelenceMod.Items.Armor.PreHM.Seashine
 			player.magicCrit += 3;
             player.rangedCrit += 3;
             player.meleeCrit += 3;
-            player.minionKB *= 1.2f;
+            player.minionKB += 0.02f;
         }
 
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
-            modRecipe.AddIngredient(ItemID.IceBlock, 40);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 12);
+            modRecipe.AddIngredient(ItemID.SandBlock, 25);
+            modRecipe.AddIngredient(ItemID.Seashell, 5);
+            modRecipe.AddIngredient(ItemID.Starfish, 5);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

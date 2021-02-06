@@ -26,11 +26,11 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 8;
-            item.value = Item.sellPrice(0, 1, 15, 0);
+            item.value = Item.sellPrice(0, 1, 0, 0);
             item.rare = ItemRarityID.Green;
             item.autoReuse = false;
             item.shoot = ModContent.ProjectileType<CrystalShard>();
-            item.shootSpeed = 24f;
+            item.shootSpeed = 8f;
         }
         public override Vector2? HoldoutOffset()
         {

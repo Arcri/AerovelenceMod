@@ -223,10 +223,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                             delta = new Vector2(0f, 15f);
                         }
                         if (t % 250 == 0)
-                        {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
-                            npc.netUpdate = true;
-                        }
+                      //  {
+                       //     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
+                        //    npc.netUpdate = true;
+                       // }
                         if (t % 50 == 0)
                         {
 
@@ -256,7 +256,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                         Projectile.NewProjectile(player.Center - new Vector2(0, 16f * 5f), new Vector2(0f, 0f), ProjectileID.CultistBossLightningOrbArc, 10, 3f, Main.myPlayer, BuffID.OnFire, -0f);
                     }*/
                 }
-                if (Vector2.Distance(npc.Center, player.Center) >= 500)
+                /*if (Vector2.Distance(npc.Center, player.Center) >= 500)
                 {
                     cheeseCheck++;
                     npc.rotation += npc.velocity.X * 0.025f;
@@ -290,7 +290,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                             cheeseCheck = 0;
                         }
                     }
-                }
+                }*/
                 if (!player.active || player.dead)
                 {
                     npc.noTileCollide = true;

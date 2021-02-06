@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture;
 
 namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 {
@@ -20,8 +21,18 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.useAnimation = 15;
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 0, 0);
+            item.consumable = true;
+            item.value = Item.sellPrice(0, 0, 0, 0);
             item.createTile = mod.TileType("GlimmeringBed"); //put your CustomBlock Tile name
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 15);
+            modRecipe.AddIngredient(ItemID.Silk, 5);
+            modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());
+            modRecipe.SetResult(this, 1);
+            modRecipe.AddRecipe();
         }
     }
 }

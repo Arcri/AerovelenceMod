@@ -32,7 +32,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shootSpeed = 8f;
             item.useAmmo = AmmoID.Bullet;
         }
-        public override bool ConsumeAmmo(Terraria.Player player)
+        public override bool ConsumeAmmo(Player player)
         {
             return false;
         }

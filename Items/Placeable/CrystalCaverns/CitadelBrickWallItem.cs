@@ -24,5 +24,13 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 			item.consumable = true;
 			item.createWall = WallType<Blocks.CrystalCaverns.Walls.CitadelBrickWall>();
 		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ModContent.ItemType<CitadelBrickItem>(), 1);
+			modRecipe.AddTile(TileID.WorkBenches);
+			modRecipe.SetResult(this, 4);
+			modRecipe.AddRecipe();
+		}
 	}
 }

@@ -9,14 +9,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Shark");
+            DisplayName.SetDefault("Flareshark");
             Tooltip.SetDefault("33% chance to not consume ammo\nShoots flares alongside bullets");
         }
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item41;
             item.crit = 4;
-            item.damage = 28;
+            item.damage = 8;
             item.ranged = true;
             item.width = 46;
             item.height = 28;
@@ -24,13 +24,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAnimation = 10;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 3, 50, 0);
+            item.knockBack = 0;
+            item.value = Item.sellPrice(0, 9, 0, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = ProjectileID.Bullet;
             item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 10f;
+            item.shootSpeed = 8f;
         }
         public override bool ConsumeAmmo(Player player)
         {
@@ -42,9 +42,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
             {
-                type = Main.rand.Next(new int[] { type, ProjectileID.Bullet, ProjectileID.Flare});
-                return true;
+                {
+                    type = Main.rand.Next(new int[] { type, ProjectileID.Bullet, ProjectileID.Flare });
+                    return true;
+                }
             }
         }
         public override void AddRecipes()

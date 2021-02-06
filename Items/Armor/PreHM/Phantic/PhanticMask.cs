@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantic Mask");
-            Tooltip.SetDefault("+1 max minion slots\nMinion knockback increased slightly");
+            Tooltip.SetDefault("8% increased minion damage\n+1 max minion slot\nMinion knockback increased slightly");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -27,19 +27,20 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
             item.width = 18;
             item.height = 18;
             item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 1;
+            item.rare = ItemRarityID.Green;
+            item.defense = 2;
         }
 		public override void UpdateEquip(Player player)
         {
             player.maxMinions += 1;
-            player.minionKB *= 1.15f;
+            player.minionDamage += 0.08f;
+            player.minionKB += 0.1f;
         }
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 9);
-            modRecipe.AddIngredient(ItemID.ShadowScale, 10);
+            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
+            modRecipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 10);
             modRecipe.AddTile(TileID.Anvils);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();

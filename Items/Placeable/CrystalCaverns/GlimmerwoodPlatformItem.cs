@@ -21,7 +21,15 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.value = Item.sellPrice(0, 0, 0, 0);
-            item.createTile = mod.TileType("GlimmerwoodTile"); //put your CustomBlock Tile name
+            item.consumable = true;
+            item.createTile = mod.TileType("GlimmerwoodTile");
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 1);
+            modRecipe.SetResult(this, 2);
+            modRecipe.AddRecipe();
         }
     }
 }

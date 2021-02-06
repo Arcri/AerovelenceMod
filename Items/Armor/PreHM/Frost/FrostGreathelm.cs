@@ -10,8 +10,8 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frozen Greathelm");
-            Tooltip.SetDefault("10% increased melee damage\n8% increased melee swing speed\n8% increased melee critical strike chance");
+            DisplayName.SetDefault("Frost Greathelm");
+            Tooltip.SetDefault("10% increased melee damage and swing speed");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -33,9 +33,8 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         }
 		public override void UpdateEquip(Player player)
         {
-            player.meleeDamage *= 1.1f;
-            player.meleeSpeed *= 1.1f;
-            player.meleeCrit += 10;
+            player.meleeDamage += 0.1f;
+            player.meleeSpeed += 0.1f;
         }
 
         public override void AddRecipes()

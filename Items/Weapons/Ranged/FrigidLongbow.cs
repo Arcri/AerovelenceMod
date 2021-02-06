@@ -15,8 +15,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
-            item.crit = 20;
-            item.damage = 18;
+            item.crit = 4;
+            item.damage = 27;
             item.ranged = true;
             item.width = 24;
             item.height = 42;
@@ -24,13 +24,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAnimation = 25;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
-            item.knockBack = 6;
-            item.value = 10000;
+            item.knockBack = 3;
+            item.value = Item.sellPrice(0, 2, 50, 0);
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
             item.shoot = AmmoID.Arrow;
             item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 8f;
+            item.shootSpeed = 12f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -56,7 +56,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
+            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
             modRecipe.AddIngredient(ItemID.IceBlock, 35);
             modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
             modRecipe.AddTile(TileID.Anvils);
