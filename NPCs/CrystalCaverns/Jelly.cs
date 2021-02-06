@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,17 +11,16 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Jelly");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.BlueSlime];
+            Main.npcFrameCount[npc.type] = 4;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 1;
             npc.lifeMax = 70;
             npc.damage = 15;
             npc.defense = 24;
             npc.knockBackResist = 0f;
-            npc.width = 38;
-            npc.height = 18;
+            npc.width = 16;
+            npc.height = 24;
             npc.value = Item.buyPrice(0, 0, 7, 0);
             npc.lavaImmune = true;
             npc.noGravity = false;
@@ -29,33 +29,34 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.DeathSound = SoundID.NPCDeath44;
         }
 
-        private const int Frame_Jelly1 = 1;
-        private const int Frame_Jelly2 = 2;
-        private const int Frame_Jelly3 = 3;
-        private const int Frame_Jelly4 = 4;
+        int frame;
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter++;
-            if (npc.frameCounter < 10)
+            if (npc.frameCounter >= 10)
             {
-                npc.frame.Y = Frame_Jelly1 * frameHeight;
+                frame++;
+                npc.frameCounter = 0;
             }
-            else if (npc.frameCounter < 20)
+            if (frame > 3)
             {
-                npc.frame.Y = Frame_Jelly2 * frameHeight;
+                frame = 0;
             }
-            else if (npc.frameCounter < 30)
+            npc.frame.Y = frame * frameHeight;
+        }
+
+        public override void AI()
+        {
+            if (npc.wet)
             {
-                npc.frame.Y = Frame_Jelly3 * frameHeight;
-            }
-            else if (npc.frameCounter < 40)
-            {
-                npc.frame.Y = Frame_Jelly4 * frameHeight;
+                npc.ai[0]++;
+                npc.velocity.Y = (float)Math.Sin(npc.ai[0] / 20) * 2;
             }
             else
             {
-                npc.frameCounter = 0;
+                npc.velocity.Y += 0.02f;
             }
+            Lighting.AddLight(npc.Center, 0f, 0f, 0.6f);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
