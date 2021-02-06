@@ -15,127 +15,127 @@ namespace AerovelenceMod.Items
 			switch (npc.type)
 			{
 				case NPCID.Probe:
-					if (Main.rand.Next(1001) == 0)
+					if (Main.rand.NextBool(1001))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("PlaroveneBlaster"));
 					}
 					break;
 				case NPCID.TheDestroyer:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("PlaroveneBlaster"));
 					}
 					break;
 				case NPCID.SkeletronPrime:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("LazX"));
 					}
 					break;
 				case NPCID.PrimeLaser:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("LazX"));
 					}
 					break;
 				case NPCID.Retinazer:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("ClockworkLazinator"));
 					}
 					break;
 				case NPCID.Plantera:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("CrystalGlade"));
 					}
 					break;
 				case NPCID.EyeofCthulhu:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("CthulhusWrath"));
 					}
 					break;
 				case NPCID.KingSlime:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("SlimyKnife"));
 					}
 					break;
 				case NPCID.QueenBee:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("SlimyKnife"));
 					}
 					break;
 				case NPCID.SkeletronHead:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("SkullBow"));
 					}
 					break;
 				case NPCID.Golem:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("NapalmLauncher"));
 					}
 					break;
 				case NPCID.WallofFleshEye:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("VampiricRapier"));
 					}
 					break;
 				case NPCID.Bunny:
-					if (Main.rand.Next(1001) == 0)
+					if (Main.rand.NextBool(1001))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("BunnyCannon"));
 					}
 					break;
 				case NPCID.PossessedArmor:
-					if (Main.rand.Next(251) == 0)
+					if (Main.rand.NextBool(251))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("FAMASTER"));
 					}
 					break;
 				case NPCID.WalkingAntlion:
-					if (Main.rand.Next(26) == 0)
+					if (Main.rand.NextBool(26))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("MandiBlaster"));
 					}
 					break;
 				case NPCID.BlueSlime:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("SlimyGreatsword"));
 					}
 					break;
 				case NPCID.Poltergeist:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("Miasmi"));
 					}
 					break;
 				case NPCID.Hellbat:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("LightOfTheAncients"));
 					}
 					break;
 				case NPCID.FireImp:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("FlameShot"));
 					}
 					break;
 				case NPCID.TacticalSkeleton:
-					if (Main.rand.Next(51) == 0)
+					if (Main.rand.NextBool(51))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("ConfrenceCall"));
 					}
 					break;
 				case NPCID.Hornet:
-					if (Main.rand.Next(26) == 0)
+					if (Main.rand.NextBool(26))
 					{
 						Item.NewItem(npc.getRect(), ModContent.ItemType<Stinger>());
 					}
