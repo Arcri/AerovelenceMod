@@ -31,12 +31,12 @@ namespace AerovelenceMod.NPCs.Cave
             npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
         }
+        private const int Frame_AdobeSnail_0 = 0;
         private const int Frame_AdobeSnail_1 = 1;
         private const int Frame_AdobeSnail_2 = 2;
         private const int Frame_AdobeSnail_3 = 3;
         private const int Frame_AdobeSnail_4 = 4;
         private const int Frame_AdobeSnail_5 = 5;
-        private const int Frame_AdobeSnail_6 = 6;
 
 
         public override void FindFrame(int frameHeight)
@@ -44,27 +44,27 @@ namespace AerovelenceMod.NPCs.Cave
             npc.frameCounter++;
             if (npc.frameCounter < 10)
             {
-                npc.frame.Y = Frame_AdobeSnail_1 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_0 * frameHeight;
             }
             else if (npc.frameCounter < 20)
             {
-                npc.frame.Y = Frame_AdobeSnail_2 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_1 * frameHeight;
             }
             else if (npc.frameCounter < 30)
             {
-                npc.frame.Y = Frame_AdobeSnail_3 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_2 * frameHeight;
             }
             else if (npc.frameCounter < 40)
             {
-                npc.frame.Y = Frame_AdobeSnail_4 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_3 * frameHeight;
             }
             else if (npc.frameCounter < 50)
             {
-                npc.frame.Y = Frame_AdobeSnail_5 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_4 * frameHeight;
             }
             else if (npc.frameCounter < 60)
             {
-                npc.frame.Y = Frame_AdobeSnail_6 * frameHeight;
+                npc.frame.Y = Frame_AdobeSnail_5 * frameHeight;
             }
             else
             {

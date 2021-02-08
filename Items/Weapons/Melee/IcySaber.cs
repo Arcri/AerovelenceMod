@@ -17,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.UseSound = SoundID.Item1;
 			item.crit = 20;
             item.damage = 24;
-            item.ranged = true;
+            item.melee = true;
             item.width = 64;
             item.height = 72;
             item.useTime = 24;

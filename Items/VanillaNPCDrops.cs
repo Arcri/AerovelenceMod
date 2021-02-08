@@ -1,5 +1,8 @@
 using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
+using AerovelenceMod.Items.Placeable.Ores;
 using AerovelenceMod.Items.Weapons.Ranged;
+using AerovelenceMod.NPCs.Cave;
 using AerovelenceMod.NPCs.CrystalCaverns;
 using Terraria;
 using Terraria.ID;
@@ -156,6 +159,7 @@ namespace AerovelenceMod.Items
 						Item.NewItem(npc.getRect(), ModContent.ItemType<FrostShard>());
 					}
 					break;
+
 			}
 			if (npc.type == ModContent.NPCType<LuminousDefender>())
 			{
@@ -164,6 +168,73 @@ namespace AerovelenceMod.Items
 					Item.NewItem(npc.getRect(), ModContent.ItemType<LustrousCrystal>());
 				}
 			}
+			if (npc.type == ModContent.NPCType<LuminousDefender>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(3, 10));
+				}
+			}
+			if (npc.type == ModContent.NPCType<LivingBoulder>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(1, 6));
+				}
+			}
+			if (npc.type == ModContent.NPCType<CaveSnail>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(1, 6));
+				}
+			}
+
+
+			if (npc.type == ModContent.NPCType<Tumblerock1>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(1, 5));
+				}
+			}
+			if (npc.type == ModContent.NPCType<Tumblerock2>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(1, 5));
+				}
+			}
+			if (npc.type == ModContent.NPCType<Tumblerock3>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(1, 5));
+				}
+			}
+			if (npc.type == ModContent.NPCType<Tumblerock4>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(1, 5));
+				}
+			}
+
+			if (npc.type == ModContent.NPCType<CrystalSlime>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(2, 6));
+				}
+			}
+			if (npc.type == ModContent.NPCType<CrystalWormHead>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(2, 8));
+				}
+			}
+
 		}
 	}
 }
