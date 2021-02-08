@@ -1,4 +1,6 @@
 author = Arcri and the Aerovelence Dev team
 version = 1.0
+includePDB = true
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
 displayName = [c/00edff:Aerovelence Mod]
 homepage = https://discord.gg/QwqqZzc

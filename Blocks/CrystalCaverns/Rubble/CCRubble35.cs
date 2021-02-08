@@ -12,7 +12,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = false;
             Main.tileLavaDeath[Type] = false;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(051, 045, 159));
         }

@@ -12,9 +12,19 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = false;
             Main.tileLavaDeath[Type] = false;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(051, 045, 159));
+        }
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            Tile tileBelow = Framing.GetTileSafely(i, j + 1);
+            if (!tileBelow.active() || tileBelow.halfBrick() || tileBelow.topSlope())
+            {
+                WorldGen.KillTile(i, j);
+            }
+
+            return true;
         }
     }
 }

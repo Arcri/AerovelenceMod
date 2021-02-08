@@ -8,12 +8,12 @@ using Terraria.Enums;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
-    public class CitadelFlag : ModTile
+    public class AzurianSpear : ModTile
     {
 		public override void SetDefaults()
 		{
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Citadel Flag");
+			name.SetDefault("Azurian Spear");
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			Main.tileLavaDeath[Type] = true;

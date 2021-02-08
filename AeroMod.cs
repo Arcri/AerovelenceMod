@@ -86,7 +86,7 @@ namespace AerovelenceMod
 		{
 			var slots = new int[] {
 				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"),
-				GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder")
+				GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel")
 		};
 			foreach (var slot in slots)
 			{
@@ -97,7 +97,7 @@ namespace AerovelenceMod
 			}
 
 			{
-				GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder");
+				GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
 			};
 			foreach (var slot in slots)
 			{
@@ -130,7 +130,7 @@ namespace AerovelenceMod
 			}
 			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCitadel)
 			{
-				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/Placeholder");
+				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
 				priority = MusicPriority.BiomeMedium;
 			}
 		}

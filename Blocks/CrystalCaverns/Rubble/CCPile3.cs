@@ -5,7 +5,7 @@ using Terraria.ObjectData;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
 {
-    public class CCRubble5 : ModTile
+    public class CCPile3 : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -15,6 +15,16 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
             TileObjectData.addTile(Type);
             AddMapEntry(new Color(051, 045, 159));
+        }
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            Tile tileBelow = Framing.GetTileSafely(i, j + 1);
+            if (!tileBelow.active() || tileBelow.halfBrick() || tileBelow.topSlope())
+            {
+                WorldGen.KillTile(i, j);
+            }
+
+            return true;
         }
     }
 }
