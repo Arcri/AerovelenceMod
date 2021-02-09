@@ -1,4 +1,4 @@
-author = Arcri and the Aerovelence Dev team
+author = Aerovelence Development Team
 version = 1.0
 includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
