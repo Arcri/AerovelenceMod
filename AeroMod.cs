@@ -6,6 +6,7 @@ using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Items.Weapons.Ranged;
 using AerovelenceMod.Items.Weapons.Thrown;
 using AerovelenceMod.World;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 using Terraria.World.Generation;
 
 namespace AerovelenceMod
@@ -20,7 +22,8 @@ namespace AerovelenceMod
 	public class AeroMod : Mod
 	{
 		// Todo: Convert mod.XType to the new ModContent system
-
+		internal UserInterface MarauderUserInterface;
+		private UserInterface _aeroUserInterface;
 
 		public override void PostSetupContent()
 		{
@@ -81,6 +84,33 @@ namespace AerovelenceMod
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
+			}
+			if(!Main.dedServ)
+            {
+				_aeroUserInterface = new UserInterface();
+				MarauderUserInterface = new UserInterface();
+			}
+		}
+		public override void UpdateUI(GameTime gameTime)
+		{
+			MarauderUserInterface?.Update(gameTime);
+		}
+
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		{
+			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+			if (inventoryIndex != -1)
+			{
+				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+					"AerovelenceMod: Marauder UI",
+					delegate
+					{
+						// If the current UIState of the UserInterface is null, nothing will draw. We don't need to track a separate .visible value.
+						MarauderUserInterface.Draw(Main.spriteBatch, new GameTime());
+						return true;
+					},
+					InterfaceScaleType.UI)
+				);
 			}
 		}
 
