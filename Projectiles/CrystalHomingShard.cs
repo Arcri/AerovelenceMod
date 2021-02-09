@@ -23,6 +23,7 @@ namespace AerovelenceMod.Projectiles
 			projectile.alpha = 255;
 			projectile.damage = 15;
 			projectile.hostile = false;
+			projectile.timeLeft = 300;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.friendly = true;

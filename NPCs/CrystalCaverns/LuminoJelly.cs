@@ -87,7 +87,6 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             if (Main.rand.NextFloat() <= 0.50f)
             {
                 Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-2f, 2f), -5f + Main.rand.NextFloat(-2f, 2f)), ModContent.ProjectileType<LuminoShard>(), 5, 1f, Main.myPlayer);
-                Main.NewText("pass");
             }
         }
         public override void AI()

@@ -17,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         public override void SetDefaults()
         {
 			item.UseSound = SoundID.Item1;
-			item.crit = 5;
+			item.crit = 4;
             item.damage = 16;
             item.melee = true;
             item.width = 60;
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("CrystalKunaiProj");
-            item.shootSpeed = 8f;
+            item.shootSpeed = 6f;
 		}
     }
 }
@@ -49,7 +49,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.width = 18;
             projectile.height = 38;
             projectile.friendly = true;
-            projectile.penetrate = 3;
+            projectile.penetrate = 1;
             projectile.hostile = false;
             projectile.melee = true;
             projectile.tileCollide = true;

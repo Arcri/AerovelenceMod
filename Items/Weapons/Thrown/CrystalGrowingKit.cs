@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,7 +11,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
     {
         public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("'The instructions were missing'");
+			DisplayName.SetDefault("Crystal Growing Kit");
+            Tooltip.SetDefault("'The instructions were missing'");
 		}
         public override void SetDefaults()
         {
@@ -58,9 +60,9 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            int spawnX = (int)(projectile.Center.X / 16) * 16;
-            int spawnY = (int)((projectile.position.Y + projectile.height) / 16) * 16;
-            int index = Projectile.NewProjectile(spawnX, spawnY, projectile.velocity.X, projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+            int spawnX = (int)(projectile.Center.X / 64) * 64;
+            int spawnY = (int)((projectile.position.Y - projectile.height) / 16) * 16;
+            int index = Projectile.NewProjectile(spawnX, spawnY + 70, projectile.velocity.X, projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
         Main.PlaySound(SoundID.Shatter, projectile.position);
             projectile.Kill();
             return true;
@@ -92,7 +94,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             projectile.hostile = false;
             projectile.melee = true;
             projectile.alpha = 255;
-            projectile.tileCollide = true;
+            projectile.tileCollide = false;
             projectile.ignoreWater = true;
             projectile.timeLeft = 500;
         }
@@ -103,13 +105,24 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         }
         public override void AI()
         {
+            int count = 0;
+
+            foreach (Projectile proj in Main.projectile.Where(x => x.active && x.whoAmI != projectile.whoAmI && x.type == projectile.type))
+            {
+                count++;
+
+                if (count >= 7)
+                    proj.Kill();
+            }
             i++;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 132);
+                dust.noGravity = true;
+                dust.velocity *= 0.1f;
             }
             projectile.alpha -= 2;
-            projectile.velocity *= 0.99f;
+            projectile.velocity *= 0f;
         }
     }
 }

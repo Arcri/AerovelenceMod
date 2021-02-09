@@ -52,11 +52,21 @@ namespace AerovelenceMod
 			}
 			{
 				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
-			{
+				{
 				ItemID.ShadowScale,
 				ItemID.TissueSample
-			});
-			RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
+				});
+
+				RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
+			}
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bars", new int[]
+				{
+				ItemID.PlatinumBar,
+				ItemID.GoldBar
+				});
+
+				RecipeGroup.RegisterGroup("AerovelenceMod:GoldBars", group);
 			}
 		}
 

@@ -9,7 +9,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bonecutter");
-            Tooltip.SetDefault("Does more damage to skeletons");
+            Tooltip.SetDefault("Does a lot more damage to skeletons");
         }
         public override void SetDefaults()
         {
@@ -22,7 +22,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useAnimation = 19;
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 8;
+            item.knockBack = 4;
             item.value = 10000;
             item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
@@ -31,13 +31,13 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
             if(target.type == NPCID.Skeleton)
             {
-                damage *= 3;
+                damage *= 2;
             }
         }
 		public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.PlatinumBar, 12);
+            recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 12);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

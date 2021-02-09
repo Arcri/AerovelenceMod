@@ -15,7 +15,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.crit = 20;
+            item.crit = 4;
             item.damage = 15;
             item.ranged = true;
             item.width = 50;
@@ -25,12 +25,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.UseSound = SoundID.Item68;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
-            item.knockBack = 8;
+            item.knockBack = 2;
             item.value = Item.sellPrice(0, 1, 0, 0);
             item.rare = ItemRarityID.Green;
             item.autoReuse = false;
             item.shoot = ModContent.ProjectileType<CrystalShard>();
-            item.shootSpeed = 8f;
+            item.shootSpeed = 3.5f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -54,7 +54,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            float numberProjectiles = 2 + Main.rand.Next(1);
+            float numberProjectiles = 2 + Main.rand.Next(2);
             float rotation = MathHelper.ToRadians(20);
             position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
             for (int i = 0; i < numberProjectiles; i++)

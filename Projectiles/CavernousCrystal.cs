@@ -1,6 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,11 +6,11 @@ using AerovelenceMod.Dusts;
 
 namespace AerovelenceMod.Projectiles
 {
-	public class CavernousCrystal : ModProjectile
+    public class CavernousCrystal : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Cavernous Crystal");     //The English name of the projectile
+			DisplayName.SetDefault("Cavernous Crystal");
 			ProjectileID.Sets.Homing[projectile.type] = false;
 		}
 
@@ -24,15 +22,13 @@ namespace AerovelenceMod.Projectiles
 			projectile.friendly = true;
 			projectile.hostile = false;
 			projectile.melee = true;
-			projectile.penetrate = -1;
+			projectile.penetrate = 7;
 			projectile.alpha = 65;
 			projectile.light = 1f;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = true;
 			projectile.extraUpdates = 1;
 		}
-
-
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			projectile.penetrate--;
@@ -59,7 +55,6 @@ namespace AerovelenceMod.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			// This code and the similar code above in OnTileCollide spawn dust from the tiles collided with. SoundID.Item10 is the bounce sound you hear.
 			Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
 		}
 		public override void AI()
