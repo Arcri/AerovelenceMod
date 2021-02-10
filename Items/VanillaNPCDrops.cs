@@ -1,6 +1,7 @@
 using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using AerovelenceMod.Items.Placeable.Ores;
+using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Items.Weapons.Ranged;
 using AerovelenceMod.NPCs.Cave;
 using AerovelenceMod.NPCs.CrystalCaverns;
@@ -232,6 +233,20 @@ namespace AerovelenceMod.Items
 				if (Main.rand.NextBool(1))
 				{
 					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(2, 8));
+				}
+			}
+			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
+			{
+				if (Main.rand.NextBool(10))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<Crystallizer>(), Main.rand.Next(2, 8));
+				}
+			}
+			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
+			{
+				if (Main.rand.NextBool(1))
+				{
+					Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystalItem>(), Main.rand.Next(5, 15));
 				}
 			}
 

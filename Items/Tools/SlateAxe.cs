@@ -17,6 +17,7 @@ namespace AerovelenceMod.Items.Tools
             item.damage = 6;
             item.melee = true;
             item.width = 40;
+            item.useTurn = true;
             item.height = 34;
             item.useTime = 26;
             item.useAnimation = 26;

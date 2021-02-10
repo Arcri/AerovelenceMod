@@ -41,6 +41,7 @@ namespace AerovelenceMod
 		public bool BurnshockArmorBonus;
 		public bool SpiritCultistBonus = false;
 
+		public bool ShiverMinion;
 		public bool NeutronMinion = false;
 		public bool StarDrone = false;
 		public bool Minicry = false;
@@ -184,6 +185,7 @@ namespace AerovelenceMod
         public override void ResetEffects()
 		{
 			AdobeHelmet = false;
+			ShiverMinion = false;
 			FrostProjectile = false;
 			FrostMelee = false;
 			FrostMinion = false;

@@ -21,7 +21,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.knockBackResist = 0f;
             npc.width = 16;
             npc.height = 24;
-            npc.value = Item.buyPrice(0, 0, 7, 0);
+            npc.value = Item.buyPrice(0, 0, 2, 0);
             npc.lavaImmune = true;
             npc.noGravity = false;
             npc.noTileCollide = false;

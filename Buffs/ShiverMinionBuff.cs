@@ -1,16 +1,14 @@
-using AerovelenceMod.Projectiles.Minions;
-using System;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Buffs
 {
-	public class ShiverMinionBuff: ModBuff
+	public class ShiverMinionBuff : ModBuff
 	{
 		public override void SetDefaults()
 		{
-			DisplayName.SetDefault("Shiver");
-			Description.SetDefault("The lost icy spirit will fight for you");
+			DisplayName.SetDefault("Shiver Spirit");
+			Description.SetDefault("The icy spirit will fight for you");
 			Main.buffNoSave[Type] = true;
 			Main.buffNoTimeDisplay[Type] = true;
 		}
@@ -18,11 +16,11 @@ namespace AerovelenceMod.Buffs
 		public override void Update(Player player, ref int buffIndex)
 		{
 			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
-			if (player.ownedProjectileCounts[ModContent.ProjectileType<ShiverMinion>()] > 0)
+			if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Minions.ShiverMinion>()] > 0)
 			{
-				modPlayer.FrostMinion = true;
+				modPlayer.ShiverMinion = true;
 			}
-			if (!modPlayer.FrostMinion)
+			if (!modPlayer.ShiverMinion)
 			{
 				player.DelBuff(buffIndex);
 				buffIndex--;
