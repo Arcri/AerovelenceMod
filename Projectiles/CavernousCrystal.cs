@@ -11,9 +11,7 @@ namespace AerovelenceMod.Projectiles
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cavernous Crystal");
-			ProjectileID.Sets.Homing[projectile.type] = false;
 		}
-
 		public override void SetDefaults()
 		{
 			projectile.width = 52;
@@ -28,34 +26,6 @@ namespace AerovelenceMod.Projectiles
 			projectile.ignoreWater = true;
 			projectile.tileCollide = true;
 			projectile.extraUpdates = 1;
-		}
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			projectile.penetrate--;
-			if (projectile.penetrate < 0)
-			{
-				projectile.Kill();
-			}
-			else
-			{
-				Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-				if (projectile.velocity.X != oldVelocity.X)
-				{
-					projectile.velocity.X = -oldVelocity.X;
-				}
-				if (projectile.velocity.Y != oldVelocity.Y)
-				{
-					projectile.velocity.Y = -oldVelocity.Y;
-				}
-			}
-			return false;
-		}
-
-
-
-		public override void Kill(int timeLeft)
-		{
-			Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
 		}
 		public override void AI()
 		{

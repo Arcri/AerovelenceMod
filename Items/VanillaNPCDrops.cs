@@ -237,9 +237,9 @@ namespace AerovelenceMod.Items
 			}
 			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
 			{
-				if (Main.rand.NextBool(10))
+				if (Main.rand.NextBool(5))
 				{
-					Item.NewItem(npc.getRect(), ModContent.ItemType<Crystallizer>(), Main.rand.Next(2, 8));
+					Item.NewItem(npc.getRect(), ModContent.ItemType<Crystallizer>());
 				}
 			}
 			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
