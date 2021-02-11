@@ -54,6 +54,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(3));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
             Vector2 muzzleOffset = new Vector2(-7, -8);
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
