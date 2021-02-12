@@ -18,14 +18,14 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.melee = true;
             item.width = 40;
             item.height = 40;
-            item.useTime = 25;
-            item.useAnimation = 25;
+            item.useTime = 10;
+            item.useAnimation = 10;
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.Stabbing;
             item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
+            item.value = Item.sellPrice(0, 3, 50, 0);
             item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+            item.autoReuse = true;
         }
     }
 }
