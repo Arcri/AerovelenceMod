@@ -31,6 +31,16 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.shootSpeed = 8f;
             item.useAmmo = AmmoID.Bullet;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 12);
+            recipe.AddIngredient(ItemID.SunplateBlock, 20);
+            recipe.AddIngredient(ItemID.Cloud, 10);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
 
         public override Vector2? HoldoutOffset()
         {

@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,5 +30,29 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.rare = ItemRarityID.Blue;
             item.autoReuse = false;
         }
-    }
+		public override Color? GetAlpha(Color lightColor)
+		{
+			return Color.White;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
+			tooltips.Add(line);
+
+			line = new TooltipLine(mod, "Icebreaker", "Legendary item")
+			{
+				overrideColor = new Color(255, 241, 000)
+			};
+			tooltips.Add(line);
+			foreach (TooltipLine line2 in tooltips)
+			{
+				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				{
+					line2.overrideColor = new Color(255, 132, 000);
+				}
+			}
+			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
+		}
+	}
 }

@@ -55,13 +55,12 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
+            recipe.AddRecipeGroup("IronBar", 12);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

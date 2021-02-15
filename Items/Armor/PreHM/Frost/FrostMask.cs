@@ -43,6 +43,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
         {
             ModRecipe modRecipe = new ModRecipe(mod);
             modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
+            modRecipe.AddIngredient(ModContent.ItemType<KelvinCore>(), 1);
             modRecipe.AddIngredient(ItemID.IceBlock, 35);
             modRecipe.AddIngredient(ItemID.HellstoneBar, 8);
             modRecipe.AddTile(TileID.Anvils);

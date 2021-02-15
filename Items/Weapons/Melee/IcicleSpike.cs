@@ -37,13 +37,12 @@ namespace AerovelenceMod.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 6);
-            modRecipe.AddIngredient(ItemID.IceBlock, 25);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 6);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
+            recipe.AddRecipeGroup("IronBar", 7);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -31,6 +32,15 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("FrostHydrasThrowProjectile");
             item.shootSpeed = 2f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
+            recipe.AddRecipeGroup("IronBar", 7);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

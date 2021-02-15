@@ -22,6 +22,8 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
         public bool P;
         public int spinTimer;
         public bool Phase2;
+        bool SuperDash = false;
+        public int counter = 0;
         int Time = 0;
         int cheeseCheck;
         int FlyUpwardTime = 20;
@@ -203,6 +205,32 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                     {
                         i = 0;
                     }
+                    if (i % 100 == 0)
+                    {
+                        SuperDash = true;
+                    }
+
+
+                    if (SuperDash == true)
+                    {
+                        npc.rotation += 10f;
+                        counter++;
+                        if (counter >= 60)
+                        {
+                            if (player.Center.X > npc.Center.X)
+                            {
+                                npc.velocity.X += 10f;
+                            }
+                            else if (player.Center.X < npc.Center.X)
+                            {
+                                npc.velocity.X -= 10f;
+                            }
+                        }
+                        else
+                        {
+                            SuperDash = false;
+                        }
+                    }
                     if (i % 50 == 0)
                     {
                         npc.noTileCollide = true;
@@ -223,14 +251,20 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                             delta = new Vector2(0f, 15f);
                         }
                         if (t % 250 == 0)
-                      //  {
-                       //     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
-                        //    npc.netUpdate = true;
-                       // }
-                        if (t % 50 == 0)
                         {
-
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerHomingShard>(), 12, 1f, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 6, 1f, Main.myPlayer);
+                            npc.netUpdate = true;
                         }
+                        if (t % 250 == 0)
+                            //  {
+                            //     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, delta.X, delta.Y, ModContent.ProjectileType<TumblerShockBlast>(), 10, 3f, Main.myPlayer, BuffID.OnFire, 600f);
+                            //    npc.netUpdate = true;
+                            // }
+                            if (t % 50 == 0)
+                            {
+
+                            }
                         if (Main.expertMode)
                         {
                             if (t % 250 == 0)
@@ -302,31 +336,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                     }
                 }
             }
-        }
-
-        private void Move(Vector2 offset)
-        {
-            speed = 5f;
-            Vector2 moveTo = player.Center + offset;
-            Vector2 move = moveTo - npc.Center;
-            float magnitude = Magnitude(move);
-            if (magnitude > speed)
-            {
-                move *= speed / magnitude;
-            }
-            float turnResistance = 2f;
-            move = (npc.velocity * turnResistance + move) / (turnResistance + 1f);
-            magnitude = Magnitude(move);
-            if (magnitude > speed)
-            {
-                move *= speed / magnitude;
-            }
-            npc.velocity = move;
-        }
-
-        private float Magnitude(Vector2 mag)
-        {
-            return (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
         }
     }
 }
