@@ -14,7 +14,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 8;    //boss frame/animation 
+            Main.npcFrameCount[npc.type] = 26;    //boss frame/animation 
         }
         public override void SetDefaults()
         {
@@ -46,6 +46,25 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
         private const int Frame_AdobeSnail_5 = 5;
         private const int Frame_AdobeSnail_6 = 6;
         private const int Frame_AdobeSnail_7 = 7;
+        private const int Frame_AdobeSnail_8 = 8;
+        private const int Frame_AdobeSnail_9 = 9;
+        private const int Frame_AdobeSnail_10 = 10;
+        private const int Frame_AdobeSnail_11 = 11;
+        private const int Frame_AdobeSnail_12 = 12;
+        private const int Frame_AdobeSnail_13 = 13;
+        private const int Frame_AdobeSnail_14 = 14;
+        private const int Frame_AdobeSnail_15 = 15;
+        private const int Frame_AdobeSnail_16 = 16;
+        private const int Frame_AdobeSnail_17 = 17;
+        private const int Frame_AdobeSnail_18 = 18;
+        private const int Frame_AdobeSnail_19 = 19;
+        private const int Frame_AdobeSnail_20 = 20;
+        private const int Frame_AdobeSnail_21 = 21;
+        private const int Frame_AdobeSnail_22 = 22;
+        private const int Frame_AdobeSnail_23 = 23;
+        private const int Frame_AdobeSnail_24 = 24;
+        private const int Frame_AdobeSnail_25 = 25;
+        private const int Frame_AdobeSnail_26 = 26;
 
         public float frameCounter = 0f;
         public override void FindFrame(int frameHeight)
@@ -82,6 +101,83 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
             else if (frameCounter < 80)
             {
                 npc.frame.Y = Frame_AdobeSnail_7 * frameHeight;
+            }
+
+            else if (frameCounter < 90)
+            {
+                npc.frame.Y = Frame_AdobeSnail_8 * frameHeight;
+            }
+            else if (frameCounter < 100)
+            {
+                npc.frame.Y = Frame_AdobeSnail_9 * frameHeight;
+            }
+            else if (frameCounter < 120)
+            {
+                npc.frame.Y = Frame_AdobeSnail_10 * frameHeight;
+            }
+            else if (frameCounter < 130)
+            {
+                npc.frame.Y = Frame_AdobeSnail_11 * frameHeight;
+            }
+            else if (frameCounter < 140)
+            {
+                npc.frame.Y = Frame_AdobeSnail_12 * frameHeight;
+            }
+            else if (frameCounter < 150)
+            {
+                npc.frame.Y = Frame_AdobeSnail_13 * frameHeight;
+            }
+            else if (frameCounter < 160)
+            {
+                npc.frame.Y = Frame_AdobeSnail_14 * frameHeight;
+            }
+            else if (frameCounter < 170)
+            {
+                npc.frame.Y = Frame_AdobeSnail_15 * frameHeight;
+            }
+            else if (frameCounter < 180)
+            {
+                npc.frame.Y = Frame_AdobeSnail_16 * frameHeight;
+            }
+            else if (frameCounter < 190)
+            {
+                npc.frame.Y = Frame_AdobeSnail_17 * frameHeight;
+            }
+            else if (frameCounter < 200)
+            {
+                npc.frame.Y = Frame_AdobeSnail_18 * frameHeight;
+            }
+            else if (frameCounter < 210)
+            {
+                npc.frame.Y = Frame_AdobeSnail_19 * frameHeight;
+            }
+            else if (frameCounter < 220)
+            {
+                npc.frame.Y = Frame_AdobeSnail_20 * frameHeight;
+            }
+            else if (frameCounter < 230)
+            {
+                npc.frame.Y = Frame_AdobeSnail_21 * frameHeight;
+            }
+            else if (frameCounter < 240)
+            {
+                npc.frame.Y = Frame_AdobeSnail_22 * frameHeight;
+            }
+            else if (frameCounter < 250)
+            {
+                npc.frame.Y = Frame_AdobeSnail_23 * frameHeight;
+            }
+            else if (frameCounter < 260)
+            {
+                npc.frame.Y = Frame_AdobeSnail_24 * frameHeight;
+            }
+            else if (frameCounter < 270)
+            {
+                npc.frame.Y = Frame_AdobeSnail_25 * frameHeight;
+            }
+            else if (frameCounter < 280)
+            {
+                npc.frame.Y = Frame_AdobeSnail_26 * frameHeight;
             }
             else
             {
