@@ -1,105 +1,61 @@
-using Microsoft.Xna.Framework;
 using System;
+
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
+
+using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
+	// TODO: Eldrazi - Comments.
 	public class TumblerBoulder1 : ModProjectile
 	{
-		int t;
+		private NPC owner => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<CrystalTumbler>())];
+
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 1;
-			projectile.width = 44;
-			projectile.height = 44;
+			projectile.width = projectile.height = 44;
+
 			projectile.alpha =  255;
-			projectile.damage = 12;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-		}
-		public override void AI()
-		{
-			projectile.alpha -= 10;
-			projectile.velocity.Y *= 99.8f;
-			t++;
-			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Black, 1);
-			Main.dust[dust1].velocity /= 2f;
-			if (t > 25)
-			{
-				projectile.tileCollide = true;
-			}
-		}
-	}
-}
 
-namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
-{
-	public class TumblerBoulder2 : ModProjectile
-	{
-		int t;
-		public override void SetDefaults()
-		{
-			projectile.aiStyle = 1;
-			projectile.width = 44;
-			projectile.height = 44;
-			projectile.alpha = 255;
-			projectile.damage = 12;
-			projectile.friendly = false;
 			projectile.hostile = true;
+			projectile.friendly = false;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 		}
-		public override void AI()
-		{
-			projectile.alpha -= 10;
-			projectile.velocity.Y *= 99.8f;
-			t++;
-			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Black, 1);
-			Main.dust[dust1].velocity /= 2f;
-			if (t > 25)
-			{
-				projectile.tileCollide = true;
-			}
-		}
-	}
-}
 
-namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
-{
-	public class TumblerBoulder3 : ModProjectile
-	{
-		int t;
-		public override void SetDefaults()
-		{
-			projectile.aiStyle = 1;
-			projectile.width = 44;
-			projectile.height = 44;
-			projectile.damage = 12;
-			projectile.alpha = 255;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-		}
-		public override void AI()
+		public override bool PreAI()
 		{
 			projectile.alpha -= 10;
-			projectile.velocity.Y *= 99.8f;
-			t++;
-			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Black, 1);
-			Main.dust[dust1].velocity /= 2f;
-			if (t > 25)
+			Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 0, Color.Black, 1);
+
+			NPC ownerNPC = owner;
+
+			if (++projectile.ai[1] >= 120)
 			{
 				projectile.tileCollide = true;
+
+				if (projectile.ai[1] == 120)
+				{
+					Vector2 desiredVelocity = Vector2.Normalize(Main.player[ownerNPC.target].Center - projectile.Center) * 16f;
+
+					projectile.velocity = desiredVelocity;
+
+					projectile.netUpdate = true;
+				}
 			}
+			else
+			{
+				Vector2 desiredPosition = ownerNPC.Center + new Vector2(-150 + (150 * projectile.ai[0]), -150 + 25 * (float)Math.Sin(projectile.ai[1] / 15));
+
+				Vector2 desiredVelocity = desiredPosition - projectile.Center;
+
+				float speed = MathHelper.Lerp(0.1f, 12f, desiredVelocity.Length() / 100);
+				projectile.velocity = Vector2.Normalize(desiredVelocity) * speed;
+			}
+
+			return (false);
 		}
 	}
 }
