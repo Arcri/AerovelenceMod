@@ -18,7 +18,6 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = NPCID.Mothron;
             npc.lifeMax = 9500;   //boss life
             npc.damage = 32;  //boss damage
             npc.defense = 9;    //boss defense
@@ -30,159 +29,189 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
             npc.npcSlots = 1f;
             npc.boss = true;
             npc.lavaImmune = true;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
+            npc.noGravity = true;
+            npc.noTileCollide = true;
             npc.HitSound = SoundID.NPCHit44;
             npc.DeathSound = SoundID.NPCHit46;
             npc.buffImmune[24] = true;
             bossBag = ModContent.ItemType<SnowriumBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
-        private const int Frame_AdobeSnail_0 = 0;
-        private const int Frame_AdobeSnail_1 = 1;
-        private const int Frame_AdobeSnail_2 = 2;
-        private const int Frame_AdobeSnail_3 = 3;
-        private const int Frame_AdobeSnail_4 = 4;
-        private const int Frame_AdobeSnail_5 = 5;
-        private const int Frame_AdobeSnail_6 = 6;
-        private const int Frame_AdobeSnail_7 = 7;
-        private const int Frame_AdobeSnail_8 = 8;
-        private const int Frame_AdobeSnail_9 = 9;
-        private const int Frame_AdobeSnail_10 = 10;
-        private const int Frame_AdobeSnail_11 = 11;
-        private const int Frame_AdobeSnail_12 = 12;
-        private const int Frame_AdobeSnail_13 = 13;
-        private const int Frame_AdobeSnail_14 = 14;
-        private const int Frame_AdobeSnail_15 = 15;
-        private const int Frame_AdobeSnail_16 = 16;
-        private const int Frame_AdobeSnail_17 = 17;
-        private const int Frame_AdobeSnail_18 = 18;
-        private const int Frame_AdobeSnail_19 = 19;
-        private const int Frame_AdobeSnail_20 = 20;
-        private const int Frame_AdobeSnail_21 = 21;
-        private const int Frame_AdobeSnail_22 = 22;
-        private const int Frame_AdobeSnail_23 = 23;
-        private const int Frame_AdobeSnail_24 = 24;
-        private const int Frame_AdobeSnail_25 = 25;
-        private const int Frame_AdobeSnail_26 = 26;
-
-        public float frameCounter = 0f;
-        public override void FindFrame(int frameHeight)
+        private int cooldownFrames
         {
-            frameCounter += npc.velocity.X * 0.5f + 0.5f;
-            if (frameCounter < 10)
+            get
             {
-                npc.frame.Y = Frame_AdobeSnail_0 * frameHeight;
+                return (int)npc.ai[0];
             }
-            else if (frameCounter < 20)
+            set
             {
-                npc.frame.Y = Frame_AdobeSnail_1 * frameHeight;
+                npc.ai[0] = value;
             }
-            else if (frameCounter < 30)
+        }
+        private CurrentAttack currentAttack
+        {
+            get
             {
-                npc.frame.Y = Frame_AdobeSnail_2 * frameHeight;
+                return (CurrentAttack)(int)npc.ai[1];
             }
-            else if (frameCounter < 40)
+            set
             {
-                npc.frame.Y = Frame_AdobeSnail_3 * frameHeight;
+                npc.ai[1] = (int)value;
             }
-            else if (frameCounter < 50)
-            {
-                npc.frame.Y = Frame_AdobeSnail_4 * frameHeight;
-            }
-            else if (frameCounter < 60)
-            {
-                npc.frame.Y = Frame_AdobeSnail_5 * frameHeight;
-            }
-            else if (frameCounter < 70)
-            {
-                npc.frame.Y = Frame_AdobeSnail_6 * frameHeight;
-            }
-            else if (frameCounter < 80)
-            {
-                npc.frame.Y = Frame_AdobeSnail_7 * frameHeight;
-            }
+        }
+        private enum CurrentAttack
+        {
+            IdleFloat = 0,
+            Dash = 1,
+            LightningStorm = 2,
+            SummonMoths = 3,
+            BlastVolleys = 4,
+            Divebomb = 5,
+            CrystalStomp = 6,
+            CrystalSpin = 7,
+            JumpAtPlayer = 8,
+            SummonJolts = 9
+        }
+        bool grounded = false;
+        float ZaxisRotation = 0;
+        public bool phaseTwo
+        {
+            get{return npc.life < npc.lifeMax / 2;}
+        }
+        public override void AI()
+        {
+            npc.TargetClosest();
 
-            else if (frameCounter < 90)
+            if (cooldownFrames <= 0)
             {
-                npc.frame.Y = Frame_AdobeSnail_8 * frameHeight;
-            }
-            else if (frameCounter < 100)
-            {
-                npc.frame.Y = Frame_AdobeSnail_9 * frameHeight;
-            }
-            else if (frameCounter < 120)
-            {
-                npc.frame.Y = Frame_AdobeSnail_10 * frameHeight;
-            }
-            else if (frameCounter < 130)
-            {
-                npc.frame.Y = Frame_AdobeSnail_11 * frameHeight;
-            }
-            else if (frameCounter < 140)
-            {
-                npc.frame.Y = Frame_AdobeSnail_12 * frameHeight;
-            }
-            else if (frameCounter < 150)
-            {
-                npc.frame.Y = Frame_AdobeSnail_13 * frameHeight;
-            }
-            else if (frameCounter < 160)
-            {
-                npc.frame.Y = Frame_AdobeSnail_14 * frameHeight;
-            }
-            else if (frameCounter < 170)
-            {
-                npc.frame.Y = Frame_AdobeSnail_15 * frameHeight;
-            }
-            else if (frameCounter < 180)
-            {
-                npc.frame.Y = Frame_AdobeSnail_16 * frameHeight;
-            }
-            else if (frameCounter < 190)
-            {
-                npc.frame.Y = Frame_AdobeSnail_17 * frameHeight;
-            }
-            else if (frameCounter < 200)
-            {
-                npc.frame.Y = Frame_AdobeSnail_18 * frameHeight;
-            }
-            else if (frameCounter < 210)
-            {
-                npc.frame.Y = Frame_AdobeSnail_19 * frameHeight;
-            }
-            else if (frameCounter < 220)
-            {
-                npc.frame.Y = Frame_AdobeSnail_20 * frameHeight;
-            }
-            else if (frameCounter < 230)
-            {
-                npc.frame.Y = Frame_AdobeSnail_21 * frameHeight;
-            }
-            else if (frameCounter < 240)
-            {
-                npc.frame.Y = Frame_AdobeSnail_22 * frameHeight;
-            }
-            else if (frameCounter < 250)
-            {
-                npc.frame.Y = Frame_AdobeSnail_23 * frameHeight;
-            }
-            else if (frameCounter < 260)
-            {
-                npc.frame.Y = Frame_AdobeSnail_24 * frameHeight;
-            }
-            else if (frameCounter < 270)
-            {
-                npc.frame.Y = Frame_AdobeSnail_25 * frameHeight;
-            }
-            else if (frameCounter < 280)
-            {
-                npc.frame.Y = Frame_AdobeSnail_26 * frameHeight;
+                Main.NewText(currentAttack);
+                switch(currentAttack)
+                {
+                    case CurrentAttack.IdleFloat:
+                        IdleFloat();
+                        break;
+                    case CurrentAttack.Dash:
+                        Dash();
+                        break;
+                    case CurrentAttack.LightningStorm:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.SummonMoths:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.Divebomb:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.CrystalStomp:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.CrystalSpin:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.JumpAtPlayer:
+                        cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.SummonJolts:
+                        cooldownFrames = 2;
+                        break;
+                    default:
+                        Main.NewText("Error");
+                        cooldownFrames = 2;
+                        break;
+                }
             }
             else
             {
-                frameCounter = 0;
+                if (cooldownFrames == 1)
+                {
+                    int attack = grounded ? Main.rand.Next(3) + 5 : Main.rand.Next(5);
+                    if (!grounded && phaseTwo && Main.rand.Next(8) == 0)
+                    {
+                        attack = 8;
+                    }
+                    currentAttack = (CurrentAttack)attack;
+                }
+                npc.velocity *= 0.97f;
+                attackCounter = 0;
+                cooldownFrames--;
+                if (!grounded)
+                {
+                    UpdateFrame(0.3f, 0, 6);
+                }
             }
         }
+        public float trueFrame;
+        public override void FindFrame(int frameHeight)
+        {
+            npc.frame.Y = (int)trueFrame * frameHeight;
+        }
+        internal void UpdateFrame(float speed, int minFrame, int maxFrame)
+        {
+            trueFrame += speed;
+			if (trueFrame < minFrame) 
+			{
+				trueFrame = minFrame;
+			}
+			if (trueFrame > maxFrame) 
+			{
+				trueFrame = minFrame;
+			}
+        }
+
+        #region attacks
+        int attackCounter;
+        private void IdleFloat()
+        {
+            UpdateFrame(0.3f, 0, 6);
+            Player player = Main.player[npc.target];
+            attackCounter++;
+            if (attackCounter > 200)
+            {
+                cooldownFrames = 30;
+                return;
+            }
+
+            npc.velocity.Y += Math.Sign((player.position.Y - 300) - npc.Center.Y) * (phaseTwo ? 0.2f : 0.3f);
+            if (npc.velocity.Y > 20)
+                npc.velocity.Y = 20;
+            if (npc.velocity.Y < -20)
+                npc.velocity.Y = -20;
+
+            npc.velocity.X += Math.Sign(player.position.X - npc.Center.X) * (phaseTwo ? 0.2f : 0.3f);
+             if (npc.velocity.X > 20)
+                npc.velocity.X = 20;
+            if (npc.velocity.X < -20)
+                npc.velocity.X = -20;
+        }
+        Vector2 dashDirection;
+        private void Dash()
+        {
+            Player player = Main.player[npc.target];
+
+            attackCounter++;
+            if (attackCounter >= 300)
+            {
+                cooldownFrames = 30;
+                return;
+            }
+            if (attackCounter % 90 == 35)
+            {
+               dashDirection = player.Center - npc.Center;
+               dashDirection.Normalize();
+                dashDirection*= 25;
+            }
+            if (attackCounter % 90 < 50)
+            {
+                UpdateFrame(0.1f, 0, 6);
+               npc.velocity *= 0.98f;
+            }
+            else
+            {
+                UpdateFrame(0.3f, 0, 6);
+                 npc.velocity = dashDirection;
+            }
+
+        }
+        #endregion
     }
 }
