@@ -4,11 +4,11 @@ using Terraria.ID;
 
 namespace AerovelenceMod.Items.Placeable.CrystalCaverns
 {
-    public class AfflictionCrystalItem : ModItem
+    public class CrystalSandItem : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crystal Dirt");
+			DisplayName.SetDefault("Crystal Sand");
 		}
         public override void SetDefaults()
         {
@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Placeable.CrystalCaverns
             item.useTime = 10;
             item.useStyle = ItemUseStyleID.SwingThrow;
 			item.value = Item.sellPrice(0, 0, 0, 0);
-            item.createTile = mod.TileType("VividVines"); //put your CustomBlock Tile name
+            item.createTile = mod.TileType("CrystalSand"); //put your CustomBlock Tile name
             item.consumable = true;
         }
     }

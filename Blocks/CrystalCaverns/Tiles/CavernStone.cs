@@ -4,6 +4,8 @@ using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Flora;
+using AerovelenceMod.Blocks.CrystalCaverns.Rubble;
 
 namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
@@ -42,6 +44,67 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             }
             int height = tile.frameY == 36 ? 18 : 16;
             Main.spriteBatch.Draw(mod.GetTexture("Blocks/CrystalCaverns/Tiles/CavernStone_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+        }
+        public static bool PlaceObject(int x, int y, int type, bool mute = false, int style = 0, int alternate = 0, int random = -1, int direction = -1)
+        {
+            TileObject toBePlaced;
+            if (!TileObject.CanPlace(x, y, type, style, direction, out toBePlaced, false))
+            {
+                return false;
+            }
+            toBePlaced.random = random;
+            if (TileObject.Place(toBePlaced) && !mute)
+            {
+                WorldGen.SquareTileFrame(x, y, true);
+            }
+            return false;
+        }
+        public override void RandomUpdate(int i, int j)
+        {
+            Tile tile = Framing.GetTileSafely(i, j);
+            Tile tileBelow = Framing.GetTileSafely(i, j + 1);
+            Tile tileAbove = Framing.GetTileSafely(i, j - 1);
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
+            {
+                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+                {
+                    tileAbove.type = (ushort)ModContent.TileType<CrystalGrowth>();
+                    tileAbove.active(true);
+                    tileAbove.frameY = 0;
+                    tileAbove.frameX = (short)(WorldGen.genRand.Next(13) * 18);
+                    WorldGen.SquareTileFrame(i, j + 1, true);
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
+                    }
+                }
+            }
+            if (WorldGen.genRand.NextBool(25) && tileAbove.liquid > 250 && !tileAbove.active() && !tileBelow.lava())
+            {
+                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+                {
+                    tileAbove.type = (ushort)ModContent.TileType<LuminVines>();
+                    tileAbove.active(true);
+                    WorldGen.SquareTileFrame(i, j - 1, true);
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
+                    }
+                }
+            }
+            if (WorldGen.genRand.NextBool(15) && tileBelow.liquid > 250 && !tileBelow.active() && !tileBelow.lava())
+            {
+                if (!tile.bottomSlope())
+                {
+                    tileBelow.type = (ushort)ModContent.TileType<LuminVines>();
+                    tileBelow.active(true);
+                    WorldGen.SquareTileFrame(i, j + 1, true);
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendTileSquare(-1, i, j + 1, 3, TileChangeType.None);
+                    }
+                }
+            }
         }
     }
 }

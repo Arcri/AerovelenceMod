@@ -29,9 +29,10 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Flora
 			}
 		}
 
+
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
-			Tile tileAbove = Framing.GetTileSafely(i, j - 1);
+			Tile tileAbove = Framing.GetTileSafely(i, j - 2);
 			int type = -1;
 			if (tileAbove.active() && !tileAbove.bottomSlope())
 			{
