@@ -16,6 +16,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.World.Generation;
+using AerovelenceMod.Prim;
 
 namespace AerovelenceMod
 {
@@ -24,7 +25,7 @@ namespace AerovelenceMod
 		// Todo: Convert mod.XType to the new ModContent system
 		internal UserInterface MarauderUserInterface;
 		private UserInterface _aeroUserInterface;
-
+		public static PrimTrailManager primitives;
 		public override void PostSetupContent()
 		{
 			Mod bossChecklist = ModLoader.GetMod("BossChecklist");
@@ -90,6 +91,8 @@ namespace AerovelenceMod
 				_aeroUserInterface = new UserInterface();
 				MarauderUserInterface = new UserInterface();
 			}
+			primitives = new PrimTrailManager();
+			LoadDetours();
 		}
 		public override void UpdateUI(GameTime gameTime)
 		{
@@ -177,8 +180,29 @@ namespace AerovelenceMod
 		public static AeroMod Instance { get; private set; }
 
 		public override void Unload()
-		{
+        {
+			UnloadDetours();
 			Instance = null;
 		}
+		#region detours
+		private void LoadDetours()
+		{
+			On.Terraria.Main.DrawProjectiles += Main_DrawProjectiles;
+			//IL.Terraria.Main.DoDraw += DrawMoonlordLayer;
+		}
+
+		private void UnloadDetours()
+		{
+			On.Terraria.Main.DrawProjectiles -= Main_DrawProjectiles;
+			//IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
+		}
+
+
+		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
+		{
+			primitives.DrawTrails(Main.spriteBatch);
+			orig(self);
+		}
+		#endregion
 	}
 }

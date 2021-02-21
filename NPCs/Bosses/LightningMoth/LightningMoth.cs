@@ -94,7 +94,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                         Dash();
                         break;
                     case CurrentAttack.LightningStorm:
-                        cooldownFrames = 2;
+                        LightningStorm();
                         break;
                     case CurrentAttack.SummonMoths:
                         cooldownFrames = 2;
@@ -211,6 +211,18 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                  npc.velocity = dashDirection;
             }
 
+        }
+
+        private void LightningStorm()
+        {
+            UpdateFrame(0.3f, 0, 6);
+            attackCounter++;
+            if (attackCounter >= 300)
+            {
+                cooldownFrames = 30;
+                return;
+            }
+            npc.velocity = Vector2.Zero;
         }
         #endregion
     }
