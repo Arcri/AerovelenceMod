@@ -11,7 +11,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Walls
 		{
 			Main.wallHouse[Type] = true;
 			drop = ItemType<Items.Placeable.CrystalCaverns.LushGrowthWallItem>();
-			AddMapEntry(new Color(54, 87, 129));
+			AddMapEntry(new Color(018, 078, 023));
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)

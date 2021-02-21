@@ -17,11 +17,12 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileMerge[Type][mod.TileType("CrystalDirt")] = true;
             Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
             Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
+            Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = true;
             Main.tileBlockLight[Type] = true;
-            AddMapEntry(new Color(065, 065, 085));
+            AddMapEntry(new Color(046, 045, 072));
             dustType = 59;
             soundType = SoundID.Tink;
             drop = ModContent.ItemType<CitadelStoneItem>();

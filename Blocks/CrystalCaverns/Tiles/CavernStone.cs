@@ -18,7 +18,10 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             Main.tileSolid[Type] = true;
             Main.tileMerge[Type][mod.TileType("CrystalDirt")] = true;
             Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
+            Main.tileMerge[Type][mod.TileType("ChargedStone")] = true;
             Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
+            Main.tileMerge[Type][mod.TileType("CitadelStone")] = true;
+            Main.tileMerge[Type][mod.TileType("LushGrowth")] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
