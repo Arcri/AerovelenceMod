@@ -23,6 +23,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         public int shootTimer3;
         public int shootTimer4;
         public int dashTimer;
+        public int dashDirection;
         public int dashTimer2;
         private int shootTimer5;
         private int stobit;
@@ -132,7 +133,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 if (progTimer1 >= 0 && progTimer1 < 360)
                 {
                     // follows player from the top and shoots a blast of icy spikes
-                    npc.rotation = 0;
                     npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
                     npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
 
@@ -165,13 +165,26 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                         shootTimer = 0;
                     }
                 }
+
+                
                 if (progTimer1 >= 360 && progTimer1 < 660)
                 {
+                    if (dashDirection == 0)
+                    {
+                        dashDirection = 1;
+                        if (Main.rand.NextBool(2))
+                        {
+                            dashDirection *= -1;
+                        }
+                    }
+                    
                     // follows player from right and dash to left after 4 secs
+
                     dashTimer++;
                     if (dashTimer >= 0 && dashTimer < 240)
                     {
-                        npc.velocity.X = ((10 * npc.velocity.X + move.X + 300) / 20f);
+
+                        npc.velocity.X = ((10 * npc.velocity.X + move.X + 300 * dashDirection) / 20f);
                         npc.velocity.Y = ((10 * npc.velocity.Y + move.Y) / 20f);
                         stobit++;
                         if (stobit >= 40)
@@ -184,16 +197,19 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                             stobit = 0;
                         }
                     }
+
                     if (dashTimer >= 240)
                     {
+
                         npc.velocity.Y = 0;
-                        npc.velocity.X = -15f;
+                        npc.velocity.X += 0.5f * -dashDirection;
                     }
                 }
                 if (progTimer1 >= 660 && progTimer1 < 1260)
                 {
                     // normal follow player and shoots a spead (3) icy bolt
                     dashTimer = 0;
+                    dashDirection = 0;
                     Vector2 playerPos = player.position + new Vector2(0, -300);
                     float speed = 3.2f;
                     Vector2 moving = playerPos - npc.Center;
@@ -248,7 +264,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 {
                     // spins around the player
                     someValue += 3f;
-                    npc.position = player.position + new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(someValue));
+                    npc.position = Vector2.Lerp(npc.position, player.position + new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(someValue)), 0.05f);
                     npc.ai[1]++;
                     if (npc.ai[1] >= 30)
                     {
@@ -266,7 +282,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     npc.velocity = new Vector2(0f, 0f);
                     shootTimer3++;
                     int type = mod.ProjectileType("IceBolt");
-                    npc.rotation += 0.1f;
                     int damage = Main.expertMode ? 14 : 9;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     float speedX = 7f;
                     float speedY = 7f;
@@ -289,7 +304,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                 if (progTimer2 >= 1 && progTimer2 < 361)
                 {
                     // follow player's top and shoots blast of icy spikes faster
-                    npc.rotation = 0;
                     npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
                     npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
 
@@ -456,7 +470,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     npc.velocity = new Vector2(0f, 0f);
                     h++;
                     int type = mod.ProjectileType("IceBolt");
-                    npc.rotation += 0.1f;
                     int damage = Main.expertMode ? 12 : 9;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                     float speedX = 7f;
                     float speedY = 7f;
@@ -476,6 +489,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
                     progTimer2 = 0;
                 }
             }
+            npc.rotation = npc.velocity.X * 0.1f;
         }
         public override void HitEffect(int hitDirection, double damage)
         {
