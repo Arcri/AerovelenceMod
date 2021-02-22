@@ -10,6 +10,7 @@ using System.Numerics;
 
 namespace AerovelenceMod.NPCs.Bosses.CursedMachine
 {
+    [AutoloadBossHead]
     public class CursedMachine : ModNPC
     {
         private int Mode = 0;
