@@ -38,6 +38,10 @@ namespace AerovelenceMod
 			{
 				downed.Add("Snowrium");
 			}
+			if (downedCyvercry)
+			{
+				downed.Add("Cyvercry");
+			}
 			return new TagCompound
 			{
 				["downed"] = downed,
@@ -48,6 +52,7 @@ namespace AerovelenceMod
 			var downed = tag.GetList<string>("downed");
 			downedCrystalTumbler = downed.Contains("CrystalTumbler");
 			downedSnowrium = downed.Contains("Snowrium");
+			downedCyvercry = downed.Contains("Cyvercry");
 		}
 		public override void LoadLegacy(BinaryReader reader)
 		{
