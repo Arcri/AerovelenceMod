@@ -43,7 +43,7 @@ namespace AerovelenceMod
 
 		public bool ShiverMinion;
 		public bool NeutronMinion = false;
-		public bool StarDrone = false;
+		public bool StarDrone;
 		public bool Minicry = false;
 
 

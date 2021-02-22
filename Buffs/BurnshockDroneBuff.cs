@@ -17,20 +17,20 @@ namespace AerovelenceMod.Buffs
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
 			if (player.ownedProjectileCounts[ModContent.ProjectileType<ShockburnDrone>()] > 0)
 			{
 				modPlayer.StarDrone = true;
 			}
-
 			if (!modPlayer.StarDrone)
 			{
 				player.DelBuff(buffIndex);
 				buffIndex--;
-				return;
 			}
-
-			player.buffTime[buffIndex] = 18000;
+			else
+			{
+				player.buffTime[buffIndex] = 18000;
+			}
 		}
 	}
 }
