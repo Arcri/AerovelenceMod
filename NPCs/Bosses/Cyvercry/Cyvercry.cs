@@ -39,7 +39,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             npc.boss = true;
             npc.noGravity = true;
             npc.noTileCollide = true;
-            //bossBag = ModContent.ItemType<CyvercryBag>();
+            bossBag = ModContent.ItemType<CyvercryBag>();
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath14;
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry");
@@ -85,7 +85,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 }
             }
         }
-        /*public override void BossLoot(ref string name, ref int potionType)
+        public override void BossLoot(ref string name, ref int potionType)
         {
             potionType = ItemID.GreaterHealingPotion;
             if (!AeroWorld.downedCyvercry)
@@ -121,7 +121,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 if (rand == 3)
                     Item.NewItem(npc.getRect(), ModContent.ItemType<Oblivion>());
             }
-        }*/
+        }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             float alpha = 1f;

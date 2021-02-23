@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Burnshock Body Armor");
-            Tooltip.SetDefault("4% increased damage\nImmunity to Electrified\n+15 max health");
+            Tooltip.SetDefault("4% increased damage\nImmunity to Electrified");
         } 			
         public override void SetDefaults()
         {
@@ -23,10 +23,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         }
         public override void UpdateEquip(Player player)
         {
-            player.rangedDamage += 0.04f;
-            player.magicDamage += 0.04f;
-            player.meleeDamage += 0.04f;
-            player.statLifeMax2 += 15;
+            player.allDamage += 0.04f;
             player.buffImmune[BuffID.Electrified] = true;
         }
         public override void AddRecipes()

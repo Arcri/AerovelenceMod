@@ -74,12 +74,10 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
             }
             npc.ai[0]++;
             int maxAI = 0;
-            int stage = 0;
             float MovementSpeed = 1;
             if (npc.life > (int)(npc.lifeMax * 0.8f))
             {
                 maxAI = 1;
-                stage = 0;
                 MovementSpeed = 4.5f;
                 if (npc.ai[1] == 0)
                 {
@@ -96,7 +94,6 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
             if (npc.life > (int)(npc.lifeMax * 0.6f) && npc.life <= (int)(npc.lifeMax * 0.8f))
             {
                 maxAI = 2;
-                stage = 1;
                 MovementSpeed = 5.5f;
                 if (npc.ai[1] == 0)
                 {
@@ -132,7 +129,6 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
             if (npc.life > (int)(npc.lifeMax * 0.5f) && npc.life <= (int)(npc.lifeMax * 0.6f))
             {
                 maxAI = 2;
-                stage = 2;
                 MovementSpeed = 5.5f;
                 if (npc.ai[1] == 0)
                 {
@@ -164,7 +160,6 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
             if (npc.life > (int)(npc.lifeMax * 0.4f) && npc.life <= (int)(npc.lifeMax * 0.5f))
             {
                 maxAI = 3;
-                stage = 3;
                 MovementSpeed = 6f;
                 if (npc.ai[1] == 0)
                 {
@@ -269,7 +264,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
                             40, 16, Main.myPlayer);
                     }
                 }
-                stage = 4;
+
                 MovementSpeed = 11f;
             }
             if (npc.life <= (int)(npc.lifeMax * 0.1f))
@@ -320,7 +315,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
                         Main.projectile[shot].hostile = true;
                     }
                 }
-                stage = 5;
+
                 MovementSpeed = 14f;
             }
             if (npc.ai[0] % 280 == 0)

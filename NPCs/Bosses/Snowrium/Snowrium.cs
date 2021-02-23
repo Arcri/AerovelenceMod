@@ -11,28 +11,6 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
     [AutoloadBossHead]
     public class Snowrium : ModNPC
     {
-        public int t;
-        public bool Phase2;
-        public int progTimer2;
-        public int progTimer1;
-        public float someValue;
-        public float someValue2;
-        public int timerAttack;
-        public int shootTimer;
-        public int shootTimer2;
-        public int shootTimer3;
-        public int shootTimer4;
-        public int dashTimer;
-        public int dashDirection;
-        public int dashTimer2;
-        private int shootTimer5;
-        private int stobit;
-        private int stobit2;
-        private int plzstop;
-        private int ebic;
-        private int h;
-        public float hhhh;
-
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[npc.type] = 13;    //boss frame/animation 
@@ -59,42 +37,30 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
             bossBag = ModContent.ItemType<SnowriumBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
+        private enum RimegeistState
+        {
+            IdleMovement = 0,
+            SpiritSouls = 1,
+            IcicleDrop = 2,
+            AuroraBeams = 3,
+            VoidstoneDrop = 4
+        }
+        private RimegeistState State
+        {
+            get => (RimegeistState)npc.ai[0];
+            set => npc.ai[0] = (float)value;
+        }
+        private float AttackTimer
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public bool phaseTwo
         {
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/Snowrium/Glowmask");
-            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            get { return npc.life < npc.lifeMax / 2; }
         }
-        public override void NPCLoot()
-        {
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            if (!Main.expertMode)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.HealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostShard"), Main.rand.Next(10, 20), false, 0, false, false);
-                switch (Main.rand.Next(5))
-                {
-                    case 0:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystalArch"), 1, false, 0, false, false);
-                        break;
-                    case 1:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DeepFreeze"), 1, false, 0, false, false);
-                        break;
-                    case 2:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("IcySaber"), 1, false, 0, false, false);
-                        break;
-                    case 3:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CryoBall"), 1, false, 0, false, false);
-                        break;
-                    case 4:
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Snowball"), 1, false, 0, false, false);
-                        break;
-                }
-            }
-        }
+
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = 11500;  //boss life scale in expertmode
@@ -102,484 +68,111 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
         }
         public override void AI()
         {
-            var player = Main.player[npc.target];
-            if (player.dead || !player.active)
+
+            npc.TargetClosest(true);
+
+            Player player = Main.player[npc.target];
+            npc.velocity = (player.Center - npc.Center) / 50;
+            if (!player.active || player.dead)
             {
                 npc.noTileCollide = true;
                 npc.TargetClosest(false);
-                npc.velocity.Y = -20f;
+                npc.velocity.Y = 20f;
                 if (npc.timeLeft > 10)
                 {
                     npc.timeLeft = 10;
                 }
             }
-            if (npc.life <= npc.lifeMax / 2)
+            if (State == RimegeistState.IdleMovement)
             {
-                Phase2 = true;
-            }
-
-            npc.ai[0]++;
-            if (npc.ai[0] >= 600)
-            {
-                NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, ModContent.NPCType<ShiverSpirit>());
-                npc.ai[0] = 0;
-            }
-            npc.TargetClosest(true);
-            Vector2 vector8 = new Vector2(npc.position.X + (npc.width * 0.5f), npc.position.Y + (npc.height * 0.5f));
-            Vector2 move = player.position - npc.Center;
-            if (!Phase2)
-            {
-                progTimer1++;
-                if (progTimer1 >= 0 && progTimer1 < 360)
+                if (++AttackTimer >= 250)
                 {
-                    // follows player from the top and shoots a blast of icy spikes
-                    npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
-                    npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
+                    AttackTimer = 0;
 
-                    int type = mod.ProjectileType("IcySpike");
-                    int damage = Main.expertMode ? 15 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    float speedX = 10f;
-                    float speedY = 10f;
-                    Vector2 position = npc.Center;
-                    shootTimer++;
-                    if (shootTimer >= 90)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(0));
-                        Vector2 perturbedSpeed1 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45));
-                        Vector2 perturbedSpeed2 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(90));
-                        Vector2 perturbedSpeed3 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(135));
-                        Vector2 perturbedSpeed4 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(180));
-                        Vector2 perturbedSpeed5 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(225));
-                        Vector2 perturbedSpeed6 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(270));
-                        Vector2 perturbedSpeed7 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(315));
-                        Vector2 perturbedSpeed8 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed1.X, perturbedSpeed1.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed2.X, perturbedSpeed2.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed3.X, perturbedSpeed3.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed4.X, perturbedSpeed4.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed5.X, perturbedSpeed5.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed6.X, perturbedSpeed6.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed7.X, perturbedSpeed7.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed8.X, perturbedSpeed8.Y, type, damage, 2f, player.whoAmI);
-                        shootTimer = 0;
-                    }
-                }
-
-                
-                if (progTimer1 >= 360 && progTimer1 < 660)
-                {
-                    if (dashDirection == 0)
-                    {
-                        dashDirection = 1;
-                        if (Main.rand.NextBool(2))
-                        {
-                            dashDirection *= -1;
-                        }
-                    }
-                    
-                    // follows player from right and dash to left after 4 secs
-
-                    dashTimer++;
-                    if (dashTimer >= 0 && dashTimer < 240)
-                    {
-
-                        npc.velocity.X = ((10 * npc.velocity.X + move.X + 300 * dashDirection) / 20f);
-                        npc.velocity.Y = ((10 * npc.velocity.Y + move.Y) / 20f);
-                        stobit++;
-                        if (stobit >= 40)
-                        {
-                            float Speed = 7f;
-                            int damage = Main.expertMode ? 15 : 11;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                            int type = mod.ProjectileType("IceBlast");
-                            float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                            Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-                            stobit = 0;
-                        }
+                        State = (RimegeistState)Main.rand.Next(1, 5);
                     }
 
-                    if (dashTimer >= 240)
-                    {
-
-                        npc.velocity.Y = 0;
-                        npc.velocity.X += 0.5f * -dashDirection;
-                    }
-                }
-                if (progTimer1 >= 660 && progTimer1 < 1260)
-                {
-                    // normal follow player and shoots a spead (3) icy bolt
-                    dashTimer = 0;
-                    dashDirection = 0;
-                    Vector2 playerPos = player.position + new Vector2(0, -300);
-                    float speed = 3.2f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;
-                    int damage = Main.expertMode ? 15 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    Vector2 position = npc.Center;
-                    int type = mod.ProjectileType("IceBolt");
-                    float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                    shootTimer2++;
-                    if (shootTimer2 >= 120)
-                    {
-                        float numberProjectiles = 6;
-                        float rotation = MathHelper.ToRadians(10);
-                        position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
-                        for (int i = 0; i < numberProjectiles; i++)
-                        {
-                            Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1)).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
-                            if (i == 1 || i == 3)
-                            {
-                                int proj1 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                Main.projectile[proj1].velocity *= 1.25f;
-                                shootTimer2 = 0;
-                            }
-                            else if (i == 2)
-                            {
-                                int proj2 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                Main.projectile[proj2].velocity *= 1.5f;
-                                shootTimer2 = 0;
-                            }
-                            else
-                            {
-                                int proj3 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                shootTimer2 = 0;
-                            }
-
-                        }
-                    }
-                }
-                if (progTimer1 >= 1260 && progTimer1 < 1500)
-                {
-                    // spins around the player
-                    someValue += 3f;
-                    npc.position = Vector2.Lerp(npc.position, player.position + new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(someValue)), 0.05f);
-                    npc.ai[1]++;
-                    if (npc.ai[1] >= 30)
-                    {
-                        float Speed = 4f;
-                        int damage = Main.expertMode ? 16 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        int type = mod.ProjectileType("IceBlast");
-                        float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-                        npc.ai[1] = 0;
-                    }
-                }
-                if (progTimer1 >= 1500 && progTimer1 < 2160)
-                {
-                    // random spread bullet hell
-                    npc.velocity = new Vector2(0f, 0f);
-                    shootTimer3++;
-                    int type = mod.ProjectileType("IceBolt");
-                    int damage = Main.expertMode ? 14 : 9;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    float speedX = 7f;
-                    float speedY = 7f;
-                    Vector2 position = npc.Center;
-                    Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(360));
-                    if (shootTimer3 >= 10)
-                    {
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                        shootTimer3 = 0;
-                    }
-                }
-                if (progTimer1 >= 2160)
-                {
-                    progTimer1 = 0;
+                    npc.netUpdate = true;
                 }
             }
-            if (Phase2)
+            else if (State == RimegeistState.SpiritSouls)
             {
-                progTimer2++;
-                if (progTimer2 >= 1 && progTimer2 < 361)
+                if (AttackTimer++ == 0)
                 {
-                    // follow player's top and shoots blast of icy spikes faster
-                    npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
-                    npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
+                    float Speed = 7f;
+                    int damage = Main.expertMode ? 15 : 10;
+                    int type = mod.ProjectileType("IceBlast");
+                    float rotation = (float)Math.Atan2(npc.Center.Y - (player.position.Y + (player.height * 0.5f)), npc.Center.X - (player.position.X + (player.width * 0.5f)));
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
+                }
+                else if (AttackTimer++ == 5)
+                {
+                    float Speed = 7f;
+                    int damage = Main.expertMode ? 15 : 10;
+                    int type = mod.ProjectileType("IceBlast");
+                    float rotation = (float)Math.Atan2(npc.Center.Y - (player.position.Y + (player.height * 0.5f)), npc.Center.X - (player.position.X + (player.width * 0.5f)));
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
+                }
+                else if (AttackTimer++ == 10)
+                {
+                    float Speed = 7f;
+                    int damage = Main.expertMode ? 15 : 10;
+                    int type = mod.ProjectileType("IceBlast");
+                    float rotation = (float)Math.Atan2(npc.Center.Y - (player.position.Y + (player.height * 0.5f)), npc.Center.X - (player.position.X + (player.width * 0.5f)));
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
 
-                    int type = mod.ProjectileType("IcySpike");
-                    int damage = Main.expertMode ? 17 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    float speedX = 10f;
-                    float speedY = 10f;
-                    Vector2 position = npc.Center;
-                    shootTimer5++;
-                    if (shootTimer5 >= 90)
-                    {
-                        Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(0));
-                        Vector2 perturbedSpeed1 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45));
-                        Vector2 perturbedSpeed2 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(90));
-                        Vector2 perturbedSpeed3 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(135));
-                        Vector2 perturbedSpeed4 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(180));
-                        Vector2 perturbedSpeed5 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(225));
-                        Vector2 perturbedSpeed6 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(270));
-                        Vector2 perturbedSpeed7 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(315));
-                        Vector2 perturbedSpeed8 = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed1.X, perturbedSpeed1.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed2.X, perturbedSpeed2.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed3.X, perturbedSpeed3.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed4.X, perturbedSpeed4.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed5.X, perturbedSpeed5.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed6.X, perturbedSpeed6.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed7.X, perturbedSpeed7.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed8.X, perturbedSpeed8.Y, type, damage, 2f, player.whoAmI);
-                        shootTimer5 = 0;
-                    }
-                }
-                if (progTimer2 >= 361 && progTimer2 < 631)
-                {
-                    // follow player's right and shoot ice bolts faster, after 2.5 secs, dash to player at a faster speed gremer
-                    dashTimer2++;
-                    if (dashTimer2 >= 0 && dashTimer2 < 150)
-                    {
-                        npc.velocity.X = ((10 * npc.velocity.X + move.X + 300) / 20f);
-                        npc.velocity.Y = ((10 * npc.velocity.Y + move.Y) / 20f);
-                        stobit2++;
-                        if (stobit2 >= 20)
-                        {
-                            float Speed = 7f;
-                            int damage = Main.expertMode ? 13 : 9;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                            int type = ProjectileID.FrostBlastHostile;
-                            float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                            Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-                            stobit2 = 0;
-                        }
-                    }
-                    if (dashTimer2 >= 150)
-                    {
-                        npc.velocity.Y = 0;
-                        npc.velocity.X = -20f;
-                    }
-                }
-                if (progTimer2 >= 631 && progTimer2 < 1231)
-                {
-                    // normal follow player and shoot a spread (6) ice bolts
-                    dashTimer2 = 0;
-                    Vector2 playerPos = player.position + new Vector2(0, -300);
-                    float speed = 3.2f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;
-                    int damage = Main.expertMode ? 9 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    Vector2 position = npc.Center;
-                    int type = mod.ProjectileType("IceBolt");
-                    float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                    shootTimer2++;
-                    if (shootTimer2 >= 120)
-                    {
-                        float numberProjectiles = 8;
-                        float rotation = MathHelper.ToRadians(10);
-                        position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
-                        for (int i = 0; i < numberProjectiles; i++)
-                        {
-                            Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1)).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
-                            if (i == 1 || i == 3)
-                            {
-                                int proj1 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                Main.projectile[proj1].velocity *= 1.25f;
-                                shootTimer2 = 0;
-                            }
-                            else if (i == 2)
-                            {
-                                int proj2 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                Main.projectile[proj2].velocity *= 1.5f;
-                                shootTimer2 = 0;
-                            }
-                            else
-                            {
-                                int proj3 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                                shootTimer2 = 0;
-                            }
-
-                        }
-                    }
-                }
-                if (progTimer2 >= 1231 && progTimer2 < 1471)
-                {
-                    // spins around the player faster and shoots more ice bolts
-                    someValue += 3f;
-                    npc.position = player.position + new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(someValue));
-                    plzstop++;
-                    if (plzstop >= 15)
-                    {
-                        float Speed = 3f;
-                        int damage = Main.expertMode ? 11 : 8;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        int type = mod.ProjectileType("IceBlast");
-                        float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-                        plzstop = 0;
-                    }
-                }
-                if (progTimer2 >= 1471 && progTimer2 < 1951)
-                {
-                    // normal follow player, shoots less ice bolts, spawns ice projectiles on player top that explodes into 4 ice bolts
-                    Vector2 playerPos = player.position + new Vector2(0, -300);
-                    float speed = 3.2f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;
-
-                    ebic++;
-                    if (ebic >= 60)
-                    {
-                        float Speed = 7f;
-                        int damage = Main.expertMode ? 15 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        int type = mod.ProjectileType("IceBlast");
-                        int type2 = mod.ProjectileType("IceCube");
-                        float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
-                        Projectile.NewProjectile(player.Center + new Vector2(0, -300), new Vector2(0, 0), type2, damage, 2f, player.whoAmI);
-                        ebic = 0;
-                    }
-                }
-                if (progTimer2 >= 1951 && progTimer2 < 2611)
-                {
-                    // faster random spread bullet hell
-                    npc.velocity = new Vector2(0f, 0f);
-                    h++;
-                    int type = mod.ProjectileType("IceBolt");
-                    int damage = Main.expertMode ? 12 : 9;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    float speedX = 7f;
-                    float speedY = 7f;
-                    Vector2 position = npc.Center;
-                    Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(360));
-                    Vector2 perturbedSpeed1 = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(360));
-                    if (h >= 15)
-                    {
-                        Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
-                        Projectile.NewProjectile(position, perturbedSpeed1, type, damage, 2f, player.whoAmI);
-                        h = 0;
-                    }
-                }
-
-                if (progTimer2 >= 2611)
-                {
-                    progTimer2 = 0;
+                    AttackTimer = 0;
+                    State = RimegeistState.IdleMovement;
                 }
             }
-            npc.rotation = npc.velocity.X * 0.1f;
-        }
-        public override void HitEffect(int hitDirection, double damage)
-        {
-            for (int i = 0; i < 10; i++)
+            else if (State == RimegeistState.IcicleDrop)
             {
-                int dustType = DustID.Ice;
-                int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
-                Dust dust = Main.dust[dustIndex];
-                dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
-                dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;
-                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-            }
-        }
-        public override void FindFrame(int frameHeight)
-        {
-            npc.frameCounter++;
-            {
-                if (npc.frameCounter < 5)
+                if (AttackTimer++ == 0)
                 {
-                    npc.frame.Y = 0 * frameHeight;
+                    Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<IceBlast>(), 12, 1f, Main.myPlayer, 0);
                 }
-                else if (npc.frameCounter < 10)
+                if (AttackTimer++ == 5)
                 {
-                    npc.frame.Y = 1 * frameHeight;
+                    Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<IceBlast>(), 12, 1f, Main.myPlayer, 0);
                 }
-                else if (npc.frameCounter < 15)
+                if (AttackTimer++ == 10)
                 {
-                    npc.frame.Y = 2 * frameHeight;
-                }
-                else if (npc.frameCounter < 20)
-                {
-                    npc.frame.Y = 3 * frameHeight;
-                }
-                else if (npc.frameCounter < 25)
-                {
-                    npc.frame.Y = 4 * frameHeight;
-                }
-                else
-                {
-                    npc.frameCounter = 0;
+                    Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<IceBlast>(), 12, 1f, Main.myPlayer, 0);
+
+                    AttackTimer = 0;
+                    State = RimegeistState.IdleMovement;
                 }
             }
-            if (npc.life <= npc.lifeMax / 2)
+            else if (State == RimegeistState.AuroraBeams)
             {
-                if (npc.frameCounter < 5)
+                npc.velocity.X = 0;
+                npc.velocity.Y = 0;
+                if (AttackTimer++ == 10)
                 {
-                    npc.frame.Y = 5 * frameHeight;
-                }
-                else if (npc.frameCounter < 10)
-                {
-                    npc.frame.Y = 6 * frameHeight;
-                }
-                else if (npc.frameCounter < 15)
-                {
-                    npc.frame.Y = 7 * frameHeight;
-                }
-                else if (npc.frameCounter < 20)
-                {
-                    npc.frame.Y = 8 * frameHeight;
-                }
-                else if (npc.frameCounter < 25)
-                {
-                    npc.frame.Y = 9 * frameHeight;
-                }
-                else if (npc.frameCounter < 30)
-                {
-                    npc.frame.Y = 10 * frameHeight;
-                }
-                else if (npc.frameCounter < 35)
-                {
-                    npc.frame.Y = 11 * frameHeight;
-                }
-                else if (npc.frameCounter < 40)
-                {
-                    npc.frame.Y = 12 * frameHeight;
-                }
-                else
-                {
-                    npc.frameCounter = 0;
+                    Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<IceBlast>(), 12, 1f, Main.myPlayer, 0);
+
+                    AttackTimer = 0;
+                    State = RimegeistState.IdleMovement;
                 }
             }
-        }
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
-        {
-            scale = 1.5f;
-            return null;
+            else if (State == RimegeistState.VoidstoneDrop)
+            {
+                npc.velocity.Y += 5f;
+                if (AttackTimer++ == 10)
+                {
+                    Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<IceBlast>(), 12, 1f, Main.myPlayer, 0);
+
+                    AttackTimer = 0;
+                    State = RimegeistState.IdleMovement;
+                }
+            }
         }
     }
 }
-namespace AerovelenceMod.NPCs.Bosses.Snowrium
+
+    namespace AerovelenceMod.NPCs.Bosses.Snowrium
 {
 
     public class ShiverSpirit : ModNPC
@@ -981,10 +574,9 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 
             if (projectile.alpha == 0)
             {
-                int direction = -1;
 
-                if (projectile.Center.X < mountedCenter.X)
-                    direction = 1;
+
+
 
                 //player.itemRotation = (float)Math.Atan2(remainingVectorToPlayer.Y * direction, remainingVectorToPlayer.X * direction);
             }

@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
 		{
             player.setBonus = "11% increased ranged damage\nTaking damage will release damaging shards of crystal";
             player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
-            player.rangedDamage += 0.11f;
+            player.rangedDamage += 0.05f;
         } 	
         public override void SetDefaults()
         {
@@ -33,7 +33,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         }
 		public override void UpdateEquip(Player player)
         {
-			player.rangedDamage += 1.00f;
+			player.rangedDamage += 0.10f;
             player.rangedCrit += 8;
         }
         public override void AddRecipes()

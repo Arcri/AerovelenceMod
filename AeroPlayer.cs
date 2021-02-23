@@ -93,6 +93,16 @@ namespace AerovelenceMod
 					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
 				}
             }
+			if (BurnshockArmorBonus)
+			{
+				if (damage > 25)
+				{
+					Vector2 offset = new Vector2(0, -100);
+					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer);
+					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer);
+					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer);
+				}
+			}
 		}
 
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)

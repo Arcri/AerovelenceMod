@@ -20,7 +20,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
 			item.crit = 20;
-            item.damage = 28;
+            item.damage = 38;
             item.ranged = true;
             item.width = 66;
             item.height = 22;
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.knockBack = 8;
             item.value = Item.sellPrice(0, 15, 0, 0);
             item.rare = ItemRarityID.Pink;
-            item.autoReuse = true;
+            item.autoReuse = false;
             item.shoot = mod.ProjectileType("HydraulicBlasterProj");
 			item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 28f;
@@ -41,7 +41,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddRecipeGroup("IronBar", 10);
+            modRecipe.AddIngredient(ItemID.HallowedBar, 10);
             modRecipe.AddIngredient(ItemID.Starfish, 5);
             modRecipe.AddIngredient(ItemID.SoulofSight, 3);
             modRecipe.AddIngredient(ItemID.WaterBucket, 1);
@@ -55,13 +55,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.033);
-            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = System.Math.Atan2(speedX, speedY);
+            float baseSpeed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+            double baseAngle = Math.Atan2(speedX, speedY);
             double randomAngle;
             for (int i = 0; i < num; ++i)
             {
                 randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-                posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
+                posArray[i] = new Vector2(baseSpeed * (float)Math.Sin(randomAngle), baseSpeed * (float)Math.Cos(randomAngle));
             }
             return posArray;
         }
