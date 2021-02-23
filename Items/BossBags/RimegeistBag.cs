@@ -4,9 +4,9 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.BossBags
 {
-	public class SnowriumBag : ModItem
+	public class RimegeistBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("Snowrium");
+		public override int BossBagNPC => mod.NPCType("Rimegeist");
 
 		public override void SetStaticDefaults()
 		{

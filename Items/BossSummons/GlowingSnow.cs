@@ -1,6 +1,4 @@
 using AerovelenceMod.Items.Others.Crafting;
-using AerovelenceMod.NPCs.Bosses.Snowrium;
-using System.Runtime.InteropServices;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,7 +10,7 @@ namespace AerovelenceMod.Items.BossSummons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Glowing Snow");
-            Tooltip.SetDefault("Summons Snowrium\nOnly works at night\nMust be in the snow biome");
+            Tooltip.SetDefault("Summons Rimegeist\nOnly works at night\nMust be in the snow biome");
         }
         public override void SetDefaults()
         {
@@ -28,13 +26,13 @@ namespace AerovelenceMod.Items.BossSummons
         }
         public override bool CanUseItem(Player player)
         {
-            return !NPC.AnyNPCs(mod.NPCType("Snowrium"));
+            return !NPC.AnyNPCs(mod.NPCType("Rimegeist"));
         }
         public override bool UseItem(Player player)
         {
             if (player.ZoneSnow)
             {
-                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Snowrium"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Rimegeist"));
             }
             Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
             return true;

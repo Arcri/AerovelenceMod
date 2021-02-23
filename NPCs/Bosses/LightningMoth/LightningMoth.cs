@@ -34,7 +34,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
             npc.HitSound = SoundID.NPCHit44;
             npc.DeathSound = SoundID.NPCHit46;
             npc.buffImmune[24] = true;
-            bossBag = ModContent.ItemType<SnowriumBag>();
+       //     bossBag = ModContent.ItemType<SnowriumBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
         private int cooldownFrames

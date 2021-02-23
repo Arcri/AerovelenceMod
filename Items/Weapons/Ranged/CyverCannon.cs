@@ -25,7 +25,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.knockBack = 2f;
             item.width = 70;
             item.height = 38;
-            item.damage = 60;
+            item.damage = 30;
             item.shoot = mod.ProjectileType("CyverCannonProj");
             item.rare = ItemRarityID.Yellow;
             item.value = Item.sellPrice(0, 5, 20, 0);

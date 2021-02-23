@@ -31,8 +31,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         public override void SetDefaults()
         {
             npc.lifeMax = 37500;
-            npc.damage = 60;
-            npc.defense = 20;
+            npc.damage = 65;
+            npc.defense = 30;
             npc.knockBackResist = 0f;
             npc.width = 180;
             npc.height = 100;
@@ -49,7 +49,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         {
             npc.lifeMax = 41500;
             npc.damage = 85;
-            npc.defense = 20;
+            npc.defense = 35;
         }
         public override void FindFrame(int frameHeight)
         {
@@ -296,9 +296,9 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     prevCenter = player.Center;
                     npc.rotation = (npc.Center - player.Center).ToRotation();
                 }
-                float dist = 512;
+                float dist = 300;
                 if (ai1 <= 10)
-                    dist = 750;
+                    dist = 650;
                 Vector2 dynamicAddition = new Vector2(30, 0).RotatedBy(MathHelper.ToRadians(dynamicCounter));
                 Vector2 circular = new Vector2(0, 96).RotatedBy(MathHelper.ToRadians(ai2));
                 Vector2 goTo = prevCenter - direction * new Vector2(-dist + circular.X, 0).RotatedBy(MathHelper.ToRadians(dynamicAddition.X));
@@ -307,7 +307,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 goTo = goTo.SafeNormalize(Vector2.Zero);
                 if(ai2 > 120)
                 {
-                    npc.rotation = MathHelper.ToRadians(180) + goTo.ToRotation();
+                    npc.rotation = (npc.Center - player.Center).ToRotation();
                 }
                 if (speed > distance) 
                 {
@@ -318,7 +318,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 {
                     ai3--;
                     shadowTrail = true;
-                    if(((ai3 % 6 == 0 && !Main.expertMode) || (ai3 % 5 == 0 && Main.expertMode)) && !runOncePhase2)
+                    npc.rotation = (npc.Center - player.Center).ToRotation();
+                    if (((ai3 % 6 == 0 && !Main.expertMode) || (ai3 % 5 == 0 && Main.expertMode)) && !runOncePhase2)
                     {
                         FireLaser(ModContent.ProjectileType<EnergyBall>(), 1, 0, player.whoAmI);
                     }
