@@ -13,11 +13,9 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
     [AutoloadBossHead]
     public class CursedMachine : ModNPC
     {
-        private int Mode = 0;
         int timer = 0;
         int t = 0;
-        bool spawned = false;
-        bool hasBeenBelow500 = false;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Cursed Machine");

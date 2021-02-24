@@ -41,7 +41,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class CyverCannonProj : ModProjectile
 	{
-		int i;
 		public int Timer;
 		public float shootSpeed = 0.5f;
 
@@ -193,7 +192,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class DarkLaser : ModProjectile
 	{
-		int t;
 		public int i;
 		public int counter = 0;
 		public override void SetDefaults()
@@ -245,8 +243,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class CannonSplit : ModProjectile
 	{
-		int t;
-		public int i;
+        public int i;
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.Homing[projectile.type] = true;

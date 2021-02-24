@@ -13,9 +13,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
     [AutoloadBossHead]
     public class CrystalTumbler : ModNPC
     {
-        private Player player;
-
-        private float speed;
         float LifePercentLeft;
         int t;
         int i;
@@ -24,16 +21,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
         public bool Phase2;
         bool SuperDash = false;
         bool ThrownRock1 = false;
-        bool ThrownRock2 = false;
-        bool ThrownRock3 = false;
         public int counter = 0;
-        int Time = 0;
-        int cheeseCheck;
-        int FlyUpwardTime = 20;
-        int RotationTime = (int)2.5 * 60;
-        int rotationalSpeed = 2;
-        int TotalRotations = 3;
-        int Max = 10;
 
         public override void SetDefaults()
         {
@@ -186,13 +174,11 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
                         counter++;
                         if (counter >= 10)
                         {
-                            ThrownRock2 = true;
                             Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                         }
                         counter++;
                         if (counter >= 20)
                         {
-                            ThrownRock3 = true;
                             Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<TumblerShard1>(), 4, 1f, Main.myPlayer);
                         }
                     }

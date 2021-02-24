@@ -157,6 +157,8 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			}
 			return true;
 		}
+
+        [Obsolete]
         public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;

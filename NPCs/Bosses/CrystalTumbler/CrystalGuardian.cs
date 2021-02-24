@@ -12,7 +12,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
             Main.npcFrameCount[npc.type] = 3;
         }
 
-        int i;
+        private readonly int i;
 
         public override void SetDefaults()
         {

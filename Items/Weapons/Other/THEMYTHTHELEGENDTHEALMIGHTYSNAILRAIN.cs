@@ -49,7 +49,6 @@ namespace AerovelenceMod.Items.Weapons.Other
 {
     public class SnailRainManager : ModProjectile
     {
-        Mod apoMod;
         public override void SetDefaults()
         {
             projectile.width = 1;

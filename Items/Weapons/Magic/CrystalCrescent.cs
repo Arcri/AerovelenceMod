@@ -90,7 +90,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class CrystalCrescentProj : ModProjectile
     {
-        int i;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Crystal Crescent");
@@ -205,7 +204,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
                             break;
                     }
                     {
-                        hitDirection = (Main.player[projectile.owner].Center.X < Main.npc[i].Center.X) ? 1 : (-1);
                     }
                     if (Main.rand.Next(6) != 0)
                     {
@@ -239,7 +237,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class CrystalCrescentProjAlt : ModProjectile
     {
-        private int i;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Crystal Crescent");
@@ -293,9 +290,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
                     projectile.rotation += (float)Math.PI;
                 }
                 float f = projectile.rotation - (float)Math.PI / 4f * (float)Math.Sign(projectile.velocity.X);
-                float collisionPoint2 = 0f;
-                float num = 50f;
-                    num = 110f;
                 player.DirectionTo(projectile.Center);
                 player.DirectionTo(destination2);
                 Vector2 vector3 = projectile.velocity.SafeNormalize(Vector2.UnitY);
@@ -316,7 +310,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
                             break;
                     }
                     velocity *= 10f + (float)Main.rand.Next(4);
-                    hitDirection = ((Main.player[projectile.owner].Center.X < Main.npc[i].Center.X) ? 1 : (-1));
                     // Projectile.NewProjectile(base.projectile.Center, velocity, ModContent.ProjectileType<CrystalCrescentProjAlt>(), projectile.damage, 0f, projectile.owner);
                 }
                 for (int k = 0; k < 3; k += 2)

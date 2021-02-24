@@ -62,7 +62,6 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class SoulChakramProjectile : ModProjectile
     {
-        int Counter = 2;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Soul Chakram");

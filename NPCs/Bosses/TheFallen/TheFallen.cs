@@ -12,17 +12,7 @@ namespace AerovelenceMod.NPCs.Bosses.TheFallen //credit to Dominic Karma for jum
     [AutoloadBossHead]
     public class TheFallen : ModNPC
     {
-        private Player player;
-        private float speed;
-        float LifePercentLeft;
         int t;
-        int i;
-        int FlyUpwardTime = 5;
-        int Time = 10;
-        int RotationTime = 10;
-        int TotalRotations = 5;
-        int Max = 10;
-
         public override void SetDefaults()
         {
             npc.aiStyle = -1;

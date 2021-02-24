@@ -76,8 +76,6 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			Item.NewItem(i * 16, j * 16, 32, 32, chestDrop);
 			Chest.DestroyChest(i, j);
 		}
-
-        [Obsolete]
         public override void RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
@@ -150,7 +148,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles.Furniture
 			}
 		}
 
-		public override void MouseOver(int i, int j)
+        public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];

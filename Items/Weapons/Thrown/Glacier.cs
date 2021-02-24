@@ -64,7 +64,6 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class GlacierProjectile : ModProjectile
     {
-        int Counter = 2;
         int i;
         public override void SetStaticDefaults()
         {

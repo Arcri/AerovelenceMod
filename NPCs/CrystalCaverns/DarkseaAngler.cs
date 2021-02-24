@@ -15,9 +15,6 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             DisplayName.SetDefault("Darksea Angler");
             Main.npcFrameCount[npc.type] = 8;
         }
-
-        int t;
-
         bool IsElectricityActive = false;
 
         public override void SetDefaults()
@@ -48,7 +45,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             IsElectricityActive = reader.ReadBoolean();
         }
 
-        bool IselectricityActive = false;
+        private bool IselectricityActive = false;
         float ai = 0;
         float delayBetween = 0;
         public override bool PreAI()
