@@ -1,5 +1,6 @@
 using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -40,7 +41,6 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.useAmmo = AmmoID.Bullet;
             item.shootSpeed = 24f;
         }
-
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
