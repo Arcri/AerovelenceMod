@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
         public override void SetDefaults()
 		{
-			item.damage = 50;
+			item.damage = 62;
 			item.crit = 8;
 			item.magic = true;
 			item.mana = 12;
@@ -99,7 +99,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 					projectile.velocity = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
 					projectile.localAI[0] = 1f;
 				}
-				projectile.velocity *= 1.015f;
+				projectile.velocity *= 1.035f;
 			}
 		}
 

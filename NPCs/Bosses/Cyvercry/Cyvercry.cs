@@ -353,7 +353,22 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 {
                     if(ai1 % 5 == 0)
                     {
-                        FireLaser(ProjectileID.DeathLaser, 9f, 0.7f);
+                        if (Main.expertMode)
+                        {
+                            FireLaser(ProjectileID.DeathLaser, 13f, 0.7f);
+                        }
+                        if (!Main.expertMode)
+                        {
+                            FireLaser(ProjectileID.DeathLaser, 11f, 0.7f);
+                        }
+                        if (Main.expertMode)
+                        {
+                            npc.defense = 35;
+                        }
+                        if (!Main.expertMode)
+                        {
+                            npc.defense = 30;
+                        }
                         ai3++;
                     }
                     if(ai3 >= 30)
@@ -372,6 +387,14 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     {
                         for (int i = 0; i < 360; i += 20)
                         {
+                            if (Main.expertMode)
+                            {
+                                npc.defense = 65;
+                            }
+                            if (!Main.expertMode)
+                            {
+                                npc.defense = 60;
+                            }
                             Vector2 circular = new Vector2(64, 0).RotatedBy(MathHelper.ToRadians(i));
                             circular.X *= 0.6f;
                             circular = circular.RotatedBy(npc.rotation);
@@ -386,6 +409,14 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     }
                     for(int j = 0; j < ai2; j++)
                     {
+                        if (Main.expertMode)
+                        {
+                            npc.defense = 65;
+                        }
+                        if (!Main.expertMode)
+                        {
+                            npc.defense = 60;
+                        }
                         Vector2 circular = new Vector2(64, 0).RotatedBy(MathHelper.ToRadians(j * 120 + ai1 * 4));
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(npc.rotation);
@@ -394,7 +425,9 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                         dust.velocity *= 0.1f;
                         dust.scale = 1.4f;
                         dust.noGravity = true;
+                        npc.defense = 60;
                     }
+                    
                 }
             }
             if(nextAttack == 1)

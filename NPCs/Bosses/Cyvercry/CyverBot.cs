@@ -17,7 +17,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry
         public override void SetDefaults()
         {
             npc.lifeMax = 540;
-            npc.damage = 16;
+            npc.damage = 40;
             npc.defense = 12;
             npc.width = 66;
             npc.height = 40;
@@ -43,7 +43,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry
         float dynamicCounter = 0;
         public override void AI()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
                 npc.netUpdate = true;
             dynamicCounter++;
             npc.spriteDirection = -1;
@@ -131,7 +131,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry
             {
                 damage = (int)(damage / Main.expertDamage);
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
             }
