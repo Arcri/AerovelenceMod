@@ -31,8 +31,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         public override void SetDefaults()
         {
             npc.lifeMax = 37500;
-            npc.damage = 65;
-            npc.defense = 30;
+            npc.damage = 105;
+            npc.defense = 25;
             npc.knockBackResist = 0f;
             npc.width = 180;
             npc.height = 100;
@@ -48,8 +48,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = 41500;
-            npc.damage = 85;
-            npc.defense = 35;
+            npc.damage = 125;
+            npc.defense = 30;
         }
         public override void FindFrame(int frameHeight)
         {
@@ -238,6 +238,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             {
                 npc.rotation = (npc.Center - player.Center).ToRotation();
                 npc.velocity.Y -= 0.09f;
+                npc.timeLeft = 300;
                 if(npc.position.Y <= 16 * 35) //checking for top of the world practically
                 {
                     npc.active = false;
@@ -607,7 +608,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                         Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(240, 600), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            int damage = npc.damage / 2;
+                            int damage = 70;
                             if (Main.expertMode)
                             {
                                 damage = (int)(damage / Main.expertDamage);
@@ -643,7 +644,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = npc.Center - new Vector2(96, 0).RotatedBy(npc.rotation);
-            int damage = npc.damage / 2;
+            int damage = 75;
             if (Main.expertMode)
             {
                 damage = (int)(damage / Main.expertDamage);
@@ -752,8 +753,8 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         }
         public override void SetDefaults()
         {
-            projectile.width = 166;
-            projectile.height = 100;
+            projectile.width = 124;
+            projectile.height = 75;
             projectile.timeLeft = 240;
             projectile.penetrate = -1;
             projectile.friendly = false;

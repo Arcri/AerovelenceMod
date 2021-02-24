@@ -126,7 +126,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = npc.Center - new Vector2(96, 0).RotatedBy(npc.rotation);
-            int damage = npc.damage / 2;
+            int damage = 50;
             if (Main.expertMode)
             {
                 damage = (int)(damage / Main.expertDamage);
