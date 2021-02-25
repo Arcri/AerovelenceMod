@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.useAnimation = 40;
 			item.useTime = 40;
 			item.knockBack = 4f;
-			item.damage = 9;
+			item.damage = 40;
 			item.noUseGraphic = true;
 			item.shoot = ModContent.ProjectileType<CavernMaulerProjectile>();
 			item.shootSpeed = 15.1f;

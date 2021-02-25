@@ -3,17 +3,16 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
-	public class TumblerOrb : ModProjectile
+    public class TeleportCharge : ModProjectile
 	{
 		int t;
 		public override void SetDefaults()
 		{
-			projectile.width = 80;
-			projectile.height = 80;
+			projectile.width = 128;
+			projectile.height = 128;
 			projectile.aiStyle = 88;
 			projectile.damage = 1;
 			projectile.hostile = true;
@@ -23,12 +22,13 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		
 		public override void AI()
 		{
+			Player player = Main.player[projectile.owner];
+			projectile.Center = player.Center + new Vector2(0, -370);
 			if (projectile.localAI[1] == 0f)
 			{
-				Main.PlaySound(SoundID.Item121, projectile.position);
 				projectile.localAI[1] = 1f;
 			}
-			if (projectile.ai[0] < 180f)
+			if (projectile.ai[0] < 150f)
 			{
 				projectile.alpha -= 5;
 				if (projectile.alpha < 0)
@@ -38,7 +38,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			}
 			else
 			{
-				projectile.alpha += 5;
+				projectile.alpha += 7;
 				if (projectile.alpha > 255)
 				{
 					projectile.alpha = 255;
@@ -73,23 +73,8 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						}
 					}
 				}
-				for (int i = 0; i < numberProjectiles; i++)
-				{
-					Vector2 vector69 = array7[i] - projectile.Center;
-					float ai = Main.rand.Next(100);
-					Vector2 vector70 = Vector2.Normalize(vector69.RotatedByRandom(0.78539818525314331)) * 7f;
-					Projectile.NewProjectile(projectile.Center, vector70, ProjectileType<TumblerOrbArc>(), 10, 0f, Main.myPlayer, vector69.ToRotation(), ai);
-				}
 			}                     
 			Lighting.AddLight(projectile.Center, 0.4f, 0.85f, 0.9f);
-			if (++projectile.frameCounter >= 4)
-			{
-				projectile.frameCounter = 0;
-				if (++projectile.frame >= Main.projFrames[projectile.type])
-				{
-					projectile.frame = 0;
-				}
-			}
 			if (projectile.alpha >= 150 || !(projectile.ai[0] < 180f))
 			{
 				return;
@@ -105,7 +90,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				{
 					num869 = 0.5f;
 				}
-				Vector2 value42 = new Vector2((float)(-projectile.width) * 0.2f * projectile.scale, 0f).RotatedBy(num869 * ((float)Math.PI * 2f)).RotatedBy(projectile.velocity.ToRotation());
+				Vector2 value42 = new Vector2(-projectile.width * 0.2f * projectile.scale, 0f).RotatedBy(num869 * ((float)Math.PI * 2f)).RotatedBy(projectile.velocity.ToRotation());
 				int num870 = Dust.NewDust(projectile.Center - Vector2.One * 5f, 10, 10, 226, (0f - projectile.velocity.X) / 3f, (0f - projectile.velocity.Y) / 3f, 150, Color.Transparent, 0.7f);
 				Main.dust[num870].position = projectile.Center + value42;
 				Main.dust[num870].velocity = Vector2.Normalize(Main.dust[num870].position - projectile.Center) * 2f;

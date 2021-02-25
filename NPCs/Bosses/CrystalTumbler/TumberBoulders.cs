@@ -12,7 +12,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
 	public class TumblerBoulder1 : ModProjectile
 	{
-		private NPC owner => Main.npc[NPC.FindFirstNPC(ModContent.NPCType<CrystalTumbler>())];
+		private NPC owner => Main.npc[NPC.FindFirstNPC(NPCType<CrystalTumbler>())];
         public override void SetStaticDefaults()
         {
 			Main.projFrames[projectile.type] = 3;
@@ -55,10 +55,11 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 0, Color.Black, 1);
 
 			NPC ownerNPC = owner;
-			if(projectile.ai[1] == 0)
-            {
+			if (projectile.ai[1] == 0)
+			{
 				projectile.frame = Main.rand.Next(3);
-            }
+			}
+
 			if (++projectile.ai[1] >= 120)
 			{
 				projectile.tileCollide = true;
@@ -72,7 +73,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					projectile.netUpdate = true;
 				}
 			}
-			return true;
+			else
+			{
+				Vector2 desiredPosition = ownerNPC.Center + new Vector2(-150 + (150 * projectile.ai[0]), -150 + 25 * (float)Math.Sin(projectile.ai[1] / 15));
+
+				Vector2 desiredVelocity = desiredPosition - projectile.Center;
+
+				float speed = MathHelper.Lerp(0.1f, 12f, desiredVelocity.Length() / 100);
+				projectile.velocity = Vector2.Normalize(desiredVelocity) * speed;
+			}
+
+			return (false);
 		}
 	}
 }

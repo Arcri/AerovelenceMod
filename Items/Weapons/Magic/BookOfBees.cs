@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -8,7 +10,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Book of Bees");
-            Tooltip.SetDefault("Wait, those aren't bees...\nRelic");
+            Tooltip.SetDefault("Wait, those aren't bees...");
         }
         public override void SetDefaults()
         {
@@ -19,7 +21,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.height = 48;
             item.useTime = 10;
             item.useAnimation = 10;
-            item.UseSound = SoundID.Item5;
+            item.UseSound = SoundID.Item82;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 4;
@@ -28,6 +30,30 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.autoReuse = true;
             item.shoot = ProjectileID.Wasp;
             item.shootSpeed = 12f;
+        }
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var line = new TooltipLine(mod, "Verbose:RemoveMe", "Why do I exist, dawg");
+            tooltips.Add(line);
+
+            line = new TooltipLine(mod, "Book of Bees", "Legendary item")
+            {
+                overrideColor = new Color(255, 241, 000)
+            };
+            tooltips.Add(line);
+            foreach (TooltipLine line2 in tooltips)
+            {
+                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                {
+                    line2.overrideColor = new Color(255, 132, 000);
+                }
+            }
+            tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
         }
     }
 }

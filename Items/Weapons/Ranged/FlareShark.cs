@@ -16,7 +16,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             item.UseSound = SoundID.Item41;
             item.crit = 4;
-            item.damage = 8;
+            item.damage = 11;
             item.ranged = true;
             item.width = 46;
             item.height = 28;

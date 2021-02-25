@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,14 +34,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         }
         public override Vector2? HoldoutOffset()
         {
+
             return new Vector2(-8, 0);
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool UseItem(Player player)
         {
-            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(2));
-            speedX = perturbedSpeed.X;
-            speedY = perturbedSpeed.Y;
-            player.statLife -= 5;
+            Main.NewText("HHHH");
+            player.Hurt(PlayerDeathReason.ByCustomReason(player.name + " didn't follow the instructions"), 5, 0, false);
             return true;
         }
         public override void AddRecipes()
