@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Icebreaker");
-			Tooltip.SetDefault("'A forgotten hero's sword, lost in the tundra'");
+			Tooltip.SetDefault("'A forgotten hero's sword, lost in the tundra'\nHas a chance to rain ice above an enemy when hit");
 		}
         public override void SetDefaults()
         {

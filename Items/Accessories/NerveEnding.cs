@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -11,7 +12,7 @@ namespace AerovelenceMod.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Nerve Ending");
-			Tooltip.SetDefault("Increases live regen by 5%");
+			Tooltip.SetDefault("Increases live regen by 10%");
 		}
         public override void SetDefaults()
         {
@@ -19,9 +20,9 @@ namespace AerovelenceMod.Items.Accessories
             item.width = 16;
             item.height = 26;
             item.value = 10000;
-            item.rare = -12;
+            item.rare = ItemRarityID.Green;
         }
-		public override void UpdateAccessory(Player player, bool hideVisual)
+        public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.lifeRegen += 5;
 		}

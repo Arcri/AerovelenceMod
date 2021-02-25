@@ -75,5 +75,9 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			projectile.tileCollide = true;
 			projectile.ignoreWater = false;
 		}
-	}
+        public override void AI()
+        {
+			projectile.rotation = projectile.velocity.ToRotation();
+		}
+    }
 }

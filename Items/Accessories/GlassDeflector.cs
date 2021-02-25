@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -11,7 +12,7 @@ namespace AerovelenceMod.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Glass Deflector");
-			Tooltip.SetDefault("Gain 15% inceased damage at the cost of your defense\nExpert");
+			Tooltip.SetDefault("Has a chance to reflect a projectile\n2 shards of space crystal float around you\nExpert");
 		}
         public override void SetDefaults()
         {
@@ -21,7 +22,24 @@ namespace AerovelenceMod.Items.Accessories
 			item.value = Item.sellPrice(0, 5, 0, 0);
 			item.rare = -12;
         }
-		public override void UpdateAccessory(Player player, bool hideVisual)
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+            tooltips.Add(line);
+            foreach (TooltipLine line2 in tooltips)
+            {
+                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                {
+                    line2.overrideColor = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
+                }
+            }
+        }
+        public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.statDefense -= 5;
 			player.meleeDamage *= 1.15f;

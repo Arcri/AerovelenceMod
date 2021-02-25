@@ -27,6 +27,7 @@ namespace AerovelenceMod
 			downedSnowrium = false;
 			downedCyvercry = false;
 		}
+
 		public override TagCompound Save()
 		{
 			var downed = new List<string>();

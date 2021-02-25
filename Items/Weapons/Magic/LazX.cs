@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Weapons.Ranged
+namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class LazX : ModItem
     {
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = ProjectileID.RubyBolt;
-            item.shootSpeed = 32f;
+            item.shootSpeed = 40f;
         }
 		
 		public override Vector2? HoldoutOffset()

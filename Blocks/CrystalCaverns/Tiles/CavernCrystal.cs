@@ -10,6 +10,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
 {
     public class CavernCrystal : ModTile
     {
+        private readonly int oneHelixRevolutionInUpdateTicks = 30;
         public override void SetDefaults()
         {
             mineResist = 2.5f;
@@ -27,15 +28,17 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             soundType = SoundID.Tink;
             drop = ModContent.ItemType<CavernCrystalItem>();
         }
-        public override void NearbyEffects(int i, int j, bool closer)
+        /*public override void NearbyEffects(int i, int j, bool closer)
         {
+            float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
+
+            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin(oneHelixRevolutionInUpdateTicks) * piFraction);
             Lighting.AddLight(new Vector2(i + 0.5f, j + 0.5f) * 16, new Vector3(0.1f, 0.32f, 0.5f) * 0.35f);
-            Vector2 dustVelocity = Vector2.UnitX * 18f;
             if (Main.rand.Next(40) == 0)
             {
                 Dust.NewDustPerfect(new Vector2(i + Main.rand.NextFloat(), j + Main.rand.NextFloat()) * 16, ModContent.DustType<Charge>(), new Vector2(0, -Main.rand.NextFloat(4, 6)), 0, default, Main.rand.NextFloat(0.4f, 0.7f));
             }
-        }
+        }*/
         
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {

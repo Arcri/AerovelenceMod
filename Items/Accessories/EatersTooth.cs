@@ -23,7 +23,7 @@ namespace AerovelenceMod.Items.Accessories
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.meleeDamage += 0.2f;
+			player.meleeDamage += 0.10f;
 			player.meleeSpeed =+ 1.2f;
 			player.maxRunSpeed -= 0.3f;
         }

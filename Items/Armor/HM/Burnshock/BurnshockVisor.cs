@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Burnshock Visor");
-            Tooltip.SetDefault("+2 max minion slots and 5% increased minion damage");
+            Tooltip.SetDefault("+3 max minion slots and 15% increased minion damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         {
             player.setBonus = "20% increased minion damage and increased minion knockback\nTaking damage will release damaging shards of crystal";
             player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
-            player.minionDamage += 0.15f;
+            player.minionDamage += 0.20f;
             player.minionKB += 0.05f;
         }
         public override void SetDefaults()
@@ -34,8 +34,8 @@ namespace AerovelenceMod.Items.Armor.HM.Burnshock
         }
 		public override void UpdateEquip(Player player)
         {
-            player.maxMinions += 2;
-            player.minionDamage += 0.05f;
+            player.maxMinions += 3;
+            player.minionDamage += 0.15f;
         }
         public override void AddRecipes()
         {

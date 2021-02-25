@@ -17,6 +17,9 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.World.Generation;
 using AerovelenceMod.Prim;
+using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
+using AerovelenceMod.Skies;
 
 namespace AerovelenceMod
 {
@@ -78,6 +81,8 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
+			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
+			SkyManager.Instance["AerovelenceMod:CrystalTorrents"] = new CrystalTorrentSky();
 			Instance = this;
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -119,15 +124,6 @@ namespace AerovelenceMod
 				);
 			}
 		}
-
-
-
-
-
-
-
-
-
 		public override void Close()
 		{
 			var slots = new int[] {

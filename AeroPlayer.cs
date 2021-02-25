@@ -1,3 +1,4 @@
+using AerovelenceMod.CrystalTorrent;
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Projectiles;
@@ -66,8 +67,12 @@ namespace AerovelenceMod
 		}
 
 
-
-        public override void UpdateDead()
+		public override void UpdateBiomeVisuals()
+		{
+			player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrentUp, player.Center);
+		}
+		
+		public override void UpdateDead()
 		{
 			SoulFire = false;
 			badHeal = false;

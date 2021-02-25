@@ -16,7 +16,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void SetDefaults()
         {
 			item.crit = 20;
-            item.damage = 25;
+            item.damage = 45;
             item.ranged = true;
             item.width = 44;
             item.height = 44;

@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Affliction Necklace");
-			Tooltip.SetDefault("Increases night vision slightly");
+			Tooltip.SetDefault("Has a chance to inflict Lost Souls");
 		}
         public override void SetDefaults()
         {

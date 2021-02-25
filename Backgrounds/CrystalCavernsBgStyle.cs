@@ -2,7 +2,7 @@ using Terraria;
 using AerovelenceMod;
 using Terraria.ModLoader;
 
-namespace ExampleMod.Backgrounds
+namespace AerovelenceMod.Backgrounds
 {
 	public class CrystalCavernsBgStyle : ModSurfaceBgStyle
 	{
@@ -10,8 +10,6 @@ namespace ExampleMod.Backgrounds
 		{
 			return !Main.gameMenu && Main.LocalPlayer.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns;
 		}
-
-		// Use this to keep far Backgrounds like the mountains.
 		public override void ModifyFarFades(float[] fades, float transitionSpeed)
 		{
 			for (int i = 0; i < fades.Length; i++)
@@ -34,7 +32,6 @@ namespace ExampleMod.Backgrounds
 				}
 			}
 		}
-
 		public override int ChooseFarTexture()
 		{
 			if (Main.dayTime)
@@ -50,9 +47,6 @@ namespace ExampleMod.Backgrounds
 				return mod.GetBackgroundSlot("Backgrounds/CrystalCavernsBgSurfaceFar");
 			}
 		}
-
-
-
 		public override int ChooseMiddleTexture()
 		{
 			if (Main.hardMode)

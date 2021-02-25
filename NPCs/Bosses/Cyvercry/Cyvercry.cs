@@ -447,7 +447,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                         {
                             npc.Center = player.Center + new Vector2(1256, 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                             ai3++;
-                            Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 12, 0.75f);
+                            Main.PlaySound(SoundLoader.customSoundType, -1, -1, mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/Test"));
                             FireLaser(ModContent.ProjectileType<ShadowCyvercry>(), 20, 0, 0, !runOncePhase2 ? -1 : 0);
                         }
                     }
@@ -546,7 +546,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                             dust.scale = 1.75f;
                         dust.noGravity = true;
                     }
-                    for(int i = 0; i < 2 + (Main.expertMode ? 1 : 0) + (!runOncePhase2 ? 1 : 0); i++)
+                    for(int i = 0; i < 1 + (Main.expertMode ? 1 : 0) + (!runOncePhase2 ? 1 : 0); i++)
                     {
                         if(Main.netMode != NetmodeID.MultiplayerClient)
                         {

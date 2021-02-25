@@ -12,7 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 		{
 			Item.staff[item.type] = true;
 			DisplayName.SetDefault("Cthulhus Wrath");
-			Tooltip.SetDefault("It's angered essence is trapped.");
+			Tooltip.SetDefault("Its angered essence is trapped");
 		}
         public override void SetDefaults()
         {
@@ -45,7 +45,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 				item.useStyle = ItemUseStyleID.HoldingOut;
 				item.useTime = 70;
 				item.useAnimation = 70;
-				item.damage = 35;
+				item.damage = 55;
 				item.mana = 0;
 			}
 			else
@@ -53,7 +53,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 				item.useStyle = ItemUseStyleID.HoldingOut;
 				item.useTime = 12;
 				item.useAnimation = 12;
-				item.damage = 16;
+				item.damage = 10;
 				item.mana = 5;
 				item.shoot = ProjectileID.Flames;
 				item.shootSpeed = 12f;
@@ -64,14 +64,19 @@ namespace AerovelenceMod.Items.Weapons.Magic
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
 			if (player.altFunctionUse == 2)
-					if (player.direction == 1)
-					{
-					player.velocity.X += 10;
-					}
-					else
-					{
-					player.velocity.X -= 10;
-					}
+			{
+				if(player == Main.LocalPlayer)
+				{
+					player.velocity = Vector2.Normalize(Main.MouseWorld - player.Center) * 10;
+				}
+
+				if (player.velocity.X == 0 && player.velocity.Y == 0)
+				{
+					player.velocity.X += 2;
+				}
+			}
+
+
 			return true;
         }
 

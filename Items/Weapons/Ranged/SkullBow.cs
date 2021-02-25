@@ -29,10 +29,14 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			item.value = Item.sellPrice(0, 3, 80, 0);
 			item.rare = ItemRarityID.Purple;
 			item.shoot = ProjectileID.Bone;
-			item.useAmmo = 154;
+			item.useAmmo = AmmoID.Arrow;
 			item.autoReuse = true;
 		}
-
+		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		{
+			type = Main.rand.Next(new int[] { type, type, type, ProjectileID.Skull });
+			return true;
+		}
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
