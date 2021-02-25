@@ -49,7 +49,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			for (int i = 0; i < projectile.oldPos.Length; i++)
 			{
 				Vector2 position = projectile.oldPos[i] - Main.screenPosition + vector + new Vector2(0f, projectile.gfxOffY);
-				Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length);
+				Color color = Color.White;
 				sb.Draw(Main.projectileTexture[projectile.type], position, null, color, projectile.rotation, vector, projectile.scale, SpriteEffects.None, 0f);
 			}
 			return true;
