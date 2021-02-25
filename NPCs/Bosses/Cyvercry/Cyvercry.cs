@@ -217,6 +217,10 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.netUpdate = true;
             Player player = Main.player[npc.target];
             npc.spriteDirection = -1;
+            if (Main.expertMode)
+                npc.defense = 35;
+            else
+                npc.defense = 30;
             if (runOnce)
             {
                 prevCenter = player.Center;
@@ -240,9 +244,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.velocity.Y -= 0.09f;
                 npc.timeLeft = 300;
                 if(npc.position.Y <= 16 * 35) //checking for top of the world practically
-                {
                     npc.active = false;
-                }
                 return;
             }
             if(ai5 > 30)
@@ -308,7 +310,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 goTo = goTo.SafeNormalize(Vector2.Zero);
                 if(ai2 > 120)
                 {
-                    npc.rotation = (npc.Center - player.Center).ToRotation();
+                    npc.rotation = MathHelper.ToRadians(180) + goTo.ToRotation();
                 }
                 if (speed > distance) 
                 {
@@ -319,7 +321,6 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 {
                     ai3--;
                     shadowTrail = true;
-                    npc.rotation = (npc.Center - player.Center).ToRotation();
                     if (((ai3 % 6 == 0 && !Main.expertMode) || (ai3 % 5 == 0 && Main.expertMode)) && !runOncePhase2)
                     {
                         FireLaser(ModContent.ProjectileType<EnergyBall>(), 1, 0, player.whoAmI);
@@ -352,24 +353,12 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 npc.velocity += toPlayer * 0.8f;
                 if (ai2 > 3)
                 {
-                    if(ai1 % 5 == 0)
+                    if (ai1 % 5 == 0)
                     {
                         if (Main.expertMode)
-                        {
                             FireLaser(ProjectileID.DeathLaser, 13f, 0.7f);
-                        }
-                        if (!Main.expertMode)
-                        {
+                        else
                             FireLaser(ProjectileID.DeathLaser, 11f, 0.7f);
-                        }
-                        if (Main.expertMode)
-                        {
-                            npc.defense = 35;
-                        }
-                        if (!Main.expertMode)
-                        {
-                            npc.defense = 30;
-                        }
                         ai3++;
                     }
                     if(ai3 >= 30)
@@ -383,19 +372,15 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                 }
                 else
                 {
+                    if (Main.expertMode) //increase defense during charge period
+                        npc.defense = 65;
+                    else
+                        npc.defense = 60;
                     Vector2 from = npc.Center + new Vector2(-128, 0).RotatedBy(npc.rotation);
                     if (ai1 % 50 == 0)
                     {
                         for (int i = 0; i < 360; i += 20)
                         {
-                            if (Main.expertMode)
-                            {
-                                npc.defense = 65;
-                            }
-                            if (!Main.expertMode)
-                            {
-                                npc.defense = 60;
-                            }
                             Vector2 circular = new Vector2(64, 0).RotatedBy(MathHelper.ToRadians(i));
                             circular.X *= 0.6f;
                             circular = circular.RotatedBy(npc.rotation);
@@ -410,14 +395,6 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                     }
                     for(int j = 0; j < ai2; j++)
                     {
-                        if (Main.expertMode)
-                        {
-                            npc.defense = 65;
-                        }
-                        if (!Main.expertMode)
-                        {
-                            npc.defense = 60;
-                        }
                         Vector2 circular = new Vector2(64, 0).RotatedBy(MathHelper.ToRadians(j * 120 + ai1 * 4));
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(npc.rotation);
@@ -426,7 +403,6 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
                         dust.velocity *= 0.1f;
                         dust.scale = 1.4f;
                         dust.noGravity = true;
-                        npc.defense = 60;
                     }
                     
                 }
