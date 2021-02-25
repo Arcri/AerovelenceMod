@@ -162,7 +162,7 @@ namespace AerovelenceMod.Items
 					break;
 
 			}
-			if (AeroWorld.downedSnowrium)
+			if (AeroWorld.downedRimegeist)
 			{
 				if (npc.type == NPCID.IceSlime || npc.type == NPCID.SpikedIceSlime || npc.type == NPCID.IceBat || npc.type == NPCID.UndeadViking || npc.type == NPCID.CyanBeetle)
 				{

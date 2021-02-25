@@ -1,19 +1,15 @@
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
 using AerovelenceMod.Blocks.MusicBoxes;
 
 namespace AerovelenceMod.Items.Placeable.MusicBoxes
 {
-    public class SnowriumBoxItem : ModItem
+    public class RimegeistBoxItem : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Music Box (Snowrium)");
+			DisplayName.SetDefault("Music Box (Rimegeist)");
             Tooltip.SetDefault("Composed by A44");
 		}
 		public override void SetDefaults()
@@ -24,7 +20,7 @@ namespace AerovelenceMod.Items.Placeable.MusicBoxes
 			item.useTime = 10;
 			item.autoReuse = true;
 			item.consumable = true;
-			item.createTile = TileType<SnowriumBox>();
+			item.createTile = TileType<RimegeistBox>();
 			item.width = 24;
 			item.height = 24;
 			item.rare = ItemRarityID.LightRed;

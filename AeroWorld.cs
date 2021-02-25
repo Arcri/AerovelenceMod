@@ -16,16 +16,20 @@ namespace AerovelenceMod
 	public class AeroWorld : ModWorld
 	{
 		public static bool downedCrystalTumbler;
-		public static bool downedSnowrium;
+		public static bool downedRimegeist;
+		public static bool downedLightningMoth;
 		public static bool downedCyvercry;
+		public static bool downedTheFallen;
 		public static int cavernTiles;
 		public static int citadelTiles;
 
 		public override void Initialize()
 		{
 			downedCrystalTumbler = false;
-			downedSnowrium = false;
+			downedRimegeist = false;
+			downedLightningMoth = false;
 			downedCyvercry = false;
+			downedTheFallen = false;
 		}
 
 		public override TagCompound Save()
@@ -35,13 +39,21 @@ namespace AerovelenceMod
 			{
 				downed.Add("CrystalTumbler");
 			}
-			if (downedSnowrium)
+			if (downedRimegeist)
 			{
-				downed.Add("Snowrium");
+				downed.Add("Rimegeist");
+			}
+			if (downedLightningMoth)
+			{
+				downed.Add("LightningMoth");
 			}
 			if (downedCyvercry)
 			{
 				downed.Add("Cyvercry");
+			}
+			if (downedTheFallen)
+			{
+				downed.Add("TheFallen");
 			}
 			return new TagCompound
 			{
@@ -52,8 +64,10 @@ namespace AerovelenceMod
 		{
 			var downed = tag.GetList<string>("downed");
 			downedCrystalTumbler = downed.Contains("CrystalTumbler");
-			downedSnowrium = downed.Contains("Snowrium");
+			downedRimegeist = downed.Contains("Rimegeist");
+			downedLightningMoth = downed.Contains("LightningMoth");
 			downedCyvercry = downed.Contains("Cyvercry");
+			downedTheFallen = downed.Contains("");
 		}
 		public override void LoadLegacy(BinaryReader reader)
 		{
@@ -62,8 +76,10 @@ namespace AerovelenceMod
 			{
 				BitsByte flags = reader.ReadByte();
 				downedCrystalTumbler = flags[0];
-				downedSnowrium = flags[1];
-				downedCyvercry = flags[2];
+				downedRimegeist = flags[1];
+				downedLightningMoth = flags[2];
+				downedCyvercry = flags[3];
+				downedTheFallen = flags[4];
 			}
 			else
 			{
@@ -74,16 +90,20 @@ namespace AerovelenceMod
 		{
 			var flags = new BitsByte();
 			flags[0] = downedCrystalTumbler;
-			flags[1] = downedSnowrium;
-			flags[2] = downedCyvercry;
+			flags[1] = downedRimegeist;
+			flags[2] = downedLightningMoth;
+			flags[3] = downedCyvercry;
+			flags[4] = downedTheFallen;
 			writer.Write(flags);
 		}
 		public override void NetReceive(BinaryReader reader)
 		{
 			BitsByte flags = reader.ReadByte();
 			downedCrystalTumbler = flags[0];
-			downedSnowrium = flags[1];
-			downedCyvercry = flags[2];
+			downedRimegeist = flags[1];
+			downedLightningMoth = flags[2];
+			downedCyvercry = flags[3];
+			downedTheFallen = flags[4];
 		}
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{

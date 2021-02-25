@@ -7,7 +7,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Blocks.MusicBoxes
 {
-    public class SnowriumBox : ModTile
+    public class RimegeistBox : ModTile
     {
 		public override void SetDefaults()
 		{
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Blocks.MusicBoxes
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 16, 48, ItemType<Items.Placeable.MusicBoxes.SnowriumBoxItem>());
+			Item.NewItem(i * 16, j * 16, 16, 48, ItemType<Items.Placeable.MusicBoxes.RimegeistBoxItem>());
 		}
 
 		public override void MouseOver(int i, int j)
@@ -35,7 +35,7 @@ namespace AerovelenceMod.Blocks.MusicBoxes
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
 			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<Items.Placeable.MusicBoxes.SnowriumBoxItem>();
+			player.showItemIcon2 = ItemType<Items.Placeable.MusicBoxes.RimegeistBoxItem>();
 		}
 	}
 }

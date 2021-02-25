@@ -35,9 +35,11 @@ namespace AerovelenceMod
 			if (bossChecklist != null)
 			{
 
-				bossChecklist.Call("AddBossWithInfo", "Crystal Tumbler", 0.5f, (Func<bool>)(() => AeroWorld.downedCrystalTumbler), "Use a [i:" + ItemType("LargeGeode") + "] in the Crystal Caverns");
-				bossChecklist.Call("AddBossWithInfo", "Snowrium", 5.5f, (Func<bool>)(() => AeroWorld.downedSnowrium), "Use a [i:" + ItemType("GlowingSnow") + "] at night in the snow biome");
+				bossChecklist.Call("AddBossWithInfo", "Crystal Tumbler", 1.5f, (Func<bool>)(() => AeroWorld.downedCrystalTumbler), "Use a [i:" + ItemType("LargeGeode") + "] in the Crystal Caverns");
+				bossChecklist.Call("AddBossWithInfo", "Rimegeist", 5.5f, (Func<bool>)(() => AeroWorld.downedRimegeist), "Use a [i:" + ItemType("GlowingSnow") + "] at night in the snow biome");
+				bossChecklist.Call("AddBossWithInfo", "LightningMoth", 6.5f, (Func<bool>)(() => AeroWorld.downedRimegeist), "Use a [i:" + ItemType("GlowingSnow") + "] at night in the Crystal Fields");
 				bossChecklist.Call("AddBossWithInfo", "Cyvercry", 9.5f, (Func<bool>)(() => AeroWorld.downedCyvercry), "Use a [i:" + ItemType("ObsidianEye") + "] at night");
+				bossChecklist.Call("AddBossWithInfo", "TheFallen", 12.5f, (Func<bool>)(() => AeroWorld.downedCyvercry), "Use a [i:" + ItemType("ObsidianEye") + "] in the sky");
 
 
 
@@ -89,7 +91,7 @@ namespace AerovelenceMod
 
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
