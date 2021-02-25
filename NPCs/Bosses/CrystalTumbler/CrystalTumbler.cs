@@ -81,8 +81,8 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			npc.height = 128;
 			npc.value = Item.buyPrice(0, 5, 60, 45);
 
-			npc.damage = 12;
-			npc.defense = 8;
+			npc.damage = 30;
+			npc.defense = 15;
 			npc.lifeMax = 2200;
 			npc.knockBackResist = 0f;
 			npc.alpha = 0;

@@ -15,7 +15,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			projectile.width = 80;
 			projectile.height = 80;
 			projectile.aiStyle = 88;
-			projectile.damage = 1;
+			projectile.damage = 15;
 			projectile.hostile = true;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = false;
