@@ -32,7 +32,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         {
             npc.lifeMax = 37500;
             npc.damage = 105;
-            npc.defense = 25;
+            npc.defense = 30;
             npc.knockBackResist = 0f;
             npc.width = 180;
             npc.height = 100;
@@ -49,7 +49,7 @@ namespace AerovelenceMod.NPCs.Bosses.Cyvercry //Change me
         {
             npc.lifeMax = 41500;
             npc.damage = 125;
-            npc.defense = 30;
+            npc.defense = 35;
         }
         public override void FindFrame(int frameHeight)
         {
