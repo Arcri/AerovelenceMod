@@ -20,32 +20,24 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			projectile.width = 14;
 			projectile.maxPenetrate = 1;
 			projectile.height = 36;
-			projectile.alpha = 255;
 			projectile.damage = 15;
 			projectile.hostile = true;
 			projectile.tileCollide = false;
 			projectile.ignoreWater = true;
 			projectile.friendly = false;
 			projectile.magic = true;
+			projectile.timeLeft = 200;
 		}
 
 		public override void AI()
 		{
-			if (projectile.alpha > 30)
-			{
-				projectile.alpha -= 15;
-				if (projectile.alpha < 30)
-				{
-					projectile.alpha = 30;
-				}
-			}
 			if (projectile.localAI[0] == 0f)
 			{
 				AdjustMagnitude(ref projectile.velocity);
 				projectile.localAI[0] = 1f;
 			}
 			Vector2 move = Vector2.Zero;
-			float distance = 400f;
+			float distance = 1000f;
 			bool target = false;
 			for (int k = 0; k < Main.player.Length; k++)
 			{

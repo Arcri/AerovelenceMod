@@ -1,10 +1,12 @@
 Aerovelence is a large content mod themed around space and the sky, with an interesting twist! Aerovelence has plenty of new content, new enemies to fight, and secrets to be uncovered.
 If there are any issues with the mod, join the Discord server linked at the bottom and report bugs in #bug-reports.
 
+https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
+
 Current rundown:
--250+ Items
+-200+ Items
 -Large collection of new NPCs with fun and unique AI
--2 fun bossfights
+-1 fun bossfight
 -A brand new biome, the Crystal Caverns!
 -Legendary items that have a low drop rate from any boss, modded and vanilla alike!
 

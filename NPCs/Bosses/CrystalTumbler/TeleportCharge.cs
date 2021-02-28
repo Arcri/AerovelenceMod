@@ -17,6 +17,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			projectile.damage = 1;
 			projectile.hostile = true;
 			projectile.ignoreWater = true;
+			projectile.timeLeft = 150;
 			projectile.tileCollide = false;
 		}
 		
