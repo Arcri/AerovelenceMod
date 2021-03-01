@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -13,7 +14,9 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			DisplayName.SetDefault("Icebreaker");
 			Tooltip.SetDefault("'A forgotten hero's sword, lost in the tundra'\nHas a chance to rain ice above an enemy when hit");
 		}
-        public override void SetDefaults()
+		int npcWho = 0;
+
+		public override void SetDefaults()
         {
 			item.UseSound = SoundID.Item1;
 			item.crit = 8;
@@ -34,8 +37,14 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		{
 			return Color.White;
 		}
-
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
+        public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
+        {
+			Vector2 position = target.position - Vector2.UnitY * 60;
+			Vector2 velocity = target.position * 5;
+			Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+			base.OnHitNPC(player, target, damage, knockBack, crit);
+        }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
 			tooltips.Add(line);
@@ -55,4 +64,50 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
 		}
 	}
+}
+namespace AerovelenceMod.Items.Weapons.Melee
+{
+    public class IcebreakerIcicle : ModProjectile
+    {
+        public override void SetDefaults()
+        {
+            projectile.width = 18;
+            projectile.aiStyle = -1;
+            projectile.height = 38;
+            projectile.friendly = true;
+            projectile.penetrate = 3;
+			projectile.alpha = 255;
+            projectile.hostile = false;
+            projectile.melee = true;
+            projectile.tileCollide = true;
+            projectile.ignoreWater = true;
+            projectile.timeLeft = 120;
+        }
+        public override void AI()
+        {
+            projectile.rotation = projectile.velocity.ToRotation();
+            projectile.velocity.Y += 3;
+            projectile.rotation += projectile.velocity.X * 0.01f;
+			DelegateMethods.v3_1 = new Vector3(0.6f, 1f, 1f) * 0.2f;
+			Utils.PlotTileLine(projectile.Center, projectile.Center + projectile.velocity * 10f, 8f, DelegateMethods.CastLightOpen);
+			if (projectile.alpha > 0)
+			{
+				Main.PlaySound(SoundID.Item9, projectile.Center);
+				projectile.alpha = 0;
+				projectile.scale = 1.1f;
+				float num101 = 16f;
+				for (int num102 = 0; num102 < num101; num102++)
+				{
+					Vector2 spinningpoint5 = Vector2.UnitX * 0f;
+					spinningpoint5 += -Vector2.UnitY.RotatedBy((float)num102 * ((float)Math.PI * 2f / num101)) * new Vector2(1f, 4f);
+					spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
+					int num103 = Dust.NewDust(projectile.Center, 0, 0, 180);
+					Main.dust[num103].scale = 1.5f;
+					Main.dust[num103].noGravity = true;
+					Main.dust[num103].position = projectile.Center + spinningpoint5;
+					Main.dust[num103].velocity = projectile.velocity * 0f + spinningpoint5.SafeNormalize(Vector2.UnitY) * 1f;
+				}
+			}
+		}
+    }
 }

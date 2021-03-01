@@ -4,13 +4,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
-
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
-	public class TumblerBoulder1 : ModProjectile
+    public class TumblerBoulder1 : ModProjectile
 	{
 		private NPC owner => Main.npc[NPC.FindFirstNPC(NPCType<CrystalTumbler>())];
         public override void SetStaticDefaults()
