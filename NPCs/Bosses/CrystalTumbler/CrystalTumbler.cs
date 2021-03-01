@@ -71,6 +71,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		public int spinTimer;
 		public bool Phase2;
 		public bool Teleport = false;
+		public bool doingDash = false;
 		int i;
 		bool teleported = false;
 		int t;
@@ -131,6 +132,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			// Idle roll/follow state. Very basic movement, with a timer for a random attack state.
 			if (State == CrystalTumblerState.IdleRoll)
 			{
+				doingDash = false;
 				RollingMove(target);
 				counter++;
 				npc.Opacity *= 1.1f;
@@ -139,13 +141,20 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					AttackTimer = 0;
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
-						if ((target.Center.Y < npc.Center.Y - 50 || target.Center.Y > npc.Center.Y + 50))
+						if (target.Center.Y < npc.Center.Y - 50 || target.Center.Y > npc.Center.Y + 50)
 						{
 							if (target.Center.Y > npc.Center.Y + 50)
 							{
 								State = CrystalTumblerState.Teleport;
 							}
 						}
+						else if (npc.velocity.Y == 0 && target.Center.Y < npc.Center.Y - 50)
+						{
+
+							State = CrystalTumblerState.Jump;
+						}
+
+
 						else if (Math.Abs(target.Center.Y - npc.Center.Y) <= 50 && Main.rand.NextBool(2))
 						{
 							State = CrystalTumblerState.SuperDash;
@@ -167,15 +176,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 							}
 						}
 					}
-				}
-				else if (++AttackTimer >= 70 && target.Center.Y > npc.Center.Y + 100)
-				{
-					AttackTimer = 0;
-					if (Main.netMode != NetmodeID.MultiplayerClient)
-					{
-						State = CrystalTumblerState.Teleport;
-					}
-					npc.netUpdate = true;
 				}
 			}
 
@@ -206,21 +206,29 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			// Attack state. Starts speedy roll in place. After a set amount of ticks, releases/dashes with a high velocity and frequent jumps/bounces.
 			else if (State == CrystalTumblerState.Jump)
 			{
-				Main.NewText("Jump");
-				npc.velocity.Y -= Main.rand.Next(12) + 7;
-				for (int num325 = 0; num325 < 20; num325++)
+				if (target.Center.Y > npc.Center.Y - 60)
 				{
-					Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+					npc.velocity.Y -= Main.rand.Next(15) + 12;
+					for (int num325 = 0; num325 < 20; num325++)
+					{
+						Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+					}
+					State = CrystalTumblerState.IdleRoll;
 				}
-				State = CrystalTumblerState.IdleRoll;
+				else if(target.Center.Y < npc.Center.Y)
+                {
+					State = CrystalTumblerState.IdleRoll;
+                }
 			}
 			else if (State == CrystalTumblerState.SuperDash)
 			{
 				t++;
 				CheckPlatform(target);
+				CheckTilesNextTo(target);
 				// Rotating in place state.
 				if (++AttackTimer <= 180)
 				{
+					doingDash = true;
 					npc.velocity.X *= 0.95f;
 					npc.rotation += AttackTimer / 180 * npc.direction;
 					float speed = 5f;
@@ -258,12 +266,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						npc.netUpdate = true;
 						npc.velocity.X = npc.direction * 16f;
 					}
+
 				}
+
 				// Fast horizontal movement and frequent jumps.
 				else
 				{
 					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 76, 0.75f);
-					TryJump(Main.rand.Next(4, 7), 60);
+					if (npc.velocity.Y == 0 && target.Center.Y < npc.Center.Y - 100f)
+					{
+						TryJump(Main.rand.Next(4, 7), 60);
+					}
 					JumpTimer--;
 					var player = Main.player[npc.target];
 					if (player.Center.X > npc.Center.X)
@@ -274,7 +287,9 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					{
 						npc.velocity.X -= 0.3f;
 					}
+					doingDash = false;
 				}
+
 
 
 				// After 480 ticks (300 ticks or 5 seconds after the 'Rotating in place' state), go back to idle rolling.
@@ -285,7 +300,6 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					AttackTimer = 0;
 					State = CrystalTumblerState.IdleRoll;
 				}
-				npc.velocity = Vector2.Clamp(npc.velocity, Vector2.One * -16, Vector2.One * 16);
 				npc.rotation += npc.velocity.X * 0.025f;
 			}
 			else if (State == CrystalTumblerState.Electricity)
@@ -400,6 +414,27 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				}
 			}
 		}
+		private void CheckTilesNextTo(Player player)
+		{
+			bool doJump = true;
+
+			for (int i = (int)npc.position.X; i < npc.position.X + npc.width; i += npc.width / 4)
+			{
+
+			}
+			if (doJump && !doingDash)
+			{
+				if (npc.velocity.Y == 0 && npc.velocity.X == 0)
+				{
+					npc.velocity.Y -= Main.rand.Next(9) + 7;
+					for (int num325 = 0; num325 < 20; num325++)
+					{
+						Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+					}
+					State = CrystalTumblerState.IdleRoll;
+				}
+			}
+		}
 
 		public override void NPCLoot()
 		{
@@ -482,27 +517,28 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			// Movement.
 			float desiredSpeed = 2 + 12 * (1 - LifePercentLeft);
 			CheckPlatform(player);
+			CheckTilesNextTo(player);
 			if (player.Center.X > npc.Center.X)
 			{
 				if (npc.velocity.X < desiredSpeed)
 				{
-					npc.velocity.X += (0.2f * (1 - LifePercentLeft + 1));
+					npc.velocity.X += (0.1f * (1 - LifePercentLeft + 1));
 				}
 			}
 			else if (player.Center.X < npc.Center.X)
 			{
 				if (npc.velocity.X > -desiredSpeed)
 				{
-					npc.velocity.X -= (0.2f * (1 - LifePercentLeft + 1));
+					npc.velocity.X -= (0.1f * (1 - LifePercentLeft + 1));
 				}
 			}
+			npc.velocity.X = MathHelper.Clamp(npc.velocity.X, -8, 8);
 
 			// Rotation.
 			npc.rotation += npc.velocity.X * 0.025f;
 
 			// Jump.
-			if (npc.velocity.Y == 0 &&
-				player.Center.Y < npc.Center.Y - 100f)
+			if (npc.velocity.Y == 0 && player.Center.Y < npc.Center.Y - 100f)
 			{
 				TryJump(Main.rand.Next(12) + 7, 180);
 			}
