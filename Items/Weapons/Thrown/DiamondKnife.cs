@@ -26,7 +26,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.noMelee = true;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Pink;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("DiamondKnifeProjectile");

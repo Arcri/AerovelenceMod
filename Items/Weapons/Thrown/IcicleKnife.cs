@@ -30,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.maxStack = 999;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Pink;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = mod.ProjectileType("IcicleKnifeProj");

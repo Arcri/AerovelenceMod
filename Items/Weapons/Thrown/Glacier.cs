@@ -28,7 +28,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			item.noUseGraphic = true;
             item.knockBack = 3;
             item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("GlacierProjectile");
             item.UseSound = SoundID.Item1;

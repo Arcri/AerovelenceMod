@@ -9,7 +9,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Walls
 	{
 		public override void SetDefaults()
 		{
-			Main.wallHouse[Type] = true;
+			Main.wallHouse[Type] = false;
 			drop = ItemType<Items.Placeable.CrystalCaverns.LushGrowthWallItem>();
 			AddMapEntry(new Color(018, 078, 023));
 		}

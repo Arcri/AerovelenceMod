@@ -12,7 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Crystal Crescent");
-            Tooltip.SetDefault("Left click to fire a slow but damaging crystal\nLeft click to fire a beam of luminous light");
+            Tooltip.SetDefault("Left click to fire a slow but damaging crystal\nLeft click to fire a beam of luminous light\nVERY UNFINISHED");
         }
         public override void SetDefaults()
         {
@@ -25,14 +25,14 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.height = 16;
             item.UseSound = SoundID.DD2_SkyDragonsFurySwing;
             item.shoot = ModContent.ProjectileType<CrystalCrescentProj>();
-            item.rare = ItemRarityID.Yellow;
-            item.value = Item.sellPrice(0, 5);
+            item.rare = ItemRarityID.Blue;
+            item.value = Item.sellPrice(0, 1);
             item.noMelee = true;
             item.noUseGraphic = true;
             item.channel = true;
             item.autoReuse = true;
             item.melee = true;
-            item.damage = 70;
+            item.damage = 13;
         }
         public override bool AltFunctionUse(Player player)
         {

@@ -24,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = ItemRarityID.Green;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = false;
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)

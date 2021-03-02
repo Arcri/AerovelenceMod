@@ -12,6 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Reaper");
+			Tooltip.SetDefault("Fires lost souls when near an enemy");
 		}
         public override void SetDefaults()
         {

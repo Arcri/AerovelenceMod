@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,6 +27,15 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.value = Item.sellPrice(0, 0, 65, 20);
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("IronBar", 10);
+            recipe.AddIngredient(ItemID.Vertebrae, 8);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {

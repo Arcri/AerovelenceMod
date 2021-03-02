@@ -38,9 +38,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.GoldBar, 8);
+            recipe.AddIngredient(ItemID.GoldBar, 15);
             recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddRecipeGroup("IronBar", 3);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

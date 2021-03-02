@@ -10,6 +10,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shining Shooter");
+            Tooltip.SetDefault("Fires a large, slow travelling crystal");
         }
         public override void SetDefaults()
         {
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.noMelee = true;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Orange;
+            item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("ShiningShooterProj");
             item.shootSpeed = 6f;

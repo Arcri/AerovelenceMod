@@ -11,13 +11,13 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Skull Bow");
-			Tooltip.SetDefault("Made up of the Dungeon's guardian");
+			Tooltip.SetDefault("Converts arrows into bones");
 		}
 		public override void SetDefaults()
 		{
 			item.shootSpeed = 24f;
 			item.crit = 6;
-			item.damage = 15;
+			item.damage = 13;
 			item.ranged = true;
 			item.width = 26;
 			item.height = 42;

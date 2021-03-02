@@ -8,19 +8,19 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class Lifeleak : ModItem
     {
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Lifeleak");
-			Tooltip.SetDefault("'You feel numb holding it'\nUses your life as ammo");
-		}
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Lifeleak");
+            Tooltip.SetDefault("'You feel numb holding it'\nUses your life as ammo");
+        }
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item41;
-			item.crit = 3;
+            item.UseSound = SoundID.Item41;
+            item.crit = 3;
             item.damage = 15;
             item.ranged = true;
             item.width = 72;
-            item.height = 28; 
+            item.height = 28;
             item.useTime = 18;
             item.useAnimation = 18;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -37,10 +37,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
             return new Vector2(-8, 0);
         }
-        public override bool UseItem(Player player)
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Main.NewText("HHHH");
-            player.Hurt(PlayerDeathReason.ByCustomReason(player.name + " didn't follow the instructions"), 5, 0, false);
+            player.Hurt(PlayerDeathReason.ByCustomReason(player.name + " didn't follow the instructions"), Main.rand.Next(5, 8), 0, false);
             return true;
         }
         public override void AddRecipes()

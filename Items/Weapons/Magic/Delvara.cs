@@ -31,7 +31,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.noMelee = true;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 1, 10, 0);
-            item.rare = ItemRarityID.LightRed;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("DelvaraFireball");
             item.shootSpeed = 11f;

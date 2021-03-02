@@ -15,7 +15,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.width = 22;
 			item.height = 20;
 			item.value = Item.sellPrice(silver: 5);
-			item.rare = ItemRarityID.White;
+			item.rare = ItemRarityID.Green;
 			item.noMelee = true;
 			item.useStyle = ItemUseStyleID.HoldingOut;
 			item.useAnimation = 40;

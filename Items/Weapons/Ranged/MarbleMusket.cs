@@ -12,7 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Marble Musket");
-			Tooltip.SetDefault("Fires a chunk of slow-travelling marble");
+			Tooltip.SetDefault("Fires a chunk of slow-travelling marble, unfinished weapon");
 		}
         public override void SetDefaults()
         {

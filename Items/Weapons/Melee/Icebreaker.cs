@@ -13,6 +13,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		{
 			DisplayName.SetDefault("Icebreaker");
 			Tooltip.SetDefault("'A forgotten hero's sword, lost in the tundra'\nHas a chance to rain ice above an enemy when hit");
+			Tooltip.SetDefault("This item is unfinished!");
 		}
 		int npcWho = 0;
 

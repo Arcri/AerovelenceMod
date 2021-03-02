@@ -12,6 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Avalanche");
+            Tooltip.SetDefault("This item is unfinished!");
 		}
         public override void SetDefaults()
         {

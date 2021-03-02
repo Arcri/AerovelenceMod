@@ -3,6 +3,8 @@ If there are any issues with the mod, join the Discord server linked at the bott
 
 https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 
+This version of the mod fixes the Crystal Tumbler AI.
+
 Current rundown:
 -200+ Items
 -Large collection of new NPCs with fun and unique AI

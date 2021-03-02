@@ -13,7 +13,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Cryo Ball");
-		}
+            Tooltip.SetDefault("Fires out snowflakes when near an enemy");
+        }
         public override void SetDefaults()
         {
             item.channel = true;		

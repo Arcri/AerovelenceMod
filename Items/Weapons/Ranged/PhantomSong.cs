@@ -10,7 +10,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phanton Song");
+            DisplayName.SetDefault("Phantom Song");
         }
         public override void SetDefaults()
         {

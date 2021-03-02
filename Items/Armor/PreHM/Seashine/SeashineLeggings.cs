@@ -18,7 +18,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Seashine
             item.width = 18;
             item.height = 18;
             item.value = 10;
-            item.rare = ItemRarityID.Orange;
+            item.rare = ItemRarityID.Green;
             item.defense = 2;
         }
 

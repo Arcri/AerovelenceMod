@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
+using AerovelenceMod.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Items.BossSummons
             item.width = 28;
             item.height = 28;
             item.value = 100;
-            item.rare = ItemRarityID.Orange;
+            item.rare = ItemRarityID.Blue;
             item.useAnimation = 30;
             item.useTime = 30;
 			item.maxStack = 999;
@@ -38,9 +39,7 @@ namespace AerovelenceMod.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-			{
-                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("CrystalTumbler"));
-            }
+            NPC.NewNPC((int)player.position.X, (int)player.position.Y - 250, ModContent.NPCType<CrystalTumbler>());
             Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
             return true;
         }

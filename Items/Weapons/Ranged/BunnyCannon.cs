@@ -10,7 +10,8 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bunny Cannon");
-            Tooltip.SetDefault("Killing bunnies is cruel period.");
+            Tooltip.SetDefault("Killing bunnies is cruel, period.");
+            Tooltip.SetDefault("'How did you get this?'");
         }
         public override void SetDefaults()
         {
@@ -26,7 +27,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.noMelee = true;
             item.knockBack = 8;
             item.value = 10000;
-            item.rare = ItemRarityID.Purple;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
             item.shoot = ProjectileID.ExplosiveBunny;
             item.shootSpeed = 24f;

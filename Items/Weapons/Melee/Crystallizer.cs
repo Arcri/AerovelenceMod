@@ -12,6 +12,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Crystallizer");
+			Tooltip.SetDefault("Rains down on enemies when near an enemy");
 		}
         public override void SetDefaults()
         {

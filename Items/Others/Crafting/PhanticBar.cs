@@ -20,7 +20,7 @@ namespace AerovelenceMod.Items.Others.Crafting
 			item.width = 32;
 			item.height = 24;
 			item.useAnimation = 15;
-			item.useTime = 10;
+			item.useTime = 15;
 			item.autoReuse = true;
 			item.consumable = true;
 			item.placeStyle = 0;

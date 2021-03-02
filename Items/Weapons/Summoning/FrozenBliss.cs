@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Weapons.Summoning
 
 		public override void SetDefaults()
 		{
-			item.damage = 110;
+			item.damage = 30;
 			item.summon = true;
 			item.mana = 10;
 			item.width = 26;

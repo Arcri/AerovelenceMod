@@ -1,3 +1,6 @@
+using AerovelenceMod.Items.Weapons.ProjectileItem;
+using AerovelenceMod.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,26 +12,38 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Marshmallow Cannon");
-            Tooltip.SetDefault("Shoots a marshmallow");
+            Tooltip.SetDefault("Requires mallow bullets to work");
         }
         public override void SetDefaults()
         {
-            item.damage = 6;
+            item.UseSound = SoundID.Item41;
+            item.crit = 8;
+            item.damage = 28;
             item.ranged = true;
-            item.width = 58;
-            item.height = 24;
-            item.useTime = 25;
-            item.useAnimation = 5;
+            item.width = 46;
+            item.height = 28;
+            item.useTime = 18;
+            item.useAnimation = 18;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
-            item.knockBack = 0.2f;
-            item.value = Item.sellPrice(0, 0, 50, 0);
+            item.knockBack = 6;
+            item.value = Item.sellPrice(0, 3, 50, 0);
             item.rare = ItemRarityID.Green;
-            item.UseSound = SoundID.Item11;
             item.autoReuse = false;
-            item.useAmmo = ModContent.ItemType<ProjectileItem.MallowBullet>();
-            item.shoot = mod.ProjectileType("MallowBullet");
-            item.shootSpeed = 10f;
+            item.shoot = ModContent.ProjectileType<MallowBulletProj>();
+            item.useAmmo = ModContent.ItemType<MallowBullet>();
+            item.shootSpeed = 0.05f;
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-2, 0);
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(3));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
+            return true;
         }
         public override void AddRecipes()
         {

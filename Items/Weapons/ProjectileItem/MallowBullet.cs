@@ -1,3 +1,4 @@
+using AerovelenceMod.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,13 +18,13 @@ namespace AerovelenceMod.Items.Weapons.ProjectileItem
             item.width = 8;
             item.height = 12;
             item.knockBack = 4;
-            item.rare = ItemRarityID.Pink;
+            item.rare = ItemRarityID.Blue;
 			item.maxStack = 999;
 			item.consumable = true;
-            item.shoot = mod.ProjectileType("Mallowbullet");
-			item.shootSpeed = 10f;
+            item.shoot = ModContent.ProjectileType<MallowBulletProj>();
+            item.shootSpeed = 10f;
             item.value = Item.sellPrice(0, 0, 1, 10);
-            item.ammo = AmmoID.Bullet;
+            item.ammo = item.type;
         }
         public override void AddRecipes()
         {

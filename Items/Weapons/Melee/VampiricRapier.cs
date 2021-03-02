@@ -17,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
 			item.crit = 20;
             item.damage = 45;
-            item.ranged = true;
+            item.melee = true;
             item.width = 44;
             item.height = 44;
             item.useTime = 11;
@@ -29,15 +29,18 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
         }
-		
-		
-        public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
-        {
-            Player p = Main.player[Main.myPlayer];
-            int healingAmount = damage / 15;
-            p.statLife += healingAmount;
-            p.HealEffect(healingAmount, true);
-        }
+
+
+		public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
+		{
+			if (target.type != NPCID.TargetDummy)
+			{
+				Player p = Main.player[Main.myPlayer];
+				int healingAmount = damage / 15;
+				p.statLife += healingAmount;
+				p.HealEffect(healingAmount, true);
+			}
+		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{

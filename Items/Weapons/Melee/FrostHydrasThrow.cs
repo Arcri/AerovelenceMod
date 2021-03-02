@@ -11,7 +11,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Frost Hydra's Throw");
-		}
+            Tooltip.SetDefault("Unfinished");
+        }
         public override void SetDefaults()
         {
             item.channel = true;		
@@ -28,7 +29,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			item.noUseGraphic = true;
             item.knockBack = 8;
             item.value = Item.sellPrice(0, 8, 0, 0);
-            item.rare = ItemRarityID.Pink;
+            item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("FrostHydrasThrowProjectile");
             item.shootSpeed = 2f;

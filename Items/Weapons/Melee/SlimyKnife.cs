@@ -11,7 +11,6 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slimy Knife");
-			Tooltip.SetDefault("Relic");
 		}
 		public override void SetDefaults()
 		{

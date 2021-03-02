@@ -99,7 +99,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.damage = 20;  //boss damage increase in expermode
+			npc.damage = 45;  //boss damage increase in expermode
 			npc.lifeMax = 3300;  //boss life scale in expertmode
 		}
 
@@ -541,7 +541,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					npc.velocity.X -= (0.1f * (1 - LifePercentLeft + 1));
 				}
 			}
-			npc.velocity.X = MathHelper.Clamp(npc.velocity.X, -8, 8);
+			npc.velocity.X = MathHelper.Clamp(npc.velocity.X, -6, 6);
 
 			// Rotation.
 			npc.rotation += npc.velocity.X * 0.025f;

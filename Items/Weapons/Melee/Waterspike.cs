@@ -24,7 +24,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useStyle = ItemUseStyleID.Stabbing;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 3, 50, 0);
-            item.rare = ItemRarityID.Blue;
+            item.rare = ItemRarityID.Green;
             item.autoReuse = true;
         }
     }
