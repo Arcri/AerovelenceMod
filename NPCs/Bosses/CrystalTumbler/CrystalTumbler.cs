@@ -513,6 +513,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				0f
 				);
 		}
+		public override void BossHeadRotation(ref float rotation)
+		{
+			rotation = npc.rotation;
+		}
 
 		#region AI Methods
 

@@ -141,8 +141,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public int i;
 		public override void SetDefaults()
 		{
-			projectile.width = 100;
-			projectile.height = 100;
+			projectile.width = 52;
+			projectile.height = 52;
 			projectile.melee = true;
 			projectile.timeLeft = 120;
 			projectile.light = 0.5f;
@@ -159,12 +159,13 @@ namespace AerovelenceMod.Items.Weapons.Melee
 		public override void AI()
 		{
 			i++;
+			projectile.rotation += rot;
+			projectile.scale *= 1.005f;
 			if (i % 2 == 0)
 			{
 				int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
 			}
 			projectile.alpha += 2;
-			projectile.rotation += rot;
 			rot *= 0.99f;
 			if (projectile.ai[0] == 0f)
 			{
@@ -179,6 +180,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			{
 				if (num437 != projectile.whoAmI && Main.projectile[num437].active && Main.projectile[num437].owner == projectile.owner && Main.projectile[num437].type == projectile.type && projectile.timeLeft > Main.projectile[num437].timeLeft && Main.projectile[num437].timeLeft > 30)
 				{
+					projectile.alpha += 10;
 					Main.projectile[num437].timeLeft = 30;
 				}
 			}
