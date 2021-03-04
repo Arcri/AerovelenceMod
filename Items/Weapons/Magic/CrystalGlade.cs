@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -64,11 +65,12 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
 	public class CrystalGladeProj : ModProjectile
 	{
+		private readonly int oneHelixRevolutionInUpdateTicks = 30;
 		public override void SetDefaults()
 		{
 			projectile.aiStyle = 227;
-			projectile.width = 18;
-			projectile.height = 38;
+			projectile.width = 38;
+			projectile.height = 18;
 			projectile.alpha = 0;
 			projectile.penetrate = 4;
 			projectile.friendly = true;
@@ -77,6 +79,17 @@ namespace AerovelenceMod.Items.Weapons.Magic
 		}
         public override void AI()
         {
+			Player player = Main.player[projectile.owner];
+			float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
+			float piFractionVelocity = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
+			float ReversepiFraction = MathHelper.Pi + oneHelixRevolutionInUpdateTicks;
+			Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
+			Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+			newDust.noGravity = true;
+			newDustPosition.Y *= -1;
+			newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+			newDust.noGravity = true;
+			newDust.velocity *= 0f;
 			projectile.rotation = projectile.velocity.ToRotation();
 		}
     }

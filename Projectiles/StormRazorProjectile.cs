@@ -1,44 +1,14 @@
-using AerovelenceMod.Projectiles;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using System;
+using AerovelenceMod.Dusts;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace AerovelenceMod.Items.Weapons.Melee
+namespace AerovelenceMod.Projectiles
 {
-    public class StratusStriker : ModItem
-    {
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Stratus Striker");
-			Tooltip.SetDefault("Fires a storm razor that can travel on blocks\nStorm razors also increase in size");
-		}
-        public override void SetDefaults()
-        {
-			item.UseSound = SoundID.Item1;
-			item.crit = 8;
-            item.damage = 74;
-            item.melee = true;
-            item.width = 50;
-            item.height = 52; 
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-			item.value = Item.sellPrice(0, 0, 40, 20);
-            item.rare = ItemRarityID.Cyan;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<StratusProjectile>();
-            item.shootSpeed = 18f;
-        }
-    }
-}
-
-namespace AerovelenceMod.Items.Weapons.Melee
-{
-    public class StratusProjectile : ModProjectile
+    public class StormRazorProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -51,8 +21,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
             projectile.width = 50;
             projectile.height = 50;
             projectile.friendly = true;
-            projectile.melee = true;
-            projectile.penetrate = 7;
+            projectile.magic = true;
+            projectile.penetrate = 15;
             projectile.timeLeft = 200;
             projectile.alpha = 100;
         }
@@ -88,8 +58,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         }
         public override void AI()
         {
-            projectile.scale *= 1.002f;
-            projectile.rotation += 100;
+            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 63, projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
             Main.dust[dust].velocity /= 1.2f;
             Main.dust[dust].noGravity = true;
@@ -98,17 +67,36 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
             Vector2 offset = new Vector2(0, 0);
             Main.PlaySound(SoundID.Item10);
-
-            for (float i = 0; i < 360; i += 0.5f)
             {
-                float ang = (float)(i * Math.PI) / 180;
-                float x = (float)(Math.Cos(ang) * 15) + projectile.Center.X;
-                float y = (float)(Math.Sin(ang) * 15) + projectile.Center.Y;
-                Vector2 vel = Vector2.Normalize(new Vector2(x - projectile.Center.X, y - projectile.Center.Y)) * 7;
-                int dustIndex = Dust.NewDust(new Vector2(x - 3, y - 3), 6, 6, 63, vel.X, vel.Y);
-                Main.dust[dustIndex].noGravity = true;
+                projectile.penetrate--;
+                if (projectile.penetrate <= 0)
+                {
+                    projectile.Kill();
+                }
+                else
+                {
+                    if (projectile.velocity.X != oldVelocity.X && Math.Abs(oldVelocity.X) > 1f)
+                    {
+                        projectile.velocity.X = oldVelocity.X * -2;
+                    }
+                    if (projectile.velocity.Y != oldVelocity.Y && Math.Abs(oldVelocity.Y) > 1f)
+                    {
+                        projectile.velocity.Y = oldVelocity.Y * -2;
+                    }
+                    projectile.velocity *= 0.75f;
+                    Main.PlaySound(SoundID.Item10, projectile.position);
+                }
+                for (float i = 0; i < 360; i += 0.5f)
+                {
+                    float ang = (float)(i * Math.PI) / 180;
+                    float x = (float)(Math.Cos(ang) * 15) + projectile.Center.X;
+                    float y = (float)(Math.Sin(ang) * 15) + projectile.Center.Y;
+                    Vector2 vel = Vector2.Normalize(new Vector2(x - projectile.Center.X, y - projectile.Center.Y)) * 7;
+                    int dustIndex = Dust.NewDust(new Vector2(x - 3, y - 3), 6, 6, 63, vel.X, vel.Y);
+                    Main.dust[dustIndex].noGravity = true;
+                }
+                return false;
             }
-            return false;
         }
     }
 }

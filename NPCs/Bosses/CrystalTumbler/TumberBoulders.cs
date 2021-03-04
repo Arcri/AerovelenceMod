@@ -31,7 +31,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		{
 			if (isntThrown == true)
 			{
-				Texture2D texture = ModContent.GetTexture(Texture + "Glow");
+				Texture2D texture = GetTexture(Texture + "Glow");
 				Rectangle frame = texture.Frame(1, 3, 0, projectile.frame);
 				spriteBatch.Draw(
 					texture,
