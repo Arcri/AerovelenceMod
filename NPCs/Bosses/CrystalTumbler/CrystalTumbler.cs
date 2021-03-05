@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.BossBags;
+//using AerovelenceMod.Items.BossBags;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 {
@@ -18,13 +19,13 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		// AI state management of the Crystal Tumbler.
 		private enum CrystalTumblerState
 		{
-			IdleRoll		= 0,
-			ProjectileSpawn	= 1,
-			SuperDash		= 2,
-			Electricity		= 3,
-			RockRain		= 4,
-			Jump			= 5,
-			Teleport		= 6
+			IdleRoll = 0,
+			ProjectileSpawn = 1,
+			SuperDash = 2,
+			Electricity = 3,
+			RockRain = 4,
+			Jump = 5,
+			Teleport = 6
 		}
 
 		/// <summary>
@@ -131,6 +132,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			}*/
 
 			// Idle roll/follow state. Very basic movement, with a timer for a random attack state.
+			//if (State != CrystalTumblerState.IdleRoll) { Main.NewText(State); }
 			if (State == CrystalTumblerState.IdleRoll)
 			{
 				doingDash = false;
@@ -145,18 +147,23 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 
 					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
-						if ((npc.Center.Y - 50 > target.Center.Y ||	npc.Center.Y + 50 < target.Center.Y) && Main.rand.NextBool(2))
+
+						if ((npc.Center.Y - 50 > target.Center.Y || npc.Center.Y + 50 < target.Center.Y) && Main.rand.NextBool(2))
 						{
 							State = CrystalTumblerState.Teleport;
-							
+
 							// Jump *only* when below the target, standing on solid ground, and with a bit of randomness.
-							if (npc.velocity.Y == 0 && npc.Center.Y - 50 > target.Center.Y && Main.rand.NextBool(2))
+
+
+							if (npc.velocity.Y == 0 && npc.Center.Y - 50 > target.Center.Y /*&& Main.rand.NextBool(2)*/)
 							{
+
 								State = CrystalTumblerState.Jump;
 							}
 						}
 						else if (Math.Abs(target.Center.Y - npc.Center.Y) <= 50 && Main.rand.NextBool(2))
 						{
+
 							State = CrystalTumblerState.SuperDash;
 						}
 						else
@@ -203,11 +210,16 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				}
 				RollingMove(target);
 			}
-			
+
 			// Attack state. Starts speedy roll in place. After a set amount of ticks, releases/dashes with a high velocity and frequent jumps/bounces.
 			else if (State == CrystalTumblerState.Jump)
 			{
-				if (target.Center.Y > npc.Center.Y - 60)
+				/*Main.NewText("Newcheck");
+				Main.NewText(target.Center.Y < npc.Center.Y - 60);
+				Main.NewText(npc.Center.Y - 60 + "   -60 y");
+				Main.NewText(target.Center.Y);*/
+
+				if (target.Center.Y < npc.Center.Y - 60)
 				{
 					npc.velocity.Y -= Main.rand.Next(15) + 12;
 					for (int num325 = 0; num325 < 20; num325++)
@@ -216,16 +228,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					}
 					State = CrystalTumblerState.IdleRoll;
 				}
-				else if(target.Center.Y < npc.Center.Y)
+				else if (target.Center.Y > npc.Center.Y)
 				{
 					State = CrystalTumblerState.IdleRoll;
 				}
 			}
+
 			else if (State == CrystalTumblerState.SuperDash)
 			{
 				t++;
 				CheckPlatform(target);
-				CheckTilesNextTo(target);
+				CheckTilesNextTo(target, 5f);
 				// Rotating in place state.
 				if (++AttackTimer <= 180)
 				{
@@ -288,7 +301,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					{
 						npc.velocity.X -= 0.3f;
 					}
-					doingDash = false;
+					doingDash = false; //idk
 				}
 
 
@@ -303,6 +316,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				}
 				npc.rotation += npc.velocity.X * 0.025f;
 			}
+
 			else if (State == CrystalTumblerState.Electricity)
 			{
 				var player = Main.player[npc.target];
@@ -320,6 +334,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				State = CrystalTumblerState.IdleRoll;
 				RollingMove(target);
 			}
+
 			else if (State == CrystalTumblerState.Teleport)
 			{
 				Vector2 teleportPosition = target.position - Vector2.UnitY * 370;
@@ -375,6 +390,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					State = CrystalTumblerState.IdleRoll;
 				}
 			}
+
 			else if (State == CrystalTumblerState.RockRain)
 			{
 				Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 74, 0.75f);
@@ -423,13 +439,16 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			}
 		}
 
-		private void CheckTilesNextTo(Player player)
+		private void CheckTilesNextTo(Player player, float desiredspeed)
 		{
-			bool doJump = true;
+			bool doJump = false;
 
 			for (int i = (int)npc.position.X; i < npc.position.X + npc.width; i += npc.width / 4)
 			{
-
+				if (npc.velocity.X < desiredspeed && player.Center.Y < npc.Center.Y)
+				{
+					doJump = true;
+				}
 			}
 			if (doJump && !doingDash)
 			{
@@ -443,6 +462,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					State = CrystalTumblerState.IdleRoll;
 				}
 			}
+
 		}
 
 		public override void NPCLoot()
@@ -528,9 +548,10 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		private void RollingMove(Player player)
 		{
 			// Movement.
+
 			float desiredSpeed = 2 + 12 * (1 - LifePercentLeft);
 			CheckPlatform(player);
-			CheckTilesNextTo(player);
+			CheckTilesNextTo(player, desiredSpeed);
 			if (player.Center.X > npc.Center.X)
 			{
 				if (npc.velocity.X < desiredSpeed)
@@ -559,6 +580,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			{
 				JumpTimer--;
 			}
+
 		}
 
 		/// <summary>

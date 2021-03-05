@@ -1,9 +1,11 @@
 Aerovelence is a large content mod themed around space and the sky, with an interesting twist! Aerovelence has plenty of new content, new enemies to fight, and secrets to be uncovered.
 If there are any issues with the mod, join the Discord server linked at the bottom and report bugs in #bug-reports.
+THIS MOD IS IN DEVELOPMENT.
+
 
 https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 
-This version of the mod fixes the Crystal Tumbler AI.
+This version of the mod fixes the Slate armor set bonus, new item abilities and fixes Crystal Tumbler jumping when the player is under it.
 
 Current rundown:
 -200+ Items
@@ -18,7 +20,7 @@ CREDITS
 
 Directed by: Arcri
 Music by: A44
-Code by: Yelloface, Dominic Karma, Naka, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, and A44
-Sprites by: Arcri, Stryke, Orion, Naka, and Wiigirl
+Code by: Yelloface, Dominic Karma, Naka, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, A44, and Felipe350.
+Sprites by: Arcri, Stryke, Orion, Naka, Wiigirl, and Tiredghostdude.
 Structures by DarkArtist
 Lore and Storywriting by Maker of Scratchock Live

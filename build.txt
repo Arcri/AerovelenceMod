@@ -1,5 +1,5 @@
 author = Aerovelence Development Team
-version = 1.7.41
+version = 1.7.42.1
 includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
 displayName = [c/00edff:Aerovelence Mod]
