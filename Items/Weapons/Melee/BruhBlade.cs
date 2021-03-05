@@ -19,6 +19,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.height = 64;
             item.useTime = 24;
             item.useAnimation = 24;
+            item.mana = 10;
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;

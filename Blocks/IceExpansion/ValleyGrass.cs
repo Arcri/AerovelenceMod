@@ -1,27 +1,20 @@
-using Terraria.World.Generation;
 using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Collections.Generic;
-using AerovelenceMod.Dusts;
-using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Blocks.CrystalCaverns.Tiles.Flora;
-using AerovelenceMod.Blocks.CrystalCaverns.Tiles;
 
 namespace AerovelenceMod.Blocks.IceExpansion
 {
-	public class ValleyGrass : ModTile
+    public class ValleyGrass : ModTile
 	{
 		public static int _type;
 		public override void SetDefaults()
 		{
 			Main.tileSolid[Type] = true;
-			SetModTree(new CrystalTree());
+			SetModTree(new ValleyTree());
 			Main.tileMerge[Type][mod.TileType("ValleyGrass")] = true;
-			Main.tileBlendAll[this.Type] = true;
+			Main.tileBlendAll[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
@@ -88,54 +81,11 @@ namespace AerovelenceMod.Blocks.IceExpansion
 					}
 				}
 			}
-			int tileX, tileY;
-			for (int y = -1; y <= 1; y++)
-			{
-				for (int x1 = -1; x1 <= 1; x1++)
-				{
-					tileX = i + x1;
-					tileY = j + y;
-					if (!WorldGen.InWorld(i, j, 0)) continue;
-					if (Main.tile[tileX, tileY].type == TileID.MushroomGrass && Main.rand.Next(4) == 0)
-					{
-						Main.tile[tileX, tileY].type = (ushort)mod.TileType("ValleyGrass");
-						WorldGen.SquareTileFrame(tileX, tileY, true);
-					}
-				}
-			}
-			for (int x = i - 1; x <= i + 1; x++)
-			{
-				for (int y = j - 1; y <= j + 1; y++)
-				{
-					if ((x != i || j != y) && Main.tile[x, y].active() && Main.tile[x, y].type == mod.TileType("ValleyDirt"))
-					{
-						WorldGen.SpreadGrass(x, y, mod.TileType("ValleyDirt"), Type, false, Main.tile[i, j].color());
-						if (Main.tile[x, y].type == Type)
-						{
-							WorldGen.SquareTileFrame(x, y, true);
-						}
-					}
-					if ((x != i || j != y) && Main.tile[x, y].active() && Main.tile[x, y].type == TileID.Dirt)
-					{
-						WorldGen.SpreadGrass(x, y, TileID.Dirt, TileID.CorruptGrass, false, Main.tile[i, j].color());
-						if (Main.tile[x, y].type == Type)
-						{
-							WorldGen.SquareTileFrame(x, y, true);
-						}
-					}
-				}
-			}
 		}
 		public override int SaplingGrowthType(ref int style)
 		{
 			style = 0;
 			return TileID.Saplings;
-		}
-		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-		{
-			r = 0f;
-			g = 0.050f;
-			b = 0.200f;
 		}
 	}
 }

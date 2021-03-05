@@ -1,6 +1,7 @@
 using System;
 using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -61,7 +62,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             projectile.hostile = false;
             projectile.penetrate = -1;
             projectile.ranged = true;
-            projectile.tileCollide = false;
+            projectile.tileCollide = true;
             projectile.ignoreWater = false;
 			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
@@ -77,7 +78,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
 			Lighting.AddLight(projectile.Center, 1f, 1f, 0.25f);
 			Dust.NewDust(projectile.position + projectile.velocity, 0, 0, 55, 0, 0);
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) + 1.57f;
         }
     }
 }

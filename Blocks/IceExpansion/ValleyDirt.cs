@@ -1,6 +1,5 @@
 using Terraria;
 using Terraria.ModLoader;
-using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 
@@ -26,7 +25,7 @@ namespace AerovelenceMod.Blocks.IceExpansion
 			AddMapEntry(new Color(061, 079, 110));
 			dustType = 59;
 			soundType = SoundID.Tink;
-			drop = ModContent.ItemType<AfflictionCrystalItem>();
+			drop = ItemID.DirtBlock;
 
         }
     }
