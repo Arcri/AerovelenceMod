@@ -20,9 +20,13 @@ namespace AerovelenceMod.Items.Armor.PreHM.Slate
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-			player.setBonus = "Potato";
-			player.AddBuff(BuffID.Ravens, -1);
-		} 	
+			player.setBonus = "Defense increased while in the cavern layer";
+			if(player.ZoneRockLayerHeight)
+            {
+                player.statDefense += 7;
+            }
+
+        } 	
         public override void SetDefaults()
         {
             item.width = 22;

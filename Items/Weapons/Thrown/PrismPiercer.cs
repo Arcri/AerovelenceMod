@@ -18,9 +18,9 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item1;
-            item.crit = 8;
+            item.crit = 4;
             item.damage = 12;
-            item.ranged = true;
+            item.melee = true;
             item.width = 22;
             item.height = 40;
             item.useTime = 17;

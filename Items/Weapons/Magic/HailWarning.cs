@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Hail Warning");
-            Tooltip.SetDefault("'Ancient memories of frost and lost souls'");
+            Tooltip.SetDefault("Casts an icicle that rains more icicles from the sky");
         }
         public override void SetDefaults()
         {
@@ -56,6 +56,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 
         public override void AI()
         {
+            projectile.rotation = projectile.velocity.ToRotation();
             timer++;
             if (timer % 5 == 0)
             {
@@ -69,6 +70,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
     public class HailIcicle : ModProjectile
     {
+        int i;
         public override void SetDefaults()
         {
             projectile.width = 18;
@@ -78,14 +80,19 @@ namespace AerovelenceMod.Items.Weapons.Magic
             projectile.penetrate = 3;
             projectile.hostile = false;
             projectile.melee = true;
-            projectile.tileCollide = true;
+            projectile.tileCollide = false;
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
         }
         public override void AI()
         {
+            i++;
+            if (i > 100)
+            {
+                projectile.tileCollide = true;
+            }
             projectile.velocity.Y += 3;
-            projectile.rotation += projectile.velocity.X * 0.01f;
+            projectile.rotation = projectile.velocity.ToRotation();
         }
     }
 }

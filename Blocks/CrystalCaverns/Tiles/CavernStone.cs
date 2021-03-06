@@ -37,7 +37,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
         {
             return ((new Vector2(i, j) + TileOffset) * 16) - Main.screenPosition - (off ?? new Vector2(0));
         }
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+      /*  public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Tile tile = Main.tile[i, j];
             Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
@@ -47,7 +47,7 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             }
             int height = tile.frameY == 36 ? 18 : 16;
             Main.spriteBatch.Draw(mod.GetTexture("Blocks/CrystalCaverns/Tiles/CavernStone_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-        }
+        }*/
         public static bool PlaceObject(int x, int y, int type, bool mute = false, int style = 0, int alternate = 0, int random = -1, int direction = -1)
         {
             TileObject toBePlaced;

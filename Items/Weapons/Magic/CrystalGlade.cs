@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -64,20 +67,31 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
 	public class CrystalGladeProj : ModProjectile
 	{
+		private readonly int oneHelixRevolutionInUpdateTicks = 30;
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 227;
-			projectile.width = 18;
-			projectile.height = 38;
+			projectile.width = 38;
+			projectile.height = 18;
 			projectile.alpha = 0;
 			projectile.penetrate = 4;
 			projectile.friendly = true;
 			projectile.tileCollide = true;
 			projectile.ignoreWater = false;
 		}
-        public override void AI()
-        {
+		public override bool PreAI()
+		{
+			++projectile.localAI[0];
+			float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
+			Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
+			Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+			newDust.noGravity = true;
+			newDustPosition.Y *= -1;
+			newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+			newDust.noGravity = true;
 			projectile.rotation = projectile.velocity.ToRotation();
+			return (false);
 		}
-    }
+		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+	=> this.DrawAroundOrigin(spriteBatch, lightColor * projectile.Opacity);
+	}
 }
