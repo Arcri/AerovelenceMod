@@ -15,8 +15,8 @@ namespace AerovelenceMod.Items.Others.Alchemical
 		public override void SetDefaults()
 		{
 			item.width = item.height = 20;
-			item.rare = ItemRarityID.Green;
-			item.maxStack = 99;
+			item.rare = ItemRarityID.White;
+			item.maxStack = 999;
 			item.value = Item.sellPrice(0, 0, 3, 0);
 			item.noUseGraphic = true;
 			item.useStyle = ItemUseStyleID.SwingThrow;

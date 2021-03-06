@@ -128,7 +128,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				npc.position.Y = npc.position.Y - (npc.height / 2.0f);
 				for (int num621 = 0; num621 < 10; num621++)
 				{
-					int num622 = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, 226, 0f, 0f, 100, default(Color), 2f);
+					int num622 = Dust.NewDust(new Vector2(npc.position.X, npc.position.Y), npc.width, npc.height, 226, 0f, 0f, 100, new Color(112, 244, 250), 2f);
 					Main.dust[num622].velocity *= 1f;
 					if (Main.rand.Next(2) == 0)
 					{
