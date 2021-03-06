@@ -12,51 +12,79 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Marble Musket");
-			Tooltip.SetDefault("Fires a chunk of slow-travelling marble, unfinished weapon");
+			Tooltip.SetDefault("Left right click zoom in and see the trajectory of the bullet"+
+                               "\nRight click to fire a chunk of slow-travelling marble");
 		}
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item41;
             item.crit = 6;
-            item.damage = 29;
+            item.damage = 0;
             item.ranged = true;
             item.width = 58;
             item.height = 18;
-            item.useTime = 26;
-            item.useAnimation = 26;
+            item.useTime = 1;
+            item.useAnimation = 1;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 0, 55, 40);
             item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-			item.shoot = AmmoID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 24f;
+            item.autoReuse = true;
+            item.shoot = ModContent.ProjectileType<MarbleShotTrajectory>();
+            item.ammo = AmmoID.None;
+            item.shootSpeed = 100;
         }
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-4, 0);
         }
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+
+            Collision.CanHit(position, -5, 30, position, -5, 30);
+
+            if (type == ProjectileID.Bullet)
+            {
+                type = ModContent.ProjectileType<MarbleBullet>();
+            }
+            return true;
+        }
+		#region altfuction
+		public override bool AltFunctionUse(Player player)
 		{
-			if (type == ProjectileID.Bullet)
-			{
-				type = ModContent.ProjectileType<MarbleBullet>();
-			}
 			return true;
 		}
+		public override bool CanUseItem(Player player)
+		{
+			if (player.altFunctionUse == 2)
+			{
 
-		public override void AddRecipes()
+                item.useTime = 50;
+                item.useAnimation = 50;
+                item.damage = 14;
+                item.shoot = AmmoID.Bullet;
+                item.useAmmo = AmmoID.Bullet;
+                item.shootSpeed = 24f;
+            }
+			else
+			{
+                item.useTime = 1;
+                item.useAnimation = 1;
+                item.damage = 0;
+                item.shoot = ModContent.ProjectileType<MarbleShotTrajectory>();
+                item.useAmmo = AmmoID.None;
+                item.shootSpeed = 100f;
+            }
+			return base.CanUseItem(player);
+		}
+
+        public override void HoldItem(Player player)
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.Marble, 45);
-            modRecipe.AddRecipeGroup("IronBar", 5);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+                player.GetModPlayer<AeroPlayer>().zooming = true;
         }
 
+        #endregion
     }
 }
 
@@ -96,7 +124,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 		{
 			Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
 			for (int k = 0; k < projectile.oldPos.Length; k++)
-			{
+			{ 
 				Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
 				Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
 				spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
@@ -109,4 +137,63 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			Main.PlaySound(SoundID.Item10, projectile.position);
 		}
 	}
+}
+
+namespace AerovelenceMod.Projectiles
+{
+    public class MarbleShotTrajectory : ModProjectile
+    {
+        public override bool? CanCutTiles() => false;
+        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Marble Trajectory");
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 16;
+            projectile.height = 16;
+
+            projectile.aiStyle = 1;
+            aiType = ProjectileID.Bullet;
+
+            projectile.ranged = true;
+            projectile.friendly = false;
+            projectile.penetrate = -1;
+            projectile.damage = 0;
+            projectile.alpha = 255;
+            projectile.extraUpdates = 16;
+            projectile.light = 0;
+            projectile.ignoreWater = true;
+        }
+        public override bool PreAI()
+        {
+            if (++projectile.localAI[0] > 4.8f)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+
+                    int num = 5;
+                    int index2 = Dust.NewDust(projectile.position, 1, 1, 206, 0.0f, 0.0f, 0, new Color(204, 181, 72), 1.3f);
+                    Main.dust[index2].position = projectile.Center - projectile.velocity / num;
+                    Main.dust[index2].velocity *= 0f;
+                    Main.dust[index2].noGravity = true;
+                    Main.dust[index2].noLight = true;
+                }    
+            }
+            return true;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            projectile.Kill();
+            return true;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
+        }
+    }
 }

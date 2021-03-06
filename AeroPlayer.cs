@@ -19,7 +19,15 @@ namespace AerovelenceMod
 {
 	public class AeroPlayer : ModPlayer
 	{
-		public bool SoulFig;
+        //ARCRI I DONT UNDERSTAND THESE GROUPS
+        public bool zooming;
+		//PLEASE MOVE THIS - its used for zooming with weapons :wegud:
+
+		#region PETS
+		public bool FishPartner;
+        #endregion
+
+        public bool SoulFig;
 		public bool KnowledgeFruit;
 		public bool DevilsBounty;
 
@@ -52,7 +60,9 @@ namespace AerovelenceMod
 		public override void Initialize()
 		{
 
-			
+			zooming = false;
+
+			FishPartner = false;
 
 			AdobeHelmet = false;
 			PhanticBonus = false;
@@ -68,6 +78,7 @@ namespace AerovelenceMod
 		}
 
 
+
 		public override void UpdateBiomeVisuals()
 		{
 			player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrentUp, player.Center);
@@ -75,6 +86,10 @@ namespace AerovelenceMod
 		
 		public override void UpdateDead()
 		{
+			zooming = false;
+
+			FishPartner = false;
+
 			SoulFire = false;
 			badHeal = false;
 			Electrified = false;
@@ -200,6 +215,10 @@ namespace AerovelenceMod
 
         public override void ResetEffects()
 		{
+			zooming = false;
+
+			FishPartner = false;
+
 			AdobeHelmet = false;
 			ShiverMinion = false;
 			FrostProjectile = false;
@@ -295,11 +314,17 @@ namespace AerovelenceMod
 			return null;
 		}
 
+        public override void ModifyZoom(ref float zoom)
+        {
+			if (zooming)
+			{
+				zoom = 1f;
+			}
+		}
 
 
 
-
-		public static bool BossPresent => Main.npc.ToList().Any(npc => npc.boss && npc.active);
+        public static bool BossPresent => Main.npc.ToList().Any(npc => npc.boss && npc.active);
 
 		public NPC GetFarthestBoss
 		{
