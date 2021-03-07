@@ -1,4 +1,5 @@
 using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,8 +38,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
-            recipe.AddRecipeGroup("IronBar", 7);
+            recipe.AddIngredient(ItemID.OrichalcumBar, 15);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 15);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

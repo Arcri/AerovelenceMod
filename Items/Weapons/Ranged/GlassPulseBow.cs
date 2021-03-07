@@ -3,6 +3,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Projectiles;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
+
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class GlassPulseBow : ModItem
@@ -37,6 +39,15 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f));
             Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ModContent.ProjectileType<PrismaticBolt>(), damage, knockBack, Main.myPlayer);
             return false;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.HellstoneBar, 15);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 15);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }
