@@ -48,7 +48,7 @@ namespace AerovelenceMod
 		public bool MidasCrown;
 
 		public bool AdobeHelmet;
-		public bool AmbrosiaBonus;
+		public bool AmbrosiaBonus = false;
 		public bool PhanticBonus;
 		public bool FrostMelee;
 		public bool FrostProjectile;
@@ -106,10 +106,13 @@ namespace AerovelenceMod
 		{
 			if (AeroMod.ArmorHotKey.JustPressed)
 			{
-				if(AmbrosiaBonus && MiningAbilityCooldown == false)
-                {
-					Projectile.NewProjectile(player.Center, (Main.MouseWorld - player.Center) / 10, ProjectileType<MiningEnergyBlast>(), 1, 0);
-					player.AddBuff(BuffType<MiningAbilityCooldown>(), 600);
+				if (MiningAbilityCooldown == false)
+				{
+					if (AmbrosiaBonus)
+					{
+						Projectile.NewProjectile(player.Center, (Main.MouseWorld - player.Center) / 10, ProjectileType<MiningEnergyBlast>(), 1, 0);
+						player.AddBuff(BuffType<MiningAbilityCooldown>(), 600);
+					}
 				}
 			}
 		}
@@ -242,6 +245,7 @@ namespace AerovelenceMod
 			ShiverMinion = false;
 			FrostProjectile = false;
 			FrostMelee = false;
+			MiningAbilityCooldown = false;
 			FrostMinion = false;
 			PhanticBonus = false;
 			UpgradedHooks = false;
@@ -249,6 +253,7 @@ namespace AerovelenceMod
 			SpiritCultistBonus = false;
 			badHeal = false;
 			MiningAbilityCooldown = false;
+			AmbrosiaBonus = false;
 			QueensStinger = false;
 			NeutronMinion = false;
 			StarDrone = false;
