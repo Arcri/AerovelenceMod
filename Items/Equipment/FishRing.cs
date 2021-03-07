@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Equipement
+namespace AerovelenceMod.Items.Equipment
 {
     public class FishRing : ModItem
 	{

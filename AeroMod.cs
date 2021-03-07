@@ -20,11 +20,18 @@ using AerovelenceMod.Prim;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Skies;
+using AerovelenceMod.ILHooks;
 
 namespace AerovelenceMod
 {
 	public class AeroMod : Mod
 	{
+		public static ModHotKey ArmorHotKey;
+
+
+
+
+
 		// Todo: Convert mod.XType to the new ModContent system
 		internal UserInterface MarauderUserInterface;
 		private UserInterface _aeroUserInterface;
@@ -83,6 +90,8 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
+			GemGrapplingRange.Load();
+			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 			SkyManager.Instance["AerovelenceMod:CrystalTorrents"] = new CrystalTorrentSky();
 			Instance = this;
@@ -178,10 +187,78 @@ namespace AerovelenceMod
 				priority = MusicPriority.BiomeMedium;
 			}
 		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(this);
+
+			recipe = new ModRecipe(this);
+			recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 5);
+			recipe.AddIngredient(ItemID.Cloud, 5);
+			recipe.AddIngredient(ItemID.SunplateBlock, 3);
+			recipe.AddTile(TileID.SkyMill);
+			recipe.SetResult(ItemID.LuckyHorseshoe, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.Cloud, 25);
+			recipe.AddIngredient(ItemID.Bottle, 1);
+			recipe.AddTile(TileID.SkyMill);
+			recipe.SetResult(ItemID.CloudinaBottle, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.SandBlock, 25);
+			recipe.AddIngredient(ItemID.Bottle, 1);
+			recipe.AddTile(TileID.SkyMill);
+			recipe.SetResult(ItemID.SandstorminaBottle, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.SnowBlock, 25);
+			recipe.AddIngredient(ItemID.Bottle, 1);
+			recipe.AddTile(TileID.SkyMill);
+			recipe.SetResult(ItemID.BlizzardinaBottle, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.Starfish, 12);
+			recipe.AddIngredient(ItemID.Seashell, 12);
+			recipe.AddIngredient(ItemID.Bottle, 1);
+			recipe.AddTile(TileID.SkyMill);
+			recipe.SetResult(ItemID.TsunamiInABottle, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddRecipeGroup("IronBar", 5);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(ItemID.Aglet, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddRecipeGroup("IronBar", 4);
+			recipe.AddIngredient(ItemID.Stinger, 10);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(ItemID.AnkletoftheWind, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.HellstoneBar, 10);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(ItemID.LavaCharm, 1);
+			recipe.AddRecipe();
+
+		}
+
+
+
+
+
 		public static AeroMod Instance { get; private set; }
 
 		public override void Unload()
         {
+			ArmorHotKey = null;
 			UnloadDetours();
 			Instance = null;
 		}

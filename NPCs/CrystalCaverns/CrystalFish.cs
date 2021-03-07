@@ -1,4 +1,4 @@
-﻿using AerovelenceMod.Items.Equipement;
+﻿using AerovelenceMod.Items.Equipment;
 using AerovelenceMod.Items.Others.Alchemical;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

@@ -1,4 +1,5 @@
 //using AerovelenceMod.CrystalTorrent;
+using AerovelenceMod.Buffs;
 using AerovelenceMod.CrystalTorrent;
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Weapons.Melee;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -36,14 +38,17 @@ namespace AerovelenceMod
 		public bool ZoneCrystalCitadel;
 
 		public bool SoulFire;
+		public bool MiningAbilityCooldown;
 		public bool Electrified;
 		public bool badHeal;
 
 		public bool QueensStinger;
+		public bool UpgradedHooks;
 		public bool EmeraldEmpoweredGem;
 		public bool MidasCrown;
 
 		public bool AdobeHelmet;
+		public bool AmbrosiaBonus;
 		public bool PhanticBonus;
 		public bool FrostMelee;
 		public bool FrostProjectile;
@@ -65,6 +70,7 @@ namespace AerovelenceMod
 			FishPartner = false;
 
 			AdobeHelmet = false;
+			AmbrosiaBonus = false;
 			PhanticBonus = false;
 			SpiritCultistBonus = false;
 			FrostMelee = false;
@@ -73,6 +79,7 @@ namespace AerovelenceMod
 			BurnshockArmorBonus = false;
 
 			MidasCrown = false;
+			UpgradedHooks = false;
 			EmeraldEmpoweredGem = false;
 			QueensStinger = false;
 		}
@@ -91,8 +98,20 @@ namespace AerovelenceMod
 			FishPartner = false;
 
 			SoulFire = false;
+			MiningAbilityCooldown = false;
 			badHeal = false;
 			Electrified = false;
+		}
+		public override void ProcessTriggers(TriggersSet triggersSet)
+		{
+			if (AeroMod.ArmorHotKey.JustPressed)
+			{
+				if(AmbrosiaBonus && MiningAbilityCooldown == false)
+                {
+					Projectile.NewProjectile(player.Center, (Main.MouseWorld - player.Center) / 10, ProjectileType<MiningEnergyBlast>(), 1, 0);
+					player.AddBuff(BuffType<MiningAbilityCooldown>(), 600);
+				}
+			}
 		}
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
@@ -225,9 +244,11 @@ namespace AerovelenceMod
 			FrostMelee = false;
 			FrostMinion = false;
 			PhanticBonus = false;
+			UpgradedHooks = false;
 			BurnshockArmorBonus = false;
 			SpiritCultistBonus = false;
 			badHeal = false;
+			MiningAbilityCooldown = false;
 			QueensStinger = false;
 			NeutronMinion = false;
 			StarDrone = false;
@@ -246,6 +267,20 @@ namespace AerovelenceMod
 			if (modPlayer.badHeal)
 			{
 				Texture2D texture = mod.GetTexture("Buffs/SoulFire");
+				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
+				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
+				Main.playerDrawData.Add(data);
+				for (int k = 0; k < 2; k++)
+				{
+					int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, DustType<Smoke>(), 0f, 0f, 0, Color.Black);
+					Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+					Main.playerDrawDust.Add(dust);
+				}
+			}
+			if (modPlayer.MiningAbilityCooldown)
+			{
+				Texture2D texture = mod.GetTexture("Buffs/MiningAbilityCooldown");
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
 				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
