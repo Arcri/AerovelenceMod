@@ -133,7 +133,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                     int attack = grounded ? Main.rand.Next(3) + 6 : Main.rand.Next(6);
                     if (!grounded && phaseTwo && Main.rand.Next(8) == 0)
                     {
-                        attack = 8;
+                        attack = 9;
                     }
                     currentAttack = (CurrentAttack)attack;
                 }
