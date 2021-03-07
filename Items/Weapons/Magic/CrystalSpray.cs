@@ -35,15 +35,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			this.item.value = 27000;
 			this.item.magic = true;
 		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 	}
 }
 
