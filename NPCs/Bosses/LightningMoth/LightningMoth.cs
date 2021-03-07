@@ -14,7 +14,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 26;    //boss frame/animation 
+            Main.npcFrameCount[npc.type] = 7;    //boss frame/animation 
         }
         public override void SetDefaults()
         {
@@ -37,6 +37,12 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
        //     bossBag = ModContent.ItemType<SnowriumBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
         }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			var effects = npc.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+			spriteBatch.Draw(Main.npcTexture[npc.type], new Vector2(npc.Center.X, npc.Center.Y) - Main.screenPosition + new Vector2(0, npc.gfxOffY), npc.frame, lightColor, npc.rotation, npc.frame.Size() / 2, npc.scale, effects, 0);
+			return false;
+		}
         private int cooldownFrames
         {
             get
@@ -74,10 +80,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
         }
         bool grounded = false;
         float ZaxisRotation = 0;
-        public bool phaseTwo
-        {
-            get{return npc.life < npc.lifeMax / 2;}
-        }
+        public bool phaseTwo => npc.life < npc.lifeMax / 2;
         public override void AI()
         {
             npc.TargetClosest();
@@ -99,8 +102,11 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                     case CurrentAttack.SummonMoths:
                         cooldownFrames = 2;
                         break;
-                    case CurrentAttack.Divebomb:
+                    case CurrentAttack.BlastVolleys:
                         cooldownFrames = 2;
+                        break;
+                    case CurrentAttack.Divebomb:
+                        DiveBomb();
                         break;
                     case CurrentAttack.CrystalStomp:
                         cooldownFrames = 2;
@@ -124,7 +130,7 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
             {
                 if (cooldownFrames == 1)
                 {
-                    int attack = grounded ? Main.rand.Next(3) + 5 : Main.rand.Next(5);
+                    int attack = grounded ? Main.rand.Next(3) + 6 : Main.rand.Next(6);
                     if (!grounded && phaseTwo && Main.rand.Next(8) == 0)
                     {
                         attack = 8;
@@ -137,14 +143,24 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                 if (!grounded)
                 {
                     UpdateFrame(0.3f, 0, 6);
+                    npc.noGravity = true;
+                    npc.noTileCollide = true;
+                }
+                else
+                {
+                    UpdateFrame(0.3f, 8, 17);
+                    npc.noGravity = false;
+                    npc.noTileCollide = false;
                 }
             }
         }
         public float trueFrame;
         public override void FindFrame(int frameHeight)
-        {
-            npc.frame.Y = (int)trueFrame * frameHeight;
-        }
+		{
+			npc.frame.Width = 268;
+			npc.frame.X = ((int)trueFrame % 4) * npc.frame.Width;
+			npc.frame.Y = (((int)trueFrame - ((int)trueFrame % 4)) / 4) * npc.frame.Height;
+		}
         internal void UpdateFrame(float speed, int minFrame, int maxFrame)
         {
             trueFrame += speed;
@@ -223,6 +239,51 @@ namespace AerovelenceMod.NPCs.Bosses.LightningMoth
                 return;
             }
             npc.velocity = Vector2.Zero;
+        }
+        Vector2 posToBe = Vector2.Zero;
+        bool diveBombed = false;
+        private void DiveBomb()
+        {
+            UpdateFrame(0.3f, 7, 7);
+             Player player = Main.player[npc.target];
+            if (attackCounter == 0)
+            {
+                diveBombed = false;
+                attackCounter = 1;
+            }   
+            if (!diveBombed)
+            {
+                if (attackCounter == 1)
+                {
+                    posToBe = player.Center - new Vector2(0, 500);
+                }
+                Vector2 direction = posToBe - npc.Center;
+                float lerpSpeed = (float)Math.Sqrt(direction.Length());
+                direction.Normalize();
+                direction *= lerpSpeed;
+                npc.velocity = direction;
+                if (lerpSpeed < 10)
+                {
+                    attackCounter++;
+                    if (attackCounter > 30)
+                    {
+                        diveBombed = true;
+                    }
+                }
+            }
+            else
+            {
+                attackCounter++;
+                npc.velocity.Y = 30;
+                npc.velocity.X = 0;
+                npc.noTileCollide = false;
+                if (Main.netMode != NetmodeID.MultiplayerClient && (Main.tile[(int)(npc.Center.X / 16), (int)((npc.Center.Y + 150) / 16)].collisionType == 1 || attackCounter > 75))
+                {
+                    grounded = true;
+                    cooldownFrames = 30;
+                    return;
+                }
+            }
         }
         #endregion
     }
