@@ -90,8 +90,8 @@ namespace AerovelenceMod
 		public override void Load()
 		{
 			Instance = this;
-			string shaderName = "AerovelenceM:DustifiedCrystalShine";
-			string shaderPath = "Effects/DustifiedCrystalShine";
+			string shaderName = "AerovelenceMod:TestCrystalShine";
+			string shaderPath = "Effects/TestCrystalShine";
 
 			var shaderRef = new Ref<Effect>(AeroMod.Instance.GetEffect(shaderPath));
 			(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();

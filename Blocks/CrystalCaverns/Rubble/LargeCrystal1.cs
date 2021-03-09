@@ -34,8 +34,8 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
 		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			spriteBatch.End();
-			spriteBatch.Begin(default, BlendState.Additive, default, default, default, Filters.Scene["AerovelenceMod:DustifiedCrystalShine"].GetShader().Shader);
-			Filters.Scene["AerovelenceMod:DustifiedCrystalShine"].GetShader().UseProgress((float)Main.time * 0.02f).UseOpacity(0.8f);
+			spriteBatch.Begin(default, BlendState.Additive, default, default, default, Filters.Scene["AerovelenceMod:TestCrystalShine"].GetShader().Shader);
+			Filters.Scene["AerovelenceMod:TestCrystalShine"].GetShader().UseProgress((float)Main.time * 0.02f).UseOpacity(0.8f);
 
 			return (true);
 		}
