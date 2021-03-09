@@ -5,26 +5,24 @@ using AerovelenceMod.Items.Weapons.Magic;
 using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Items.Weapons.Ranged;
 using AerovelenceMod.Items.Weapons.Thrown;
-using AerovelenceMod.World;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
-using Terraria.World.Generation;
 using AerovelenceMod.Prim;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Skies;
 using AerovelenceMod.ILHooks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AerovelenceMod
 {
-	public class AeroMod : Mod
+    public class AeroMod : Mod
 	{
 		public static ModHotKey ArmorHotKey;
 
@@ -34,6 +32,7 @@ namespace AerovelenceMod
 
 		// Todo: Convert mod.XType to the new ModContent system
 		internal UserInterface MarauderUserInterface;
+		internal UserInterface RockCollectorUserInterface;
 		private UserInterface _aeroUserInterface;
 		public static PrimTrailManager primitives;
 		public override void PostSetupContent()
@@ -90,11 +89,18 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
+			Instance = this;
+			string shaderName = "AerovelenceM:DustifiedCrystalShine";
+			string shaderPath = "Effects/DustifiedCrystalShine";
+
+			var shaderRef = new Ref<Effect>(AeroMod.Instance.GetEffect(shaderPath));
+			(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
+
 			GemGrapplingRange.Load();
 			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 			SkyManager.Instance["AerovelenceMod:CrystalTorrents"] = new CrystalTorrentSky();
-			Instance = this;
+
 			if (Main.netMode != NetmodeID.Server)
 			{
 
@@ -109,6 +115,7 @@ namespace AerovelenceMod
             {
 				_aeroUserInterface = new UserInterface();
 				MarauderUserInterface = new UserInterface();
+				RockCollectorUserInterface = new UserInterface();
 			}
 			primitives = new PrimTrailManager();
 			LoadDetours();
@@ -129,6 +136,19 @@ namespace AerovelenceMod
 					{
 						// If the current UIState of the UserInterface is null, nothing will draw. We don't need to track a separate .visible value.
 						MarauderUserInterface.Draw(Main.spriteBatch, new GameTime());
+						return true;
+					},
+					InterfaceScaleType.UI)
+				);
+			}
+			if (inventoryIndex != -1)
+			{
+				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+					"AerovelenceMod: RockCollector UI",
+					delegate
+					{
+						// If the current UIState of the UserInterface is null, nothing will draw. We don't need to track a separate .visible value.
+						RockCollectorUserInterface.Draw(Main.spriteBatch, new GameTime());
 						return true;
 					},
 					InterfaceScaleType.UI)

@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using AerovelenceMod.Effects;
 using Terraria.Enums;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -28,6 +31,21 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
 			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
 		}
+		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+		{
+			spriteBatch.End();
+			spriteBatch.Begin(default, BlendState.Additive, default, default, default, Filters.Scene["AerovelenceMod:DustifiedCrystalShine"].GetShader().Shader);
+			Filters.Scene["AerovelenceMod:DustifiedCrystalShine"].GetShader().UseProgress((float)Main.time * 0.02f).UseOpacity(0.8f);
+
+			return (true);
+		}
+		public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+		{
+			spriteBatch.End();
+			spriteBatch.Begin(default, default, default, default, default, default);
+		}
+
+
 		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height)
 		{
 			offsetY = 2;

@@ -11,13 +11,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace ExampleMod.NPCs
+namespace AerovelenceMod.NPCs.TownNPC
 {
     // [AutoloadHead] and npc.townNPC are extremely important and absolutely both necessary for any Town NPC to work at all.
     [AutoloadHead]
 	public class Marauder : ModNPC
 	{
-		public override string Texture => "AerovelenceMod/NPCs/General/Marauder";
+		public override string Texture => "AerovelenceMod/NPCs/TownNPC/Marauder";
 
 		public override bool Autoload(ref string name)
 		{

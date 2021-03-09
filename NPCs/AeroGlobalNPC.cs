@@ -27,7 +27,7 @@ namespace AerovelenceMod.NPCs
         {
 			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
 			{
-				for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY * 13) * 2E-05); k++)
+				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
 				{
 					int EEXX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
 					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
@@ -35,7 +35,7 @@ namespace AerovelenceMod.NPCs
 					{
 						if (Main.tile[EEXX, WHHYY].active())
 						{
-							WorldGen.OreRunner(EEXX, WHHYY, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("PhanticOreBlock"));
+							WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("PhanticOreBlock"));
 						}
 					}
 				}
