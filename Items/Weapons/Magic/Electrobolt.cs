@@ -39,8 +39,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.CopperBar, 3);
-            recipe.AddIngredient(ItemID.HellstoneBar, 3);
-            recipe.AddIngredient(ItemID.Obsidian, 10);
             recipe.AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1);
             recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 15);
             recipe.AddRecipeGroup("IronBar", 5);

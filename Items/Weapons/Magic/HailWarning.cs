@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -32,6 +33,14 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("HailProjectile");
             item.shootSpeed = 40f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 10);
+            recipe.AddTile(TileID.Bookcases);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

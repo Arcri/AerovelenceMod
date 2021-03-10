@@ -11,29 +11,40 @@ namespace AerovelenceMod.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			this.DisplayName.SetDefault("Crystal Spray");
-			this.Tooltip.SetDefault("Aqua Sceptre++");
+			DisplayName.SetDefault("Crystal Spray");
+			Tooltip.SetDefault("Casts homing water streams to chase your foes\nAqua Sceptre++");
 		}
 
 		public override void SetDefaults()
 		{
-			this.item.mana = 6;
-			this.item.autoReuse = true;
-			this.item.useStyle = ItemUseStyleID.HoldingOut;
-			this.item.useAnimation = 16;
-			this.item.useTime = 8;
-			this.item.knockBack = 5f;
-			this.item.width = 38;
-			this.item.height = 10;
-			this.item.damage = 60;
-			this.item.scale = 1f;
-			this.item.shoot = ModContent.ProjectileType<CrystalSprayProjectile>();
-			this.item.shootSpeed = 12.5f;
-			this.item.UseSound = SoundID.Item13;
-			this.item.noMelee = true;
-			this.item.rare = ItemRarityID.Green;
-			this.item.value = 27000;
-			this.item.magic = true;
+			item.mana = 6;
+			item.autoReuse = true;
+			item.useStyle = ItemUseStyleID.HoldingOut;
+			item.useAnimation = 16;
+			item.useTime = 8;
+			item.knockBack = 5f;
+			item.width = 38;
+			item.crit = 5;
+			item.height = 10;
+			item.damage = 78;
+			item.scale = 1f;
+			item.shoot = ModContent.ProjectileType<CrystalSprayProjectile>();
+			item.shootSpeed = 12.5f;
+			item.UseSound = SoundID.Item13;
+			item.noMelee = true;
+			item.rare = ItemRarityID.Yellow;
+			item.value = 27000;
+			item.magic = true;
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ItemID.AquaScepter, 1);
+			modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
+			modRecipe.AddIngredient(ItemID.HallowedBar, 15);
+			modRecipe.AddTile(TileID.MythrilAnvil);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
 		}
 	}
 }
@@ -45,7 +56,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 	{
 		private void ApplyTrailFx()
 		{
-			Projectile proj = this.projectile;
+			Projectile proj = projectile;
 
 			//proj.velocity.Y += 0.2f;
 
@@ -53,9 +64,9 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			{
 				int castAheadDist = 6;
 				var pos = new Vector2(
-					proj.position.X + (float)castAheadDist,
-					proj.position.Y + (float)castAheadDist
-				);
+					proj.position.X + castAheadDist,
+					proj.position.Y + castAheadDist
+                );
 
 				for (int subDusts = 0; subDusts < 3; subDusts++)
 				{

@@ -1,3 +1,4 @@
+using AerovelenceMod.Items.Others.Crafting;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -8,12 +9,13 @@ namespace AerovelenceMod.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Red Shade");
-            Tooltip.SetDefault("Wait, those aren't bees...\nRelic");
+            Tooltip.SetDefault("Fires Skulls");
         }
         public override void SetDefaults()
         {
-            item.crit = 20;
-            item.damage = 28;
+            item.crit = 4;
+            item.mana = 5;
+            item.damage = 18;
             item.magic = true;
             item.width = 36;
             item.height = 48;
@@ -26,8 +28,16 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.value = 10000;
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
-            item.shoot = ProjectileID.Wasp;
+            item.shoot = ProjectileID.Skull;
             item.shootSpeed = 12f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
+            recipe.AddTile(TileID.Bookcases);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }
