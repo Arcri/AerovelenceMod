@@ -89,18 +89,13 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
-			Instance = this;
-			string shaderName = "AerovelenceMod:TestCrystalShine";
-			string shaderPath = "Effects/TestCrystalShine";
-
-			var shaderRef = new Ref<Effect>(AeroMod.Instance.GetEffect(shaderPath));
-			(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
+			
 
 			GemGrapplingRange.Load();
 			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 			SkyManager.Instance["AerovelenceMod:CrystalTorrents"] = new CrystalTorrentSky();
-
+			Instance = this;
 			if (Main.netMode != NetmodeID.Server)
 			{
 

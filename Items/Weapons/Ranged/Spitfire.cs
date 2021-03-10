@@ -15,8 +15,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
 			item.UseSound = SoundID.Item5;
 			item.crit = 9;
-            item.damage = 26;
-            item.ranged = true;
+            item.damage = 34;
+            item.magic = true;
+            item.mana = 5;
             item.width = 30;
             item.height = 54;
             item.useTime = 22;
@@ -25,10 +26,9 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.noMelee = true;
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
+            item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.shoot = ProjectileID.ScutlixLaserFriendly;
-			item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 7f;
         }
     }
