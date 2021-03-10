@@ -86,27 +86,6 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Tiles
             {
                 if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
                 {
-                    tileAbove.type = (ushort)ModContent.TileType<CrystalCavernsPiles>();
-                    tileAbove.active(true);
-
-                    if (Framing.GetTileSafely(i, j).active())
-                    {
-                        WorldGen.KillTile(i, j);
-                        WorldGen.PlaceObject(i, j, (ushort)ModContent.TileType<CrystalCavernsPiles>());
-                    }
-                    tileAbove.frameY = 0;
-                    tileAbove.frameX = (short)(WorldGen.genRand.Next(3) * 36);
-                    WorldGen.SquareTileFrame(i, j + 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
-            {
-                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
-                {
                     tileAbove.type = (ushort)ModContent.TileType<CavernsRubbleFloor>();
                     tileAbove.active(true);
                     tileAbove.frameY = 0;

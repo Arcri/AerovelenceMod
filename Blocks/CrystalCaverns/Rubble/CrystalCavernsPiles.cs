@@ -25,15 +25,6 @@ namespace AerovelenceMod.Blocks.CrystalCaverns.Rubble
 		{
 			offsetY = 2;
 		}
-		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-		{
-			Tile tileBelow = Framing.GetTileSafely(i, j + 2);
-			if (!tileBelow.active() || tileBelow.halfBrick() || tileBelow.topSlope() || tileBelow.type != ModContent.TileType<CavernStone>())
-			{
-				WorldGen.KillTile(i, j);
-			}
-			return true;
-		}
         public override void NearbyEffects(int i, int j, bool closer)
 		{
 			Lighting.AddLight(new Vector2(i, j) * 16, new Vector3(0.0f, 0.20f, 0.60f));

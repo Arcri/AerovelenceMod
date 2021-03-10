@@ -151,7 +151,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						if ((npc.Center.Y - 50 > target.Center.Y || npc.Center.Y + 50 < target.Center.Y) && Main.rand.NextBool(2))
 						{
 							State = CrystalTumblerState.Teleport;
-
+							npc.netUpdate = true;
 							// Jump *only* when below the target, standing on solid ground, and with a bit of randomness.
 
 
@@ -159,12 +159,14 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 							{
 
 								State = CrystalTumblerState.Jump;
+								npc.netUpdate = true;
 							}
 						}
 						else if (Math.Abs(target.Center.Y - npc.Center.Y) <= 50 && Main.rand.NextBool(2))
 						{
 
 							State = CrystalTumblerState.SuperDash;
+							npc.netUpdate = true;
 						}
 						else
 						{
@@ -172,14 +174,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 							if (randomState == 0)
 							{
 								State = CrystalTumblerState.ProjectileSpawn;
+								npc.netUpdate = true;
 							}
 							else if (randomState == 1)
 							{
 								State = CrystalTumblerState.Electricity;
+								npc.netUpdate = true;
 							}
 							else
 							{
 								State = CrystalTumblerState.RockRain;
+								npc.netUpdate = true;
 							}
 						}
 					}
@@ -195,16 +200,19 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				{
 					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
 					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 0);
+					npc.netUpdate = true;
 				}
 				else if (AttackTimer == 10)
 				{
 					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
 					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 1);
+					npc.netUpdate = true;
 				}
 				else if (AttackTimer == 20)
 				{
 					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
 					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 2);
+					npc.netUpdate = true;
 					AttackTimer = 0;
 					State = CrystalTumblerState.IdleRoll;
 				}
@@ -225,6 +233,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					for (int num325 = 0; num325 < 20; num325++)
 					{
 						Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+						npc.netUpdate = true;
 					}
 					State = CrystalTumblerState.IdleRoll;
 				}
@@ -232,6 +241,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				{
 					State = CrystalTumblerState.IdleRoll;
 				}
+				npc.netUpdate = true;
 			}
 
 			else if (State == CrystalTumblerState.SuperDash)
@@ -252,10 +262,12 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						if (Main.rand.NextBool(2))
 						{
 							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
 						}
 						else
 						{
 							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
 						}
 					}
 					else if (t % 15 == 0 && Main.expertMode == true)
@@ -264,14 +276,17 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						if (randomProj == 0)
 						{
 							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 20, 10f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
 						}
 						else if (randomProj == 1)
 						{
 							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 10f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
 						}
 						else
 						{
 							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerHomingShard>(), 20, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
 						}
 					}
 					// If the timer is at 180 (or 3 seconds), set the velocity towards the NPCs direction.
@@ -279,6 +294,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					{
 						npc.netUpdate = true;
 						npc.velocity.X = npc.direction * 16f;
+						npc.netUpdate = true;
 					}
 
 				}
@@ -296,10 +312,12 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					if (player.Center.X > npc.Center.X)
 					{
 						npc.velocity.X += 0.3f;
+						npc.netUpdate = true;
 					}
 					else if (player.Center.X < npc.Center.X)
 					{
 						npc.velocity.X -= 0.3f;
+						npc.netUpdate = true;
 					}
 					doingDash = false; //idk
 				}
@@ -329,6 +347,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					int type = mod.ProjectileType("TumblerOrb");
 					float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
 					Projectile.NewProjectile(vector8.X, vector8.Y, (float)(Math.Cos(rotation) * Speed * -1), (float)(Math.Sin(rotation) * Speed * -1), type, damage, 0f, 0);
+					npc.netUpdate = true;
 				}
 				AttackTimer = 0;
 				State = CrystalTumblerState.IdleRoll;
@@ -346,10 +365,12 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					if (AttackTimer >= 100)
 					{
 						npc.Opacity *= 0.97f;
+						npc.netUpdate = true;
 					}
 					if (AttackTimer == 100)
 					{
 						Projectile.NewProjectile(target.position, default, ModContent.ProjectileType<TeleportCharge>(), 12, 1f, Main.myPlayer, 1);
+						npc.netUpdate = true;
 					}
 					if (teleported == true)
 					{
@@ -367,6 +388,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 						npc.noTileCollide = true;
 						teleported = true;
 						AttackTimer = 0;
+						npc.netUpdate = true;
 						Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 94, 0.75f);
 						for (float i = 0; i < 360; i += 0.5f)
 						{
@@ -379,6 +401,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 
 							int dustIndex = Dust.NewDust(new Vector2(x - 3, y - 3), 6, 6, 54, vel.X, vel.Y);
 							Main.dust[dustIndex].noGravity = true;
+							npc.netUpdate = true;
 						}
 						State = CrystalTumblerState.IdleRoll;
 					}
@@ -400,10 +423,12 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					if (Main.rand.NextBool(2))
 					{
 						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike1>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						npc.netUpdate = true;
 					}
 					else
 					{
 						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike2>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						npc.netUpdate = true;
 					}
 				}
 
@@ -532,6 +557,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 				npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
 				0f
 				);
+			npc.netUpdate = true;
 		}
 		public override void BossHeadRotation(ref float rotation)
 		{

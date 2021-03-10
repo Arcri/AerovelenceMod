@@ -14,6 +14,7 @@ namespace AerovelenceMod.Blocks.Ores
 			mineResist = 2.5f;
 			minPick = 55;
             Main.tileSolid[Type] = true;
+            Main.tileSpelunker[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;

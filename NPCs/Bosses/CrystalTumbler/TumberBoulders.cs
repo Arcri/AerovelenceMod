@@ -31,6 +31,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 		{
 			if (isntThrown == true)
 			{
+				projectile.netUpdate = true;
 				Texture2D texture = GetTexture(Texture + "Glow");
 				Rectangle frame = texture.Frame(1, 3, 0, projectile.frame);
 				spriteBatch.Draw(
@@ -56,12 +57,13 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			if (projectile.ai[1] == 0)
 			{
 				projectile.frame = Main.rand.Next(3);
+				projectile.netUpdate = true;
 			}
 
 			if (++projectile.ai[1] >= 120)
 			{
 				projectile.tileCollide = true;
-
+				projectile.netUpdate = true;
 				if (projectile.ai[1] == 120)
 				{
 					Vector2 desiredVelocity = Vector2.Normalize(Main.player[ownerNPC.target].Center - projectile.Center) * 16f;
@@ -79,6 +81,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 
 				float speed = MathHelper.Lerp(0.1f, 12f, desiredVelocity.Length() / 100);
 				projectile.velocity = Vector2.Normalize(desiredVelocity) * speed;
+				projectile.netUpdate = true;
 			}
 
 			return (false);

@@ -16,6 +16,7 @@ namespace AerovelenceMod.Blocks.Ores
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
+            Main.tileSpelunker[Type] = true;
             Main.tileLighted[Type] = false;
             drop = ModContent.ItemType<BurnshockOreItem>();
 			dustType = 10;
