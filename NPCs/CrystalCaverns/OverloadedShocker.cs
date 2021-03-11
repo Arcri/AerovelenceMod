@@ -15,7 +15,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         public override void SetDefaults()
         {
             npc.aiStyle = 1;
-            npc.lifeMax = 70;
+            npc.lifeMax = 1000;
             npc.damage = 15;
             npc.defense = 24;
             npc.knockBackResist = 0f;
@@ -32,7 +32,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .1f : 0f;
+            return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
         }
 
         public override void HitEffect(int hitDirection, double damage)

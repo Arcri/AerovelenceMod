@@ -69,7 +69,7 @@ namespace AerovelenceMod.Items
 				case NPCID.QueenBee:
 					if (Main.rand.NextBool(51))
 					{
-						Item.NewItem(npc.getRect(), mod.ItemType("SlimyKnife"));
+						Item.NewItem(npc.getRect(), mod.ItemType("BookOfBees"));
 					}
 					break;
 				case NPCID.SkeletronHead:
@@ -109,7 +109,7 @@ namespace AerovelenceMod.Items
 					}
 					break;
 				case NPCID.BlueSlime:
-					if (Main.rand.NextBool(51))
+					if (Main.rand.NextBool(101))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("SlimyGreatsword"));
 					}
@@ -190,14 +190,14 @@ namespace AerovelenceMod.Items
 			{
 				if (Main.rand.NextBool(1))
 				{
-					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(1, 6));
+					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(10, 20));
 				}
 			}
 			if (npc.type == ModContent.NPCType<CaveSnail>())
 			{
 				if (Main.rand.NextBool(1))
 				{
-					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(1, 6));
+					Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOreItem>(), Main.rand.Next(5, 10));
 				}
 			}
 

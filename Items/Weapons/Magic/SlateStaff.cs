@@ -37,7 +37,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<SlateOreItem>(), 35);
             recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddIngredient(ItemID.Ruby, 10);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

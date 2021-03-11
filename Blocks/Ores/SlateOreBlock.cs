@@ -11,12 +11,12 @@ namespace AerovelenceMod.Blocks.Ores
     {
         public override void SetDefaults()
         {
-			mineResist = 2.5f;
+			mineResist = 1f;
 			minPick = 35;
             Main.tileSolid[Type] = true;
             Main.tileSpelunker[Type] = true;
-            Main.tileMergeDirt[Type] = true;
-            Main.tileBlockLight[Type] = false;
+            Main.tileMergeDirt[Type] = false;
+            Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
             drop = ModContent.ItemType<SlateOreItem>();
 			dustType = 4;
