@@ -44,8 +44,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             modRecipe.AddIngredient(ItemID.HallowedBar, 10);
             modRecipe.AddIngredient(ItemID.Starfish, 5);
             modRecipe.AddIngredient(ItemID.SoulofSight, 3);
-            modRecipe.AddIngredient(ItemID.WaterBucket, 1);
-            modRecipe.AddTile(TileID.Hellforge);
+            modRecipe.AddTile(TileID.MythrilAnvil);
             modRecipe.SetResult(this);
             modRecipe.AddRecipe();
         }

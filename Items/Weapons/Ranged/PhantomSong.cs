@@ -1,5 +1,6 @@
 using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,7 +17,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         {
             item.UseSound = SoundID.Item5;
             item.crit = 4;
-            item.damage = 23;
+            item.damage = 17;
             item.ranged = true;
             item.width = 30;
             item.height = 54;
@@ -30,17 +31,18 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.autoReuse = true;
             item.shoot = AmmoID.Arrow;
             item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 7f;
+            item.shootSpeed = 8.5f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            type = Main.rand.Next(new int[] { type, type, type, mod.ProjectileType("PhantomSongArrow") });
+            type = Main.rand.Next(new int[] { type, type, mod.ProjectileType("PhantomSongArrow") });
             return true;
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 8);
+            recipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 4);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
@@ -62,6 +64,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             projectile.width = 42;
+            projectile.velocity *= 1.01f;
             projectile.height = 14;
             projectile.friendly = true;
             projectile.penetrate = 3;
@@ -74,6 +77,10 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override void AI()
         {
             i++;
+            if (i % 25 == 0)
+            {
+                Projectile.NewProjectile(projectile.Center, projectile.velocity * 0, ModContent.ProjectileType<PhantomSongAura>(), projectile.damage, projectile.knockBack);
+            }
             projectile.rotation = projectile.velocity.ToRotation();
             projectile.frameCounter++;
             if (projectile.frameCounter % 3 == 0)
@@ -83,12 +90,43 @@ namespace AerovelenceMod.Items.Weapons.Ranged
                 if (projectile.frame >= 3)
                     projectile.frame = 0;
             }
-            if (i % 1 == 0)
+            Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 60);
+            dust.noGravity = true;
+            dust.velocity *= 0.1f;
+        }
+    }
+}
+namespace AerovelenceMod.Items.Weapons.Ranged
+{
+    internal sealed class PhantomSongAura : ModProjectile
+    {
+        public override void SetDefaults()
+        {
+            projectile.width = projectile.height = 10;
+            projectile.penetrate = 5;
+            projectile.alpha = 3;
+            projectile.timeLeft = 100;
+            projectile.damage = 60;
+            projectile.scale = 1f;
+
+            projectile.friendly = true;
+        }
+        public override bool PreAI()
+        {
+            projectile.scale *= 0.99f;
+            Vector2 from = projectile.position;
+            for (int i = 0; i < 360; i += 20)
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 60);
+                Vector2 circular = new Vector2(24 * projectile.scale, 0).RotatedBy(MathHelper.ToRadians(i));
+                circular.X *= 0.7f;
+                circular = circular.RotatedBy(Math.Atan2(projectile.velocity.Y, projectile.velocity.X));
+                Vector2 dustVelo = new Vector2(0, 0).RotatedBy(Math.Atan2(projectile.velocity.Y, projectile.velocity.X));
+                Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, 60, 0, 0, projectile.alpha);
+                dust.velocity *= 0.15f;
+                dust.velocity += dustVelo;
                 dust.noGravity = true;
-                dust.velocity *= 0.1f;
             }
+            return true;
         }
     }
 }

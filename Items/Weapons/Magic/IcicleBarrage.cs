@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
+using AerovelenceMod.Items.Others.Crafting;
 
 #endregion
 
@@ -14,7 +15,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 {
 	public class IcicleBarrage : ModItem
 	{
-		private readonly int MaxProjectileHeight = 160;
+		private readonly int MaxProjectileHeight = 320;
 
 		public override void SetStaticDefaults()
 		{
@@ -29,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 
 			item.crit = 11;
 			item.mana = 20;
-			item.damage = 82;
+			item.damage = 32;
 			item.knockBack = 6f;
 
 			item.useTime = item.useAnimation = 65;
@@ -43,6 +44,15 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.shoot = ModContent.ProjectileType<Projectiles.WallOfIce>();
 
 			item.UseSound = SoundID.Item100;
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
+			recipe.AddIngredient(ItemID.SoulofLight, 10);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

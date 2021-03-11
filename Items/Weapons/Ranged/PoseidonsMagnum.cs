@@ -64,6 +64,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 			recipe.AddIngredient(ItemID.FragmentVortex, 12);
 			recipe.AddIngredient(ItemID.Starfish, 15);
 			recipe.AddIngredient(ItemID.LunarBar, 8);
+			recipe.AddTile(TileID.LunarCraftingStation);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

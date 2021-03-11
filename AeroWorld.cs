@@ -136,6 +136,8 @@ namespace AerovelenceMod
         {
 			int[] itemsToPlaceInMarbleChests = { ItemType<MarbleMusket>(), ItemID.SilverBullet};
 			int itemsToPlaceInMarbleChestsChoice = 0;
+			int[] itemsToPlaceInGraniteChests = { ItemType<GraniteCannon>(), ItemID.SilverBullet };
+			int itemsToPlaceInGraniteChestsChoice = 0;
 			for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
 			{
 				Chest chest = Main.chest[chestIndex];
@@ -148,6 +150,23 @@ namespace AerovelenceMod
 						{
 							chest.item[inventoryIndex].SetDefaults(itemsToPlaceInMarbleChests[itemsToPlaceInMarbleChestsChoice]);
 							itemsToPlaceInMarbleChestsChoice = (itemsToPlaceInMarbleChestsChoice + 1) % itemsToPlaceInMarbleChests.Length;
+							break;
+						}
+					}
+				}
+			}
+			for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
+			{
+				Chest chest = Main.chest[chestIndex];
+				// If you look at the sprite for Chests by extracting Tiles_21.xnb, you'll see that the 12th chest is the Ice Chest. Since we are counting from 0, this is where 11 comes from. 36 comes from the width of each tile including padding. 
+				if (chest != null && Main.tile[chest.x, chest.y].type == TileID.Containers && Main.tile[chest.x, chest.y].frameX == 50 * 36)
+				{
+					for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
+					{
+						if (chest.item[inventoryIndex].type == ItemID.None)
+						{
+							chest.item[inventoryIndex].SetDefaults(itemsToPlaceInGraniteChests[itemsToPlaceInGraniteChestsChoice]);
+							itemsToPlaceInGraniteChestsChoice = (itemsToPlaceInGraniteChestsChoice + 1) % itemsToPlaceInGraniteChests.Length;
 							break;
 						}
 					}

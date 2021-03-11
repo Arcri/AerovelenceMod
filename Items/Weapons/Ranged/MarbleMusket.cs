@@ -1,6 +1,7 @@
 using AerovelenceMod.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,12 +10,15 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 {
     public class MarbleMusket : ModItem
     {
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Marble Musket");
-			Tooltip.SetDefault("Left right click zoom in and see the trajectory of the bullet"+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Marble Musket");
+            Tooltip.SetDefault("Left right click zoom in and see the trajectory of the bullet" +
                                "\nRight click to fire a chunk of slow-travelling marble");
-		}
+        }
+
+        public bool HasUsedTrajectory = false;
+        public bool Zooming = false;
         public override void SetDefaults()
         {
             item.crit = 6;
@@ -30,7 +34,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 0, 55, 40);
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<MarbleShotTrajectory>();
+            item.shoot = ModContent.ProjectileType<MarbleBullet>();
             item.ammo = AmmoID.None;
             item.shootSpeed = 100;
         }
@@ -41,7 +45,27 @@ namespace AerovelenceMod.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-
+            if (HasUsedTrajectory == true)
+            {
+                Main.NewText("True");
+                Vector2 muzzleOffset = new Vector2(-7, -8);
+                if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
+                {
+                    position += muzzleOffset;
+                }
+            }
+            else if (HasUsedTrajectory == false)
+            {
+                Main.NewText("False");
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(70));
+                speedX = perturbedSpeed.X;
+                speedY = perturbedSpeed.Y;
+                Vector2 muzzleOffset = new Vector2(-7, -8);
+                if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
+                {
+                    position += muzzleOffset;
+                }
+            }
             Collision.CanHit(position, -5, 30, position, -5, 30);
 
             if (type == ProjectileID.Bullet)
@@ -50,38 +74,46 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             }
             return true;
         }
-		#region altfuction
-		public override bool AltFunctionUse(Player player)
-		{
-			return true;
-		}
-		public override bool CanUseItem(Player player)
-		{
-			if (player.altFunctionUse == 2)
-			{
-
+        #region altfuction
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+        public override bool CanUseItem(Player player)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                HasUsedTrajectory = !HasUsedTrajectory;
+                Zooming = true;
+                Main.NewText("Turning to True");
+                item.useStyle = ItemUseStyleID.HoldingOut;
+                item.useTime = 5;
+                item.useAnimation = 5;
+                item.damage = 10;
+                item.shoot = ModContent.ProjectileType<MarbleShotTrajectory>();
+                item.shootSpeed = 12f;
+                
+            }
+            else
+            {
+                Zooming = false;
+                Main.NewText("Turning to False");
+                item.useStyle = ItemUseStyleID.HoldingOut;
                 item.useTime = 50;
                 item.useAnimation = 50;
-                item.damage = 14;
-                item.shoot = AmmoID.Bullet;
-                item.useAmmo = AmmoID.Bullet;
-                item.shootSpeed = 24f;
+                item.damage = 55;
+                item.shoot = ModContent.ProjectileType<MarbleBullet>();
+                item.shootSpeed = 30f;
             }
-			else
-			{
-                item.useTime = 1;
-                item.useAnimation = 1;
-                item.damage = 0;
-                item.shoot = ModContent.ProjectileType<MarbleShotTrajectory>();
-                item.useAmmo = AmmoID.None;
-                item.shootSpeed = 100f;
-            }
-			return base.CanUseItem(player);
-		}
+            return base.CanUseItem(player);
+        }
 
         public override void HoldItem(Player player)
         {
+            if (Zooming)
+            {
                 player.GetModPlayer<AeroPlayer>().zooming = true;
+            }
         }
 
         #endregion
