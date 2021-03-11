@@ -16,7 +16,7 @@ namespace AerovelenceMod.Projectiles.Minions
         public override void SetStaticDefaults()
         {
 			DisplayName.SetDefault("Mini-Cry");
-			Main.projFrames[projectile.type] = 5;
+			Main.projFrames[projectile.type] = 6;
 			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 		}
         public override void SetDefaults()
@@ -35,7 +35,6 @@ namespace AerovelenceMod.Projectiles.Minions
 			projectile.timeLeft = 18000;
 			projectile.minionSlots = 1;
 		}
-
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			if (projectile.penetrate == 0)
@@ -54,6 +53,18 @@ namespace AerovelenceMod.Projectiles.Minions
 		}
 		public override void AI()
 		{
+			bool flag64 = projectile.type == mod.ProjectileType("Minicry");
+			Player player = Main.player[projectile.owner];
+			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
+			if (flag64)
+			{
+				if (player.dead)
+					modPlayer.Minicry = false;
+
+				if (modPlayer.Minicry)
+					projectile.timeLeft = 2;
+
+			}
 			i++;
 			projectile.rotation = projectile.velocity.ToRotation();
 			projectile.frameCounter++;
@@ -61,7 +72,7 @@ namespace AerovelenceMod.Projectiles.Minions
 			{
 				projectile.frame++;
 				projectile.frameCounter = 0;
-				if (projectile.frame >= 5)
+				if (projectile.frame >= 6)
 					projectile.frame = 0;
 			}
 

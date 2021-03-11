@@ -20,7 +20,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Slate
             item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Blue;
-            item.defense = 4;
+            item.defense = 5;
         }
         public override void UpdateEquip(Player player)
         {
@@ -33,6 +33,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Slate
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<SlateOreItem>(), 65);
             recipe.AddRecipeGroup("Wood", 25);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

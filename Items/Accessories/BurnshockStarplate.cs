@@ -17,11 +17,11 @@ namespace AerovelenceMod.Items.Accessories
             item.width = 24;
             item.height = 40;
             item.value = 60000;
-            item.rare = ItemRarityID.Green;
+            item.rare = ItemRarityID.Pink;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.statLifeMax2 += 50;
+            player.starCloak = true;
 			player.lifeRegen =+ 2;
 			player.maxRunSpeed += 0.3f;
         }

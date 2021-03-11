@@ -17,8 +17,8 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.aiStyle = 1;
             npc.lifeMax = 70;
             npc.damage = 15;
-            npc.defense = 24;
-            npc.knockBackResist = 0f;
+            npc.defense = 2;
+            npc.knockBackResist = 0.2f;
             animationType = NPCID.BlueSlime;
             npc.width = 38;
             npc.height = 18;
@@ -29,7 +29,11 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath44;
         }
-
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        {
+            npc.lifeMax = 150;
+            npc.defense = 12;
+        }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .5f : 0f;

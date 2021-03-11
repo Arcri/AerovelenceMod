@@ -79,7 +79,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
             i++;
             if (i % 25 == 0)
             {
-                Projectile.NewProjectile(projectile.Center, projectile.velocity * 0, ModContent.ProjectileType<PhantomSongAura>(), projectile.damage, projectile.knockBack);
+                Projectile.NewProjectile(projectile.Center, projectile.velocity * 0.99f, ModContent.ProjectileType<PhantomSongAura>(), projectile.damage, projectile.knockBack);
             }
             projectile.rotation = projectile.velocity.ToRotation();
             projectile.frameCounter++;
@@ -114,6 +114,7 @@ namespace AerovelenceMod.Items.Weapons.Ranged
         public override bool PreAI()
         {
             projectile.scale *= 0.99f;
+            projectile.velocity *= 0.000001f;
             Vector2 from = projectile.position;
             for (int i = 0; i < 360; i += 20)
             {

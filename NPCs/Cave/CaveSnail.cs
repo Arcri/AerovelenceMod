@@ -18,8 +18,8 @@ namespace AerovelenceMod.NPCs.Cave
         public override void SetDefaults()
         {
             npc.aiStyle = 67;
-            npc.lifeMax = 4;
-            npc.defense = 24;
+            npc.lifeMax = 30;
+            npc.defense = 5;
             npc.knockBackResist = 0f;
             npc.width = 38;
             npc.height = 18;
@@ -27,6 +27,7 @@ namespace AerovelenceMod.NPCs.Cave
             npc.lavaImmune = true;
             npc.noGravity = false;
             npc.noTileCollide = false;
+            npc.damage = 0;
             npc.HitSound = SoundID.NPCHit2;
             npc.DeathSound = SoundID.NPCDeath1;
             npc.buffImmune[24] = true;
