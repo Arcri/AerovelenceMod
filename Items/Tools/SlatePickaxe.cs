@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Tools
             item.useTime = 16;
             item.useAnimation = 16;
             item.useTurn = true;
-			item.pick = 60;
+            item.pick = 60;
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;

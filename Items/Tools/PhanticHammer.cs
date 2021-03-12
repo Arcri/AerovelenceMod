@@ -21,7 +21,8 @@ namespace AerovelenceMod.Items.Tools
             item.useTime = 25;
             item.useAnimation = 25;
 			item.hammer = 60;
-			item.UseSound = SoundID.Item1;
+            item.useTurn = true;
+            item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 0, 35, 0);

@@ -8,6 +8,7 @@ using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.Items.Others.Misc;
 using AerovelenceMod.Items.Others.Quest;
 using AerovelenceMod.Items.Others.UIButton;
+using AerovelenceMod.Items.Tools;
 using AerovelenceMod.Items.Weapons.CavernsHMPlaceholder;
 using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Items.Weapons.Thrown;
@@ -221,7 +222,7 @@ namespace AerovelenceMod.NPCs.TownNPC
 
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM1>());
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<SpeedstersPickaxe>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM2>());
 			nextSlot++;

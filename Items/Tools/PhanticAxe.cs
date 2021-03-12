@@ -19,7 +19,8 @@ namespace AerovelenceMod.Items.Tools
             item.height = 34;
             item.useTime = 20;
             item.useAnimation = 20;
-			item.axe = 14;
+            item.useTurn = true;
+            item.axe = 14;
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;

@@ -18,6 +18,7 @@ namespace AerovelenceMod.Items.Tools
             item.width = 50;
             item.height = 50;
             item.useTime = 20;
+            item.useTurn = true;
             item.useAnimation = 20;
 			item.pick = 200;
 			item.UseSound = SoundID.Item1;
@@ -31,7 +32,7 @@ namespace AerovelenceMod.Items.Tools
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 12);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
