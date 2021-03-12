@@ -90,8 +90,8 @@ namespace AerovelenceMod.NPCs.Bosses.Rimegeist
                 npc.velocity = Vector2.Zero;
                 npc.alpha = 30;
 
-                CoolDust(npc.Center, 1, DustID.Ice);
-                CoolDust(npc.Center, 2, DustID.Ice, default, 1.25f);
+                CoolDust(npc.Center, 1, DustID.ApprenticeStorm);
+                CoolDust(npc.Center, 2, DustID.ApprenticeStorm);
 
 
                 if (++AttackTimer >= 200)

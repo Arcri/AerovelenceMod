@@ -29,7 +29,7 @@ namespace AerovelenceMod.NPCs.General
             npc.DeathSound = SoundID.NPCDeath44;
         }
         int speed = 3;
-        int maxFrames = 4;
+        int maxFrames = 3;
         int frame;
         public override void FindFrame(int frameHeight)
         {
@@ -91,7 +91,7 @@ namespace AerovelenceMod.NPCs.General
 		}
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.player.ZoneSnow && !Main.dayTime ? .5f : 0f;
+            return spawnInfo.player.ZoneSnow && !Main.dayTime ? .1f : 0f;
         }
 
         public override void HitEffect(int hitDirection, double damage)
