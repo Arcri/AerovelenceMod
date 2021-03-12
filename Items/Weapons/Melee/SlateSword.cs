@@ -18,8 +18,9 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.melee = true;
             item.width = 40;
             item.height = 40;
-            item.useTime = 25;
-            item.useAnimation = 25;
+            item.useTime = 24;
+            item.useAnimation = 24;
+            item.useTurn = true;
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 4;
@@ -32,6 +33,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<SlateOreItem>(), 45);
             recipe.AddRecipeGroup("Wood", 15);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

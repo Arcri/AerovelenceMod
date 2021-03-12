@@ -34,6 +34,7 @@ namespace AerovelenceMod.Items.Tools
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<SlateOreItem>(), 35);
             recipe.AddRecipeGroup("Wood", 15);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

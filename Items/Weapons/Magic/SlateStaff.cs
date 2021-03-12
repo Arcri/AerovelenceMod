@@ -15,13 +15,13 @@ namespace AerovelenceMod.Items.Weapons.Magic
         public override void SetDefaults()
         {
             item.crit = 4;
-            item.damage = 19;
+            item.damage = 17;
             item.magic = true;
-            item.mana = 4;
+            item.mana = 5;
             item.width = 50;
             item.height = 50;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 16;
+            item.useAnimation = 16;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
             item.shoot = ProjectileID.RubyBolt;
-            item.shootSpeed = 10f;
+            item.shootSpeed = 12f;
 		}
         public override void AddRecipes()
         {
