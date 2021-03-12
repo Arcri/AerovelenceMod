@@ -224,15 +224,15 @@ namespace AerovelenceMod.NPCs.TownNPC
 		{
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<SpeedstersPickaxe>());
 			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM2>());
+			shop.item[nextSlot].SetDefaults(ItemID.Topaz);
 			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM3>());
+			shop.item[nextSlot].SetDefaults(ItemID.Amethyst);
 			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM4>());
+			shop.item[nextSlot].SetDefaults(ItemID.Ruby);
 			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM5>());
+			shop.item[nextSlot].SetDefaults(ItemID.Emerald);
 			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM6>());
+			shop.item[nextSlot].SetDefaults(ItemID.Diamond);
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM7>());
 			nextSlot++;

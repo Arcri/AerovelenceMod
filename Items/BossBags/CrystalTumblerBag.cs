@@ -35,7 +35,7 @@ namespace AerovelenceMod.Items.BossBags
 			player.QuickSpawnItem(ItemID.GoldCoin, 9);
 			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
 
-			int drop = Main.rand.Next(7);
+			int drop = Main.rand.Next(8);
 
 			player.TryGettingDevArmor();
 
@@ -52,6 +52,18 @@ namespace AerovelenceMod.Items.BossBags
 					break;
 				case 3:
 					player.QuickSpawnItem(mod.ItemType("PrismThrasher"));
+					break;
+				case 4:
+					player.QuickSpawnItem(mod.ItemType("CavernousImpaler"));
+					break;
+				case 5:
+					player.QuickSpawnItem(mod.ItemType("CavernousImpaler"));
+					break;
+				case 6:
+					player.QuickSpawnItem(mod.ItemType("CavernMauler"));
+					break;
+				case 7:
+					player.QuickSpawnItem(mod.ItemType("DarkCrystalStaff"));
 					break;
 			}
 		}

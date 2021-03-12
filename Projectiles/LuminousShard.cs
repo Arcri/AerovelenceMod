@@ -17,7 +17,8 @@ namespace AerovelenceMod.Projectiles
 		public override void SetDefaults()
 		{
 			projectile.width = 14;
-			projectile.height = 36;
+            projectile.netUpdate = true;
+            projectile.height = 36;
 			projectile.maxPenetrate = 1;
 			projectile.alpha = 255;
 			projectile.hostile = false;
@@ -32,15 +33,20 @@ namespace AerovelenceMod.Projectiles
 			if(projectile.alpha > 0)
             {
 				projectile.alpha -= 5;
+                projectile.netUpdate = true;
             }
             Player player = Main.player[(int)projectile.ai[0]];
             if (player.dead || !player.active)
+            {
                 projectile.Kill();
+            }
+            projectile.netUpdate = true;
             rotation -= 2;
             rotation *= 0.93f;
             if(rotation <= 0)
             {
                 rotation = 0;
+                projectile.netUpdate = true;
             }
             Vector2 toPlayer = projectile.Center - player.Center;
             if(rotation != 0)
@@ -54,6 +60,7 @@ namespace AerovelenceMod.Projectiles
                     {
                         toPlayer = toPlayer.SafeNormalize(Vector2.Zero) * 12;
                         projectile.velocity = -toPlayer;
+                        projectile.netUpdate = true;
                     }
                     runOnce = false;
                     Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 8, 0.8f);
@@ -65,6 +72,7 @@ namespace AerovelenceMod.Projectiles
                         dust2.velocity += -projectile.velocity * 0.35f;
                         dust2.scale = 2.75f;
                         dust2.noGravity = true;
+                        projectile.netUpdate = true;
                     }
                 }
                 projectile.hostile = true;
@@ -72,12 +80,15 @@ namespace AerovelenceMod.Projectiles
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.1f;
                 projectile.velocity.Y += 0.09f;
+                projectile.netUpdate = true;
             }
             else
             {
                 projectile.velocity *= 0.9675f;
+                projectile.netUpdate = true;
             }
             Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 0.2f / 255f, (255 - projectile.alpha) * 0.3f / 255f, (255 - projectile.alpha) * 0.8f / 255f);
+            projectile.netUpdate = true;
         }
         public override void Kill(int timeLeft)
         {
@@ -88,11 +99,13 @@ namespace AerovelenceMod.Projectiles
                 dust.velocity += projectile.velocity * 0.5f;
                 dust.scale *= 1.75f;
                 dust.noGravity = true;
+                projectile.netUpdate = true;
             }
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
 			projectile.Kill();
+            projectile.netUpdate = true;
         }
     }
 }
