@@ -3,6 +3,7 @@ using System.Linq;
 using AerovelenceMod;
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Accessories;
+using AerovelenceMod.Items.BossSummons;
 using AerovelenceMod.Items.Others.Crafting;
 using AerovelenceMod.Items.Others.Misc;
 using AerovelenceMod.Items.Others.Quest;
@@ -134,18 +135,28 @@ namespace AerovelenceMod.NPCs.TownNPC
 			switch (Main.rand.Next(4))
 			{
 				case 0:
-					return "Y’know, that Phantic stuff is great if you wanna get stoned.";
+					return "Y'know, that Phantic stuff is great if you wanna get stoned.";
 				case 1:
 					return "Is that a new outfit? I dig it.";
 				case 2:
 					{
 						Main.npcChatCornerItem = ModContent.ItemType<OreQuest>();
-						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}] or [i:{ModContent.ItemType<GoldCluster>()}] I'll reward you with something!";
+						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}], [i:{ModContent.ItemType<GoldCluster>()}], [i:{ModContent.ItemType<SlateCluster>()}], or [i:{ModContent.ItemType<PhanticCluster>()}], I'll reward you with something!";
 					}
 				
 				case 3:
                     {
-						return "Don’t waste time mining diamonds. Platinum’s where it’s at.";
+						return "Don't waste time mining diamonds. Platinum's where it's at.";
+
+					}
+				case 4:
+					{
+						return "Hooks? Pickaxes? Cool mining accessories? You want it? It's yours my friend, as long as you have enough ores.";
+
+					}
+				case 5:
+					{
+						return $"A violent electrical storm floods the land... Yeah. I don't take i:{ModContent.ItemType<CrystalTorrentSpawner>()}]";
 
 					}
 				default:
@@ -155,7 +166,6 @@ namespace AerovelenceMod.NPCs.TownNPC
 		public override void SetChatButtons(ref string button, ref string button2)
 		{
 			button = Language.GetTextValue("LegacyInterface.28");
-			button2 = "Become Bitchass";
 			if (Main.LocalPlayer.HasItem(ModContent.ItemType<CopperCluster>()) ||
 				Main.LocalPlayer.HasItem(ModContent.ItemType<TinCluster>()) ||
 				Main.LocalPlayer.HasItem(ModContent.ItemType<IronCluster>()) ||
@@ -166,7 +176,7 @@ namespace AerovelenceMod.NPCs.TownNPC
 				Main.LocalPlayer.HasItem(ModContent.ItemType<GoldCluster>()) ||
 				Main.LocalPlayer.HasItem(ModContent.ItemType<SlateCluster>()) ||
 								Main.LocalPlayer.HasItem(ModContent.ItemType<PhanticCluster>()))
-				button = "Upgrade " + Lang.GetItemNameValue(ItemID.HiveBackpack);
+				button = "Turn in ore chunks";
 		}
 		public override void OnChatButtonClicked(bool firstButton, ref bool shop)
 		{
