@@ -1,3 +1,5 @@
+using AerovelenceMod.Blocks.CrystalCaverns.Tiles;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,6 +18,14 @@ namespace AerovelenceMod.Items.Others.Crafting
             item.height = 22;
             item.value = 10;
             item.rare = ItemRarityID.Green;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 3);
+            recipe.AddTile(TileID.Furnaces);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

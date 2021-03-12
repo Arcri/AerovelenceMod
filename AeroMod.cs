@@ -208,6 +208,13 @@ namespace AerovelenceMod
 			ModRecipe recipe = new ModRecipe(this);
 
 			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ItemID.IceMirror, 1);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(ItemID.MagicMirror, 1);
+			recipe.AddRecipe();
+
+
+			recipe = new ModRecipe(this);
 			recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 5);
 			recipe.AddIngredient(ItemID.Cloud, 5);
 			recipe.AddIngredient(ItemID.SunplateBlock, 3);

@@ -48,6 +48,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore3"), 1f);
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore4"), 1f);
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/LuminousDefenderGore5"), 1f);
+
 			}
 		}
 		public override void SendExtraAI(BinaryWriter writer)
@@ -69,8 +70,10 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				damage -= 20;
 				if (damage < 2)
 					damage = 1;
+				npc.netUpdate = true;
 			};
-        }
+			npc.netUpdate = true;
+		}
         public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			if (defending)
@@ -80,10 +83,12 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				damage -= 20;
 				if (damage < 2)
 					damage = 1;
+				npc.netUpdate = true;
 			}
         }
 		public void FireShards(int player)
         {
+			npc.netUpdate = true;
 			Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 101, 1.1f);
 			delayBetween = 45;
 			for(int i = 0; i < 3; i++)
@@ -94,9 +99,11 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 					if (Main.expertMode)
 					{
 						damage2 = (int)(damage2 / Main.expertDamage);
+						npc.netUpdate = true;
 					}
 					Projectile.NewProjectile(new Vector2(npc.Center.X, npc.position.Y), new Vector2(0, -Main.rand.NextFloat(5, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-10, 10) + (-20 + 20 * i))), ModContent.ProjectileType<LuminousShard>(), damage2, 3, Main.myPlayer, player);
-                }
+					npc.netUpdate = true;
+				}
             }
         }
 		bool defending = false;
@@ -110,6 +117,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 			defending = false; 
 			if(delayBetween > 0)
 				delayBetween--;
+			npc.netUpdate = true;
 			if (ai < 0f)
 			{
 				if(ai == -immuneTimeLength)
@@ -122,6 +130,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 						dust2.velocity += -circular * 0.08f;
 						dust2.scale = 2.25f;
 						dust2.noGravity = true;
+						npc.netUpdate = true;
 					}
 				}
 				if(ai >= -immuneTimeLength + 20)
@@ -130,9 +139,11 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				}
 				ai += 1f;
                 npc.velocity.X *= 0.9f;
+				npc.netUpdate = true;
 				if (Math.Abs(npc.velocity.X) < 0.001)
 				{
                     npc.velocity.X = 0.001f * npc.direction;
+					npc.netUpdate = true;
 				}
 				if (Math.Abs(npc.velocity.Y) > 1f)
 				{
@@ -142,6 +153,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 				{
 					npc.netUpdate = true;
                     npc.velocity.X += npc.direction * 0.3f;
+					npc.netUpdate = true;
 				}
 				return false;
 			}
@@ -152,6 +164,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 					ai += 15f; //increase immune timer by 15 when hit
 				}
 				ai += 1f; //increases immune timer rapidly, 60 / second
+				npc.netUpdate = true;
 			}
 			else if (Math.Abs(npc.velocity.Y) <= 0.1f)
 			{
@@ -216,6 +229,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 			{
 				npc.frameCounter = 0.0;
 				npc.frame.Y = frameHeight;
+				npc.netUpdate = true;
 			}
 			base.FindFrame(frameHeight);
         }

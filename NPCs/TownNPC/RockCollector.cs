@@ -156,7 +156,16 @@ namespace AerovelenceMod.NPCs.TownNPC
 		{
 			button = Language.GetTextValue("LegacyInterface.28");
 			button2 = "Become Bitchass";
-			if (Main.LocalPlayer.HasItem(ModContent.ItemType<CopperCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<TinCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<IronCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<LeadCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<SilverCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<TungstenCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<PlatinumCluster>()) || Main.LocalPlayer.HasItem(ModContent.ItemType<GoldCluster>()))
+			if (Main.LocalPlayer.HasItem(ModContent.ItemType<CopperCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<TinCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<IronCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<LeadCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<SilverCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<TungstenCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<PlatinumCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<GoldCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<SlateCluster>()) ||
+								Main.LocalPlayer.HasItem(ModContent.ItemType<PhanticCluster>()))
 				button = "Upgrade " + Lang.GetItemNameValue(ItemID.HiveBackpack);
 		}
 		public override void OnChatButtonClicked(bool firstButton, ref bool shop)
@@ -167,7 +176,7 @@ namespace AerovelenceMod.NPCs.TownNPC
 		ModContent.ItemType<CopperCluster>(), ModContent.ItemType<TinCluster>(),
 		ModContent.ItemType<IronCluster>(), ModContent.ItemType<LeadCluster>(),
 		ModContent.ItemType<SilverCluster>(), ModContent.ItemType<TungstenCluster>(),
-		ModContent.ItemType<PlatinumCluster>(), ModContent.ItemType<GoldCluster>() };
+		ModContent.ItemType<PlatinumCluster>(), ModContent.ItemType<GoldCluster>(), ModContent.ItemType<PhanticCluster>(), ModContent.ItemType<SlateCluster>() };
 			if (firstButton)
 			{
 
@@ -226,7 +235,7 @@ namespace AerovelenceMod.NPCs.TownNPC
 
 		public override void NPCLoot()
 		{
-			Item.NewItem(npc.getRect(), ModContent.ItemType<PhanticSword>());
+			Item.NewItem(npc.getRect(), ModContent.ItemType<RockPouch>());
 		}
 
 		public override bool CanGoToStatue(bool toKingStatue)
