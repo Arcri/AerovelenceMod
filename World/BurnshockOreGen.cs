@@ -33,7 +33,7 @@ namespace AerovelenceMod.World
         public override void Load(TagCompound tag)
         {
             var spawned = tag.GetList<string>("spawned");
-            spawnBurnshock = spawned.Contains("phantic");
+            spawnBurnshock = spawned.Contains("burnshock");
         }
     }
 }

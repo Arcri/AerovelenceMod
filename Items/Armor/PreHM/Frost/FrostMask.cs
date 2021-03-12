@@ -22,7 +22,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
             player.setBonus = "Summons a Shiver thing to fight for you";
             if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("ShiverMinion")) == -1)
             {
-                player.AddBuff(mod.BuffType("ShiverMinion"), 100, false);
+                player.AddBuff(mod.BuffType("ShiverMinionBuff"), 100, false);
                 for (int m = 0; m < 1; m++) { Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("ShiverMinion"), (int)(25f * player.minionDamage), player.minionKB, player.whoAmI); }
             }
         }

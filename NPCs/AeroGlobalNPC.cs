@@ -1,5 +1,6 @@
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Weapons.Thrown;
+using AerovelenceMod.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -40,6 +41,22 @@ namespace AerovelenceMod.NPCs
 					}
 				}
 				Main.NewText("Phantom stones formed in the caves!", 180, 60, 140);
+			}
+			if (npc.type == NPCType<CrystalTumbler>() && !AeroWorld.downedCrystalTumbler)
+			{
+				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
+				{
+					int EEXX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
+					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
+					if (Main.tile[EEXX, WHHYY] != null)
+					{
+						if (Main.tile[EEXX, WHHYY].active())
+						{
+							WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("BurnshockOreBlock"));
+						}
+					}
+				}
+				Main.NewText("Electric gemstones light the caverns!", 180, 60, 140);
 			}
 			return true;
 		}

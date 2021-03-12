@@ -11,20 +11,25 @@ namespace AerovelenceMod.Blocks.Ores
     {
         public override void SetDefaults()
         {
-			mineResist = 2.5f;
-			minPick = 45;
+			mineResist = 1.0f;
+			minPick = 180;
             Main.tileSolid[Type] = true;
-            Main.tileMergeDirt[Type] = true;
-            Main.tileBlockLight[Type] = false;
+            Main.tileMergeDirt[Type] = false;
+            Main.tileBlockLight[Type] = true;
             Main.tileSpelunker[Type] = true;
             Main.tileLighted[Type] = false;
             drop = ModContent.ItemType<BurnshockOreItem>();
-			dustType = 10;
-			soundType = SoundID.Tink;
+            dustType = 59;
+            soundType = SoundID.Tink;
 			
 			
             AddMapEntry(new Color(255, 090, 090), Language.GetText("Burnshock Ore"));
-
+        }
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            r = 0.0f;
+            g = 0.6f;
+            b = 0.9f;
         }
     }
 }

@@ -90,7 +90,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 				dust.velocity *= 0.5f;
 			}
 			if (projOwner.itemAnimation == projOwner.itemAnimationMax - 1)
-				Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X * 2f, projectile.velocity.Y * 2, Terraria.ID.ProjectileID.DD2LightningAuraT2, projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+				Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X * 2f, projectile.velocity.Y * 2, ModContent.ProjectileType<ElectricitySpark>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
 			}
 	}
 }

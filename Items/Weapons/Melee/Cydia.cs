@@ -21,7 +21,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
             item.UseSound = SoundID.Item71;
             item.crit = 20;
-            item.damage = 26;
+            item.damage = 52;
             item.melee = true;
             item.width = 52;
             item.height = 52;
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
             item.value = 10000;
-            item.rare = ItemRarityID.Green;
+            item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<CydiaProj>();
             item.shootSpeed = 15f;
