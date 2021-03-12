@@ -19,7 +19,7 @@ namespace AerovelenceMod.Items.Armor.PreHM.Frost
 		}
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Summons a Shiver thing to fight for you";
+            player.setBonus = "Summons a Shiver to fight for you";
             if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("ShiverMinion")) == -1)
             {
                 player.AddBuff(mod.BuffType("ShiverMinionBuff"), 100, false);

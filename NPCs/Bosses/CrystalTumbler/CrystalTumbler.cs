@@ -496,6 +496,7 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 			{
 				npc.DropBossBags();
 			}
+			AeroWorld.downedCrystalTumbler = true;
 			if (!Main.expertMode)
 			{
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.LesserHealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
