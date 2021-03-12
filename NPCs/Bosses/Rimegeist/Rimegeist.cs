@@ -1,181 +1,617 @@
-using AerovelenceMod.Items.BossBags;
-using Microsoft.Xna.Framework;
 using System;
+
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using AerovelenceMod.Dusts;
+using AerovelenceMod.Items.BossBags;
+using AerovelenceMod.NPCs.Bosses.CrystalTumbler;
+//using AerovelenceMod.Items.BossBags;
+
 namespace AerovelenceMod.NPCs.Bosses.Rimegeist
 {
-    [AutoloadBossHead]
-    public class Rimegeist : ModNPC
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.npcFrameCount[npc.type] = 1;    //(boss frame/animation) change this to whatever value once the boss got animations
-        }
+	[AutoloadBossHead]
+	public class Rimegeist : ModNPC
+	{
+		// AI state management of the Crystal Tumbler.
+		private enum CrystalTumblerState
+		{
+			IdleRoll = 0,
+			ProjectileSpawn = 1,
+			SuperDash = 2,
+			Electricity = 3,
+			RockRain = 4,
+			Jump = 5,
+			Teleport = 6
+		}
+		private CrystalTumblerState State
+		{
+			get => (CrystalTumblerState)npc.ai[0];
+			set => npc.ai[0] = (float)value;
+		}
+		private float AttackTimer
+		{
+			get => npc.ai[1];
+			set => npc.ai[1] = value;
+		}
+		private float JumpTimer
+		{
+			get => npc.ai[2];
+			set => npc.ai[2] = value;
+		}
+		float LifePercentLeft => (npc.life / (float)npc.lifeMax);
 
-        public override void SetDefaults()
-        {
-            npc.aiStyle = -1; // be sure to keep the value of this to -1 or else the AI will be broken
-            npc.lifeMax = 9500;   //boss life
-            npc.damage = 32;  //boss damage
-            npc.defense = 9;    //boss defense
-            npc.alpha = 0;
-            npc.knockBackResist = 0f;
-            npc.width = 188;
-            npc.height = 182;
-            npc.value = Item.buyPrice(0, 5, 75, 45);
-            npc.npcSlots = 1f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit5;
-            npc.DeathSound = SoundID.NPCHit5;
-            npc.buffImmune[24] = true;
-            bossBag = ModContent.ItemType<RimegeistBag>();
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist");
-        }
-        private enum RimegeistState
-        {
-            Attack1 = 0 // name will be changed
+		public bool P;
+		public int spinTimer;
+		public bool Phase2;
+		public bool Teleport = false;
+		public bool doingDash = false;
+		int i;
+		bool teleported = false;
+		int t;
+		public int counter = 0;
+		public int counter2 = 0;
 
-        }
-        private RimegeistState State
-        {
-            get => (RimegeistState)npc.ai[0];
-            set => npc.ai[0] = (float)value;
-        }
-        public int i;
-        private float AttackTimer
-        {
-            get => npc.ai[1];
-            set => npc.ai[1] = value;
-        }
-        private float StateTimer
-        {
-            get => npc.ai[2];
-            set => npc.ai[2] = value;
-        }
-        public bool Spawn = true;
-        public bool phaseTwo
-        {
-            get { return npc.life < npc.lifeMax / 2; }
-        }
+		public override void SetDefaults()
+		{
+			npc.width = 120;
+			npc.height = 128;
+			npc.value = Item.buyPrice(0, 5, 60, 45);
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
-        {
-            npc.lifeMax = 11500;  //boss life scale in expertmode
-            npc.damage = 40;  //boss damage increase in expermode
-        }
+			npc.alpha = 0;
+			npc.damage = 30;
+			npc.defense = 15;
+			npc.lifeMax = 3500;
+			npc.knockBackResist = 0f;
 
-        public override void AI()
-        {
+			npc.boss = true;
+			npc.lavaImmune = true;
+			npc.noGravity = false;
+			npc.noTileCollide = false;
 
-            Player player = Main.player[npc.target];
-            // npc.velocity = (player.Center - npc.Center) / 50;
-            if (!player.active || player.dead) //player check
-            {
-                npc.noTileCollide = true;
-                npc.TargetClosest(false);
-                npc.velocity.Y = 20f;
-                if (npc.timeLeft > 10)
-                {
-                    npc.timeLeft = 10;
-                }
-            }
-            if (Spawn)// spawning visuals
-            {
-                npc.velocity = Vector2.Zero;
-                npc.alpha = 30;
+			bossBag = ModContent.ItemType<CrystalTumblerBag>();
 
-                CoolDust(npc.Center, 1, DustID.Ice);
-                CoolDust(npc.Center, 2, DustID.Ice, default, 1.25f);
+			npc.HitSound = SoundID.NPCHit41;
+			npc.DeathSound = SoundID.NPCDeath44;
+			music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
+		}
 
+		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+		{
+			npc.defense = 18;
+			npc.damage = 45;  //boss damage increase in expermode
+			npc.lifeMax = 5000;  //boss life scale in expertmode
+		}
 
-                if (++AttackTimer >= 200)
-                {
-                    CoolDust(npc.Center, 3, DustID.Ice);
-                    Spawn = false;
-                    AttackTimer = 0;
-                }
+		public override bool PreAI()
+		{
+			npc.TargetClosest(true);
+			Player target = Main.player[npc.target];
 
-            }
-            else
-            {
-                StateCheck();
-            }
+			Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
 
-            if (State == RimegeistState.Attack1)
-            {
+			if (target.dead)
+			{
+				npc.velocity.Y += 0.09f;
+				npc.timeLeft = 300;
+				npc.noTileCollide = true;
+			}
 
+			npc.noTileCollide = npc.noGravity = false;
 
-            }
-        }
-        ///<summary>
-        ///Checks and changes states based on the timer.
-        ///</summary>
-        private void StateCheck()// better state management i guess
-        {
-            StateTimer++;
-            if (StateTimer <= 200)
-            {
-                State = RimegeistState.Attack1;
-            }
-        }
+			// No second phase implemented yet.
+			/*if (npc.life <= npc.lifeMax / 2)
+			{
+				AttackTimer = 0;
+				return;
+			}*/
 
-        ///<summary>
-        ///Spawn dust based on pre-made dust patterns.
-        ///</summary>
-        private void CoolDust(Vector2 pos, int pattern, int dustType, int size = 70, float fadeIn = 0f)// just don't want to clog AI() with dust codes (will be expanded)
-        {                                                                                             
-            float t = (float)Main.time * 0.1f;// this is synced i think
+			// Idle roll/follow state. Very basic movement, with a timer for a random attack state.
+			//if (State != CrystalTumblerState.IdleRoll) { Main.NewText(State); }
+			if (State == CrystalTumblerState.IdleRoll)
+			{
+				doingDash = false;
+				RollingMove(target);
+				counter++;
+				npc.Opacity *= 1.1f;
+
+				if (++AttackTimer >= 200)
+				{
+					AttackTimer = 0;
+					npc.netUpdate = true;
+
+					if (Main.netMode != NetmodeID.MultiplayerClient)
+					{
+
+						if ((npc.Center.Y - 50 > target.Center.Y || npc.Center.Y + 50 < target.Center.Y) && Main.rand.NextBool(2))
+						{
+							State = CrystalTumblerState.Teleport;
+							npc.netUpdate = true;
+							// Jump *only* when below the target, standing on solid ground, and with a bit of randomness.
 
 
-            if (pattern == 1) //infinity pattern
-            {
-                var dust = Dust.NewDustPerfect(pos, dustType, null, 100, Color.White, 2.5f);
+							if (npc.velocity.Y == 0 && npc.Center.Y - 50 > target.Center.Y /*&& Main.rand.NextBool(2)*/)
+							{
 
-                dust.noGravity = true;
-                dust.position = pos + new Vector2(size * 2 * (float)Math.Cos(t), size * (float)Math.Sin(2 * t));
-                dust.fadeIn = fadeIn;
-            }
+								State = CrystalTumblerState.Jump;
+								npc.netUpdate = true;
+							}
+						}
+						else if (Math.Abs(target.Center.Y - npc.Center.Y) <= 50 && Main.rand.NextBool(2))
+						{
 
-            if (pattern == 2) //dust vortex pattern
-            {
-                Vector2 dustPos = pos + Main.rand.NextVector2CircularEdge(size * 2, size * 2);
+							State = CrystalTumblerState.SuperDash;
+							npc.netUpdate = true;
+						}
+						else
+						{
+							int randomState = Main.rand.Next(3);
+							if (randomState == 0)
+							{
+								State = CrystalTumblerState.ProjectileSpawn;
+								npc.netUpdate = true;
+							}
+							else if (randomState == 1)
+							{
+								State = CrystalTumblerState.Electricity;
+								npc.netUpdate = true;
+							}
+							else
+							{
+								State = CrystalTumblerState.RockRain;
+								npc.netUpdate = true;
+							}
+						}
+					}
+				}
+			}
 
-                float rotation = (float)Math.Atan2(dustPos.Y - npc.Center.Y, dustPos.X - npc.Center.X);
+			// Attack state. Spawns three projectiles on the NPC, which hover for a (few) second(s), before shooting towards the target.
+			else if (State == CrystalTumblerState.ProjectileSpawn)
+			{
+				// Spawn a projectile every 10 ticks (and on the first tick this state is active).
+				// TODO: Eldrazi - Multiplayer support?
+				if (AttackTimer++ == 0)
+				{
+					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
+					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 0);
+					npc.netUpdate = true;
+				}
+				else if (AttackTimer == 10)
+				{
+					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
+					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 1);
+					npc.netUpdate = true;
+				}
+				else if (AttackTimer == 20)
+				{
+					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 69, 0.75f);
+					Projectile.NewProjectile(npc.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 2);
+					npc.netUpdate = true;
+					AttackTimer = 0;
+					State = CrystalTumblerState.IdleRoll;
+				}
+				RollingMove(target);
+			}
 
-                float speedX = (float)((Math.Cos(rotation) * 10f) * -1);
-                float speedY = (float)((Math.Sin(rotation) * 10f) * -1);
+			// Attack state. Starts speedy roll in place. After a set amount of ticks, releases/dashes with a high velocity and frequent jumps/bounces.
+			else if (State == CrystalTumblerState.Jump)
+			{
+				/*Main.NewText("Newcheck");
+				Main.NewText(target.Center.Y < npc.Center.Y - 60);
+				Main.NewText(npc.Center.Y - 60 + "   -60 y");
+				Main.NewText(target.Center.Y);*/
 
-                for (int i = 0; i < 7; i++)
-                {
-                    Dust dust = Main.dust[Dust.NewDust(dustPos, 1, 1, dustType, speedX, speedY, 100, default, 2f)];
+				if (target.Center.Y < npc.Center.Y - 60)
+				{
+					npc.velocity.Y -= Main.rand.Next(15) + 12;
+					for (int num325 = 0; num325 < 20; num325++)
+					{
+						Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+						npc.netUpdate = true;
+					}
+					State = CrystalTumblerState.IdleRoll;
+				}
+				else if (target.Center.Y > npc.Center.Y)
+				{
+					State = CrystalTumblerState.IdleRoll;
+				}
+				npc.netUpdate = true;
+			}
 
-                    dust.noGravity = true;
-                    dust.fadeIn = fadeIn;
-                }
-            }
+			else if (State == CrystalTumblerState.SuperDash)
+			{
+				t++;
+				CheckPlatform(target);
+				CheckTilesNextTo(target, 5f);
+				// Rotating in place state.
+				if (++AttackTimer <= 180)
+				{
+					doingDash = true;
+					npc.velocity.X *= 0.95f;
+					npc.rotation += AttackTimer / 180 * npc.direction;
+					float speed = 5f;
+					Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
+					if (t % 25 == 0 && !Main.expertMode == true)
+					{
+						if (Main.rand.NextBool(2))
+						{
+							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
+						}
+						else
+						{
+							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
+						}
+					}
+					else if (t % 15 == 0 && Main.expertMode == true)
+					{
+						int randomProj = Main.rand.Next(3);
+						if (randomProj == 0)
+						{
+							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 20, 10f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
+						}
+						else if (randomProj == 1)
+						{
+							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 10f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
+						}
+						else
+						{
+							Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<TumblerHomingShard>(), 20, 0f, Main.myPlayer, 0f, 0f);
+							npc.netUpdate = true;
+						}
+					}
+					// If the timer is at 180 (or 3 seconds), set the velocity towards the NPCs direction.
+					if (AttackTimer == 180)
+					{
+						npc.netUpdate = true;
+						npc.velocity.X = npc.direction * 16f;
+						npc.netUpdate = true;
+					}
 
-            if (pattern == 3) //dust explosion
-            {                 //NOTE: don't use this if the method doesn't execute for only one time
+				}
 
-                for (int i = 0; i < 10; i++)
-                {
-                    int dustIndex = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
-                    Dust dust = Main.dust[dustIndex];
+				// Fast horizontal movement and frequent jumps.
+				else
+				{
+					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 76, 0.75f);
+					if (npc.velocity.Y == 0 && target.Center.Y < npc.Center.Y - 100f)
+					{
+						TryJump(Main.rand.Next(4, 7), 60);
+					}
+					JumpTimer--;
+					var player = Main.player[npc.target];
+					if (player.Center.X > npc.Center.X)
+					{
+						npc.velocity.X += 0.3f;
+						npc.netUpdate = true;
+					}
+					else if (player.Center.X < npc.Center.X)
+					{
+						npc.velocity.X -= 0.3f;
+						npc.netUpdate = true;
+					}
+					doingDash = false; //idk
+				}
 
-                    dust.velocity.X = dust.velocity.X + Main.rand.Next(-10, 10) * 0.01f;
-                    dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-65, -48) * 0.01f;
 
-                    dust.scale *= 2f + Main.rand.Next(-30, 31) * 0.01f;
-                    dust.noGravity = true;
-                }
 
-            }
-        }
-    }
+				// After 480 ticks (300 ticks or 5 seconds after the 'Rotating in place' state), go back to idle rolling.
+				if (AttackTimer >= 480)
+				{
+					npc.netUpdate = true;
+
+					AttackTimer = 0;
+					State = CrystalTumblerState.IdleRoll;
+				}
+				npc.rotation += npc.velocity.X * 0.025f;
+			}
+
+			else if (State == CrystalTumblerState.Electricity)
+			{
+				var player = Main.player[npc.target];
+				Vector2 vector8 = new Vector2(npc.position.X + (npc.width * 0.5f), npc.position.Y + (npc.height * 0.5f));
+				if (AttackTimer++ == 0)
+				{
+					Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 93, 0.75f);
+					float Speed = 1 * 0.99f;
+					int damage = Main.expertMode ? 20 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+					int type = mod.ProjectileType("TumblerOrb");
+					float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
+					Projectile.NewProjectile(vector8.X, vector8.Y, (float)(Math.Cos(rotation) * Speed * -1), (float)(Math.Sin(rotation) * Speed * -1), type, damage, 0f, 0);
+					npc.netUpdate = true;
+				}
+				AttackTimer = 0;
+				State = CrystalTumblerState.IdleRoll;
+				RollingMove(target);
+			}
+
+			else if (State == CrystalTumblerState.Teleport)
+			{
+				Vector2 teleportPosition = target.position - Vector2.UnitY * 370;
+
+				if (!Collision.SolidCollision(teleportPosition, npc.width, npc.height))
+				{
+					AttackTimer++;
+					counter2++;
+					if (AttackTimer >= 100)
+					{
+						npc.Opacity *= 0.97f;
+						npc.netUpdate = true;
+					}
+					if (AttackTimer == 100)
+					{
+						Projectile.NewProjectile(target.position, default, ModContent.ProjectileType<TeleportCharge>(), 12, 1f, Main.myPlayer, 1);
+						npc.netUpdate = true;
+					}
+					if (teleported == true)
+					{
+						if (counter2 == 500)
+						{
+							npc.noTileCollide = false;
+							counter2 = 0;
+						}
+						teleported = false;
+					}
+					if (AttackTimer >= 200)
+					{
+						npc.position.Y = teleportPosition.Y;
+						npc.position.X = target.position.X;
+						npc.noTileCollide = true;
+						teleported = true;
+						AttackTimer = 0;
+						npc.netUpdate = true;
+						Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 94, 0.75f);
+						for (float i = 0; i < 360; i += 0.5f)
+						{
+							float ang = (float)(i * Math.PI) / 180;
+
+							float x = (float)(Math.Cos(ang) * 150) + npc.Center.X;
+							float y = (float)(Math.Sin(ang) * 150) + npc.Center.Y;
+
+							Vector2 vel = Vector2.Normalize(new Vector2(x - npc.Center.X, y - npc.Center.Y)) * 15;
+
+							int dustIndex = Dust.NewDust(new Vector2(x - 3, y - 3), 6, 6, 54, vel.X, vel.Y);
+							Main.dust[dustIndex].noGravity = true;
+							npc.netUpdate = true;
+						}
+						State = CrystalTumblerState.IdleRoll;
+					}
+					RollingMove(target);
+				}
+				else
+				{
+					npc.netUpdate = true;
+					State = CrystalTumblerState.IdleRoll;
+				}
+			}
+
+			else if (State == CrystalTumblerState.RockRain)
+			{
+				Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 74, 0.75f);
+
+				for (int i = -3; i <= 3; i++)
+				{
+					if (Main.rand.NextBool(2))
+					{
+						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike1>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						npc.netUpdate = true;
+					}
+					else
+					{
+						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike2>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						npc.netUpdate = true;
+					}
+				}
+
+				State = CrystalTumblerState.IdleRoll;
+			}
+
+			return (false);
+		}
+
+		private void CheckPlatform(Player player)
+		{
+			i++;
+			bool onplatform = true;
+
+			for (int i = (int)npc.position.X; i < npc.position.X + npc.width; i += npc.width / 4)
+			{
+				Tile tile = Framing.GetTileSafely(new Point((int)npc.position.X / 16, (int)(npc.position.Y + npc.height + 8) / 16));
+				if (!TileID.Sets.Platforms[tile.type])
+				{
+					onplatform = false;
+				}
+			}
+			if (onplatform && (npc.position.Y + npc.height + 20 < player.Center.Y))
+			{
+				if (i % 70 == 0)
+				{
+					npc.noTileCollide = true;
+				}
+				else
+				{
+					npc.noTileCollide = false;
+				}
+			}
+		}
+
+		private void CheckTilesNextTo(Player player, float desiredspeed)
+		{
+			bool doJump = false;
+
+			for (int i = (int)npc.position.X; i < npc.position.X + npc.width; i += npc.width / 4)
+			{
+				if (npc.velocity.X < desiredspeed && player.Center.Y < npc.Center.Y)
+				{
+					doJump = true;
+				}
+			}
+			if (doJump && !doingDash)
+			{
+				if (npc.velocity.Y == 0 && npc.velocity.X == 0)
+				{
+					npc.velocity.Y -= Main.rand.Next(9) + 7;
+					for (int num325 = 0; num325 < 20; num325++)
+					{
+						Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+					}
+					State = CrystalTumblerState.IdleRoll;
+				}
+			}
+
+		}
+
+		public override void NPCLoot()
+		{
+			if (Main.expertMode)
+			{
+				npc.DropBossBags();
+			}
+			AeroWorld.downedCrystalTumbler = true;
+			if (!Main.expertMode)
+			{
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.LesserHealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
+				switch (Main.rand.Next(5))
+				{
+					case 0:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CavernMauler"), 1, false, 0, false, false);
+						break;
+					case 1:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CavernousImpaler"), 1, false, 0, false, false);
+						break;
+					case 2:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystallineQuadshot"), 1, false, 0, false, false);
+						break;
+					case 3:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PrismThrasher"), 1, false, 0, false, false);
+						break;
+					case 4:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PrismPiercer"), 1, false, 0, false, false);
+						break;
+					case 5:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiamondDuster"), 1, false, 0, false, false);
+						break;
+				}
+			}
+		}
+
+		public override void HitEffect(int hitDirection, double damage)
+		{
+			if (npc.life <= 0)
+			{
+				for (int k = 0; k < 20; k++)
+				{
+					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+				}
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore1"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore2"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore3"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore4"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore5"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore6"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore7"), 1f);
+			}
+		}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+		{
+			Texture2D texture = mod.GetTexture("NPCs/Bosses/CrystalTumbler/Glowmask");
+			Vector2 drawPos = npc.Center + new Vector2(0, npc.gfxOffY) - Main.screenPosition;
+			spriteBatch.Draw
+			(
+				texture,
+				drawPos,
+				new Rectangle(0, 0, texture.Width, texture.Height),
+				Color.White * npc.Opacity,
+				npc.rotation,
+				texture.Size() * 0.5f,
+				npc.scale,
+				npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+				0f
+				);
+			npc.netUpdate = true;
+		}
+		public override void BossHeadRotation(ref float rotation)
+		{
+			rotation = npc.rotation;
+		}
+
+		#region AI Methods
+
+		/// <summary>
+		/// Very basic movement state.
+		/// Roll speed depends on current NPC life (from 2 to 14 at 0 life).
+		/// </summary>
+		/// <param name="player"></param>
+		private void RollingMove(Player player)
+		{
+			// Movement.
+
+			float desiredSpeed = 2 + 12 * (1 - LifePercentLeft);
+			CheckPlatform(player);
+			CheckTilesNextTo(player, desiredSpeed);
+			if (player.Center.X > npc.Center.X)
+			{
+				if (npc.velocity.X < desiredSpeed)
+				{
+					npc.velocity.X += (0.1f * (1 - LifePercentLeft + 1));
+				}
+			}
+			else if (player.Center.X < npc.Center.X)
+			{
+				if (npc.velocity.X > -desiredSpeed)
+				{
+					npc.velocity.X -= (0.1f * (1 - LifePercentLeft + 1));
+				}
+			}
+			npc.velocity.X = MathHelper.Clamp(npc.velocity.X, -6, 6);
+
+			// Rotation.
+			npc.rotation += npc.velocity.X * 0.025f;
+
+			// Jump.
+			if (npc.velocity.Y == 0 && player.Center.Y < npc.Center.Y - 100f)
+			{
+				TryJump(Main.rand.Next(12) + 7, 180);
+			}
+			else if (JumpTimer > 0)
+			{
+				JumpTimer--;
+			}
+
+		}
+
+		/// <summary>
+		/// Attempts to jump if the JumpTimer is past its timeout.
+		/// </summary>
+		/// <param name="height"></param>
+		/// <param name="cooldown"></param>
+		private void TryJump(float height, int cooldown)
+		{
+			if (JumpTimer > 0)
+			{
+				return;
+			}
+
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				npc.netUpdate = true;
+				npc.velocity.Y -= height;
+			}
+			for (int num325 = 0; num325 < 20; num325++)
+				Dust.NewDust(npc.position, npc.width, npc.height, DustID.Electric, npc.velocity.X, npc.velocity.Y, 0, default, 1);
+
+			JumpTimer = cooldown;
+		}
+
+		#endregion
+	}
 }
