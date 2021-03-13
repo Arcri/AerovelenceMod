@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Tools
 {
-    public class StarburstChainsaw : ModItem
+    public class StarglassChainsaw : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Starburst Chainsaw");
+			DisplayName.SetDefault("Starglass Chainsaw");
 		}
 		public override void SetDefaults()
 		{
@@ -29,7 +29,7 @@ namespace AerovelenceMod.Items.Tools
 			item.rare = ItemRarityID.Cyan;
 			item.UseSound = SoundID.Item23;
 			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("StarburstChainsawProj");
+			item.shoot = mod.ProjectileType("StarglassChainsawProj");
 			item.shootSpeed = 40f;
 		}
 	}
@@ -37,7 +37,7 @@ namespace AerovelenceMod.Items.Tools
 
 namespace AerovelenceMod.Items.Tools
 {
-    public class StarburstChainsawProj : ModProjectile
+    public class StarglassChainsawProj : ModProjectile
 	{
 		public override void SetDefaults()
 		{

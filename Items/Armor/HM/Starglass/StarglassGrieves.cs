@@ -3,14 +3,24 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Armor.HM.Starburst
+namespace AerovelenceMod.Items.Armor.HM.Starglass
+
+
+
+
+
+
+
+
+
+
 {
     [AutoloadEquip(EquipType.Legs)]
-    public class StarburstGrieves : ModItem
+    public class StarglassGrieves : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starburst Grieves");
+            DisplayName.SetDefault("Starglass Grieves");
             Tooltip.SetDefault("4% increased critical strike chance\n11% increased movement speed");
         }
         public override void SetDefaults()

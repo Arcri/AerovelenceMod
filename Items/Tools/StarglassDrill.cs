@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Items.Tools
 {
-    public class StarburstDrill : ModItem
+    public class StarglassDrill : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Starburst Drill");
+			DisplayName.SetDefault("Starglass Drill");
 		}
 		public override void SetDefaults()
 		{
@@ -29,7 +29,7 @@ namespace AerovelenceMod.Items.Tools
 			item.rare = ItemRarityID.Cyan;
 			item.UseSound = SoundID.Item23;
 			item.autoReuse = true;
-			item.shoot = mod.ProjectileType("StarburstDrillProj");
+			item.shoot = mod.ProjectileType("StarglassDrillProj");
 			item.shootSpeed = 40f;
 		}
 	}
@@ -37,7 +37,7 @@ namespace AerovelenceMod.Items.Tools
 
 namespace AerovelenceMod.Items.Tools
 {
-    public class StarburstDrillProj : ModProjectile
+    public class StarglassDrillProj : ModProjectile
 	{
 		public override void SetDefaults()
 		{

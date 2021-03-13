@@ -3,14 +3,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Armor.HM.Starburst
+namespace AerovelenceMod.Items.Armor.HM.Starglass
 {
     [AutoloadEquip(EquipType.Body)]
-    public class StarburstChestplate : ModItem
+    public class StarglassChestplate : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starburst Chestplate");
+            DisplayName.SetDefault("Starglass Chestplate");
             Tooltip.SetDefault("4% increased damage\nImmunity to Electrified\n+15 max health");
         } 			
         public override void SetDefaults()

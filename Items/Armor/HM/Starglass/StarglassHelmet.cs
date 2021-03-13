@@ -1,42 +1,42 @@
+using AerovelenceMod.Items.Armor.HM.Starglass;
 using AerovelenceMod.Items.Others.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Armor.HM.Starburst
+namespace AerovelenceMod.Items.Armor.HM.Starglass
 {
     [AutoloadEquip(EquipType.Head)]
-    public class StarburstVisage : ModItem
+    public class StarglassHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starburst Visage");
-            Tooltip.SetDefault("10% increased magic damage\n7% increased magic critical strike chance\n12% less mana cost\n+75 max mana");
+            DisplayName.SetDefault("Starglass Helmet");
+            Tooltip.SetDefault("+2 max minion slots and 5% increased minion damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return body.type == ModContent.ItemType<StarburstChestplate>() && legs.type == ModContent.ItemType<StarburstGrieves>() && head.type == ModContent.ItemType<StarburstVisage>();
+			return body.type == ModContent.ItemType<StarglassChestplate>() && legs.type == ModContent.ItemType<StarglassGrieves>() && head.type == ModContent.ItemType<StarglassHelmet>();
 		}
-		public override void UpdateArmorSet(Player player)
-		{
-            player.setBonus = "11% increased magic damage\nTaking damage will release damaging shards of crystal";
+        public override void UpdateArmorSet(Player player)
+        {
+            player.setBonus = "20% increased minion damage and increased minion knockback\nTaking damage will release damaging shards of crystal";
             player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
-            player.magicDamage += 0.11f;
-        } 	
+            player.minionDamage += 0.15f;
+            player.minionKB += 0.05f;
+        }
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
+            item.width = 18;
+            item.height = 18;
             item.value = 10;
             item.rare = ItemRarityID.Orange;
-            item.defense = 6;
+            item.defense = 4;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.magicDamage += 0.10f;
-            player.magicCrit += 7;
-            player.manaCost -= 0.12f;
-            player.statManaMax2 += 75;
+            player.maxMinions += 2;
+            player.minionDamage += 0.05f;
         }
         public override void AddRecipes()
         {

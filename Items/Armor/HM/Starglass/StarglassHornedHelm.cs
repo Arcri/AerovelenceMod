@@ -3,19 +3,20 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Armor.HM.Starburst
+namespace AerovelenceMod.Items.Armor.HM.Starglass
+
 {
     [AutoloadEquip(EquipType.Head)]
-    public class StarburstHornedHelm : ModItem
+    public class StarglassHornedHelm : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starburst Horned Helm");
+            DisplayName.SetDefault("Starglass Horned Helm");
             Tooltip.SetDefault("10% increased melee damage and swing speed\n8% increased melee critical strike chance");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return body.type == ModContent.ItemType<StarburstChestplate>() && legs.type == ModContent.ItemType<StarburstGrieves>() && head.type == ModContent.ItemType<StarburstHornedHelm>();
+			return body.type == ModContent.ItemType<StarglassChestplate>() && legs.type == ModContent.ItemType<StarglassGrieves>() && head.type == ModContent.ItemType<StarglassHornedHelm>();
 		}
 		public override void UpdateArmorSet(Player player)
 		{

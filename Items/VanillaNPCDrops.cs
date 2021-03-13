@@ -159,22 +159,15 @@ namespace AerovelenceMod.Items
 					{
 						Item.NewItem(npc.getRect(), ModContent.ItemType<FrostShard>());
 					}
-					break;
-
-			}
-			if (AeroWorld.downedRimegeist)
-			{
-				if (npc.type == NPCID.IceSlime || npc.type == NPCID.SpikedIceSlime || npc.type == NPCID.IceBat || npc.type == NPCID.UndeadViking || npc.type == NPCID.CyanBeetle)
-				{
-					if (Main.rand.Next(21) == 0)
+					else if (AeroWorld.downedRimegeist && (Main.rand.Next(21) == 0))
 					{
 						Item.NewItem(npc.getRect(), mod.ItemType("KelvinCore"));
 					}
-				}
+					break;
 			}
 			if (npc.type == ModContent.NPCType<LuminousDefender>())
 			{
-				if (Main.rand.NextBool(6))
+				if (Main.rand.NextBool(3))
 				{
 					Item.NewItem(npc.getRect(), ModContent.ItemType<LustrousCrystal>());
 				}
