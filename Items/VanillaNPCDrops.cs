@@ -167,7 +167,7 @@ namespace AerovelenceMod.Items
 			}
 			if (npc.type == ModContent.NPCType<LuminousDefender>())
 			{
-				if (Main.rand.NextBool(3))
+				if (Main.rand.NextBool(2))
 				{
 					Item.NewItem(npc.getRect(), ModContent.ItemType<LustrousCrystal>());
 				}
