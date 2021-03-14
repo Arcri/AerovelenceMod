@@ -42,7 +42,7 @@ namespace AerovelenceMod.Items.BossBags
 			switch (Main.rand.Next(8))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("CrystallineQuadShot"));
+					player.QuickSpawnItem(mod.ItemType("CrystallineQuadshot"));
 					break;
 				case 1:
 					player.QuickSpawnItem(mod.ItemType("PrismPiercer"));
