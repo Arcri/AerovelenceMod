@@ -20,8 +20,8 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         }
         public override void SetDefaults()
         {
-            npc.lifeMax = 1;
-            npc.aiStyle = 1;
+            npc.lifeMax = 5;
+            npc.aiStyle = 5;
             npc.damage = 40;
             npc.defense = 0;
             npc.knockBackResist = 0f;
@@ -46,7 +46,15 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         {
             i++;
             Player player = Main.player[npc.target];
-
+            Vector2 moveTo = player.Center;
+            float speed = 5f;
+            Vector2 move = moveTo - npc.Center;
+            float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+            move *= speed / magnitude;
+            if (i % 1 == 0)
+            {
+                npc.velocity = move;
+            }
             ++npc.localAI[0];
             float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float piFractionVelocity = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
@@ -81,7 +89,6 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
                 if (npc.ai[1] > 3)
                     npc.ai[1] = 0;
             }
-
             npc.rotation = (npc.Center - player.Center).ToRotation();
             if (!npc.noTileCollide)
             {

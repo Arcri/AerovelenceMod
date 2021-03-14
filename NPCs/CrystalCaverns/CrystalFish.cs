@@ -112,7 +112,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns && spawnInfo.water ? 0.16f : 0f;
+			return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns && spawnInfo.water ? .2f : 0f;
 		}
 		public override void HitEffect(int hitDirection, double damage)
 		{

@@ -137,7 +137,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 	public class CavernousImpalerProjectile2 : ModProjectile
 	{
 		public bool e;
-		public float rot = 0.5f;
+		public float rot = 0f;
 		public int i;
 		public override void SetDefaults()
 		{
