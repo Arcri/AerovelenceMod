@@ -29,7 +29,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
             npc.DeathSound = SoundID.NPCDeath44;
             npc.knockBackResist = 0.35f;
             npc.lavaImmune = true;
-            npc.value = Item.buyPrice(0, 0, 4, 0);
+            npc.value = Item.buyPrice(0, 1, 0, 0);
             npc.buffImmune[20] = true;
             npc.buffImmune[24] = true;
 			animationType = 0;
@@ -235,7 +235,7 @@ namespace AerovelenceMod.NPCs.CrystalCaverns
         }
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .2f : 0f;
+			return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .25f : 0f;
 		}
 	}
 }

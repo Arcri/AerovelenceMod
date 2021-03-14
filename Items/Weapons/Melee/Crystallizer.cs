@@ -18,7 +18,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
         {
             item.channel = true;		
 			item.crit = 2;
-            item.damage = 22;
+            item.damage = 27;
             item.melee = true;
             item.width = 32;
             item.height = 32;

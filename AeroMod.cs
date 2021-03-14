@@ -19,6 +19,7 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Skies;
 using AerovelenceMod.ILHooks;
 using Microsoft.Xna.Framework.Graphics;
+using AerovelenceMod.Items.Placeable.CrystalCaverns;
 
 namespace AerovelenceMod
 {
@@ -211,6 +212,13 @@ namespace AerovelenceMod
 			recipe.AddIngredient(ItemID.IceMirror, 1);
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(ItemID.MagicMirror, 1);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(this);
+			recipe.AddIngredient(ModContent.ItemType<CavernCrystalItem>(), 2);
+			recipe.AddIngredient(ItemID.Bottle, 1);
+			recipe.AddTile(TileID.Bottles);
+			recipe.SetResult(ItemID.WormholePotion, 1);
 			recipe.AddRecipe();
 
 
