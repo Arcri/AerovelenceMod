@@ -18,6 +18,7 @@ namespace AerovelenceMod.Projectiles
 			projectile.alpha =  0;
 			projectile.damage = 6;
 			projectile.friendly = true;
+            projectile.maxPenetrate = 3;
 			projectile.hostile = false;
 			projectile.tileCollide = true;
 			projectile.ignoreWater = true;

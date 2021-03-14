@@ -51,6 +51,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			projectile.height = 38;
 			projectile.melee = true;
 			projectile.timeLeft = 120;
+            projectile.damage = 4;
 			projectile.light = 0.5f;
 		}
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -146,6 +147,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 		public override void SetDefaults()
 		{
 			projectile.width = 8;
+            projectile.damage = 4;
 			projectile.height = 8;
 			projectile.friendly = true;
 			projectile.magic = true;
