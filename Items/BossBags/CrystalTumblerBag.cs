@@ -39,7 +39,7 @@ namespace AerovelenceMod.Items.BossBags
 
 			player.TryGettingDevArmor();
 
-			switch (Main.rand.Next(4))
+			switch (Main.rand.Next(8))
 			{
 				case 0:
 					player.QuickSpawnItem(mod.ItemType("CrystallineQuadShot"));

@@ -56,6 +56,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
             projectile.extraUpdates = 0;
             projectile.width = 16;
             projectile.height = 16;
+			projectile.damage = 10;
             projectile.aiStyle = 99;
             projectile.friendly = true;
             projectile.penetrate = -1;
