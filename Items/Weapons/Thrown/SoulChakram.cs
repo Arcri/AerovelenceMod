@@ -8,19 +8,24 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class SoulChakram : ModItem
     {
-		public override void SetStaticDefaults()
+        int amount = 0;
+        Projectile previousProjectile = null;
+
+        public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Soul Chakram");
+            Tooltip.SetDefault("Stacks up to 5\nDeals double damage when going backwards");
 		}
         public override void SetDefaults()
         {	
 			item.crit = 20;
-            item.damage = 20;
+            item.maxStack = 5;
+            item.damage = 16;
             item.melee = true;
             item.width = 20;
             item.height = 30;
-            item.useTime = 24;
-            item.useAnimation = 24;
+            item.useTime = 14;
+            item.useAnimation = 14;
 			item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -31,9 +36,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("SoulChakramProjectile");
             item.UseSound = SoundID.Item1;
-            item.shootSpeed = 10f;
+            item.shootSpeed = 14f;
         }
-
 
         public override void AddRecipes()
         {
@@ -43,16 +47,26 @@ namespace AerovelenceMod.Items.Weapons.Thrown
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-
         public override bool CanUseItem(Player player)
         {
-            for (int i = 0; i < 1000; ++i)
+            
+            for (int i = 0; i < Main.projectile.Length; i++)
             {
-                if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot)
+                if (Main.projectile[i].active == true && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot && Main.projectile[i] != previousProjectile)
                 {
-                    return false;
+                    amount++;
+                    if (amount >= item.stack)
+                    {
+                        return false;
+                    }
                 }
+                else if (Main.projectile[i] == previousProjectile)
+                {
+                    i = 0;
+                }
+                previousProjectile = Main.projectile[i];
             }
+            amount = 0;
             return true;
         }
     }
@@ -62,6 +76,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class SoulChakramProjectile : ModProjectile
     {
+        int i = 0;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Soul Chakram");
@@ -82,6 +97,11 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 
         public override void AI()
         {
+            i++;
+            if (i == 45)
+            {
+                projectile.damage *= 2;
+            }
             int num622 = Dust.NewDust(new Vector2(projectile.position.X - projectile.velocity.X, projectile.position.Y - projectile.velocity.Y), projectile.width, projectile.height, 191, 0f, 0f, 100, default, 2f);
             Main.dust[num622].noGravity = true;
             Main.dust[num622].scale = 0.5f;
