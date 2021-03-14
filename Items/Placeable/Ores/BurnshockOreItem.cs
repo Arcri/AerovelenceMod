@@ -16,6 +16,7 @@ namespace AerovelenceMod.Items.Placeable.Ores
             item.height = 12;
             item.maxStack = 999;
             item.useTurn = true;
+            item.consumable = true;
             item.autoReuse = true;
             item.useAnimation = 15;
             item.useTime = 10;
