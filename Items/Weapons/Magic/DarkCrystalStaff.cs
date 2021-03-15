@@ -17,14 +17,14 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 12;
-            item.damage = 38;
+            item.crit = 33;
+            item.damage = 39;
             item.magic = true;
-            item.mana = 12;
+            item.mana = 10;
             item.width = 64;
             item.height = 64;
-            item.useTime = 32;
-            item.useAnimation = 32;
+            item.useTime = 24;
+            item.useAnimation = 24;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;

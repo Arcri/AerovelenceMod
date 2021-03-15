@@ -48,10 +48,13 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 		public override void SetDefaults()
 		{
 			projectile.width = 38;
+            projectile.friendly = true;
+            projectile.hostile = false;
 			projectile.height = 38;
 			projectile.melee = true;
 			projectile.timeLeft = 120;
-            projectile.damage = 4;
+            projectile.damage = 16;
+            projectile.penetrate = -1;
 			projectile.light = 0.5f;
 		}
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -69,6 +72,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 			if (i % 2 == 0)
 			{
 				int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                Main.dust[dust].noGravity = true;
 			}
 			projectile.alpha += 2;
 			projectile.rotation += rot;
