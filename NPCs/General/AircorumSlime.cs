@@ -30,11 +30,6 @@ namespace AerovelenceMod.NPCs.General
             npc.DeathSound = SoundID.NPCDeath44;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns ? .5f : 0f;
-        }
-
         public override void HitEffect(int hitDirection, double damage)
         {
             if (npc.life <= 0 || npc.life >= 0)

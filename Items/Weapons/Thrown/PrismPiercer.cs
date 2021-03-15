@@ -18,8 +18,8 @@ namespace AerovelenceMod.Items.Weapons.Thrown
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item1;
-            item.crit = 4;
-            item.damage = 12;
+            item.crit = 16;
+            item.damage = 24;
             item.melee = true;
             item.width = 22;
             item.height = 40;
@@ -147,7 +147,7 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 		public override void SetDefaults()
 		{
 			projectile.width = 8;
-            projectile.damage = 4;
+            projectile.damage = 10;
 			projectile.height = 8;
 			projectile.friendly = true;
 			projectile.magic = true;

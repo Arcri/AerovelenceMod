@@ -17,14 +17,14 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 35;
+            item.crit = 12;
+            item.damage = 38;
             item.magic = true;
-            item.mana = 20;
+            item.mana = 12;
             item.width = 64;
             item.height = 64;
-            item.useTime = 35;
-            item.useAnimation = 35;
+            item.useTime = 32;
+            item.useAnimation = 32;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -33,7 +33,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<InvisibleProj>();
-            item.shootSpeed = 11f;
+            item.shootSpeed = 12f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
