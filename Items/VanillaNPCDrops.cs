@@ -108,6 +108,12 @@ namespace AerovelenceMod.Items
 						Item.NewItem(npc.getRect(), mod.ItemType("MandiBlaster"));
 					}
 					break;
+				case NPCID.DarkCaster:
+					if (Main.rand.NextBool(26))
+					{
+						Item.NewItem(npc.getRect(), mod.ItemType("SorcerersStaff"));
+					}
+					break;
 				case NPCID.BlueSlime:
 					if (Main.rand.NextBool(101))
 					{
