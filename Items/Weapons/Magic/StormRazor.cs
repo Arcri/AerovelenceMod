@@ -1,9 +1,7 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.Weapons.Magic;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {

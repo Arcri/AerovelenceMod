@@ -1,4 +1,4 @@
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

@@ -1,5 +1,5 @@
 using AerovelenceMod.Dusts;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.NPCs.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -9,9 +9,8 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.NPCs.CrystalCaverns
 {
-    public class LuminousDefender : ModNPC
+	public class LuminousDefender : ModNPC
     {
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Luminous Defender");

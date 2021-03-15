@@ -1,3 +1,4 @@
+using AerovelenceMod.Projectiles.Weapons.Minions;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -16,7 +17,7 @@ namespace AerovelenceMod.Buffs
 		public override void Update(Player player, ref int buffIndex)
 		{
 			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
-			if (player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Minions.ShiverMinion>()] > 0)
+			if (player.ownedProjectileCounts[ModContent.ProjectileType<ShiverMinion>()] > 0)
 			{
 				modPlayer.ShiverMinion = true;
 			}

@@ -1,5 +1,5 @@
 using AerovelenceMod.Dusts;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.NPCs.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

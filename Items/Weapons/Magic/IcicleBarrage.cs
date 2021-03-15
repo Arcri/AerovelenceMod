@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Projectiles.Weapons.Magic;
 
 #endregion
 
@@ -41,7 +42,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 			item.autoReuse = true;
 
 			item.shootSpeed = 15f;
-			item.shoot = ModContent.ProjectileType<Projectiles.WallOfIce>();
+			item.shoot = ModContent.ProjectileType<WallOfIce>();
 
 			item.UseSound = SoundID.Item100;
 		}

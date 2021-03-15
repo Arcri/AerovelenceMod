@@ -1,5 +1,5 @@
 using AerovelenceMod.Items.Others.Crafting;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

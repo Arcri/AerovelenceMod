@@ -1,5 +1,4 @@
-using AerovelenceMod.Projectiles.Minions;
-using System;
+using AerovelenceMod.Projectiles.Weapons.Minions;
 using Terraria;
 using Terraria.ModLoader;
 

@@ -2,8 +2,7 @@
 using AerovelenceMod.Buffs;
 using AerovelenceMod.CrystalTorrent;
 using AerovelenceMod.Dusts;
-using AerovelenceMod.Items.Weapons.Melee;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.Other.ArmorSetBonus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -14,7 +13,6 @@ using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod

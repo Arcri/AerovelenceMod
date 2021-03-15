@@ -1,4 +1,4 @@
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.NPCs.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

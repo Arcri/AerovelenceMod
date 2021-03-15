@@ -1,7 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
+using AerovelenceMod.Projectiles.Weapons.Throwing;
 
 namespace AerovelenceMod.Items.Weapons.Thrown
 {

@@ -1,15 +1,13 @@
 using AerovelenceMod.Dusts;
-using AerovelenceMod.Projectiles;
-using IL.Terraria.ID;
+using AerovelenceMod.Projectiles.Weapons.Magic;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Items.Weapons.Melee
 {
-    public class ThunderLanceProjectile : ModProjectile
+	public class ThunderLanceProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -46,8 +44,8 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			projectile.direction = projOwner.direction;
 			projOwner.heldProj = projectile.whoAmI;
 			projOwner.itemTime = projOwner.itemAnimation;
-			projectile.position.X = ownerMountedCenter.X - (float)(projectile.width / 2);
-			projectile.position.Y = ownerMountedCenter.Y - (float)(projectile.height / 2);
+			projectile.position.X = ownerMountedCenter.X - projectile.width / 2;
+			projectile.position.Y = ownerMountedCenter.Y - projectile.height / 2;
 			if (!projOwner.frozen)
 			{
 				if (MovementFactor == 0f)
@@ -90,7 +88,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 				dust.velocity *= 0.5f;
 			}
 			if (projOwner.itemAnimation == projOwner.itemAnimationMax - 1)
-				Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X * 2f, projectile.velocity.Y * 2, ModContent.ProjectileType<ElectricitySpark>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+				Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X * 2f, projectile.velocity.Y * 2, ProjectileType<ElectricitySpark>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
 			}
 	}
 }

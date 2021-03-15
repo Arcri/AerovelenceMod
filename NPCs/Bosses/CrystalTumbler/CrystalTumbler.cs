@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.BossBags;
+using AerovelenceMod.Projectiles.NPCs.Bosses.CrystalTumbler;
 //using AerovelenceMod.Items.BossBags;
 
 namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler

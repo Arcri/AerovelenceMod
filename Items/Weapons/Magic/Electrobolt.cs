@@ -1,9 +1,9 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Projectiles.Weapons.Magic;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {

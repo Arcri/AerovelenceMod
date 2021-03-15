@@ -2,8 +2,8 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Projectiles;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
+using AerovelenceMod.Projectiles.Weapons.Ranged;
 
 namespace AerovelenceMod.Items.Weapons.Ranged
 {
