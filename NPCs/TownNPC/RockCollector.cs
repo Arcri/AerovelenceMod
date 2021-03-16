@@ -1,10 +1,8 @@
-using System;
 using System.Linq;
-using AerovelenceMod;
 using AerovelenceMod.Dusts;
 using AerovelenceMod.Items.Accessories;
 using AerovelenceMod.Items.BossSummons;
-using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Items.Equipment;
 using AerovelenceMod.Items.Others.Misc;
 using AerovelenceMod.Items.Others.Quest;
 using AerovelenceMod.Items.Others.UIButton;
@@ -12,7 +10,6 @@ using AerovelenceMod.Items.Tools;
 using AerovelenceMod.Items.Weapons.CavernsHMPlaceholder;
 using AerovelenceMod.Items.Weapons.Melee;
 using AerovelenceMod.Items.Weapons.Thrown;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -20,8 +17,8 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.NPCs.TownNPC
 {
-	// [AutoloadHead] and npc.townNPC are extremely important and absolutely both necessary for any Town NPC to work at all.
-	[AutoloadHead]
+    // [AutoloadHead] and npc.townNPC are extremely important and absolutely both necessary for any Town NPC to work at all.
+    [AutoloadHead]
 	public class RockCollector : ModNPC
 	{
 		public override string Texture => "AerovelenceMod/NPCs/TownNPC/RockCollector";
@@ -34,8 +31,6 @@ namespace AerovelenceMod.NPCs.TownNPC
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName automatically assigned from .lang files, but the commented line below is the normal approach.
-			// DisplayName.SetDefault("Example Person");
 			Main.npcFrameCount[npc.type] = 25;
 			NPCID.Sets.ExtraFramesCount[npc.type] = 9;
 			NPCID.Sets.AttackFrameCount[npc.type] = 4;
@@ -223,6 +218,18 @@ namespace AerovelenceMod.NPCs.TownNPC
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<SpeedstersPickaxe>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<StoneHatchet>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ItemID.MiningHelmet);
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ItemID.Hook);
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ItemID.Torch);
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ItemID.Rope);
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ItemID.SpelunkerPotion);
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ItemID.Topaz);
 			nextSlot++;
