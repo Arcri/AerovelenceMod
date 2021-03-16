@@ -518,6 +518,9 @@ namespace AerovelenceMod.NPCs.Bosses.CrystalTumbler
 					case 5:
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiamondDuster"), 1, false, 0, false, false);
 						break;
+					case 6:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DarkCrystalStaff"), 1, false, 0, false, false);
+						break;
 				}
 			}
 		}
