@@ -210,8 +210,6 @@ namespace AerovelenceMod.NPCs.TownNPC
 
 					Main.LocalPlayer.QuickSpawnItem(itemToReceive);
 				}
-
-				shop = true;
 			}
 		}
 
