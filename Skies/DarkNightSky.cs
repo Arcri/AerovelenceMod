@@ -6,7 +6,7 @@ using Terraria.Graphics.Effects;
 
 namespace AerovelenceMod.Skies
 {
-    public class CrystalTorrentSky : CustomSky
+    public class DarkNightSky : CustomSky
     {
         private bool _isActive;
         private float _fadeOpacity;

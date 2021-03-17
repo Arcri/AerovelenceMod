@@ -1,4 +1,3 @@
-using AerovelenceMod.CrystalTorrent;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,16 +22,8 @@ namespace AerovelenceMod.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            if (!CrystalTorrentWorld.CrystalTorrentUp)
-            {
-                Main.NewText("A violent electrical storm floods the land...", 175, 75, 255, false);
-                CrystalTorrentInvasion.StartCrystalTorrent();
-                return true;
-            }
-            else
-            {
+
                 return false;
-            }
         }
     }
 }

@@ -20,6 +20,7 @@ using AerovelenceMod.Skies;
 using AerovelenceMod.ILHooks;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
+using AerovelenceMod.Events;
 
 namespace AerovelenceMod
 {
@@ -94,8 +95,12 @@ namespace AerovelenceMod
 
 			GemGrapplingRange.Load();
 			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
-			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
-			SkyManager.Instance["AerovelenceMod:CrystalTorrents"] = new CrystalTorrentSky();
+
+			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
+
+			Filters.Scene["AerovelenceMod:DarkNights"] = new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
+			Overlays.Scene.Load();
+			Filters.Scene.Load();
 			Instance = this;
 			if (Main.netMode != NetmodeID.Server)
 			{
@@ -190,7 +195,7 @@ namespace AerovelenceMod
 			Player player = Main.LocalPlayer;
 			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
 			{
-				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
+				music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
 				priority = MusicPriority.BiomeMedium;
 			}
 			if (Main.myPlayer == -1 || Main.gameMenu || !Main.LocalPlayer.active)
@@ -199,8 +204,17 @@ namespace AerovelenceMod
 			}
 			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCitadel)
 			{
-				music = this.GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
+				music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
 				priority = MusicPriority.BiomeMedium;
+			}
+
+			else if (!Main.dayTime)
+			{
+				if (DarkNightWorld.DarkNight)
+				{
+					music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
+					priority = MusicPriority.Environment;
+				}
 			}
 		}
 

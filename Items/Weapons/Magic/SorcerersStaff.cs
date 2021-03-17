@@ -11,7 +11,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             Item.staff[item.type] = true;
-            DisplayName.SetDefault("Sorcerers Staff");
+            DisplayName.SetDefault("Sorcerer's Staff");
             Tooltip.SetDefault("Casts water bolts\n'What should we call this? It's a sorcerer's staff.\n'Hmm... Sorcerer's Staff?'");
         }
         public override void SetDefaults()

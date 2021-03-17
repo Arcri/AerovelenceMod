@@ -1,7 +1,6 @@
-//using AerovelenceMod.CrystalTorrent;
 using AerovelenceMod.Buffs;
-using AerovelenceMod.CrystalTorrent;
 using AerovelenceMod.Dusts;
+using AerovelenceMod.Events;
 using AerovelenceMod.Projectiles.Other.ArmorSetBonus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +16,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod
 {
-	public class AeroPlayer : ModPlayer
+    public class AeroPlayer : ModPlayer
 	{
         //ARCRI I DONT UNDERSTAND THESE GROUPS
         public bool zooming;
@@ -86,7 +85,8 @@ namespace AerovelenceMod
 
 		public override void UpdateBiomeVisuals()
 		{
-			player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrentUp, player.Center);
+			player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrents, player.Center);
+			player.ManageSpecialBiomeVisuals("AerovelenceMod:DarkNights", DarkNightWorld.DarkNight, player.Center);
 		}
 		
 		public override void UpdateDead()

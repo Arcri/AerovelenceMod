@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.World.Generation;
@@ -106,6 +107,8 @@ namespace AerovelenceMod
 			downedCyvercry = flags[3];
 			downedTheFallen = flags[4];
 		}
+
+		
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
 			int idx = tasks.FindIndex(t => t.Name == "Underworld"); //Terrain
@@ -131,6 +134,7 @@ namespace AerovelenceMod
 			cavernTiles = 0;
 			citadelTiles = 0;
 		}
+
 
         public override void PostWorldGen()
         {
