@@ -15,8 +15,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine
 	public class CursedMachine : ModNPC
 	{
 		public static int cursedBoss = -1;
-
-		bool hasBeenBelow500 = false;
+        readonly bool hasBeenBelow500 = false;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Cursed Machine");

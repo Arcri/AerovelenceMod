@@ -9,7 +9,6 @@ namespace AerovelenceMod.Projectiles.NPCs.Bosses.CrystalTumbler
 {
 	public class TumblerOrb : ModProjectile
 	{
-		int t;
 		public override void SetDefaults()
 		{
 			projectile.width = 80;

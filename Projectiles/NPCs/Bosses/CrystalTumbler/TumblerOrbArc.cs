@@ -10,7 +10,6 @@ namespace AerovelenceMod.Projectiles.NPCs.Bosses.CrystalTumbler
 {
     public class TumblerOrbArc : ModProjectile
 	{
-		int t;
         public override void SetStaticDefaults()
         {
 			ProjectileID.Sets.TrailCacheLength[projectile.type] = 40;

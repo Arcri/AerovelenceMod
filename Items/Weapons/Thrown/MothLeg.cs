@@ -55,7 +55,6 @@ namespace AerovelenceMod.Items.Weapons.Thrown
 {
     public class MothLegProjectile : ModProjectile
     {
-        int i;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Moth Leg");

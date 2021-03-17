@@ -25,6 +25,7 @@ namespace AerovelenceMod.Items.Accessories
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
+
 			player.moveSpeed += 0.35f;
 			CrystalStompersPlayer mp = player.GetModPlayer<CrystalStompersPlayer>();
 

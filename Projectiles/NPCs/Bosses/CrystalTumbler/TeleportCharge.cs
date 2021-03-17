@@ -8,7 +8,6 @@ namespace AerovelenceMod.Projectiles.NPCs.Bosses.CrystalTumbler
 {
     public class TeleportCharge : ModProjectile
 	{
-		int t;
 		public override void SetDefaults()
 		{
 			projectile.width = 128;
