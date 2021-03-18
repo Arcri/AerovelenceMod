@@ -91,10 +91,12 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
-			
 
 			GemGrapplingRange.Load();
 			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
+
+				Filters.Scene["AerovelenceMod:FoggyFields"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
+				SkyManager.Instance["AerovelenceMod:FoggyFields"] = new CrystalTorrentSky();
 
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
 

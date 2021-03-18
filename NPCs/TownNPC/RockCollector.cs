@@ -139,7 +139,6 @@ namespace AerovelenceMod.NPCs.TownNPC
 						Main.npcChatCornerItem = ModContent.ItemType<OreQuest>();
 						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}], [i:{ModContent.ItemType<GoldCluster>()}], [i:{ModContent.ItemType<SlateCluster>()}], or [i:{ModContent.ItemType<PhanticCluster>()}], I'll reward you with something!";
 					}
-				
 				case 3:
                     {
 						return "Don't waste time mining diamonds. Platinum's where it's at.";

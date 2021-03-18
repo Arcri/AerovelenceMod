@@ -85,6 +85,10 @@ namespace AerovelenceMod
 
 		public override void UpdateBiomeVisuals()
 		{
+			if (player.GetModPlayer<AeroPlayer>().ZoneCrystalCaverns)
+			{
+				player.ManageSpecialBiomeVisuals("AerovelenceMod:FoggyFields", FoggyFieldsWorld.FoggyFields, player.Center);
+			}
 			player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrents, player.Center);
 			player.ManageSpecialBiomeVisuals("AerovelenceMod:DarkNights", DarkNightWorld.DarkNight, player.Center);
 		}
