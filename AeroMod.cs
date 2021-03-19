@@ -21,13 +21,14 @@ using AerovelenceMod.ILHooks;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Items.Placeable.CrystalCaverns;
 using AerovelenceMod.Events;
+using MonoMod.RuntimeDetour.HookGen;
+using System.Reflection;
 
 namespace AerovelenceMod
 {
     public class AeroMod : Mod
 	{
 		public static ModHotKey ArmorHotKey;
-
 
 
 
@@ -312,12 +313,16 @@ namespace AerovelenceMod
 		private void LoadDetours()
 		{
 			On.Terraria.Main.DrawProjectiles += Main_DrawProjectiles;
+			AeroPlayer aeroPlayer = new AeroPlayer();
+			On.Terraria.Player.ItemCheck += aeroPlayer.DetouredItemCheck;
 			//IL.Terraria.Main.DoDraw += DrawMoonlordLayer;
 		}
 
 		private void UnloadDetours()
 		{
 			On.Terraria.Main.DrawProjectiles -= Main_DrawProjectiles;
+			AeroPlayer aeroPlayer = new AeroPlayer();
+			On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			//IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
 

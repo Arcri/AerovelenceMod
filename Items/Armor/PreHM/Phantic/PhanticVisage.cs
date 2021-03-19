@@ -15,12 +15,12 @@ namespace AerovelenceMod.Items.Armor.PreHM.Phantic
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{
-			return body.type == ModContent.ItemType<PhanticCuisses>() && legs.type == ModContent.ItemType<PhanticCuirass>() && head.type == ModContent.ItemType<PhanticVisage>();
+			return body.type == ModContent.ItemType<PhanticCuirass>() && legs.type == ModContent.ItemType<PhanticCuisses>() && head.type == ModContent.ItemType<PhanticVisage>();
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-            player.setBonus = "Taking over 10 damage will spawn a homing soul to chase your foes";
-            player.GetModPlayer<AeroPlayer>().PhanticBonus = true;
+            player.setBonus = "Firing a magic weapon has a chance to also call forth a Phantic Soul.";
+            player.GetModPlayer<AeroPlayer>().PhanticMagicBonus = true;
         } 	
         public override void SetDefaults()
         {
