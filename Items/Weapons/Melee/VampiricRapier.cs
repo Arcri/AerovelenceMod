@@ -52,7 +52,7 @@ namespace AerovelenceMod.Items.Weapons.Melee
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwooooooah");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "VampiricRapier", "Legendary item")
+			line = new TooltipLine(mod, "VampiricRapier", "Artifact")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};

@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Projectiles.Weapons.Magic;
+using System;
 
 namespace AerovelenceMod.Items.Weapons.Magic
 {
@@ -32,56 +33,38 @@ namespace AerovelenceMod.Items.Weapons.Magic
             item.value = Item.sellPrice(0, 10, 50, 0);
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = mod.ProjectileType("HomingWisp");
+            item.shoot = mod.ProjectileType("BeholderOrb");
             item.shootSpeed = 40f;
         }
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.075);
-            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = System.Math.Atan2(speedX, speedY);
+            float baseSpeed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+            double baseAngle = Math.Atan2(speedX, speedY);
             double randomAngle;
             for (int i = 0; i < num; ++i)
             {
                 randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-                posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
+                posArray[i] = new Vector2(baseSpeed * (float)Math.Sin(randomAngle), baseSpeed * (float)Math.Cos(randomAngle));
             }
-            return (Vector2[])posArray;
-        }
-
-        public static void SpawnDustFromTexture(Vector2 position, int dustType, float size, string imagePath, bool noGravity = true, float rot = 0.34f)
-        {
-            if (Main.netMode != NetmodeID.Server)
-            {
-                float rotation = Main.rand.NextFloat(-rot, rot);
-                Texture2D texture = ModContent.GetTexture(imagePath);
-                int[] pixelData = new int[texture.Width * texture.Height];
-
-                texture.GetData(pixelData);
-
-                for (int i = 0; i < texture.Width; i += 2)
-                {
-                    for (int j = 0; j < texture.Height; j += 2)
-                    {
-                        if (pixelData[j * texture.Width + i] != 0)
-                        {
-                            Vector2 dustPosition = new Vector2(i - texture.Width / 2, j - texture.Height / 2) * size;
-                            Dust.NewDustPerfect(position, dustType, dustPosition.RotatedBy(rotation)).noGravity = noGravity;
-                        }
-                    }
-                }
-            }
+            return posArray;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            float speed = 0f;
+            float speed = 5f;
             Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-            Projectile.NewProjectile(Main.MouseWorld, velocity, ModContent.ProjectileType<EyeOfTheBeholder>(), 50, 5f);
+            Vector2 velocityEye = new Vector2(speed, speed) * 0;
+
+            Projectile.NewProjectile(Main.MouseWorld, velocityEye, ModContent.ProjectileType<EyeOfTheBeholder>(), 50, 5f);
+            for (int i = 0; i < 4; i++)
+            {
+                Projectile.NewProjectile(player.Center, velocity, type, 30, 5f, player.whoAmI);
+                Projectile.NewProjectile(player.Center, velocity, type, 30, 5f, player.whoAmI);
+            }
             return false;
         }
-
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);

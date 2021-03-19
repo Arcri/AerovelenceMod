@@ -2,6 +2,7 @@ using AerovelenceMod.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
@@ -34,6 +35,25 @@ namespace AerovelenceMod.Items.Weapons.Melee
             item.autoReuse = true;
             item.melee = true;
             item.damage = 12;
+        }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
+            tooltips.Add(line);
+
+            line = new TooltipLine(mod, "Electromagnetism", "Artifact")
+            {
+                overrideColor = new Color(255, 241, 000)
+            };
+            tooltips.Add(line);
+            foreach (TooltipLine line2 in tooltips)
+            {
+                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                {
+                    line2.overrideColor = new Color(255, 132, 000);
+                }
+            }
+            tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

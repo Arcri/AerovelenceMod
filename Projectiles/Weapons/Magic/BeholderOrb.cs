@@ -30,6 +30,16 @@ namespace AerovelenceMod.Projectiles.Weapons.Magic
 		public override void AI()
 		{
 			i++;
+			Player player = Main.player[projectile.owner];
+			Vector2 moveTo = Main.MouseWorld;
+			float speed = 10f;
+			Vector2 move = moveTo - projectile.Center;
+			float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+			move *= speed / magnitude;
+			if (i % 5 == 0)
+			{
+				projectile.velocity += move;
+			}
 			projectile.rotation += rot;
 			projectile.scale *= 1.005f;
 			if (i % 2 == 0)
@@ -46,14 +56,6 @@ namespace AerovelenceMod.Projectiles.Weapons.Magic
 			if (Math.Sqrt(projectile.velocity.X * projectile.velocity.X + projectile.velocity.Y * projectile.velocity.Y) > 2.0)
 			{
 				projectile.velocity *= 0.99f;
-			}
-			for (int num437 = 0; num437 < 1000; num437++)
-			{
-				if (num437 != projectile.whoAmI && Main.projectile[num437].active && Main.projectile[num437].owner == projectile.owner && Main.projectile[num437].type == projectile.type && projectile.timeLeft > Main.projectile[num437].timeLeft && Main.projectile[num437].timeLeft > 30)
-				{
-					projectile.alpha += 10;
-					Main.projectile[num437].timeLeft = 30;
-				}
 			}
 			int[] array = new int[20];
 			int num438 = 0;
@@ -102,7 +104,6 @@ namespace AerovelenceMod.Projectiles.Weapons.Magic
 					float num448 = num440 - vector31.X;
 					float num449 = num441 - vector31.Y;
 					float num450 = (float)Math.Sqrt(num448 * num448 + num449 * num449);
-					float num451 = num450;
 					num450 = num447 / num450;
 					num448 *= num450;
 					num449 *= num450;
