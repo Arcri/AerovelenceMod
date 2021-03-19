@@ -70,7 +70,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
             i++;
             ++projectile.localAI[0];
             float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
-            float piFractionVelocity = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float ReversepiFraction = MathHelper.Pi + oneHelixRevolutionInUpdateTicks;
             Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
             Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 29);
@@ -87,7 +86,6 @@ namespace AerovelenceMod.Items.Weapons.Magic
             newDust2.noGravity = true;
             newDust2.velocity *= 0f;
             projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            Vector2 Velocity2 = new Vector2(0, (float)Math.Sin(projectile.localAI[0] % oneHelixRevolutionInUpdateTicks * piFraction)) * projectile.height;
             return (false);
         }
         public override void AI()
