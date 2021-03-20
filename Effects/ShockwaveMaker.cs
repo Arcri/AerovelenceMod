@@ -16,7 +16,7 @@ namespace Aerovelence.Effects
         private int rippleSpeed = 15;
         private float distortStrength = 300f;
 
-        public override string Texture => "Aerovelence/Blank";
+        public override string Texture => "AerovelenceMod/Blank";
 
         public override void SetDefaults()
         {
@@ -44,7 +44,7 @@ namespace Aerovelence.Effects
             {
                 projectile.ai[0]++;
                 float progress = projectile.ai[1] / 60f;
-                float distortStrength = 200;
+                float distortStrength = 300;
                 Filters.Scene["Shockwave"].GetShader().UseProgress(progress).UseOpacity(distortStrength * (1 - progress / 3f));
             }
         }
