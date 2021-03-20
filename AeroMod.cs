@@ -98,7 +98,7 @@ namespace AerovelenceMod
 
 				Filters.Scene["AerovelenceMod:FoggyFields"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 				SkyManager.Instance["AerovelenceMod:FoggyFields"] = new CrystalTorrentSky();
-				Filters.Scene["Shockwave"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/ShockwaveEffect")), "ShockwavePass"), EffectPriority.VeryHigh);
+				Filters.Scene["Shockwave"] = new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/ShockwaveEffect")), "ShockwavePass"), EffectPriority.Low);
 
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
 
