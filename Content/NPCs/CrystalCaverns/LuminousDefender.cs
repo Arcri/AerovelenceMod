@@ -4,6 +4,7 @@ using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,6 +35,11 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             npc.buffImmune[24] = true;
 			animationType = 0;
         }
+		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+		{
+			Texture2D texture = mod.GetTexture("Content/NPCs/CrystalCaverns/LuminousDefender_Glow");
+			spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{

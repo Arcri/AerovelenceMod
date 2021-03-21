@@ -31,8 +31,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.magic = true;
             item.mana = 20;
         }
-
-
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-10, 0);
@@ -69,32 +67,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                         projectile.timeLeft = num433;
                     }
                 }
-                float num434 = 1f;
-                if (projectile.velocity.Y < 0f)
-                {
-                    num434 -= projectile.velocity.Y / 3f;
-                }
-                projectile.ai[0] += num434;
-                if (projectile.ai[0] > 30f)
-                {
-                    projectile.velocity.Y += 0.5f;
-                    if (projectile.velocity.Y > 0f)
-                    {
-                        projectile.velocity.X *= 0.95f;
-                    }
-                    else
-                    {
-                        projectile.velocity.X *= 1.05f;
-                    }
-                }
-                float x = projectile.velocity.X;
-                float y = projectile.velocity.Y;
-                float num435 = (float)Math.Sqrt(x * x + y * y);
-                num435 = 15.95f * projectile.scale / num435;
-                x *= num435;
-                y *= num435;
-                projectile.velocity.X = x;
-                projectile.velocity.Y = y;
                 projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
                 return;
             }
@@ -111,7 +83,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
                 }
                 projectile.localAI[0] = 1f;
-                projectile.timeLeft = num433;
             }
             projectile.velocity.X *= 0.98f;
             projectile.velocity.Y *= 0.98f;
@@ -126,7 +97,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             else if (projectile.timeLeft > num433 - 10)
             {
                 int num436 = num433 - projectile.timeLeft;
-                projectile.alpha = 255 - (int)(255f * (float)num436 / 10f);
+                projectile.alpha = 255 - (int)(255f * num436 / 10f);
             }
             else
             {
@@ -149,11 +120,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             projectile.scale = 1.25f;
+            projectile.timeLeft = 50;
         }
         public override void AI()
         {
-            int num433 = 1200;
-            if (projectile.type == ModContent.ProjectileType<RainbowCannonProj2>())
+            int num433 = 50;
+            if (projectile.type == ModContent.ProjectileType<RainbowCannonProj1>())
             {
                 if (projectile.owner == Main.myPlayer)
                 {
@@ -163,37 +135,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                         projectile.localAI[0] = 3f;
                         Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X * 0.001f, projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), projectile.damage, projectile.knockBack, projectile.owner);
                     }
-                    if (projectile.timeLeft > num433)
-                    {
-                        projectile.timeLeft = num433;
-                    }
                 }
-                float num434 = 1f;
-                if (projectile.velocity.Y < 0f)
-                {
-                    num434 -= projectile.velocity.Y / 3f;
-                }
-                projectile.ai[0] += num434;
-                if (projectile.ai[0] > 30f)
-                {
-                    projectile.velocity.Y += 0.5f;
-                    if (projectile.velocity.Y > 0f)
-                    {
-                        projectile.velocity.X *= 0.95f;
-                    }
-                    else
-                    {
-                        projectile.velocity.X *= 1.05f;
-                    }
-                }
-                float x = projectile.velocity.X;
-                float y = projectile.velocity.Y;
-                float num435 = (float)Math.Sqrt(x * x + y * y);
-                num435 = 15.95f * projectile.scale / num435;
-                x *= num435;
-                y *= num435;
-                projectile.velocity.X = x;
-                projectile.velocity.Y = y;
                 projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
                 return;
             }
@@ -210,10 +152,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
                 }
                 projectile.localAI[0] = 1f;
-                projectile.timeLeft = num433;
             }
-            projectile.velocity.X *= 0.98f;
-            projectile.velocity.Y *= 0.98f;
             if (projectile.rotation == 0f)
             {
                 projectile.alpha = 255;
@@ -225,7 +164,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             else if (projectile.timeLeft > num433 - 10)
             {
                 int num436 = num433 - projectile.timeLeft;
-                projectile.alpha = 255 - (int)(255f * (float)num436 / 10f);
+                projectile.alpha = 255 - (int)(255f * num436 / 10f);
             }
             else
             {

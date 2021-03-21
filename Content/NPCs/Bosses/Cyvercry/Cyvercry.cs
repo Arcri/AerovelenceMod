@@ -125,7 +125,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 alpha = (240 - ai1 + ai2) / 240f;
             }
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/Cyvercry/Glowmask");
+            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/Glowmask");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White * alpha, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -160,18 +160,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 for(int i = 0; i < 360; i += 30)
                 {
                     Vector2 rotationalPos = new Vector2(Main.rand.NextFloat(2, 3), 0).RotatedBy(MathHelper.ToRadians(i));
-                    texture = mod.GetTexture("NPCs/Bosses/Cyvercry/CyvercryRed");
+                    texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/CyvercryRed");
                     spriteBatch.Draw(texture, npc.Center - Main.screenPosition + rotationalPos, npc.frame, color2 * alpha, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0);
                 }
             }
-            texture = mod.GetTexture("NPCs/Bosses/Cyvercry/Cyvercry");
+            texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/Cyvercry");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, color * alpha, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0);
             if(shadowTrail)
             {
                 for (int k = 0; k < npc.oldPos.Length; k++)
                 {
                     Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
-                    color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
+                    color = npc.GetAlpha(lightColor) * ((npc.oldPos.Length - k) / (float)npc.oldPos.Length);
                     spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color * 0.5f, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
                 }
             }

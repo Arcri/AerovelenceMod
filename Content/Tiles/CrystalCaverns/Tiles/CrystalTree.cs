@@ -1,5 +1,4 @@
 using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
@@ -28,17 +27,17 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 
 		public override Texture2D GetTexture()
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/CrystalTree");
+			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree");
 		}
 
 		public override Texture2D GetTopTextures(int i, int j, ref int frame, ref int frameWidth, ref int frameHeight, ref int xOffsetLeft, ref int yOffset)
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/CrystalTree_Tops");
+			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Tops");
 		}
 
 		public override Texture2D GetBranchTextures(int i, int j, int trunkOffset, ref int frame)
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/CrystalTree_Branches");
+			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Branches");
 		}
 	}
 }

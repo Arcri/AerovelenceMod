@@ -139,7 +139,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             Texture2D primaryTexture = Main.npcTexture[npc.type];
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/Cyvercry/CyverBotRed");
+            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/CyverBotRed");
             Vector2 drawOrigin = new Vector2(npc.width * 0.5f, npc.height * 0.5f);
             Color color2 = new Color(100, 100, 100, 0);
             if (npc.ai[2] == -1)
@@ -153,7 +153,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/Cyvercry/GlowmaskBot");
+            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, npc.GetAlpha(Color.White), npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
         }
         public override void FindFrame(int frameHeight)

@@ -544,7 +544,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			Texture2D texture = mod.GetTexture("NPCs/Bosses/CrystalTumbler/Glowmask");
+			Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/CrystalTumbler/Glowmask");
 			spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
 		}
 

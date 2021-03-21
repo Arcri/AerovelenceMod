@@ -58,7 +58,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
 
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/TheFallen/Glowmask");
+            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/TheFallen/Glowmask");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
             for (int k = 0; k < npc.oldPos.Length; k++)
             {
                 Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
-                Color color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
+                Color color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / npc.oldPos.Length);
                 spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
             }
             return true;
@@ -191,11 +191,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
                 npc.velocity.X -= 0.2f;
             }
             npc.rotation = npc.velocity.X * 0.1f;
-        }
-
-        private float Magnitude(Vector2 mag)
-        {
-            return (float)Math.Sqrt(mag.X * mag.X + mag.Y * mag.Y);
         }
     }
 }

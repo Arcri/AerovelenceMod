@@ -5,13 +5,13 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Content.Tiles.FrostDungeon.Furniture.Placeble
+namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
 {
-	public class FrostburnTorchItem : ModItem
+	public class GlimmeringTorchItem : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Frostburn Torch");
+			DisplayName.SetDefault("Glimmering Torch");
 		}
 
 		public override void SetDefaults()
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Tiles.FrostDungeon.Furniture.Placeble
 			item.useTime = 10;
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.consumable = true;
-			item.createTile = TileType<FrostburnTorch>();
+			item.createTile = TileType<Tiles.CrystalCaverns.Tiles.Furniture.GlimmeringTorch>();
 			item.flame = true;
 			item.value = 50;
 		}

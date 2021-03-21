@@ -1,10 +1,11 @@
-using AerovelenceMod.Items.Others.Crafting;
+using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Items.Weapons.Magic
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     public class SkyvoltFlare : ModItem
     {
@@ -59,7 +60,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
     }
 }
-namespace AerovelenceMod.Items.Weapons.Magic
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     public class SkyvoltMeteor : ModProjectile
     {
@@ -113,10 +114,56 @@ namespace AerovelenceMod.Items.Weapons.Magic
                 Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-1f, 1f), -5f + Main.rand.NextFloat(-1f, 1f)), ModContent.ProjectileType<ElectricBolt>(), 5, 0.5f, Main.myPlayer);
                 t = 0;
             }
-
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            int cooldown = 3;
+            if (projectile.localAI[1] <= 0f)
+            {
+                Projectile explosion = Projectile.NewProjectileDirect(target.Center, Vector2.Zero, ModContent.ProjectileType<SkyvoltExplosion>(), damage, 10f, projectile.owner, 0f, 1f);
+                Vector2 radius = new Vector2(90f, 90f);
+                explosion.Hitbox = new Rectangle(explosion.getRect().X - (int)(radius.X / 2), explosion.getRect().Y - (int)(radius.Y / 2), explosion.getRect().Width + (int)radius.X, explosion.getRect().Height + (int)radius.Y);
+                projectile.localAI[1] = cooldown;
+            }
+            projectile.localNPCImmunity[target.whoAmI] = 6;
+            target.immune[projectile.owner] = cooldown;
+            Main.PlaySound(SoundID.Item89, projectile.position);
+            projectile.position.X += projectile.width / 2;
+            projectile.position.Y += projectile.height / 2;
+            projectile.width = (int)(128f * projectile.scale);
+            projectile.height = (int)(128f * projectile.scale);
+            projectile.position.X -= projectile.width / 2;
+            projectile.position.Y -= projectile.height / 2;
+            for (int i = 0; i < 8; i++)
+            {
+                Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 31, 0f, 0f, 100, default, 1.5f);
+            }
+            for (int t = 0; t < 32; t++)
+            {
+                int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 6, 0f, 0f, 100, default, 2.5f);
+                Main.dust[dust].noGravity = true;
+                Dust dust113 = Main.dust[dust];
+                Dust dust2 = dust113;
+                dust2.velocity *= 3f;
+                dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 6, 0f, 0f, 100, default, 1.5f);
+                dust113 = Main.dust[dust];
+                dust2 = dust113;
+                dust2.velocity *= 2f;
+                Main.dust[dust].noGravity = true;
+            }
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
+            Player target = Main.player[projectile.owner];
+            int cooldown = 3;
+            if (projectile.localAI[1] <= 0f)
+            {
+                Projectile explosion = Projectile.NewProjectileDirect(target.Center, Vector2.Zero, ModContent.ProjectileType<SkyvoltExplosion>(), -30, 10f, projectile.owner, 0f, 1f);
+                Vector2 radius = new Vector2(90f, 90f);
+                explosion.Hitbox = new Rectangle(explosion.getRect().X - (int)(radius.X / 2), explosion.getRect().Y - (int)(radius.Y / 2), explosion.getRect().Width + (int)radius.X, explosion.getRect().Height + (int)radius.Y);
+                projectile.localAI[1] = cooldown;
+            }
+            projectile.localNPCImmunity[target.whoAmI] = 6;
             Main.PlaySound(SoundID.Item89, projectile.position);
             projectile.position.X += projectile.width / 2;
             projectile.position.Y += projectile.height / 2;
@@ -147,7 +194,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
 }
 
 
-namespace AerovelenceMod.Items.Weapons.Magic
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     partial class ElectricBolt : ModProjectile
     {
@@ -208,7 +255,7 @@ namespace AerovelenceMod.Items.Weapons.Magic
         }
     }
 }
-namespace AerovelenceMod.Items.Weapons.Magic
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     partial class ElectricBolt : ModProjectile
     {
@@ -243,6 +290,96 @@ namespace AerovelenceMod.Items.Weapons.Magic
         {
             ApplyTrailFx();
             projectile.velocity.Y += 0.2f;
+            return false;
+        }
+    }
+}
+namespace AerovelenceMod.Content.Items.Weapons.Magic
+{
+    public class SkyvoltExplosion : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Skyvolt Explosion");
+            Main.projFrames[projectile.type] = 5;
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 100;
+            projectile.height = 100;
+            projectile.friendly = true;
+            projectile.alpha = 255;
+            projectile.ignoreWater = true;
+            projectile.timeLeft = 60;
+            projectile.tileCollide = false;
+            projectile.penetrate = -1;
+            projectile.usesLocalNPCImmunity = true;
+        }
+
+        public override void AI()
+        {
+            Player player = Main.player[projectile.owner];
+            projectile.ai[1] += 0.01f;
+            projectile.scale = projectile.ai[1];
+            if (projectile.ai[0] == 0)
+            {
+                Main.PlaySound(SoundID.Item14, projectile.Center);
+            }
+
+            projectile.ai[0]++;
+            if (projectile.ai[0] >= 3 * Main.projFrames[projectile.type])
+            {
+                projectile.Kill();
+                return;
+            }
+
+            if (++projectile.frameCounter >= 3)
+            {
+                projectile.frameCounter = 0;
+                if (++projectile.frame >= Main.projFrames[projectile.type])
+                {
+                    projectile.hide = true;
+                }
+            }
+            projectile.alpha -= 63;
+            if (projectile.alpha < 0)
+            {
+                projectile.alpha = 0;
+            }
+
+            projectile.Damage();
+
+            int dusts = 5;
+            for (int i = 0; i < dusts; i++)
+            {
+                if (Main.rand.NextBool(3))
+                {
+                    float speed = 6f;
+                    Vector2 velocity = new Vector2(0f, -speed * Main.rand.NextFloat(0.5f, 1.2f)).RotatedBy(MathHelper.ToRadians(360f / i * dusts + Main.rand.NextFloat(-50f, 50f)));
+                    Dust dust1 = Dust.NewDustPerfect(projectile.Center, 59, velocity, 150, default, 1.5f);
+                    dust1.noGravity = true;
+                }
+            }
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            int cooldown = 4;
+            projectile.localNPCImmunity[target.whoAmI] = 6;
+            target.immune[projectile.owner] = cooldown;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Texture2D texture = Main.projectileTexture[projectile.type];
+            Rectangle rectangle = texture.Frame(1, Main.projFrames[projectile.type], 0, projectile.frame);
+            Color color = projectile.GetAlpha(lightColor);
+
+            if (!projectile.hide)
+            {
+                spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, rectangle, color, projectile.rotation, rectangle.Size() * 0.5f, projectile.scale, SpriteEffects.None, 0f);
+            }
             return false;
         }
     }

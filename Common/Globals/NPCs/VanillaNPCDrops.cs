@@ -146,7 +146,20 @@ namespace AerovelenceMod.Common.Globals.NPCs
                     else if (DownedWorld.DownedRimegeist&& (Main.rand.Next(21) == 0))
                         Item.NewItem(npc.getRect(), mod.ItemType("KelvinCore"));
                     break;
-			}
+                case NPCID.VoodooDemon:
+                case NPCID.RedDevil:
+                case NPCID.BoneSerpentHead:
+                case NPCID.Demon:
+                case NPCID.LavaSlime:
+                case NPCID.DemonTaxCollector:
+                case NPCID.Lavabat:
+                    if (Main.rand.NextBool(11))
+                    {
+                        if(Main.hardMode)
+                            Item.NewItem(npc.getRect(), ModContent.ItemType<EmberFragment>());
+                    }
+                    break;
+            }
 
 			if (npc.type == ModContent.NPCType<LuminousDefender>())
                 if (Main.rand.NextBool(2))

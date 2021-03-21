@@ -49,7 +49,7 @@ namespace AerovelenceMod.Content.NPCs.General.DarkNight
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("NPCs/General/DarkNight/CatsEye_Glow");
+            Texture2D texture = mod.GetTexture("Content/NPCs/General/DarkNight/CatsEye_Glow");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
         }
         public override void AI()

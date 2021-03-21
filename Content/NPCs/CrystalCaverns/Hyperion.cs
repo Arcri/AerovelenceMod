@@ -151,7 +151,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("NPCs/CrystalCaverns/Hyperion_Glow");
+            Texture2D texture = mod.GetTexture("Content/NPCs/CrystalCaverns/Hyperion_Glow");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
         }
 
