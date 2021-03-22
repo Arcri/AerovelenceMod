@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameInput;
@@ -29,7 +30,8 @@ namespace AerovelenceMod
 
 		public bool AdobeHelmet;
 		public bool AmbrosiaBonus;
-		public bool PhanticBonus;
+		public bool PhanticMeleeBonus;
+		public bool PhanticRangedBonus;
 		public bool PhanticMagicBonus;
 		public bool FrostMelee;
 		public bool FrostProjectile;
@@ -51,7 +53,9 @@ namespace AerovelenceMod
 
 			AdobeHelmet = false;
 			AmbrosiaBonus = false;
-			PhanticBonus = false;
+			PhanticMeleeBonus = false;
+			PhanticRangedBonus = false;
+			PhanticMagicBonus = false;
 			SpiritCultistBonus = false;
 			FrostMelee = false;
 			FrostProjectile = false;
@@ -97,7 +101,7 @@ namespace AerovelenceMod
 
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
-			if (PhanticBonus)
+			if (PhanticMeleeBonus)
             {
 				if (damage > 10)
                 {
@@ -120,7 +124,7 @@ namespace AerovelenceMod
 
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
 		{
-			if (PhanticBonus)
+			if (PhanticMeleeBonus)
 			{
 				if (damage > 10)
 				{
@@ -155,13 +159,20 @@ namespace AerovelenceMod
 				
 				target.AddBuff(ModContent.BuffType<LiftedSpiritsDebuff>(), 210);
 			}
+			if (PhanticRangedBonus && Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
+			{
+				float rot = Main.rand.NextFloat(MathHelper.TwoPi);
+				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
+				Vector2 velocity = Vector2.One.RotatedBy(rot) * -1 * 12f;
+				Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, player.HeldItem.knockBack, player.whoAmI, 0, 0);
+			}
 		}
 		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Player self, int i)
 		{
             if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.magic && Main.rand.NextFloat() < 0.125f)
                 if (!self.releaseUseItem && self.itemAnimation == self.HeldItem.useAnimation - 1 && self.itemAnimation != 0)
                     Projectile.NewProjectile(self.Center, self.DirectionTo(Main.MouseWorld) * self.HeldItem.shootSpeed / 2, 
-                        ModContent.ProjectileType<PhanticSoul>(), self.HeldItem.damage, self.HeldItem.knockBack, self.whoAmI);
+                        ModContent.ProjectileType<PhanticSoul>(), 40, self.HeldItem.knockBack, self.whoAmI);
             
             orig(self, i);
 		}
@@ -222,7 +233,7 @@ namespace AerovelenceMod
 			FrostMelee = false;
 			MiningAbilityCooldown = false;
 			FrostMinion = false;
-			PhanticBonus = false;
+			PhanticMeleeBonus = false;
 			PhanticMagicBonus = false;
 			UpgradedHooks = false;
 			BurnshockArmorBonus = false;
