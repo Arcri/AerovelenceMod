@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Armor.Phantic
 		public override void UpdateArmorSet(Player player)
 		{
             player.setBonus = "Taking over 10 damage will spawn a homing soul to chase your foes";
-            player.GetModPlayer<AeroPlayer>().PhanticBonus = true;
+            player.GetModPlayer<AeroPlayer>().PhanticMeleeBonus = true;
         } 	
         public override void SetDefaults()
         {
