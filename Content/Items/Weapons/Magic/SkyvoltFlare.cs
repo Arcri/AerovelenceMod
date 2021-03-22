@@ -108,7 +108,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 Main.dust[dust].fadeIn = 1f;
                 Main.dust[dust].noGravity = true;
             }
-            if(t % 25 == 0)
+            if (t % 25 == 0)
             {
                 Vector2 offset = projectile.Center + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
                 Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-1f, 1f), -5f + Main.rand.NextFloat(-1f, 1f)), ModContent.ProjectileType<ElectricBolt>(), 5, 0.5f, Main.myPlayer);
