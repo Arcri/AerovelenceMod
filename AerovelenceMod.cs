@@ -16,6 +16,24 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
+using AerovelenceMod.Content.Items.BossSummons;
+using System;
+using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Thrown;
+using AerovelenceMod.Content.Items.Weapons.Melee;
+using AerovelenceMod.Content.Items.Weapons.Magic;
+using AerovelenceMod.Content.Items.TreasureBags;
+using AerovelenceMod.Content.Items.Accessories;
+using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
+using AerovelenceMod.Content.NPCs.Bosses.LightningMoth;
+using AerovelenceMod.Content.Items.Weapons.Summoning;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Content.Items.Placeables.Trophies;
+using AerovelenceMod.Content.Items.Armor.Vanity;
+using AerovelenceMod.Content.Items.Placeables.MusicBoxes;
+using AerovelenceMod.Content.NPCs.Bosses.TheFallen;
 
 namespace AerovelenceMod
 {
@@ -31,7 +49,10 @@ namespace AerovelenceMod
 		internal UserInterface RockCollectorUserInterface;
 
 		public static PrimTrailManager primitives;
-        
+
+		//Mod Support
+		public bool FargosModMutant;
+
 		internal static AerovelenceMod Instance { get; set; }
 
         public AerovelenceMod()
@@ -46,10 +67,145 @@ namespace AerovelenceMod
                 AutoloadSounds = true
             };
         }
+		public override void PostSetupContent()
+		{
+			Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+			if (bossChecklist != null)
+			{
+				bossChecklist.Call(
+					"AddBoss",
+					1.5f,
+					ModContent.NPCType<CrystalTumbler>(),
+					this,
+					"Crystal Tumbler",
+					(Func<bool>)(() => DownedWorld.DownedCrystalTumbler),
+					ModContent.ItemType<LargeGeode>(),
+					new List<int>
+					{
+						ModContent.ItemType<CrystalTumblerMask>(),
+						ModContent.ItemType<CrystalTumblerTrophy>(),
+						ModContent.ItemType<CrystalTumblerBoxItem>()
+					},
+					new List<int>
+					{
+						ModContent.ItemType<CrystalTumblerBag>(),
+						ModContent.ItemType<DiamondDuster>(),
+						ModContent.ItemType<DarkCrystalStaff>(),
+						ModContent.ItemType<PrismThrasher>(),
+						ModContent.ItemType<CavernousImpaler>(),
+						ModContent.ItemType<PrismPiercer>(),
+						ModContent.ItemType<CrystallineQuadshot>(),
+						ModContent.ItemType<PrismaticSoul>() },
+					$"Use a [i:" + ModContent.ItemType<LargeGeode>() + "] in the Crystal Caverns"
+				);
 
-		public override void PostSetupContent() => WeakReferences.SetupModSupport();
 
-        public override void Load()
+				bossChecklist.Call(
+					"AddBoss",
+					5.5f,
+					ModContent.NPCType<Rimegeist>(),
+					this,
+					"Rimegeist",
+					(Func<bool>)(() => DownedWorld.DownedRimegeist),
+					ModContent.ItemType<GlowingSnow>(),
+					new List<int>
+					{
+						ModContent.ItemType<RimegeistMask>(),
+						ModContent.ItemType<RimegeistTrophy>(),
+						ModContent.ItemType<RimegeistBoxItem>()
+					},
+					new List<int> { ModContent.ItemType<RimegeistBag>(),
+						ModContent.ItemType<FragileIceCrystal>(),
+						ModContent.ItemType<IcySaber>(),
+						ModContent.ItemType<CrystalArch>(),
+						ModContent.ItemType<Snowball>(),
+						ModContent.ItemType<DeepFreeze>() },
+					$"Use a [i:" + ModContent.ItemType<GlowingSnow>() + "] at night"
+					);
+
+				bossChecklist.Call(
+					"AddBoss",
+					6.5f,
+					ModContent.NPCType<LightningMoth>(),
+					this,
+					"Lightning Moth",
+					(Func<bool>)(() => DownedWorld.DownedLightningMoth),
+					ModContent.ItemType<GlowingSnow>(),
+					new List<int>
+					{
+						ModContent.ItemType<LightningMothMask>(),
+						ModContent.ItemType<LightningMothTrophy>(),
+						ModContent.ItemType<LightningMothBoxItem>()
+					},
+					new List<int>
+					{
+						ModContent.ItemType<RimegeistBag>(),
+						ModContent.ItemType<BladeOfTheSkies>(),
+						ModContent.ItemType<EyeOfTheGreatMoth>(),
+						ModContent.ItemType<MothLeg>(),
+						ModContent.ItemType<Electromagnetism>(),
+						ModContent.ItemType<Florentine>(),
+						ModContent.ItemType<ElectrapulseCanister>(),
+						ModContent.ItemType<SongOfTheStorm>(),
+						ModContent.ItemType<StaticSurge>()},
+					$"Use a [i:" + ModContent.ItemType<TorrentialTotem>() + "] at night in the Crystal Caverns"
+					);
+
+
+				bossChecklist.Call(
+					"AddBoss",
+					9.5f,
+					ModContent.NPCType<Cyvercry>(),
+					this,
+					"Cyvercry",
+					(Func<bool>)(() => DownedWorld.DownedCyvercry),
+					ModContent.ItemType<GlowingSnow>(),
+					new List<int>
+					{
+						ModContent.ItemType<CyvercryMask>(),
+						ModContent.ItemType<CyvercryTrophy>(),
+						ModContent.ItemType<CyvercryBoxItem>()
+					},
+					new List<int>
+					{ 
+						ModContent.ItemType<CyvercryBag>(),
+						ModContent.ItemType<Oblivion>(),
+						ModContent.ItemType<Cyverthrow>(),
+						ModContent.ItemType<CyverCannon>(),
+						ModContent.ItemType<DarknessDischarge>(),
+						ModContent.ItemType<AetherVision>(),
+						ModContent.ItemType<EnergyShield>()},
+					$"Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] at night anywhere"
+					);
+
+				bossChecklist.Call(
+					"AddBoss",
+					12.5f,
+					ModContent.NPCType<TheFallenSpirit>(),
+					this,
+					"The Fallen",
+					(Func<bool>)(() => DownedWorld.DownedTheFallen),
+					ModContent.ItemType<GlowingSnow>(),
+					new List<int>
+					{
+						ModContent.ItemType<TheFallenMask>(),
+						ModContent.ItemType<TheFallenTrophy>(),
+						ModContent.ItemType<TheFallenBoxItem>()
+					},
+
+					new List<int>
+					{
+						ModContent.ItemType<TheFallenBag>(),
+						ModContent.ItemType<OzoneShredder>(),
+						ModContent.ItemType<WindboundWave>(),
+						ModContent.ItemType<StormRazor>()
+					},
+					$"Use a [i:" + ModContent.ItemType<AncientAmulet>() + "] during the day in the sky"
+					);
+			}
+		}
+
+		public override void Load()
 		{
             GemGrapplingRange.Load();
 
@@ -97,6 +253,7 @@ namespace AerovelenceMod
         {
             UnloadDetours();
 
+			FargosModMutant = false;
             ArmorHotKey = null;
             Instance = null;
         }

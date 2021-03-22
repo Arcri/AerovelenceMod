@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 namespace AerovelenceMod.Content.Items.Armor.Vanity
 {
     [AutoloadEquip(EquipType.Head)]
-    public class SnowriumMask : ModItem
+    public class TheFallenMask : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Snowrium Mask");
+            DisplayName.SetDefault("The Fallen Mask");
         }
         public override void SetDefaults()
         {

@@ -4,9 +4,9 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.TreasureBags
 {
-	public class CrystalTumblerBag : ModItem
+	public class LightningMothBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("CrystalTumbler");
+		public override int BossBagNPC => mod.NPCType("LightningMoth");
 
 		public override void SetStaticDefaults()
 		{
@@ -32,35 +32,33 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 		public override void OpenBossBag(Player player)
 		{
 			player.QuickSpawnItem(mod.ItemType("PrismaticSoul"));
-			player.QuickSpawnItem(ItemID.GoldCoin, 9);
-			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
-
-			int drop = Main.rand.Next(8);
+			player.QuickSpawnItem(ItemID.GoldCoin, 18);
+			player.QuickSpawnItem(ItemID.GreaterHealingPotion, Main.rand.Next(4, 12));
 
 			player.TryGettingDevArmor();
 
 			switch (Main.rand.Next(6))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("CrystallineQuadshot"));
+					player.QuickSpawnItem(mod.ItemType("BladeOfTheSkies"));
 					break;
 				case 1:
-					player.QuickSpawnItem(mod.ItemType("PrismPiercer"));
+					player.QuickSpawnItem(mod.ItemType("EyeOfTheGreatMoth"));
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("DiamondDuster"));
+					player.QuickSpawnItem(mod.ItemType("MothLeg"));
 					break;
 				case 3:
-					player.QuickSpawnItem(mod.ItemType("PrismThrasher"));
+					player.QuickSpawnItem(mod.ItemType("Florentine"));
 					break;
 				case 4:
-					player.QuickSpawnItem(mod.ItemType("CavernousImpaler"));
+					player.QuickSpawnItem(mod.ItemType("ElectrapulseCanister"));
 					break;
 				case 5:
-					player.QuickSpawnItem(mod.ItemType("CavernMauler"));
+					player.QuickSpawnItem(mod.ItemType("SongOfTheStorm"));
 					break;
 				case 6:
-					player.QuickSpawnItem(mod.ItemType("DarkCrystalStaff"));
+					player.QuickSpawnItem(mod.ItemType("StaticSurge"));
 					break;
 			}
 		}

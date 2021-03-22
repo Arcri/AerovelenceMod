@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Trophies
 {
-	public class SnowriumTrophy : ModItem
+    public class LightningMothTrophy : ModItem
 	{
 		public override void SetDefaults()
 		{
@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Trophies
 			item.consumable = true;
 			item.value = 50000;
 			item.rare = ItemRarityID.Blue;
-			item.createTile = ModContent.TileType<SnowriumTrophyPlaced>();
+			item.createTile = ModContent.TileType<LightningMothTrophyPlaced>();
 			item.placeStyle = 0;
 		}
 	}

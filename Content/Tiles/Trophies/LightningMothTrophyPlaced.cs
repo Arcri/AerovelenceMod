@@ -6,7 +6,7 @@ using Terraria.ObjectData;
 
 namespace AerovelenceMod.Content.Tiles.Trophies
 {
-	public class SnowriumTrophyPlaced : ModTile
+    public class LightningMothTrophyPlaced : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -19,13 +19,13 @@ namespace AerovelenceMod.Content.Tiles.Trophies
 			dustType = 7;
 			disableSmartCursor = true;
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Snowrium Trophy");
+			name.SetDefault("Lightning Moth Trophy");
 			AddMapEntry(new Color(120, 85, 60), name);
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<SnowriumTrophy>());
+			Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<LightningMothTrophy>());
 
 		}
 	}

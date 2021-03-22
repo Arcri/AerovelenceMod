@@ -8,83 +8,58 @@ using System;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.Worlds;
 using Terraria.ModLoader;
+using AerovelenceMod.Content.Events.DarkNight;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
+using AerovelenceMod.Content.Items.TreasureBags;
+using AerovelenceMod.Content.Items.Placeables.Trophies;
+using AerovelenceMod.Content.Items.Armor.Vanity;
+using Terraria;
+using Microsoft.Xna.Framework;
+using On.Terraria.ID;
+using Terraria.Localization;
+using System.Text;
+using System.Linq;
 
 namespace AerovelenceMod.Common
 {
-    internal static class WeakReferences
-    {
-        public static void SetupModSupport() => SetupBossChecklistSupport();
+	internal static class WeakReferences
+	{
+		public static class BossChecklistIntegration
+		{
+			private static readonly Version BossChecklistAPIVersion = new Version(1, 1); // Do not change this yourself.
+			public class BossChecklistBossInfo
+			{
+				internal string key = "";
+				internal string modSource = "";
+				internal string internalName = "";
+				internal string displayName = "";
+				internal float progression = 0f;
+				internal Func<bool> downed = () => false;
+				internal bool isBoss = false;
+				internal bool isMiniboss = false;
+				internal bool isEvent = false;
+				internal List<int> npcIDs = new List<int>();
+				internal List<int> spawnItem = new List<int>();
+				internal List<int> loot = new List<int>();
+				internal List<int> collection = new List<int>();
+			}
 
-        // TODO - Isnt this method of adding bosses obsolete?
-        private static void SetupBossChecklistSupport()
-        {
-            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
-            if (bossChecklist != null)
-            {
 
-                bossChecklist.Call
-                (
-                    "AddBossWithInfo",
-                    "Crystal Tumbler",
-                    1.5f,
-                    (Func<bool>)(() => DownedWorld.DownedCrystalTumbler),
-                    "Use a [i:" + ModContent.ItemType<LargeGeode>() + "] in the Crystal Caverns"
-                );
-                
-                bossChecklist.Call
-                (
-                    "AddBossWithInfo", 
-                    "Rimegeist", 
-                    5.5f, 
-                    (Func<bool>)(() => DownedWorld.DownedRimegeist), 
-                    "Use a [i:" + ModContent.ItemType<GlowingSnow>() + "] at night in the snow biome"
-                );
-                
-                bossChecklist.Call
-                (
-                    "AddBossWithInfo", 
-                    "LightningMoth", 
-                    6.5f, 
-                    (Func<bool>)(() => DownedWorld.DownedRimegeist), 
-                    "Use a [i:" + ModContent.ItemType<GlowingSnow>() + "] at night in the Crystal Fields"
-                );
-                
-                bossChecklist.Call
-                (
-                    "AddBossWithInfo", 
-                    "Cyvercry",
-                    9.5f, 
-                    (Func<bool>)(() => DownedWorld.DownedCyvercry), 
-                    "Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] at night"
-                );
-                
-                bossChecklist.Call
-                    (
-                    "AddBossWithInfo", 
-                    "TheFallen", 
-                    12.5f, 
-                    (Func<bool>)(() => DownedWorld.DownedCyvercry), 
-                    "Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] in the sky"
-                    );
+			public static readonly Dictionary<string, BossChecklistBossInfo> bossInfos = new Dictionary<string, BossChecklistBossInfo>();
 
-                bossChecklist.Call
-                (
-                    "AddToBossLoot", 
-                    "AerovelenceMod", 
-                    "Crystal Tumbler",
-                    new List<int> { ModContent.ItemType<DiamondDuster>(), ModContent.ItemType<DarkCrystalStaff>(), 
-                        ModContent.ItemType<CavernMauler>(), ModContent.ItemType<CavernousImpaler>(), ModContent.ItemType<PrismThrasher>(), 
-                        ModContent.ItemType<CrystallineQuadshot>(), ModContent.ItemType<PrismPiercer>(), ModContent.ItemType<PrismaticSoul>()
-                });
 
-                bossChecklist.Call
-                (
-                    "AddToBossSpawnItems", 
-                    "AerovelenceMod", 
-                    "Crystal Tumbler", 
-                    new List<int> { ModContent.ItemType<LargeGeode>()
-                });
-            }
+
+			public static void UnloadBossChecklistIntegration()
+			{
+				bossInfos.Clear();
+			}
+			public static float DownedBossProgress()
+			{
+				if (bossInfos.Count == 0)
+					return 0;
+				return (float)bossInfos.Count(x => x.Value.downed()) / bossInfos.Count();
+			}
+			public static bool BossDowned(string bossKey) => bossInfos.TryGetValue(bossKey, out var bossInfo) && bossInfo.downed();
         }
-    }
+	}
 }
