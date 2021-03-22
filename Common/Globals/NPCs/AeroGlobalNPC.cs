@@ -23,7 +23,17 @@ namespace AerovelenceMod.Common.Globals.NPCs
 			CrystalKunai = false;
 		}
 
-		public override bool CheckDead(NPC npc)
+		//Idk what I'm doing
+       /* public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        {
+			Mod fargowiltas = ModLoader.GetMod("Fargowiltas");
+			if (fargowiltas != null)
+			{
+				shop.item[nextSlot].SetDefaults(fargowiltas.ItemType("LargeGeode"));
+				nextSlot++;
+			}
+		}*/
+        public override bool CheckDead(NPC npc)
         {
 			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
 			{
