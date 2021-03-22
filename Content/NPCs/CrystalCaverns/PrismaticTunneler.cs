@@ -7,9 +7,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
+namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
-	internal class VoidReaverHead : VoidReaver
+	internal class PrismaticTunnelerHead : PrismaticTunneler
 	{
 
 		public override void SetDefaults()
@@ -18,16 +18,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 			npc.CloneDefaults(NPCID.DiggerHead);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.width = 114;
-			npc.height = 180;
-			npc.lifeMax = 100;
-			npc.damage = 10;
-			npc.noGravity = true;
+			npc.width = 58;
+			npc.lifeMax = 1000;
+			npc.height = 50;
+			npc.damage = 70;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -43,12 +42,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 			{
 				for (int k = 0; k < 20; k++)
 				{
-					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+					Dust.NewDust(npc.position, npc.width, npc.height, DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
 			}
 		}
+		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns && Main.hardMode ? .1f : 0f;
 
 		private int attackCounter;
 		public override void SendExtraAI(BinaryWriter writer)
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 		}
 	}
 
-	internal class VoidReaverBody : VoidReaver
+	internal class PrismaticTunnelerBody : PrismaticTunneler
 	{
 
 		public override void SetDefaults()
@@ -91,15 +91,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 			npc.CloneDefaults(NPCID.DiggerBody);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.width = 114;
-			npc.height = 124;
-			npc.noGravity = true;
-			npc.lifeMax = 100;
+			npc.lifeMax = 1000;
 			npc.damage = 10;
+			npc.width = 58;
+			npc.height = 28;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -116,7 +115,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 		}
 	}
 
-	internal class VoidReaverTail : VoidReaver
+	internal class PrismaticTunnelerTail : PrismaticTunneler
 	{
 
 		public override void SetDefaults()
@@ -124,15 +123,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 			npc.CloneDefaults(NPCID.DiggerTail);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.width = 114;
-			npc.height = 120;
-			npc.lifeMax = 100;
-			npc.noGravity = true;
+			npc.width = 58;
+			npc.height = 26;
+			npc.lifeMax = 1000;
 			npc.damage = 10;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -156,7 +154,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 	}
 
 	// I made this 2nd base class to limit code repetition.
-	public abstract class VoidReaver : Worm
+	public abstract class PrismaticTunneler : Worm
 	{
 		public override void SetStaticDefaults()
 		{
@@ -165,17 +163,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 
 		public override void Init()
 		{
-			minLength = 80;
-			maxLength = 80;
-			tailType = NPCType<VoidReaverTail>();
-			bodyType = NPCType<VoidReaverBody>();
-			headType = NPCType<VoidReaverHead>();
-			speed = 15.5f;
-			turnSpeed = 0.075f;
+			minLength = 20;
+			maxLength = 20;
+			tailType = NPCType<PrismaticTunnelerTail>();
+			bodyType = NPCType<PrismaticTunnelerBody>();
+			headType = NPCType<PrismaticTunnelerHead>();
+			speed = 13.5f;
+			turnSpeed = 0.245f;
 		}
 	}
 
-	public abstract class Worm : ModNPC
+	public abstract class PrismWorm : ModNPC
 	{
 		/* ai[0] = follower
 		 * ai[1] = following
@@ -189,7 +187,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 		public int headType;
 		public int bodyType;
 		public int tailType;
-		public bool flies = true;
+		public bool flies = false;
 		public bool directional = false;
 		public float speed;
 		public float turnSpeed;
@@ -223,22 +221,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 				{
 					if (head)
 					{
-						npc.ai[3] = (float)npc.whoAmI;
+						npc.ai[3] = npc.whoAmI;
 						npc.realLife = npc.whoAmI;
-						npc.ai[2] = (float)Main.rand.Next(minLength, maxLength + 1);
-						npc.ai[0] = (float)NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)(npc.position.Y + (float)npc.height), bodyType, npc.whoAmI);
+						npc.ai[2] = Main.rand.Next(minLength, maxLength + 1);
+						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), bodyType, npc.whoAmI);
 					}
 					else if (npc.ai[2] > 0f)
 					{
-						npc.ai[0] = (float)NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)(npc.position.Y + (float)npc.height), npc.type, npc.whoAmI);
+						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), npc.type, npc.whoAmI);
 					}
 					else
 					{
-						npc.ai[0] = (float)NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)(npc.position.Y + (float)npc.height), tailType, npc.whoAmI);
+						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), tailType, npc.whoAmI);
 					}
 					Main.npc[(int)npc.ai[0]].ai[3] = npc.ai[3];
 					Main.npc[(int)npc.ai[0]].realLife = npc.realLife;
-					Main.npc[(int)npc.ai[0]].ai[1] = (float)npc.whoAmI;
+					Main.npc[(int)npc.ai[0]].ai[1] = npc.whoAmI;
 					Main.npc[(int)npc.ai[0]].ai[2] = npc.ai[2] - 1f;
 					npc.netUpdate = true;
 				}
@@ -260,9 +258,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 				}
 			}
 			int num180 = (int)(npc.position.X / 16f) - 1;
-			int num181 = (int)((npc.position.X + (float)npc.width) / 16f) + 2;
+			int num181 = (int)((npc.position.X + npc.width) / 16f) + 2;
 			int num182 = (int)(npc.position.Y / 16f) - 1;
-			int num183 = (int)((npc.position.Y + (float)npc.height) / 16f) + 2;
+			int num183 = (int)((npc.position.Y + npc.height) / 16f) + 2;
 			if (num180 < 0)
 			{
 				num180 = 0;
@@ -289,9 +287,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 						if (Main.tile[num184, num185] != null && (Main.tile[num184, num185].nactive() && (Main.tileSolid[(int)Main.tile[num184, num185].type] || Main.tileSolidTop[(int)Main.tile[num184, num185].type] && Main.tile[num184, num185].frameY == 0) || Main.tile[num184, num185].liquid > 64))
 						{
 							Vector2 vector17;
-							vector17.X = (float)(num184 * 16);
-							vector17.Y = (float)(num185 * 16);
-							if (npc.position.X + (float)npc.width > vector17.X && npc.position.X < vector17.X + 16f && npc.position.Y + (float)npc.height > vector17.Y && npc.position.Y < vector17.Y + 16f)
+							vector17.X = num184 * 16;
+							vector17.Y = num185 * 16;
+							if (npc.position.X + npc.width > vector17.X && npc.position.X < vector17.X + 16f && npc.position.Y + (float)npc.height > vector17.Y && npc.position.Y < vector17.Y + 16f)
 							{
 								flag18 = true;
 								if (Main.rand.NextBool(100) && npc.behindTiles && Main.tile[num184, num185].nactive())
@@ -363,7 +361,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 				catch
 				{
 				}
-				npc.rotation = (float)System.Math.Atan2((double)num192, (double)num191) + 1.57f;
+				npc.rotation = (float)System.Math.Atan2(num192, num191) + 1.57f;
 				num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
 				int num194 = npc.width;
 				num193 = (num193 - (float)num194) / num193;
@@ -394,7 +392,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 					{
 						npc.velocity.Y = num188;
 					}
-					if ((double)(System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y)) < (double)num188 * 0.4)
+					if (System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y) < num188 * 0.4)
 					{
 						if (npc.velocity.X < 0f)
 						{
@@ -444,7 +442,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 						npc.soundDelay = (int)num195;
 						Main.PlaySound(SoundID.Roar, npc.position, 1);
 					}
-					num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
+					num193 = (float)System.Math.Sqrt(num191 * num191 + num192 * num192);
 					float num196 = System.Math.Abs(num191);
 					float num197 = System.Math.Abs(num192);
 					float num198 = num188 / num193;
@@ -462,7 +460,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 						}
 						if (flag20)
 						{
-							if (Main.netMode != NetmodeID.MultiplayerClient && (double)(npc.position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
+							if (Main.netMode != NetmodeID.MultiplayerClient && npc.position.Y / 16f > (Main.rockLayer + Main.maxTilesY) / 2.0)
 							{
 								npc.active = false;
 								int num200 = (int)npc.ai[0];
@@ -470,6 +468,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 								{
 									int num201 = (int)Main.npc[num200].ai[0];
 									Main.npc[num200].active = false;
+									npc.life = 0;
 									if (Main.netMode == NetmodeID.Server)
 									{
 										NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, num200, 0f, 0f, 0f, 0, 0, 0);
@@ -496,14 +495,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 								npc.velocity *= 1.1f;
 							}
 						}
-						if (npc.position.Y > Main.player[npc.target].position.Y || (double)(Main.player[npc.target].position.Y / 16f) > Main.worldSurface || Main.player[npc.target].dead)
+						if (npc.position.Y > Main.player[npc.target].position.Y || Main.player[npc.target].position.Y / 16f > Main.worldSurface || Main.player[npc.target].dead)
 						{
 							flag21 = true;
 							if (System.Math.Abs(npc.velocity.X) < num188 / 2f)
 							{
 								if (npc.velocity.X == 0f)
 								{
-									npc.velocity.X = npc.velocity.X - (float)npc.direction;
+									npc.velocity.X = npc.velocity.X - npc.direction;
 								}
 								npc.velocity.X = npc.velocity.X * 1.1f;
 							}
@@ -542,7 +541,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 									npc.velocity.Y = npc.velocity.Y - num189;
 								}
 							}
-							if ((double)System.Math.Abs(num192) < (double)num188 * 0.2 && (npc.velocity.X > 0f && num191 < 0f || npc.velocity.X < 0f && num191 > 0f))
+							if (System.Math.Abs(num192) < num188 * 0.2 && (npc.velocity.X > 0f && num191 < 0f || npc.velocity.X < 0f && num191 > 0f))
 							{
 								if (npc.velocity.Y > 0f)
 								{
@@ -553,7 +552,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 									npc.velocity.Y = npc.velocity.Y - num189 * 2f;
 								}
 							}
-							if ((double)System.Math.Abs(num191) < (double)num188 * 0.2 && (npc.velocity.Y > 0f && num192 < 0f || npc.velocity.Y < 0f && num192 > 0f))
+							if (System.Math.Abs(num191) < num188 * 0.2 && (npc.velocity.Y > 0f && num192 < 0f || npc.velocity.Y < 0f && num192 > 0f))
 							{
 								if (npc.velocity.X > 0f)
 								{
@@ -640,19 +639,26 @@ namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 					}
 				}
 			}
-
 			CustomBehavior();
 		}
 
-		public virtual void Init() { }
+		public virtual void Init()
+		{
+		}
 
-        public virtual bool ShouldRun() => false;
+		public virtual bool ShouldRun()
+		{
+			return false;
+		}
 
-        public virtual void CustomBehavior() { }
+		public virtual void CustomBehavior()
+		{
+		}
 
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => head ? (bool?)null : false;
-
-		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .1f : 0f;
+		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+		{
+			return head ? (bool?)null : false;
+		}
 	}
 }
 

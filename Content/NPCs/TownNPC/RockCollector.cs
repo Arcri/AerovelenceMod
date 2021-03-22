@@ -84,7 +84,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 		public override string TownNPCName()
 		{
-			switch (WorldGen.genRand.Next(4))
+			switch (WorldGen.genRand.Next(7))
 			{
 				case 0:
 					return "Roxxane";
@@ -127,7 +127,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			{
 				return "Hate that " + Main.npc[Angler].GivenName + " guy. Imagine thinking fish rock. Pff.";
 			}
-			switch (Main.rand.Next(4))
+			switch (Main.rand.Next(6))
 			{
 				case 0:
 					return "Y'know, that Phantic stuff is great if you wanna get stoned.";
@@ -139,7 +139,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}], [i:{ModContent.ItemType<GoldCluster>()}], [i:{ModContent.ItemType<SlateCluster>()}], or [i:{ModContent.ItemType<PhanticCluster>()}], I'll reward you with something!";
 					}
 				case 3:
-                    {
+					{
 						return "Don't waste time mining diamonds. Platinum's where it's at.";
 
 					}
@@ -152,6 +152,10 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 					{
 						return $"A violent electrical storm floods the land... Yeah. I don't take i:{ModContent.ItemType<CrystalTorrentSpawner>()}].";
 
+					}
+				case 6:
+                    {
+						return "Yo mama so fat she burger. She bigger than the Crystal Tumbler!";
 					}
 				default:
 					return "Hooks? Pickaxes? Cool mining accessories? You want it? It's yours my friend, as long as you have enough ores.";

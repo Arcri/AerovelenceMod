@@ -1,15 +1,17 @@
+/*using System;
 using System.IO;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Content.NPCs.CrystalCaverns
+namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 {
-	internal class CrystalWormHead : CrystalWorm
+	internal class VoidReaverHead : VoidReaver
 	{
 
 		public override void SetDefaults()
@@ -18,13 +20,16 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			npc.CloneDefaults(NPCID.DiggerHead);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.lifeMax = 100;
+			npc.width = 114;
+			npc.height = 180;
+			npc.lifeMax = 1500000;
 			npc.damage = 10;
+			npc.noGravity = true;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2500000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -42,11 +47,10 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
 				}
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
+				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
 			}
 		}
-		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .1f : 0f;
 
 		private int attackCounter;
 		public override void SendExtraAI(BinaryWriter writer)
@@ -81,7 +85,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		}
 	}
 
-	internal class CrystalWormBody : CrystalWorm
+	internal class VoidReaverBody : VoidReaver
 	{
 
 		public override void SetDefaults()
@@ -89,12 +93,15 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			npc.CloneDefaults(NPCID.DiggerBody);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.lifeMax = 100;
+			npc.width = 114;
+			npc.height = 124;
+			npc.noGravity = true;
+			npc.lifeMax = 1500000;
 			npc.damage = 10;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2500000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -111,7 +118,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		}
 	}
 
-	internal class CrystalWormTail : CrystalWorm
+	internal class VoidReaverTail : VoidReaver
 	{
 
 		public override void SetDefaults()
@@ -119,12 +126,15 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			npc.CloneDefaults(NPCID.DiggerTail);
 			npc.aiStyle = -1;
 			npc.defense = 10;
-			npc.lifeMax = 100;
+			npc.width = 114;
+			npc.height = 120;
+			npc.lifeMax = 1500000;
+			npc.noGravity = true;
 			npc.damage = 10;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 200;  //boss life scale in expertmode
+			npc.lifeMax = 2500000;  //boss life scale in expertmode
 			npc.damage = 20;  //boss damage increase in expermode
 		}
 
@@ -148,45 +158,165 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 	}
 
 	// I made this 2nd base class to limit code repetition.
-	public abstract class CrystalWorm : Worm
+	public abstract class VoidReaver : Worm
 	{
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Crystal Worm");
 		}
-
 		public override void Init()
 		{
-			minLength = 6;
-			maxLength = 12;
-			tailType = NPCType<CrystalWormTail>();
-			bodyType = NPCType<CrystalWormBody>();
-			headType = NPCType<CrystalWormHead>();
-			speed = 5.5f;
-			turnSpeed = 0.045f;
+			minLength = 80;
+			maxLength = 80;
+			tailType = NPCType<VoidReaverTail>();
+			bodyType = NPCType<VoidReaverBody>();
+			headType = NPCType<VoidReaverHead>();
+			speed = 25.5f;
+			turnSpeed = 0.475f;
 		}
 	}
 
 	public abstract class Worm : ModNPC
 	{
+
+		private enum VoidReaverState
+		{
+			IdleFly = 0,
+			TimeAuraSpawn = 1,
+			SuperDash = 2,
+			BodyLasers = 3,
+			TimeBlades = 4,
+			EnergyProjectiles = 5
+		}
+
+		/// <summary>
+		/// Manages the current AI state of the Crystal Tumbler.
+		/// Gets and sets npc.ai[0] as tracker.
+		/// </summary>
+		private VoidReaverState State
+		{
+			get => (VoidReaverState)npc.ai[0];
+			set => npc.ai[0] = (float)value;
+		}
+
+		/// <summary>
+		/// Manages several AI state attack timers.
+		/// Gets and sets npc.ai[1] as tracker.
+		/// </summary>
+		private float AttackTimer
+		{
+			get => npc.ai[1];
+			set => npc.ai[1] = value;
+		}
+
+
+
 		/* ai[0] = follower
 		 * ai[1] = following
 		 * ai[2] = distanceFromTail
 		 * ai[3] = head
-		 */
+		 
+		public bool phaseTwo = false;
 		public bool head;
 		public bool tail;
+		public int damage;
 		public int minLength;
 		public int maxLength;
 		public int headType;
 		public int bodyType;
 		public int tailType;
-		public bool flies = false;
+		public int i;
+		public bool flies = true;
 		public bool directional = false;
 		public float speed;
 		public float turnSpeed;
+		float dynamicCounter = 0;
 
 		public override void AI()
+		{
+			npc.TargetClosest(true);
+			Player player = Main.player[npc.target];
+			if (npc.life <= npc.lifeMax / 2)
+            {
+				phaseTwo = true;
+            }
+
+			if (State == VoidReaverState.IdleFly)
+			{
+				WormMovement(player);
+				if (++AttackTimer >= 200)
+				{
+					AttackTimer = 0;
+
+					if (Main.netMode != NetmodeID.MultiplayerClient)
+					{
+						State = (VoidReaverState)Main.rand.Next(1, 5);
+					}
+
+					npc.netUpdate = true;
+				}
+			}
+			else if (State == VoidReaverState.TimeAuraSpawn)
+            {
+				for (int i = 0; i < 3 + (Main.expertMode ? 1 : 0); i++)
+				{
+					Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(300, 600), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
+					if (Main.netMode != NetmodeID.MultiplayerClient)
+					{
+						damage = 0;
+						Projectile.NewProjectile(toLocation, Vector2.Zero, ProjectileType<DarkDaggerProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
+					}
+					Vector2 toLocationVelo = toLocation - player.Center;
+					Vector2 from = npc.Center;
+					for (int j = 0; j < 300; j++)
+					{
+						Vector2 velo = toLocationVelo.SafeNormalize(Vector2.Zero);
+						from += velo * 12;
+						Vector2 circularLocation = new Vector2(10, 0).RotatedBy(MathHelper.ToRadians(j * 12 + dynamicCounter));
+
+						int dust = Dust.NewDust(from + new Vector2(-4, -4) + circularLocation, 0, 0, 164, 0, 0, 0, default, 1.25f);
+						Main.dust[dust].noGravity = true;
+						Main.dust[dust].velocity *= 0.1f;
+						Main.dust[dust].scale = 1.8f;
+
+						if ((from - toLocation).Length() < 24)
+						{
+							break;
+						}
+					}
+				}
+				State = VoidReaverState.IdleFly;
+			}
+			else if (State == VoidReaverState.SuperDash)
+            {
+				Vector2 moveTo = player.Center;
+				float speed = 10f;
+				Vector2 move = moveTo - npc.Center;
+				float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+				move *= speed / magnitude;
+				if (i % 100 == 0)
+				{
+					npc.velocity = move;
+				}
+				State = VoidReaverState.IdleFly;
+			}
+			else if (State == VoidReaverState.BodyLasers)
+            {
+				State = VoidReaverState.IdleFly;
+			}
+			else if (State == VoidReaverState.TimeBlades)
+            {
+				State = VoidReaverState.IdleFly;
+			}
+			else if (State == VoidReaverState.EnergyProjectiles)
+            {
+				State = VoidReaverState.IdleFly;
+			}
+		}
+
+
+
+		private void WormMovement(Player player)
 		{
 			if (npc.localAI[1] == 0f)
 			{
@@ -462,7 +592,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 								{
 									int num201 = (int)Main.npc[num200].ai[0];
 									Main.npc[num200].active = false;
-									npc.life = 0;
 									if (Main.netMode == NetmodeID.Server)
 									{
 										NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, num200, 0f, 0f, 0f, 0, 0, 0);
@@ -635,24 +764,16 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			}
 			CustomBehavior();
 		}
+		public virtual void Init() { }
 
-		public virtual void Init()
-		{
-		}
+        public virtual bool ShouldRun() => false;
 
-		public virtual bool ShouldRun()
-		{
-			return false;
-		}
+        public virtual void CustomBehavior() { }
 
-		public virtual void CustomBehavior()
-		{
-		}
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => head ? (bool?)null : false;
 
-		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
-		{
-			return head ? (bool?)null : false;
-		}
+		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .1f : 0f;
 	}
 }
 
+*/
