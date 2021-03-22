@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Armor.Phantic
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-            player.setBonus = "Hitting an enemy with a Ranged weapon has a chance to spawn a Phantic Soul.";
+            player.setBonus = "Hitting an enemy with a Ranged projectile has a chance to spawn a Phantic Soul.";
             player.GetModPlayer<AeroPlayer>().PhanticRangedBonus = true;
         } 	
         public override void SetDefaults()

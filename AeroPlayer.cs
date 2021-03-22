@@ -159,7 +159,7 @@ namespace AerovelenceMod
 				
 				target.AddBuff(ModContent.BuffType<LiftedSpiritsDebuff>(), 210);
 			}
-			if (PhanticRangedBonus && Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
+			if (PhanticRangedBonus && proj.ranged && Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
 			{
 				float rot = Main.rand.NextFloat(MathHelper.TwoPi);
 				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
