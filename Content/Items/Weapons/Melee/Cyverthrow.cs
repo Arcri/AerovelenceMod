@@ -124,7 +124,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("Items/Weapons/Melee/CyverthrowProj_Glow");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Melee/CyverthrowProj_Glow");
             spriteBatch.Draw(
                 texture,
                 new Vector2

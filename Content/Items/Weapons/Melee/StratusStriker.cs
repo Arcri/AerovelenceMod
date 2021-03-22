@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("Projectiles/StormRazorProjectile_Glow");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Projectiles/Weapons/Magic/StormRazorProjectile_Glow");
             spriteBatch.Draw(
                 texture,
                 new Vector2

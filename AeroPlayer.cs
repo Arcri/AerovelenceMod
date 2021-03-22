@@ -259,7 +259,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.badHeal)
 			{
-				Texture2D texture = mod.GetTexture("Buffs/SoulFire");
+				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/SoulFire");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
@@ -280,7 +280,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.MiningAbilityCooldown)
 			{
-				Texture2D texture = mod.GetTexture("Buffs/MiningAbilityCooldown");
+				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/MiningAbilityCooldown");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
@@ -301,7 +301,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.Electrified)
 			{
-				Texture2D texture = mod.GetTexture("Buffs/Electrified");
+				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/Electrified");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);

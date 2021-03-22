@@ -165,7 +165,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("Items/Weapons/Ranged/CyverCannonProj_Glow");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Ranged/CyverCannonProj_Glow");
             spriteBatch.Draw(
                 texture,
                 new Vector2

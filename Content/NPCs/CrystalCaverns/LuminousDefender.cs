@@ -37,7 +37,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
 		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			Texture2D texture = mod.GetTexture("Content/NPCs/CrystalCaverns/LuminousDefender_Glow");
+			Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/NPCs/CrystalCaverns/LuminousDefender_Glow");
 			spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, npc.GetAlpha(Color.White), npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
 		}
 

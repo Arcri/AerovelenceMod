@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.value = Item.sellPrice(0, 2, 45, 0);
             item.rare = ItemRarityID.Yellow;
             item.autoReuse = true;
-            item.shoot = mod.ProjectileType("StormEdgeProjectile");
+            item.shoot = ModContent.ProjectileType<StormEdgeProjectile>();
             item.UseSound = SoundID.Item1;
             item.shootSpeed = 13f;
         }
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = mod.GetTexture("Items/Weapons/Thrown/StormEdgeProjectile_GlowMask");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Thrown/StormEdgeProjectile_GlowMask");
             spriteBatch.Draw(
                 texture,
                 new Vector2

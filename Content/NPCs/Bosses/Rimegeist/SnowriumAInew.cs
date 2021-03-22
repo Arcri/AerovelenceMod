@@ -48,7 +48,7 @@ namespace AerovelenceMod.NPCs.Bosses.Snowrium
 
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("NPCs/Bosses/Snowrium/Glowmask");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/NPCs/Bosses/Snowrium/Glowmask");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

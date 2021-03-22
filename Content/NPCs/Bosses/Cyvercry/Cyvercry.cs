@@ -125,7 +125,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 alpha = (240 - ai1 + ai2) / 240f;
             }
-            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/Cyvercry/Glowmask");
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Glowmask");
             spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White * alpha, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
