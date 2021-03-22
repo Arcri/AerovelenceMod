@@ -9,6 +9,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
     public class StormRazorProjectile : ModProjectile
     {
+        public float maxVelocity = 18f;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Storm Razor");
@@ -61,6 +62,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 63, projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
             Main.dust[dust].velocity /= 1.2f;
             Main.dust[dust].noGravity = true;
+            if (projectile.ai[0] > 0) projectile.ai[0]--;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
@@ -83,7 +85,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
                         projectile.velocity.Y = oldVelocity.Y * -2;
                     }
                     projectile.velocity *= 0.75f;
+                    if (projectile.velocity.Length() > maxVelocity)
+                    {
+                        projectile.velocity = projectile.velocity.SafeNormalize(projectile.velocity) * maxVelocity;
+                    }
                     Main.PlaySound(SoundID.Item10, projectile.position);
+                    //Kinda bandaid fix for projectile having an aneurysm on confined spaces, maybe someone finds a better fix ~Exitium
+                    if (projectile.ai[0] > 0)
+                    {
+                        projectile.velocity = projectile.velocity.RotatedByRandom(MathHelper.ToRadians(360));
+                    }
+                    projectile.ai[0] = 5;
                 }
                 for (float i = 0; i < 360; i += 0.5f)
                 {

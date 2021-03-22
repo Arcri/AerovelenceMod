@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -31,6 +32,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<StormRazorProjectile>();
             item.shootSpeed = 18f;
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            position = new Vector2(position.X, position.Y - 12);
+            return true;
         }
     }
 }
