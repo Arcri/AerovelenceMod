@@ -1,8 +1,8 @@
-using AerovelenceMod.Content.Projectiles.Weapons.Magic;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -12,18 +12,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
             Item.staff[item.type] = true;
             DisplayName.SetDefault("Scepter of the skies");
-            Tooltip.SetDefault("Does Something");
+            Tooltip.SetDefault("Unleashes the power from the sky");
         }
+
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 82;
+            item.crit = 5;
+            item.damage = 58;
             item.magic = true;
             item.mana = 20;
             item.width = 64;
             item.height = 64;
-            item.useTime = 65;
-            item.useAnimation = 65;
+            item.useTime = 25;
+            item.useAnimation = 25;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -32,8 +33,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("HomingWisp");
-            item.shootSpeed = 40f;
+            item.shootSpeed = 12f;
         }
+
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
@@ -51,11 +53,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
-            for (int i = 0; i < 5; ++i)
+            Vector2[] speeds = randomSpread(speedX, speedY, 5, 2);
+            for (int i = 0; i < 2; ++i)
             {
                 type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<HomingWisp>(), ModContent.ProjectileType<HomingWispPurple>() });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI, 1);
             }
             return false;
         }
@@ -63,12 +65,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostRay>(), 1);
-            modRecipe.AddIngredient(ItemID.StaffofEarth, 1);
-            modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
-            modRecipe.AddIngredient(ItemID.ShadowbeamStaff, 1);
-            modRecipe.AddIngredient(ItemID.Ectoplasm, 40);
-            modRecipe.AddIngredient(ItemID.ShroomiteBar, 15);
+            modRecipe.AddIngredient(ModContent.ItemType<Delvara>(), 1);
+            modRecipe.AddIngredient(ItemID.CrystalVileShard, 1);
+            modRecipe.AddIngredient(ItemID.HallowedBar, 15);
             modRecipe.AddTile(TileID.MythrilAnvil);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
