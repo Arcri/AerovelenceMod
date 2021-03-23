@@ -14,12 +14,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("H2O Caliber");
-            Tooltip.SetDefault("Fires short range bubbles");
 		}
         public override void SetDefaults()
         {
 			item.crit = 4;
-            item.damage = 17;
+            item.damage = 12;
             item.ranged = true;
             item.width = 44;
             item.height = 26;
@@ -32,27 +31,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.rare = ItemRarityID.Green;
 			item.shoot = ProjectileID.FlaironBubble;
             item.autoReuse = true;
-            item.shootSpeed = 9f;
-        }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            float numberProjectiles = 2 + Main.rand.Next(1);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
-            for (int i = 0; i < numberProjectiles; i++)
-            {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5));
-                float scale = 1f - (Main.rand.NextFloat() * .3f);
-                if (i == 1)
-                {
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI);
-                }
-                else
-                {
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
-                }
-            }
-            return false;
+            item.shootSpeed = 7f;
         }
     }
 }
