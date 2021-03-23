@@ -150,7 +150,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 					}
 				case 5:
 					{
-						return $"A violent electrical storm floods the land... Yeah. I don't take i:{ModContent.ItemType<CrystalTorrentSpawner>()}].";
+						return $"A violent electrical storm floods the land... Yeah. I don't take [i:{ModContent.ItemType<CrystalTorrentSpawner>()}].";
 
 					}
 				case 6:

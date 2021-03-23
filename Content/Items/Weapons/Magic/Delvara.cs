@@ -1,10 +1,10 @@
 using System;
-using AerovelenceMod.Content.Projectiles;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -12,20 +12,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+			Item.staff[item.type] = true;
             DisplayName.SetDefault("Delvara");
-            Tooltip.SetDefault("Uses magnetism to generate power");
+            Tooltip.SetDefault("Fires a speedy fireball");
         }
+
         public override void SetDefaults()
         {
-            item.crit = 11;
+            item.crit = 5;
             item.damage = 35;
             item.magic = true;
             item.mana = 15;
             item.width = 50;
             item.height = 50;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 30;
+            item.useAnimation = 30;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -34,8 +35,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("DelvaraFireball");
-            item.shootSpeed = 11f;
-        }
+            item.shootSpeed = 10f;
+		}
+
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
@@ -49,7 +51,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             modRecipe.AddRecipe();
         }
     }
+}
 
+namespace AerovelenceMod.Content.Items.Weapons.Magic
+{
     internal sealed class DelvaraFireball : ModProjectile
     {
         // Thanks to Eldrazi for the code :D
