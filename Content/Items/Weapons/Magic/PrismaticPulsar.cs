@@ -1,8 +1,8 @@
+using AerovelenceMod.Content.Projectiles.Weapons.Magic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -14,17 +14,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             DisplayName.SetDefault("Prismatic Pulsar");
             Tooltip.SetDefault("Burns with the fury of the lost souls");
         }
-
         public override void SetDefaults()
         {
-            item.crit = 5;
+            item.crit = 11;
             item.damage = 82;
             item.magic = true;
-            item.mana = 25;
+            item.mana = 20;
             item.width = 64;
             item.height = 64;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 65;
+            item.useAnimation = 65;
             item.UseSound = SoundID.Item21;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -33,9 +32,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
             item.shoot = mod.ProjectileType("HomingWisp");
-            item.shootSpeed = 14f;
+            item.shootSpeed = 40f;
         }
-
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
@@ -54,10 +52,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < 5; ++i)
             {
                 type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<HomingWisp>(), ModContent.ProjectileType<HomingWispPurple>() });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI, 2);
+                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
             }
             return false;
         }
@@ -65,8 +63,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<ScepterOfTheSkies>(), 1);
-            modRecipe.AddIngredient(ItemID.FrostStaff, 1);
+            modRecipe.AddIngredient(ModContent.ItemType<FrostRay>(), 1);
             modRecipe.AddIngredient(ItemID.StaffofEarth, 1);
             modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
             modRecipe.AddIngredient(ItemID.ShadowbeamStaff, 1);

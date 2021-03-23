@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.VoidReaver
 {
-    public class VoidReaverBody : ModNPC
+    public class VoidReaver : ModNPC
     {
         public override void AI()
         {

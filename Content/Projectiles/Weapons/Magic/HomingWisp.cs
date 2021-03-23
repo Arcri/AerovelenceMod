@@ -1,16 +1,21 @@
 using System;
+using AerovelenceMod.Content.Buffs;
+using AerovelenceMod.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Content.Buffs;
 using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
     public class HomingWisp : ModProjectile
 	{
+		public override void SetStaticDefaults()
+		{
+			ProjectileID.Sets.Homing[projectile.type] = true;
+		}
+
 		public override void SetDefaults()
 		{
 			projectile.width = 8;
@@ -55,23 +60,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 				}
 				projectile.rotation += projectile.velocity.X * 0.099f;
 			}
-			if (projectile.ai[0] == 2)
+			if (target)
 			{
-				if (target)
-				{
-					AdjustMagnitude(ref move);
-					projectile.velocity = (10 * projectile.velocity + move) / 11f;
-					AdjustMagnitude(ref projectile.velocity);
-					if (projectile.ai[0] == 2 && projectile.ai[1] > 30f)
-					{
-						projectile.ai[1] = 0;
-						for (int i = 0; i < 360; i += 60)
-						{
-							Projectile.NewProjectile(projectile.Center, new Vector2(20, 20).RotatedBy(MathHelper.ToRadians(i)), ProjectileType<WispLaser>(), projectile.damage, 0, Main.myPlayer);
-						}
-					}
-					projectile.ai[1]++;
-				} 
+				AdjustMagnitude(ref move);
+				projectile.velocity = (10 * projectile.velocity + move) / 11f;
+				AdjustMagnitude(ref projectile.velocity);
 			}
 			if (projectile.alpha <= 30)
 			{
@@ -85,23 +78,15 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 			float magnitude = (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
 			if (magnitude > 6f)
 			{
-				vector *= 11f / magnitude;
+				vector *= 6f / magnitude;
 			}
 		}
+
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			if (projectile.ai[0] == 1)
+			if (Main.rand.NextBool())
 			{
-				Projectile.NewProjectileDirect(projectile.position, projectile.velocity, ProjectileType<LightBeam>(), 0, 0);
-				if (Main.rand.NextBool())
-				{
-					target.AddBuff(BuffType<SoulFire>(), 300);
-				}
-			}
-
-			if (projectile.ai[0] == 2)
-			{
-				Projectile.NewProjectileDirect(target.position, projectile.velocity, ProjectileType<SpiralExplosion>(), projectile.damage, projectile.knockBack, projectile.owner, 1);
+				target.AddBuff(BuffType<SoulFire>(), 300);
 			}
 		}
 	}

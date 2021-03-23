@@ -1,6 +1,6 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Content.Dusts
 {
@@ -31,5 +31,5 @@ namespace AerovelenceMod.Content.Dusts
         {
             return Color.White;
         }
-	}
+    }
 }
