@@ -33,21 +33,21 @@ namespace AerovelenceMod.Backgrounds.CrystalCaverns
 		public override int ChooseFarTexture()
 		{
 			if (Main.hardMode)
-				return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgHardmodeFar");
-			return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgSurfaceFar");
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeFar");
+			return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceFar");
 		}
 		public override int ChooseMiddleTexture()
 		{
 			if (Main.hardMode)
-				return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgHardmodeMid0");
-			return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgSurfaceMid0");
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeMid0");
+			return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceMid0");
 		}
 
 		public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
 		{
 			if (Main.hardMode)
-				return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgHardmodeClose");
-			return mod.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCavernsBgSurfaceClose");
+				return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeClose");
+			return mod.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceClose");
 		}
 	}
 }

@@ -58,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             target.life = 0;
             if (t % 50 == 0)
             {
-                SpawnDustFromTexture(projectile.position, DustID.Fire, 0.5f, "AerovelenceMod/Items/Weapons/Ranged/CockSprite");
+                SpawnDustFromTexture(projectile.position, DustID.Fire, 0.5f, "AerovelenceMod/Content/Items/Weapons/Ranged/CockSprite");
             }
             Rectangle r = new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height);
             CombatText.NewText(r, new Color(89, 32, 255), $"Ech");

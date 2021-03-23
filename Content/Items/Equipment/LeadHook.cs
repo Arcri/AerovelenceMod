@@ -111,7 +111,7 @@ namespace AerovelenceMod.Content.Items.Equipment
 		}
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texture = ModContent.GetTexture("AerovelenceMod/AerovelenceMod/Items/Equipment/LeadHookChain");
+			Texture2D texture = ModContent.GetTexture("Content/Items/Equipment/LeadHookChain");
 			Vector2 vector = projectile.Center;
 			Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;
 			Rectangle? sourceRectangle = null;

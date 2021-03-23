@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             item.UseSound = SoundID.Item11;
             item.crit = 8;
-            item.damage = 70;
+            item.damage = 120;
             item.melee = true;
             item.width = 22;
             item.height = 38;
@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(100, 240), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    damage = item.damage / 2;
+                    damage = item.damage;
                     Projectile.NewProjectile(toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDaggerProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
                 }
                 Vector2 toLocationVelo = toLocation - player.Center;
@@ -129,6 +129,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 1.8f / 255f, (255 - projectile.alpha) * 0.0f / 255f, (255 - projectile.alpha) * 0.0f / 255f);
             if (projectile.timeLeft <= 25)
                 projectile.alpha += 10;
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.immune[projectile.owner] = 3;
         }
     }
 }
