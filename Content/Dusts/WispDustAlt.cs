@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Dusts
 {
-	public class WispDustPurple : ModDust
+	public class WispDustAlt : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{
@@ -15,7 +15,7 @@ namespace AerovelenceMod.Content.Dusts
 
 		public override bool Update(Dust dust)
 		{
-			dust.position += dust.velocity / 4;
+			dust.position += dust.velocity/4;
 			dust.rotation += dust.velocity.X * 0.15f;
 			dust.scale *= 0.99f;
 			float light = 0.35f * dust.scale;
