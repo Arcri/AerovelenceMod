@@ -9,10 +9,14 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 {
 	public class TumblerOrb : ModProjectile
 	{
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+			Main.projFrames[projectile.type] = 4;
+		}
+        public override void SetDefaults()
 		{
-			projectile.width = 80;
-			projectile.height = 80;
+			projectile.width = 106;
+			projectile.height = 106;
 			projectile.aiStyle = 88;
 			projectile.damage = 15;
 			projectile.hostile = true;
@@ -22,6 +26,14 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 		
 		public override void AI()
 		{
+			projectile.frameCounter++;
+			if (projectile.frameCounter % 7 == 0)
+			{
+				projectile.frame++;
+				projectile.frameCounter = 0;
+				if (projectile.frame >= 4)
+					projectile.frame = 0;
+			}
 			if (projectile.localAI[1] == 0f)
 			{
 				Main.PlaySound(SoundID.Item121, projectile.position);
