@@ -205,6 +205,7 @@ namespace AerovelenceMod
 			}
 		}
 
+		public static Effect LegElectricity;
 		public override void Load()
 		{
             GemGrapplingRange.Load();
@@ -236,6 +237,8 @@ namespace AerovelenceMod
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
+
+				LegElectricity = Instance.GetEffect("Effects/LegElectricity");
 			}
 
             if (!Main.dedServ)
@@ -256,6 +259,7 @@ namespace AerovelenceMod
 			FargosModMutant = false;
             ArmorHotKey = null;
             Instance = null;
+			LegElectricity = null;
         }
 
 		public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
@@ -460,7 +464,13 @@ namespace AerovelenceMod
 			On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
-
+		public override void MidUpdateProjectileItem()
+        {
+			if (Main.netMode != NetmodeID.Server)
+            {
+                primitives.UpdateTrails();
+            }
+		}
 		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
 		{
 			primitives.DrawTrails(Main.spriteBatch);

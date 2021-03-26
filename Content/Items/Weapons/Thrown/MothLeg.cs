@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Core.Prim;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -66,7 +67,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             projectile.magic = false;
             projectile.penetrate = -1;
             projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
         }
 
         public override void AI()
@@ -76,5 +76,92 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Main.dust[num622].scale = 0.5f;
             projectile.rotation += 0.05f;
         }
+        public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit)
+        {
+            if (projectile.tileCollide)
+            {
+                int proj = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<MothLegProj2>(), projectile.damage, projectile.knockBack, projectile.owner, target.whoAmI);
+                if (Main.netMode != NetmodeID.Server)
+                {
+                    AerovelenceMod.primitives.CreateTrail(new LegPrimTrail(Main.projectile[proj]));
+                }
+                target.immune[projectile.owner] = 3;
+            }
+        }
+    }
+    public class MothLegProj2 : ModProjectile
+    {
+        NPC[] hit = new NPC[8];
+        public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Electricity");
+		}
+
+        private NPC Target {
+			get => Main.npc[(int)projectile.ai[1]];
+			set { projectile.ai[1] = value.whoAmI; }
+		}
+
+		private Vector2 Origin {
+			get => new Vector2(projectile.localAI[0], projectile.localAI[1]);
+			set {
+				projectile.localAI[0] = value.X;
+				projectile.localAI[1] = value.Y;
+			}
+		}
+
+		public override void SetDefaults()
+		{
+			projectile.friendly = true;
+			projectile.hostile = false;
+			projectile.ranged = true;
+			projectile.penetrate = 5;
+			projectile.timeLeft = 300;
+			projectile.aiStyle = -1;
+			projectile.height = 7;
+			projectile.width = 7;
+            projectile.tileCollide = false;
+			projectile.alpha = 255;
+		}
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			projectile.velocity = Vector2.Zero;
+			hit[projectile.penetrate - 1] = target;
+			target = TargetNext(target);
+			if (target != null)
+            {
+                projectile.Center = target.Center;
+            }
+			else
+				projectile.Kill();
+
+			projectile.netUpdate = true;
+		}
+        private NPC TargetNext(NPC current)
+		{
+			float range = 25 * 14;
+			range *= range;
+			NPC target = null;
+			var center = projectile.Center;
+			for (int i = 0; i < 200; ++i) {
+				NPC npc = Main.npc[i];
+				//if npc is a valid target (active, not friendly, and not a critter)
+				if (npc != current && npc.active && npc.CanBeChasedBy(null) && CanTarget(npc)) {
+					float dist = Vector2.DistanceSquared(center, npc.Center);
+					if (dist < range) {
+						range = dist;
+						target = npc;
+					}
+				}
+			}
+			return target;
+		}
+        private bool CanTarget(NPC target)
+		{
+			foreach (var npc in hit)
+				if (target == npc)
+					return false;
+			return true;
+		}
     }
 }

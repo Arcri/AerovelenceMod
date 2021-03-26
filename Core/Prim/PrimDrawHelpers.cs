@@ -3,9 +3,25 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace AerovelenceMod.Core.Prim
 {
+    static class ShaderHelpers
+    {
+       public static bool HasParameter(this Effect effect, string parameterName)
+        {
+            foreach (EffectParameter parameter in effect.Parameters)
+            {
+                if (parameter.Name == parameterName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
     public partial class PrimTrail
     {
         public interface ITrailShader
@@ -18,6 +34,14 @@ namespace AerovelenceMod.Core.Prim
             public string ShaderPass => "DefaultPass";
             public void ApplyShader<T>(Effect effect, T trail, List<Vector2> positions, string ESP, float progressParam)
             {
+                if (effect.HasParameter("noiseTexture"))
+                {
+                    effect.Parameters["noiseTexture"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/noise"));
+                }
+                if (effect.HasParameter("arcLashColorTwo"))
+                {
+                    effect.Parameters["arcLashColorTwo"].SetValue(new Vector3(1.0f, 1.0f, 1.0f));
+                }
                 try
                 {
                     effect.Parameters["progress"].SetValue(progressParam);
@@ -49,7 +73,7 @@ namespace AerovelenceMod.Core.Prim
         {
             return new Vector2(-vector.Y, vector.X);
         }
-        public void PrepareShader(Effect effects, string PassName, float progress = 0, string texture = null)
+        public void PrepareShader(Effect effects, string PassName, float progress = 0, Color? color = null)
         {
             int width = _device.Viewport.Width;
             int height = _device.Viewport.Height;
@@ -57,6 +81,11 @@ namespace AerovelenceMod.Core.Prim
             Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Matrix.CreateTranslation(width / 2, height / -2, 0) * Matrix.CreateRotationZ(MathHelper.Pi) * Matrix.CreateScale(zoom.X, zoom.Y, 1f);
             Matrix projection = Matrix.CreateOrthographic(width, height, 0, 1000);
             effects.Parameters["WorldViewProjection"].SetValue(view * projection);
+             Color Color = color ?? Color.White;
+            if (effects.HasParameter("uColor"))
+            {
+                effects.Parameters["uColor"].SetValue(Color.ToVector3());
+            }
             _trailShader.ApplyShader(effects, this, _points, PassName, progress);
         }
         protected void PrepareShader(Effect effects)
