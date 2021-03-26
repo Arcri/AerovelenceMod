@@ -41,22 +41,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-                npc.netUpdate = true;
-                Texture2D texture = ModContent.GetTexture(Texture + "_Glow");
-                Rectangle frame = texture.Frame(1, 3, 0, npc.frame.Y);
-                spriteBatch.Draw(
-                    texture,
-                    npc.Center - Main.screenPosition,
-                    frame,
-                    Color.White,
-                    npc.rotation,
-                    frame.Size() / 2,
-                    npc.scale,
-                    SpriteEffects.None,
-                    0f
-                );
+            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/Decurion/DecurionBody_Glow");
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
         }
         public override bool PreAI()
         {
