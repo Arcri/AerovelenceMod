@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         {
             npc.lifeMax = 100;        //this is the npc health
             npc.damage = 90;    //this is the npc damage
-            npc.defense = -10;         //this is the npc defense
+            npc.defense = 35;         //this is the npc defense
             npc.knockBackResist = 0f;
             npc.width = 66; //this is where you put the npc sprite width.     important
             npc.height = 90; //this is where you put the npc sprite height.   important

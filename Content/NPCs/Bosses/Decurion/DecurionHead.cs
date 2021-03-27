@@ -9,27 +9,24 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
 {
-    
-    
     [AutoloadBossHead]
     public class DecurionHead : ModNPC
     {
         public override void BossHeadRotation(ref float rotation) => rotation = npc.rotation;
 
         public bool phaseTwo = false;
-        private bool Spawned;
+        public bool EnergyBladeDash = false;
         public int damage;
         internal int phaseTimer = 0;
         public int i;
-        float dynamicCounter = 0;
         private enum DecurionState
         {
             IdleFly = 0,
-            TimeAuraSpawn = 1,
-            SuperDash = 2,
-            BodyLasers = 3,
-            TimeBlades = 4,
-            EnergyProjectiles = 5
+            Dash = 1,
+            EnergyBladeDash = 2,
+            DeathRayProbes = 3,
+            SpinDash = 4,
+            BodyLasers = 5
         }
 
         /// <summary>
@@ -70,9 +67,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         }
         public override void SetDefaults()
         {
-            npc.lifeMax = 122663;        //this is the npc health
-            npc.damage = 100;    //this is the npc damage
-            npc.defense = 15;         //this is the npc defense
+            npc.lifeMax = 175000;        //this is the npc health
+            npc.damage = 200;    //this is the npc damage
+            npc.defense = 40;         //this is the npc defense
             npc.knockBackResist = 0f;
             npc.width = 66; //this is where you put the npc sprite width.     important
             npc.height = 112; //this is where you put the npc sprite height.   important
@@ -112,9 +109,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 164097; //Change me
+            npc.lifeMax = 200000; //Change me
             npc.damage = 300;
-            npc.defense = -100;
+            npc.defense = 50;
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
@@ -207,67 +204,37 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                 {
                     npc.ai[1] = 0;
                 }
-                if (npc.life < npc.lifeMax * 0.8 & !HPIncrements[0])
+                if (!HPIncrements[0])
                 {
                     for (int i = 0; i < segmentIDs.Count; i++)
                     {
-                        if (i % 3 == 0)
+                        if (Main.npc[segmentIDs[i]].type == ModContent.NPCType<DecurionBodyGunsSockets>())
                         {
-                            for (int j = 0; j < 4; j++)
+                            for (int j = 0; j < 2; j++)
                             {
                                 float angle = 3.141592f * 2 / 4 * j;
-                                int spawned = NPC.NewNPC((int)(npc.Center.X), (int)(npc.Center.Y), mod.NPCType("WormProbeCircler"), npc.whoAmI, segmentIDs[i], angle);
+                                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<DecurionBodyGun1>(), npc.whoAmI, segmentIDs[i], angle);
+
+                                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<DecurionBodyGun2>(), npc.whoAmI, segmentIDs[i], angle);
+                            }
+                        }
+                    }
+                    for (int i = 0; i < segmentIDs.Count; i++)
+                    {
+                        if (Main.npc[segmentIDs[i]].type == ModContent.NPCType<DecurionBodyRocketSockets>())
+                        {
+                            for (int j = 0; j < 2; j++)
+                            {
+                                float angle = 3.141592f * 2 / 4 * j;
+                                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<DecurionBodyRocket1>(), npc.whoAmI, segmentIDs[i], angle);
+
+                                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<DecurionBodyRocket2>(), npc.whoAmI, segmentIDs[i], angle);
                             }
                         }
                     }
                     HPIncrements[0] = true;
                 }
-                if (npc.life < npc.lifeMax * 0.6 & !HPIncrements[1])
-                {
-                    for (int i = 0; i < segmentIDs.Count; i++)
-                    {
-                        if (i % 3 == 0)
-                        {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                float angle = 3.141592f * 2 / 4 * j;
-                                int spawned = NPC.NewNPC((int)(npc.Center.X), (int)(npc.Center.Y), mod.NPCType("WormProbeCircler"), npc.whoAmI, segmentIDs[i], angle);
-                            }
-                        }
-                    }
-                    HPIncrements[1] = true;
-                }
-                if (npc.life < npc.lifeMax * 0.4 & !HPIncrements[2])
-                {
-                    for (int i = 0; i < segmentIDs.Count; i++)
-                    {
-                        if (i % 2 == 0)
-                        {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                float angle = 3.141592f * 2 / 4 * j;
-                                int spawned = NPC.NewNPC((int)(npc.Center.X), (int)(npc.Center.Y), mod.NPCType("WormProbeCircler"), npc.whoAmI, segmentIDs[i], angle);
-                            }
-                        }
-                    }
-                    HPIncrements[2] = true;
-                }
-                if (npc.life < npc.lifeMax * 0.2 & !HPIncrements[3])
-                {
-                    for (int i = 0; i < segmentIDs.Count; i++)
-                    {
-                        if (i % 2 == 0)
-                        {
-                            for (int j = 0; j < 5; j++)
-                            {
-                                float angle = 3.141592f * 2 / 4 * j;
-                                int spawned = NPC.NewNPC((int)(npc.Center.X), (int)(npc.Center.Y), mod.NPCType("WormProbeCircler"), npc.whoAmI, segmentIDs[i], angle);
-                            }
-                        }
-                    }
-                    HPIncrements[3] = true;
-                }
-                if (npc.life < npc.lifeMax * 0.4 & npc.ai[1] == 0)
+                if (npc.life < npc.lifeMax * 0.4 && npc.ai[1] == 0)
                 {
                     npc.ai[1] = 1;
                 }
@@ -275,10 +242,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                 {
                     if (npc.ai[1] == 0) //passive mode
                     {
-                        if (phaseTimer % 180 == 0)
-                        {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ProjectileID.CultistBossLightningOrb, 18, 0);
-                        }
                         if (Vector2.Distance(player.Center, npc.Center) > 40)
                         {
                             float xMax = 11f;
@@ -303,10 +266,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                     }
                     if (npc.ai[1] == 1)//aggressive mode
                     {
-                        if (phaseTimer % 100 == 0)
-                        {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ProjectileID.CultistBossLightningOrb, 18, 0);
-                        }
                         Vector2 distnorm = player.Center - npc.Center;
                         distnorm.Normalize();
                         distnorm *= 16;
@@ -379,6 +338,54 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                     npc.velocity.X = (Math.Sign(player.Center.X - npc.Center.X) * (Math.Abs(player.velocity.X) + 5f));
                 }
             }
+           /* if(State == DecurionState.IdleFly)
+            {
+                npc.alpha += 5;
+                Main.NewText("IdleFly");
+                if (++AttackTimer >= 200)
+                {
+                    AttackTimer = 0;
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        State = (DecurionState)Main.rand.Next(1, 5);
+                    }
+
+                    npc.netUpdate = true;
+                }
+            }
+            else if (State == DecurionState.Dash)
+            {
+                Main.NewText("Dash");
+                Vector2 moveTo = player.Center;
+                float speed = 10f;
+                Vector2 move = moveTo - npc.Center;
+                float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                move *= speed / magnitude;
+                npc.velocity = move;
+                if (++AttackTimer == 50)
+                {
+                    AttackTimer = 0;
+                    State = DecurionState.IdleFly;
+                }
+            }
+            else if (State == DecurionState.EnergyBladeDash)
+            {
+                Main.NewText("Energy Blade Dash");
+                npc.alpha = 255;
+                EnergyBladeDash = true;
+                Vector2 moveTo = player.Center;
+                float speed = 10f;
+                Vector2 move = moveTo - npc.Center;
+                float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                move *= speed / magnitude;
+                npc.velocity = move;
+                if (++AttackTimer == 50)
+                {
+                    AttackTimer = 0;
+                    State = DecurionState.IdleFly;
+                }
+            }*/
             npc.rotation = Main.npc[firstSegment].rotation;
             if (npc.ai[1] == 3) //player is dead
             {

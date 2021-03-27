@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         {
             npc.lifeMax = 100;        //this is the npc health
             npc.damage = 90;    //this is the npc damage
-            npc.defense = -10;         //this is the npc defense
+            npc.defense = 35;         //this is the npc defense
             npc.knockBackResist = 0f;
             npc.width = 66; //this is where you put the npc sprite width.     important
             npc.height = 80; //this is where you put the npc sprite height.   important
@@ -53,11 +53,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                 npc.frame.Y = Main.rand.Next(3);
                 npc.netUpdate = true;
             }
-            npc.chaseable = !NPC.AnyNPCs(mod.NPCType("WormProbeCircler"));
             npc.alpha = Main.npc[(int)npc.ai[1]].alpha;
             npc.damage = Main.npc[(int)npc.ai[1]].damage == 0 ? 0 : 90;
             npc.localAI[0] += new Random().Next(4);
-            if (npc.localAI[0] >= (float)Main.rand.Next(3300, 12000))
+            if (npc.localAI[0] >= Main.rand.Next(3300, 12000))
             {
                 int ball = Projectile.NewProjectile(npc.Center.X,
                     npc.Center.Y,
@@ -78,14 +77,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             Vector2 vector18 = new Vector2(npc.position.X, npc.position.Y);
             float num191 = Main.player[npc.target].Center.X;
             float num192 = Main.player[npc.target].Center.Y;
-            num191 = (float)((int)(num191 / 16f) * 16);
-            num192 = (float)((int)(num192 / 16f) * 16);
-            vector18.X = (float)((int)(vector18.X / 16f) * 16);
-            vector18.Y = (float)((int)(vector18.Y / 16f) * 16);
+            num191 = ((int)(num191 / 16f) * 16);
+            num192 = ((int)(num192 / 16f) * 16);
+            vector18.X = ((int)(vector18.X / 16f) * 16);
+            vector18.Y = ((int)(vector18.Y / 16f) * 16);
             num191 -= vector18.X;
             num192 -= vector18.Y;
-            float num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
-            if (npc.ai[1] > 0f && npc.ai[1] < (float)Main.npc.Length)
+            float num193 = (float)Math.Sqrt(num191 * num191 + num192 * num192);
+            if (npc.ai[1] > 0f && npc.ai[1] < Main.npc.Length)
             {
                 try
                 {
@@ -96,10 +95,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                 catch
                 {
                 }
-                npc.rotation = (float)System.Math.Atan2((double)num192, (double)num191) + 1.57f;
-                num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
+                npc.rotation = (float)Math.Atan2(num192, num191) + 1.57f;
+                num193 = (float)Math.Sqrt(num191 * num191 + num192 * num192);
                 int num194 = npc.width / 2;
-                num193 = (num193 - (float)num194) / num193;
+                num193 = (num193 - num194) / num193;
                 num191 *= num193;
                 num192 *= num193;
                 npc.velocity = Vector2.Zero;
@@ -122,7 +121,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         {
             SpriteEffects spriteEffects = 0;
             Color alpha = npc.GetAlpha(drawColor);
-            Color color = Lighting.GetColor((int)((double)npc.position.X + (double)npc.width * 0.5) / 16, (int)(((double)npc.position.Y + (double)npc.height * 0.5) / 16.0));
+            Color color = Lighting.GetColor((int)(npc.position.X + npc.width * 0.5) / 16, (int)((npc.position.Y + npc.height * 0.5) / 16.0));
             Texture2D texture2D = Main.npcTexture[npc.type];
             int num = Main.npcTexture[npc.type].Height / Main.npcFrameCount[npc.type];
             int num2 = num * (int)npc.frameCounter;
@@ -136,15 +135,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             while (((num4 > 0 && num7 < num3) || (num4 < 0 && num7 > num3)) && Lighting.NotRetro)
             {
                 Color color2 = npc.GetAlpha(color);
-                float num8 = (float)(num3 - num7);
+                float num8 = (num3 - num7);
                 if (num4 < 0)
                 {
-                    num8 = (float)(num5 - num7);
+                    num8 = (num5 - num7);
                 }
-                color2 *= num8 / ((float)NPCID.Sets.TrailCacheLength[npc.type] * 1.5f);
+                color2 *= num8 / (NPCID.Sets.TrailCacheLength[npc.type] * 1.5f);
                 Vector2 vector2 = npc.oldPos[num7];
                 float rotation = npc.rotation;
-                Main.spriteBatch.Draw(texture2D, vector2 + npc.Size / 2f - Main.screenPosition + new Vector2(0f, npc.gfxOffY), new Rectangle?(rectangle), color2, rotation + npc.rotation * num6 * (float)(num7 - 1) * -(float)spriteEffects.HasFlag(SpriteEffects.FlipHorizontally).ToDirectionInt(), vector, npc.scale, spriteEffects, 0f);
+                Main.spriteBatch.Draw(texture2D, vector2 + npc.Size / 2f - Main.screenPosition + new Vector2(0f, npc.gfxOffY), new Rectangle?(rectangle), color2, rotation + npc.rotation * num6 * (num7 - 1) * -spriteEffects.HasFlag(SpriteEffects.FlipHorizontally).ToDirectionInt(), vector, npc.scale, spriteEffects, 0f);
                 num7 += num4;
             }
             SpriteEffects spriteEffects2 = (npc.direction == -1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
