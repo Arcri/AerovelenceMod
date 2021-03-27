@@ -101,7 +101,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			{
 				if (Main.rand.NextFloat() <= 0.3f)
 				{
-					Dust dust = Dust.NewDustPerfect(projectile.Center, DustID.Electric, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+					Dust dust = Dust.NewDustPerfect(projectile.Center, DustID.Electric, new Vector2((float)Math.Sin(i) * 2.6f, (float)Math.Cos(i)) * 2.4f);
 					dust.noGravity = true;
 					Main.PlaySound(SoundID.Item94, projectile.Center);
 				}
