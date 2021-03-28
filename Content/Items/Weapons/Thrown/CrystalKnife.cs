@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.UseSound = SoundID.Item1;
             item.crit = 8;
             item.damage = 12;
-            item.melee = true;
+            item.thrown = true;
             item.width = 60;
             item.height = 32;
             item.useTime = 17;

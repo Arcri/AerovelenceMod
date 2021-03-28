@@ -63,9 +63,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             projectile.friendly = true;
         }
 
+        // Properties / Methods: PascalCase
+        // Private fields: _camelCase
+        // Public / internal fields: camelCase
 
-
-        public float movementFactor
+        public float MoveFactor
         {
             get => projectile.ai[0];
             set => projectile.ai[0] = value;
@@ -82,21 +84,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             projectile.position.Y = ownerMountedCenter.Y - projectile.height / 2;
             if (!projOwner.frozen)
             {
-                if (movementFactor == 0f)
+                if (MoveFactor == 0f)
                 {
-                    movementFactor = 3f;
+                    MoveFactor = 3f;
                     projectile.netUpdate = true;
                 }
                 if (projOwner.itemAnimation < projOwner.itemAnimationMax / 3)
                 {
-                    movementFactor -= 2.4f;
+                    MoveFactor -= 2.4f;
                 }
                 else
                 {
-                    movementFactor += 2.1f;
+                    MoveFactor += 2.1f;
                 }
             }
-            projectile.position += projectile.velocity * movementFactor;
+            projectile.position += projectile.velocity * MoveFactor;
             if (projOwner.itemAnimation == 0)
             {
                 projectile.Kill();
@@ -110,7 +112,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             if (Main.rand.NextBool(3))
             {
                 Dust dust = Dust.NewDustDirect(projectile.position, projectile.height, projectile.width, ModContent.DustType<Sparkle>(),
-                    projectile.velocity.X * .2f, projectile.velocity.Y * .2f, 200, Scale: 1.2f);
+                    projectile.velocity.X * .2f, projectile.velocity.Y * .2f * projectile.alpha, 200, Scale: 1.2f);
                 dust.velocity += projectile.velocity * 0.3f;
                 dust.velocity *= 0.2f;
             }

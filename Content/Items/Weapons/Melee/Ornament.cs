@@ -65,6 +65,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
             }
+
+            if (Main.rand.NextFloat() <= 0.03)
+            {
+                Projectile.NewProjectile(projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, projectile.damage, projectile.knockBack, projectile.owner);
+            }
         }
 
     }
@@ -88,6 +93,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             if (Main.rand.Next(2) == 0)
             {
                 Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+            }
+            if (Main.rand.NextFloat() <= 0.03)
+            {
+                Projectile.NewProjectile(projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, projectile.damage, projectile.knockBack, projectile.owner);
             }
         }
     }
