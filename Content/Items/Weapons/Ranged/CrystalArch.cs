@@ -31,6 +31,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 12f;
         }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-4, 0);
+        }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FrostArrow, damage, knockBack, player.whoAmI);
