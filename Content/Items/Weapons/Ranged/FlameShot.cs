@@ -10,6 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Flameshot");
+            Tooltip.SetDefault("Shoots a flame-emissive fire arrow.");
 		}
         public override void SetDefaults()
         {
@@ -27,40 +28,44 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 2, 50, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
+            item.shoot = ProjectileID.FireArrow;
 			item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 7f;
-            fireArrow = new Projectile();
         }
-        private Projectile fireArrow;
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-		{
-            fireArrow = Projectile.NewProjectileDirect(position, new Vector2(speedX, speedY), ProjectileID.FireArrow, damage, knockBack, player.whoAmI);
-
-
-
-
-			return false;
-		}
-        public override void UpdateInventory(Player player)
+        public override Vector2? HoldoutOffset()
         {
-            if (fireArrow.active && fireArrow.type == ProjectileID.FireArrow)
+            return new Vector2(-4, 0);
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Projectile.NewProjectile(position, new Vector2(speedX, speedY), ProjectileID.FireArrow, damage, knockBack, player.whoAmI);
+            return false;
+        }
+    }
+    public class FireArrow : GlobalProjectile
+    {
+        public override void PostAI(Projectile projectile)
+        {
+            Player player = Main.player[projectile.owner];
+            if (projectile.type == ProjectileID.FireArrow)
             {
-
-                int projectiles = 3;
-                Vector2 position = fireArrow.Center;
-                float numberProjectiles = 5f;
-                float rotation = MathHelper.ToRadians(180f);
-                int i = 0; 
-                if (Main.rand.NextFloat() <= 0.05f)
+                if (projectile.active && projectile.type == ProjectileID.FireArrow &&player.HeldItem.modItem is FlameShot fs)
                 {
-                    while (i < numberProjectiles)
+                    int projectiles = 3;
+                    Vector2 position = projectile.Center;
+                    float numberProjectiles = 4f;
+                    float rotation = MathHelper.ToRadians(180f);
+                    int i = 0;
+                    if (Main.rand.NextFloat() <= 0.05f)
                     {
-                        Vector2 perturbedSpeed = Utils.RotatedBy(new Vector2(fireArrow.velocity.X, fireArrow.velocity.Y), MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1f)), default) * 0.2f;
-                        var m = Projectile.NewProjectileDirect(position, new Vector2(perturbedSpeed.X, perturbedSpeed.Y), ProjectileID.MolotovFire, (int)(player.HeldItem.damage * 1.5f), 0, player.whoAmI, 0f, 0f);
-                        m.friendly = true;
-                        m.hostile = false;
-                        i++;
+                        while (i < numberProjectiles)
+                        {
+                            Vector2 perturbedSpeed = Utils.RotatedBy(new Vector2(projectile.velocity.X, projectile.velocity.Y), MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1f)), default) * 0.2f;
+                            var m = Projectile.NewProjectileDirect(position, new Vector2(perturbedSpeed.X, perturbedSpeed.Y), ProjectileID.MolotovFire, (int)(player.HeldItem.damage * 1.5f), 0, player.whoAmI, 0f, 0f);
+                            m.friendly = true;
+                            m.hostile = false;
+                            i++;
+                        }
                     }
                 }
             }
