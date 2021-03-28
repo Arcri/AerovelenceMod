@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             npc.damage = 30;
             npc.defense = 32;
             npc.knockBackResist = 0f;
-            animationType = NPCID.Crimslime;
+            animationType = NPCID.BlueSlime;
             npc.width = 70;
             npc.height = 46;
             npc.value = Item.buyPrice(0, 15, 7, 0);
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                         vector2.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
                         vector2.Normalize();
                         vector2 *= 4f + (float)Main.rand.Next(-50, 51) * 0.01f;
-                        Projectile.NewProjectile(npc.position.X, npc.position.Y, vector2.X, vector2.Y * 7 / 6, ModContent.ProjectileType<LuminoShard>(), npc.damage, 0f);
+                        Projectile.NewProjectile(npc.position.X, npc.position.Y, vector2.X, vector2.Y, ModContent.ProjectileType<LuminoShard>(), npc.damage, 0f);
                     }
                 }
                 if (npc.ai[1] > 600)
@@ -119,12 +119,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             return true;
         }
 
-        public override bool CheckDead()
-        {
-            if(AI_State==1)
-                aura.active = false;
-            return base.CheckDead();
-        }
         public override void HitEffect(int hitDirection, double damage)
         {
             if (npc.life <= 0 || npc.life >= 0)
@@ -154,7 +148,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
             projectile.usesLocalNPCImmunity = true;
             projectile.localNPCHitCooldown = 3;
             projectile.timeLeft = 10;
-            projectile.tileCollide = true;
+            projectile.tileCollide = false;
         }
 
         public override void AI()
@@ -175,10 +169,6 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
             projectile.velocity.Y += 0.2f;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            return false;
-        }
         public override string Texture => "Terraria/Projectile_"+ ProjectileID.None;
     }
 }
