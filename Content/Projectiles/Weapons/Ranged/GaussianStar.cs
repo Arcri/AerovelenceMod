@@ -94,7 +94,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			{
 				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(projectile.Center, Main.npc[i].Center) < 160f)
 				{
-					Main.npc[i].StrikeNPC(projectile.damage, projectile.knockBack, projectile.direction);
+					int Direction = 0;
+					if (projectile.position.X - Main.npc[i].position.X < 0)
+						Direction = 1;
+					else
+						Direction = -1;
+					Main.npc[i].StrikeNPC(projectile.damage, projectile.knockBack, Direction);
 				}
 			}
 			for (double i = 0; i < 6.28; i += 0.2)

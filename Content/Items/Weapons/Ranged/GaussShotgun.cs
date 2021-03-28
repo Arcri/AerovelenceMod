@@ -12,6 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Gauss Shotgun");
+			Tooltip.SetDefault("Also shoots a homing Gaussian Star");
 		}
 
 		public override void SetDefaults()
@@ -55,7 +56,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			Projectile.NewProjectile(new Vector2(position.X, position.Y - 10), new Vector2(speedX, speedY), ProjectileType<GaussianStar>(), 32, 5f, player.whoAmI);
+			Projectile.NewProjectile(new Vector2(position.X, position.Y - 8), new Vector2(speedX, speedY), ProjectileType<GaussianStar>(), 32, 5f, player.whoAmI);
 			position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
 			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
 			speedX = perturbedSpeed.X;
