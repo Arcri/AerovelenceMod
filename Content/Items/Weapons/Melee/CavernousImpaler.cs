@@ -37,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override bool CanUseItem(Player player)
         {
-            return player.ownedProjectileCounts[item.shoot] < 1; // item.shoot doesn't seem to work here :/
+            return player.ownedProjectileCounts[item.shoot] < 1;
         }
     }
 
