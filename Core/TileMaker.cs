@@ -8,8 +8,11 @@ namespace AerovelenceMod.Core
 {
     internal static class TileMaker
     {
+        /// <summary>
+        /// Make <paramref name="tilesToMergeWith"></paramref> null to not merge with any specific tile(s).
+        /// </summary>
         public static void SimpleFramedTile(this ModTile tile, int drop, int soundType, int dustType, Color mapColor, int minPick, 
-            string mapName = "", bool mergeDirt = false, bool stone = false)
+            string mapName = "", bool mergeDirt = false, bool stone = false, params int[] tilesToMergeWith)
         {
             Main.tileBlockLight[tile.Type] = true;
             Main.tileLighted[tile.Type] = true;
@@ -21,6 +24,14 @@ namespace AerovelenceMod.Core
             ModTranslation name = tile.CreateMapEntryName();
             name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
+
+            if (tilesToMergeWith != null)
+            {
+                foreach (int i in tilesToMergeWith)
+                {
+                    Main.tileMerge[tile.Type][i] = true;
+                }
+            }
 
             tile.drop = drop;
             tile.soundType = soundType;

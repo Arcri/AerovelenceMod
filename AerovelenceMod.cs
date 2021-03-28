@@ -69,7 +69,14 @@ namespace AerovelenceMod
         }
 		public override void PostSetupContent()
 		{
-			Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+			var bossChecklist = ModLoader.GetMod("BossChecklist");
+			var terrariaAmbience = ModLoader.GetMod("TerrariaAmbience");
+			if (terrariaAmbience != null)
+            {
+				terrariaAmbience.Call("AddTilesToList", this, "Stone", new string[] { "CavernStone", "CavernCrystal", "ChargedStone", "HardenedIce", "SmoothCavernStone", "MilitaryMetal", "SlateOreBlock", "PhanticBarPlaced" }, null);
+				terrariaAmbience.Call("AddTilesToList", this, "Grass", new string[] { "CrystalDirt", "CrystalGrass", "ValleyGrass", "ValleyDirt" }, null);
+				terrariaAmbience.Call("AddTilesToList", this, "Sand", new string[] { "CrystalSand" }, null);
+			}
 			if (bossChecklist != null)
 			{
 				bossChecklist.Call(

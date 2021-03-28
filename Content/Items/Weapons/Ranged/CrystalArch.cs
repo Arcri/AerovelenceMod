@@ -34,6 +34,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FrostArrow, damage, knockBack, player.whoAmI);
+            if (Main.rand.NextBool(3))
+            {
+                for (int i = 0; i < Main.rand.Next(1, 3); i++)
+                {
+                    Projectile.NewProjectile(position.X,
+                        position.Y,
+                        speedX + Main.rand.NextFloat(-2, 2),
+                        speedY + Main.rand.NextFloat(-2, 2),
+                        ProjectileID.FrostArrow,
+                        damage,
+                        knockBack,
+                        player.whoAmI);
+                }
+            }
             return false;
         }
     }

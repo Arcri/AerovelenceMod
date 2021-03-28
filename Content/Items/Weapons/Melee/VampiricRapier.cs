@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Vampiric Rapier");
-			Tooltip.SetDefault("`Must've been a previous traveller's`");
+			Tooltip.SetDefault("`Must've been a previous traveller's`\nHeals your life by 6.66% of the damage you deal per-hit");
 		}
         public override void SetDefaults()
         {
