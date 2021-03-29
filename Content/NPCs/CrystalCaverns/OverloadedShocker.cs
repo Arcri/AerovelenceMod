@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         private int AI_State = 0;
         private Projectile aura;
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns && Main.hardMode ? .1f : 0f;
+            spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
 
         public override bool PreAI()
         {

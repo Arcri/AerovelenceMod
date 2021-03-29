@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
 			}
 		}
-		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .1f : 0f;
+		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
 
 		private int attackCounter;
 		public override void SendExtraAI(BinaryWriter writer)

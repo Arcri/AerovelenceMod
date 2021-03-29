@@ -6,7 +6,7 @@ namespace AerovelenceMod.Backgrounds.CrystalCaverns
 {
 	public class CrystalCavernsBgStyle : ModSurfaceBgStyle
 	{
-		public override bool ChooseBgStyle() => !Main.gameMenu && Main.LocalPlayer.GetModPlayer<ZonePlayer>().zoneCrystalCaverns;
+		public override bool ChooseBgStyle() => !Main.gameMenu && Main.LocalPlayer.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns;
 
 		public override void ModifyFarFades(float[] fades, float transitionSpeed)
 		{

@@ -5,8 +5,8 @@ namespace AerovelenceMod.Common.Globals.Worlds
 {
     public class ZoneWorld : ModWorld
     {
-        public static int CavernTiles;
-        public static int CitadelTiles;
+        public static int CavernTiles { get; private set; }
+        public static int CitadelTiles { get; private set; };
 
         public override void ResetNearbyTileEffects()
         {

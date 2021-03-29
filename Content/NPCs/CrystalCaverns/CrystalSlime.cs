@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             npc.defense = 12;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .5f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .5f : 0f;
 
         public override void HitEffect(int hitDirection, double damage)
         {

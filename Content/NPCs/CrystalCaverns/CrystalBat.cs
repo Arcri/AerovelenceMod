@@ -33,7 +33,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			animationType = NPCID.CaveBat;
 		}
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .1f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
 
 		public override void HitEffect(int hitDirection, double damage)
 		{

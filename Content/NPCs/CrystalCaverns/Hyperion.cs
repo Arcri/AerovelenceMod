@@ -156,7 +156,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) => 
-            spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns && !Main.dayTime && Main.hardMode ? .2f : 0f;
+            spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && !Main.dayTime && Main.hardMode ? .2f : 0f;
 
 
         public override void HitEffect(int hitDirection, double damage)
