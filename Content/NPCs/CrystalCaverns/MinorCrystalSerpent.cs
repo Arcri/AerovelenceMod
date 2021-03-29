@@ -657,6 +657,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns && spawnInfo.water ? 1f : 0f;
+            spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.water ? 1f : 0f;
 	}
 }

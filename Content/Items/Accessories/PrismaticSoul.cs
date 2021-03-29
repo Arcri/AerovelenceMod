@@ -48,7 +48,7 @@ namespace AerovelenceMod.Content.Items.Accessories
             player.moveSpeed += 0.5f;
             player.jumpSpeedBoost += 1.5f;
 
-            if (player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns)
+            if (player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
             {
                 player.statDefense += 5;
                 player.allDamage += 0.3f;

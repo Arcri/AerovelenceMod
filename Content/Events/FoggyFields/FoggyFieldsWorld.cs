@@ -37,7 +37,7 @@ namespace AerovelenceMod.Content.Events.FoggyFields
                         for (var i = 0; i < 255; i++)
                             if (Main.player[i].active)
                             {
-                                if (Main.player[i].GetModPlayer<ZonePlayer>().zoneCrystalCaverns)
+                                if (Main.player[i].GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
                                 {
                                     FoggyFields = true;
                                     break;

@@ -330,13 +330,13 @@ namespace AerovelenceMod
             if (zonePlayer == null)
                 return;
 
-            if (zonePlayer.zoneCrystalCaverns)
+            if (zonePlayer.ZoneCrystalCaverns)
             {
                 music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
                 priority = MusicPriority.BiomeHigh;
             }
 
-            if (zonePlayer.zoneCrystalCitadel)
+            if (zonePlayer.ZoneCrystalCitadel)
             {
                 music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
                 priority = MusicPriority.BiomeHigh;

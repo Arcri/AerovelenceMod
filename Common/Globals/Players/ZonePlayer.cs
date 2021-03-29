@@ -16,36 +16,36 @@ namespace AerovelenceMod.Common.Globals.Players
     {
         public const int DEFAULT_TILE_REQUIREMENT = 100;
 
-        public bool zoneCrystalCaverns;
-        public bool zoneCrystalCitadel;
+        public bool ZoneCrystalCaverns { get; private set; }
+        public bool ZoneCrystalCitadel { get; private set; }
 
         public override void UpdateBiomes()
         {
-            zoneCrystalCaverns = ZoneWorld.CavernTiles > DEFAULT_TILE_REQUIREMENT;
-            zoneCrystalCitadel = ZoneWorld.CitadelTiles > DEFAULT_TILE_REQUIREMENT;
+            ZoneCrystalCaverns = ZoneWorld.CavernTiles > DEFAULT_TILE_REQUIREMENT;
+            ZoneCrystalCitadel = ZoneWorld.CitadelTiles > DEFAULT_TILE_REQUIREMENT;
         }
 
         public override bool CustomBiomesMatch(Player other)
         {
             var modOther = other.GetModPlayer<ZonePlayer>();
 
-            return zoneCrystalCaverns == modOther.zoneCrystalCaverns && zoneCrystalCitadel == modOther.zoneCrystalCitadel;
+            return ZoneCrystalCaverns == modOther.ZoneCrystalCaverns && ZoneCrystalCitadel == modOther.ZoneCrystalCitadel;
         }
 
         public override void CopyCustomBiomesTo(Player other)
         {
             var modOther = other.GetModPlayer<ZonePlayer>();
 
-            modOther.zoneCrystalCaverns = zoneCrystalCaverns;
-            modOther.zoneCrystalCitadel = zoneCrystalCitadel;
+            modOther.ZoneCrystalCaverns = ZoneCrystalCaverns;
+            modOther.ZoneCrystalCitadel = ZoneCrystalCitadel;
         }
 
         public override void SendCustomBiomes(BinaryWriter writer)
         {
             BitsByte flags = new BitsByte
             {
-                [0] = zoneCrystalCaverns,
-                [1] = zoneCrystalCitadel
+                [0] = ZoneCrystalCaverns,
+                [1] = ZoneCrystalCitadel
             };
 
             writer.Write(flags);
@@ -54,13 +54,13 @@ namespace AerovelenceMod.Common.Globals.Players
         public override void ReceiveCustomBiomes(BinaryReader reader)
         {
             BitsByte flags = reader.ReadByte();
-            zoneCrystalCaverns = flags[0];
-            zoneCrystalCitadel = flags[1];
+            ZoneCrystalCaverns = flags[0];
+            ZoneCrystalCitadel = flags[1];
         }
 
         public override void UpdateBiomeVisuals()
         {
-            if (zoneCrystalCaverns)
+            if (ZoneCrystalCaverns)
                 player.ManageSpecialBiomeVisuals("AerovelenceMod:FoggyFields", FoggyFieldsWorld.FoggyFields, player.Center);
 
             player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrents, player.Center);
@@ -69,7 +69,7 @@ namespace AerovelenceMod.Common.Globals.Players
 
         public override Texture2D GetMapBackgroundImage()
         {
-            if (zoneCrystalCaverns)
+            if (ZoneCrystalCaverns)
                 return mod.GetTexture("Backgrounds/CrystalCaverns/CrystalCavernsMapBackground");
             
             return null;

@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             item.value = 100;
         }
 
-        public override bool CanUseItem(Player player) => player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns && !NPC.AnyNPCs(ModContent.NPCType<LightningMoth>());
+        public override bool CanUseItem(Player player) => player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && !NPC.AnyNPCs(ModContent.NPCType<LightningMoth>());
 
         public override bool UseItem(Player player)
         {

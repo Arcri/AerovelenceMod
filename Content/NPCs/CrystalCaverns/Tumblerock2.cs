@@ -47,6 +47,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override void AI() => npc.rotation += npc.velocity.X * 0.05f;
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().zoneCrystalCaverns ? .3f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .3f : 0f;
     }
 }
