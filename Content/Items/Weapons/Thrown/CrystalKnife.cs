@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -16,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.UseSound = SoundID.Item1;
             item.crit = 8;
             item.damage = 12;
-            item.thrown = true;
+            item.melee = true;
             item.width = 60;
             item.height = 32;
             item.useTime = 17;
@@ -28,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("CrystalKnifeProjectile");
+            item.shoot = ModContent.ProjectileType<CrystalKnifeProjectile>();
             item.shootSpeed = 16f;
         }
         public override void AddRecipes()
@@ -36,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.FallenStar, 10);
             recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddRecipeGroup("IronBar", 3);
+            recipe.AddIngredient(ItemID.IronBar, 3);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
@@ -44,38 +45,44 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     }
 
     public class CrystalKnifeProjectile : ModProjectile
-    {
-        public bool e;
-        public float rot = 0.5f;
-        public int i;
+    {        
         public override void SetDefaults()
         {
             projectile.width = 18;
             projectile.height = 38;
             projectile.friendly = true;
             projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
+            projectile.ranged = true;
             projectile.tileCollide = true;
             projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            projectile.timeLeft = 180;
+            projectile.aiStyle = 1;
         }
+
+        private bool rotChanged = false;
         public override void AI()
         {
-            i++;
-            if (i % 2 == 0)
+            if (!rotChanged)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                projectile.rotation = projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
+                rotChanged = true;
             }
-            projectile.alpha += 2;
-            projectile.velocity *= 0.99f;
-            if (!e)
-            {
-                projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-                e = true;
-            }
-            projectile.rotation += rot;
-            rot *= 0.99f;
+            projectile.velocity.X *= 0.982f;
+            projectile.velocity.Y += 0.27f;
+
+            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 160, 0, 0);
+
         }
+
+        
+        public override void Kill(int timeLeft)
+        {
+            Main.PlaySound(SoundID.Dig);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 11) * .25f, Main.rand.Next(-10, -5) * .25f, ProjectileID.CrystalShard, 0, projectile.owner);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-5, 12) * .25f, Main.rand.Next(-6, 10) * .25f, ProjectileID.CrystalShard,  0, projectile.owner);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-2, 9) * .25f, Main.rand.Next(-3, 5) * .25f, ProjectileID.CrystalShard, 0, projectile.owner);
+        }
+            
+        
     }
 }
