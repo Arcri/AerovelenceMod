@@ -20,15 +20,25 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             projectile.width = 7;
             projectile.height = 7;
             projectile.aiStyle = 1;
-            projectile.tileCollide = false;
             projectile.ignoreWater = false;
             projectile.friendly = true;
             projectile.ranged = true;
-            projectile.penetrate = 3;
         }
-
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            int Max = 0;
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(projectile.Center, Main.npc[i].Center) < 66f && Max < 5)
+                {
+                    Main.npc[i].AddBuff(BuffID.Electrified, 155);
+                    Max++;
+                }
+            }
+        }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
+            Lighting.AddLight((int)projectile.Center.X / 16, (int)projectile.Center.Y / 16, 0.3f, 0.8f, 1.1f);
             Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
             for (int k = 0; k < projectile.oldPos.Length; k++)
             {
@@ -38,6 +48,5 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             }
             return true;
         }
-
     }
 }
