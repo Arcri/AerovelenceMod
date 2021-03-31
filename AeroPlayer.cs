@@ -1,5 +1,6 @@
 using AerovelenceMod.Content.Buffs;
 using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
 using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,6 +28,7 @@ namespace AerovelenceMod
 		public bool UpgradedHooks;
 		public bool EmeraldEmpoweredGem;
 		public bool MidasCrown;
+		public bool PoweredBattery;
 
 		public bool AdobeHelmet;
 		public bool AmbrosiaBonus;
@@ -66,6 +68,7 @@ namespace AerovelenceMod
 			UpgradedHooks = false;
 			EmeraldEmpoweredGem = false;
 			QueensStinger = false;
+			PoweredBattery = false;
 		}
 
 		public override void UpdateDead()
@@ -101,6 +104,12 @@ namespace AerovelenceMod
 
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
+			Player player = Main.player[npc.target];
+			if (PoweredBattery)
+            {
+				if (Main.rand.NextBool(10))
+					Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<EnergyAura>(), 3, 2, player.whoAmI);
+			}
 			if (PhanticMeleeBonus)
             {
 				if (damage > 10)
