@@ -54,5 +54,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             }
             return false;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ItemID.Sandstone, 15);
+            modRecipe.AddRecipeGroup("AerovelenceMod:GoldBars", 12);
+            modRecipe.SetResult(this, 1);
+            modRecipe.AddRecipe();
+        }
     }
 }

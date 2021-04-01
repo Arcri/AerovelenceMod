@@ -18,14 +18,14 @@ namespace AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet
         {
             item.width = 30;
             item.height = 18;
-            item.value = 10;
+            item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = ItemRarityID.Blue;
         }
         public override void UpdateEquip(Player player)
         {
             player.jumpSpeedBoost += 1.5f;
         }
-        public override void AddRecipes()
+      /*  public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 15);
@@ -35,6 +35,6 @@ namespace AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

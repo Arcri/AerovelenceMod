@@ -5,10 +5,10 @@ THIS MOD IS IN DEVELOPMENT.
 
 https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 
-This version of the mod fixes the Slate armor set bonus, new item abilities and fixes Crystal Tumbler jumping when the player is under it.
+This mod version fixes a lot of bugs, and has boss checklist support.
 
 Current rundown:
--200+ Items
+-230+ Items
 -Large collection of new NPCs with fun and unique AI
 -1 fun bossfight
 -A brand new biome, the Crystal Caverns!
@@ -20,8 +20,7 @@ CREDITS
 
 Directed by: Arcri
 Music by: A44
-Code by: Yelloface, Dominic Karma, Naka, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, A44, and Felipe350.
-Sprites by: Arcri, Stryke, Orion, Naka, Wiigirl, and Tiredghostdude.
+Code by: Yelloface, ExitiumTheCat, Dominic Karma, RighteousRyan, Graydee, Naka, TraoX, FullOfXP, GabeHasWon, VortexOfRainbows, Hamstar, Just Req, Grrenix, Eldrazi, A44, and Felipe350.
+Sprites by: Arcri, Criitiical, SpicySpaceSnake, HondaCivicMoment, Blossom, Xinix, Stryke, TraoX, Orion, Naka, Seasalt, and Tiredghostdude.
 Structures by DarkArtist
-Lore and Storywriting by Maker of Scratchock Live
-mfw balls
+Lore and Storywriting by: Maker of Scratchock Live

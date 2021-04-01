@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,7 +13,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetDefaults()
         {	
             item.crit = 4;
-            item.damage = 23;
+            item.damage = 30;
             item.ranged = true;
             item.width = 38;
             item.height = 38;
@@ -26,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.noMelee = true;
             item.noUseGraphic = true;
             item.knockBack = 3;
-            item.value = Item.sellPrice(0, 2, 45, 0);
+            item.value = Item.sellPrice(0, 1, 50, 0);
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<StoneHatchetProjectile>();
@@ -41,8 +39,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             DisplayName.SetDefault("Stone Hatchet");
         }
-
-        int i;
 
         public override void SetDefaults()
         {

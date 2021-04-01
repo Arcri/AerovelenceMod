@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Flameshot");
-            Tooltip.SetDefault("Shoots a flame-emissive fire arrow.");
+            Tooltip.SetDefault("Shoots a flame-emissive fire arrow");
 		}
         public override void SetDefaults()
         {
@@ -49,14 +49,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Player player = Main.player[projectile.owner];
             if (projectile.type == ProjectileID.FireArrow)
             {
-                if (projectile.active && projectile.type == ProjectileID.FireArrow &&player.HeldItem.modItem is FlameShot fs)
+                if (projectile.active && projectile.type == ProjectileID.FireArrow && player.HeldItem.modItem is FlameShot fs)
                 {
                     int projectiles = 3;
                     Vector2 position = projectile.Center;
                     float numberProjectiles = 4f;
                     float rotation = MathHelper.ToRadians(180f);
                     int i = 0;
-                    if (Main.rand.NextFloat() <= 0.05f)
+                    if (Main.rand.NextFloat() <= 0.01f)
                     {
                         while (i < numberProjectiles)
                         {

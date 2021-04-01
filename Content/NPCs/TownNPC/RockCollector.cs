@@ -2,7 +2,9 @@ using System.Linq;
 using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Accessories;
+using AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet;
 using AerovelenceMod.Content.Items.BossSummons;
+using AerovelenceMod.Content.Items.Equipment;
 using AerovelenceMod.Content.Items.Others.Misc;
 using AerovelenceMod.Content.Items.Others.Quest;
 using AerovelenceMod.Content.Items.Others.UIButton;
@@ -127,7 +129,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			{
 				return "Hate that " + Main.npc[Angler].GivenName + " guy. Imagine thinking fish rock. Pff.";
 			}
-			switch (Main.rand.Next(6))
+			switch (Main.rand.Next(5))
 			{
 				case 0:
 					return "Y'know, that Phantic stuff is great if you wanna get stoned.";
@@ -136,7 +138,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 				case 2:
 					{
 						Main.npcChatCornerItem = ModContent.ItemType<OreQuest>();
-						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}], [i:{ModContent.ItemType<GoldCluster>()}], [i:{ModContent.ItemType<SlateCluster>()}], or [i:{ModContent.ItemType<PhanticCluster>()}], I'll reward you with something!";
+						return $"If you find a [i:{ModContent.ItemType<CopperCluster>()}], [i:{ModContent.ItemType<TinCluster>()}], [i:{ModContent.ItemType<IronCluster>()}], [i:{ModContent.ItemType<LeadCluster>()}], [i:{ModContent.ItemType<SilverCluster>()}], [i:{ModContent.ItemType<TungstenCluster>()}], [i:{ModContent.ItemType<PlatinumCluster>()}], [i:{ModContent.ItemType<GoldCluster>()}], [i:{ModContent.ItemType<SlateCluster>()}], or [i:{ModContent.ItemType<PhanticCluster>()}], I'll reward you with something that can help you while mining!";
 					}
 				case 3:
 					{
@@ -149,11 +151,6 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 					}
 				case 5:
-					{
-						return $"A violent electrical storm floods the land... Yeah. I don't take [i:{ModContent.ItemType<CrystalTorrentSpawner>()}].";
-
-					}
-				case 6:
                     {
 						return "Yo mama so fat she burger. She bigger than the Crystal Tumbler!";
 					}
@@ -223,6 +220,16 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<StoneHatchet>());
 			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<IronHook>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<DiggingClaws>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<AmbrosiaMiningHelmet>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<AmbrosiaMiningChestplate>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<AmbrosiaMiningBoots>());
+			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ItemID.MiningHelmet);
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ItemID.Hook);
@@ -242,14 +249,6 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			shop.item[nextSlot].SetDefaults(ItemID.Emerald);
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ItemID.Diamond);
-			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM7>());
-			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM8>());
-			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<PhanticClaws>());
-			nextSlot++;
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<PhanticSword>());
 			nextSlot++;
 		}
 

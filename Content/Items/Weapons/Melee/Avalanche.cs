@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Avalanche");
-            Tooltip.SetDefault("This item is unfinished!");
+            Tooltip.SetDefault("Rains down frost balls on your enemies");
 		}
         public override void SetDefaults()
         {
@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.height = 72;
             item.useTime = 24;
 			item.useAnimation = 24;
-            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 7, 50, 0);
             item.rare = ItemRarityID.Orange;

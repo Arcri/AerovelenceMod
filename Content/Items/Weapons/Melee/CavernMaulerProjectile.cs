@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
 	public class CavernMaulerProjectile : ModProjectile
 	{
-		private const string ChainTexturePath = "AerovelenceMod/Items/Weapons/Melee/CavernMaulerProjectileChain";
+		private const string ChainTexturePath = "AerovelenceMod/Content/Items/Weapons/Melee/CavernMaulerProjectileChain";
 
 		public override void SetStaticDefaults()
 		{

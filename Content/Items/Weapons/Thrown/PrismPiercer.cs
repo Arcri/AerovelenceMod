@@ -144,7 +144,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetDefaults()
         {
             projectile.width = 8;
-            projectile.damage = 10;
+            projectile.damage = 2;
             projectile.height = 8;
             projectile.friendly = true;
             projectile.magic = true;

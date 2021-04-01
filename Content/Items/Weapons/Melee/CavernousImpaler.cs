@@ -18,9 +18,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             item.damage = 30;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 18;
+            item.useAnimation = 55;
             item.useTime = 24;
-            item.shootSpeed = 3.7f;
+            item.shootSpeed = 1.8f;
             item.knockBack = 5f;
             item.width = 32;
             item.height = 32;
@@ -47,7 +47,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             DisplayName.SetDefault("Cavernous Impaler");
         }
-
         public override void SetDefaults()
         {
             projectile.width = 18;
@@ -66,7 +65,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         // Properties / Methods: PascalCase
         // Private fields: _camelCase
         // Public / internal fields: camelCase
-
         public float MoveFactor
         {
             get => projectile.ai[0];
@@ -241,6 +239,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             projectile.width = 8;
             projectile.height = 8;
+            projectile.damage = 4;
             projectile.friendly = true;
             projectile.magic = true;
             projectile.extraUpdates = 100;

@@ -35,8 +35,6 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 			player.QuickSpawnItem(ItemID.GoldCoin, 9);
 			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
 
-			int drop = Main.rand.Next(8);
-
 			player.TryGettingDevArmor();
 
 			switch (Main.rand.Next(6))

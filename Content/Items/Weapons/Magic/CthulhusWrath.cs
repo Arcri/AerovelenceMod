@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "Why do I exist, dawg");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Cthulhu's Wrath", "Legendary item")
+			line = new TooltipLine(mod, "Cthulhu's Wrath", "Artifact weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};

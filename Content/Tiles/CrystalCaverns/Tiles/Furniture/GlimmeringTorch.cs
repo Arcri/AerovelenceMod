@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			for (int k = 0; k < 7; k++) {
 				float x = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
 				float y = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
-				Main.spriteBatch.Draw(mod.GetTexture("Content/Tiles/CrystalCaverns/Furniture/GlimmeringTorch_Flame"), new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/Furniture/GlimmeringTorch_Flame"), new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 			}
 		}
 	}

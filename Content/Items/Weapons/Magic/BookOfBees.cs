@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.height = 48;
             item.useTime = 10;
             item.useAnimation = 10;
-            item.UseSound = SoundID.Item82;
+            item.UseSound = SoundID.Item42;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 4;
@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             var line = new TooltipLine(mod, "Verbose:RemoveMe", "Why do I exist, dawg");
             tooltips.Add(line);
 
-            line = new TooltipLine(mod, "Book of Bees", "Legendary item")
+            line = new TooltipLine(mod, "Book of Bees", "Artifact weapon")
             {
                 overrideColor = new Color(255, 241, 000)
             };

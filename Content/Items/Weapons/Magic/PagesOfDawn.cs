@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.height = 44;
             item.useTime = 65;
             item.useAnimation = 65;
-            item.UseSound = SoundID.Item21;
+            item.UseSound = SoundID.Item34;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 6;
