@@ -2,6 +2,7 @@ using AerovelenceMod.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using AerovelenceMod.Core;
 using AerovelenceMod.Backgrounds.Skies;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Common.IL;
@@ -252,6 +253,8 @@ namespace AerovelenceMod
             {
                 MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
+				DiscordRichPresence.Initialize();
+				Main.OnTick += DiscordRichPresence.Update;
 			}
 
 			primitives = new PrimTrailManager();
@@ -261,8 +264,12 @@ namespace AerovelenceMod
 
         public override void Unload()
         {
-            UnloadDetours();
-
+			if (!Main.dedServ)
+			{
+				DiscordRichPresence.Deinitialize();
+				Main.OnTick -= DiscordRichPresence.Update;
+			}
+			UnloadDetours();
 			FargosModMutant = false;
             ArmorHotKey = null;
             Instance = null;
