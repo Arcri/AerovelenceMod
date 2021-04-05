@@ -16,7 +16,7 @@ namespace AerovelenceMod.Core
         {
             Presence = new RichPresence
             {
-                Details = "Playing Aerovelence",
+                Details = "In Main Menu",
                 Assets = new Assets
                 {
                     LargeImageText = "Aerovelence",
@@ -51,7 +51,7 @@ namespace AerovelenceMod.Core
             if (AeroClientConfig.Instance.DiscordRPCEnabled)
                 Cooldown++;
 
-            if (Client == null || Cooldown % 60 != 0 || !AeroClientConfig.Instance.DiscordRPCEnabled)
+            if (Client == null || Cooldown < 60 || !AeroClientConfig.Instance.DiscordRPCEnabled)
                 return;
 
             Client.Invoke();
@@ -76,7 +76,7 @@ namespace AerovelenceMod.Core
                 else if (zonePlayer.ZoneCrystalCaverns)
                 {
                     Client.UpdateDetails("In the Crystal Caverns");
-                    Client.UpdateLargeAsset("crystalcaverns", "Aerovelence - tModLoader");
+                    Client.UpdateLargeAsset("crystalcavern", "Aerovelence - tModLoader");
                     Client.UpdateState("");
                     Client.UpdateSmallAsset("helditem", Main.LocalPlayer.HeldItem.Name);
                 }
@@ -96,6 +96,7 @@ namespace AerovelenceMod.Core
                 Client.UpdateSmallAsset("terrariamod", "Terraria Mod");
             }
             Client.SetPresence(Presence);
+            Cooldown = 0;
         }
         public static void Deinitialize()
         {
