@@ -5,11 +5,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
+using Microsoft.Xna.Framework;
+using Terraria.ModLoader.IO;
 
 namespace AerovelenceMod
 {
     public class AeroWorld : ModWorld
 	{
+		public static Dictionary<Vector2, Vector2> ETPLinks = new Dictionary<Vector2, Vector2>();
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
 			int idx = tasks.FindIndex(t => t.Name == "Underworld"); //Terrain
@@ -66,5 +69,25 @@ namespace AerovelenceMod
 				}
 			}
 		}
-    }
+		public override TagCompound Save()
+		{
+			return new TagCompound {
+		{"ETPLinksKeys", new List<Vector2>(ETPLinks.Keys)},
+		{"ETPLinksValues", new List<Vector2>(ETPLinks.Values)}
+			};
+		}
+		public override void Load(TagCompound tag)
+		{
+			if (tag.ContainsKey("ETPLinksKeys"))
+			{
+				if (tag.ContainsKey("ETPLinksValues"))
+				{
+					for (int i = 0; i < tag.GetList<Vector2>("ETPLinksKeys").Count; i++)
+					{
+						ETPLinks.Add(tag.GetList<Vector2>("ETPLinksKeys")[i], tag.GetList<Vector2>("ETPLinksValues")[i]);
+					}
+				}	
+			}
+		}
+	}
 }
