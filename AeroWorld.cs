@@ -13,7 +13,22 @@ namespace AerovelenceMod
     public class AeroWorld : ModWorld
 	{
 		public static Dictionary<Vector2, Vector2> ETPLinks = new Dictionary<Vector2, Vector2>();
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+		public IList<Vector2> Keys;
+		public IList<Vector2> Values;
+		public bool Bingus;
+		public override void PreUpdate()
+		{
+			if (!Bingus)
+			{
+				for (int i = 0; i < Keys.Count; i++)
+				{
+					if (!ETPLinks.ContainsKey(Keys[i]))
+					ETPLinks.Add(Keys[i], Values[i]);
+				}
+				Bingus = false;
+			}
+		}
+		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
 			int idx = tasks.FindIndex(t => t.Name == "Underworld"); //Terrain
 			if (idx == -1)
@@ -27,7 +42,6 @@ namespace AerovelenceMod
 
 			totalWeight += pass.Weight;
 		}
-
         public override void PostWorldGen()
         {
 			int[] itemsToPlaceInMarbleChests = { ModContent.ItemType<MarbleMusket>(), ItemID.SilverBullet};
@@ -80,14 +94,13 @@ namespace AerovelenceMod
 		{
 			if (tag.ContainsKey("ETPLinksKeys"))
 			{
-				if (tag.ContainsKey("ETPLinksValues"))
-				{
-					for (int i = 0; i < tag.GetList<Vector2>("ETPLinksKeys").Count; i++)
-					{
-						ETPLinks.Add(tag.GetList<Vector2>("ETPLinksKeys")[i], tag.GetList<Vector2>("ETPLinksValues")[i]);
-					}
-				}	
+				Keys = tag.GetList<Vector2>("ETPLinksKeys");
+			}
+			if (tag.ContainsKey("ETPLinksValues"))
+			{
+				Values = tag.GetList<Vector2>("ETPLinksValues");
 			}
 		}
 	}
 }
+ 

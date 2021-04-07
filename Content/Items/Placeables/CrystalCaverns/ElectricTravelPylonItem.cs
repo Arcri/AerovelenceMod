@@ -11,13 +11,13 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Electric Travel Pylon");
-            Tooltip.SetDefault("Shift-Right-Clicking the Pylon will open a Link, doing that again with a second Pylon will estabilish the Link, and you'll be able to become electricity and travel between them by Right-Clicking.");
+            Tooltip.SetDefault("Right-Click to become electricity and travel to the linked Pylon\nShift-Right-Click to open a link, and then do it again on another Pylon to estabilish it\nIf you hold Caps Lock while estabilishing a link it will automatically make it 2-way");
         }
 
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
+            item.width = 32;
+            item.height = 48;
             item.maxStack = 999;
             item.useTurn = true;
             item.autoReuse = true;

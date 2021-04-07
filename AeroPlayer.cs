@@ -184,18 +184,17 @@ namespace AerovelenceMod
 			if (TravellingByETP)
 			{
 				Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 0.3f, 0.8f, 1.1f);
-				Dust Dust1 = Dust.NewDustDirect(new Vector2(player.position.X - 2f, player.position.Y - 2f), player.width + 4, player.height + 4, DustID.Electric, 0f, 0f, 100, default, 1.5f);
-				Dust1.velocity *= 1.6f;
-				Dust Dust2 = Dust1;
-				Dust2.scale *= 0.5f;
-				Dust2.velocity.Y -= 1f;
-				Dust1.position = Vector2.Lerp(Dust1.position, player.Center, 0.5f);
+				//Dust Dust1 = Dust.NewDustDirect(new Vector2(player.position.X - 2f, player.position.Y - 2f), player.width + 4, player.height + 4, DustID.Electric, 0f, 0f, 100, default, 0.5f);
+				//Dust1.velocity *= 1.6f;
+				//Dust1.position = Vector2.Lerp(Dust1.position, player.Center, 0.5f);
 				player.AddBuff(BuffID.Cursed, 2);
 				player.AddBuff(BuffID.Invisibility, 2);
-				player.velocity += player.DirectionTo(ETPDestination) * 2f;
-				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X, (int)ETPDestination.Y, 32, 32)))
+				player.gravity = 0f;
+				player.velocity = player.DirectionTo(ETPDestination) * 6f;
+				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24, (int)ETPDestination.Y, 8, 32)))
 				{
 					TravellingByETP = false;
+					player.velocity *= 0.05f;
 				}
 			}
 		}
