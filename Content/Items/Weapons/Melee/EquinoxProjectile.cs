@@ -9,11 +9,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
 	public class EquinoxProjectile : ModProjectile
 	{
-		private const string ChainTexturePath = "AerovelenceMod/Items/Weapons/Melee/EquinoxProjectileChain";
+		private const string ChainTexturePath = "AerovelenceMod/Content/Items/Weapons/Melee/EquinoxProjectileChain";
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Cavern Mauler Ball");
+			DisplayName.SetDefault("Equinox");
 		}
 
 		public override void SetDefaults()
@@ -108,7 +108,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 						projectile.velocity.X *= 0.96f;
 				}
 			}
-			projectile.rotation = vectorToPlayer.ToRotation() - projectile.velocity.X * 0.1f;
+			projectile.rotation = (projectile.Center - player.Center).ToRotation();
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
