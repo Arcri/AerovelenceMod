@@ -40,11 +40,18 @@ namespace AerovelenceMod
 		public bool FrostMinion;
 		public bool BurnshockArmorBonus;
 		public bool SpiritCultistBonus;
+		public bool lumberjackSetBonus;
+
+		public bool dustiliteSetBonus;
+		public int dustiliteSetBonusCooldown;
+		public readonly int defaultDustiliteSetBonusCooldown = 1200;
 
 		public bool ShiverMinion;
 		public bool NeutronMinion;
 		public bool StarDrone;
 		public bool Minicry;
+		public bool charmingBush;
+		public bool huntressSummon;
 
 		public bool IsETPBeingLinked;
 		public bool TravellingByETP;
@@ -266,6 +273,7 @@ namespace AerovelenceMod
 			FrostMinion = false;
 			PhanticMeleeBonus = false;
 			PhanticMagicBonus = false;
+			lumberjackSetBonus = false;
 			UpgradedHooks = false;
 			BurnshockArmorBonus = false;
 			SpiritCultistBonus = false;
@@ -273,9 +281,12 @@ namespace AerovelenceMod
 			MiningAbilityCooldown = false;
 			AmbrosiaBonus = false;
 			QueensStinger = false;
+
 			NeutronMinion = false;
 			StarDrone = false;
 			Minicry = false;
+			charmingBush = false;
+			huntressSummon = false;
 		}
 
 		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)

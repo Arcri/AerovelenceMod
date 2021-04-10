@@ -1,5 +1,5 @@
 using AerovelenceMod.Content.Buffs;
-using AerovelenceMod.Content.Projectiles.Weapons.Minions;
+using AerovelenceMod.Content.Projectiles.Weapons.Summoning;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Relic Of Royalty");
-            Tooltip.SetDefault("Summons an ancient runic protector to protect you");
+            Tooltip.SetDefault("Summons an ancient royal protector to protect you");
         }
         public override void SetDefaults()
         {
@@ -29,16 +29,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
             item.value = Item.sellPrice(0, 2, 0, 0);
             item.UseSound = SoundID.Item8;
             item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<Minicry>();
+            item.shoot = ModContent.ProjectileType<RoyalDestroyer>();
             item.shootSpeed = 0f;
             item.summon = true;
             item.buffType = ModContent.BuffType<AetherVisionBuff>();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            player.AddBuff(item.buffType, 2);
-            position = Main.MouseWorld;
-            return true;
+            if (player.altFunctionUse == 2)
+            {
+                return (false);
+            }
+
+            // Spawn new projectile with a random type.
+            int summonType = Main.rand.Next(3);
+            if (summonType == 0)
+            {
+                damage -= 9;
+            }
+            else if (summonType == 1)
+            {
+                damage += 7;
+            }
+
+            player.AddBuff(item.buffType, item.buffTime);
+            Projectile.NewProjectile(Main.MouseWorld, Vector2.Zero, type, damage, knockBack, player.whoAmI, summonType);
+
+            return (false);
         }
+
+        public override void UseStyle(Player player)
+         => player.itemLocation -= new Vector2(96 * player.direction, 18);
     }
 }

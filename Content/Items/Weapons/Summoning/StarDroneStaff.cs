@@ -1,5 +1,5 @@
 using AerovelenceMod.Content.Buffs;
-using AerovelenceMod.Content.Projectiles.Weapons.Minions;
+using AerovelenceMod.Content.Projectiles.Weapons.Summoning;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

@@ -1,4 +1,4 @@
-using AerovelenceMod.Content.Projectiles.Weapons.Minions;
+using AerovelenceMod.Content.Projectiles.Weapons.Summoning;
 using Terraria;
 using Terraria.ModLoader;
 

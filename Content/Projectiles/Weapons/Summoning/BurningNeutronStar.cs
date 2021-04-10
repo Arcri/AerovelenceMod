@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Projectiles.Weapons.Minions
+namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
 
 	public class BurningNeutronStar : ModProjectile

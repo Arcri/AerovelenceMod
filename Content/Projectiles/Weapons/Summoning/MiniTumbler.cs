@@ -1,20 +1,17 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Projectiles.Weapons.Minions
+namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
 
-    public class ShockburnDrone : ModProjectile
+	public class MiniTumbler : ModProjectile
 	{
 		int i;
 
         public override void SetStaticDefaults()
         {
-			DisplayName.SetDefault("Star Drone");
-			Main.projFrames[projectile.type] = 5;
-			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+			DisplayName.SetDefault("Mini Tumbler");
 		}
         public override void SetDefaults()
 		{
@@ -24,23 +21,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Minions
 			projectile.minion = true;
 			projectile.friendly = true;
 			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
+			projectile.tileCollide = false;
 			projectile.netImportant = true;
 			aiType = ProjectileID.Spazmamini;
 			projectile.alpha = 0;
 			projectile.penetrate = -10;
-			projectile.timeLeft = 18000;
 			projectile.minionSlots = 1;
 		}
-
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			if (projectile.penetrate == 0)
-				projectile.Kill();
-
-			return false;
-		}
-
 		public override bool? CanCutTiles()
 		{
 			return true;
@@ -52,15 +39,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Minions
 		public override void AI()
 		{
 			i++;
-			projectile.rotation = projectile.velocity.ToRotation();
-			projectile.frameCounter++;
-			if (projectile.frameCounter % 10 == 0)
-			{
-				projectile.frame++;
-				projectile.frameCounter = 0;
-				if (projectile.frame >= 5)
-					projectile.frame = 0;
-			}
+			projectile.rotation *= 0.1f;
 
 			if (i % 2 == 0)
 			{

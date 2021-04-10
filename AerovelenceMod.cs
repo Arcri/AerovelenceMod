@@ -40,7 +40,14 @@ namespace AerovelenceMod
 {
     public class AerovelenceMod : Mod
     {
-        internal static string PLACEHOLDER_TEXTURE = "AerovelenceMod/Blank";
+		public const bool DEBUG = true;
+
+		internal static string PLACEHOLDER_TEXTURE = "AerovelenceMod/Blank";
+		public const string ProjectileAssets = "AerovelenceMod/Assets/Projectiles/";
+		public const string CrystalCavernsAssets = "AerovelenceMod/Assets/CrystalCaverns/";
+
+		public const string Abbreviation = "AM";
+		public const string AbbreviationPrefix = Abbreviation + ":";
 
 		// Hotkeys
 		public static ModHotKey ArmorHotKey;
@@ -53,6 +60,8 @@ namespace AerovelenceMod
 
 		//Mod Support
 		public bool FargosModMutant;
+
+
 
 		internal static AerovelenceMod Instance { get; set; }
 
@@ -216,7 +225,14 @@ namespace AerovelenceMod
 		public static Effect LegElectricity;
 		public override void Load()
 		{
-            GemGrapplingRange.Load();
+			string shaderName = "AerovelenceMod:CavernCrystalShine";
+			string shaderPath = "Effects/CavernCrystalShine";
+
+			var shaderRef = new Ref<Effect>(Instance.GetEffect(shaderPath));
+			(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
+
+
+			GemGrapplingRange.Load();
 
             ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
 

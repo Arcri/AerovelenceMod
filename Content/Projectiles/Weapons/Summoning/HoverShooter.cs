@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 
-namespace AerovelenceMod.Content.Projectiles.Weapons.Minions
+namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
 	public abstract class HoverShooter : Minion
 	{
