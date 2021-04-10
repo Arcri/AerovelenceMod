@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Projectiles.Weapons.Throwing;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,7 +10,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
             DisplayName.SetDefault("Thorn Glove");
             Tooltip.SetDefault("Throws a spiky ball that bounces around");
         }
@@ -23,15 +23,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.useTime = 30;
             item.useAnimation = 30;
             item.noUseGraphic = true;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.UseSound = SoundID.Item18;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 10, 50, 0);
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<ThornBall>();
-            item.shootSpeed = 15f;
+            item.shoot = ModContent.ProjectileType<PlanteraSeed>();
+            item.shootSpeed = 16f;
+        }
+
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+           if(player.statLife <= player.statLifeMax2 && type == ModContent.ProjectileType<PlanteraSeed>())
+           {
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<PlanteraSeed>(), 51, 13, player.whoAmI);
+
+           }
+           if (player.statLife <= player.statLifeMax2 / 2 && type == ModContent.ProjectileType<PlanteraSeed>())
+           {
+                type = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<PlanteraGreenSeed>(), 43, 13, player.whoAmI);
+
+           }
+           if (player.statLife <= player.statLifeMax2 / 3)
+           {
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<ThornBall>(), 60, 13, player.whoAmI);
+
+           }
+
+            return false;
         }
     }
 }
