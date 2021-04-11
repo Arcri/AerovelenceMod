@@ -55,6 +55,8 @@ namespace AerovelenceMod
 
 		public bool IsETPBeingLinked;
 		public bool TravellingByETP;
+		public int ETPDustDelay;
+		public int ETPSoundDelay;
 		public Vector2 ETPBeingLinkedPosition = new Vector2();
 		public Vector2 ETPDestination;
 		public override void Initialize()
@@ -100,32 +102,32 @@ namespace AerovelenceMod
 				
 					if (AmbrosiaBonus)
 					{
-						Projectile.NewProjectile(player.Center, (Main.MouseWorld - player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
+						Terraria.Projectile.NewProjectile(player.Center, (Terraria.Main.MouseWorld - player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
 						player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 600);
 					}
         }
 
-		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(Terraria.Item item, Terraria.NPC target, int damage, float knockback, bool crit)
 		{
 			if (FrostMelee)
-                if (Main.rand.NextBool(2))
+                if (Terraria.Main.rand.NextBool(2))
 					target.AddBuff(BuffID.Frostburn, 120);
         }
 
-        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(Terraria.NPC npc, int damage, bool crit)
         {
-			Player player = Main.player[npc.target];
+			Terraria.Player player = Terraria.Main.player[npc.target];
 			if (PoweredBattery)
             {
-				if (Main.rand.NextBool(10))
-					Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<EnergyAura>(), 3, 2, player.whoAmI);
+				if (Terraria.Main.rand.NextBool(10))
+					Terraria.Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<EnergyAura>(), 3, 2, player.whoAmI);
 			}
 			if (PhanticMeleeBonus)
             {
 				if (damage > 10)
                 {
 					Vector2 offset = new Vector2(0, -100);
-					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
             }
 			if (BurnshockArmorBonus)
@@ -134,31 +136,31 @@ namespace AerovelenceMod
 				{
 					Vector2 offset = new Vector2(0, -100);
 
-					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer);
-					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer); 
-					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
 				}
 			}
 		}
 
-        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        public override void OnHitByProjectile(Terraria.Projectile proj, int damage, bool crit)
 		{
 			if (PhanticMeleeBonus)
 			{
 				if (damage > 10)
 				{
 					Vector2 offset = new Vector2(0, -100);
-					Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
 			}
 		}
 
-		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPCWithProj(Terraria.Projectile proj, Terraria.NPC target, int damage, float knockback, bool crit)
 		{
 			if (QueensStinger)
                 if (proj.type != 181)
-					if (Main.rand.NextBool(10))
-						Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, player.whoAmI);
+					if (Terraria.Main.rand.NextBool(10))
+						Terraria.Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, player.whoAmI);
 			
 			if (EmeraldEmpoweredGem)
                 target.AddBuff(39, 40);
@@ -167,7 +169,7 @@ namespace AerovelenceMod
                 target.AddBuff(BuffID.Midas, 900);
 			
 			if (FrostProjectile)
-                if (Main.rand.NextBool(2))
+                if (Terraria.Main.rand.NextBool(2))
                     target.AddBuff(BuffID.Frostburn, 120);
             
 		
@@ -178,58 +180,80 @@ namespace AerovelenceMod
 				
 				target.AddBuff(ModContent.BuffType<LiftedSpiritsDebuff>(), 210);
 			}
-			if (PhanticRangedBonus && proj.ranged && Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
+			if (PhanticRangedBonus && proj.ranged && Terraria.Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
 			{
-				float rot = Main.rand.NextFloat(MathHelper.TwoPi);
+				float rot = Terraria.Main.rand.NextFloat(MathHelper.TwoPi);
 				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
 				Vector2 velocity = Vector2.One.RotatedBy(rot) * -1 * 12f;
-				Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, player.HeldItem.knockBack, player.whoAmI, 0, 0);
+				Terraria.Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, player.HeldItem.knockBack, player.whoAmI, 0, 0);
 			}
 		}
 		public override void PreUpdate()
 		{
 			if (TravellingByETP)
 			{
-				Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 0.3f, 0.8f, 1.1f);
-				//Dust Dust1 = Dust.NewDustDirect(new Vector2(player.position.X - 2f, player.position.Y - 2f), player.width + 4, player.height + 4, DustID.Electric, 0f, 0f, 100, default, 0.5f);
-				//Dust1.velocity *= 1.6f;
-				//Dust1.position = Vector2.Lerp(Dust1.position, player.Center, 0.5f);
-				player.AddBuff(BuffID.Cursed, 2);
-				player.AddBuff(BuffID.Invisibility, 2);
-				player.gravity = 0f;
-				player.velocity = player.DirectionTo(ETPDestination) * 6f;
-				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24, (int)ETPDestination.Y, 8, 32)))
+				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24 - 16, (int)ETPDestination.Y - 16, 24, 48)))
 				{
 					TravellingByETP = false;
 					player.velocity *= 0.05f;
+					for (int i2 = 0; i2 < 4; i2++)
+					{
+						Dust Dust1 = Dust.NewDustDirect(new Vector2(ETPDestination.X + 8f, ETPDestination.Y - 8f), 20, 20, DustID.Electric, 0f, 0f, 100, default, 1f);
+						Dust1.velocity *= 1.6f;
+						Dust Dust2 = Dust1;
+						Dust2.velocity.Y -= 1f;
+						Dust1.position = Vector2.Lerp(Dust1.position, new Vector2(ETPDestination.X + 8f, ETPDestination.Y - 8f), 0.5f);
+					}
+				}
+				else
+				{
+					ETPDustDelay--;
+					if (ETPDustDelay <= 0)
+					{
+						Terraria.Dust Dust1 = Terraria.Dust.NewDustPerfect(player.Center, 229, default, 0, Color.DarkBlue, 2f);
+						Dust1.noGravity = true;
+						ETPDustDelay = 3;
+					}
+					ETPSoundDelay--;
+					if (ETPSoundDelay <= 0)
+					{
+						Main.PlaySound(SoundID.Item93, player.Center);
+						ETPSoundDelay = 20;
+					}
+					Terraria.Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 0.3f, 0.8f, 1.1f);
+					player.AddBuff(BuffID.Cursed, 2);
+					player.AddBuff(BuffID.Invisibility, 2);
+					player.gravity = 0f;
+					player.direction = player.velocity.X > 0 ? 1 : -1;
+					player.velocity = player.DirectionTo(ETPDestination) * 6f;
+					player.position += player.velocity;
 				}
 			}
 		}
-		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Player self, int i)
+		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Terraria.Player self, int i)
 		{
-            if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.magic && Main.rand.NextFloat() < 0.125f)
+            if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.magic && Terraria.Main.rand.NextFloat() < 0.125f)
                 if (!self.releaseUseItem && self.itemAnimation == self.HeldItem.useAnimation - 1 && self.itemAnimation != 0)
-                    Projectile.NewProjectile(self.Center, self.DirectionTo(Main.MouseWorld) * self.HeldItem.shootSpeed / 2, 
+					Terraria.Projectile.NewProjectile(self.Center, self.DirectionTo(Terraria.Main.MouseWorld) * self.HeldItem.shootSpeed / 2, 
                         ModContent.ProjectileType<PhanticSoul>(), 40, self.HeldItem.knockBack, self.whoAmI);
             
             orig(self, i);
 		}
-
-        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
             if (SoulFire)
             {
-                if (Main.rand.NextBool(4) && drawInfo.shadow == 0f)
+                if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
                 {
-                    int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
+                    int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
                         player.height + 4, ModContent.DustType<WispDust>(), player.velocity.X * 0.4f, player.velocity.Y * 0.4f,
                         100, default, 3f);
 
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].velocity *= 1.8f;
-                    Main.dust[dust].velocity.Y -= 0.5f;
+					Terraria.Main.dust[dust].noGravity = true;
+					Terraria.Main.dust[dust].velocity *= 1.8f;
+					Terraria.Main.dust[dust].velocity.Y -= 0.5f;
 
-                    Main.playerDrawDust.Add(dust);
+					Terraria.Main.playerDrawDust.Add(dust);
                 }
 
                 r *= 0.1f;
@@ -241,15 +265,15 @@ namespace AerovelenceMod
 
             if (Electrified)
             {
-                if (Main.rand.NextBool(4) && drawInfo.shadow == 0f)
+                if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
                 {
-                    int dust = Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
+                    int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
                         player.height + 4, DustID.AncientLight, player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100,
                         default, 3f);
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].velocity *= 1.8f;
-                    Main.dust[dust].velocity.Y -= 0.5f;
-                    Main.playerDrawDust.Add(dust);
+					Terraria.Main.dust[dust].noGravity = true;
+					Terraria.Main.dust[dust].velocity *= 1.8f;
+					Terraria.Main.dust[dust].velocity.Y -= 0.5f;
+					Terraria.Main.playerDrawDust.Add(dust);
                 }
 
                 r *= 0.0f;
@@ -296,27 +320,27 @@ namespace AerovelenceMod
             
 			Mod mod = ModLoader.GetMod("AerovelenceMod");
 
-            Player drawPlayer = drawInfo.drawPlayer;
+			Terraria.Player drawPlayer = drawInfo.drawPlayer;
 			AeroPlayer modPlayer = drawPlayer.GetModPlayer<AeroPlayer>();
 
 			if (modPlayer.badHeal)
 			{
 				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/SoulFire");
 
-				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
+				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
+				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
 
-				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X 
+				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Terraria.Lighting.GetColor((int)((drawInfo.position.X 
                         + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, 
                         new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
 
-				Main.playerDrawData.Add(data);
+				Terraria.Main.playerDrawData.Add(data);
 
 				for (int k = 0; k < 2; k++)
 				{
-					int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
-					Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
-					Main.playerDrawDust.Add(dust);
+					int dust = Terraria.Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
+					Terraria.Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+					Terraria.Main.playerDrawDust.Add(dust);
 				}
 			}
 
@@ -324,20 +348,20 @@ namespace AerovelenceMod
 			{
 				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/MiningAbilityCooldown");
 
-				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
 
-				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X 
+				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Terraria.Lighting.GetColor((int)((drawInfo.position.X 
                     + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, 
                     new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
-				
-                Main.playerDrawData.Add(data);
+
+				Terraria.Main.playerDrawData.Add(data);
 
 				for (int k = 0; k < 2; k++)
 				{
-					int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
-					Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
-					Main.playerDrawDust.Add(dust);
+					int dust = Terraria.Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
+					Terraria.Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+					Terraria.Main.playerDrawDust.Add(dust);
 				}
 			}
 
@@ -345,20 +369,20 @@ namespace AerovelenceMod
 			{
 				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Buffs/Electrified");
 
-				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
-				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
+				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
+				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
 
-				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Lighting.GetColor((int)((drawInfo.position.X 
+				DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, Terraria.Lighting.GetColor((int)((drawInfo.position.X 
                     + drawPlayer.width / 2f) / 16f), (int)((drawInfo.position.Y - 4f - texture.Height / 2f) / 16f)), 0f, 
                     new Vector2(texture.Width / 2f, texture.Height), 1f, SpriteEffects.None, 0);
 
-				Main.playerDrawData.Add(data);
+				Terraria.Main.playerDrawData.Add(data);
 
 				for (int k = 0; k < 2; k++)
 				{
-					int dust = Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
-					Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
-					Main.playerDrawDust.Add(dust);
+					int dust = Terraria.Dust.NewDust(new Vector2(drawInfo.position.X + drawPlayer.width / 2f - texture.Width / 2f, drawInfo.position.Y - 4f - texture.Height), texture.Width, texture.Height, ModContent.DustType<Smoke>(), 0f, 0f, 0, Color.Black);
+					Terraria.Main.dust[dust].velocity += drawPlayer.velocity * 0.25f;
+					Terraria.Main.playerDrawDust.Add(dust);
 				}
 			}
 		});
@@ -368,5 +392,5 @@ namespace AerovelenceMod
 			if (zooming)
                 zoom = 1f;
         }
-    }
+	}
 }
