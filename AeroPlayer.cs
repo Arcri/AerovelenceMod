@@ -230,6 +230,11 @@ namespace AerovelenceMod
 				}
 			}
 		}
+		public override void SetControls()
+		{
+			if (TravellingByETP)
+			player.controlDown = true;
+		}
 		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Terraria.Player self, int i)
 		{
             if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.magic && Terraria.Main.rand.NextFloat() < 0.125f)
