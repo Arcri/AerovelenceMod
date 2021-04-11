@@ -13,9 +13,9 @@ using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
-    internal sealed class DustiliteTome_Proj : ModProjectile
+    internal sealed class CarbonCadence_Proj : ModProjectile
 	{
-		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DustiliteCrystal";
+		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DiamondCavernCrystal";
 
 		public enum AIState
 		{
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dustilite Shard");
+			DisplayName.SetDefault("Diamond Crystal Shard");
 		}
 		public override void SetDefaults()
 		{
@@ -50,6 +50,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override bool PreAI()
 		{
+			Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 0f / 255f, (255 - projectile.alpha) * 0.3f / 255f, (255 - projectile.alpha) * 0.9f / 255f);
 			projectile.velocity *= 0.98f;
 			projectile.rotation = projectile.velocity.X * 0.1f;
 
@@ -82,7 +83,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			return (false);
 		}
-
+		
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 			=> State = AIState.Explosion;
 
@@ -105,7 +106,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>());
+				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>());
 			}
 
 			if (State == AIState.Explosion)
@@ -114,12 +115,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 				{
 					Vector2 velocity = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 8f;
 
-					Projectile.NewProjectile(projectile.Center, velocity, ModContent.ProjectileType<DustiliteShard>(), 10, 1f, projectile.owner);
+					Projectile.NewProjectile(projectile.Center, velocity, ModContent.ProjectileType<DiamondCrystalShard>(), 10, 1f, projectile.owner);
 				}
 
 				for (int i = 0; i < 20; ++i)
 				{
-					Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>());
+					Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>());
 					dust.scale *= 1.5f;
 					dust.velocity *= 2f;
 					dust.noGravity = true;

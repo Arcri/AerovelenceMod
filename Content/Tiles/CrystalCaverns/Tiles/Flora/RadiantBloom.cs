@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
 			Color colour = Color.White;
 
-			Texture2D glow = ModContent.GetTexture("Content/Tiles/CrystalCaverns/Tiles/Flora/RadiantBloom_Glow");
+			Texture2D glow = ModContent.GetTexture("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/RadiantBloom_Glow");
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
 			spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.frameX, tile.frameY, 16, 16), colour);
 		}
