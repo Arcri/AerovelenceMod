@@ -25,6 +25,11 @@ namespace AerovelenceMod.Content.Items.Armor.Lumberjack
 
 			item.defense = 2;
 		}
+		public override void DrawHands(ref bool drawHands, ref bool drawArms)
+		{
+			drawHands = true;
+			drawArms = true;
+		}
 
 		public override void UpdateEquip(Player player)
 			=> player.meleeSpeed += 0.05f;
