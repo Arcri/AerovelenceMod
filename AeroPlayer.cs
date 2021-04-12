@@ -42,9 +42,8 @@ namespace AerovelenceMod
 		public bool SpiritCultistBonus;
 		public bool lumberjackSetBonus;
 
-		public bool dustiliteSetBonus;
-		public int dustiliteSetBonusCooldown;
-		public readonly int defaultDustiliteSetBonusCooldown = 1200;
+		public int burnshockSetBonusCooldown;
+		public readonly int defaultBurnshockSetBonusCooldown = 1200;
 
 		public bool ShiverMinion;
 		public bool NeutronMinion;

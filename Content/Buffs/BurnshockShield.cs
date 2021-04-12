@@ -7,12 +7,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Buffs
 {
-	// TODO: Eldrazi - Implement correct sprites.
-	public sealed class DustiliteShield : ModBuff
+	public sealed class BurnshockShield : ModBuff
 	{
 		public override void SetDefaults()
 		{
-			DisplayName.SetDefault("Dustilite Shield");
+			DisplayName.SetDefault("Burnshock Shield");
 			Description.SetDefault("A protective shield");
 			
 			Main.debuff[Type] = false;

@@ -33,5 +33,15 @@ namespace AerovelenceMod.Content.Items.Armor.Lumberjack
 
 		public override void UpdateEquip(Player player)
 			=> player.meleeSpeed += 0.05f;
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddRecipeGroup("Wood", 20);
+			recipe.AddIngredient(ItemID.Silk, 7);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

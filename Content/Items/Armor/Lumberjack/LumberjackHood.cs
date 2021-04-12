@@ -25,10 +25,11 @@ namespace AerovelenceMod.Content.Items.Armor.Lumberjack
 
 		public override void UpdateArmorSet(Player player)
 		{
-			var ep = player.GetModPlayer<AeroPlayer>();
+			var ap = player.GetModPlayer<AeroPlayer>();
 
 			player.meleeSpeed += 0.05f;
-			ep.lumberjackSetBonus = true;
+			ap.lumberjackSetBonus = true;
+			player.minionDamage += 0.15f;
 
 			int axeProjectileType = ModContent.ProjectileType<Projectiles.Other.ArmorSetBonus.LumberjackAxe>();
 			if (player.ownedProjectileCounts[axeProjectileType] < 1)
@@ -36,7 +37,17 @@ namespace AerovelenceMod.Content.Items.Armor.Lumberjack
 				Projectile.NewProjectile(player.Center, default, axeProjectileType, 10, 0.5f, player.whoAmI);
 			}
 
-			player.setBonus = "Increases melee speed by 5%\nA sharp axe accompanies you...";
+			player.setBonus = "Increases melee speed by 5%\nIncreases summon damage by 15%\nA sharp axe accompanies you...";
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddRecipeGroup("Wood", 15);
+			recipe.AddIngredient(ItemID.Silk, 3);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

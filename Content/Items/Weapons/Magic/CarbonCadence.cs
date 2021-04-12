@@ -12,7 +12,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
 	public sealed class CarbonCadence : ModItem
 	{
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+			DisplayName.SetDefault("Carbon Cadence");
+			Tooltip.SetDefault("Casts explosive crystal mines that shatter into shards");
+        }
+        public override void SetDefaults()
 		{
 			item.width = 24;
 			item.height = 32;

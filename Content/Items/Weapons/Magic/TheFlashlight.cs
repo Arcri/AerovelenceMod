@@ -12,6 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("The Flashlight");
+            Tooltip.SetDefault("Fires quick beams of light");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults()
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.height = 38;
             item.damage = 10;
             item.shoot = mod.ProjectileType("TheFlashlightProj");
-            item.rare = ItemRarityID.Yellow;
+            item.rare = ItemRarityID.Blue;
             item.value = Item.sellPrice(0, 5, 20, 0);
             item.noMelee = true;
             item.noUseGraphic = true;
@@ -33,16 +34,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.channel = true;
             item.mana = 5;
         }
-		public override void AddRecipes()
-		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-			modRecipe.AddIngredient(ItemID.IceBlock, 30);
-			modRecipe.AddIngredient(ItemID.HellstoneBar, 8);
-			modRecipe.AddTile(TileID.Anvils);
-			modRecipe.SetResult(this, 1);
-			modRecipe.AddRecipe();
-		}
 	}
 	class FlashlightProjectile : ModProjectile
 	{

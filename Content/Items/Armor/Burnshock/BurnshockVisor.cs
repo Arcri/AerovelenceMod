@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
+using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,10 +20,27 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
 		}
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "20% increased minion damage and increased minion knockback\nTaking damage will release damaging shards of crystal";
-            player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
+            player.setBonus = "20% increased minion damage and increased minion knockback\nTaking damage will release damaging shards of crystal\nCommand a projectile blocking shield";
             player.minionDamage += 0.20f;
             player.minionKB += 0.05f;
+
+            AeroPlayer ap = player.GetModPlayer<AeroPlayer>();
+
+
+            ap.BurnshockArmorBonus = true;
+
+            if (ap.burnshockSetBonusCooldown > 0)
+            {
+                ap.burnshockSetBonusCooldown--;
+            }
+            else
+            {
+                if (player.ownedProjectileCounts[ModContent.ProjectileType<BurnshockArmorProjectile>()] < 1)
+                {
+                    Projectile.NewProjectile(player.Center, default, ModContent.ProjectileType<BurnshockArmorProjectile>(), 0, 0, player.whoAmI);
+                }
+                player.AddBuff(ModContent.BuffType<Buffs.BurnshockShield>(), 2);
+            }
         }
         public override void SetDefaults()
         {

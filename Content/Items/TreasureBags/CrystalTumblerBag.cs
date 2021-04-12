@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 					player.QuickSpawnItem(mod.ItemType("PrismPiercer"));
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("DiamondDuster"));
+					player.QuickSpawnItem(mod.ItemType("CarbonCadence"));
 					break;
 				case 3:
 					player.QuickSpawnItem(mod.ItemType("PrismThrasher"));

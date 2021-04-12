@@ -15,6 +15,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Thorns of Agony");
+			Tooltip.SetDefault("Casts an agonizing thorny flower that can pierce");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults()
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			item.crit = 4;
 			item.mana = 20;
-			item.damage = 16;
+			item.damage = 18;
 			item.knockBack = 5f;
 
 			item.useTime = item.useAnimation = 28;
@@ -49,6 +50,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			}
 
 			return (false);
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Vine, 10);
+			recipe.AddRecipeGroup("Wood", 15);
+			recipe.AddIngredient(ItemID.JungleSpores, 7);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

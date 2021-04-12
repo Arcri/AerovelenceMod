@@ -48,6 +48,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		{
 			Main.projPet[projectile.type] = true;
 
+			Main.projFrames[projectile.type] = 4;
 			ProjectileID.Sets.Homing[projectile.type] = true;
 			ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
 			ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;

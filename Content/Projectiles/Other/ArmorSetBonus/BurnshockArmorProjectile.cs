@@ -11,13 +11,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 {
-    internal sealed class DustiliteArmorProjectile : ModProjectile
+    internal sealed class BurnshockArmorProjectile : ModProjectile
 	{
 		private readonly float centerOffset = 32;
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dustilite Shield");
+			DisplayName.SetDefault("Burnshock Shield");
 		}
 		public override void SetDefaults()
 		{
@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			AeroPlayer ap = p.GetModPlayer<AeroPlayer>();
 
 			// Check to see if the projectile needs to be alive.
-			if (!p.HasBuff(ModContent.BuffType<Buffs.DustiliteShield>()))
+			if (!p.HasBuff(ModContent.BuffType<Buffs.BurnshockShield>()))
 			{
 				projectile.Kill();
 				return (false);
@@ -70,8 +70,8 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 
 			if (projectile.ai[0] >= 5)
 			{
-				p.AddBuff(ModContent.BuffType<Buffs.DustiliteDefense>(), 420);
-				ap.dustiliteSetBonusCooldown = ap.defaultDustiliteSetBonusCooldown;
+				p.AddBuff(ModContent.BuffType<Buffs.BurnshockDefense>(), 420);
+				ap.burnshockSetBonusCooldown = ap.defaultBurnshockSetBonusCooldown;
 				projectile.Kill();
 			}
 
