@@ -12,6 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
             DisplayName.SetDefault("Crystal Spray");
             Tooltip.SetDefault("Casts homing water streams to chase your foes\nAqua Sceptre++");
+            Item.staff[item.type] = true;
         }
 
         public override void SetDefaults()
