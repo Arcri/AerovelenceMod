@@ -9,12 +9,13 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.Utilities;
+using Terraria.Graphics.Effects;
 
 #endregion
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
-    internal sealed class DustCrystalCore_Proj : ModProjectile
+	internal sealed class ShiningCrystalCore_Proj : ModProjectile
 	{
 		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DiamondCavernCrystal";
 
@@ -52,7 +53,6 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			projectile.localNPCHitCooldown = 10;
 			projectile.usesLocalNPCImmunity = true;
 		}
-
 		public override bool PreAI()
 		{
 			Player owner = Main.player[projectile.owner];
@@ -143,8 +143,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
+			spriteBatch.End();
+			spriteBatch.Begin(default, BlendState.Additive, default, default, default, Filters.Scene["AerovelenceMod:CavernCrystalShine"].GetShader().Shader);
+			Filters.Scene["AerovelenceMod:CavernCrystalShine"].GetShader().ApplyTime((float)Main.time * 0.02f).ApplyOpacity(0.8f);
 			this.DrawProjectileTrailCentered(spriteBatch, lightColor, 0.8f, 0.2f, 2);
-			return (this.DrawProjectileCentered(spriteBatch, lightColor));
+			return (true);
+		}
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+
+			spriteBatch.End();
+			spriteBatch.Begin(default, default, default, default, default, default);
 		}
 	}
 }

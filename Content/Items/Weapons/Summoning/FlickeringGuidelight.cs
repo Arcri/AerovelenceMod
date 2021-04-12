@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 			item.autoReuse = true;
 			
 			item.shootSpeed = 10;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.DustCrystalCore_Proj>();
+			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.ShiningCrystalCore_Proj>();
 			
 			item.UseSound = SoundID.Item101;
 		}
