@@ -46,8 +46,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             if (Main.dayTime)
             {
-                
+                type = ProjectileID.FireArrow;
             }
+            if (!Main.dayTime)
+            {
+                type = ProjectileID.FrostburnArrow;
+            }
+
+            return true;
         }
     }
 }
