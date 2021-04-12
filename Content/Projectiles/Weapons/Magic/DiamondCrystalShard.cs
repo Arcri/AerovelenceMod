@@ -12,9 +12,9 @@ using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
-	internal sealed class DustiliteShard : ModProjectile
+	internal sealed class DiamondCrystalShard : ModProjectile
 	{
-		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DustiliteShards";
+		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DiamondCavernShards";
 
 		public override void SetStaticDefaults()
 		{
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			if (Main.rand.Next(20) == 0)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100);
+				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100);
 			}
 
 			return (false);
@@ -73,7 +73,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 5; ++i)
 			{
-				Dust newDust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>(), 0, 0, 100)];
+				Dust newDust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>(), 0, 0, 100)];
 				newDust.noGravity = true;
 
 				if (Main.rand.Next(3) == 0)

@@ -50,42 +50,49 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			i -= Main.tile[i, j].frameX / 18 % 2;
 			j -= Main.tile[i, j].frameY / 18 % 3;
 			Vector2 position = new Vector2(i * 16, (j - 3) * 16);
-			if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift))
+			if (!player.TravellingByETP)
 			{
-				if (player.IsETPBeingLinked)
+				if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift))
 				{
-					if (new Vector2(i * 16, (j - 3) * 16) != player.ETPBeingLinkedPosition)
+					if (player.IsETPBeingLinked)
 					{
-						player.IsETPBeingLinked = false;
-						CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "Link Estabilished");
-						AeroWorld.ETPLinks[player.ETPBeingLinkedPosition] = position;
-						if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.CapsLock))
+						if (new Vector2(i * 16, (j - 3) * 16) != player.ETPBeingLinkedPosition)
 						{
-							AeroWorld.ETPLinks[position] = player.ETPBeingLinkedPosition;
+							player.IsETPBeingLinked = false;
+							CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "Link Estabilished");
+							AeroWorld.ETPLinks[player.ETPBeingLinkedPosition] = position;
+							if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.CapsLock))
+							{
+								AeroWorld.ETPLinks[position] = player.ETPBeingLinkedPosition;
+							}
 						}
+					}
+					else
+					{
+						player.IsETPBeingLinked = true;
+						player.ETPBeingLinkedPosition = position;
+						CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "Link Open");
+					}
+				}
+				else if (AeroWorld.ETPLinks.ContainsKey(position))
+				{
+					player.ETPDestination = new Vector2(AeroWorld.ETPLinks[position].X, AeroWorld.ETPLinks[position].Y + 40f);
+					Main.LocalPlayer.position = new Vector2(position.X, position.Y + 40f);
+					player.TravellingByETP = true;
+					for (int i2 = 0; i2 < 4; i2++)
+					{
+						Dust Dust1 = Dust.NewDustDirect(new Vector2(position.X + 8f, position.Y + 32f), 20, 20, DustID.Electric, 0f, 0f, 100, default, 1f);
+						Dust1.velocity *= 1.6f;
+						Dust Dust2 = Dust1;
+						Dust2.velocity.Y -= 1f;
+						Dust1.position = Vector2.Lerp(Dust1.position, new Vector2(position.X + 8f, position.Y + 32f), 0.5f);
 					}
 				}
 				else
 				{
-					player.IsETPBeingLinked = true;
-					player.ETPBeingLinkedPosition = position;
-					CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "Link Open");
+					CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "No Link Estabilished");
 				}
-			}
-			else if (AeroWorld.ETPLinks.ContainsKey(position))
-			{
-				player.ETPDestination = AeroWorld.ETPLinks[position];
-				Main.LocalPlayer.position = position;
-				player.TravellingByETP = true;
-				Dust Dust1 = Dust.NewDustDirect(position, i * 16, j * 16 , DustID.Electric, 0f, 0f, 100, default, 1.5f);
-				Dust1.velocity *= 1.6f;
-				Dust Dust2 = Dust1;
-				Dust2.scale *= 0.5f;
-				Dust2.velocity.Y -= 1f;;
-			}
-			else
-			{
-				CombatText.NewText(new Rectangle(i * 16, j * 16, 16, 18), Color.LightSkyBlue, "No Link Estabilished");
+
 			}
 			return true;
 		}

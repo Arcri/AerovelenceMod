@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Dusts
 {
-	public sealed class Dustilite : ModDust
+	public sealed class Crystal : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{

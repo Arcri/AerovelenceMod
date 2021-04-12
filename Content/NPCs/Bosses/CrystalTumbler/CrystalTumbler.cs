@@ -2,6 +2,10 @@ using System;
 using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.TreasureBags;
+using AerovelenceMod.Content.Items.Weapons.Magic;
+using AerovelenceMod.Content.Items.Weapons.Melee;
+using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Thrown;
 using AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -506,25 +510,25 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				switch (Main.rand.Next(0, 7))
 				{
 					case 0:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CavernMauler"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<CavernMauler>());
 						break;
 					case 1:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CavernousImpaler"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<CavernousImpaler>());
 						break;
 					case 2:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystallineQuadshot"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<CrystallineQuadshot>());
 						break;
 					case 3:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PrismThrasher"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<PrismThrasher>());
 						break;
 					case 4:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("PrismPiercer"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<PrismPiercer>());
 						break;
 					case 5:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiamondDuster"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<CarbonCadence>());
 						break;
 					case 6:
-						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DarkCrystalStaff"));
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<DarkCrystalStaff>());
 						break;
 				}
 			}

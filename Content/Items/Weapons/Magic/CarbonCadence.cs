@@ -10,9 +10,14 @@ using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-	public sealed class DustiliteTome : ModItem
+	public sealed class CarbonCadence : ModItem
 	{
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+			DisplayName.SetDefault("Carbon Cadence");
+			Tooltip.SetDefault("Casts explosive crystal mines that shatter into shards");
+        }
+        public override void SetDefaults()
 		{
 			item.width = 24;
 			item.height = 32;
@@ -32,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			item.autoReuse = true;
 
 			item.shootSpeed = 8;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.DustiliteTome_Proj>();
+			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.CarbonCadence_Proj>();
 
 			item.UseSound = SoundID.Item9;
 		}
@@ -59,7 +64,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 					Projectile p = Main.projectile[i];
 					if (p.active && p.owner == player.whoAmI && p.type == item.shoot && p.ai[0] == 1)
 					{
-						p.ai[0] = (int)Projectiles.Weapons.Magic.DustiliteTome_Proj.AIState.Explosion;
+						p.ai[0] = (int)Projectiles.Weapons.Magic.CarbonCadence_Proj.AIState.Explosion;
 						p.netUpdate = true;
 					}
 				}

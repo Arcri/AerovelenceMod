@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 {
-    public class LargeCrystal4 : ModTile
+    public class LargeCrystal6 : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -19,9 +19,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 			Main.tileNoAttach[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
-			TileObjectData.newTile.Height = 6;
-			TileObjectData.newTile.Width = 6;
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16, 16, 16 };
+			TileObjectData.newTile.Height = 3;
+			TileObjectData.newTile.Width = 2;
+			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16 };
 			TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.newTile.StyleWrapLimit = 2;
 			TileObjectData.newTile.StyleMultiplier = 2;

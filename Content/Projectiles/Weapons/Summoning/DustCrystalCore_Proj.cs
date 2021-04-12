@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
     internal sealed class DustCrystalCore_Proj : ModProjectile
 	{
-		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DustiliteCrystal";
+		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DiamondCavernCrystal";
 
 		public enum AIState
 		{
@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 				if (Main.rand.NextBool(10))
 				{
-					Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f);
+					Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f);
 				}
 
 				desiredPosition = target.Center;
@@ -137,7 +137,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Dustilite>());
+				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>());
 			}
 		}
 

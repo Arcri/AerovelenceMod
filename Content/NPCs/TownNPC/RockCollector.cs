@@ -10,6 +10,7 @@ using AerovelenceMod.Content.Items.Others.Quest;
 using AerovelenceMod.Content.Items.Others.UIButton;
 using AerovelenceMod.Content.Items.Tools;
 using AerovelenceMod.Content.Items.Weapons.CavernsHMPlaceholder;
+using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
@@ -219,6 +220,8 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<SpeedstersPickaxe>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<StoneHatchet>());
+			nextSlot++;
+			shop.item[nextSlot].SetDefaults(ModContent.ItemType<TheFlashlight>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<IronHook>());
 			nextSlot++;

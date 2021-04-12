@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Content.Dusts
 {
-	public sealed class DustiliteCrystal : ModDust
+	public sealed class CavernCrystalDust : ModDust
 	{
 		public override void OnSpawn(Dust dust)
 		{
