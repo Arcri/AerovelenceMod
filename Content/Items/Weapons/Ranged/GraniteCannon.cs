@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item41;
+            item.UseSound = SoundID.Item92;
             item.crit = 6;
             item.damage = 29;
             item.ranged = true;
@@ -53,9 +54,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             ModRecipe modRecipe = new ModRecipe(mod);
             modRecipe.AddIngredient(ItemID.Granite, 45);
-            modRecipe.AddRecipeGroup("IronBar", 5);
+            modRecipe.AddIngredient(ItemID.IronBar, 5);
             modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
+            modRecipe.SetResult(this);
             modRecipe.AddRecipe();
         }
 
@@ -81,33 +82,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             projectile.tileCollide = true;
             projectile.extraUpdates = 1;
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, 240, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
-            int type = mod.ProjectileType("GraniteShard1");
-            Vector2 velocity = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(40));
-            Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
-            int type2 = mod.ProjectileType("GraniteShard2");
-            Vector2 velocity2 = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(50));
-            Projectile.NewProjectile(projectile.Center, velocity2, type2, projectile.damage, 5f, projectile.owner);
-            int type3 = mod.ProjectileType("GraniteShard3");
-            Vector2 velocity3 = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(-50));
-            Projectile.NewProjectile(projectile.Center, velocity3, type3, projectile.damage, 5f, projectile.owner);
-        }
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, 240, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
-            int type = mod.ProjectileType("GraniteShard1");
-            Vector2 velocity = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(40));
-            Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
-            int type2 = mod.ProjectileType("GraniteShard2");
-            Vector2 velocity2 = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(50));
-            Projectile.NewProjectile(projectile.Center, velocity2, type2, projectile.damage, 5f, projectile.owner);
-            int type3 = mod.ProjectileType("GraniteShard3");
-            Vector2 velocity3 = new Vector2(projectile.velocity.X * -0.6f, projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(-50));
-            Projectile.NewProjectile(projectile.Center, velocity3, type3, projectile.damage, 5f, projectile.owner);
-            return true;
-        }
+        
+
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
@@ -119,14 +95,52 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             }
             return true;
         }
+
+        int Timer = 0;
         public override void AI()
         {
             projectile.rotation += 100;
+
+
+            Timer++;
+            if (Timer <= 12)
+            {
+                if (++projectile.localAI[1] > 10)
+                {
+                    float amountOfDust = 16f;
+                    for (int i = 0; i < amountOfDust; ++i)
+                    {
+                        Vector2 spinningpoint5 = -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / amountOfDust)) * new Vector2(1f, 4f);
+                        spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
+
+                        Dust dust = Dust.NewDustPerfect(projectile.Center + spinningpoint5, 136, spinningpoint5, 0, Color.Blue, 1.3f);
+                        dust.noGravity = true;
+                    }
+
+                    projectile.localAI[1] = 0;
+                }
+            }
         }
         public override void Kill(int timeLeft)
         {
+
+            for (double i = 0; i < 6.28; i += 0.1)
+            {
+                Dust dust = Dust.NewDustPerfect(projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+                dust.noGravity = true;
+            }
+
             Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            Main.PlaySound(SoundID.Item93, projectile.position);
+
+
+            if (Main.myPlayer == projectile.owner)
+            {
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
+
+            }
         }
     }
 
@@ -149,10 +163,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             projectile.ignoreWater = true;
             projectile.tileCollide = true;
             projectile.extraUpdates = 1;
+            projectile.alpha = 255;
         }
         public override void AI()
         {
-            projectile.velocity.Y += 0.2f;
+
+            Dust dust;
+            projectile.velocity.Y += 0.09f;
+
+
+            dust = Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, DustID.Electric);
+            dust.scale = 0.45f;
+            dust.noGravity = true;
         }
         public override void Kill(int timeLeft)
         {
@@ -161,65 +183,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
     }
 
-    public class GraniteShard2 : ModProjectile
-    {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Granite Shard");
-        }
-        public override void SetDefaults()
-        {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.penetrate = 5;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
-        }
-        public override void AI()
-        {
-            projectile.velocity.Y += 0.2f;
-        }
-        public override void Kill(int timeLeft)
-        {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
-        }
-    }
-
-    public class GraniteShard3 : ModProjectile
-    {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Granite Shard");
-        }
-        public override void SetDefaults()
-        {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.penetrate = 5;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
-        }
-        public override void AI()
-        {
-            projectile.velocity.Y += 0.2f;
-        }
-        public override void Kill(int timeLeft)
-        {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
-        }
-    }
+    
 }

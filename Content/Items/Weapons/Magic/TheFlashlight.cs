@@ -7,16 +7,16 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-	public class TheFlashlight : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("The Flashlight");
+    public class TheFlashlight : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("The Flashlight");
             Tooltip.SetDefault("Fires quick beams of light");
-			Item.staff[item.type] = true;
-		}
-		public override void SetDefaults()
-		{
+            Item.staff[item.type] = true;
+        }
+        public override void SetDefaults()
+        {
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.useAnimation = 20;
             item.useTime = 20;
@@ -34,47 +34,47 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.channel = true;
             item.mana = 5;
         }
-	}
-	class FlashlightProjectile : ModProjectile
-	{
-		public override void SetDefaults()
-		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.friendly = true;
-			projectile.magic = true;
-			projectile.extraUpdates = 100;
-			projectile.timeLeft = 300;
-			projectile.tileCollide = true;
-			projectile.penetrate = 300;
-		}
-		public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
+    }
+    class FlashlightProjectile : ModProjectile
+    {
+        public override void SetDefaults()
+        {
+            projectile.width = 4;
+            projectile.height = 4;
+            projectile.friendly = true;
+            projectile.magic = true;
+            projectile.extraUpdates = 100;
+            projectile.timeLeft = 300;
+            projectile.tileCollide = true;
+            projectile.penetrate = 300;
+        }
+        public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
 
 
-		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-		{
-			projectile.damage = (int)(projectile.damage * 0.8);
-		}
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            projectile.damage = (int)(projectile.damage * 0.8);
+        }
 
-		public override void AI()
-		{
-			projectile.localAI[0] += 1f;
-			if (projectile.localAI[0] > 3f)
-			{
-				for (int i = 0; i < 2; i++)
-				{
-					Vector2 projectilePosition = projectile.position;
-					projectilePosition -= projectile.velocity * ((float)i * 0.25f);
-					projectile.alpha = 255;
-					int dust = Dust.NewDust(projectilePosition, 1, 1, 64, 0f, 0f, 0, default, 1f);
-					Main.dust[dust].noGravity = true;
-					Main.dust[dust].position = projectilePosition;
-					Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-					Main.dust[dust].velocity *= 0.2f;
-				}
-			}
-		}
-	}
+        public override void AI()
+        {
+            projectile.localAI[0] += 1f;
+            if (projectile.localAI[0] > 3f)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 projectilePosition = projectile.position;
+                    projectilePosition -= projectile.velocity * ((float)i * 0.25f);
+                    projectile.alpha = 255;
+                    int dust = Dust.NewDust(projectilePosition, 1, 1, 159, 0f, 0f, 0, default, 1f);
+                    Main.dust[dust].noGravity = true;
+                    Main.dust[dust].position = projectilePosition;
+                    Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                    Main.dust[dust].velocity *= 0.2f;
+                }
+            }
+        }
+    }
 }
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -85,7 +85,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
-            base.DisplayName.SetDefault("The Flashlight");
+            DisplayName.SetDefault("The Flashlight");
             Main.projFrames[projectile.type] = 6;
         }
 
@@ -151,10 +151,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 {
                     Vector2 spinningpoint = Vector2.UnitX * 24f;
                     spinningpoint = spinningpoint.RotatedBy(projectile.rotation - (float)Math.PI / 2f);
-                    Vector2 value = base.projectile.Center + spinningpoint;
+                    Vector2 value = projectile.Center + spinningpoint;
                     for (int i = 0; i < 2; i++)
                     {
-                        int num5 = Dust.NewDust(value - Vector2.One * 8f, 16, 16, 64, projectile.velocity.X / 2f, projectile.velocity.Y / 2f, 100);
+                        int num5 = Dust.NewDust(value - Vector2.One * 8f, 16, 16, 159, projectile.velocity.X / 2f, projectile.velocity.Y / 2f, 100);
                         Main.dust[num5].velocity *= 0.66f;
                         Main.dust[num5].noGravity = true;
                         Main.dust[num5].scale = 1.4f;
@@ -181,14 +181,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                         {
                             projectile.netUpdate = true;
                         }
-                        base.projectile.velocity = velocity;
+                        projectile.velocity = velocity;
                         float scaleFactor = 14f;
                         int num8 = 2;
                         int FlashlightProj = ModContent.ProjectileType<FlashlightProjectile>();
                         for (int j = 0; j < 1; j++)
                         {
                             value2 = projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
-                            Vector2 spinningpoint2 = Vector2.Normalize(base.projectile.velocity) * scaleFactor;
+                            Vector2 spinningpoint2 = Vector2.Normalize(projectile.velocity) * scaleFactor;
                             spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914);
                             if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
                             {

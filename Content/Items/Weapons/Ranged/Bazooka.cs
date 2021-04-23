@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.width = 62;
             item.height = 32;
             item.useTime = 5;
-            item.useAnimation = 5;
+            item.useAnimation = 25;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 0.2f;

@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 rotChanged = true;
             }
             projectile.velocity.X *= 0.982f;
-            projectile.velocity.Y += 0.27f;
+            projectile.velocity.Y += 0.14f;
 
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 160, 0, 0);
 
