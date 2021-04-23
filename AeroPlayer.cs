@@ -194,6 +194,7 @@ namespace AerovelenceMod
 				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24 - 16, (int)ETPDestination.Y - 16, 24, 48)))
 				{
 					TravellingByETP = false;
+					ETPDestination = new Vector2(0, 0);
 					player.velocity *= 0.05f;
 					for (int i2 = 0; i2 < 4; i2++)
 					{

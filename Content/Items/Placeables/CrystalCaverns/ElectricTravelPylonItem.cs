@@ -32,6 +32,7 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
             ModRecipe modRecipe = new ModRecipe(mod);
             modRecipe.AddIngredient(ModContent.ItemType<CrystalShard>(), 9);
             modRecipe.AddIngredient(RecipeGroupID.IronBar, 6);
+            modRecipe.AddIngredient(ItemID.Wire, 12);
             modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
