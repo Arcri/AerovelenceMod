@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,8 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.magic = true;
             item.width = 36;
             item.height = 48;
-            item.useTime = 10;
-            item.useAnimation = 10;
+            item.useTime = item.useAnimation = 30; 
             item.UseSound = SoundID.Item42;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.value = 10000;
             item.rare = ItemRarityID.Purple;
             item.autoReuse = true;
-            item.shoot = ProjectileID.Wasp;
+            item.shoot = ModContent.ProjectileType<HiveProjectile>();
             item.shootSpeed = 12f;
         }
         public override Color? GetAlpha(Color lightColor)
