@@ -77,9 +77,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void Kill(int timeLeft)
 		{
+			Main.PlaySound(SoundID.Item10);
 			for (int i = 0; i < 20; i++)
 			{
-				Main.PlaySound(SoundID.Item10);
 				Dust dust = Dust.NewDustDirect(projectile.Center - new Vector2(5), 0, 0, ModContent.DustType<Wood>(), 0, 0, projectile.alpha);
 				dust.velocity *= 0.55f;
 				dust.velocity += projectile.velocity * 0.5f;

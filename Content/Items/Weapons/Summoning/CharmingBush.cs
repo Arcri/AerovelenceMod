@@ -45,7 +45,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 
 			item.UseSound = SoundID.Item44;
 		}
-
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ItemID.VineRope, 35);
+			modRecipe.AddRecipeGroup("Wood", 35);
+			modRecipe.AddIngredient(ItemID.Daybloom, 3);
+			modRecipe.AddIngredient(ItemID.Fireblossom, 3);
+			modRecipe.AddIngredient(ItemID.Waterleaf, 3);
+			modRecipe.AddTile(TileID.Anvils);
+			modRecipe.SetResult(this);
+			modRecipe.AddRecipe();
+		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
 			if (player.altFunctionUse == 2)
@@ -77,7 +88,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 					Main.projectile[i].ai[0] = projectileAmount;
 				}
 			}
-
 			return (false);
 		}
 	}

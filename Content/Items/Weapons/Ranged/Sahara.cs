@@ -22,8 +22,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.ranged = true;
             item.width = 30;
             item.height = 54;
-            item.useTime = 22;
-            item.useAnimation = 22;
+            item.useTime = 60;
+            item.useAnimation = 60;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
             item.knockBack = 4;
@@ -80,12 +80,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             if (shootTimer >= Main.rand.Next(20, 21))
             {
                 float speed = 2f;
-                int type = ProjectileID.GreekFire3;
+                int type = ProjectileID.MolotovFire;
                 Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
                 Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
                 shootTimer = 0;
             }
-            if(projectile.velocity.X == 0 && projectile.velocity.Y == 0)
+            if(Math.Abs(projectile.velocity.X) < 0.02f)
             {
                 projectile.Kill();
             }
@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             for (int i = 0; i < 5; ++i)
             {
                 float speed = 2f;
-                int type = ProjectileID.GreekFire3;
+                int type = ProjectileID.MolotovFire;
                 Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
                 Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
             }
