@@ -32,5 +32,9 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 				projectile.tileCollide = true;
 			}
 		}
+		public override void Kill(int timeLeft)
+		{
+			Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 73, 0.75f);
+		}
 	}
 }

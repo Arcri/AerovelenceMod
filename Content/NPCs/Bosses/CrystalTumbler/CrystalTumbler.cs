@@ -5,6 +5,7 @@ using AerovelenceMod.Content.Items.TreasureBags;
 using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Summoning;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
@@ -507,7 +508,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 			if (!Main.expertMode)
 			{
 				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.LesserHealingPotion, Main.rand.Next(4, 12));
-				switch (Main.rand.Next(0, 7))
+				switch (Main.rand.Next(0, 8))
 				{
 					case 0:
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<CavernMauler>());
@@ -529,6 +530,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 						break;
 					case 6:
 						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<DarkCrystalStaff>());
+						break;
+					case 7:
+						Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<ShiningCrystalCore>());
 						break;
 				}
 			}

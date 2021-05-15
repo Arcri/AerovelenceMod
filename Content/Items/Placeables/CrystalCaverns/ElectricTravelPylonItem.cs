@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
+using AerovelenceMod.Content.Items.Placeables.Blocks;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture;
 using Terraria;
 using Terraria.ID;
@@ -30,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<CrystalShard>(), 9);
+            modRecipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 9);
             modRecipe.AddIngredient(RecipeGroupID.IronBar, 6);
             modRecipe.AddIngredient(ItemID.Wire, 12);
             modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());

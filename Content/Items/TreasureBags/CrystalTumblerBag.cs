@@ -1,3 +1,9 @@
+using AerovelenceMod.Content.Items.Accessories;
+using AerovelenceMod.Content.Items.Weapons.Magic;
+using AerovelenceMod.Content.Items.Weapons.Melee;
+using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Summoning;
+using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -31,34 +37,37 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(mod.ItemType("PrismaticSoul"));
+			player.QuickSpawnItem(ModContent.ItemType<PrismaticSoul>());
 			player.QuickSpawnItem(ItemID.GoldCoin, 9);
 			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
 
 			player.TryGettingDevArmor();
 
-			switch (Main.rand.Next(6))
+			switch (Main.rand.Next(7))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("CrystallineQuadshot"));
+					player.QuickSpawnItem(ModContent.ItemType<CrystallineQuadshot>());
 					break;
 				case 1:
-					player.QuickSpawnItem(mod.ItemType("PrismPiercer"));
+					player.QuickSpawnItem(ModContent.ItemType<PrismPiercer>());
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("CarbonCadence"));
+					player.QuickSpawnItem(ModContent.ItemType<CarbonCadence>());
 					break;
 				case 3:
-					player.QuickSpawnItem(mod.ItemType("PrismThrasher"));
+					player.QuickSpawnItem(ModContent.ItemType<PrismThrasher>());
 					break;
 				case 4:
-					player.QuickSpawnItem(mod.ItemType("CavernousImpaler"));
+					player.QuickSpawnItem(ModContent.ItemType<CavernousImpaler>());
 					break;
 				case 5:
-					player.QuickSpawnItem(mod.ItemType("CavernMauler"));
+					player.QuickSpawnItem(ModContent.ItemType<CavernMauler>());
 					break;
 				case 6:
-					player.QuickSpawnItem(mod.ItemType("DarkCrystalStaff"));
+					player.QuickSpawnItem(ModContent.ItemType<DarkCrystalStaff>());
+					break;
+				case 7:
+					player.QuickSpawnItem(ModContent.ItemType<ShiningCrystalCore>());
 					break;
 			}
 		}

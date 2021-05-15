@@ -1,5 +1,6 @@
 using AerovelenceMod.Content.Dusts;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -34,6 +35,10 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 			{
 				projectile.tileCollide = true;
 			}
+		}
+		public override void Kill(int timeLeft)
+		{
+			Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 62, 0.75f);
 		}
 	}
 }
