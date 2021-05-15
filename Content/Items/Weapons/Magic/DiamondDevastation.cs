@@ -15,23 +15,40 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             DisplayName.SetDefault("Diamond Devastation");
             Tooltip.SetDefault("Casts fast diamond bolts");
         }
+      
+        
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
-           
-          
-            ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow");
-           
+            Lighting.AddLight(item.position, 0.08f, .38f, .24f);
+            Texture2D texture;
+            texture = Main.itemTexture[item.type];
+            spriteBatch.Draw
+            (
 
+                ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow"),
+                new Vector2
+                (
+                    item.position.X - Main.screenPosition.X + item.width * 0.5f,
+                    item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f + 2f
+                ),
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                Color.White,
+                rotation,
+                texture.Size() * 0.5f,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
         }
         public override void SetDefaults()
         {
             Item.staff[item.type] = true;
-            item.damage = 40;
+            item.damage = 45;
             item.magic = true;
-            item.mana = 20;
+            item.mana = 7;
             item.width = item.height = 64;
 
-            item.useTime = item.useAnimation = 35;
+            item.useTime = item.useAnimation = 32;
 
             item.UseSound = SoundID.Item110;
             item.useStyle = ItemUseStyleID.HoldingOut;
@@ -41,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.rare = ItemRarityID.LightRed;
             item.autoReuse = true;
             item.shoot = ModContent.ProjectileType<DiamondBlastProjectile>(); ;
-            item.shootSpeed = 15f;
+            item.shootSpeed = 16f;
         }
 
         

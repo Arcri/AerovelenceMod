@@ -15,13 +15,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {	
-            item.crit = 20;
             item.damage = 20;
             item.melee = true;
-            item.width = 20;
-            item.height = 30;
-            item.useTime = 24;
-            item.useAnimation = 24;
+            item.width = item.height = 40;
+            
+            item.useTime = item.useAnimation = 24;
+            
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -30,33 +29,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.value = Item.sellPrice(0, 1, 0, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
-            item.shoot = mod.ProjectileType("GlacierProjectile");
+            item.shoot = ModContent.ProjectileType<GlacierProjectile>();
             item.UseSound = SoundID.Item1;
             item.shootSpeed = 10f;
         }
-
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-            recipe.AddRecipeGroup("IronBar", 5);
+            recipe.AddRecipeGroup(ItemID.IronBar, 5);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-
-        public override bool CanUseItem(Player player)
-        {
-            for (int i = 0; i < 1000; ++i)
-            {
-                if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<GlacierProjectile>()] < 1;
     }
 
     public class GlacierProjectile : ModProjectile
@@ -65,17 +52,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Glacier");
+            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 30;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.ranged = true;
+            projectile.width = projectile.height = 40;
+            
+            projectile.aiStyle = projectile.penetrate = 3;
+           
+            projectile.ranged =  projectile.friendly = true;
+
             projectile.magic = false;
-            projectile.penetrate = 3;
+            
             projectile.timeLeft = 600;
             projectile.extraUpdates = 1;
         }
@@ -92,36 +82,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Main.dust[num622].scale = 0.5f;
             projectile.rotation += 0.1f;
         }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
+            for (int k = 0; k < projectile.oldPos.Length; k++)
+            {
+                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                Color color = projectile.GetAlpha(Color.LightPink) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+            }
+            return true;
+        }
     }
     public class GlacierProjectile2 : ModProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 4;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-        }
+       
 
         public override void SetDefaults()
         {
             projectile.width = 30;
             projectile.height = 10;
             projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.melee = true;
+            projectile.friendly = projectile.melee = projectile.ignoreWater = true;
+            projectile.hostile = projectile.tileCollide = false;
+            
             projectile.penetrate = 3;
             projectile.timeLeft = 200;
             projectile.light = 0.5f;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
+             
             projectile.extraUpdates = 1;
-
-
         }
         public override void AI()  
         {
             projectile.velocity *= 0.90f;
-            projectile.alpha += 2;
+            projectile.alpha = 255;
             projectile.scale *= 0.99f;
             if (projectile.alpha <= 0.4)
             {
@@ -135,18 +130,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
             projectile.rotation = projectile.velocity.ToRotation();
-        }
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-        {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int k = 0; k < projectile.oldPos.Length; k++)
-            {
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(Color.LightPink) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
-            }
-            return true;
         }
     }
 }

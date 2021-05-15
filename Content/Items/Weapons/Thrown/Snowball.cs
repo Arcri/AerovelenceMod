@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("SnowballProjectile");
+            item.shoot = ModContent.ProjectileType<SnowballProjectile>();
             item.shootSpeed = 5f;
         }
     }
@@ -43,8 +44,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             projectile.width = 20;
             projectile.height = 26;
             projectile.aiStyle = 16;
-            projectile.friendly = true;
-            projectile.ranged = true;
+            projectile.friendly = projectile.ranged = true;
+            
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
             projectile.extraUpdates = 1;
@@ -53,9 +54,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             for (int i = 0; i < 15; i++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 65, projectile.oldVelocity.X * 0.2f, projectile.oldVelocity.Y * 0.2f);
+                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.oldVelocity.X * 0.2f, projectile.oldVelocity.Y * 0.2f);
             }
             Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
+
+            int type = Main.rand.Next(new int[] { ProjectileID.SnowBallFriendly, ProjectileID.SnowBallFriendly });
+            int num318 = Main.rand.Next(4, 8);
+            for (int num319 = 0; num319 < num318; num319++)
+            {
+                Vector2 value16 = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                value16.Normalize();
+                value16 *= Main.rand.Next(280, 481) * 0.0111f;
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, value16.X, value16.Y, type, projectile.damage, projectile.owner, 0, Main.rand.Next(-45, 1));
+            }
+            int damage = (int)(projectile.damage);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0,  ProjectileID.DD2ExplosiveTrapT2Explosion, damage, 0, projectile.owner);
+
+            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0, 0);
         }
     }
 }

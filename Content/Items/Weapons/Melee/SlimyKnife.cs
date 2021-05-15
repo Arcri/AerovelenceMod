@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -6,8 +7,8 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
-    public class SlimyKnife : ModItem
-    {
+	public class SlimyKnife : ModItem
+	{
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Slimy Knife");
@@ -34,6 +35,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 			return Color.White;
 		}
 
+		
+
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
@@ -52,6 +55,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
+		}
+
+		public override void UseStyle(Player player)
+		{
+			Vector2 targetPosition = Main.MouseWorld - Main.LocalPlayer.Center;
+			int direction = Math.Sign(targetPosition.X);
+
+			player.ChangeDir(direction);
+
+			player.direction = direction;
+			player.itemRotation = (targetPosition * direction).ToRotation();
 		}
 	}
 }
