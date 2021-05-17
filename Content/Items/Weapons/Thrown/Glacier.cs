@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-            recipe.AddRecipeGroup(ItemID.IronBar, 5);
+            recipe.AddRecipeGroup("IronBar", 5);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
