@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.ProjectileItem
 {
-    public class SandstormArrowItem : ModItem
+    public class SandstormArrow : ModItem
     {
 		public override void SetStaticDefaults()
 		{
