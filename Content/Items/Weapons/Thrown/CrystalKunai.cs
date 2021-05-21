@@ -42,8 +42,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 38;
+            projectile.width = 14;
+            projectile.height = 14;
             projectile.friendly = true;
             projectile.penetrate = 1;
             projectile.hostile = false;
