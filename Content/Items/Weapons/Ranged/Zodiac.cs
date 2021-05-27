@@ -1,10 +1,16 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 using Microsoft.Xna.Framework;
 =======
+=======
+>>>>>>> Stashed changes
 using System;
 using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 using Terraria;
 using Terraria.ID;
@@ -17,6 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Zodiac");
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             Tooltip.SetDefault("Fires two bullets at once");
         }
@@ -51,6 +58,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             }
             return false;
 =======
+=======
+>>>>>>> Stashed changes
             Tooltip.SetDefault("MAN");
         }
 
@@ -199,6 +208,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     projectile.Kill();
                 }
             }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }
