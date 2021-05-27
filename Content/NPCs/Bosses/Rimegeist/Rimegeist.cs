@@ -23,8 +23,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.defense = 9;    //boss defense
             npc.alpha = 0;
             npc.knockBackResist = 0f;
-            npc.width = 188;
-            npc.height = 182;
+            npc.width = 246;
+            npc.height = 296;
             npc.value = Item.buyPrice(0, 5, 75, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
