@@ -19,12 +19,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
         public override void SetDefaults()
         {
-            projectile.width = 35;
-            projectile.height = 35;
+            projectile.width = projectile.height = 35;
+           
             projectile.aiStyle = -1;
             projectile.friendly = true;
             projectile.ranged = true;
-            projectile.penetrate = 4;
             projectile.tileCollide = true;
         }
 
@@ -46,6 +45,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
         public override void Kill(int timeLeft)
         {
             Main.PlaySound(SoundID.NPCDeath19, projectile.position);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-2, 5) * .25f, Main.rand.Next(-2, 7) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)

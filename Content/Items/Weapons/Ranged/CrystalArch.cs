@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Projectiles.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -14,20 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
-            item.crit = 4;
             item.damage = 33;
+
             item.ranged = true;
+            item.noMelee = true;
+            item.autoReuse = true;
+
             item.width = 60;
             item.height = 32;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            
+            item.useAnimation = item.useTime = 20;
             item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
+            
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 2, 50, 0);
             item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
+           
+            item.shoot = ModContent.ProjectileType<IceArrow>();
             item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 12f;
         }
@@ -35,7 +39,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             return new Vector2(-4, 0);
         }
+
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        { 
+            type = ModContent.ProjectileType<IceArrow>();
+            return true;
+
+            for(int i i++ < i = 0)
+            {
+
+            }
+        }
+
+
+
+
+
+
+        /*public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FrostArrow, damage, knockBack, player.whoAmI);
             if (Main.rand.NextBool(3))
@@ -53,6 +74,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 }
             }
             return false;
-        }
+        } */
     }
 }
