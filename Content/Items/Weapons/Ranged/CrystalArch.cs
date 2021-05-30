@@ -44,11 +44,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         { 
             type = ModContent.ProjectileType<IceArrow>();
             return true;
-
-            for(int i i++ < i = 0)
-            {
-
-            }
         }
 
 

@@ -95,7 +95,7 @@ namespace AerovelenceMod.Core
                 Client.UpdateState("");
                 Client.UpdateSmallAsset("terrariamod", "Terraria Mod");
             }
-            Client.SetPresence(Presence);
+            //Client.SetPresence(Presence); It would constantly relaod the default presence
             Cooldown = 0;
         }
         public static void Deinitialize()

@@ -18,7 +18,7 @@ namespace AerovelenceMod
 		public bool Bingus;
 		public override void PreUpdate()
 		{
-			if (!Bingus)
+			/*if (!Bingus)
 			{
 				for (int i = 0; i < Keys.Count; i++)
 				{
@@ -26,7 +26,7 @@ namespace AerovelenceMod
 					ETPLinks.Add(Keys[i], Values[i]);
 				}
 				Bingus = false;
-			}
+			}*/
 		}
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
