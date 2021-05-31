@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Nerve Ending");
-			Tooltip.SetDefault("Increases live regen by 10%");
+			Tooltip.SetDefault("Increases life regen by 10%");
 		}
         public override void SetDefaults()
         {
