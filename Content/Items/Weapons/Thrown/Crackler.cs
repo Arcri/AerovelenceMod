@@ -1,6 +1,10 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Core.Prim;
+using System;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -42,15 +46,68 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 30;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.magic = false;
+            projectile.CloneDefaults(ProjectileID.Shuriken);
+            projectile.width = 15;
+            projectile.height = 15;
+            projectile.thrown = true;
+            projectile.penetrate = 1;
+        }
+
+        public override void AI()
+        {
+            Dust dust = Dust.NewDustPerfect(projectile.Center + (10 * ((projectile.rotation - 0.78f).ToRotationVector2())), 6);
+            dust.noGravity = true;
+            dust.scale = Main.rand.NextFloat(0.7f, 0.9f);
+            dust.fadeIn = 1.5f;
+        }
+        public override void Kill(int timeLeft)
+        {
+            Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<CracklerProjTwo>(), projectile.damage, projectile.knockBack, projectile.owner);
+        }
+    }
+    public class CracklerProjTwo : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Crackler");
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 50;
+            projectile.height = 50;
+            projectile.thrown = true;
             projectile.penetrate = -1;
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            projectile.timeLeft = 30;
+            projectile.tileCollide = false;
+            projectile.friendly = true;
+            projectile.rotation = Main.rand.NextFloat(6.28f);
+            color = new Color(Main.rand.Next(60, 255), Main.rand.Next(60, 255), Main.rand.Next(60, 255));
+        }
+
+        BasicEffect effect = new BasicEffect(Main.graphics.GraphicsDevice)
+        {
+            VertexColorEnabled = true,
+        };
+
+        Color color = Color.White;
+        public override void AI()
+        {
+            projectile.scale = 1 + (float)Math.Sin((30 - projectile.timeLeft) / 4f);
+            if (projectile.scale > 1)
+            {
+                projectile.scale--;
+                projectile.scale /= 2;
+                projectile.scale++;
+            }
+            if (projectile.scale < 0.1f)
+                projectile.active = false;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            StarDraw.DrawStarBasic(effect, projectile.Center, projectile.rotation, projectile.scale * 30, color);
+            return false;
         }
     }
 }
