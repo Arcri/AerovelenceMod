@@ -8,10 +8,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
     public class CrystalArch : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Crystal Arch");
-        }
+        int projectileAmount = 3;
+        public override void SetStaticDefaults() => DisplayName.SetDefault("Crystal Arch");
+        
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
@@ -33,22 +32,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
            
             item.shoot = ModContent.ProjectileType<IceArrow>();
             item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 12f;
+            item.shootSpeed = 11f;
         }
+
+        public override bool CanUseItem(Player player)
+            => player.ownedProjectileCounts[item.shoot] < 3;
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-4, 0);
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        { 
+        {   
             type = ModContent.ProjectileType<IceArrow>();
-            return true;
-
-            for(int i i++ < i = 0)
+            
+            for(int i = 0; i < projectileAmount; i++)
             {
-
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.PiOver4 * 0.25f);
+                Projectile.NewProjectile(position, perturbedSpeed, type, damage, knockBack, player.whoAmI);
             }
+
+           return false;
+
         }
 
 
