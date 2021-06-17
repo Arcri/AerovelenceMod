@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -14,22 +15,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item1;
-            item.crit = 5;
-            item.damage = 44;
+            item.damage = 34;
             item.ranged = true;
-            item.width = 20;
-            item.height = 26;
-            item.useTime = 17;
-            item.useAnimation = 17;
+            item.width = 30;
+            item.height = 32;
+            item.useTime = item.useAnimation = 36;
+            
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true;
-            item.knockBack = 4;
             item.value = Item.sellPrice(0, 6, 10, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
             item.noUseGraphic = true;
             item.shoot = ModContent.ProjectileType<SnowballProjectile>();
-            item.shootSpeed = 5f;
+            item.shootSpeed = 9f;
         }
     }
 
@@ -41,36 +40,113 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 26;
-            projectile.aiStyle = 16;
+            projectile.width = projectile.height = 30;
+
+            projectile.CloneDefaults(ProjectileID.Shuriken);
             projectile.friendly = projectile.ranged = true;
-            
+
+            projectile.tileCollide = true;
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
             projectile.extraUpdates = 1;
         }
+
+        public override void AI()
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                Dust dust = Dust.NewDustPerfect(projectile.Center + (10 * ((projectile.rotation - 0.78f).ToRotationVector2())), 20);
+                dust.noGravity = true;
+                dust.scale = Main.rand.NextFloat(0.09f, 0.2f);
+                dust.fadeIn = 1.5f;
+            }
+        }
         public override void Kill(int timeLeft)
         {
-            for (int i = 0; i < 15; i++)
-            {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.oldVelocity.X * 0.2f, projectile.oldVelocity.Y * 0.2f);
-            }
             Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
 
-            int type = Main.rand.Next(new int[] { ProjectileID.SnowBallFriendly, ProjectileID.SnowBallFriendly });
-            int num318 = Main.rand.Next(4, 8);
-            for (int num319 = 0; num319 < num318; num319++)
-            {
-                Vector2 value16 = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
-                value16.Normalize();
-                value16 *= Main.rand.Next(280, 481) * 0.0111f;
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, value16.X, value16.Y, type, projectile.damage, projectile.owner, 0, Main.rand.Next(-45, 1));
-            }
             int damage = (int)(projectile.damage);
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0,  ProjectileID.DD2ExplosiveTrapT2Explosion, damage, 0, projectile.owner);
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, projectile.owner);
 
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0, 0);
+            if (Main.myPlayer == projectile.owner)
+            {
+                damage = (int)(projectile.damage * 0.5f);
+
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 0, 5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 0, -5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, -5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
+            }
+
+        }
+
+        public class SnowballProjectileTwo : ModProjectile
+        {
+            public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+            public override void SetDefaults()
+            {
+                projectile.width = projectile.height = 8;
+
+                projectile.friendly = projectile.ranged = true;
+
+                projectile.aiStyle = -1;
+
+                projectile.penetrate = -1;
+
+                projectile.timeLeft = 140;
+
+                projectile.tileCollide = false;
+
+                projectile.extraUpdates = 4;
+
+            }
+            public override void AI()
+            {
+                projectile.velocity.X *= 1.01f;
+                projectile.velocity = projectile.velocity.RotatedBy(System.Math.PI / 40);
+
+                for (int j = 0; j < 10; j++)
+                {
+                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
+                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.Blue, 0.9f);
+                    dust.position.X = x;
+                    dust.position.Y = y;
+                    dust.velocity *= 0f;
+                    dust.noGravity = true;
+                }
+            }
+        }
+        public class SnowballProjectileThree : ModProjectile
+        {
+            public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+            public override void SetDefaults()
+            {
+                projectile.width = projectile.height = 20;
+
+                projectile.aiStyle = -1;
+                projectile.friendly = projectile.melee = projectile.ignoreWater = true;
+
+                projectile.penetrate = -1;
+                projectile.timeLeft = 60;
+
+                projectile.tileCollide = false;
+                projectile.extraUpdates = 1;
+
+                projectile.alpha = 255;
+            }
+            public override void AI()
+            {
+                for (int i = 0; i < 2; ++i)
+                {
+                    float randomDust = Main.rand.NextFloat(-3, 3);
+                    float randomDust2 = Main.rand.NextFloat(3, -3);
+                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, randomDust, randomDust2);
+                }
+
+            }
+            public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+              => target.AddBuff(BuffID.Frostburn, 120);
         }
     }
 }

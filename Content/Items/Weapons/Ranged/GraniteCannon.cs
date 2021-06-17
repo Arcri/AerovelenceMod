@@ -99,9 +99,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         int Timer = 0;
         public override void AI()
         {
-            projectile.rotation += 100;
-
-
             Timer++;
             if (Timer <= 12)
             {
@@ -181,7 +178,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
             Main.PlaySound(SoundID.Item10, projectile.position);
         }
-    }
-
-    
+    } 
 }

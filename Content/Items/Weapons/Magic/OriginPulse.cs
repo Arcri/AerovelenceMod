@@ -1,5 +1,4 @@
-using System;
-using AerovelenceMod.Content.Projectiles.Weapons.Ranged;
+
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -16,7 +15,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item11;
-            item.crit = 8;
             item.damage = 49;
             item.magic = true;
             item.width = 36;
@@ -28,42 +26,43 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.knockBack = 4;
             item.value = Item.sellPrice(0, 25, 0, 0);
             item.rare = ItemRarityID.Pink;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("OriginPulseProj");
-            item.shootSpeed = 14f;
+            item.autoReuse = false;
+            item.shoot = ModContent.ProjectileType<OriginPulseProj>();
+            item.shootSpeed = 3f;
         }
     }
 
     public class OriginPulseProj : ModProjectile
-    {
-
-        int t;
+    { 
         public override void SetDefaults()
         {
             projectile.width = 14;
             projectile.height = 36;
-            projectile.friendly = true;
-            projectile.penetrate = 5;
-            projectile.hostile = false;
-            projectile.magic = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 420;
+            
+            projectile.penetrate = -1;
+            projectile.magic = projectile.tileCollide = projectile.ignoreWater = projectile.friendly = true;
+                        
+            projectile.extraUpdates = 14;
+            projectile.alpha = 255;
         }
         public override void AI()
         {
-            t++;
-            projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 3.141592653f;
-            projectile.scale *= (1 + 0.00238095238095238095238095238095f);
-            if (projectile.timeLeft % 30 == 0)
+            if (++projectile.localAI[1] > 10)
             {
-                projectile.damage += 4;
+                float amountOfDust = 16f;
+                for (int i = 0; i < amountOfDust; ++i)
+                {                  
+                    Vector2 spinningpoint5 = -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / amountOfDust)) * new Vector2(1f, 4f);
+                    spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
+
+                    Dust dust = Dust.NewDustPerfect(projectile.Center + spinningpoint5, 71, spinningpoint5, 0, Color.Blue, 1.3f);
+                    dust.noGravity = true;
+                    dust.scale *= 1.03f;
+                }
+                projectile.localAI[1] = 0;
             }
-            if(t % 50 == 0)
-            {
-                Vector2 offset = new Vector2(0, 0);
-                Projectile.NewProjectile(projectile.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<VoidBolt>(), 6, 1f, Main.myPlayer);
-            }
+
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Projectiles.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -13,35 +14,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item40;
-            item.crit = 4;
-            item.damage = 20;
+            item.damage = 13;
+            item.noMelee = true;
             item.ranged = true;
+            item.channel = true;
             item.width = 70;
             item.height = 44;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 1;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 8f;
+            item.useTime = item.useAnimation = 20;
+            item.UseSound = SoundID.Item13;
+            item.useStyle = 5;
+            item.shootSpeed = 14f;
+            
+            item.shoot = ModContent.ProjectileType<DeepFreezeProjectile>();
+            item.value = Item.sellPrice(silver: 3);
         }
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-6, 0);
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5));
-            speedX = perturbedSpeed.X;
-            speedY = perturbedSpeed.Y;
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.NanoBullet, damage, knockBack, player.whoAmI);
-            return false;
-        }
+ 
     }
 }

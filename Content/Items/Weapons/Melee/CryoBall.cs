@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.channel = true;		
+            item.channel = true;
             item.crit = 4;
             item.damage = 29;
             item.melee = true;
@@ -40,122 +40,117 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
     public class CryoBallProjectile : ModProjectile
     {
-        private int shootTimer;
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 13;
             ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 245f;
             ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 16f;
-        }
-        public override void AI()
-        {
-            if (Main.rand.Next(10) == 0)
-            {
-                Dust dust = Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-                dust.scale = 0.50f;
-            }
-            float distance = 192f;
-            bool npcNearby = false;
-            for (int k = 0; k < 200; k++)
-            {
-                if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5 && Main.npc[k].type != NPCID.TargetDummy)
-                {
-                    Vector2 newMove = Main.npc[k].Center - projectile.Center;
-                    float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
-                    if (distanceTo < distance)
-                    {
-                        distance = distanceTo;
-                        npcNearby = true;
-                    }
 
-                }
+            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
 
-            }
+            projectile.width = projectile.height = 16;
 
-            shootTimer++;
+            projectile.aiStyle = 99;
 
-
-            if (shootTimer >= Main.rand.Next(20, 30))
-                if (npcNearby)
-                {
-
-                    {
-                        float speed = 5f;
-                        int type = mod.ProjectileType("CryoBallProj2");
-                        Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
-                        shootTimer = 0;
-
-                        if (Main.rand.Next(2) == 0)
-                        {
-                            Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-                        }
-                    }
-
-                }
-        }
-    }
-    public class CryoBallProj2 : ModProjectile
-    {
-
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 4;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-        }
-
-        public override void SetDefaults()
-        {
-            projectile.width = 30;
-            projectile.height = 10;
-            projectile.aiStyle = -1;
             projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.penetrate = 3;
-            projectile.timeLeft = 200;
-            projectile.light = 0.5f;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
-            projectile.extraUpdates = 1;
-
-
+            projectile.penetrate = -1;
         }
-        public override void AI()
+
+        int OnHit = 0;
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            projectile.velocity *= 0.90f;
-            projectile.alpha += 2;
-            projectile.scale *= 0.99f;
-            if (projectile.alpha <= 0.4)
+            OnHit++;
+            if (OnHit == 9)
             {
-                projectile.active = false;
+                Main.PlaySound(SoundID.Item67, (int)projectile.Center.X, (int)projectile.Center.Y);
+
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, projectile.owner);
+                OnHit = 0;
             }
-            if (Main.rand.NextFloat() < 0.5f)
-            {
-                int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0f, 0f, 0, default, 1.118421f);
-                Dust dust = Main.dust[dustIndex];
-                dust.noGravity = true;
-                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-            }
-            projectile.rotation = projectile.velocity.ToRotation();
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Texture2D texture = Main.projectileTexture[projectile.type];
+            Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+            Color color = Color.Lerp(Color.Blue, Color.Purple, 0.5f + (float)Math.Sin(MathHelper.ToRadians(projectile.frame)) / 2f) * 0.5f;
+            for (int i = 0; i < projectile.oldPos.Length; i++)
             {
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(Color.LightPink) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, projectile.oldPos[i] + projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, projectile.oldRot[i], rectangle.Size() / 2f, 1f, projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
             }
+
             return true;
+        }
+
+        public override void AI()
+        {
+            if (OnHit >= 3)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    float t = (float)Main.time * 0.1f;
+                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
+                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.LightBlue, 0.9f);
+                    dust.position.X = x;
+                    dust.position.Y = y;
+                    dust.velocity *= 0f;
+                    dust.noGravity = true;
+                    dust.scale = 0.9f;
+                    dust.position = projectile.Center + new Vector2((float)Math.Sin(2 * t) / 2f, -(float)Math.Cos(3 * t) / 3f) * 100f;
+                }
+            }
+            if (OnHit >= 6)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    float t = (float)Main.time * 0.1f;
+                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
+                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    Dust dust2 = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.LightBlue, 0.9f);
+                    dust2.position.X = x;
+                    dust2.position.Y = y;
+                    dust2.velocity *= 0f;
+                    dust2.noGravity = true;
+                    dust2.scale = 0.9f;
+                    dust2.position = projectile.Center + new Vector2((float)Math.Sin(4 * t) / 2f, -(float)Math.Cos(2 * t) / 3f) * 100f;
+                }
+            }
+        }
+
+    }
+    public class CryoBallProj2 : ModProjectile
+    {
+        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override void SetDefaults()
+        {
+            projectile.width = projectile.height = 200;
+
+            projectile.aiStyle = -1;
+            projectile.friendly = projectile.melee = projectile.ignoreWater = true;
+
+            projectile.penetrate = -1;
+            projectile.timeLeft = 60;
+
+            projectile.tileCollide = false;
+            projectile.extraUpdates = 1;
+
+            projectile.alpha = 255;
+        }
+        public override void AI()
+        {
+            for (int i = 0; i < 16; ++i)
+            {
+                float randomDust = Main.rand.NextFloat(-4, 4);
+                float randomDust2 = Main.rand.NextFloat(4, -4);
+                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, randomDust, randomDust2);
+            }
+
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(BuffID.Frostburn, 120);
         }
     }
 }

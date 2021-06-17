@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             projectile.velocity.X *= 1.015f;
             projectile.velocity.Y += 0.35f;
 
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Ice, 0, 0);
+            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0, 0);
             Main.dust[dust].noGravity = true;
         }
 

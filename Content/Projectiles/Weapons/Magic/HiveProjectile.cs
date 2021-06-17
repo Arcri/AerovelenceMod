@@ -22,9 +22,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             projectile.width = projectile.height = 35;
            
             projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
+
+            projectile.friendly = projectile.ranged = projectile.tileCollide = true;                       
         }
 
         int Timer = 0;
@@ -34,19 +33,26 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             projectile.velocity.X *= 0.984f;
             projectile.velocity.Y += 0.28f;
 
-            Timer++;
+            projectile.ai[0]++;
             if(Timer >= 15)
             {
                 Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
-                Timer = 0;
+                projectile.ai[0] = 0;
             }
         }
 
         public override void Kill(int timeLeft)
-        {
+        { 
             Main.PlaySound(SoundID.NPCDeath19, projectile.position);
             Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
             Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-2, 5) * .25f, Main.rand.Next(-2, 7) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
+
+            for(int i = 0; i < 12; ++i)
+            { 
+               float random = Main.rand.NextFloat(-6f, 6f);
+               Dust dust = Dust.NewDustDirect(projectile.position, 0 , 0, 153, random, random);
+               dust.scale = 0.8f;
+            }
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
