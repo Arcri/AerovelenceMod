@@ -1,4 +1,6 @@
+using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Others.Crafting;
+using AerovelenceMod.Content.Projectiles.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -11,7 +13,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Hydra's Throw");
-            Tooltip.SetDefault("Unfinished");
+            Tooltip.SetDefault("Summons a blizzard of ice shards that do 75% damage");
         }
         public override void SetDefaults()
         {
@@ -47,12 +49,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
     public class FrostHydrasThrowProjectile : ModProjectile
     {
-        public float timerFloat = 0f;
         public int timer = 0;
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 440f;
+            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 540f;
             ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 24f;
         }
         public override void SetDefaults()
@@ -65,32 +66,43 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             projectile.penetrate = -1;
             projectile.melee = true;
             projectile.scale = 1f;
+            timer = 800;
         }
-
-
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
+        int counter = 0;
         public override void AI()
         {
-            if (Main.rand.Next(2) == 0)
+            for(int k = 0; k < 10; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-            }
-            Vector2 projPos = projectile.position;
-            float speedVertical = 10f;
-            float speedHorizontal = 10f;
-            Vector2 countedSpeed = new Vector2(speedHorizontal, speedVertical).RotatedBy(MathHelper.ToRadians(0));
-            Vector2 countedSpeed2 = new Vector2(speedHorizontal, speedVertical).RotatedBy(MathHelper.ToRadians(90));
-            if (timerFloat == 1f)
-            {
-                Projectile.NewProjectile(projPos.X, projPos.Y, countedSpeed.X, countedSpeed.Y, mod.ProjectileType("IcyShard"), 60, 10f);
-                Projectile.NewProjectile(projPos.X, projPos.Y, countedSpeed2.X, countedSpeed2.Y, mod.ProjectileType("IcyShardClone"), 60, 10f);
-                timerFloat = 2f;
+                counter++;
+                projectile.position += projectile.velocity * 0.1f;
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 outwards = new Vector2(0, 1 * (i * 2 - 1)).RotatedBy(MathHelper.ToRadians(counter * 1.5f));
+                    Vector2 spawnAt = projectile.Center;
+                    Dust dust = Dust.NewDustDirect(spawnAt - new Vector2(5), 0, 0, ModContent.DustType<WispDust>());
+                    dust.velocity = outwards * 6f;
+                    dust.noGravity = true;
+                    dust.scale *= 0.1f;
+                    dust.scale += 1f;
+                }
             }
             timer++;
-            if (timer >= 30)
+            int spawnRate = 50;
+            if (timer >= spawnRate)
             {
-                timerFloat += 1f;
+                for(int i = 0; i < (timer > 300 ? 2 : 1); i++)
+                {
+                    if(Main.myPlayer == projectile.owner)
+                    {
+                        Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<IcyShard>(), (int)(projectile.damage * 0.75f), projectile.knockBack, Main.myPlayer, projectile.identity);
+                    }
+                }
+                timer = Main.rand.Next(30);
             }
-
         }
     }
 }
