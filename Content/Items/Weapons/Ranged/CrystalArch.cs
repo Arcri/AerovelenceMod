@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
            
             item.shoot = ModContent.ProjectileType<IceArrow>();
             item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 11f;
+            item.shootSpeed = 8f;
         }    
         public override Vector2? HoldoutOffset()
         {

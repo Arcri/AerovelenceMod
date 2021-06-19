@@ -26,8 +26,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void AI()
         {
-            projectile.velocity.X *= 1.015f;
-            projectile.velocity.Y += 0.35f;
+            projectile.velocity.X *= 1.005f;
+            projectile.velocity.Y += 0.05f;
 
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0, 0);
             Main.dust[dust].noGravity = true;
