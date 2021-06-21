@@ -1,41 +1,57 @@
 ﻿
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
 {
     public class IcySaberProj : ModProjectile
-    {      
+    {
+
+        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+
         public override void SetDefaults()
         {
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 120;
-            projectile.tileCollide = false;
-            projectile.ownerHitCheck = true;
+            projectile.width = projectile.height = 8;
+
+            projectile.aiStyle = -1;
+            projectile.friendly = projectile.melee = projectile.tileCollide = false;
+
+            projectile.penetrate = 4;
+
+            projectile.timeLeft = 180;
         }
 
+        int Timer = 0;
         public override void AI()
         {
+            projectile.velocity *= 1.003f;
 
-            Player player = Main.player[projectile.owner];
-            float num = (float)Math.PI / 2f;
-            Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
-            num = 0f;
+            for (int j = 0; j < 80; j++)
+            {
+                float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
+                float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.Blue, 0.9f);
+                dust.position.X = x;
+                dust.position.Y = y;
+                dust.velocity *= 0f;
+                dust.noGravity = true;
+            }
+            if (++projectile.localAI[1] > 10)
+            {
+                float amountOfDust = 16f;
+                for (int i = 0; i < amountOfDust; ++i)
+                {
+                    Vector2 spinningpoint5 = -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / amountOfDust)) * new Vector2(1f, 4f);
+                    spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
 
+                    Dust dust = Dust.NewDustPerfect(projectile.Center + spinningpoint5, 20, spinningpoint5, 0, Color.Blue, 1.3f);
+                    dust.noGravity = true;
+                }
 
-            projectile.position = player.RotatedRelativePoint(player.MountedCenter) - projectile.Size / 2f;
-            projectile.rotation = projectile.velocity.ToRotation() + num;
-            projectile.spriteDirection = projectile.direction;
-            projectile.timeLeft = 2;
-            player.ChangeDir(projectile.direction);
-            player.heldProj = projectile.whoAmI;
-            player.itemTime = 2;
-            player.itemAnimation = 2;
-            player.itemRotation = (float)Math.Atan2(projectile.velocity.Y * (float)projectile.direction, projectile.velocity.X * (float)projectile.direction);
-        }
+                projectile.localAI[1] = 0;
+            }
+        }      
     }
 }

@@ -18,13 +18,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item1;
-            item.crit = 8;
             item.damage = 12;
             item.melee = true;
             item.width = 60;
             item.height = 32;
-            item.useTime = 17;
-            item.useAnimation = 17;
+            item.useTime = 37;
+            item.useAnimation = 37;
             item.useStyle = ItemUseStyleID.SwingThrow;
             item.noMelee = true;
             item.knockBack = 4;
@@ -32,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.rare = ItemRarityID.Blue;
             item.autoReuse = true;
             item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("ElectrapulseCanisterProj");
+            item.shoot = ModContent.ProjectileType<ElectrapulseCanisterProj>();
             item.shootSpeed = 16f;
         }
     }

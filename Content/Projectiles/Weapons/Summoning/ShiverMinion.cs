@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -7,30 +8,20 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
     public class ShiverMinion : HoverShooter
     {
-        public override void SetStaticDefaults()
+        public override void SetDefaults()
         {
-            Main.projFrames[projectile.type] = 3;
             Main.projPet[projectile.type] = true;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
             ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
-        }
 
-        public override void SetDefaults()
-        {
-            projectile.netImportant = true;
+            projectile.penetrate = -1;
+            projectile.minionSlots = 1f;
+            projectile.netImportant = projectile.friendly = projectile.minion = projectile.ignoreWater = true;
+
             projectile.width = 46;
             projectile.height = 30;
-            projectile.friendly = true;
-            projectile.minion = true;
-            projectile.minionSlots = 1;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 18000;
+
             projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            inertia = 20f;
-            shoot = ModContent.ProjectileType<ShiverBolt>();
-            shootSpeed = 12f;
         }
 
         public override void CheckActive()
@@ -47,31 +38,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
             }
         }
 
-        public override void CreateDust()
+        public override void AI()
         {
-            if (projectile.ai[0] == 0f)
-            {
-                if (Main.rand.NextBool(5))
-                {
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height / 2, 20);
-                    Main.dust[dust].velocity.Y -= 1.2f;
-                }
-            }
-            else
-            {
-                if (Main.rand.NextBool(3))
-                {
-                    Vector2 dustVel = projectile.velocity;
-                    if (dustVel != Vector2.Zero)
-                    {
-                        dustVel.Normalize();
-                    }
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20);
-                    Main.dust[dust].velocity -= 1.2f * dustVel;
-                }
-            }
-            Lighting.AddLight((int)(projectile.Center.X / 16f), (int)(projectile.Center.Y / 16f), 0.6f, 0.9f, 0.3f);
+            Player player = Main.player[projectile.owner];
+            Vector2 idlePos = player.Center;
+
         }
+
 
         public override void SelectFrame()
         {

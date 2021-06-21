@@ -20,15 +20,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.height = 72;
             item.useTime = 24;
             item.useAnimation = 24;
-            item.useStyle = ItemUseStyleID.HoldingOut;
+            item.useStyle = ItemUseStyleID.SwingThrow;
             item.knockBack = 6;
             item.value = Item.sellPrice(0, 7, 50, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = true;
-            item.channel = true;
-            item.noMelee = true;
-            item.shoot = ModContent.ProjectileType<IcySaberProj>();
         }
 
+        public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
+        {
+
+            float length = 350f;
+            Vector2 projectilePos = target.Center + (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2() * length;
+            Vector2 projectileVelocity = Vector2.Normalize(target.Center - projectilePos) * 16;
+
+            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcySaberProj>(), damage, knockBack);
+            Main.PlaySound(SoundID.Item27);
+
+            if(crit == true)
+            target.AddBuff(BuffID.Frostburn, 180);
+        }
     }
 }
