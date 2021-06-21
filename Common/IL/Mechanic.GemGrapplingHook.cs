@@ -15,7 +15,7 @@ namespace AerovelenceMod.Common.IL
         {
             var c = new ILCursor(il);
 
-            if (c.TryGotoNext(MoveType.After,
+            if (!c.TryGotoNext(MoveType.After,
                 i => i.MatchStloc(127)))
             {
                 return;
@@ -30,9 +30,9 @@ namespace AerovelenceMod.Common.IL
             // And returns an int as well.
             c.EmitDelegate<Func<Projectile, int, int>>((projectile, originalValue) =>
             {
-                Player owner = Main.player[projectile.owner];
+                AeroPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<AeroPlayer>();
 
-                if (owner.accRunSpeed >= 6)
+                if (modPlayer.UpgradedHooks)
                 {
                     return (originalValue + 200);
                 }
