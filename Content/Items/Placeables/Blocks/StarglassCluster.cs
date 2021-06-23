@@ -15,6 +15,8 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
             item.autoReuse = true;
             item.consumable = true;
 
+            item.maxStack = 999;
+            item.useTime = 10;
             item.useAnimation = 15;
 
             item.createTile = ModContent.TileType<StarglassOreBlock>();
