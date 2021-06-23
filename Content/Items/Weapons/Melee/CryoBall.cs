@@ -13,18 +13,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cryo Ball");
-            Tooltip.SetDefault("Fires out snowflakes when near an enemy");
+            Tooltip.SetDefault("Every nine hits releases an icy mist blast");
         }
         public override void SetDefaults()
         {
             item.channel = true;
-            item.crit = 4;
             item.damage = 29;
             item.melee = true;
             item.width = 34;
             item.height = 40;
-            item.useTime = 24;
-            item.useAnimation = 24;
+            
+            item.useAnimation = item.useTime = 24;
             item.UseSound = SoundID.Item1;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.noMelee = true;
@@ -33,13 +32,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.value = Item.sellPrice(0, 3, 75, 0);
             item.rare = ItemRarityID.Orange;
             item.autoReuse = false;
-            item.shoot = mod.ProjectileType("CryoBallProjectile");
+            item.shoot = ModContent.ProjectileType<CryoBallProjectile>();
             item.shootSpeed = 16f;
         }
     }
 
+    internal static class ProjectileExtentions
+    {
+        public static bool DrawProjectileCenteredWithTexture(this ModProjectile p, Texture2D texture, SpriteBatch spriteBatch, Color lightColor)
+        {
+            Rectangle frame = texture.Frame(1, Main.projFrames[p.projectile.type], 0, p.projectile.frame);
+            Vector2 origin = frame.Size() / 2 + new Vector2(p.drawOriginOffsetX, p.drawOriginOffsetY);
+            SpriteEffects effects = p.projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            Vector2 drawPosition = p.projectile.Center - Main.screenPosition + new Vector2(p.drawOffsetX, 0);
+
+            spriteBatch.Draw(texture, drawPosition, frame, lightColor, p.projectile.rotation, origin, p.projectile.scale, effects, 0f);
+
+            return (false);
+        }
+    }
     public class CryoBallProjectile : ModProjectile
     {
+
         public override void SetDefaults()
         {
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 13;
@@ -72,17 +87,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            Color color = Color.Lerp(Color.Blue, Color.Purple, 0.5f + (float)Math.Sin(MathHelper.ToRadians(projectile.frame)) / 2f) * 0.5f;
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            Texture2D texture2D = mod.GetTexture("Assets/Glow");
+            for(int k = 0; k < projectile.oldPos.Length; k++)
             {
-                Main.spriteBatch.Draw(texture, projectile.oldPos[i] + projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, projectile.oldRot[i], rectangle.Size() / 2f, 1f, projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .35f;
+                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(-9f, -11.5f);
+                Color color = projectile.GetAlpha(Color.DarkBlue) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+               
+                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0f);
             }
 
             return true;
         }
-
+        
         public override void AI()
         {
             if (OnHit >= 3)
@@ -118,7 +136,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 }
             }
         }
-
     }
     public class CryoBallProj2 : ModProjectile
     {
@@ -151,6 +168,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(BuffID.Frostburn, 120);
-        }
-    }
+        }       
+    } 
 }

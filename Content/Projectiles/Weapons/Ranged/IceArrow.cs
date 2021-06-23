@@ -9,7 +9,6 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 {
     public class IceArrow : ModProjectile
     {
-        int Timer = 0;
         public override void SetStaticDefaults() => DisplayName.SetDefault("Ice Arrow");
 
         public override void SetDefaults()
@@ -26,13 +25,10 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void AI()
         {
-            projectile.velocity.X *= 1.005f;
-            projectile.velocity.Y += 0.05f;
-
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0, 0);
+            projectile.velocity.X *= 0.999f;
+            projectile.velocity.Y += 0.23f;
+            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 109, 0, 0);
             Main.dust[dust].noGravity = true;
-        }
-
-        
+        }   
     }
 }
