@@ -1,145 +1,218 @@
-using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Input;
-using Terraria.ID;
+using AerovelenceMod.Content.Tiles.Ores;
 using Microsoft.Xna.Framework;
-using Terraria.World.Generation;
+using System.Collections.Generic;
+using Terraria;
 using Terraria.GameContent.Generation;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.World.Generation;
 
-namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
+namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
 {
-	class WorldGenTutorialWorld : ModWorld
-	{
-		public static bool JustPressed(Keys key)
-		{
-			return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
-		}
+    public class IceWorldgen : ModWorld
+    {
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        {
+            int genIndex;
 
-		public override void PostUpdate()
-		{
-			// if (JustPressed(Keys.D1))
-			// TestMethod((int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16);
-		}
+            genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Lakes"));
+            if (genIndex != -1)
+            {
+                tasks.Insert(genIndex + 1, new PassLegacy("Ice Extras", IceExtras));
+            }
+            genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Smooth World"));
+            if (genIndex != -1)
+            {
+                tasks.Insert(genIndex + 1, new PassLegacy("Finish Ice Spikes", IceExtras2));
+            }
+        }
 
-		private void TestMethod(int x, int y)
-		{
-			Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
+        private void DrawCircle(float x2, float y2, float radius, float xMultiplier, float yMultiplier, int tile, bool add, bool replace, bool wall)
+        {
+            for (int y = (int)(y2 - radius * yMultiplier); y <= y2 + radius * yMultiplier; y++)
+            {
+                for (int x = (int)(x2 - radius * xMultiplier); x <= x2 + radius * xMultiplier; x++)
+                {
+                    if (x > 1 && x < Main.maxTilesX && y > 1 && y < Main.maxTilesY && Framing.GetTileSafely(x, y).type != ModContent.TileType<StarglassOreBlock>())
+                    {
+                        if (Vector2.Distance(new Vector2(x2, y2), new Vector2((x - x2) / xMultiplier + x2, (y - y2) / yMultiplier + y2)) < radius)
+                        {
+                            if (tile == -2)
+                            {
+                                Framing.GetTileSafely(x, y).liquid = 255;
+                            }
+                            else if (tile == -1)
+                            {
+                                if (wall == true)
+                                {
+                                }
+                                else
+                                {
+                                    if (!Framing.GetTileSafely(x, y).active())
+                                    {
+                                        WorldGen.PlaceTile(x, y, Framing.GetTileSafely(x, y).type);
+                                    }
+                                }
+                            }
+                            else if (tile == 0)
+                            {
+                                if (wall == true)
+                                {
+                                    WorldGen.KillWall(x, y);
+                                }
+                                else
+                                {
+                                    if (Framing.GetTileSafely(x, y).active())
+                                    {
+                                        WorldGen.KillTile(x, y);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (add == true)
+                                {
+                                    if (wall == true)
+                                    {
+                                        if (Framing.GetTileSafely(x, y).wall == 0)
+                                        {
+                                            WorldGen.PlaceWall(x, y, tile);
+                                        }
+                                    }
+                                    else if (!Framing.GetTileSafely(x, y).active())
+                                    {
+                                        WorldGen.PlaceTile(x, y, tile);
+                                    }
+                                }
+                                if (replace == true)
+                                {
+                                    if (wall == true)
+                                    {
+                                        if (Framing.GetTileSafely(x, y).wall != 0)
+                                        {
+                                            Framing.GetTileSafely(x, y).wall = (ushort)tile;
+                                        }
+                                    }
+                                    else if (Framing.GetTileSafely(x, y).active())
+                                    {
+                                        Framing.GetTileSafely(x, y).type = (ushort)tile;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			// Code to test placed here:
-			WorldGen.TileRunner(x - 1, y, WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(2, 8), TileID.CobaltBrick);
+        private void IceExtras(GenerationProgress progress)
+        {
+            progress.Message = "Ice Spikes";
 
-		}
+            int structureCount = Main.maxTilesX / 250;
 
-		/*
-		float width = Main.rand.NextFloat(2f, 8f);
-		float angle = Main.rand.NextFloat(MathHelper.TwoPi);
+            while (structureCount > 0)
+            {
+                int structureX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
+                int structureY = 1;
+                bool valid = false;
 
-		WorldUtils.Gen(point, new Spike(width, angle, 3 * width), Actions.Chain(
-		new Actions.SetTile(Terraria.ID.TileID.RubyGemspark)
-			));
-			WorldUtils.Gen(point, new Spike(width, angle, 3 * width), Actions.Chain(
-		new Actions.SetFrames(),
-		new SpikeFrame()
-		)); */
+                while (!Framing.GetTileSafely(structureX, structureY).active())
+                {
+                    structureY++;
+                }
 
+                if (Framing.GetTileSafely(structureX, structureY).type == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).type == TileID.IceBlock)
+                {
+                    valid = true;
+                }
 
-		public class Spike : GenShape
-		{
-			private readonly float _width;
+                if (valid == true)
+                {
+                    int size = WorldGen.genRand.Next(4, 13);
+                    float size2 = size;
+                    int x = structureX;
+                    int y = structureY;
 
-			private Vector2 _endOffset;
+                    while (size > 0 && size2 > 0.5f)
+                    {
+                        DrawCircle(x, y, size, 0.25f, 0.75f, TileID.IceBlock, true, true, false);
 
-			public Spike(float width, float angle = 0, float speed = 10f)
-			{
-				_width = width;
+                        y -= 1;
+                        size2 = (float)(size2 * 0.8f);
+                        size = (int)size2;
+                    }
 
-				_endOffset = angle.ToRotationVector2() * speed * 16f;
-			}
+                    WorldGen.PlaceTile(x - 1, y + 1, ModContent.TileType<StarglassOreBlock>());
+                    WorldGen.PlaceTile(x + 1, y + 1, ModContent.TileType<StarglassOreBlock>());
 
-			public override bool Perform(Point origin, GenAction action)
-			{
-				Vector2 tileOrigin = new Vector2(origin.X << 4, origin.Y << 4);
-				return PlotTileTale(tileOrigin, tileOrigin + _endOffset, _width,
-					(int x, int y) => UnitApply(action, origin, x, y) || !_quitOnFail);
-			}
+                    structureCount--;
+                }
+            }
 
-			private bool PlotTileTale(Vector2 start, Vector2 end, float width, Utils.PerLinePoint plot)
-			{
-				float halfWidth = width / 2f;
+            progress.Message = "Ice Chasms";
 
-				Point pEnd = end.ToTileCoordinates();
-				Point pStart = start.ToTileCoordinates();
+            structureCount = Main.maxTilesX / 4200;
 
-				int totalLength = -1,
-					currentLength = 0;
+            while (structureCount > 0)
+            {
+                int structureX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
+                int structureY = 1;
+                bool valid = false;
 
-				Utils.PlotLine(pStart, pEnd, delegate
-				{
-					totalLength++;
-					return (true);
-				});
+                while (!Framing.GetTileSafely(structureX, structureY).active())
+                {
+                    structureY++;
+                }
 
-				if (totalLength <= 0)
-				{
-					return (false);
-				}
+                if (Framing.GetTileSafely(structureX, structureY).type == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).type == TileID.IceBlock)
+                {
+                    valid = true;
+                }
 
-				return Utils.PlotLine(pStart, pEnd, (x, y) =>
-				{
-					float scaleFactor = 1f - (float)currentLength / (float)totalLength;
+                if (valid == true)
+                {
+                    int size = 12;
+                    int x = structureX;
+                    int y = structureY;
 
-					PlaceBlotch(x, y, halfWidth * scaleFactor, plot);
+                    while (size > 0)
+                    {
+                        DrawCircle(x, y, size, 1, 0.5f, 0, true, true, false);
+                        if (size <= 8)
+                        {
+                            DrawCircle(x, y, size, 1, 0.5f, -2, true, true, false);
+                        }
 
-					return (++currentLength <= totalLength);
-				});
-			}
+                        int x2 = x + WorldGen.genRand.Next(-2, 3);
+                        int y2 = y + WorldGen.genRand.Next(-2, 3);
 
-			private void PlaceBlotch(int genX, int genY, float width, Utils.PerLinePoint plot)
-			{
-				Vector2 origin = new Vector2(genX, genY);
+                        DrawCircle(x2, y2, size, 1.25f, 0.25f, 0, true, true, false);
 
-				for (int x = genX - (int)width - 1; x < genX + (int)width + 1; ++x)
-				{
-					for (int y = genY - (int)width - 1; y < genY + (int)width + 1; ++y)
-					{
-						if (Vector2.Distance(origin, new Vector2(x, y)) >= width)
-						{
-							continue;
-						}
+                        DrawCircle(x, y, size + 3, 1, 0.5f, TileID.IceBlock, false, true, false);
+                        DrawCircle(x2, y2, size + 3, 1.5f, 0.25f, TileID.IceBlock, false, true, false);
 
-						if (Main.tile[x, y] == null)
-							Main.tile[x, y] = new Tile();
-						plot(x, y);
-					}
-				}
-			}
-		}
+                        x += WorldGen.genRand.Next(-5, 6);
+                        y += WorldGen.genRand.Next(size - 2, size);
+                        size -= 1;
+                    }
 
-		public class SpikeFrame : GenAction
-		{
-			public override bool Apply(Point origin, int x, int y, params object[] args)
-			{
-				if (!WorldGen.InWorld(x, y, 5))
-				{
-					return (false);
-				}
-
-				Tile top = Framing.GetTileSafely(x, y - 1);
-				Tile bottom = Framing.GetTileSafely(x, y + 1);
-
-				Tile left = Framing.GetTileSafely(x - 1, y);
-				Tile right = Framing.GetTileSafely(x + 1, y);
-
-				if (!top.active() && !bottom.active() && !left.active() && !right.active())
-				{
-					Main.tile[x, y].active(false);
-					return UnitApply(origin, x, y, args);
-				}
-
-				Tile.SmoothSlope(x, y);
-
-				return UnitApply(origin, x, y, args);
-			}
-		}
-	}
+                    structureCount--;
+                }
+            }
+        }
+        private void IceExtras2(GenerationProgress progress)
+        {
+            for (int y = 1; y < Main.maxTilesY; y++)
+            {
+                for (int x = 1; x < Main.maxTilesX; x++)
+                {
+                    if (Framing.GetTileSafely(x, y).type == ModContent.TileType<StarglassOreBlock>())
+                    {
+                        WorldGen.KillTile(x, y);
+                    }
+                }
+            }
+        }
+    }
 }
