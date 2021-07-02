@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.autoReuse = false;
             item.shoot = mod.ProjectileType("HydraulicBlasterProj");
 			item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 28f;
+            item.shootSpeed = 15f;
         }
 
         public override void AddRecipes()
@@ -97,14 +98,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
 			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 			i++;
-			if (i % 3 == 0)
+			/*if (i % 3 == 0)
 			{
 				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 56, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-			}
+			}*/
 			projectile.velocity.Y += 0.1f;
 			projectile.velocity *= 0.98f;
         }
-		public override bool OnTileCollide(Vector2 oldVelocity) 
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            Texture2D texture2D = mod.GetTexture("Assets/Glow");
+            for (int k = 0; k < projectile.oldPos.Length; k++)
+            {
+                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
+                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
+                Color color = projectile.GetAlpha(Color.Aqua) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+
+                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, Main.projectileTexture[projectile.type].Size(), scale, SpriteEffects.None, 0f);
+            }
+
+            return true;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity) 
 		{
 			Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), mod.ProjectileType("HydraulicBlasterProjSmall"), 10, 2, Main.player[0].whoAmI);
 			return true;
@@ -132,14 +148,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			projectile.timeLeft = 60;
 			projectile.alpha = 100;
         }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            Texture2D texture2D = mod.GetTexture("Assets/Glow");
+            for (int k = 0; k < projectile.oldPos.Length; k++)
+            {
+                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
+                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
+                Color color = projectile.GetAlpha(Color.Aqua) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+
+                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, Main.projectileTexture[projectile.type].Size(), scale, SpriteEffects.None, 0f);
+            }
+
+            return true;
+        }
         public override void AI()
         {
 			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 			i++;
-			if (i % 3 == 0)
+		/*	if (i % 3 == 0)
 			{
 				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 56, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-			}
+			}*/
 			projectile.velocity.Y += 0.1f;
 			projectile.velocity *= 0.98f;
         }

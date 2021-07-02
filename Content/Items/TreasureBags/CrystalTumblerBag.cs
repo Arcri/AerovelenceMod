@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 			player.TryGettingDevArmor();
 
-			switch (Main.rand.Next(7))
+			switch (Main.rand.Next(8))
 			{
 				case 0:
 					player.QuickSpawnItem(ModContent.ItemType<CrystallineQuadshot>());

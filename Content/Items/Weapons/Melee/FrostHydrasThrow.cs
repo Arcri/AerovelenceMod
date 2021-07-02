@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
             ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 540f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 24f;
+            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 22f;
         }
         public override void SetDefaults()
         {
@@ -75,7 +75,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         int counter = 0;
         public override void AI()
         {
-            for(int k = 0; k < 10; k++)
+            for(int k = 0; k < 4; k++)
             {
                 counter++;
                 projectile.position += projectile.velocity * 0.1f;
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 }
             }
             timer++;
-            int spawnRate = 50;
+            int spawnRate = 100;
             if (timer >= spawnRate)
             {
                 for(int i = 0; i < (timer > 300 ? 2 : 1); i++)
