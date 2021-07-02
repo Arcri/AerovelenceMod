@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -33,6 +34,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.shoot = AmmoID.Arrow;
             item.useAmmo = AmmoID.Arrow;
             item.shootSpeed = 8.5f;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 3);
+            recipe.AddIngredient(ItemID.Sandstone, 30);
+            recipe.AddIngredient(ItemID.Cactus, 7);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Others.Crafting;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -47,8 +48,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 30);
-			recipe.AddRecipeGroup("Wood", 10);
+			recipe.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 2);
+			recipe.AddIngredient(ItemID.Sandstone, 30);
+			recipe.AddIngredient(ItemID.Cactus, 5);
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

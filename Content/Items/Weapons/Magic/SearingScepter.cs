@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Others.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,8 +36,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Sandstone, 35);
-            recipe.AddRecipeGroup("Wood", 15);
+            recipe.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 1);
+            recipe.AddIngredient(ItemID.Sandstone, 15);
+            recipe.AddIngredient(ItemID.Cactus, 5);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
@@ -96,6 +98,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             projectile.extraUpdates = 1;
             projectile.alpha = 0;
         }
+
         public override void AI()
         {
 

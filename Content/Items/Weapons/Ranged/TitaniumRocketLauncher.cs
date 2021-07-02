@@ -35,9 +35,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ItemID.ShroomiteBar, 10);
-			modRecipe.AddIngredient(ItemID.RocketLauncher, 1);
-			modRecipe.AddIngredient(ItemID.IllegalGunParts, 1);
+			modRecipe.AddIngredient(ItemID.TitaniumBar, 15);
+			modRecipe.AddIngredient(ItemID.SoulofMight, 10);
+			modRecipe.AddIngredient(ItemID.HallowedBar, 5);
 			modRecipe.AddTile(TileID.MythrilAnvil);
 			modRecipe.SetResult(this);
 			modRecipe.AddRecipe();

@@ -168,6 +168,18 @@ namespace AerovelenceMod.Common.Globals.NPCs
                 if (Main.rand.NextBool(2))
                     Item.NewItem(npc.getRect(), ModContent.ItemType<LustrousCrystal>());
 
+            if (npc.type == NPCID.WalkingAntlion )
+                if (Main.rand.NextBool(3))
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<HugeAntlionMandible>());
+
+            if (npc.type == NPCID.FlyingAntlion)
+                if (Main.rand.NextBool(4))
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<HugeAntlionMandible>());
+
+            if (npc.type == NPCID.Antlion)
+                if (Main.rand.NextBool(3))
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<HugeAntlionMandible>());
+
             if (npc.type == ModContent.NPCType<LuminousDefender>())
                 if (Main.rand.NextBool(1))
                     Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystal>(), Main.rand.Next(3, 10));
