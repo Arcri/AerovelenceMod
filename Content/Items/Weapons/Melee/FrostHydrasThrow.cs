@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
             ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 540f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 22f;
+            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 20f;
         }
         public override void SetDefaults()
         {
@@ -66,6 +66,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             projectile.penetrate = -1;
             projectile.melee = true;
             projectile.scale = 1f;
+            projectile.tileCollide = true;
             timer = 800;
         }
         public override bool ShouldUpdatePosition()
@@ -78,7 +79,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             for(int k = 0; k < 4; k++)
             {
                 counter++;
-                projectile.position += projectile.velocity * 0.1f;
+                projectile.velocity = Collision.TileCollision(projectile.position, projectile.velocity, projectile.width, projectile.height, true, true);
+                projectile.position += projectile.velocity * 0.25f;
                 for (int i = 0; i < 2; i++)
                 {
                     Vector2 outwards = new Vector2(0, 1 * (i * 2 - 1)).RotatedBy(MathHelper.ToRadians(counter * 1.5f));
