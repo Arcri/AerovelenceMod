@@ -34,6 +34,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			StarExplosion();
             return true;
         }
+		int j;
 		public override void AI()
 		{
 			int numDust = 5;
@@ -57,10 +58,10 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 		private void StarExplosion()
         {
 			Vector2 vector16 = ((float)Main.rand.NextDouble() * ((float)Math.PI * 2f)).ToRotationVector2();
-			float num651 = Main.rand.Next(5, 9);
-			float num652 = Main.rand.Next(12, 17);
-			float value16 = Main.rand.Next(3, 7);
-			float explosionSize = 20f;
+			float num651 = Main.rand.Next(4, 8);
+			float num652 = Main.rand.Next(4, 8);
+			float value16 = Main.rand.Next(4, 8);
+			float explosionSize = 10f;
 			for (float num654 = 0f; num654 < num651; num654++)
 			{
 				for (int num655 = 0; num655 < 2; num655++)
