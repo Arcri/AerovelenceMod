@@ -1,4 +1,3 @@
-using AerovelenceMod.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Common.IL;
 using AerovelenceMod.Content.Events.DarkNight;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
-using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Core.Prim;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -27,7 +25,6 @@ using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.TreasureBags;
 using AerovelenceMod.Content.Items.Accessories;
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.NPCs.Bosses.LightningMoth;
 using AerovelenceMod.Content.Items.Weapons.Summoning;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
@@ -35,6 +32,7 @@ using AerovelenceMod.Content.Items.Placeables.Trophies;
 using AerovelenceMod.Content.Items.Armor.Vanity;
 using AerovelenceMod.Content.Items.Placeables.MusicBoxes;
 using AerovelenceMod.Content.NPCs.Bosses.TheFallen;
+using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 
 namespace AerovelenceMod
 {
