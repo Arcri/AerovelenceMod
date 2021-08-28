@@ -12,6 +12,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist //Change me
         public float currentSpeed = 3;
         int t = 0;
         float rotationValue = 1;
+
+        int speed = 3;
+        int maxFrames = 4;
+        int frame;
+        int i;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Circler"); //DONT Change me
@@ -67,10 +73,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist //Change me
             if (rotationValue >= 75 * 16)
                 npc.active = false;
         }
+
         public override void FindFrame(int frameHeight)
         {
-            npc.frame.Y = frameHeight * t;
+            npc.frameCounter++;
+            if (npc.frameCounter >= speed)
+            {
+                frame++;
+                npc.frameCounter = 0;
+            }
+
+            if (frame > maxFrames)
+                frame = 0;
+
+            npc.frame.Y = frame * frameHeight;
         }
+
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             return false;       //this make that the npc does not have a health bar
