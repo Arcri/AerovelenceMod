@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void SetDefaults()
         {
             item.channel = true;		
-            item.crit = 20;
-            item.damage = 36;
+            item.crit = 4;
+            item.damage = 18;
             item.melee = true;
             item.width = 36;
             item.height = 48;
