@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering
 {
-    public class GlimmeringBathtub: AerovelenceItem
+    public class GlimmeringBathtub: ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Glimmering Bathtub");
 

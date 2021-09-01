@@ -30,6 +30,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             npc.knockBackResist = 0f;
             
             npc.aiStyle = -1;
+            npc.damage = 20;
             aiType = -1;
         }
 

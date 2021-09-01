@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class LushGrowth : AerovelenceItem
+    public class LushGrowth : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Lush Growth");
 

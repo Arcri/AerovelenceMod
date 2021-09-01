@@ -1,11 +1,11 @@
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class ChargedStone : AerovelenceItem
+    public class GlimmerwoodPlatformItem : ModItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Charged Stone");
+        public override void SetStaticDefaults() => DisplayName.SetDefault("Glimmerwood Platform");
 
         public override void SetDefaults()
         {
@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
             item.useAnimation = 15;
             item.useTime = 10;
 
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.ChargedStone>();
+            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.Furniture.GlimmerwoodPlatform>();
 
             item.useStyle = ItemUseStyleID.SwingThrow;
         }

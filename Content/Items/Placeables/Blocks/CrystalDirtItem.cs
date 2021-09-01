@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class CrystalDirt : AerovelenceItem
+    public class CrystalDirtItem : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Crystal Dirt");
 

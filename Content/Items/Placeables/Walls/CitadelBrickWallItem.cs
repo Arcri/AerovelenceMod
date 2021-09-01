@@ -24,12 +24,12 @@ namespace AerovelenceMod.Content.Items.Placeables.Walls
 			item.useTime = 7;
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.consumable = true;
-			item.createWall = WallType<CitadelBrickWall>();
+			//item.createWall = WallType<CitadelBrickWall>();
 		}
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ModContent.ItemType<CitadelBrick>(), 1);
+			//modRecipe.AddIngredient(ModContent.ItemType<CitadelBrick>(), 1);
 			modRecipe.AddTile(TileID.WorkBenches);
 			modRecipe.SetResult(this, 4);
 			modRecipe.AddRecipe();

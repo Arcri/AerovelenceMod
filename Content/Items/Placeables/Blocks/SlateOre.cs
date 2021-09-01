@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class SlateOre : AerovelenceItem
+    public class SlateOre : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Slate Slab");
 

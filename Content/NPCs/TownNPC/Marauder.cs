@@ -1,6 +1,5 @@
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Accessories;
-using AerovelenceMod.Content.Items.Weapons.CavernsHMPlaceholder;
 using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
@@ -192,7 +191,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
-			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM1>());
+			/*shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM1>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM2>());
 			nextSlot++;
@@ -207,7 +206,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM7>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<HM8>());
-			nextSlot++;
+			nextSlot++;*/
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<PhanticClaws>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<PhanticSword>());

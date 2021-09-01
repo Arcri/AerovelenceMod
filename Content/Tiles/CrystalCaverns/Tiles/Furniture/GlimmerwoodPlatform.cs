@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			AddMapEntry(new Color(068, 077, 098));
 
 			dustType = ModContent.DustType<Sparkle>();
-			drop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodPlatform>();
+			drop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodPlatformItem>();
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Platforms };
 		}

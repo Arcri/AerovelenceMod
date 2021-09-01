@@ -3,9 +3,9 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class CitadelBrick : AerovelenceItem
+    public class AncientChunk : ModItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Citadel Brick");
+		public override void SetStaticDefaults() => DisplayName.SetDefault("Ancient Chunk");
 
         public override void SetDefaults()
         {
@@ -17,8 +17,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
             item.useAnimation = 15;
             item.useTime = 10;
 
-
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.CitadelBrick>();
+            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.AncientChunk>();
 
             item.useStyle = ItemUseStyleID.SwingThrow;
         }

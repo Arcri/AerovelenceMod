@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class CrystalSand : AerovelenceItem
+    public class CrystalSand : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Crystal Sand");
 

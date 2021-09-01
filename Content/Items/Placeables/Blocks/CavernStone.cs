@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class CavernStone : AerovelenceItem
+    public class CavernStone : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Cavern Stone");
 

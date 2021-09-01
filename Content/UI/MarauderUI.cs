@@ -51,11 +51,11 @@ namespace AerovelenceMod.Content.UI
 			base.Update(gameTime);
 
 			// talkNPC is the index of the NPC the player is currently talking to. By checking talkNPC, we can tell when the player switches to another NPC or closes the NPC chat dialog.
-			if (Main.LocalPlayer.talkNPC == -1 || Main.npc[Main.LocalPlayer.talkNPC].type != ModContent.NPCType<Marauder>())
+			/*if (Main.LocalPlayer.talkNPC == -1 || Main.npc[Main.LocalPlayer.talkNPC].type != ModContent.NPCType<Marauder>())
 			{
 				// When that happens, we can set the state of our UserInterface to null, thereby closing this UIState. This will trigger OnDeactivate above.
 				ModContent.GetInstance<AerovelenceMod>().MarauderUserInterface.SetState(null);
-			}
+			}*/
 		}
 
 		private bool tickPlayed;

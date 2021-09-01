@@ -8,10 +8,10 @@ https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 This mod version fixes a lot of bugs, and has boss checklist support.
 
 Current rundown:
--230+ Items
+-260+ Items
 -Large collection of new NPCs with fun and unique AI
--1 fun bossfight
--A brand new biome, the Crystal Caverns!
+-2 fun bossfights
+-A brand reworked new biome, the Crystal Caverns!
 -Legendary items that have a low drop rate from any boss, modded and vanilla alike!
 
 If this mod seems interesting to you, join our Discord here: https://discord.gg/QwqqZzc

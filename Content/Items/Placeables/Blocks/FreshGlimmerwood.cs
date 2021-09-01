@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class FreshGlimmerwood : AerovelenceItem
+    public class FreshGlimmerwood : ModItem
     {
         public override void SetStaticDefaults() => DisplayName.SetDefault("Fresh Glimmerwood");
 
