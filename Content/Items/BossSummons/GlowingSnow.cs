@@ -1,5 +1,4 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
-using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,7 +26,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             item.value = 100;
         }
 
-        public override bool CanUseItem(Player player) => !NPC.AnyNPCs(ModContent.NPCType<Rimegeist>());
+        //public override bool CanUseItem(Player player) => !NPC.AnyNPCs(ModContent.NPCType<Rimegeist>());
 
         public override bool UseItem(Player player)
         {

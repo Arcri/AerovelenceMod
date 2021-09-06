@@ -123,11 +123,6 @@ namespace AerovelenceMod
 		public override void OnHitByNPC(Terraria.NPC npc, int damage, bool crit)
 		{
 			Terraria.Player player = Terraria.Main.player[npc.target];
-			if (PoweredBattery)
-			{
-				if (Terraria.Main.rand.NextBool(10))
-					Terraria.Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<EnergyAura>(), 3, 2, player.whoAmI);
-			}
 			if (PhanticMeleeBonus)
 			{
 				if (damage > 10)

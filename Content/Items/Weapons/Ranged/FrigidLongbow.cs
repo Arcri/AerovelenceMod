@@ -11,6 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frigid Longbow");
+            Tooltip.SetDefault("Fires an extra frost arrow");
         }
         public override void SetDefaults()
         {

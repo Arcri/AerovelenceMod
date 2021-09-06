@@ -12,6 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantom Song");
+            Tooltip.SetDefault("Has a chance to fire a phantom arrow");
         }
         public override void SetDefaults()
         {

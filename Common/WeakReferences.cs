@@ -1,28 +1,10 @@
-﻿using AerovelenceMod.Content.Items.Accessories;
-using AerovelenceMod.Content.Items.BossSummons;
-using AerovelenceMod.Content.Items.Weapons.Magic;
-using AerovelenceMod.Content.Items.Weapons.Melee;
-using AerovelenceMod.Content.Items.Weapons.Ranged;
-using AerovelenceMod.Content.Items.Weapons.Thrown;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using AerovelenceMod.Common.Globals.Worlds;
-using Terraria.ModLoader;
-using AerovelenceMod.Content.Events.DarkNight;
-using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
-using AerovelenceMod.Content.Items.TreasureBags;
-using AerovelenceMod.Content.Items.Placeables.Trophies;
-using AerovelenceMod.Content.Items.Armor.Vanity;
-using Terraria;
-using Microsoft.Xna.Framework;
-using On.Terraria.ID;
-using Terraria.Localization;
-using System.Text;
 using System.Linq;
 
 namespace AerovelenceMod.Common
 {
-	internal static class WeakReferences
+    internal static class WeakReferences
 	{
 		public static class BossChecklistIntegration
 		{

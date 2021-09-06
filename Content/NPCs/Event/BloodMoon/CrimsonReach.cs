@@ -20,6 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
             npc.width = 80;
             npc.height = 40;
+            npc.damage = 40;
 
             npc.knockBackResist = 0f;
 

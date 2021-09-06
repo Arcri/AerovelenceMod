@@ -5,7 +5,6 @@ using AerovelenceMod.Core;
 using AerovelenceMod.Backgrounds.Skies;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Common.IL;
-using AerovelenceMod.Content.Events.DarkNight;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using AerovelenceMod.Core.Prim;
 using Terraria;
@@ -25,14 +24,11 @@ using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.TreasureBags;
 using AerovelenceMod.Content.Items.Accessories;
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.NPCs.Bosses.LightningMoth;
-using AerovelenceMod.Content.Items.Weapons.Summoning;
-using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Items.Placeables.Trophies;
 using AerovelenceMod.Content.Items.Armor.Vanity;
 using AerovelenceMod.Content.Items.Placeables.MusicBoxes;
-using AerovelenceMod.Content.NPCs.Bosses.TheFallen;
-using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
+using AerovelenceMod.Content.Items.Weapons.Summoning;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 
 namespace AerovelenceMod
 {
@@ -115,7 +111,7 @@ namespace AerovelenceMod
 				);
 
 
-				bossChecklist.Call(
+				/*bossChecklist.Call(
 					"AddBoss",
 					5.5f,
 					ModContent.NPCType<Rimegeist>(),
@@ -164,7 +160,7 @@ namespace AerovelenceMod
 						ModContent.ItemType<SongOfTheStorm>(),
 						ModContent.ItemType<StaticSurge>()},
 					$"Use a [i:" + ModContent.ItemType<TorrentialTotem>() + "] at night in the Crystal Caverns"
-					);
+					);*/
 
 
 				bossChecklist.Call(
@@ -193,7 +189,7 @@ namespace AerovelenceMod
 					$"Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] at night anywhere"
 					);
 
-				bossChecklist.Call(
+				/*bossChecklist.Call(
 					"AddBoss",
 					12.5f,
 					ModContent.NPCType<TheFallenSpirit>(),
@@ -216,20 +212,22 @@ namespace AerovelenceMod
 						ModContent.ItemType<StormRazor>()
 					},
 					$"Use a [i:" + ModContent.ItemType<AncientAmulet>() + "] during the day in the sky"
-					);
+					);*/
 			}
 		}
 
 		public static Effect LegElectricity;
 		public override void Load()
 		{
-			string shaderName = "AerovelenceMod:CavernCrystalShine";
-			string shaderPath = "Effects/CavernCrystalShine";
+			if (Main.netMode != NetmodeID.Server)
+			{
+				string shaderName = "AerovelenceMod:CavernCrystalShine";
+				string shaderPath = "Effects/CavernCrystalShine";
 
-			var shaderRef = new Ref<Effect>(Instance.GetEffect(shaderPath));
-			(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
+				var shaderRef = new Ref<Effect>(Instance.GetEffect(shaderPath));
+				(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
 
-
+			}
 			GemGrapplingRange.Load();
 
             ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
@@ -238,9 +236,6 @@ namespace AerovelenceMod
                 new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 			
             SkyManager.Instance["AerovelenceMod:FoggyFields"] = new CrystalTorrentSky();
-
-            Filters.Scene["Shockwave"] = 
-                new Filter(new ScreenShaderData(new Ref<Effect>(GetEffect("Effects/ShockwaveEffect")), "ShockwavePass"), EffectPriority.Low);
 
 			Filters.Scene["AerovelenceMod:CrystalTorrents"] = 
                 new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
@@ -255,11 +250,11 @@ namespace AerovelenceMod
 			{
                 AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
+			//	AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
+				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
+				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
 
 				LegElectricity = Instance.GetEffect("Effects/LegElectricity");
 			}
@@ -364,11 +359,11 @@ namespace AerovelenceMod
                 priority = MusicPriority.BiomeHigh;
 			}
 
-            if (!Main.dayTime && DarkNightWorld.DarkNight)
+            /*if (!Main.dayTime && DarkNightWorld.DarkNight)
             {
                 music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
                 priority = MusicPriority.Environment;
-            }
+            }*/
         }
 
         public override void AddRecipeGroups()

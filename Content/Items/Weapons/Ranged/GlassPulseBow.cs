@@ -13,7 +13,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Glass Pulse Bow");
-		}
+            Tooltip.SetDefault("Fires a bolt of energy");
+        }
 
         public override void SetDefaults()
         {

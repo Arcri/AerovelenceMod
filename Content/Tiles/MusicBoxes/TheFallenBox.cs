@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Tiles.MusicBoxes
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
 			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<TheFallenBoxItem>();
+			//player.showItemIcon2 = ItemType<RimegeistBoxItem>();
 		}
 	}
 }

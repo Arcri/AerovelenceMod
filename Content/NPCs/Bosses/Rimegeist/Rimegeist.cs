@@ -1,18 +1,20 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using On.Terraria.GameContent.Events;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+//namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 {
     [AutoloadBossHead]
     public class Rimegeist : ModNPC
     {
         public int t;
-        public bool Phase2;
         public int progTimer2;
         public int progTimer1;
         public float someValue;
@@ -24,9 +26,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public int shootTimer4;
         public int dashTimer;
         public int dashTimer2;
+        private float whiteIn = 0f;
         private int stobit;
         private int ebic;
         public float hhhh;
+        public static Rimegeist rimegeist;
+        public const string AssetDirectory = "AerovelenceMod/Content/NPCs/Bosses/Rimegeist/";//AerovelenceMod/Content/NPCs/Bosses/Rimegeist/
 
         private enum RimegeistState
         {
@@ -39,8 +44,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             HomingVoidSouls = 6,
             VoidStone = 7,
             VortexOfRainbows = 8,
-            IceBulletHell = 9
-
+            IceBulletHell = 9,
+            PhaseTwoTransition = 10,
+            ShadowDash = 11,
         }
 
         /// <summary>
@@ -62,6 +68,45 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             get => npc.ai[1];
             set => npc.ai[1] = value;
         }
+
+        /// <summary>
+        /// Manages the phase 2
+        /// Gets and sets npc.ai[2] as tracker.
+        /// </summary>
+        public float PhaseTwo
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+
+
+        /// <summary>
+        /// Changes the npc state and attack timer
+        /// Allows easier code injection later on to interupt change states
+        /// </summary>
+        public void ChangeState(int stateIndex, int attackTimer = 0)
+        {
+            State = (RimegeistState)stateIndex;
+            if (PhaseTwo < 1 && npc.life < npc.lifeMax / 2)
+                State = RimegeistState.PhaseTwoTransition;
+
+            if (PhaseTwo > 2000)
+            {
+                State = RimegeistState.ShadowDash;
+                PhaseTwo = Main.rand.Next(5, 200);
+
+            }
+
+            this.AttackTimer = attackTimer;
+
+        }
+
+        public override bool Autoload(ref string name)
+        {
+            ScreenObstruction.Draw += DrawOverBlackout;
+            return true;
+        }
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[npc.type] = 8;    //boss frame/animation 
@@ -73,8 +118,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.damage = 32;  //boss damage
             npc.defense = 24;    //boss defense
             npc.knockBackResist = 0f;
-            npc.width = 246;
-            npc.height = 300;
+            npc.width = 220;
+            npc.height = 260;
             npc.value = Item.buyPrice(0, 5, 75, 45);
             npc.npcSlots = 1f;
             npc.boss = true;
@@ -94,9 +139,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             {
                 npc.DropBossBags();
             }
-            if (!Main.expertMode)
+            else
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.HealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostShard"), Main.rand.Next(10, 20), false, 0, false, false);
                 switch (Main.rand.Next(5))
                 {
@@ -118,12 +162,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 }
             }
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void BossLoot(ref string name, ref int potionType)
         {
-            float alpha = 1f;
-            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/Rimegeist/Glowmask");
-            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White * alpha, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+            potionType = ItemID.HealingPotion;
         }
+
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+        {
+            return npc.localAI[2] > -30f && State != RimegeistState.ShadowDash ? false : base.CanHitPlayer(target, ref cooldownSlot);
+        }
+
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = 10000;  //boss life scale in expertmode
@@ -138,428 +186,285 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void AI()
         {
-            npc.rotation = npc.velocity.X * 0.025f;
-            if (npc.life <= npc.lifeMax / 2)
+
+            npc.dontTakeDamage = npc.localAI[2] > 0f && State != RimegeistState.ShadowDash;
+            npc.localAI[0] = npc.velocity.X * 0.025f;
+            npc.rotation += (npc.localAI[0] - npc.rotation) * 0.05f;
+
+            npc.localAI[2]--;
+            if (npc.localAI[2] < 1)
+                npc.localAI[3] *= 0.95f;
+
+            rimegeist = this;
+
+            if (PhaseTwo > 0 && State != RimegeistState.PhaseTwoTransition)
             {
-                Phase2 = true;
+                PhaseTwo += 1;
             }
-            if(Phase2)
-            {
-                for (int i = 0; i < 7; i++)
-                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore" + i));
-            }
+
             npc.TargetClosest(true);
             Player target = Main.player[npc.target];
             Vector2 vector8 = new Vector2(npc.position.X + (npc.width * 0.5f), npc.position.Y + (npc.height * 0.5f));
             var player = Main.player[npc.target];
             Vector2 move = player.position - npc.Center;
 
-            if (State == RimegeistState.IdleMovement)
-            {
-                int RandomPos;
-                if (AttackTimer % 120 == 0)
-                {
-                    RandomPos = 300;
-                }
-                else
-                {
-                    RandomPos = -300;
-                }
-                Vector2 playerPos = player.position + new Vector2(0, RandomPos);
-                {
-                    float speed = 4.6f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;
-                   // Main.NewText("Idle Movement");
-                    if (++AttackTimer >= 1)
-                    {
-                        AttackTimer = 0;
-                        npc.netUpdate = true;
+            float speed = 4.6f;
+            Vector2 playerPos = player.position + new Vector2(0, 0);
+            Vector2 moving = playerPos - npc.Center;
+            float magnitude = 1f;
+            int RandomPos;
+            float turnResistance = 5f;
 
-                        if (Main.netMode != NetmodeID.MultiplayerClient)
+            switch (State)
+            {
+
+                case RimegeistState.IdleMovement:
+
+                    if (AttackTimer % 120 == 0)
+                    {
+                        RandomPos = 300;
+                    }
+                    else
+                    {
+                        RandomPos = -300;
+                    }
+                    playerPos = player.position + new Vector2(0, RandomPos);
+                    {
+                        speed = 4.6f;
+                        moving = playerPos - npc.Center;
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
                         {
-                            State = RimegeistState.RadialIcicles;
+                            moving *= speed / magnitude;
+                        }
+                        turnResistance = 5f;
+                        moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        npc.velocity = moving;
+                        // Main.NewText("Idle Movement");
+                        if (++AttackTimer >= 1)
+                        {
+                            npc.netUpdate = true;
+
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                ChangeState((int)RimegeistState.RadialIcicles);
+                            }
                         }
                     }
-                }
-            }
 
+                    break;
+                case RimegeistState.RadialIcicles:
 
-            else if (State == RimegeistState.RadialIcicles)
-            {
-                if (++AttackTimer <= 180)
-                {
-                    //Main.NewText("Radial Icicles");
-
-                    // follows player from the top and shoots a blast of icy spikes
-                    npc.velocity.X = ((10 * npc.velocity.X + move.X) / 20f);
-                    npc.velocity.Y = ((10 * npc.velocity.Y + move.Y - 300) / 20f);
-
-                    int type = mod.ProjectileType("IcySpike");
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    float speedX = 10f;
-                    float speedY = 10f;
-                    Vector2 position = npc.Center;
-
-
-                    shootTimer++;
-
-                    if (shootTimer >= 90)
+                    if (++AttackTimer <= 220)
                     {
-                        if (Main.netMode != 1)
-                            for (int i = 0; i < 8; i++)
+                        //Main.NewText("Radial Icicles");
+
+                        // follows player from the top and shoots a blast of icy spikes
+
+                        float scalespeed = (PhaseTwo > 0 ? 0.2f : MathHelper.Clamp(AttackTimer / 300f, 0f, 1f)) * 10f;
+
+                        if (AttackTimer < 30 && PhaseTwo > 0)
+                        {
+                            if (AttackTimer < 80)
                             {
-                                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45 * i));
-                                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
+                                npc.localAI[2] = 2;
+                                npc.localAI[3] += (60f - npc.localAI[3]) * 0.75f;
                             }
-                        shootTimer = 0;
+                            else
+                            {
+                                npc.localAI[2] = 2;
+                                npc.localAI[3] += (0f - npc.localAI[3]) * 0.75f;
+                            }
+                        }
+
+                        npc.velocity.X = (((npc.velocity.X + move.X) / 20f)) * scalespeed;
+                        npc.velocity.Y = (((npc.velocity.Y + move.Y - 300) / 20f)) * scalespeed;
+
+                        int type = mod.ProjectileType("IcySpike");
+                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        float speedX = 10f;
+                        float speedY = 10f;
+                        Vector2 position = npc.Center;
+
+
+                        shootTimer++;
+
+                        if (shootTimer >= 90)
+                        {
+                            if (Main.netMode != 1)
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45 * i));
+                                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
+                                }
+                            shootTimer = 0;
+                        }
+                        if (AttackTimer == 220)
+                        {
+                            npc.netUpdate = true;
+
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                ChangeState(Main.rand.Next(2, 10));
+                            }
+                        }
+                    }
+
+                    break;
+                case RimegeistState.IceBlast:
+
+                    if (++AttackTimer <= 180)
+                    {
+                        dashTimer = 0;
+                        playerPos = player.position + new Vector2(Math.Sign(-move.X) * 500, 0);
+                        speed = 3.2f;
+                        moving = playerPos - npc.Center;
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        turnResistance = 5f;
+                        moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        npc.velocity = moving;
+                        // Main.NewText("Ice Blast");
+                        stobit++;
+                        if (stobit >= 40)
+                        {
+                            float Speed = 7f;
+                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int type = mod.ProjectileType("IceBlast");
+                            float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
+                            if (Main.netMode != 1)
+                                Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer);
+                            stobit = 0;
+                        }
                     }
                     if (AttackTimer == 180)
                     {
                         npc.netUpdate = true;
 
-                        AttackTimer = 0;
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            State = (RimegeistState)Main.rand.Next(2, 10);
+                            ChangeState(Main.rand.Next(2, 10));
                         }
                     }
-                }
-            }
-            else if (State == RimegeistState.IceBlast)
-            {
 
-                if (++AttackTimer <= 180)
-                {
-                    dashTimer = 0;
-                    Vector2 playerPos = player.position + new Vector2(500, 0);
-                    float speed = 3.2f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;
-                   // Main.NewText("Ice Blast");
-                    stobit++;
-                    if (stobit >= 40)
-                    {
-                        float Speed = 7f;
-                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        int type = mod.ProjectileType("IceBlast");
-                        float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                        if (Main.netMode != 1)
-                            Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer);
-                        stobit = 0;
-                    }
-                }
-                if (AttackTimer == 180)
-                {
-                    npc.netUpdate = true;
+                    break;
+                case RimegeistState.IceBoltBlast:
 
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    if (++AttackTimer <= 180)
                     {
-                        State = (RimegeistState)Main.rand.Next(2, 10);
-                    }
-                }
-            }
-            else if (State == RimegeistState.IceBoltBlast)
-            {
-                if (++AttackTimer <= 180)
-                {
-                   // Main.NewText("IceBoltBlast");
-                    /*Vector2 playerPos = player.position + new Vector2(0, -300);
-                    float speed = 5.1f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    float turnResistance = 5f;
-                    moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                    if (magnitude > speed)
-                    {
-                        moving *= speed / magnitude;
-                    }
-                    npc.velocity = moving;*/
-                    int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                    Vector2 position = npc.Center;
-                    int type = mod.ProjectileType("IceBolt");
-                    float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                    shootTimer2++;
-                    if (shootTimer2 >= 50)
-                    {
-                        float numberProjectiles = 6;
-                        float rotation = MathHelper.ToRadians(10);
-                        position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
-                        for (int i = 0; i < numberProjectiles; i++)
+                        // Main.NewText("IceBoltBlast");
+                        /*Vector2 playerPos = player.position + new Vector2(0, -300);
+                        float speed = 5.1f;
+                        Vector2 moving = playerPos - npc.Center;
+                        float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
                         {
-                            Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1)).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
-                            if (Main.netMode != 1)
+                            moving *= speed / magnitude;
+                        }
+                        float turnResistance = 5f;
+                        moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        npc.velocity = moving;*/
+                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        Vector2 position = npc.Center;
+                        int type = mod.ProjectileType("IceBolt");
+                        float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
+                        shootTimer2++;
+                        if (shootTimer2 >= 50)
+                        {
+                            float numberProjectiles = 6;
+                            float rotation = MathHelper.ToRadians(10);
+                            position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
+                            for (int i = 0; i < numberProjectiles; i++)
                             {
-                                float speedMult = 1f;
-                                if (i == 1 || i == 3)
+                                Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1)).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
+                                if (Main.netMode != 1)
                                 {
-                                    speedMult = 1.25f;
+                                    float speedMult = 1f;
+                                    if (i == 1 || i == 3)
+                                    {
+                                        speedMult = 1.25f;
+                                    }
+                                    else if (i == 2)
+                                    {
+                                        speedMult = 1.5f;
+                                    }
+                                    Main.PlaySound(SoundID.Item101);
+                                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * speedMult, perturbedSpeed.Y * speedMult, type, damage, 2f, Main.myPlayer);
+
                                 }
-                                else if (i == 2)
-                                {
-                                    speedMult = 1.5f;
-                                }
-                                Main.PlaySound(SoundID.Item101);
-                                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * speedMult, perturbedSpeed.Y * speedMult, type, damage, 2f, Main.myPlayer);
+                                shootTimer2 = 0;
 
                             }
-                            shootTimer2 = 0;
-
                         }
                     }
-                }
-                if (AttackTimer == 180)
-                {
-                    npc.netUpdate = true;
-
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    if (AttackTimer == 180)
                     {
-                        State = (RimegeistState)Main.rand.Next(2, 10);
-                    }
-                }
-            }
+                        npc.netUpdate = true;
 
-            else if (State == RimegeistState.IcicleRain)
-            {
-                if (++AttackTimer <= 0)
-                {
-                    progTimer1++;
-                    //Main.NewText("IcicleRain");
-
-                }
-                if (AttackTimer == 1)
-                {
-                    npc.netUpdate = true;
-
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        State = (RimegeistState)Main.rand.Next(2, 10);
-                    }
-                }
-            }
-            else if (State == RimegeistState.VortexOfRainbows)
-            {
-
-                int RandomPos;
-                if (AttackTimer % 120 == 0)
-                {
-                    RandomPos = 300;
-                }
-                else
-                {
-                    RandomPos = -300;
-                }
-                Vector2 playerPos = player.position + new Vector2(0, RandomPos);
-                float speed = 4f;
-                Vector2 moving = playerPos - npc.Center;
-                float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                if (magnitude > speed)
-                {
-                    moving *= speed / magnitude;
-                }
-                float turnResistance = 5f;
-                moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                if (magnitude > speed)
-                {
-                    moving *= speed / magnitude;
-                }
-                npc.velocity = moving;
-                if (++AttackTimer <= 180)
-                {
-                   // Main.NewText("Vortex Of Rainbows");
-
-                    if (progTimer2 <= 60)
-                    {
-                        npc.velocity *= 0.9f;
-                        int type = mod.ProjectileType("RainbowBlast");
-                        if (Main.netMode != 1 && progTimer2 % 10 == 0)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Vector2 circular = new Vector2(0, -8).RotatedBy(MathHelper.ToRadians(progTimer2 * 6));
-                            Projectile.NewProjectile(npc.Center, circular, type, npc.damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
+                            ChangeState(Main.rand.Next(2, 10));
                         }
                     }
-                    progTimer2++;
-                }
-                if (AttackTimer == 180)
-                {
-                    progTimer2 = 0;
-                    npc.netUpdate = true;
 
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    break;
+                case RimegeistState.IcicleRain:
+
+                    if (++AttackTimer <= 0)
                     {
-                        State = RimegeistState.RadialIcicles;
+                        progTimer1++;
+                        //Main.NewText("IcicleRain");
+
                     }
-                }
-            }
-            else if (State == RimegeistState.HomingVoidSouls)
-            {
-                npc.velocity *= 0.99f;
-                //Main.NewText("HomingVoidSouls");
-                if (++AttackTimer <= 180)
-                {
-                    ebic++;
-                    if (ebic >= 100)
+                    if (AttackTimer == 1)
                     {
-                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        int type2 = mod.ProjectileType("IceCube");
-                        Projectile.NewProjectile(player.Center + new Vector2(0, -300), new Vector2(0, 0), type2, damage, 2f, player.whoAmI);
-                        ebic = 0;
-                    }
-                    shootTimer2++;
-                    if (shootTimer2 >= 150)
-                    {
-                        float numberProjectiles = 4;
-                        for (int i = 0; i < numberProjectiles; i++)
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            if (Main.netMode != 1)
-                            {
-                                FireLaser(ModContent.ProjectileType<HomingWispSouls>(), 1, 0, player.whoAmI);
-                            }
-                            shootTimer2 = 0;
-
+                            ChangeState(Main.rand.Next(2, 10));
                         }
                     }
-                }
-                if (AttackTimer == 180)
-                {
-                    npc.netUpdate = true;
 
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    break;
+                case RimegeistState.VortexOfRainbows:
+
+
+                    if (AttackTimer % 120 == 0)
                     {
-                        State = RimegeistState.Dash;
-                    }
-                }
-            }
-            else if (State == RimegeistState.Dash)
-            {
-                //Main.NewText("Dash");
-                if (++AttackTimer >= 0 && AttackTimer < 480)
-                {
-                    dashTimer++;
-                    if (dashTimer % 240 < 150)
-                    {
-                       // Main.NewText("Dash Align");
-                        int leftOrRight = (int)Math.Sign(npc.Center.X - player.Center.X) * 500;
-
-
-                        npc.velocity = move * 0.02f;
-                        npc.velocity *= 0.99f;//Friction
-
-                    }
-                    else if (dashTimer % 240 < 160 || dashTimer % 240 > 220)
-                    {
-                      //  Main.NewText("Dash Wait");
-                        npc.velocity *= 0.75f;
-                        moveSpeed = 0;
+                        RandomPos = 300;
                     }
                     else
                     {
-                       // Main.NewText("Dash Fly");
-                        if (moveSpeed == 0)
-                        {
-                            Main.PlaySound(new LegacySoundStyle(SoundID.Roar, 0), npc.Center);
-                            moveSpeed = Math.Sign(player.Center.X - npc.Center.X) * 10;
-                            npc.velocity.X = moveSpeed;
-                        }
+                        RandomPos = -300;
                     }
-                }
-
-                if (AttackTimer == 480)
-                {
-                    npc.netUpdate = true;
-
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        State = RimegeistState.RadialIcicles;
-                    }
-                }
-            }
-
-            else if (State == RimegeistState.VoidStone)
-            {
-               // Main.NewText("Void Stone");
-                if (++AttackTimer <= 80)
-                {
-                    npc.velocity *= 0.99f;
-                    npc.velocity.Y -= 0.02f;
-                    float numberProjectiles = 2;
-                    float rotation = MathHelper.ToRadians(10);
-                    float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-
-                    Vector2 position = npc.Center;
-                    someValue += 3f;
-                    shootTimer2++;
-                    position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
-                    if (shootTimer2 > 40)
-                    {
-                        if (Main.netMode != 1)
-                        {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ModContent.ProjectileType<VoidStone>(), 15, 2f, Main.myPlayer, npc.target);
-
-                        }
-                        shootTimer2 = -30;
-                    }
-                }
-                if (AttackTimer == 80)
-                {
-                    npc.netUpdate = true;
-
-                    AttackTimer = 0;
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        State = (RimegeistState)Main.rand.Next(2, 10);
-                    }
-                }
-            }
-
-            else if (State == RimegeistState.IceBulletHell)
-            {
-                Vector2 playerPos = player.position + new Vector2(-400, 0);
-                {
-                    float speed = 4.6f;
-                    Vector2 moving = playerPos - npc.Center;
-                    float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                    playerPos = player.position + new Vector2(0, RandomPos);
+                    speed = 4f;
+                    moving = playerPos - npc.Center;
+                    magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
                     if (magnitude > speed)
                     {
                         moving *= speed / magnitude;
                     }
-                    float turnResistance = 5f;
+                    turnResistance = 5f;
                     moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
                     magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
                     if (magnitude > speed)
@@ -567,62 +472,363 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         moving *= speed / magnitude;
                     }
                     npc.velocity = moving;
-                    float length = 850f;
+                    if (++AttackTimer <= 180)
                     {
-                        Vector2 projectilePos = player.Center + (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2() * length;
-                        Vector2 projectileVelocity = Vector2.Normalize(target.Center - projectilePos) * 16;
-                       // Main.NewText("Laser Bullet Hell");
-                        if (++AttackTimer == 0)
-                        {
-                            npc.dontTakeDamage = true;
+                        // Main.NewText("Vortex Of Rainbows");
 
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-
-                        }
-                        if (AttackTimer == 5)
+                        if (progTimer2 <= 60)
                         {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
+                            npc.velocity *= 0.9f;
+                            int type = mod.ProjectileType("RainbowBlast");
+                            if (Main.netMode != 1 && progTimer2 % 10 == 0)
+                            {
+                                Vector2 circular = new Vector2(0, -8).RotatedBy(MathHelper.ToRadians(progTimer2 * 6));
+                                Projectile.NewProjectile(npc.Center, circular, type, npc.damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
+                            }
                         }
-                        if (AttackTimer == 10)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
-                        if (AttackTimer == 15)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
-                        if (AttackTimer == 20)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
-                        if (AttackTimer == 25)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
-                        if (AttackTimer == 30)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
-                        if (AttackTimer == 35)
-                        {
-                            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
-                        }
+                        progTimer2++;
                     }
-                    if (AttackTimer == 50)
+                    if (AttackTimer == 180)
                     {
-                        npc.dontTakeDamage = false;
+                        progTimer2 = 0;
                         npc.netUpdate = true;
 
-                        AttackTimer = 0;
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            State = (RimegeistState)Main.rand.Next(2, 10);
+                            ChangeState((int)RimegeistState.RadialIcicles);
                         }
                     }
-                }
+
+                    break;
+                case RimegeistState.HomingVoidSouls:
+
+                    npc.velocity *= 0.99f;
+                    //Main.NewText("HomingVoidSouls");
+                    if (++AttackTimer <= 180)
+                    {
+                        ebic++;
+                        if (ebic >= 100)
+                        {
+                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int type2 = mod.ProjectileType("IceCube");
+                            Projectile.NewProjectile(player.Center + new Vector2(0, -300), new Vector2(0, 0), type2, damage, 2f, player.whoAmI);
+                            ebic = 0;
+                        }
+                        shootTimer2++;
+                        if (shootTimer2 >= 150)
+                        {
+                            float numberProjectiles = 4;
+                            for (int i = 0; i < numberProjectiles; i++)
+                            {
+                                if (Main.netMode != 1)
+                                {
+                                    FireLaser(ModContent.ProjectileType<HomingWispSouls>(), 1, 0, player.whoAmI);
+                                }
+                                shootTimer2 = 0;
+
+                            }
+                        }
+                    }
+                    if (AttackTimer == 180)
+                    {
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChangeState((int)RimegeistState.Dash);
+                        }
+                    }
+
+                    break;
+                case RimegeistState.Dash:
+
+
+                    Vector2 movewhere = PhaseTwo > 0 ? move + new Vector2(Math.Sign(player.Center.X - npc.Center.X) * -200, -200) : move;
+
+                    //Main.NewText("Dash");
+                    if (++AttackTimer >= 0 && AttackTimer < 480)
+                    {
+                        dashTimer++;
+
+                        if (dashTimer % 240 < 150)
+                        {
+
+                            npc.velocity = movewhere * MathHelper.Clamp((dashTimer % 240) / 100f, 0f, 1f) * (PhaseTwo > 0 ? 0.075f : 0.02f);
+                            npc.velocity *= 0.99f;//Friction
+
+                        }
+                        else if (dashTimer % 240 < 160 || dashTimer % 240 > 220)
+                        {
+                            //  Main.NewText("Dash Wait");
+                            if (PhaseTwo > 0)
+                            {
+                                npc.velocity = -Vector2.Normalize(move) * (12 * MathHelper.Clamp(AttackTimer / 60f, 0f, 1f));
+
+                            }
+                            npc.velocity *= 0.75f;
+                            moveSpeed = 0;
+                        }
+                        else
+                        {
+                            // Main.NewText("Dash Fly");
+                            if (moveSpeed == 0)
+                            {
+                                Main.PlaySound(new LegacySoundStyle(SoundID.Roar, 0), npc.Center);
+                                moveSpeed = Math.Sign(player.Center.X - npc.Center.X) * 10;
+                                if (PhaseTwo < 1)
+                                {
+                                    npc.velocity.X = moveSpeed;
+                                }
+                                else
+                                {
+                                    npc.velocity = Vector2.Normalize(move) * 16;
+                                }
+                            }
+                        }
+                    }
+
+                    if (AttackTimer == 480)
+                    {
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChangeState((int)RimegeistState.RadialIcicles);
+                        }
+                    }
+
+                    break;
+                case RimegeistState.VoidStone:
+
+                    // Main.NewText("Void Stone");
+                    if (++AttackTimer <= 80)
+                    {
+                        npc.velocity *= 0.99f;
+                        npc.velocity.Y -= 0.02f;
+                        float numberProjectiles = 2;
+                        float rotation = MathHelper.ToRadians(10);
+                        float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
+
+                        Vector2 position = npc.Center;
+                        someValue += 3f;
+                        shootTimer2++;
+                        position += Vector2.Normalize(new Vector2((float)((Math.Cos(rotate) * 5f) * -1), (float)((Math.Sin(rotate) * 5f) * -1))) * 45f;
+                        if (shootTimer2 > 40)
+                        {
+                            if (Main.netMode != 1)
+                            {
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ModContent.ProjectileType<VoidStone>(), 15, 2f, Main.myPlayer, npc.target);
+
+                            }
+                            shootTimer2 = -30;
+                        }
+                    }
+                    if (AttackTimer == 80)
+                    {
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChangeState((int)Main.rand.Next(2, 10));
+                        }
+                    }
+                    break;
+                case RimegeistState.IceBulletHell:
+
+                    playerPos = player.position + new Vector2(-400, 0);
+                    {
+                        speed = 4.6f;
+                        moving = playerPos - npc.Center;
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        turnResistance = 5f;
+                        moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
+                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
+                        if (magnitude > speed)
+                        {
+                            moving *= speed / magnitude;
+                        }
+                        npc.velocity = moving;
+                        float length = 850f;
+                        {
+                            Vector2 projectilePos = player.Center + (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2() * length;
+                            Vector2 projectileVelocity = Vector2.Normalize(target.Center - projectilePos) * 16;
+
+                            // Main.NewText("Laser Bullet Hell");
+                            if (++AttackTimer % 5 == 0 && AttackTimer < 40)
+                            {
+                                npc.dontTakeDamage = true;
+
+                                Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcyLaserProj>(), npc.damage, 1);
+                            }
+                        }
+                        if (AttackTimer == 50)
+                        {
+                            npc.dontTakeDamage = false;
+                            npc.netUpdate = true;
+
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                ChangeState((int)Main.rand.Next(2, 10));
+                            }
+                        }
+                    }
+
+                    break;
+                case RimegeistState.PhaseTwoTransition:
+
+                    npc.velocity *= 0.95f;
+                    npc.dontTakeDamage = true;
+
+                    whiteIn = MathHelper.Clamp(whiteIn + (AttackTimer < 120 ? 0.025f : -0.15f), 0, 1f);
+
+                    if (++AttackTimer == 120)
+                    {
+                        PhaseTwo = 1;
+
+                        Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = Main.PlaySound(new LegacySoundStyle(SoundID.Roar, 2), npc.Center);
+
+                        if (snd != null)
+                        {
+                            snd.Pitch = -0.25f;
+                        }
+
+                        for (int i = 0; i < 7; i++)
+                            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore" + i));
+
+                    }
+
+                    if (AttackTimer == 200)
+                    {
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChangeState((int)RimegeistState.Dash);
+                        }
+                    }
+
+                    break;
+                case RimegeistState.ShadowDash:
+
+                    //Main.NewText("Dash");
+
+                    AttackTimer += 1;
+
+                    npc.localAI[2] = 20;
+                    npc.localAI[3] += (60f - npc.localAI[3]) * 0.15f;
+
+                    if (AttackTimer < 600)
+                        Terraria.GameContent.Events.ScreenObstruction.screenObstruction = MathHelper.Clamp(Terraria.GameContent.Events.ScreenObstruction.screenObstruction + 0.10f, 0f, 0.95f);
+
+                    dashTimer++;
+
+                    int dashindex = 200;
+
+                    if (dashTimer % dashindex >= 140)
+                    {
+
+                        //Main.NewText(npc.velocity);
+
+                        if (dashTimer % dashindex == 140)
+                        {
+                            npc.velocity = Vector2.Normalize(move) * 32f;
+
+                            Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = Main.PlaySound(new LegacySoundStyle(SoundID.Roar, 0), npc.Center);
+
+                            if (snd != null)
+                            {
+                                snd.Pitch = 0.50f;
+                            }
+
+                        }
+
+                        if (dashTimer % 10 == 0)
+                        {
+                            Projectile.NewProjectile(npc.Center, -Vector2.Normalize(move) * 1f, ModContent.ProjectileType<HomingWispSouls>(), 20, 0, Main.myPlayer);
+                        }
+                    }
+                    else
+                    {
+                        if (dashTimer % dashindex < 100)
+                        {
+                            npc.velocity += ((move + Vector2.UnitX.RotatedBy(move.ToRotation() + MathHelper.Pi) * (MathHelper.Max((dashTimer % dashindex * 12f) - 200, 240f))) - npc.velocity) * 0.025f;
+                            npc.velocity = Vector2.Normalize(npc.velocity) * MathHelper.Clamp(npc.velocity.Length(), 0f, 12f);
+
+                        }
+                        npc.velocity *= 0.95f;
+                    }
+
+                    if (AttackTimer == 650)
+                    {
+                        dashTimer = 0;
+                        npc.netUpdate = true;
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            ChangeState((int)RimegeistState.VortexOfRainbows);
+                        }
+                    }
+
+                    break;
+                default:
+
+                    //when non is true
+                    break;
+
             }
         }
 
+        Texture2D GlowTexture => ModContent.GetTexture(AssetDirectory + "Glowmask");
+
+        public float EyesFade => 1f;
+        public float Alpha => MathHelper.Clamp(3f - (npc.localAI[3]) / 20f, 0f, 1f);
+        public float ShadowTrailEffect => MathHelper.Clamp((float)Math.Sin(Math.Min((npc.localAI[3] / 30f) * MathHelper.Pi, MathHelper.PiOver2)), 0f, 1f);
+        public Color EyesColor => Color.Lerp(Color.Black, Color.White, EyesFade) * EyesFade;
+
+
+        public void DrawOverBlackout(On.Terraria.GameContent.Events.ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
+        {
+            orig(spriteBatch);
+
+            foreach (Projectile homingshot in Main.projectile.Where(testby => testby.active && testby.type == ModContent.ProjectileType<HomingWispSouls>()))
+            {
+                homingshot.modProjectile.PreDraw(spriteBatch, Color.White);
+            }
+
+            if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.npc.active)
+            {
+                float alpha = 1f;
+                spriteBatch.Draw(ModContent.GetTexture(AssetDirectory + "Glowmask"), Rimegeist.rimegeist.npc.Center - Main.screenPosition, Rimegeist.rimegeist.npc.frame, Rimegeist.rimegeist.EyesColor, Rimegeist.rimegeist.npc.rotation, Rimegeist.rimegeist.npc.frame.Size() / 2f, Rimegeist.rimegeist.npc.scale, SpriteEffects.None, 0);
+            }
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            Texture2D solidColor = ModContent.GetTexture(AssetDirectory + "RimegeistColorOver");
+            if (ShadowTrailEffect > 0)
+            {
+                for (float f = 0; f < npc.velocity.Length(); f += 0.10f)
+                {
+                    float scale = 3f;
+                    spriteBatch.Draw(solidColor, npc.Center + (Vector2.Normalize(npc.velocity) * -f * scale) - Main.screenPosition, npc.frame, Color.Black * 0.075f * ShadowTrailEffect * (1f - (f / npc.velocity.Length())), npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+                }
+            }
+            if (Alpha > 0)
+            {
+                spriteBatch.Draw(Main.npcTexture[npc.type], npc.Center - Main.screenPosition, npc.frame, drawColor * Alpha, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+                spriteBatch.Draw(GlowTexture, npc.Center - Main.screenPosition, npc.frame, Color.White * Alpha, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+
+            }
+            if (Alpha * whiteIn > 0)
+                spriteBatch.Draw(solidColor, npc.Center - Main.screenPosition, npc.frame, Color.White * Alpha * whiteIn, npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+
+            return false;
+
+        }
 
         public override void HitEffect(int hitDirection, double damage)
         {
@@ -639,7 +845,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter++;
-            if (npc.life <= npc.lifeMax / 2)
+            if (PhaseTwo > 0)
             {
                 int frameSpeed = 10;
                 int frameC = (int)(npc.frameCounter / frameSpeed) % 7;
@@ -670,10 +876,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.velocity -= toPlayer * recoilMult;
         }
     }
-}
 
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
     public class RainbowBlast : ModProjectile
     {
         public override void SetStaticDefaults()
@@ -691,7 +894,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             {
                 float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * 1.0f;
                 Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
-                Color color = projectile.GetAlpha(fetchRainbow()) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                Color color = projectile.GetAlpha(FetchRainbow()) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
                 for (int i = 0; i < 6; i++)
                 {
                     if (i == 0)
@@ -714,7 +917,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             projectile.extraUpdates = 1;
             projectile.tileCollide = false;
         }
-        public Color fetchRainbow()
+        public Color FetchRainbow()
         {
             float sin1 = (float)Math.Sin(MathHelper.ToRadians(projectile.ai[1]));
             float sin2 = (float)Math.Sin(MathHelper.ToRadians(projectile.ai[1] + 120));
@@ -737,20 +940,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 Main.PlaySound(SoundID.Item75);
             }
 
-        counter++;
+            counter++;
             projectile.velocity *= 0.955f + 0.000175f * counter;
-            
+
             Player player = Main.player[(int)projectile.ai[0]];
             Vector2 toPlayer = player.Center - projectile.Center;
             Vector2 circular = new Vector2(1, 0).RotatedBy(MathHelper.ToRadians(projectile.ai[1] * 2));
             projectile.velocity += toPlayer.SafeNormalize(Vector2.Zero) * (counter * 0.0004f) + circular * 0.05f;
             projectile.ai[1] += 2f;
-            Lighting.AddLight(new Vector2(projectile.Center.X, projectile.Center.Y), fetchRainbow().R / 255f, fetchRainbow().G / 255f, fetchRainbow().B / 255f);
+            Color rainbow = FetchRainbow();
+            Lighting.AddLight(new Vector2(projectile.Center.X, projectile.Center.Y), rainbow.R / 255f, rainbow.G / 255f, rainbow.B / 255f);
             if (Main.rand.NextBool(10))
             {
                 int num2 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 267);
                 Dust dust = Main.dust[num2];
-                Color color2 = new Color(110, 110, 110, 0).MultiplyRGBA(fetchRainbow());
+                Color color2 = new Color(110, 110, 110, 0).MultiplyRGBA(rainbow);
                 dust.color = color2;
                 dust.noGravity = true;
                 dust.fadeIn = 0.1f;
@@ -761,9 +965,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
     }
-}
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
+
     public class IcySpike : ModProjectile
     {
         public override void SetDefaults()
@@ -800,12 +1002,29 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
             return true;
         }
-    }
-}
 
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
-    public class IceCube : ModProjectile
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            Texture2D texture = ModContent.GetTexture(Rimegeist.AssetDirectory + "IcySpike_Glowmask");
+            Vector2 drawPos = projectile.Center + new Vector2(0, projectile.gfxOffY) - Main.screenPosition;
+            //keep an eye on the width and height when doing this. It matters
+            spriteBatch.Draw
+            (
+                texture,
+                drawPos,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                Color.White,
+                projectile.rotation,
+                texture.Size() * 0.5f,
+                projectile.scale,
+                SpriteEffects.None, //adjust this according to the sprite
+                0f
+                );
+        }
+
+    }
+
+    public class IceCube : WispSouls
     {
         public override void SetDefaults()
         {
@@ -818,13 +1037,30 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             projectile.ignoreWater = true;
             projectile.timeLeft = 120;
         }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.PhaseTwo > 0)
+                base.PreDraw(spriteBatch, lightColor);
+
+            return true;
+        }
         public override void AI()
         {
+            if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.PhaseTwo > 0)
+            {
+                if (projectile.velocity.Length() < 3)
+                {
+                    projectile.velocity = -Vector2.UnitY * 8f;
+                }
+                base.AI();
+            }
+
             Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.AncientLight, 0f, 0f, 255);
             dust.noGravity = true;
         }
         public override void Kill(int timeLeft)
         {
+
             if (Main.netMode != 1)
             {
                 int type = ProjectileID.FrostShard;
@@ -839,9 +1075,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
     }
-}
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
+
     public class IceBolt : ModProjectile
     {
         public override void SetDefaults()
@@ -875,7 +1109,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = mod.GetTexture("Content/NPCs/Bosses/Rimegeist/IceBolt_Glowmask");
+            Texture2D texture = ModContent.GetTexture(Rimegeist.AssetDirectory + "IceBolt_Glowmask");
             Vector2 drawPos = projectile.Center + new Vector2(0, projectile.gfxOffY) - Main.screenPosition;
             //keep an eye on the width and height when doing this. It matters
             spriteBatch.Draw
@@ -892,12 +1126,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 );
         }
     }
-}
 
-
-
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
     public class IceBlast : ModProjectile
     {
         public override string Texture => "Terraria/Projectile_" + ProjectileID.FrostBlastHostile;
@@ -911,10 +1140,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             aiType = ProjectileID.FrostBlastHostile;
         }
     }
-}
-
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
     public class HomingWispSouls : ModProjectile
     {
         public override void SetStaticDefaults()
@@ -930,13 +1155,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             for (int k = 0; k < projectile.oldPos.Length; k++)
             {
                 float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
+                Vector2 drawPos = projectile.oldPos[k] + projectile.Hitbox.Size() / 2f - Main.screenPosition;
                 Color color = projectile.GetAlpha(Color.Black) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, Main.projectileTexture[projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, texture2D.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
 
-            return true;
+            texture2D = Main.projectileTexture[projectile.type];
+
+            Rectangle rect = new Rectangle(0, (projectile.frame % (Main.projFrames[projectile.type])) * (texture2D.Height / Main.projFrames[projectile.type]), texture2D.Width, texture2D.Height / Main.projFrames[projectile.type]);
+
+            spriteBatch.Draw(texture2D, projectile.Center - Main.screenPosition, rect, Color.White * projectile.Opacity, projectile.velocity.X / 20f, rect.Size() / 2f, projectile.scale, SpriteEffects.None, 0);
+
+            return false;
         }
         public override void SetDefaults()
         {
@@ -946,7 +1177,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             projectile.friendly = false;
             projectile.aiStyle = -1;
             projectile.tileCollide = false;
-            projectile.ranged = projectile.friendly = true;
+            projectile.ranged = projectile.friendly == true;
             projectile.timeLeft = 180;
         }
         int radians = 16;
@@ -956,6 +1187,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         private bool spawned;
         public override void AI()
         {
+
+            projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f);
+
             if (!spawned)
             {
                 spawned = true;
@@ -982,10 +1216,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
     }
-}
-
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
     public class WispSouls : ModProjectile
     {
         public override void SetStaticDefaults()
@@ -1015,7 +1245,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             projectile.height = 18;
             projectile.aiStyle = -1;
             projectile.tileCollide = false;
-            projectile.ranged = projectile.friendly = true;
+            projectile.ranged = projectile.friendly == true;
             projectile.timeLeft = 180;
         }
         int radians = 16;
@@ -1023,6 +1253,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         private bool spawned;
         public override void AI()
         {
+
+            projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f);
+
             if (!spawned)
             {
                 spawned = true;
@@ -1056,9 +1289,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
     }
-}
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
+
     public class VoidStone : ModProjectile
     {
 
@@ -1142,10 +1373,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
     }
-}
 
-namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
-{
+
+
     public class IcyLaserProj : ModProjectile
     {
 
@@ -1201,3 +1431,4 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
     }
 }
+

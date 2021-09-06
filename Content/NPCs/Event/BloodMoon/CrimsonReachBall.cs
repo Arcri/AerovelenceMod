@@ -22,6 +22,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             projectile.alpha = 1;
             projectile.timeLeft = 180;
             projectile.aiStyle = 0;
+            projectile.damage = 30;
         }
 
         public override void AI()

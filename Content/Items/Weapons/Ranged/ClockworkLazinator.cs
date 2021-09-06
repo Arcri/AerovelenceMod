@@ -14,7 +14,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Tooltip.SetDefault("Handed down for millenia");
 		}
 
-
 		public override void SetDefaults()
 		{
 			item.crit = 9;
@@ -59,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Clockwork Lazinator", "Legendary item")
+			line = new TooltipLine(mod, "Clockwork Lazinator", "Artifact Weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};

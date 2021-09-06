@@ -10,8 +10,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ricochet Pistol");
-			Tooltip.SetDefault("A Skygod's wish, fulfilled within");
-		}
+			Tooltip.SetDefault("'A Skygod's wish, fulfilled within'");
+            Tooltip.SetDefault("Fires a cloud that bounces off of walls and enemies");
+        }
 		public override void SetDefaults()
 		{
             item.damage = 25;

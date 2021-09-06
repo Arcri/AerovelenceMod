@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ember Rifle");
-			Tooltip.SetDefault("Shoots a beam of fire.");
+			Tooltip.SetDefault("Shoots a beam of fire");
 		}
         public override void SetDefaults()
         {

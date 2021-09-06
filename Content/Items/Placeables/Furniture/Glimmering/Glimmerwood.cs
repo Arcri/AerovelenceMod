@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering
 {
-    public class Glimmerwood : AerovelenceItem
+    public class Glimmerwood : ModItem
     {
         public override void SetStaticDefaults() => DisplayName.SetDefault("Glimmerwood");
 

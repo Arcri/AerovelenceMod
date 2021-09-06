@@ -21,7 +21,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
                           tileCounts[ModContent.TileType<CrystalDirt>()] + 
                           tileCounts[ModContent.TileType<CavernCrystal>()];
             
-            CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];
+            //CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];
         }
     }
 }

@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
         public override void AddRecipes()
         {
             var recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<ChargedStone>(), 15);
+            recipe.AddIngredient(ModContent.ItemType<ChargedStoneItem>(), 15);
             recipe.AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);

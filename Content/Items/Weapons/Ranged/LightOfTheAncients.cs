@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Light of the Ancients");
-			Tooltip.SetDefault("I feel like I'm going to break this thing...");
+			Tooltip.SetDefault("'I feel like I'm going to break this thing...'");
 		}
         public override void SetDefaults()
         {

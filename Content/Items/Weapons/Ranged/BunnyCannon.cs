@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bunny Cannon");
-            Tooltip.SetDefault("Killing bunnies is cruel, period.");
+            Tooltip.SetDefault("Killing bunnies is cruel, period. Yet you STILL did it.");
             Tooltip.SetDefault("'How did you get this?'");
         }
         public override void SetDefaults()

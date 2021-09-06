@@ -1,13 +1,13 @@
-/*using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+
 namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 {
-    [AutoloadBossHead]
     public class GhastlyGlacier : ModNPC
     {
 
@@ -80,4 +80,4 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.damage = 40;  //boss damage increase in expermode
         }
     }
-}*/
+}

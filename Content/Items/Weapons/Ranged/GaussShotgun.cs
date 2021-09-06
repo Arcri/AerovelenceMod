@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Gauss Shotgun");
-			Tooltip.SetDefault("Also shoots a homing Gaussian Star");
+			Tooltip.SetDefault("Fires a homing Gaussian Star");
 		}
 
 		public override void SetDefaults()

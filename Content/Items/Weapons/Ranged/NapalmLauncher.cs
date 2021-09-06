@@ -73,7 +73,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Napalm Launcher", "Legendary item")
+			line = new TooltipLine(mod, "Napalm Launcher", "Artifact Weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};

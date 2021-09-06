@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            item.damage = 23;
+            item.damage = 12;
             item.ranged = true;
             item.width = 58;
             item.height = 18;

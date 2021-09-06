@@ -3,15 +3,12 @@ using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Accessories;
 using AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet;
-using AerovelenceMod.Content.Items.BossSummons;
 using AerovelenceMod.Content.Items.Equipment;
 using AerovelenceMod.Content.Items.Others.Misc;
 using AerovelenceMod.Content.Items.Others.Quest;
 using AerovelenceMod.Content.Items.Others.UIButton;
 using AerovelenceMod.Content.Items.Tools;
-using AerovelenceMod.Content.Items.Weapons.CavernsHMPlaceholder;
 using AerovelenceMod.Content.Items.Weapons.Magic;
-using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
 using Terraria.ID;
@@ -217,6 +214,11 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 		public override void SetupShop(Chest shop, ref int nextSlot)
 		{
+			if (DownedWorld.DownedCyvercry)
+			{
+				shop.item[nextSlot].SetDefaults(ModContent.ItemType<SuperSpeedstersPickaxe>());
+				nextSlot++;
+			}
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<SpeedstersPickaxe>());
 			nextSlot++;
 			shop.item[nextSlot].SetDefaults(ModContent.ItemType<StoneHatchet>());

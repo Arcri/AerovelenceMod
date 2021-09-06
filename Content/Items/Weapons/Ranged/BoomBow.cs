@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Others.Crafting;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -36,8 +37,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 30);
-            recipe.AddRecipeGroup("Wood", 10);
+            recipe.AddIngredient(ModContent.ItemType<BloodChunk>(), 20);
+            recipe.AddRecipeGroup("Wood", 20);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

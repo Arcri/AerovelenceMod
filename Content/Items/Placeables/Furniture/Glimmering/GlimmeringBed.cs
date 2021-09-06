@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering
 {
-    public class GlimmeringBed : AerovelenceItem
+    public class GlimmeringBed : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Glimmering Bed");
 

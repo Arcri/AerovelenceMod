@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class FieldStone : AerovelenceItem
+    public class FieldStone : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Crystal Stone");
 
