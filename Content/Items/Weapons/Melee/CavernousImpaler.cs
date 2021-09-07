@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.damage = 30;
+            item.damage = 20;
             item.useStyle = ItemUseStyleID.HoldingOut;
             item.useAnimation = 55;
             item.useTime = 24;

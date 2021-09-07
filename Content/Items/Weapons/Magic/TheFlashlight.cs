@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.knockBack = 2f;
             item.width = 70;
             item.height = 38;
-            item.damage = 10;
+            item.damage = 22;
             item.shoot = mod.ProjectileType("TheFlashlightProj");
             item.rare = ItemRarityID.Blue;
             item.value = Item.sellPrice(0, 5, 20, 0);
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.noUseGraphic = true;
             item.magic = true;
             item.channel = true;
-            item.mana = 5;
+            item.mana = 2;
         }
     }
     class FlashlightProjectile : ModProjectile

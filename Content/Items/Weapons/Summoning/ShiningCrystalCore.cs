@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 
 			item.crit = 4;
 			item.mana = 15;
-			item.damage = 12;
+			item.damage = 25;
 			item.knockBack = 1;
 
 			item.useTime = item.useAnimation = 35;

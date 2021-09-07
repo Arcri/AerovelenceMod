@@ -87,8 +87,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 			npc.alpha = 0;
 			npc.damage = 30;
-			npc.defense = 15;
-			npc.lifeMax = 3500;
+			npc.defense = 20;
+			npc.lifeMax = 4000;
 			npc.knockBackResist = 0f;
 
 			npc.boss = true;
@@ -105,9 +105,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.defense = 18;
+			npc.defense = 26;
 			npc.damage = 45;  //boss damage increase in expermode
-			npc.lifeMax = 5000;  //boss life scale in expertmode
+			npc.lifeMax = 5500;  //boss life scale in expertmode
 		}
 
 		public override bool PreAI()

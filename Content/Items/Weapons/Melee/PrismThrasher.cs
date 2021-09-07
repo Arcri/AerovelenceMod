@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.noUseGraphic = true;
             item.channel = true;
             item.noMelee = true;
-            item.damage = 25;
+            item.damage = 27;
             item.knockBack = 4f;
             item.autoReuse = false;
             item.noMelee = true;

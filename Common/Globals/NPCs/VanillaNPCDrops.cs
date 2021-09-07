@@ -200,13 +200,13 @@ namespace AerovelenceMod.Common.Globals.NPCs
                     Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOre>(), Main.rand.Next(5, 10));
             if (npc.type == ModContent.NPCType<BloodMoth>())
                 if (Main.rand.NextBool(1))
-                    Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOre>(), Main.rand.Next(1, 5));
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<BloodChunk>(), Main.rand.Next(1, 5));
             if (npc.type == ModContent.NPCType<BoomBug>())
                 if (Main.rand.NextBool(1))
-                    Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOre>(), Main.rand.Next(1, 5));
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<BloodChunk>(), Main.rand.Next(1, 5));
             if (npc.type == ModContent.NPCType<CrimsonReach>())
                 if (Main.rand.NextBool(1))
-                    Item.NewItem(npc.getRect(), ModContent.ItemType<SlateOre>(), Main.rand.Next(5, 10));
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<BloodChunk>(), Main.rand.Next(5, 10));
 
             if (npc.type == ModContent.NPCType<Tumblerock1>())
                 if (Main.rand.NextBool(1))
