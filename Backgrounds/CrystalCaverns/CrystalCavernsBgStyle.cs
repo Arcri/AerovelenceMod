@@ -21,6 +21,8 @@ namespace AerovelenceMod.Backgrounds.CrystalCaverns
 					}
 				}
 				else
+
+				//fart
 				{
 					fades[i] -= transitionSpeed;
 					if (fades[i] < 0f)
