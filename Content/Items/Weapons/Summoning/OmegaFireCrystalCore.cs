@@ -19,10 +19,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 
 			item.crit = 4;
 			item.mana = 15;
-			item.damage = 55;
+			item.damage = 35;
 			item.knockBack = 1;
 
-			item.useTime = item.useAnimation = 35;
+			item.useTime = item.useAnimation = 25;
 			item.useStyle = ItemUseStyleID.HoldingUp;
 			
 			item.summon = true;
@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.ownedProjectileCounts[item.shoot] < 5;
+			=> player.ownedProjectileCounts[item.shoot] < 10;
 
 	}
 }

@@ -31,8 +31,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			set => projectile.ai[0] = (int)value;
 		}
 
-		private readonly float maxSpeed = 8f;
-		private readonly float orbitRadius = 60f;
+		private readonly float maxSpeed = 15f;
+		private readonly float orbitRadius = 100f;
 
 		public override void SetStaticDefaults()
 		{

@@ -40,12 +40,22 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             }
 
             return true;
-        } 
-        
+        }
+
         int radians = 16;
         int Timer = 0;
+        private bool spawned;
         public override void AI()
         {
+
+            projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f);
+
+            if (!spawned)
+            {
+                spawned = true;
+                Main.PlaySound(SoundID.Item104);
+            }
+            projectile.rotation = projectile.velocity.ToRotation();
             projectile.velocity *= 1.03f;
 
             if (Timer < 60)

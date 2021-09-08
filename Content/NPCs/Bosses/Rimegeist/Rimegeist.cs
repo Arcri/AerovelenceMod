@@ -698,8 +698,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             snd.Pitch = -0.25f;
                         }
 
-                        for (int i = 0; i < 7; i++)
-                            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore" + i));
+                        for (int i = 0; i < 3; i++)
+                            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/RimegeistGore" + i));
 
                     }
 
