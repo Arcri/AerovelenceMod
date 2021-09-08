@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Items.Accessories;
 using AerovelenceMod.Content.Items.Others.Crafting;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
@@ -148,7 +149,7 @@ namespace AerovelenceMod.Common.Globals.NPCs
 				case NPCID.IceBat:
 				case NPCID.UndeadViking:
 				case NPCID.CyanBeetle:
-					if (Main.rand.NextBool(16))
+					if (Main.rand.NextBool(11))
                         Item.NewItem(npc.getRect(), ModContent.ItemType<FrostShard>());
                     else if (DownedWorld.DownedRimegeist&& (Main.rand.Next(21) == 0))
                         Item.NewItem(npc.getRect(), ModContent.ItemType<KelvinCore>());
@@ -236,8 +237,15 @@ namespace AerovelenceMod.Common.Globals.NPCs
 			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
                 if (Main.rand.NextBool(5))
                     Item.NewItem(npc.getRect(), ModContent.ItemType<Crystallizer>());
-            
-			if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
+
+            if (npc.type == ModContent.NPCType<BloodMoth>())
+                if (Main.rand.NextBool(15))
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<CrystallineWings>());
+            if (npc.type == ModContent.NPCType<BoomBug>())
+                if (Main.rand.NextBool(20))
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<CrystallineWings>());
+
+            if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
                 if (Main.rand.NextBool(1)) // what
                     Item.NewItem(npc.getRect(), ModContent.ItemType<CavernCrystal>(), Main.rand.Next(5, 15));
         }

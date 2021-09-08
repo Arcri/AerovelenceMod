@@ -15,7 +15,7 @@ namespace AerovelenceMod.Content.Items.Accessories
             DisplayName.SetDefault("Prismatic Soul");
             Tooltip.SetDefault("Damage and defense are increased while in the Crystal Caverns" +
                                "\nIncreases movement speed slightly" +
-                               "\nYou are now lighter, making you able to jump higher" +
+                               "\nYou are now lighter, making you able to jump higher\n+1 Summon Slot" +
                                "\nExpert");
             
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 7));
@@ -47,6 +47,7 @@ namespace AerovelenceMod.Content.Items.Accessories
         {
             player.moveSpeed += 0.5f;
             player.jumpSpeedBoost += 1.5f;
+            player.slotsMinions += 1;
 
             if (player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
             {

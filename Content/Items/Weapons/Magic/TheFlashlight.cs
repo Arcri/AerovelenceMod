@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.damage = 22;
             item.shoot = mod.ProjectileType("TheFlashlightProj");
             item.rare = ItemRarityID.Blue;
-            item.value = Item.sellPrice(0, 5, 20, 0);
+            item.value = Item.sellPrice(0, 3, 20, 0);
             item.noMelee = true;
             item.noUseGraphic = true;
             item.magic = true;

@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 33;
-            item.damage = 39;
+            item.crit = 4;
+            item.damage = 30;
             item.magic = true;
             item.mana = 10;
             item.width = 64;

@@ -377,7 +377,25 @@ namespace AerovelenceMod
                 RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
 
             }
-            {
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Adamantite Bars", new int[]
+				{
+					ItemID.AdamantiteBar,
+					ItemID.TitaniumBar
+				});
+				RecipeGroup.RegisterGroup("AerovelenceMod:TitaniumBars", group);
+
+			}
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Cobalt Bars", new int[]
+				{
+					ItemID.CobaltBar,
+					ItemID.PalladiumBar
+				});
+				RecipeGroup.RegisterGroup("AerovelenceMod:CobaltBars", group);
+
+			}
+			{
                 RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
                 {
                     ItemID.ShadowScale,

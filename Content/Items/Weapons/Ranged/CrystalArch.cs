@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item5;
-            item.damage = 33;
+            item.damage = 20;
 
             item.ranged = true;
             item.noMelee = true;

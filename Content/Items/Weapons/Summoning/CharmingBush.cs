@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 			item.rare = ItemRarityID.Blue;
 
 			item.mana = 30;
-			item.damage = 25;
+			item.damage = 40;
 			item.knockBack = 0.5f;
 
 			item.useTime = item.useAnimation = 25;

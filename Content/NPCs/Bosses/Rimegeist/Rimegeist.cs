@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.TreasureBags;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using On.Terraria.GameContent.Events;
@@ -114,9 +115,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void SetDefaults()
         {
             npc.aiStyle = -1;  //5 is the flying AI
-            npc.lifeMax = 9000;   //boss life
-            npc.damage = 32;  //boss damage
-            npc.defense = 24;    //boss defense
+            npc.lifeMax = 10000;   //boss life
+            npc.damage = 40;  //boss damage
+            npc.defense = 35;    //boss defense
             npc.knockBackResist = 0f;
             npc.width = 220;
             npc.height = 260;
@@ -129,10 +130,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.HitSound = SoundID.NPCHit5;
             npc.DeathSound = SoundID.NPCHit5;
             npc.buffImmune[24] = true;
-            //bossBag = ModContent.ItemType<RimegeistBag>();
+            bossBag = ModContent.ItemType<RimegeistBag>();
             music = mod.GetSoundSlot(Terraria.ModLoader.SoundType.Music, "Sounds/Music/Rimegeist");
         }
-
         public override void NPCLoot()
         {
             if (Main.expertMode)
@@ -174,8 +174,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 10000;  //boss life scale in expertmode
-            npc.damage = 40;  //boss damage increase in expermode
+            npc.lifeMax = 12000;  //boss life scale in expertmode
+            npc.damage = 30;  //boss damage increase in expermode
+            npc.defense = 40;
         }
 
         int moveSpeed = 0;
@@ -286,7 +287,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         npc.velocity.Y = (((npc.velocity.Y + move.Y - 300) / 20f)) * scalespeed;
 
                         int type = mod.ProjectileType("IcySpike");
-                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        int damage = Main.expertMode ? 25 : 15;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         float speedX = 10f;
                         float speedY = 10f;
                         Vector2 position = npc.Center;
@@ -342,7 +343,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         if (stobit >= 40)
                         {
                             float Speed = 7f;
-                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int damage = Main.expertMode ? 20 : 15;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             int type = mod.ProjectileType("IceBlast");
                             float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
                             if (Main.netMode != 1)
@@ -382,7 +383,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             moving *= speed / magnitude;
                         }
                         npc.velocity = moving;*/
-                        int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        int damage = Main.expertMode ? 20 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         Vector2 position = npc.Center;
                         int type = mod.ProjectileType("IceBolt");
                         float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
@@ -478,12 +479,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         if (progTimer2 <= 60)
                         {
+                            int damage = Main.expertMode ? 75 : 65;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             npc.velocity *= 0.9f;
                             int type = mod.ProjectileType("RainbowBlast");
                             if (Main.netMode != 1 && progTimer2 % 10 == 0)
                             {
                                 Vector2 circular = new Vector2(0, -8).RotatedBy(MathHelper.ToRadians(progTimer2 * 6));
-                                Projectile.NewProjectile(npc.Center, circular, type, npc.damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
+                                Projectile.NewProjectile(npc.Center, circular, type, damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
                             }
                         }
                         progTimer2++;
@@ -509,7 +511,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         ebic++;
                         if (ebic >= 100)
                         {
-                            int damage = Main.expertMode ? 5 : 2;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             int type2 = mod.ProjectileType("IceCube");
                             Projectile.NewProjectile(player.Center + new Vector2(0, -300), new Vector2(0, 0), type2, damage, 2f, player.whoAmI);
                             ebic = 0;
@@ -864,7 +866,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = npc.Center - new Vector2(96, 0).RotatedBy(npc.rotation);
-            int damage = 75;
+            int damage = 60;
             if (Main.expertMode)
             {
                 damage = (int)(damage / Main.expertDamage);

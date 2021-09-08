@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Items.Weapons.Ranged
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     public class DeepFreeze : ModItem
     {
@@ -17,22 +17,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.damage = 30;
+            item.damage = 35;
             item.noMelee = true;
-            item.ranged = true;
+            item.magic = true;
+            item.mana = 5;
             item.width = 70;
             item.height = 44;
             item.useTime = item.useAnimation = 30;
             item.UseSound = SoundID.Item13;
             item.useStyle = 5;
-            item.shootSpeed = 14f;
+            item.shootSpeed = 17f;
             item.rare = ItemRarityID.Orange;
             item.shoot = ModContent.ProjectileType<DeepFreezeProjectile>();
-            item.value = Item.sellPrice(silver: 3);
+            item.value = Item.sellPrice(gold: 10);
         }
         public override Vector2? HoldoutOffset()
         {
-            return new Vector2(-6, 0);
+            return new Vector2(-12, 0);
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -63,7 +64,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 }
 
 
-namespace AerovelenceMod.Content.Items.Weapons.Ranged
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
     public class DeepFreezeProjectile : ModProjectile
     {

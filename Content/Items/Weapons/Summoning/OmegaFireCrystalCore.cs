@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Summoning
 {
-	public sealed class ShiningCrystalCore : ModItem
+	public sealed class OmegaFireCrystalCore : ModItem
 	{
 		public override void SetDefaults()
 		{
@@ -19,20 +19,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 
 			item.crit = 4;
 			item.mana = 15;
-			item.damage = 25;
+			item.damage = 55;
 			item.knockBack = 1;
 
-			item.useTime = item.useAnimation = 20;
+			item.useTime = item.useAnimation = 35;
 			item.useStyle = ItemUseStyleID.HoldingUp;
 			
 			item.summon = true;
 			item.noMelee = true;
 			item.autoReuse = true;
 			
-			item.shootSpeed = 14;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.ShiningCrystalCore_Proj>();
+			item.shootSpeed = 10;
+			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.OmegaFireCrystalCore_Proj>();
 			
 			item.UseSound = SoundID.Item101;
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ItemID.SoulofNight, 15);
+			modRecipe.AddIngredient(ModContent.ItemType<ShiningCrystalCore>(), 1);
+			modRecipe.AddRecipeGroup("AerovelenceMod:CobaltBars", 15);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
 		}
 
 		public override bool CanUseItem(Player player)

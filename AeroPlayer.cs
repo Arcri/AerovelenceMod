@@ -111,7 +111,7 @@ namespace AerovelenceMod
 					if (AmbrosiaBonus)
 					{
 						Terraria.Projectile.NewProjectile(player.Center, (Terraria.Main.MouseWorld - player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
-						player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 1);
+						player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 100);
 					}
 		}
 		public override void OnHitNPC(Terraria.Item item, Terraria.NPC target, int damage, float knockback, bool crit)

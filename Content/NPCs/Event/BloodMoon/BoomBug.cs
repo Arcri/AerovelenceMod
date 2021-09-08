@@ -27,8 +27,9 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
             npc.noGravity = true;
 
-            npc.knockBackResist = 0f;
-
+            npc.knockBackResist = 0.1f;
+            npc.HitSound = SoundID.NPCHit1;
+            npc.DeathSound = SoundID.NPCDeath44;
             npc.aiStyle = -1;
             aiType = -1;
         }

@@ -15,9 +15,9 @@ using Terraria.Graphics.Effects;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
-	internal sealed class ShiningCrystalCore_Proj : ModProjectile
+	internal sealed class OmegaFireCrystalCore_Proj : ModProjectile
 	{
-		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "DiamondCavernCrystal";
+		public override string Texture => AerovelenceMod.CrystalCavernsAssets + "FireCrystal";
 
 		public enum AIState
 		{
@@ -31,8 +31,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			set => projectile.ai[0] = (int)value;
 		}
 
-		private readonly float maxSpeed = 10f;
-		private readonly float orbitRadius = 80f;
+		private readonly float maxSpeed = 8f;
+		private readonly float orbitRadius = 60f;
 
 		public override void SetStaticDefaults()
 		{
@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			projectile.width = 36;
 			projectile.height = 52;
 
-			projectile.penetrate = 8;
+			projectile.penetrate = -1;
 
 			projectile.minion = true;
 			projectile.friendly = true;
