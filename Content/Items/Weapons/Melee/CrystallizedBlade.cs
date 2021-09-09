@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
+using AerovelenceMod.Content.Items.Placeables.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -93,7 +94,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 15);
+            recipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 50);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

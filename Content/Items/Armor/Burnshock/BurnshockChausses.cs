@@ -33,10 +33,9 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 7);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddTile(TileID.Anvils);
+            modRecipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 12);
+            modRecipe.AddIngredient(ItemID.CrystalShard, 10);
+            modRecipe.AddTile(TileID.MythrilAnvil);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
         }

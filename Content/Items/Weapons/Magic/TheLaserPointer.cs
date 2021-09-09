@@ -7,12 +7,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-    public class TheFlashlight : ModItem
+    public class TheLaserPointer : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Flashlight");
-            Tooltip.SetDefault("Fires quick beams of light\n'Have you tried turning it off and on again?'");
+            DisplayName.SetDefault("The Laser Pointer");
+            Tooltip.SetDefault("Fires quick beams of LASERS\n'Have you tried playing with a cat?'");
             Item.staff[item.type] = true;
         }
         public override void SetDefaults()
@@ -24,18 +24,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.knockBack = 2f;
             item.width = 70;
             item.height = 38;
-            item.damage = 22;
-            item.shoot = mod.ProjectileType("TheFlashlightProj");
+            item.damage = 42;
+            item.shoot = mod.ProjectileType("TheLaserPointerProj");
             item.rare = ItemRarityID.Blue;
-            item.value = Item.sellPrice(0, 3, 20, 0);
+            item.value = Item.sellPrice(0, 10, 0, 0);
             item.noMelee = true;
             item.noUseGraphic = true;
             item.magic = true;
             item.channel = true;
-            item.mana = 2;
+            item.mana = 4;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe modRecipe = new ModRecipe(mod);
+            modRecipe.AddIngredient(ItemID.SoulofLight, 15);
+            modRecipe.AddIngredient(ModContent.ItemType<TheFlashlight>(), 1);
+            modRecipe.AddRecipeGroup("AerovelenceMod:CobaltBars", 15);
+            modRecipe.SetResult(this, 1);
+            modRecipe.AddRecipe();
         }
     }
-    class FlashlightProjectile : ModProjectile
+
+    class LaserPointerProjectile : ModProjectile
     {
         public override void SetDefaults()
         {
@@ -66,7 +76,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                     Vector2 projectilePosition = projectile.position;
                     projectilePosition -= projectile.velocity * ((float)i * 0.25f);
                     projectile.alpha = 255;
-                    int dust = Dust.NewDust(projectilePosition, 1, 1, 159, 0f, 0f, 0, default, 1f);
+                    int dust = Dust.NewDust(projectilePosition, 1, 1, 60, 0f, 0f, 0, default, 1f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].position = projectilePosition;
                     Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
@@ -78,21 +88,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 }
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-    public class TheFlashlightProj : ModProjectile
+    public class TheLaserPointerProj : ModProjectile
     {
         public int Timer;
         public float shootSpeed = 0.5f;
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Flashlight");
+            DisplayName.SetDefault("The Laser Pointer");
             Main.projFrames[projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 30;
+            projectile.width = 26;
+            projectile.height = 38;
             projectile.aiStyle = 75;
             projectile.friendly = true;
             projectile.penetrate = -1;
@@ -184,12 +194,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                         projectile.velocity = velocity;
                         float scaleFactor = 14f;
                         int num8 = 2;
-                        int FlashlightProj = ModContent.ProjectileType<FlashlightProjectile>();
+                        int FlashlightProj = ModContent.ProjectileType<LaserPointerProjectile>();
                         for (int j = 0; j < 1; j++)
                         {
                             value2 = projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
                             Vector2 spinningpoint2 = Vector2.Normalize(projectile.velocity) * scaleFactor;
-                            spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914);
+                            spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.00004954631328583 - 0.000004773156642914);
                             if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
                             {
                                 spinningpoint2 = -Vector2.UnitY;

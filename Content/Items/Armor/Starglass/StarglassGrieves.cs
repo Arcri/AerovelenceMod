@@ -39,16 +39,5 @@ namespace AerovelenceMod.Content.Items.Armor.Starglass
             player.meleeCrit += 4;
             player.rangedCrit += 4;
         }
-
-        public override void AddRecipes()
-        {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 7);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
-        }
     }
 }

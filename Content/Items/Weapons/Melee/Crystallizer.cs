@@ -35,14 +35,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.shoot = mod.ProjectileType("CrystallizerProj");
             item.shootSpeed = 2f;
         }
-        public override void AddRecipes()
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 6);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }
     }
 
     public class CrystallizerProj : ModProjectile

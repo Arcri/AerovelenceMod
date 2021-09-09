@@ -29,13 +29,5 @@ namespace AerovelenceMod.Content.Items.Others.Crafting
 			item.maxStack = 999;
 			item.value = Item.sellPrice(0, 0, 20, 0);
 		}
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<PhanticOre>(), 3);
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 	}
 }

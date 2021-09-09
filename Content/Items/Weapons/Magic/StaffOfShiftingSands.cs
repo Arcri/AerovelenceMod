@@ -32,15 +32,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.shoot = ProjectileID.RubyBolt;
             item.shootSpeed = 12f;
 		}
-        public override void AddRecipes()
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 35);
-            recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }
     }
 }
 

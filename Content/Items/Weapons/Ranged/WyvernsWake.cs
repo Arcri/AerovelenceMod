@@ -60,16 +60,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             }
             return false;
         }
-        public override void AddRecipes()
-        {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
-        }
     }
 
     public class WyvernProjectile : ModProjectile
