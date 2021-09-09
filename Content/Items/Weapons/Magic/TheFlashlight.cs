@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Flashlight");
-            Tooltip.SetDefault("Fires quick beams of light");
+            Tooltip.SetDefault("Fires quick beams of light\n'Have you tried turning it off and on again?'");
             Item.staff[item.type] = true;
         }
         public override void SetDefaults()
@@ -24,10 +24,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.knockBack = 2f;
             item.width = 70;
             item.height = 38;
-            item.damage = 10;
+            item.damage = 20;
             item.shoot = mod.ProjectileType("TheFlashlightProj");
             item.rare = ItemRarityID.Blue;
-            item.value = Item.sellPrice(0, 5, 20, 0);
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.noMelee = true;
             item.noUseGraphic = true;
             item.magic = true;

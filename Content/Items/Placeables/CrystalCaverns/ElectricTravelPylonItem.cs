@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
 {
-    public class ElectricTravelPylonItem : AerovelenceItem
+    public class ElectricTravelPylonItem : ModItem
     {
         public override void SetStaticDefaults()
         {

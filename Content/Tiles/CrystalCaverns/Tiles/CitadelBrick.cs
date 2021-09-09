@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			AddMapEntry(new Color(061, 079, 110));
 			dustType = 59;
 			soundType = SoundID.Tink;
-            drop = ModContent.ItemType<Items.Placeables.Blocks.CitadelBrick>();
+            drop = ModContent.ItemType<Items.Placeables.Blocks.CitadelBrickItem>();
 
         }
     }

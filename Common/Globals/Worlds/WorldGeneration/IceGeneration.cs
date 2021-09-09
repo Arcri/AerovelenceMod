@@ -33,7 +33,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
             {
                 for (int x = (int)(x2 - radius * xMultiplier); x <= x2 + radius * xMultiplier; x++)
                 {
-                    if (x > 1 && x < Main.maxTilesX && y > 1 && y < Main.maxTilesY && Framing.GetTileSafely(x, y).type != ModContent.TileType<StarglassOreBlock>())
+                    if (x > 1 && x < Main.maxTilesX && y > 1 && y < Main.maxTilesY && Framing.GetTileSafely(x, y).type != ModContent.TileType<SlateOreBlock>())
                     {
                         if (Vector2.Distance(new Vector2(x2, y2), new Vector2((x - x2) / xMultiplier + x2, (y - y2) / yMultiplier + y2)) < radius)
                         {
@@ -143,8 +143,8 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                         size = (int)size2;
                     }
 
-                    WorldGen.PlaceTile(x - 1, y + 1, ModContent.TileType<StarglassOreBlock>());
-                    WorldGen.PlaceTile(x + 1, y + 1, ModContent.TileType<StarglassOreBlock>());
+                    WorldGen.PlaceTile(x - 1, y + 1, ModContent.TileType<SlateOreBlock>());
+                    WorldGen.PlaceTile(x + 1, y + 1, ModContent.TileType<SlateOreBlock>());
 
                     structureCount--;
                 }
@@ -207,7 +207,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
             {
                 for (int x = 1; x < Main.maxTilesX; x++)
                 {
-                    if (Framing.GetTileSafely(x, y).type == ModContent.TileType<StarglassOreBlock>())
+                    if (Framing.GetTileSafely(x, y).type == ModContent.TileType<SlateOreBlock>())
                     {
                         WorldGen.KillTile(x, y);
                     }

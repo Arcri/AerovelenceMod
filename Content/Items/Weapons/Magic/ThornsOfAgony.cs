@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Vine, 10);
+			recipe.AddIngredient(ItemID.Vine, 5);
 			recipe.AddRecipeGroup("Wood", 15);
 			recipe.AddIngredient(ItemID.JungleSpores, 7);
 			recipe.AddTile(TileID.WorkBenches);

@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void SetDefaults()
         {
             Item.staff[item.type] = true;
-            item.damage = 45;
+            item.damage = 40;
             item.magic = true;
             item.mana = 7;
             item.width = item.height = 64;

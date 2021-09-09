@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Others.Crafting;
 using AerovelenceMod.Content.Projectiles.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -67,6 +68,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 				Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
 			}
 			return true;
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemType<BurnshockBar>(), 15);
+			recipe.AddIngredient(ItemID.SoulofMight, 10);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

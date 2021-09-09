@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class BurnshockOre : AerovelenceItem
+    public class BurnshockOre : ModItem
     {
 		public override void SetStaticDefaults() => DisplayName.SetDefault("Burnshock Ore");
 

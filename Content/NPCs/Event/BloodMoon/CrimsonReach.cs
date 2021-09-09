@@ -20,6 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
             npc.width = 80;
             npc.height = 40;
+            npc.damage = 40;
 
             npc.knockBackResist = 0f;
 
@@ -87,5 +88,8 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
             return false;
         }
+
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? SpawnCondition.OverworldNightMonster.Chance * 0.1f : 0f;
     }
 }

@@ -12,13 +12,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rock Pouch");
-            Tooltip.SetDefault("Throws rocks");
+            Tooltip.SetDefault("'It throws rocks. What else did you expect?' - The Rock Collector's final words...");
         }
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item1;
             item.crit = 8;
-            item.damage = 12;
+            item.damage = 20;
             item.melee = true;
             item.width = 60;
             item.height = 32;

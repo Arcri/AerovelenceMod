@@ -3,21 +3,21 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Placeables.Blocks
 {
-    public class FieldStone : ModItem
+    public class ChargedStoneItem : ModItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Crystal Stone");
+		public override void SetStaticDefaults() => DisplayName.SetDefault("Charged Stone");
 
         public override void SetDefaults()
         {
-            item.consumable = true;
             item.useTurn = true;
             item.autoReuse = true;
+            item.consumable = true;
 
             item.maxStack = 999;
             item.useAnimation = 15;
             item.useTime = 10;
 
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.FieldStone>();
+            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.ChargedStone>();
 
             item.useStyle = ItemUseStyleID.SwingThrow;
         }

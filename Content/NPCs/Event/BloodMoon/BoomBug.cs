@@ -14,6 +14,8 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             DisplayName.SetDefault("Boom Bug");
 
             Main.npcFrameCount[npc.type] = 5;
+            npc.HitSound = SoundID.NPCHit44;
+            npc.DeathSound = SoundID.NPCHit46;
 
             NPCID.Sets.TrailCacheLength[npc.type] = 8;
             NPCID.Sets.TrailingMode[npc.type] = 3;
@@ -22,6 +24,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
         public override void SetDefaults()
         {
             npc.lifeMax = 450;
+            npc.damage = 20;
 
             npc.width = npc.height = 42;
 
@@ -203,6 +206,6 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             spriteBatch.Draw(texture, drawPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, effects, 0f);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? SpawnCondition.OverworldNightMonster.Chance * 0.5f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? SpawnCondition.OverworldNightMonster.Chance * 0.2f : 0f;
     }
 }

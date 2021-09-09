@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.width = 38;
             item.crit = 5;
             item.height = 10;
-            item.damage = 78;
+            item.damage = 45;
             item.scale = 1f;
             item.shoot = ModContent.ProjectileType<CrystalSprayProjectile>();
             item.shootSpeed = 12.5f;

@@ -1,8 +1,5 @@
 ﻿using System.IO;
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.Events.CrystalTorrent;
-using AerovelenceMod.Content.Events.DarkNight;
-using AerovelenceMod.Content.Events.FoggyFields;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -14,7 +11,7 @@ namespace AerovelenceMod.Common.Globals.Players
     /// </summary>
     public class ZonePlayer : ModPlayer
     {
-        public const int DEFAULT_TILE_REQUIREMENT = 100;
+        public const int DEFAULT_TILE_REQUIREMENT = 500;
 
         public bool ZoneCrystalCaverns { get; private set; }
         public bool ZoneCrystalCitadel { get; private set; }
@@ -58,14 +55,14 @@ namespace AerovelenceMod.Common.Globals.Players
             ZoneCrystalCitadel = flags[1];
         }
 
-        public override void UpdateBiomeVisuals()
+        /*public override void UpdateBiomeVisuals()
         {
             if (ZoneCrystalCaverns)
                 player.ManageSpecialBiomeVisuals("AerovelenceMod:FoggyFields", FoggyFieldsWorld.FoggyFields, player.Center);
 
             player.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalTorrents", CrystalTorrentWorld.CrystalTorrents, player.Center);
             player.ManageSpecialBiomeVisuals("AerovelenceMod:DarkNights", DarkNightWorld.DarkNight, player.Center);
-        }
+        }*/
 
         public override Texture2D GetMapBackgroundImage()
         {

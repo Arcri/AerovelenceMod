@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 	{
 		protected override float ShootRange => 440;
 
-		protected override int ShootCooldown => 180;
+		protected override int ShootCooldown => 80;
 
 		public override bool Autoload(ref string name)
 			=> mod.Properties.Autoload;

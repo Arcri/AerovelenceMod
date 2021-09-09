@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
             item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("UngodlyDaggerProjectile");
+            item.shoot = mod.ProjectileType("DarkDaggerProjectile");
             item.shootSpeed = 12f;
         }
         float dynamicCounter = 0;

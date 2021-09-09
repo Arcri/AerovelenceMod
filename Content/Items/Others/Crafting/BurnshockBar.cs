@@ -1,5 +1,6 @@
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles;
 using AerovelenceMod.Content.Tiles.Ores;
 using Terraria;
 using Terraria.DataStructures;
@@ -37,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Others.Crafting
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ModContent.ItemType<BurnshockOre>(), 3);
-			recipe.AddIngredient(ModContent.ItemType<ChargedStone>(), 1);
+			recipe.AddIngredient(ModContent.ItemType<ChargedStoneItem>(), 1);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 			item.rare = ItemRarityID.Blue;
 
 			item.mana = 30;
-			item.damage = 15;
+			item.damage = 22;
 			item.knockBack = 0.5f;
 
 			item.useTime = item.useAnimation = 25;
@@ -48,7 +48,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ItemID.VineRope, 35);
 			modRecipe.AddRecipeGroup("Wood", 35);
 			modRecipe.AddIngredient(ItemID.Daybloom, 3);
 			modRecipe.AddIngredient(ItemID.Fireblossom, 3);

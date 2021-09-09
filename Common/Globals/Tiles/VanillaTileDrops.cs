@@ -128,21 +128,3 @@ namespace AerovelenceMod.Common.Globals.Tiles
         }
     }
 }
-
-// Maybe implement this into the ModTile?
-/*
-if (type == ModContent.TileType<SlateOreBlock>() && fail == false)
-{
-    if (Main.rand.NextBool(151))
-    {
-        Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<SlateCluster>());
-    }
-}
-if (type == ModContent.TileType<PhanticOreBlock>() && fail == false)
-{
-    if (Main.rand.NextBool(151))
-    {
-        Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<PhanticCluster>());
-    }
-}
-*/
