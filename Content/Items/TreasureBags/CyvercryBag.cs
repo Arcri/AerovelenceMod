@@ -1,3 +1,5 @@
+using AerovelenceMod.Content.Items.Armor.Vanity;
+using AerovelenceMod.Content.Items.Placeables.Trophies;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -31,14 +33,27 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(mod.ItemType("EnergyShield"));
-			player.QuickSpawnItem(ItemID.GoldCoin, 9);
-
-			int drop = Main.rand.Next(7);
-
 			player.TryGettingDevArmor();
+			player.QuickSpawnItem(mod.ItemType("EnergyShield"));
+			player.QuickSpawnItem(ItemID.GoldCoin, 15);
+			player.QuickSpawnItem(ItemID.GreaterHealingPotion, Main.rand.Next(4, 12));
 
-			switch (Main.rand.Next(4))
+
+			if (Main.rand.NextBool(7))
+			{
+				switch (Main.rand.Next(2))
+				{
+					case 0:
+						player.QuickSpawnItem(ModContent.ItemType<CyvercryMask>());
+						break;
+					case 1:
+						player.QuickSpawnItem(ModContent.ItemType<CyvercryTrophy>());
+						break;
+				}
+					
+			}
+
+			switch (Main.rand.Next(6))
 			{
 				case 0:
 					player.QuickSpawnItem(mod.ItemType("DarknessDischarge"));
@@ -54,6 +69,9 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 					break;
 				case 4:
 					player.QuickSpawnItem(mod.ItemType("AetherVision"));
+					break;
+				case 5:
+					player.QuickSpawnItem(ModContent.ItemType<Weapons.Thrown.DarkDagger>());
 					break;
 			}
 		}

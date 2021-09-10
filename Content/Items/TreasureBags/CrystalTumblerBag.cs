@@ -1,4 +1,6 @@
 using AerovelenceMod.Content.Items.Accessories;
+using AerovelenceMod.Content.Items.Armor.Vanity;
+using AerovelenceMod.Content.Items.Placeables.Trophies;
 using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Ranged;
@@ -38,11 +40,22 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 		public override void OpenBossBag(Player player)
 		{
 			player.QuickSpawnItem(ModContent.ItemType<PrismaticSoul>());
-			player.QuickSpawnItem(ItemID.GoldCoin, 9);
+			player.QuickSpawnItem(ItemID.GoldCoin, 7);
 			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
 
-			player.TryGettingDevArmor();
+			if (Main.rand.NextBool(7))
+			{
+				switch (Main.rand.Next(2))
+				{
+					case 0:
+						player.QuickSpawnItem(ModContent.ItemType<CrystalTumblerMask>());
+						break;
+					case 1:
+						player.QuickSpawnItem(ModContent.ItemType<CrystalTumblerTrophy>());
+						break;
+				}
 
+			}
 			switch (Main.rand.Next(8))
 			{
 				case 0:

@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Iron Chain");
+            DisplayName.SetDefault("Ball n' Chain");
             Tooltip.SetDefault("Makes you heavier\nNot recommended without wings");
         }
         public override void SetDefaults()

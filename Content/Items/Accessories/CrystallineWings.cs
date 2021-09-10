@@ -51,6 +51,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
+			Lighting.AddLight(player.Center, 000, (float)000.2, (float)000.3);
 			player.wingTimeMax = 45;
 			player.gravity *= 2.25f;
 			player.noFallDmg = false;

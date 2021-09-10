@@ -29,11 +29,12 @@ using AerovelenceMod.Content.Items.Armor.Vanity;
 using AerovelenceMod.Content.Items.Placeables.MusicBoxes;
 using AerovelenceMod.Content.Items.Weapons.Summoning;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Content.NPCs.TownNPC;
 
 namespace AerovelenceMod
 {
-    public class AerovelenceMod : Mod
-    {
+	public class AerovelenceMod : Mod
+	{
 		public const bool DEBUG = true;
 
 		internal static string PLACEHOLDER_TEXTURE = "AerovelenceMod/Blank";
@@ -59,24 +60,24 @@ namespace AerovelenceMod
 
 		internal static AerovelenceMod Instance { get; set; }
 
-        public AerovelenceMod()
-        {
-            Instance = this;
+		public AerovelenceMod()
+		{
+			Instance = this;
 
-            Properties = new ModProperties
-            {
-                Autoload = true,
-                AutoloadBackgrounds = true,
-                AutoloadGores = true,
-                AutoloadSounds = true
-            };
-        }
+			Properties = new ModProperties
+			{
+				Autoload = true,
+				AutoloadBackgrounds = true,
+				AutoloadGores = true,
+				AutoloadSounds = true
+			};
+		}
 		public override void PostSetupContent()
 		{
 			var bossChecklist = ModLoader.GetMod("BossChecklist");
 			var terrariaAmbience = ModLoader.GetMod("TerrariaAmbience");
 			if (terrariaAmbience != null)
-            {
+			{
 				terrariaAmbience.Call("AddTilesToList", this, "Stone", new string[] { "CavernStone", "CavernCrystal", "ChargedStone", "HardenedIce", "SmoothCavernStone", "MilitaryMetal", "SlateOreBlock", "PhanticBarPlaced" }, null);
 				terrariaAmbience.Call("AddTilesToList", this, "Grass", new string[] { "CrystalDirt", "CrystalGrass", "ValleyGrass", "ValleyDirt" }, null);
 				terrariaAmbience.Call("AddTilesToList", this, "Sand", new string[] { "CrystalSand" }, null);
@@ -100,7 +101,8 @@ namespace AerovelenceMod
 					new List<int>
 					{
 						ModContent.ItemType<CrystalTumblerBag>(),
-						ModContent.ItemType<DiamondDuster>(),
+						ModContent.ItemType<CarbonCadence>(),
+						ModContent.ItemType<ShiningCrystalCore>(),
 						ModContent.ItemType<DarkCrystalStaff>(),
 						ModContent.ItemType<PrismThrasher>(),
 						ModContent.ItemType<CavernousImpaler>(),
@@ -178,13 +180,14 @@ namespace AerovelenceMod
 						ModContent.ItemType<CyvercryBoxItem>()
 					},
 					new List<int>
-					{ 
+					{
 						ModContent.ItemType<CyvercryBag>(),
 						ModContent.ItemType<Oblivion>(),
 						ModContent.ItemType<Cyverthrow>(),
 						ModContent.ItemType<CyverCannon>(),
 						ModContent.ItemType<DarknessDischarge>(),
 						ModContent.ItemType<AetherVision>(),
+						ModContent.ItemType<Content.Items.Weapons.Thrown.DarkDagger>(),
 						ModContent.ItemType<EnergyShield>()},
 					$"Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] at night anywhere"
 					);
@@ -213,7 +216,9 @@ namespace AerovelenceMod
 					},
 					$"Use a [i:" + ModContent.ItemType<AncientAmulet>() + "] during the day in the sky"
 					);*/
+
 			}
+			CrossModContent();
 		}
 
 		public static Effect LegElectricity;
@@ -230,27 +235,27 @@ namespace AerovelenceMod
 			}
 			GemGrapplingRange.Load();
 
-            ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
+			ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
 
-			Filters.Scene["AerovelenceMod:FoggyFields"] = 
-                new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
-			
-            SkyManager.Instance["AerovelenceMod:FoggyFields"] = new CrystalTorrentSky();
+			Filters.Scene["AerovelenceMod:FoggyFields"] =
+				new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
 
-			Filters.Scene["AerovelenceMod:CrystalTorrents"] = 
-                new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
+			SkyManager.Instance["AerovelenceMod:FoggyFields"] = new CrystalTorrentSky();
+
+			Filters.Scene["AerovelenceMod:CrystalTorrents"] =
+				new Filter(new CrystalTorrentScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.5f, 0.0f), EffectPriority.Medium);
 
 			Filters.Scene["AerovelenceMod:DarkNights"] =
-                new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
+				new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
 
 			Overlays.Scene.Load();
 			Filters.Scene.Load();
 
-            if (Main.netMode != NetmodeID.Server)
+			if (Main.netMode != NetmodeID.Server)
 			{
-                AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
+				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
-			//	AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
+				//	AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
 				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
 				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
@@ -259,9 +264,9 @@ namespace AerovelenceMod
 				LegElectricity = Instance.GetEffect("Effects/LegElectricity");
 			}
 
-            if (!Main.dedServ)
-            {
-                MarauderUserInterface = new UserInterface();
+			if (!Main.dedServ)
+			{
+				MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
 				DiscordRichPresence.Initialize();
 				Main.OnTick += DiscordRichPresence.Update;
@@ -272,8 +277,8 @@ namespace AerovelenceMod
 			LoadDetours();
 		}
 
-        public override void Unload()
-        {
+		public override void Unload()
+		{
 			if (!Main.dedServ)
 			{
 				DiscordRichPresence.Deinitialize();
@@ -281,10 +286,10 @@ namespace AerovelenceMod
 			}
 			UnloadDetours();
 			FargosModMutant = false;
-            ArmorHotKey = null;
-            Instance = null;
+			ArmorHotKey = null;
+			Instance = null;
 			LegElectricity = null;
-        }
+		}
 
 		public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
 
@@ -297,7 +302,7 @@ namespace AerovelenceMod
 					"AerovelenceMod: Marauder UI",
 					delegate
 					{
-                        MarauderUserInterface.Draw(Main.spriteBatch, new GameTime());
+						MarauderUserInterface.Draw(Main.spriteBatch, new GameTime());
 						return true;
 					},
 					InterfaceScaleType.UI)
@@ -309,7 +314,7 @@ namespace AerovelenceMod
 					"AerovelenceMod: RockCollector UI",
 					delegate
 					{
-                        RockCollectorUserInterface.Draw(Main.spriteBatch, new GameTime());
+						RockCollectorUserInterface.Draw(Main.spriteBatch, new GameTime());
 						return true;
 					},
 					InterfaceScaleType.UI)
@@ -319,83 +324,83 @@ namespace AerovelenceMod
 
 		public override void Close()
 		{
-			var slots = new [] 
-            {
+			var slots = new[]
+			{
 				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"),
 				GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel")
-		    };
+			};
 
 			foreach (var slot in slots)
-                if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
-                    Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
+				if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
+					Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
 
-            foreach (var slot in slots)
-                if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
-                    Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
+			foreach (var slot in slots)
+				if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
+					Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
 
-            base.Close();
+			base.Close();
 		}
 
 		public override void UpdateMusic(ref int music, ref MusicPriority priority)
 		{
 			if (Main.gameMenu)
-                return;
-			
+				return;
+
 			Player player = Main.LocalPlayer;
-            var zonePlayer = player.GetModPlayer<ZonePlayer>();
+			var zonePlayer = player.GetModPlayer<ZonePlayer>();
 
-            if (zonePlayer == null)
-                return;
+			if (zonePlayer == null)
+				return;
 
-            if (zonePlayer.ZoneCrystalCaverns)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
-                priority = MusicPriority.BiomeHigh;
-            }
-
-            if (zonePlayer.ZoneCrystalCitadel)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
-                priority = MusicPriority.BiomeHigh;
+			if (zonePlayer.ZoneCrystalCaverns)
+			{
+				music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
+				priority = MusicPriority.BiomeHigh;
 			}
 
-            /*if (!Main.dayTime && DarkNightWorld.DarkNight)
+			if (zonePlayer.ZoneCrystalCitadel)
+			{
+				music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
+				priority = MusicPriority.BiomeHigh;
+			}
+
+			/*if (!Main.dayTime && DarkNightWorld.DarkNight)
             {
                 music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
                 priority = MusicPriority.Environment;
             }*/
-        }
+		}
 
-        public override void AddRecipeGroups()
-        {
-            {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
-                {
-                    ItemID.SilverBar,
-                    ItemID.TungstenBar
-                });
-                RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
+		public override void AddRecipeGroups()
+		{
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
+				{
+					ItemID.SilverBar,
+					ItemID.TungstenBar
+				});
+				RecipeGroup.RegisterGroup("AerovelenceMod:SilverBars", group);
 
-            }
-            {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
-                {
-                    ItemID.ShadowScale,
-                    ItemID.TissueSample
-                });
+			}
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
+				{
+					ItemID.ShadowScale,
+					ItemID.TissueSample
+				});
 
-                RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
-            }
-            {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bars", new int[]
-                {
-                    ItemID.PlatinumBar,
-                    ItemID.GoldBar
-                });
+				RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
+			}
+			{
+				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bars", new int[]
+				{
+					ItemID.PlatinumBar,
+					ItemID.GoldBar
+				});
 
-                RecipeGroup.RegisterGroup("AerovelenceMod:GoldBars", group);
-            }
-        }
+				RecipeGroup.RegisterGroup("AerovelenceMod:GoldBars", group);
+			}
+		}
 
 		public override void AddRecipes()
 		{
@@ -489,16 +494,30 @@ namespace AerovelenceMod
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
 		public override void MidUpdateProjectileItem()
-        {
+		{
 			if (Main.netMode != NetmodeID.Server)
-            {
-                primitives.UpdateTrails();
-            }
+			{
+				primitives.UpdateTrails();
+			}
 		}
 		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
 		{
 			primitives.DrawTrails(Main.spriteBatch);
 			orig(self);
 		}
-    }
+		private void CrossModContent()
+		{
+			Mod fargos = ModLoader.GetMod("Fargowiltas");
+			Mod census = ModLoader.GetMod("Census");
+			if (census != null)
+			{
+				census.Call("TownNPCCondition", ModContent.NPCType<RockCollector>(), "Defeat the Crystal Tumbler.");
+			}
+			if (fargos != null)
+			{
+				fargos.Call("AddSummon", 1.5f, "AerovelenceMod", "PrettyLargeGeode", (Func<bool>)(() => DownedWorld.DownedCrystalTumbler), 100 * 200);
+				fargos.Call("AddSummon", 9.5f, "AerovelenceMod", "EyeThatIsMadeFromObsidian", (Func<bool>)(() => DownedWorld.DownedCyvercry), 100 * 500);
+			}
+		}
+	}
 }
