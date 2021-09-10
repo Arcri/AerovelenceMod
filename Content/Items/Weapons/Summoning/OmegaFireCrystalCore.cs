@@ -1,5 +1,6 @@
 ﻿#region Using directives
 
+using AerovelenceMod.Content.Items.Others.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -37,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 		public override void AddRecipes()
 		{
 			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ItemID.SoulofNight, 15);
+			modRecipe.AddIngredient(ModContent.ItemType<EmberFragment>(), 15);
 			modRecipe.AddIngredient(ModContent.ItemType<ShiningCrystalCore>(), 1);
 			modRecipe.AddRecipeGroup("AerovelenceMod:CobaltBars", 15);
 			modRecipe.SetResult(this, 1);

@@ -1,4 +1,3 @@
-using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -7,12 +6,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-    public class TheLaserPointer : ModItem
+    public class TheBeacon : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Laser Pointer");
-            Tooltip.SetDefault("Fires quick beams of LASERS\n'Have you tried playing with a cat?'");
+            DisplayName.SetDefault("The Beacon");
+            Tooltip.SetDefault("Fires beams of fire\n'Solar Powered'");
             Item.staff[item.type] = true;
         }
         public override void SetDefaults()
@@ -25,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             item.width = 70;
             item.height = 38;
             item.damage = 45;
-            item.shoot = mod.ProjectileType("TheLaserPointerProj");
-            item.rare = ItemRarityID.LightPurple;
+            item.shoot = mod.ProjectileType("TheBeaconProj");
+            item.rare = ItemRarityID.Red;
             item.value = Item.sellPrice(0, 10, 0, 0);
             item.noMelee = true;
             item.noUseGraphic = true;
@@ -37,16 +36,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.SoulofLight, 15);
-            modRecipe.AddIngredient(ModContent.ItemType<TheFlashlight>(), 1);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 10);
-            modRecipe.AddTile(TileID.MythrilAnvil);
+            modRecipe.AddIngredient(ItemID.FragmentSolar, 20);
+            modRecipe.AddIngredient(ModContent.ItemType<TheLaserPointer>(), 1);
+            modRecipe.AddIngredient(ItemID.LunarBar, 10);
+            modRecipe.AddTile(TileID.LunarCraftingStation);
             modRecipe.SetResult(this, 1);
             modRecipe.AddRecipe();
         }
     }
 
-    class LaserPointerProjectile : ModProjectile
+    class TheBeaconProjectile : ModProjectile
     {
         public override void SetDefaults()
         {
@@ -77,7 +76,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                     Vector2 projectilePosition = projectile.position;
                     projectilePosition -= projectile.velocity * ((float)i * 0.25f);
                     projectile.alpha = 255;
-                    int dust = Dust.NewDust(projectilePosition, 1, 1, 60, 0f, 0f, 0, default, 1f);
+                    int dust = Dust.NewDust(projectilePosition, 1, 1, 159, 0f, 0f, 0, default, 1f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].position = projectilePosition;
                     Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
@@ -89,14 +88,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 }
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
-    public class TheLaserPointerProj : ModProjectile
+    public class TheBeaconProj : ModProjectile
     {
         public int Timer;
         public float shootSpeed = 0.5f;
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Laser Pointer");
+            DisplayName.SetDefault("The Beacon");
             Main.projFrames[projectile.type] = 6;
         }
 
@@ -195,17 +194,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                         projectile.velocity = velocity;
                         float scaleFactor = 14f;
                         int num8 = 2;
-                        int FlashlightProj = ModContent.ProjectileType<LaserPointerProjectile>();
+                        int FlashlightProj = ModContent.ProjectileType<TheBeaconProjectile>();
                         for (int j = 0; j < 1; j++)
                         {
                             value2 = projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
                             Vector2 spinningpoint2 = Vector2.Normalize(projectile.velocity) * scaleFactor;
+                            Vector2 spinningpoint3 = Vector2.Normalize(projectile.velocity) * scaleFactor;
+                            Vector2 spinningpoint4 = Vector2.Normalize(projectile.velocity) * scaleFactor;
                             spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.00004954631328583 - 0.000004773156642914);
+                            spinningpoint3 = spinningpoint3.RotatedBy(Main.rand.NextDouble() * 0.1344954631328583 - 0.091234773156642914);
+                            spinningpoint4 = spinningpoint4.RotatedBy(Main.rand.NextDouble() * 0.18914954631328583 - 0.095674773156642914);
                             if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
                             {
                                 spinningpoint2 = -Vector2.UnitY;
                             }
                             Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, FlashlightProj, projectile.damage, projectile.knockBack, projectile.owner);
+                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint3.X, spinningpoint3.Y, FlashlightProj, projectile.damage, projectile.knockBack, projectile.owner);
+                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint4.X, spinningpoint4.Y, FlashlightProj, projectile.damage, projectile.knockBack, projectile.owner);
                         }
                     }
                     else
