@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
@@ -21,6 +22,9 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             npc.width = 80;
             npc.height = 40;
             npc.damage = 40;
+
+            npc.HitSound = SoundID.NPCHit1;
+            npc.DeathSound = SoundID.NPCDeath1;
 
             npc.knockBackResist = 0f;
 

@@ -14,8 +14,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             DisplayName.SetDefault("Boom Bug");
 
             Main.npcFrameCount[npc.type] = 5;
-            npc.HitSound = SoundID.NPCHit44;
-            npc.DeathSound = SoundID.NPCHit46;
+
 
             NPCID.Sets.TrailCacheLength[npc.type] = 8;
             NPCID.Sets.TrailingMode[npc.type] = 3;
@@ -27,7 +26,8 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             npc.damage = 20;
 
             npc.width = npc.height = 42;
-
+            npc.HitSound = SoundID.NPCHit44;
+            npc.DeathSound = SoundID.NPCDeath46;
             npc.noGravity = true;
 
             npc.knockBackResist = 0f;

@@ -14,9 +14,6 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             DisplayName.SetDefault("Blood Moth");
 
             Main.npcFrameCount[npc.type] = 10;
-            npc.HitSound = SoundID.NPCHit44;
-            npc.DeathSound = SoundID.NPCHit46;
-
             NPCID.Sets.TrailCacheLength[npc.type] = 8;
             NPCID.Sets.TrailingMode[npc.type] = 3;
         }
@@ -30,7 +27,8 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             npc.noGravity = true;
 
             npc.knockBackResist = 0f;
-            
+            npc.HitSound = SoundID.NPCHit44;
+            npc.DeathSound = SoundID.NPCDeath46;
             npc.aiStyle = -1;
             npc.damage = 20;
             aiType = -1;
