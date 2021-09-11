@@ -25,8 +25,13 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+				float modifier = 1.75f;
+				
+				player.maxRunSpeed *= modifier;
+				player.accRunSpeed *= modifier;
+				player.runSlowdown *= modifier;
+				player.runAcceleration *= modifier;
 
-            player.moveSpeed += 0.35f;
             CrystalStompersPlayer mp = player.GetModPlayer<CrystalStompersPlayer>();
 
             if (!mp.DashActive)
