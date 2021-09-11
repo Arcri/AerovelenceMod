@@ -188,6 +188,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void AI()
         {
 
+
             npc.dontTakeDamage = npc.localAI[2] > 0f && State != RimegeistState.ShadowDash;
             npc.localAI[0] = npc.velocity.X * 0.025f;
             npc.rotation += (npc.localAI[0] - npc.rotation) * 0.05f;
@@ -215,7 +216,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             float magnitude = 1f;
             int RandomPos;
             float turnResistance = 5f;
-
+            if (Main.dayTime || player.dead)
+            {
+                npc.rotation *= 0.99f;
+                npc.velocity.Y -= 0.09f;
+                npc.timeLeft = 100;
+                if (npc.position.Y <= 16 * 20) //checking for top of the world practically
+                    npc.active = false;
+                return;
+            }
             switch (State)
             {
 
