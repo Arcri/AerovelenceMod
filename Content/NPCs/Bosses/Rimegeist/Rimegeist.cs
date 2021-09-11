@@ -948,7 +948,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             if (!spawned)
             {
                 spawned = true;
-                Main.PlaySound(SoundID.Item75);
+                Main.PlaySound(SoundID.Item75, projectile.Center);
             }
 
             counter++;
