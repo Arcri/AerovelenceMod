@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
-    public class CrystalSand : ModTile
+    public class CrystalSnow : ModTile
     {
         public override void SetDefaults()
         {
