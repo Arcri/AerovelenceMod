@@ -1,10 +1,10 @@
+using AerovelenceMod.Content.Items.TreasureBags;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 {
@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             npc.HitSound = SoundID.NPCHit5;
             npc.DeathSound = SoundID.NPCHit5;
             npc.buffImmune[24] = true;
-            //bossBag = ModContent.ItemType<RimegeistBag>();
+            bossBag = ModContent.ItemType<RimegeistBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist");
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)

@@ -9,7 +9,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-//namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 {
     [AutoloadBossHead]
@@ -32,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         private int ebic;
         public float hhhh;
         public static Rimegeist rimegeist;
-        public const string AssetDirectory = "AerovelenceMod/Content/NPCs/Bosses/Rimegeist/";//AerovelenceMod/Content/NPCs/Bosses/Rimegeist/
+        public const string AssetDirectory = "AerovelenceMod/Content/NPCs/Bosses/Rimegeist/";
 
         private enum RimegeistState
         {
@@ -94,7 +93,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             if (PhaseTwo > 2000)
             {
                 State = RimegeistState.ShadowDash;
-                PhaseTwo = Main.rand.Next(5, 200);
+                PhaseTwo = Main.rand.Next(5,200);
 
             }
 
@@ -115,9 +114,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void SetDefaults()
         {
             npc.aiStyle = -1;  //5 is the flying AI
-            npc.lifeMax = 10000;   //boss life
-            npc.damage = 40;  //boss damage
-            npc.defense = 35;    //boss defense
+            npc.lifeMax = 9000;   //boss life
+            npc.damage = 32;  //boss damage
+            npc.defense = 24;    //boss defense
             npc.knockBackResist = 0f;
             npc.width = 220;
             npc.height = 260;
@@ -133,6 +132,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             bossBag = ModContent.ItemType<RimegeistBag>();
             music = mod.GetSoundSlot(Terraria.ModLoader.SoundType.Music, "Sounds/Music/Rimegeist");
         }
+
         public override void NPCLoot()
         {
             if (Main.expertMode)
@@ -174,9 +174,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 12000;  //boss life scale in expertmode
-            npc.damage = 30;  //boss damage increase in expermode
-            npc.defense = 40;
+            npc.lifeMax = 10000;  //boss life scale in expertmode
+            npc.damage = 40;  //boss damage increase in expermode
         }
 
         int moveSpeed = 0;
@@ -188,14 +187,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void AI()
         {
 
-
             npc.dontTakeDamage = npc.localAI[2] > 0f && State != RimegeistState.ShadowDash;
             npc.localAI[0] = npc.velocity.X * 0.025f;
-            npc.rotation += (npc.localAI[0] - npc.rotation) * 0.05f;
+            npc.rotation += (npc.localAI[0]-npc.rotation)*0.05f;
 
             npc.localAI[2]--;
-            if (npc.localAI[2] < 1)
-                npc.localAI[3] *= 0.95f;
+            if (npc.localAI[2]<1)
+            npc.localAI[3] *= 0.95f;
 
             rimegeist = this;
 
@@ -216,6 +214,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             float magnitude = 1f;
             int RandomPos;
             float turnResistance = 5f;
+
             if (Main.dayTime || player.dead)
             {
                 npc.rotation *= 0.99f;
@@ -225,6 +224,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     npc.active = false;
                 return;
             }
+
             switch (State)
             {
 
@@ -276,9 +276,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         // follows player from the top and shoots a blast of icy spikes
 
-                        float scalespeed = (PhaseTwo > 0 ? 0.2f : MathHelper.Clamp(AttackTimer / 300f, 0f, 1f)) * 10f;
+                        float scalespeed = (PhaseTwo>0 ? 0.2f : MathHelper.Clamp(AttackTimer / 300f, 0f, 1f))*10f;
 
-                        if (AttackTimer < 30 && PhaseTwo > 0)
+                        if (AttackTimer < 30 && PhaseTwo>0)
                         {
                             if (AttackTimer < 80)
                             {
@@ -292,11 +292,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             }
                         }
 
-                        npc.velocity.X = (((npc.velocity.X + move.X) / 20f)) * scalespeed;
+                        npc.velocity.X = (((npc.velocity.X + move.X) / 20f))* scalespeed;
                         npc.velocity.Y = (((npc.velocity.Y + move.Y - 300) / 20f)) * scalespeed;
 
                         int type = mod.ProjectileType("IcySpike");
-                        int damage = Main.expertMode ? 25 : 15;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         float speedX = 10f;
                         float speedY = 10f;
                         Vector2 position = npc.Center;
@@ -331,7 +331,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     if (++AttackTimer <= 180)
                     {
                         dashTimer = 0;
-                        playerPos = player.position + new Vector2(Math.Sign(-move.X) * 500, 0);
+                        playerPos = player.position + new Vector2(Math.Sign(-move.X)*500, 0);
                         speed = 3.2f;
                         moving = playerPos - npc.Center;
                         magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
@@ -352,7 +352,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         if (stobit >= 40)
                         {
                             float Speed = 7f;
-                            int damage = Main.expertMode ? 20 : 15;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                            int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             int type = mod.ProjectileType("IceBlast");
                             float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
                             if (Main.netMode != 1)
@@ -392,7 +392,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             moving *= speed / magnitude;
                         }
                         npc.velocity = moving;*/
-                        int damage = Main.expertMode ? 20 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
+                        int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         Vector2 position = npc.Center;
                         int type = mod.ProjectileType("IceBolt");
                         float rotate = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
@@ -488,13 +488,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         if (progTimer2 <= 60)
                         {
-                            int damage = Main.expertMode ? 75 : 65;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                             npc.velocity *= 0.9f;
                             int type = mod.ProjectileType("RainbowBlast");
                             if (Main.netMode != 1 && progTimer2 % 10 == 0)
                             {
                                 Vector2 circular = new Vector2(0, -8).RotatedBy(MathHelper.ToRadians(progTimer2 * 6));
-                                Projectile.NewProjectile(npc.Center, circular, type, damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
+                                Projectile.NewProjectile(npc.Center, circular, type, npc.damage, 2f, Main.myPlayer, npc.target, progTimer1 * 18);
                             }
                         }
                         progTimer2++;
@@ -564,7 +563,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         if (dashTimer % 240 < 150)
                         {
 
-                            npc.velocity = movewhere * MathHelper.Clamp((dashTimer % 240) / 100f, 0f, 1f) * (PhaseTwo > 0 ? 0.075f : 0.02f);
+                            npc.velocity = movewhere*MathHelper.Clamp((dashTimer%240)/100f,0f,1f) * (PhaseTwo > 0 ? 0.075f : 0.02f);
                             npc.velocity *= 0.99f;//Friction
 
                         }
@@ -573,7 +572,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             //  Main.NewText("Dash Wait");
                             if (PhaseTwo > 0)
                             {
-                                npc.velocity = -Vector2.Normalize(move) * (12 * MathHelper.Clamp(AttackTimer / 60f, 0f, 1f));
+                                npc.velocity = -Vector2.Normalize(move) * (12*MathHelper.Clamp(AttackTimer/60f,0f,1f));
 
                             }
                             npc.velocity *= 0.75f;
@@ -707,8 +706,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             snd.Pitch = -0.25f;
                         }
 
-                        for (int i = 0; i < 3; i++)
-                            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/RimegeistGore" + i));
+                        for (int i = 0; i < 7; i++)
+                            Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumblerGore" + i));
 
                     }
 
@@ -732,8 +731,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     npc.localAI[2] = 20;
                     npc.localAI[3] += (60f - npc.localAI[3]) * 0.15f;
 
-                    if (AttackTimer < 600)
-                        Terraria.GameContent.Events.ScreenObstruction.screenObstruction = MathHelper.Clamp(Terraria.GameContent.Events.ScreenObstruction.screenObstruction + 0.10f, 0f, 0.95f);
+                    if (AttackTimer<600)
+                    Terraria.GameContent.Events.ScreenObstruction.screenObstruction = MathHelper.Clamp(Terraria.GameContent.Events.ScreenObstruction.screenObstruction + 0.10f, 0f, 0.95f);
 
                     dashTimer++;
 
@@ -759,14 +758,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         if (dashTimer % 10 == 0)
                         {
-                            Projectile.NewProjectile(npc.Center, -Vector2.Normalize(move) * 1f, ModContent.ProjectileType<HomingWispSouls>(), 20, 0, Main.myPlayer);
+                            Projectile.NewProjectile(npc.Center, -Vector2.Normalize(move)*1f, ModContent.ProjectileType<HomingWispSouls>(), 20, 0, Main.myPlayer);
                         }
                     }
                     else
                     {
-                        if (dashTimer % dashindex < 100)
+                        if (dashTimer% dashindex < 100)
                         {
-                            npc.velocity += ((move + Vector2.UnitX.RotatedBy(move.ToRotation() + MathHelper.Pi) * (MathHelper.Max((dashTimer % dashindex * 12f) - 200, 240f))) - npc.velocity) * 0.025f;
+                            npc.velocity += ((move + Vector2.UnitX.RotatedBy(move.ToRotation()+MathHelper.Pi)*(MathHelper.Max((dashTimer% dashindex * 12f)-200,240f)))-npc.velocity) * 0.025f;
                             npc.velocity = Vector2.Normalize(npc.velocity) * MathHelper.Clamp(npc.velocity.Length(), 0f, 12f);
 
                         }
@@ -797,15 +796,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public float EyesFade => 1f;
         public float Alpha => MathHelper.Clamp(3f - (npc.localAI[3]) / 20f, 0f, 1f);
-        public float ShadowTrailEffect => MathHelper.Clamp((float)Math.Sin(Math.Min((npc.localAI[3] / 30f) * MathHelper.Pi, MathHelper.PiOver2)), 0f, 1f);
-        public Color EyesColor => Color.Lerp(Color.Black, Color.White, EyesFade) * EyesFade;
+        public float ShadowTrailEffect => MathHelper.Clamp((float)Math.Sin(Math.Min((npc.localAI[3]/30f)*MathHelper.Pi,MathHelper.PiOver2)), 0f, 1f);
+        public Color EyesColor => Color.Lerp(Color.Black,Color.White,EyesFade) * EyesFade;
 
 
         public void DrawOverBlackout(On.Terraria.GameContent.Events.ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
         {
             orig(spriteBatch);
 
-            foreach (Projectile homingshot in Main.projectile.Where(testby => testby.active && testby.type == ModContent.ProjectileType<HomingWispSouls>()))
+            foreach(Projectile homingshot in Main.projectile.Where(testby => testby.active && testby.type == ModContent.ProjectileType<HomingWispSouls>()))
             {
                 homingshot.modProjectile.PreDraw(spriteBatch, Color.White);
             }
@@ -825,7 +824,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 for (float f = 0; f < npc.velocity.Length(); f += 0.10f)
                 {
                     float scale = 3f;
-                    spriteBatch.Draw(solidColor, npc.Center + (Vector2.Normalize(npc.velocity) * -f * scale) - Main.screenPosition, npc.frame, Color.Black * 0.075f * ShadowTrailEffect * (1f - (f / npc.velocity.Length())), npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
+                    spriteBatch.Draw(solidColor, npc.Center + (Vector2.Normalize(npc.velocity) * -f*scale) - Main.screenPosition, npc.frame, Color.Black*0.075f * ShadowTrailEffect*(1f-(f/npc.velocity.Length())), npc.rotation, npc.frame.Size() / 2f, npc.scale, SpriteEffects.None, 0);
                 }
             }
             if (Alpha > 0)
@@ -875,7 +874,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = npc.Center - new Vector2(96, 0).RotatedBy(npc.rotation);
-            int damage = 60;
+            int damage = 75;
             if (Main.expertMode)
             {
                 damage = (int)(damage / Main.expertDamage);
@@ -948,7 +947,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             if (!spawned)
             {
                 spawned = true;
-                Main.PlaySound(SoundID.Item75, projectile.Center);
+                Main.PlaySound(SoundID.Item75);
             }
 
             counter++;
@@ -1051,13 +1050,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.PhaseTwo > 0)
-                base.PreDraw(spriteBatch, lightColor);
+                base.PreDraw(spriteBatch,lightColor);
 
-            return true;
+                return true;
         }
         public override void AI()
         {
-            if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.PhaseTwo > 0)
+            if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.PhaseTwo>0)
             {
                 if (projectile.velocity.Length() < 3)
                 {
@@ -1120,7 +1119,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = ModContent.GetTexture(Rimegeist.AssetDirectory + "IceBolt_Glowmask");
+            Texture2D texture = ModContent.GetTexture(Rimegeist.AssetDirectory+"IceBolt_Glowmask");
             Vector2 drawPos = projectile.Center + new Vector2(0, projectile.gfxOffY) - Main.screenPosition;
             //keep an eye on the width and height when doing this. It matters
             spriteBatch.Draw
@@ -1166,17 +1165,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             for (int k = 0; k < projectile.oldPos.Length; k++)
             {
                 float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
-                Vector2 drawPos = projectile.oldPos[k] + projectile.Hitbox.Size() / 2f - Main.screenPosition;
+                Vector2 drawPos = projectile.oldPos[k]+projectile.Hitbox.Size()/2f - Main.screenPosition;
                 Color color = projectile.GetAlpha(Color.Black) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, texture2D.Size() / 2f, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, texture2D.Size()/2f, scale, SpriteEffects.None, 0f);
             }
 
             texture2D = Main.projectileTexture[projectile.type];
 
-            Rectangle rect = new Rectangle(0, (projectile.frame % (Main.projFrames[projectile.type])) * (texture2D.Height / Main.projFrames[projectile.type]), texture2D.Width, texture2D.Height / Main.projFrames[projectile.type]);
+            Rectangle rect = new Rectangle(0, (projectile.frame % (Main.projFrames[projectile.type])) * (texture2D.Height/Main.projFrames[projectile.type]), texture2D.Width, texture2D.Height/ Main.projFrames[projectile.type]);
 
-            spriteBatch.Draw(texture2D, projectile.Center - Main.screenPosition, rect, Color.White * projectile.Opacity, projectile.velocity.X / 20f, rect.Size() / 2f, projectile.scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture2D, projectile.Center - Main.screenPosition, rect, Color.White * projectile.Opacity, projectile.velocity.X/20f, rect.Size() / 2f, projectile.scale, SpriteEffects.None, 0);
 
             return false;
         }
@@ -1199,7 +1198,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void AI()
         {
 
-            projectile.Opacity = MathHelper.Clamp(projectile.timeLeft / 20f, 0f, 1f);
+            projectile.Opacity = MathHelper.Clamp(projectile.timeLeft/20f,0f,1f);
 
             if (!spawned)
             {
