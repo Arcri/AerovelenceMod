@@ -217,6 +217,7 @@ namespace AerovelenceMod
 		}
 
 		public static Effect LegElectricity;
+		public static Effect RailgunShader;
 		public override void Load()
 		{
 			if (Main.netMode != NetmodeID.Server)
@@ -257,6 +258,7 @@ namespace AerovelenceMod
 				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
 
 				LegElectricity = Instance.GetEffect("Effects/LegElectricity");
+				RailgunShader = Instance.GetEffect("Effects/RailgunShader");
 			}
 
             if (!Main.dedServ)
@@ -284,7 +286,8 @@ namespace AerovelenceMod
             ArmorHotKey = null;
             Instance = null;
 			LegElectricity = null;
-        }
+			RailgunShader = null;
+		}
 
 		public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
 

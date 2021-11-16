@@ -16,6 +16,9 @@ namespace AerovelenceMod
 {
 	public class AeroPlayer : ModPlayer
 	{
+
+		public int Shake = 0;
+
 		public bool zooming;
 
 		public bool FishPartner;
@@ -462,6 +465,20 @@ namespace AerovelenceMod
 		{
 			if (zooming)
 				zoom = 1f;
+		}
+
+		public override void ModifyScreenPosition()
+		{
+			float mult = Main.screenWidth / 2048f; //normalize for screen resolution
+
+			Main.screenPosition.Y += Main.rand.Next(-Shake, Shake) * mult;
+			Main.screenPosition.X += Main.rand.Next(-Shake, Shake) * mult;
+
+			if (Shake > 0)
+				Shake--;
+
+			Main.screenPosition.X = (int)Main.screenPosition.X;
+			Main.screenPosition.Y = (int)Main.screenPosition.Y;
 		}
 	}
 }
