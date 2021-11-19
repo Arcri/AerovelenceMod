@@ -4,7 +4,7 @@ float progress;
 float repeats;
 matrix WorldViewProjection;
 texture baseTexture;
-sampler2D baseSampler = sampler_state { texture = <baseTexture>; magfilter = LINEAR; minfilter = LINEAR; mipfilter = LINEAR; AddressU = wrap; AddressV = wrap; };
+sampler2D baseSampler = sampler_state { texture = <baseTexture>; magfilter = LINEAR; minfilter = LINEAR; mipfilter = LINEAR; AddressU = wrap; };
 
 texture vnoise;
 sampler vnoiseSampler = sampler_state
@@ -57,9 +57,6 @@ float4 White(VertexShaderOutput input) : COLOR0
 	float2 uv = float2(input.TextureCoordinates.x * repeats, input.TextureCoordinates.y);
 	float time3 = floor(progress * 2) / 2;
 	float time2 = time3 / 15;
-
-	if (uv.y > 0.7f || uv.y < 0.3f)
-		return float4(0, 0, 0, 0);
 
 	time2 += floor(time3 / 5) * 0.5f;
 
