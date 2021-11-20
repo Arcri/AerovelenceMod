@@ -160,7 +160,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			if (hit.Count < (int)(Charge * 5) + 2)
+			if (hit.Count < (int)(Charge * 5) + 400)
 				projectile.penetrate++;
             hit.Add(target);
         }
@@ -182,8 +182,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            _width = 70;
-            _cap = 1000;
+            _width = 10;
+            _cap = 3000;
         }
         public override void PrimStructure(SpriteBatch spriteBatch)
         {
@@ -200,7 +200,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
                 widthVar = _width;
                 if (i == 0)
                 {
-                    Color c1 = _counter % 33 > 20 && _counter % 33 < 32 ? Color.White : Color.Lerp(Color.Cyan, Color.White, Math.Min((widthVar - _width) / 5f, 1));
+                    Color c1 = _counter % 33 > 20 && _counter % 33 < 32 ? Color.White : Color.Lerp(Color.Cyan, Color.White, Math.Min((widthVar - _width) / 2f, 1));
                     Vector2 normalAhead = CurveNormal(_points, i + 1);
                     Vector2 secondUp = _points[i + 1] - normalAhead * widthVar;
                     Vector2 secondDown = _points[i + 1] + normalAhead * widthVar;
@@ -212,7 +212,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
                 {
                     if (i != _points.Count - 1)
                     {
-                        Color c = _counter % 33 > 20 && _counter % 33 < 32 ? Color.White : Color.Lerp(Color.Cyan, Color.White, Math.Min((widthVar - _width) / 5f, 1));
+                        Color c = _counter % 33 > 20 && _counter % 33 < 32 ? Color.White : Color.Lerp(Color.Cyan, Color.White, Math.Min((widthVar - _width) / 2f, 1));
                         Vector2 normal = CurveNormal(_points, i);
                         Vector2 normalAhead = CurveNormal(_points, i + 1);
                         Vector2 firstUp = _points[i] - normal * widthVar;

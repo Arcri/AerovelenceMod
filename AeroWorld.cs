@@ -40,11 +40,11 @@ namespace AerovelenceMod
 				idx = 1;
 			}
 
-			var pass = new WormGenPass();
+		//	var pass = new WormGenPass();
 
-			tasks.Insert(idx, pass);    //+1
+			//tasks.Insert(idx, pass);    //+1
 
-			totalWeight += pass.Weight;
+			//totalWeight += pass.Weight;
 		}
         public override void PostWorldGen()
         {
