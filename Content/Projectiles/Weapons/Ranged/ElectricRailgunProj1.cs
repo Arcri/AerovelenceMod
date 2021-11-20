@@ -38,9 +38,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			projectile.ignoreWater = true;
 			projectile.hide = true;
 		}
-		public override void AI()
-		{
-			Player player = Main.player[projectile.owner];
+        private bool spawned;
+        public override void AI()
+        {
+            if (!spawned)
+            {
+                spawned = true;
+                Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorCharge"));
+            }
+
+            
+            Player player = Main.player[projectile.owner];
 			player.ChangeDir(Main.MouseWorld.X > player.position.X ? 1 : -1);
 
 			player.itemTime = 45; // Set item time to 2 frames while we are used
@@ -69,14 +77,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
                 }
                 else if (!charged)
                 {
-                    Main.PlaySound(25, (int)projectile.position.X, (int)projectile.position.Y);
                     charged = true;
                 }
 			}
 			else
 			{
                 //Play firing sound!
-				Projectile proj = Projectile.NewProjectileDirect(player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
+                Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorShot"));
+                Projectile proj = Projectile.NewProjectileDirect(player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
 				if (Main.netMode != NetmodeID.Server)
 			    {
                     ElectricRailgunPrimTrail trail = new ElectricRailgunPrimTrail(proj, charge);

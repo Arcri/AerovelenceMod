@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Electric Railgun");
+            DisplayName.SetDefault("Annihilator");
             Tooltip.SetDefault("Hold down to blast your enemies with lightning");
         }
         public override void SetDefaults()
