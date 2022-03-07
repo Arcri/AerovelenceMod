@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,6 +23,13 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.consumable = true;
 			item.createTile = mod.TileType("CrystallineFabricator");
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 15);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
 		}
 	}
 }

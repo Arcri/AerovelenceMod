@@ -1,4 +1,5 @@
 using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -30,6 +31,14 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
 			item.createTile = TileType<Tiles.CrystalCaverns.Tiles.Furniture.GlimmeringTorch>();
 			item.flame = true;
 			item.value = 50;
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe modRecipe = new ModRecipe(mod);
+			modRecipe.AddIngredient(ItemType<Glimmerwood>(), 1);
+			modRecipe.AddIngredient(ItemID.Gel, 1);
+			modRecipe.SetResult(this, 1);
+			modRecipe.AddRecipe();
 		}
 
 		public override void HoldItem(Player player)

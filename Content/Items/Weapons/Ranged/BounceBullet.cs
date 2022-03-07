@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 3;
+            Main.projFrames[projectile.type] = 8;
             DisplayName.SetDefault("Power Cloud");
         }
 

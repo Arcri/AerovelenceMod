@@ -70,9 +70,11 @@ namespace AerovelenceMod.Common.Globals.NPCs
 				case NPCID.QueenBee:
 					if (Main.rand.NextBool(51))
                         Item.NewItem(npc.getRect(), ModContent.ItemType<BookOfBees>());
+                    if (Main.rand.NextBool(5))
+                        Item.NewItem(npc.getRect(), ModContent.ItemType<QueensStinger>());
                     break;
 
-				case NPCID.SkeletronHead:
+                case NPCID.SkeletronHead:
 					if (Main.rand.NextBool(51))
                         Item.NewItem(npc.getRect(), ModContent.ItemType<SkullBow>());
                     break;
