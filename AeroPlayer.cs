@@ -155,7 +155,7 @@ namespace AerovelenceMod
 					if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)) && ShieldCapacity > 200)
 					{
 						ShieldCapacity -= 200;
-						if (ShieldType == ShieldTypes.bubble || (ShieldType == ShieldTypes.impact && Main.rand.Next(1, 3) % 3 == 0) || ShieldType == ShieldTypes.nova && (damageSource.SourceNPCIndex != -1 || damageSource.SourceProjectileIndex != -1))
+						if (ShieldType == ShieldTypes.Bubble || (ShieldType == ShieldTypes.Impact && Main.rand.Next(1, 3) % 3 == 0) || ShieldType == ShieldTypes.Nova && (damageSource.SourceNPCIndex != -1 || damageSource.SourceProjectileIndex != -1))
 						{
 							player.ShadowDodge();
 							return false;
@@ -413,12 +413,12 @@ namespace AerovelenceMod
 				}
 			}
 
-			if ((modPlayer.ShieldType == ShieldTypes.bubble || modPlayer.ShieldType == ShieldTypes.nova) && !modPlayer.ShieldBroken && modPlayer.ShieldOn)
+			if ((modPlayer.ShieldType == ShieldTypes.Bubble || modPlayer.ShieldType == ShieldTypes.Nova) && !modPlayer.ShieldBroken && modPlayer.ShieldOn)
             {
 				Texture2D texture;
 				Color color;
 				Vector2 position = modPlayer.player.Center - Main.screenPosition;
-				if (modPlayer.ShieldType == ShieldTypes.bubble)
+				if (modPlayer.ShieldType == ShieldTypes.Bubble)
                 {
 					texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/BubbleShield");
 					color = new Color(160, 160, 160, 160);
@@ -442,7 +442,7 @@ namespace AerovelenceMod
 		{
 			Player drawPlayer = drawInfo.drawPlayer;
 			AeroPlayer modPlayer = drawPlayer.GetModPlayer<AeroPlayer>();
-			if (modPlayer.ShieldType == ShieldTypes.nova && !modPlayer.ShieldBroken && modPlayer.ShieldOn)
+			if (modPlayer.ShieldType == ShieldTypes.Nova && !modPlayer.ShieldBroken && modPlayer.ShieldOn)
 			{
 				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/NovaShield_Back");
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);

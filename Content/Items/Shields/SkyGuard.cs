@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 250;
 			shield.rechargeRate = 30f;
 			shield.rechargeDelay = 11;
-			shield.type = ShieldTypes.bubble;
+			shield.type = ShieldTypes.Bubble;
 
 			// This shield will protect the player from almost all projectiles, but has no protection to contact damage. Electricity can't pass through the shield but will greatly take down shield capacity.
 			// shield.capacity = 250; (Attacks do more damage to shield capacity unlike HP)

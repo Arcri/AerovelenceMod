@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 140;
 			shield.rechargeRate = 12f;
 			shield.rechargeDelay = 6;
-			shield.type = ShieldTypes.impact;
+			shield.type = ShieldTypes.Impact;
 
 			// This shield will sometimes prevent damage, but unlike other shields, will only protect the player from attacks sometimes. This will still count towards shield durability. Slightly resistant to all electric-type attacks.
 			// shield.capacity = 100; (Low, attacks do more damage to shield capacity unlike HP)

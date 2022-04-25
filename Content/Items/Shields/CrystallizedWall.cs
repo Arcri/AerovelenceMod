@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 100;
 			shield.rechargeRate = 20f;
 			shield.rechargeDelay = 12;
-			shield.type = ShieldTypes.impact;
+			shield.type = ShieldTypes.Impact;
 
 			// This shield will have a small chance to reflect projectiles and reduce contact damage from NPCs. Reflected projectiles will become friendly and harm the boss. Heavily resistant to all electric-type attacks.
 			// shield.capacity = 100; (Low, attacks do more damage to shield capacity unlike HP)

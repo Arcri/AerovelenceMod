@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 50;
 			shield.rechargeRate = 7.5f;
 			shield.rechargeDelay = 15;
-			shield.type = ShieldTypes.bubble;
+			shield.type = ShieldTypes.Bubble;
 
 
 			//this.shield;

@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 175;
 			shield.rechargeRate = 18f;
 			shield.rechargeDelay = 10;
-			shield.type = ShieldTypes.nova;
+			shield.type = ShieldTypes.Nova;
 	//		shield.projectileType = ModContent.ProjectileType<ShieldProjectile>();
 			// This shield will have a small chance to reflect projectiles. Grants a buff when the shield deflects a projectile.
 			// shield.capacity = 175; (Attacks do more damage to shield capacity unlike HP)

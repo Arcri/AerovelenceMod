@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
             shield.capacity = 500;
             shield.rechargeRate = 50;
             shield.rechargeDelay = 6;
-            shield.type = ShieldTypes.impact;
+            shield.type = ShieldTypes.Impact;
             // This shield will protect from all projectiles and almost all contact damage. Recharges in bursts of 100 every 5 seconds.
             // shield.capacity = 500; (Low, attacks do more damage to shield capacity unlike HP)
             // shield.rechargeRate = 100; (Regenerates 100 every 5 seconds, but only in bursts)

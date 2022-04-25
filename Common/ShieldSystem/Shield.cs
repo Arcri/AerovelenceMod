@@ -113,15 +113,6 @@ namespace AerovelenceMod.Common.ShieldSystem
 			}
 		}
 	}
-
-	// Short enum class to determine the shield type. 
-	public enum ShieldTypes : byte
-	{
-		bubble,
-		impact,
-		nova,
-		Count
-	}
 	
 	// Actual shield class to be extended for each shield accessory
 	public abstract class ShieldItem : ModItem
@@ -394,7 +385,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 				modplayer.ShieldCapacity -= 20;
 				if (modplayer.ShieldCapacity <= 0)
 				{
-					if (modplayer.ShieldType == ShieldTypes.nova)
+					if (modplayer.ShieldType == ShieldTypes.Nova)
 						NovaExplosionEffect();
 					else
 					{
@@ -403,7 +394,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 					}
 				}
 			}
-			if (target.life <= 0 && modplayer.ShieldType == ShieldTypes.impact)
+			if (target.life <= 0 && modplayer.ShieldType == ShieldTypes.Impact)
 			{
 				projectile.ai[0]++;
 				ShieldItem.rechargeCapacity = true;

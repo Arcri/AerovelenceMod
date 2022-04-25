@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Shields
 			shield.capacity = 300;
 			shield.rechargeRate = 15f;
 			shield.rechargeDelay = 5;
-			shield.type = ShieldTypes.nova;
+			shield.type = ShieldTypes.Nova;
 		//	shield.projectileType = ModContent.ProjectileType<FallingDefenseShieldProjectile>();
 
 			// This shield will protect the player from almost all contact damage, has a ton of shield capacity. But, recharges incredibly slow. Projectiles don't affect the shield, and will pass right through it.
