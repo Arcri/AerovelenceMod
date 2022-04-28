@@ -4,7 +4,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Items.Weapons.Ranged
+namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
 	public class LifeLeak : ModItem
 	{
