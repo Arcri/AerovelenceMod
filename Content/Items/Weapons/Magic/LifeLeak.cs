@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Lifeleak");
+			DisplayName.SetDefault("Life-Leak");
 			Tooltip.SetDefault("'You feel numb holding it'\nUses your life as ammo\nProjectiles shot from this weapon heal you");
 		}
 		public override void SetDefaults()
