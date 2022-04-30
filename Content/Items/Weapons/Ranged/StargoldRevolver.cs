@@ -1,4 +1,4 @@
-using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
+/*using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -94,4 +94,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             
         }
     }
-}
+}*/

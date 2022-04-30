@@ -60,11 +60,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             projectile.width = projectile.height = 40;
             
-            projectile.aiStyle = projectile.penetrate = 3;
-           
+            projectile.aiStyle = 3;
+
+            projectile.penetrate = -1;
+
             projectile.ranged =  projectile.friendly = true;
 
-            projectile.magic = false;
+            projectile.melee = true;
             
             projectile.timeLeft = 600;
             projectile.extraUpdates = 1;

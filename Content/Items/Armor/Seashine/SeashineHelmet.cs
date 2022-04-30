@@ -18,10 +18,10 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-            player.setBonus = "Summons a flying crab to protect you\nMovement speed in water heavily increased";
+            player.setBonus = "Summons a flying crab to protect you\nMovement speed in water heavily increased\nIMPORTANT: Unfortunately, this set does not summon a crab. We are working on implementing it!\nIn the meantime, this set will grant a very large increase to movement speed while\nin water by 20% more than what it was.";
             if (player.wet)
             {
-                player.moveSpeed += 0.15f;
+                player.moveSpeed += 0.22f;
             }
         } 	
         public override void SetDefaults()

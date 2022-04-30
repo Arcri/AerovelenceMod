@@ -95,6 +95,14 @@ namespace AerovelenceMod
 			//ShieldCapacity = 0;
 			//ShieldType = ShieldTypes.Count;
 		}
+
+
+		public override void OnEnterWorld(Player player)
+		{
+			Main.NewText("NOTE: Aerovelence is still in development. Some items may work differently than intended!", Color.Orange);
+			Main.NewText("We are looking for team members who can help out. If you are interested, join our Discord", Color.Orange);
+			Main.NewText("by clicking our mod's home-page. Thank you, and have fun!", Color.Orange);
+		}
 		public override void UpdateDead()
 		{
 			zooming = false;

@@ -8,7 +8,7 @@ https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 This mod version fixes a lot of bugs, and has boss checklist support.
 
 Current rundown:
--260+ Items
+-372+ Items
 -Large collection of new NPCs with fun and unique AI
 -2 fun bossfights
 -A brand reworked new biome, the Crystal Caverns!
@@ -18,9 +18,22 @@ If this mod seems interesting to you, join our Discord here: https://discord.gg/
 
 CREDITS
 
-Directed by: Arcri and TraoX
-Music by: A44
-Code by: Yelloface, ExitiumTheCat, Dominic Karma, RighteousRyan, Graydee, Naka, TraoX, FullOfXP, GabeHasWon, VortexOfRainbows, Hamstar, Just Req, Grrenix, Eldrazi, A44, and Felipe350.
-Sprites by: Arcri, Criitiical, SpicySpaceSnake, HondaCivicMoment, Blossom, Xinix, Stryke, TraoX, Orion, Naka, Seasalt, and Tiredghostdude.
-Structures by DarkArtist
+Directed by Arcri
+
+MAJOR CONTRIBUTORS:
+- Vortex of Rainbows (Cyvercry Boss AI)
+- IDGCaptainRussia (Rimegeist Boss AI)
+- Wombat (Ice Generation)
+- Hamstar (Crystal Caverns Generation)
+- Eldrazi (Support with Tumbler AI)
+- Graydee (Shaders & Primitives)
+
+Music by: A44 and iFlicky
+
+Code by: Yelloface, ExitiumTheCat, Stardust, Dominic Karma, RighteousRyan, Naka, TraoX, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, and Felipe350
+
+Sprites by: Arcri, Criitiical, SpicySpaceSnake, HondaCivicMoment, Blossom, Xinix, Stryke, TraoX, Orion, Naka, Seasalt, and Tiredghostdude
+
+Structures by: DarkArtist
+
 Lore and Storywriting by: Maker of Scratchock Live
