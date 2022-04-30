@@ -33,6 +33,7 @@ namespace AerovelenceMod.Content.Items.Tools
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
+            recipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 12);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
