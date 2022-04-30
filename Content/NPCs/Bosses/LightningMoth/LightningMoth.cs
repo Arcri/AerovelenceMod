@@ -455,7 +455,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= 0.93f;
+                npc.velocity *= player.position / 2;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -474,7 +474,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= 0.93f;
+                npc.velocity *= player.position / 2;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -493,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= 0.93f;
+                npc.velocity *= player.position / 2;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -512,7 +512,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= 0.93f;
+                npc.velocity *= 1.005f;
+                npc.position = player.position * 5;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -679,7 +680,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             int damage;
             float dynamicCounter = 0;
 
-            if (t % 100 == 0)
+            if (t % 200 == 0)
             {
                 for (int i = 0; i < 3 + (Main.expertMode ? 1 : 0); i++)
                 {
@@ -696,7 +697,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 int proj = Projectile.NewProjectile(npc.Center, npc.DirectionTo(player.Center) * 20, ModContent.ProjectileType<ElectricityProjectile>(), 10, 5);
                 Main.projectile[proj].ai[1] = 1;
             }
-            npc.spriteDirection = npc.direction;
+            if (t % 400 == 0)
+            {
+                DiveBomb();
+            }
+                npc.spriteDirection = npc.direction;
             npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
             UpdateFrame(0.3f, 0, 5);
             attackCounter++;
@@ -1643,7 +1648,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             projectile.width = 4;
             projectile.height = 4;
             projectile.friendly = false;
-            projectile.hostile = false;
+            projectile.hostile = true;
             projectile.magic = true;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 300;
