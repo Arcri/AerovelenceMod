@@ -1,4 +1,5 @@
 using System;
+using AerovelenceMod.Core.Prim;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -45,8 +46,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             npc.HitSound = SoundID.NPCHit44;
             npc.DeathSound = SoundID.NPCHit46;
             npc.buffImmune[24] = true;
+            npc.alpha = 150;
             //bossBag = ModContent.ItemType<SnowriumBag>();
-            //music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium");
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/LightningMoth");
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
@@ -84,10 +86,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             spriteBatch.Draw(glowTex, new Vector2(npc.Center.X, npc.Center.Y) - Main.screenPosition + new Vector2(0, npc.gfxOffY), npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2, npc.scale, effects, 0);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix); 
-            
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
             return false;
-		}
+        }
         private int cooldownFrames
         {
             get
@@ -123,8 +125,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             JumpAtPlayer = 8,
             SummonJolts = 9,
             Shotgun = 10,
-            IdleRun = 11,
-            JumpAndDash = 12
+            Teleport = 11,
+            IdleRun = 12,
+            JumpAndDash = 13
         }
         public bool phaseTwo => npc.life < npc.lifeMax / 2;
         public override void AI()
@@ -216,6 +219,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                         case CurrentAttack.JumpAndDash:
                             JumpAndDash();
                             break;
+                        case CurrentAttack.Teleport:
+                            Teleport();
+                            break;
                         case CurrentAttack.IdleRun:
                             IdleRun();
                             break;
@@ -268,7 +274,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                     }
                     if (phase == 2)
                     {
-                        int att = Main.rand.Next(5);
+                        int att = Main.rand.Next(6);
                         switch (att)
                         {
                             case 1:
@@ -283,6 +289,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                             case 4:
                                 attack = CurrentAttack.Shotgun;
                                 break;
+                            case 5:
+                                attack = CurrentAttack.Teleport;
+                                break;
                             default:
                                 attack = CurrentAttack.IdleFloat;
                                 break;
@@ -291,7 +300,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                     }
                     if (phase == 3)
                     {
-                        int att = Main.rand.Next(6);
+                        int att = Main.rand.Next(7);
                         switch (att)
                         {
                             case 1:
@@ -309,6 +318,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                             case 5:
                                 attack = CurrentAttack.Shotgun;
                                 break;
+                            case 6:
+                                attack = CurrentAttack.Teleport;
+                                break;
                             default:
                                 attack = CurrentAttack.IdleFloat;
                                 break;
@@ -324,22 +336,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
 
         public float trueFrame;
         public override void FindFrame(int frameHeight)
-		{
-			npc.frame.Width = 268;
-			npc.frame.X = ((int)trueFrame % 4) * npc.frame.Width;
-			npc.frame.Y = (((int)trueFrame - ((int)trueFrame % 4)) / 4) * npc.frame.Height;
-		}
+        {
+            npc.frame.Width = 268;
+            npc.frame.X = ((int)trueFrame % 4) * npc.frame.Width;
+            npc.frame.Y = (((int)trueFrame - ((int)trueFrame % 4)) / 4) * npc.frame.Height;
+        }
         internal void UpdateFrame(float speed, int minFrame, int maxFrame)
         {
             trueFrame += speed;
-			if (trueFrame < minFrame) 
-			{
-				trueFrame = minFrame;
-			}
-			if (trueFrame > maxFrame) 
-			{
-				trueFrame = minFrame;
-			}
+            if (trueFrame < minFrame)
+            {
+                trueFrame = minFrame;
+            }
+            if (trueFrame > maxFrame)
+            {
+                trueFrame = minFrame;
+            }
         }
 
         #region attacks
@@ -350,7 +362,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             attackCounter++;
             attackCounter++;
             Player player = Main.player[npc.target];
-            UpdateFrame(0.3f, 0, 6);
+            UpdateFrame(0.3f, 0, 5);
             npc.spriteDirection = npc.direction;
             npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
 
@@ -403,11 +415,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.noTileCollide = false;
                 if (attackCounter <= 35)
                 {
-                    UpdateFrame(0f, 18, 18);
+                    UpdateFrame(0f, 16, 16);
                 }
                 else
                 {
-                    UpdateFrame(0.2f, 19, 25);
+                    UpdateFrame(0.2f, 17, 24);
                     if (attackCounter == 35 + 25)
                     {
                         Main.PlaySound(SoundID.Item69, npc.Center);
@@ -421,10 +433,104 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
         }
 
+        private void Teleport()
+        {
+            UpdateFrame(0.3f, 0, 5);
+            npc.spriteDirection = npc.direction;
+            npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
+
+            Player player = Main.player[npc.target];
+            int distance = Main.rand.Next(350, 550);
+
+            attackCounter++;
+
+            if (attackCounter == 100)
+            {
+                Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 66);
+                Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                int rot = Main.rand.Next(360);
+                double anglex = Math.Sin(rot * (Math.PI / 180));
+                double angley = Math.Cos(rot * (Math.PI / 180));
+                npc.position.X = player.Center.X + (int)(distance * anglex);
+                npc.position.Y = player.Center.Y + (int)(distance * angley);
+
+                colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
+                npc.velocity *= player.position / 2;
+
+                npc.netUpdate = true;
+                for (int i = 0; i < 50; i++)
+                {
+                    Dust.NewDustPerfect(npc.Center, 226, new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, 0)));
+                }
+            }
+            if (attackCounter == 120)
+            {
+                Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 66);
+                Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                int rot = Main.rand.Next(360);
+                double anglex = Math.Sin(rot * (Math.PI / 180));
+                double angley = Math.Cos(rot * (Math.PI / 180));
+                npc.position.X = player.Center.X + (int)(distance * anglex);
+                npc.position.Y = player.Center.Y + (int)(distance * angley);
+
+                colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
+                npc.velocity *= player.position / 2;
+
+                npc.netUpdate = true;
+                for (int i = 0; i < 50; i++)
+                {
+                    Dust.NewDustPerfect(npc.Center, 226, new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, 0)));
+                }
+            }
+            if (attackCounter == 140)
+            {
+                Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 66);
+                Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                int rot = Main.rand.Next(360);
+                double anglex = Math.Sin(rot * (Math.PI / 180));
+                double angley = Math.Cos(rot * (Math.PI / 180));
+                npc.position.X = player.Center.X + (int)(distance * anglex);
+                npc.position.Y = player.Center.Y + (int)(distance * angley);
+
+                colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
+                npc.velocity *= player.position / 2;
+
+                npc.netUpdate = true;
+                for (int i = 0; i < 50; i++)
+                {
+                    Dust.NewDustPerfect(npc.Center, 226, new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, 0)));
+                }
+            }
+            if (attackCounter == 160)
+            {
+                Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 66);
+                Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                int rot = Main.rand.Next(360);
+                double anglex = Math.Sin(rot * (Math.PI / 180));
+                double angley = Math.Cos(rot * (Math.PI / 180));
+                npc.position.X = player.Center.X + (int)(distance * anglex);
+                npc.position.Y = player.Center.Y + (int)(distance * angley);
+
+                colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
+                npc.velocity *= 1.005f;
+                npc.position = player.position * 5;
+
+                npc.netUpdate = true;
+                for (int i = 0; i < 50; i++)
+                {
+                    Dust.NewDustPerfect(npc.Center, 226, new Vector2(Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, 0)));
+                }
+            }
+            if (attackCounter >= 165)
+            {
+                IdleFloat();
+            }
+        }
+
         private void LightningStorm()
         {
             npc.dontTakeDamage = true;
-            UpdateFrame(0.3f, 0, 6);
+            UpdateFrame(0.3f, 0, 5);
             npc.spriteDirection = npc.direction;
             npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
             attackCounter++;
@@ -439,7 +545,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             else
             {
                 npc.velocity *= 0.92f;
-                
+
                 if (attackCounter < 120)
                 {
                     if (attackCounter % 4 == 0 && attackCounter < 60)
@@ -456,22 +562,38 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                     {
                         for (int i = 0; i <= 16; i++)
                         {
-                            Projectile proj = Projectile.NewProjectileDirect(npc.Center, npc.DirectionTo(player.Center).RotatedBy(MathHelper.ToRadians(360 / 16 * i)) * 10, ModContent.ProjectileType<LightningJoltProj>(), 8, 5);
-                            proj.ai[1] = 1;
+                            for (double b = 0; b < 6.28; b += Main.rand.NextFloat(1f, 2f))
+                            {
+                                Projectile proj = Projectile.NewProjectileDirect(npc.Center, new Vector2((float)Math.Sin(b), (float)Math.Cos(b)) * 2.5f, ModContent.ProjectileType<LightningJoltProj>(), 8, 5);
+                                proj.ai[1] = 1;
+                            }
                         }
-                    } 
+                        if (phaseTwo)
+                        {
+                            for (double b = 0; b < 6.28; b += Main.rand.NextFloat(1f, 2f))
+                            {
+                                int lightningproj = Projectile.NewProjectile(npc.Center, new Vector2((float)Math.Sin(b), (float)Math.Cos(b)) * 2.5f, ModContent.ProjectileType<ElectrapulseProj>(), npc.damage, 15);
+                                if (Main.netMode != NetmodeID.Server)
+                                {
+                                    AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));
+                                }
+                            }
+                        }
+                    }
                     else if (attackCounter % 4 == 0)
                     {
-                        Projectile proj = Projectile.NewProjectileDirect(player.Center + new Vector2((-Main.screenWidth / 2) + Main.rand.Next(Main.screenWidth), -Main.screenHeight * 0.6f), new Vector2(Main.rand.NextFloat(-1, 2), Main.rand.NextFloat(15, 19)), ModContent.ProjectileType<LightningJoltProj>(), 6, 5);
-                        //proj.ai[1] = 1;
+                        Projectile.NewProjectile(player.Center + new Vector2((-Main.screenWidth / 2) + Main.rand.Next(Main.screenWidth), -Main.screenHeight * 0.6f), new Vector2((float)Math.Sin(Main.rand.NextFloat(1f, 2f)), Main.rand.NextFloat(15, 19)), ModContent.ProjectileType<LightningJoltProj>(), 6, 5);
                     }
+
                 }
             }
         }
 
+        bool balls = true;
+
         private void BlastVolleys()
         {
-            UpdateFrame(0.3f, 0, 6);
+            UpdateFrame(0.3f, 0, 5);
             attackCounter++;
             Player player = Main.player[npc.target];
             Vector2 dir = new Vector2((float)Math.Sign(npc.Center.X - player.Center.X) * 300, -100);
@@ -485,6 +607,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
 
                 return;
             }
+
             else if (attackCounter >= 30)
             {
                 npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(player.Center + dir) * (npc.Distance(player.Center + dir) / 20), 0.2f);
@@ -506,12 +629,26 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                         Main.PlaySound(SoundID.Item75, npc.Center);
                     }
                 }
+
+                if (phaseTwo && balls == true)
+                {
+                    balls = false;
+                    for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
+                    {
+                        int lightningproj = Projectile.NewProjectile(npc.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 2.5f, ModContent.ProjectileType<ElectrapulseProj>(), npc.damage, 15);
+                        if (Main.netMode != NetmodeID.Server)
+                        {
+                            AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));
+                        }
+                    }
+                }
             }
             else
             {
                 npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(player.Center + dir) * (npc.Distance(player.Center + dir) / 15), 0.3f);
                 colorLerp = MathHelper.Lerp(colorLerp, 1f, 0.05f);
                 if (attackCounter == 2) Main.PlaySound(SoundID.Item77, npc.Center);
+                balls = true;
             }
         }
         private void CheckPlatform(Player player)
@@ -533,13 +670,40 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
         }
 
+        int t;
+        int b;
 
         private void IdleFloat()
         {
-            npc.spriteDirection = npc.direction;
-            npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
-            UpdateFrame(0.3f, 0, 6);
+            t++;
             Player player = Main.player[npc.target];
+            int damage;
+            float dynamicCounter = 0;
+
+            if (t % 200 == 0)
+            {
+                for (int i = 0; i < 3 + (Main.expertMode ? 1 : 0); i++)
+                {
+                    Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(100, 240), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        damage = npc.damage / 2;
+                        int lightningproj = Projectile.NewProjectile(toLocation, Vector2.Zero, ModContent.ProjectileType<ElectricityProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
+                        AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));
+
+                    }
+                }
+
+                int proj = Projectile.NewProjectile(npc.Center, npc.DirectionTo(player.Center) * 20, ModContent.ProjectileType<ElectricityProjectile>(), 10, 5);
+                Main.projectile[proj].ai[1] = 1;
+            }
+            if (t % 400 == 0)
+            {
+                DiveBomb();
+            }
+                npc.spriteDirection = npc.direction;
+            npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
+            UpdateFrame(0.3f, 0, 5);
             attackCounter++;
             if (attackCounter > 200)
             {
@@ -660,7 +824,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             else
             {
                 if (Math.Abs(npc.velocity.X) > 0.1f)
-                npc.velocity.X *= 0.9f;
+                    npc.velocity.X *= 0.9f;
             }
 
             if (npc.velocity.X > 6 || npc.velocity.X < -6)
@@ -671,7 +835,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             {
                 npc.velocity.Y += 1f;
             }
-            
+
             if (npc.velocity.X == 0 || npc.collideX || !Collision.CanHit(npc.position, npc.width, npc.height, npc.position + new Vector2(npc.velocity.X, 0), npc.width, npc.height))
             {
                 npc.velocity.Y = -16;
@@ -681,6 +845,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
         private void Dash()
         {
             Player player = Main.player[npc.target];
+
 
             float dashMax = 120;
 
@@ -707,11 +872,53 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 else if (count < Math.Floor(dashMax * 0.75f))
                 {
                     npc.velocity = Vector2.Lerp(npc.velocity, Vector2.Zero, 0.4f);
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Vector2 projectilePosition = npc.DirectionTo(aiVector);
+                        projectilePosition -= npc.velocity * ((float)i * 0.25f);
+                        int dust = Dust.NewDust(projectilePosition, 1, 1, 20, 0f, 0f, 0, default(Color), 1f);
+                        Main.dust[dust].noGravity = true;
+                        Main.dust[dust].position = projectilePosition;
+                        Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                        Main.dust[dust].velocity *= 0.2f;
+                    }
                 }
                 if (count == Math.Floor(dashMax * 0.75f))
                 {
+
+                    Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                     Main.PlaySound(SoundID.Item67, npc.Center);
                     npc.velocity = npc.DirectionTo(aiVector) * 30;
+
+                    Vector2 startPos = npc.Center;
+                    Vector2 endPos = Vector2.Lerp(npc.velocity, npc.DirectionTo(player.Center + dir) * (npc.Distance(player.Center + dir) / 20), 0.2f);
+
+                    for (int i = 0; i < 100; i++)
+                    {
+                        //int dust2 = Dust.NewDust(startPos, 1, 1, 20, 0f, 0f, 0, default(Color), 1f);
+                        Main.NewText("Balls");
+                        Vector2 pos = startPos + ((startPos - endPos) * i / 100f);
+                        int dust = Dust.NewDust(pos, 1, 1, 6, 0f, 0f, 0, default(Color), 1f);
+
+                        for (int rr = 0; rr < 100; rr++)
+                        {
+                            int dust4 = Dust.NewDust(endPos, 1, 1, 6, 0f, 0f, 0, default(Color), 1f);
+                        }
+                        for (int rr4 = 0; rr4 < 100; rr4++)
+                        {
+                            int dust5 = Dust.NewDust(startPos, 1, 1, 6, 0f, 0f, 0, default(Color), 1f);
+                        }
+                        Main.dust[dust].noGravity = false;
+                        Main.dust[dust].position = pos;
+                        Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                        Main.dust[dust].velocity *= 0.2f;
+                        //Vector2 pos = (startPos - (startPos + endPos / 2)) * 2;
+                    }
+
+
+
+                    Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<TelegraphLightning>(), npc.damage / 2, 0f, 1);
                 }
                 if (count >= Math.Floor(dashMax * 0.75f) && count <= Math.Floor(dashMax * 0.75f) + 10)
                 {
@@ -734,13 +941,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
 
                 if (!dashing)
                 {
-                    UpdateFrame(0.3f, 0, 6);
+                    UpdateFrame(0.3f, 0, 5);
                     npc.rotation = 0f + MathHelper.ToRadians(npc.velocity.X / 2);
                     npc.spriteDirection = npc.direction;
                 }
                 else
                 {
-                    UpdateFrame(0.3f, 7, 7);
+                    UpdateFrame(0.3f, 5, 5);
                     npc.rotation = npc.AngleTo(npc.Center + npc.velocity) - MathHelper.ToRadians(90f);
                 }
             }
@@ -763,7 +970,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 {
                     npc.spriteDirection = npc.direction;
                     dashing = false;
-                    UpdateFrame(0.3f, 0, 6);
+                    UpdateFrame(0.3f, 0, 5);
                     if (attackCounter == 1)
                     {
                         posToBe = player.Center - new Vector2(0, 500);
@@ -785,7 +992,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 }
                 else
                 {
-                    UpdateFrame(0.3f, 7, 7);
+                    UpdateFrame(0.3f, 6, 6);
                     attackCounter++;
                     npc.noTileCollide = false;
                     if (npc.collideY || !Collision.CanHit(npc.Center, 2, 2, npc.Bottom + new Vector2(0, 20), 2, 2) || npc.velocity.Y == 0)
@@ -1107,6 +1314,372 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
 
             return false;
+        }
+    }
+    public class ElectrapulseProj : ModProjectile
+    {
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Ancient Lightning");
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 32;
+            projectile.height = 32;
+            projectile.aiStyle = -1;
+            projectile.melee = true;
+            projectile.penetrate = -1;
+            projectile.hostile = false;
+            projectile.friendly = true;
+            projectile.tileCollide = false;
+            projectile.damage = 0;
+            projectile.timeLeft = 120;
+            projectile.alpha = 255;
+            projectile.extraUpdates = 5;
+        }
+
+        Vector2 initialVelocity = Vector2.Zero;
+
+        private float lerp;
+        public Vector2 DrawPos;
+        public int boost;
+        public override void AI()
+        {
+            if (initialVelocity == Vector2.Zero)
+            {
+                initialVelocity = projectile.velocity;
+            }
+            if (projectile.timeLeft % 10 == 0)
+            {
+                projectile.velocity = initialVelocity.RotatedBy(Main.rand.NextFloat(-1, 1));
+            }
+            /* if (projectile.timeLeft % 2 == 0)
+             {
+                 Dust dust = Dust.NewDustPerfect(projectile.Center, 226);
+                 dust.noGravity = true;
+                 dust.scale = (float)Math.Sqrt(projectile.timeLeft) / 4;
+                 dust.velocity = Vector2.Zero;
+             }*/
+            DrawPos = projectile.position;
+        }
+    }
+
+    public class LightningAnchor : ModProjectile
+    {
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Lightning Storm");
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 5;
+            projectile.height = 5;
+            projectile.aiStyle = -1;
+            projectile.melee = true;
+            projectile.penetrate = -1;
+            projectile.hostile = false;
+            projectile.friendly = true;
+            projectile.tileCollide = false;
+            projectile.damage = 0;
+            projectile.timeLeft = 120;
+            projectile.alpha = 255;
+            projectile.extraUpdates = 5;
+        }
+
+        Vector2 initialVelocity = Vector2.Zero;
+
+        private float lerp;
+        public Vector2 DrawPos;
+        public int boost;
+
+
+        public override void AI()
+        {
+
+            Lighting.AddLight(projectile.Center, Color.CornflowerBlue.ToVector3() / 3);
+            for (int k = 0; k < Main.player.Length; k++)
+            {
+                projectile.position = Main.player[k].Center;
+            }
+            /*if (initialVelocity == Vector2.Zero)
+            {
+                initialVelocity = projectile.velocity;
+            }
+            if (projectile.timeLeft % 10 == 0)
+            {
+                projectile.velocity = initialVelocity.RotatedBy(Main.rand.NextFloat(-1, 1));
+            }
+            /* if (projectile.timeLeft % 2 == 0)
+             {
+                 Dust dust = Dust.NewDustPerfect(projectile.Center, 226);
+                 dust.noGravity = true;
+                 dust.scale = (float)Math.Sqrt(projectile.timeLeft) / 4;
+                 dust.velocity = Vector2.Zero;
+             }*/
+            DrawPos = projectile.position;
+        }
+    }
+
+    public class LightningGem : ModProjectile
+    {
+
+        float colorLerp = 0f;
+
+        float phase = 0;
+        float phase3Glow = 0f;
+        float cos1 = 0;
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Lightning Gem");
+        }
+
+        public override void SetDefaults()
+        {
+            projectile.width = 26;
+            projectile.height = 26;
+            projectile.aiStyle = -1;
+            projectile.magic = true;
+            projectile.penetrate = -1;
+            projectile.hostile = true;
+            projectile.friendly = false;
+            projectile.tileCollide = false;
+            projectile.damage = 20;
+            projectile.timeLeft = 500;
+            projectile.extraUpdates = 5;
+            projectile.alpha = 0;
+        }
+
+        Vector2 initialVelocity = Vector2.Zero;
+
+        private float lerp;
+        public Vector2 DrawPos;
+        public int boost;
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            var effects = projectile.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Texture2D auraTex = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/LightningMoth/LightningGemAura");
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //if (dashing)
+
+            for (int i = 0; i <= 4; i++)
+            {
+                spriteBatch.Draw(auraTex, projectile.Center + new Vector2(Main.rand.Next(-3, 4), Main.rand.Next(-3, 4)) - Main.screenPosition + new Vector2(0, projectile.gfxOffY), new Rectangle(0, 0, auraTex.Width, auraTex.Height), Color.Lerp(new Color(15, 15, 25), Color.CornflowerBlue, colorLerp), projectile.rotation, auraTex.Size() / 2, ((1f + ((float)Math.Cos(cos1 / 12) * 0.1f)) * phase3Glow) + MathHelper.Lerp(colorLerp, colorLerp / 2, phase3Glow), effects, 0);
+            }
+
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return true;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
+            {
+                int lightningproj = Projectile.NewProjectile(projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 4.5f, ModContent.ProjectileType<ElectrapulseProj>(), projectile.damage, projectile.knockBack, projectile.owner);
+                if (Main.netMode != NetmodeID.Server)
+                {
+                    AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));
+                }
+            }
+        }
+
+        public override void AI()
+        {
+            phase3Glow = MathHelper.Lerp(phase3Glow, 1f, 0.1f);
+            Lighting.AddLight(projectile.Center, Color.CornflowerBlue.ToVector3() / 3);
+            /*if (initialVelocity == Vector2.Zero)
+            {
+                initialVelocity = projectile.velocity;
+            }
+            if (projectile.timeLeft % 10 == 0)
+            {
+                projectile.velocity = initialVelocity.RotatedBy(Main.rand.NextFloat(-1, 1));
+            }
+            /* if (projectile.timeLeft % 2 == 0)
+             {
+                 Dust dust = Dust.NewDustPerfect(projectile.Center, 226);
+                 dust.noGravity = true;
+                 dust.scale = (float)Math.Sqrt(projectile.timeLeft) / 4;
+                 dust.velocity = Vector2.Zero;
+             }*/
+            DrawPos = projectile.position;
+        }
+    }
+
+    public class ElectricityProjectile : ModProjectile
+    {
+
+        float colorLerp = 0f;
+
+        float phase = 0;
+        float phase3Glow = 0f;
+        float cos1 = 0;
+
+
+        public override void SetDefaults()
+        {
+            projectile.width = 26;
+            projectile.height = 44;
+            projectile.timeLeft = 560;
+            projectile.penetrate = -1;
+            projectile.friendly = true;
+            projectile.hostile = false;
+            projectile.damage = 56;
+            projectile.tileCollide = false;
+            projectile.ignoreWater = true;
+            projectile.extraUpdates = 1;
+            projectile.alpha = 0;
+            //projectile.netImportant = true;
+        }
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White;
+        }
+
+        /*public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            if (projectile.timeLeft <= 420)
+                projectile.alpha = 255;
+            if (projectile.timeLeft == 420)
+                projectile.alpha = 0;
+
+                var effects = projectile.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Texture2D auraTex = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/LightningMoth/TinyAura");
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //if (dashing)
+
+            for (int i = 0; i <= 4; i++)
+            {
+                spriteBatch.Draw(auraTex, projectile.Center + new Vector2(Main.rand.Next(-3, 4), Main.rand.Next(-3, 4)) - Main.screenPosition + new Vector2(0, projectile.gfxOffY), new Rectangle(0, 0, auraTex.Width, auraTex.Height), Color.Lerp(new Color(15, 15, 25) , Color.CornflowerBlue, colorLerp) * (1f - projectile.alpha / 255f), projectile.rotation, auraTex.Size() / 2, ((1f + ((float)Math.Cos(cos1 / 12) * 0.1f)) * phase3Glow) + MathHelper.Lerp(colorLerp, colorLerp / 2, phase3Glow), effects, 0);
+            }
+
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return true;
+        }*/
+
+        public override bool ShouldUpdatePosition()
+        {
+            return projectile.timeLeft <= 420;
+        }
+        public override void AI()
+        {
+            projectile.rotation = MathHelper.ToRadians(180) + projectile.velocity.ToRotation();
+            if (projectile.timeLeft == 420)
+            {
+                projectile.alpha = 255;
+                Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 43, 0.75f);
+
+                for (double i = 0; i < 6.28; i += 0.1)
+                {
+                    Dust dust = Dust.NewDustPerfect(projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+                    dust.noGravity = true;
+                }
+            }
+            if (projectile.timeLeft > 420)
+            {
+                /*for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
+                {
+                    
+                }*/
+
+
+                /*if (player.active)
+                {
+                    Vector2 toPlayer = projectile.Center - player.Center;
+                    toPlayer = toPlayer.SafeNormalize(Vector2.Zero) * 12;
+                    projectile.velocity = -toPlayer;*/
+            }
+
+            else
+            {
+
+                Player player = Main.player[(int)projectile.ai[0]];
+                float approaching = ((540f - projectile.timeLeft) / 540f);
+                Lighting.AddLight(projectile.Center, 0.5f, 0.65f, 0.75f);
+
+                float x = Main.rand.Next(-10, 11) * 0.001f * approaching;
+                float y = Main.rand.Next(-10, 11) * 0.001f * approaching;
+                Vector2 toPlayer = projectile.Center - player.Center;
+                toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
+                projectile.velocity += -toPlayer * (0.155f * projectile.timeLeft / 540f) + new Vector2(x, y);
+
+                
+
+                projectile.hostile = false;
+                /*int dust = Dust.NewDust(projectile.Center + new Vector2(-4, -4), 0, 0, 164, 0, 0, projectile.alpha, default, 1.25f);
+                Main.dust[dust].noGravity = true;
+                Main.dust[dust].velocity *= 0.1f;
+                Main.dust[dust].scale *= 0.75f;*/
+            }
+            Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 1.8f / 255f, (255 - projectile.alpha) * 0.0f / 255f, (255 - projectile.alpha) * 0.0f / 255f);
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.immune[projectile.owner] = 3;
+        }
+    }
+    public class TelegraphLightning : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Lightning");
+        }
+        public override void SetDefaults()
+        {
+            projectile.width = 4;
+            projectile.height = 4;
+            projectile.friendly = false;
+            projectile.hostile = true;
+            projectile.magic = true;
+            projectile.extraUpdates = 100;
+            projectile.timeLeft = 300;
+            projectile.tileCollide = true;
+            projectile.penetrate = -1;
+        }
+        public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
+
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            projectile.damage = (int)(projectile.damage * 0.8);
+        }
+
+        public override void AI()
+        {
+            projectile.localAI[0] += 1f;
+            if (projectile.localAI[0] > 3f)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 projectilePosition = projectile.position;
+                    projectilePosition -= projectile.velocity * ((float)i * 0.25f);
+                    projectile.alpha = 255;
+                    int dust = Dust.NewDust(projectilePosition, 1, 1, DustID.Electric, 0f, 0f, 0, default, 1f);
+                    Main.dust[dust].noGravity = true;
+                    Main.dust[dust].position = projectilePosition;
+                    Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                    Main.dust[dust].velocity *= 0.2f;
+                }
+            }
         }
     }
 }
