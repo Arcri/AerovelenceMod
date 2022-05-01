@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -8,36 +8,30 @@ namespace AerovelenceMod.Common.ShieldSystem
 {
     public abstract class ModShield : ModItem
     {
+        public override bool CloneNewInstances => true;
+
         /// <summary>The type of the shield.</summary>
         public abstract ShieldTypes ShieldType { get; }
 
-        /// <summary>How much HP of damage this shield can take before failing.</summary>
-        public abstract int MaxCapacity { get; }
+        /// <summary>Data regarding the shield's size, capacity, etc.</summary>
+        public abstract ShieldData BaseShieldData { get; }
 
-        /// <summary>How long it takes for this shield to start regenerating outside of combat in seconds.</summary>
-        public abstract float Delay { get; }
+        public ShieldData RealData => BaseShieldData + variableData;
 
-        /// <summary>How long it takes this shield to fully regenerate in seconds.</summary>
-        public abstract int RechargeRate { get; }
-
-        /// <summary>How much HP this shield takes off of the player.</summary>
-        public abstract int HPPenalty { get; }
-
-        /// <summary>Radius of the shield in pixels. Allows for different sizes of shields if necessary.</summary>
-        public abstract int Radius { get; }
-
+        public ShieldData variableData = new ShieldData(0, 0, 0, 0, 0);
         public int capacity = 0;
+        public int prefix = 0;
 
         internal int delayTimer = 0;
         internal float rechargeTimer = 0;
 
-        internal string InformationTooltip() => $"[c/63B4B8:{ShieldType} Shield]\n{Delay} second delay\n{RechargeRate} second recharge rate\n{HPPenalty}hp burden";
+        private bool _fullRecharge = true;
 
         public override void AutoStaticDefaults()
         {
             base.AutoStaticDefaults(); //Base defaults for texture loading & name
 
-            Tooltip.SetDefault(InformationTooltip()); //Base tooltip
+            Tooltip.SetDefault($"[c/63B4B8:{ShieldType} Shield]");
         }
 
         public sealed override void SetDefaults()
@@ -45,6 +39,44 @@ namespace AerovelenceMod.Common.ShieldSystem
             item.accessory = true;
 
             SafeSetDefaults();
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo0", $"{RealData.Delay} second delay " + GetBonus(variableData.Delay, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo1", $"{RealData.RechargeRate} second recharge rate " + GetBonus(variableData.RechargeRate, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo2", $"{RealData.HPPenalty}hp burden " + GetBonus(variableData.HPPenalty, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo3", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
+        }
+
+        internal void ApplyPrefix(int boost, byte type, int sign)
+        {
+            if (type < 8)
+                variableData.Capacity = (int)(BaseShieldData.Capacity / 50f * boost);
+            else if (type < 16)
+                variableData.RechargeRate = -boost;
+            else if (type < 24)
+                variableData.Delay = -boost;
+            else if (type < 32)
+            {
+                if (sign == 1)
+                    variableData.Radius = (int)(BaseShieldData.Radius * boost * 0.2f);
+                else
+                    variableData.Radius = (int)(BaseShieldData.Radius * boost * 0.15f);
+            }
+        }
+
+        private string GetBonus(float variedVal, bool negativeDesired)
+        {
+            if (variedVal == 0) //No change
+                return "";
+            else
+            {
+                if (negativeDesired)
+                    return Math.Sign(variedVal) == -1 ? $"[c/20942F:({variedVal})]" : $"[c/C5253F:(+{variedVal})]";
+                else
+                    return Math.Sign(variedVal) == 1 ? $"[c/20942F:(+{variedVal})]" : $"[c/C5253F:({variedVal})]";
+            }
         }
 
         internal bool PlayerShieldEquipped()
@@ -68,16 +100,22 @@ namespace AerovelenceMod.Common.ShieldSystem
         {
             delayTimer++;
 
-            if (delayTimer > Delay * 60)
+            if (delayTimer > RealData.Delay * 60)
             {
                 rechargeTimer++;
-                if (rechargeTimer > RechargeRate * 60)
-                    rechargeTimer = RechargeRate * 60;
+                if (rechargeTimer > RealData.RechargeRate * 60)
+                    rechargeTimer = RealData.RechargeRate * 60;
 
-                capacity = (int)MathHelper.Lerp(0, MaxCapacity, rechargeTimer / (RechargeRate * 60));
+                capacity = (int)MathHelper.Lerp(0, RealData.Capacity, rechargeTimer / (RealData.RechargeRate * 60));
+
+                if (!_fullRecharge && capacity >= RealData.Capacity)
+                {
+                    _fullRecharge = true;
+                    OnFullRecharge(player);
+                }
             }
 
-            player.GetModPlayer<ShieldPlayer>().wornShield = this; //Set the player's shield to this shield
+            player.GetModPlayer<ShieldPlayer>().wornShieldItem = item; //Set the player's shield to this shield
 
             SafeUpdateAccessory();
         }
@@ -85,7 +123,6 @@ namespace AerovelenceMod.Common.ShieldSystem
         /// <summary>Used for equip effects outside of the base recharge.</summary>
         public virtual void SafeUpdateAccessory()
         {
-            
         }
 
         internal void BasicReflect(Player player, Projectile projectile) => projectile.velocity = projectile.DirectionFrom(player.Center) * projectile.velocity.Length();
@@ -117,11 +154,26 @@ namespace AerovelenceMod.Common.ShieldSystem
         {
             if (ShieldType == ShieldTypes.Bubble) //Deflect projectile
                 BasicReflect(player, projectile);
-            else if (ShieldType == ShieldTypes.Impact) //Kill projectile, do nothing else
+            else if (ShieldType == ShieldTypes.Impact || ShieldType == ShieldTypes.Nova) //Kill projectile, do nothing else
                 projectile.Kill();
-            //No base nova behaviour because I don't know what that'd be
         }
 
+        /// <summary>Determines by how much the capacity depletes per projectile interaction.</summary>
+        /// <param name="player">Player wearing the shield.</param>
+        /// <param name="projectile">Projectile that was interacted with.</param>
         public virtual int GetCapacityDeplete(Player player, Projectile projectile) => projectile.damage;
+
+        /// <summary>Runs when the shield loses all capacity.</summary>
+        /// <param name="player">Player wearing the shield.</param>
+        /// <param name="projectile">Projectile that was interacted with.</param>
+        public virtual void OnBreak(Player player, Projectile projectile)
+        {
+        }
+
+        /// <summary>Runs when the shield regains all capacity.</summary>
+        /// <param name="player">Player wearing the shield.</param>
+        public virtual void OnFullRecharge(Player player)
+        {
+        }
     }
 }

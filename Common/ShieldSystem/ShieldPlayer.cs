@@ -6,18 +6,20 @@ namespace AerovelenceMod.Common.ShieldSystem
 {
     public class ShieldPlayer : ModPlayer
     {
-        public ModShield wornShield = null;
+        public ModShield WornShield => wornShieldItem.modItem as ModShield;
+
+        public Item wornShieldItem = null;
 
         public override void ResetEffects()
         {
-            wornShield = null;
+            wornShieldItem = null;
         }
 
         public override void PostUpdateEquips()
         {
-            if (wornShield != null && wornShield.capacity > 0)
+            if (wornShieldItem != null && WornShield.capacity > 0)
             {
-                player.statLifeMax2 -= wornShield.HPPenalty;
+                player.statLifeMax2 -= WornShield.RealData.HPPenalty;
 
                 ReflectProjectiles();
             }
@@ -29,18 +31,17 @@ namespace AerovelenceMod.Common.ShieldSystem
             for (int i = 0; i < Main.maxProjectiles; ++i)
             {
                 Projectile proj = Main.projectile[i];
-                if (proj.active && proj.hostile && proj.DistanceSQ(player.Center) < wornShield.Radius * wornShield.Radius)
+                if (proj.active && proj.hostile && proj.DistanceSQ(player.Center) < WornShield.RealData.Radius * WornShield.RealData.Radius)
                 {
-                    if (proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[player.whoAmI] <= 0 && wornShield.CanEffectProjectile(player, proj))
+                    if (proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[player.whoAmI] <= 0 && WornShield.CanEffectProjectile(player, proj))
                     {
-                        Main.NewText(wornShield.capacity);
+                        WornShield.OnEffectProjectile(player, proj);
 
-                        wornShield.OnEffectProjectile(player, proj);
+                        WornShield.capacity -= WornShield.GetCapacityDeplete(player, proj);
+                        WornShield.rechargeTimer = WornShield.delayTimer = 0;
 
-                        wornShield.capacity -= wornShield.GetCapacityDeplete(player, proj);
-                        wornShield.rechargeTimer = wornShield.delayTimer = 0;
-
-                        Main.NewText(wornShield.capacity);
+                        if (WornShield.capacity <= 0)
+                            WornShield.OnBreak(player, proj);
                     }
 
                     if (proj.active)
@@ -51,11 +52,11 @@ namespace AerovelenceMod.Common.ShieldSystem
 
         private int GetProjectileShieldIFrames()
         {
-            if (wornShield.ShieldType == ShieldTypes.Bubble)
+            if (WornShield.ShieldType == ShieldTypes.Bubble)
                 return 30;
-            else if (wornShield.ShieldType == ShieldTypes.Impact)
+            else if (WornShield.ShieldType == ShieldTypes.Impact)
                 return 5 * 60;
-            else if (wornShield.ShieldType == ShieldTypes.Nova)
+            else if (WornShield.ShieldType == ShieldTypes.Nova)
                 return 60;
             return 0;
         }
