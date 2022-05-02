@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void SetStaticDefaults()
 		{
 			Item.staff[item.type] = true;
-			DisplayName.SetDefault("Cthulhus Wrath");
+			DisplayName.SetDefault("Cthulhu's Wrath");
 			Tooltip.SetDefault("Its angered essence is trapped");
 		}
         public override void SetDefaults()
