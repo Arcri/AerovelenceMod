@@ -182,7 +182,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            _width = 10;
+            _width = 20;
             _cap = 3000;
         }
         public override void PrimStructure(SpriteBatch spriteBatch)
@@ -243,7 +243,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             effect.Parameters["vnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/vnoise"));
             effect.Parameters["wnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/wnoise"));
             effect.Parameters["repeats"].SetValue(TrailLength / 1000f);
-            PrepareShader(effect, "MainPS", _counter * 0.1f);
+            PrepareShader(effect, "MainPS", _counter * 0.6f);
         }
         public override void OnUpdate()
         {
