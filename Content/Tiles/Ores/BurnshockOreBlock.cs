@@ -25,6 +25,12 @@ namespace AerovelenceMod.Content.Tiles.Ores
 			
             AddMapEntry(new Color(255, 090, 090), Language.GetText("Burnshock Ore"));
         }
+
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
+
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0.0f;

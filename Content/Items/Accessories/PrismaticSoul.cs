@@ -41,13 +41,15 @@ namespace AerovelenceMod.Content.Items.Accessories
             foreach (TooltipLine line2 in tooltips)
                 if (line2.mod == "Terraria" && line2.Name == "ItemName")
                     line2.overrideColor = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
+
+            tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.moveSpeed += 0.5f;
             player.jumpSpeedBoost += 1.5f;
-            player.slotsMinions += 1;
+            player.maxMinions += 1;
 
             if (player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
             {

@@ -8,7 +8,7 @@ https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
 This mod version fixes a lot of bugs, and has boss checklist support.
 
 Current rundown:
--260+ Items
+-372+ Items
 -Large collection of new NPCs with fun and unique AI
 -2 fun bossfights
 -A brand reworked new biome, the Crystal Caverns!
@@ -25,8 +25,8 @@ MAJOR CONTRIBUTORS:
 - IDGCaptainRussia (Rimegeist Boss AI)
 - Wombat (Ice Generation)
 - Hamstar (Crystal Caverns Generation)
-- Eldrazi (Help/Support with Tumbler AI)
-- Graydee (Shaders/Primitives)
+- Eldrazi (Support with Tumbler AI)
+- Graydee (Shaders & Primitives)
 
 Music by: A44 and iFlicky
 
