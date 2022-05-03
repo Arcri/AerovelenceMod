@@ -10,6 +10,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             DisplayName.SetDefault("Mutilating Edge");
         }
+
         public override void SetDefaults()
         {
             item.useTurn = true;
@@ -27,6 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             item.rare = ItemRarityID.Green;
             item.autoReuse = true;
         }
+
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
@@ -42,17 +44,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 damage *= 3;
             }
+            if (target.type == -22)
             {
-                if (target.type == -22)
-                {
-                    damage *= 3;
-                }
-                {
-                    if (target.type == -23)
-                    {
-                        damage *= 3;
-                    }
-                }
+                damage *= 3;
+            }
+            if (target.type == -23)
+            {
+                damage *= 3;
             }
         }
     }

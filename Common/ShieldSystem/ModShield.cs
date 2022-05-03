@@ -43,10 +43,11 @@ namespace AerovelenceMod.Common.ShieldSystem
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo0", $"{RealData.Delay} second delay " + GetBonus(variableData.Delay, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo1", $"{RealData.RechargeRate} second recharge rate " + GetBonus(variableData.RechargeRate, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo2", $"{RealData.HPPenalty}hp burden " + GetBonus(variableData.HPPenalty, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo3", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo0", $"{RealData.Capacity} HP capacity " + GetBonus(variableData.Capacity, false)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo1", $"{RealData.Delay} second delay " + GetBonus(variableData.Delay, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo2", $"{RealData.RechargeRate} second recharge rate " + GetBonus(variableData.RechargeRate, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo3", $"{RealData.HPPenalty} HP burden " + GetBonus(variableData.HPPenalty, true)));
+            tooltips.Add(new TooltipLine(mod, "ShieldInfo4", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
         }
 
         internal void ApplyPrefix(int boost, byte type, int sign)

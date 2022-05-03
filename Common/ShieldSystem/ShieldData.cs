@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the data of a given shield.
     /// </summary>
-    public class ShieldData
+    public struct ShieldData
     {
         /// <summary>How much HP of damage this shield can take before failing.</summary>
         public int Capacity;
