@@ -50,7 +50,24 @@ namespace AerovelenceMod.Common.ShieldSystem
             tooltips.Add(new TooltipLine(mod, "ShieldInfo4", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
         }
 
-        internal void ApplyPrefix(int boost, byte type, int sign)
+        private string GetBonus(float variedVal, bool negativeDesired)
+        {
+            if (variedVal == 0) //No change
+                return "";
+            else
+            {
+                if (negativeDesired)
+                    return Math.Sign(variedVal) == -1 ? $"[c/20942F:({variedVal})]" : $"[c/C5253F:(+{variedVal})]";
+                else
+                    return Math.Sign(variedVal) == 1 ? $"[c/20942F:(+{variedVal})]" : $"[c/C5253F:({variedVal})]";
+            }
+        }
+
+        /// <summary>Allows you to override how a specific shield is affected by a prefix in case of edge cases.</summary>
+        /// <param name="boost">Level of the prefix; 1-4.</param>
+        /// <param name="type">Type of the prefix; refer to <see cref="ShieldPrefixType"/>.</param>
+        /// <param name="sign">Whether this is a buff (1) or debuff (-1).</param>
+        public virtual void ApplyShieldPrefix(int boost, byte type, int sign)
         {
             if (type < 8)
                 variableData.Capacity = (int)(BaseShieldData.Capacity / 50f * boost);
@@ -64,19 +81,6 @@ namespace AerovelenceMod.Common.ShieldSystem
                     variableData.Radius = (int)(BaseShieldData.Radius * boost * 0.2f);
                 else
                     variableData.Radius = (int)(BaseShieldData.Radius * boost * 0.15f);
-            }
-        }
-
-        private string GetBonus(float variedVal, bool negativeDesired)
-        {
-            if (variedVal == 0) //No change
-                return "";
-            else
-            {
-                if (negativeDesired)
-                    return Math.Sign(variedVal) == -1 ? $"[c/20942F:({variedVal})]" : $"[c/C5253F:(+{variedVal})]";
-                else
-                    return Math.Sign(variedVal) == 1 ? $"[c/20942F:(+{variedVal})]" : $"[c/C5253F:({variedVal})]";
             }
         }
 

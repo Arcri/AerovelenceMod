@@ -59,7 +59,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 				shield.variableData.Delay = 0;
 				shield.variableData.Radius = 0;
 
-                shield.ApplyPrefix(boost, _type, _sign);
+                shield.ApplyShieldPrefix(boost, _type, _sign);
 			}
 		}
     }
