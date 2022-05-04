@@ -3,15 +3,15 @@ If there are any issues with the mod, join the Discord server linked at the bott
 THIS MOD IS IN DEVELOPMENT.
 
 
-https://forums.terraria.org/index.php?threads/aerovelence.103492/ Forums link!
+https://forums.terraria.org/index.php?threads/aerovelence.103492/ - Forums link!
 
-This mod version fixes a lot of bugs, and has boss checklist support.
+This mod version fixes a lot of bugs as well as adding hardmode features to the Rock Collector.
 
 Current rundown:
 -372+ Items
 -Large collection of new NPCs with fun and unique AI
--2 fun bossfights
--A brand reworked new biome, the Crystal Caverns!
+-3 fun boss fights
+-A brand new biome, the Crystal Caverns
 -Legendary items that have a low drop rate from any boss, modded and vanilla alike!
 
 If this mod seems interesting to you, join our Discord here: https://discord.gg/QwqqZzc

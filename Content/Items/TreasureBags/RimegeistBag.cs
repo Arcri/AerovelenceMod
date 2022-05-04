@@ -38,8 +38,6 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 			int drop = Main.rand.Next(7);
 
-			player.TryGettingDevArmor();
-
 			switch (Main.rand.Next(5))
 			{
 				case 0:

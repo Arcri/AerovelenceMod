@@ -19,9 +19,10 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-			player.setBonus = "50% chance to inflict Frostburn on enemies";
+			player.setBonus = "50% chance to inflict Frostburn on enemies\nImmune to Chilled and Frostburn debuffs";
             player.GetModPlayer<AeroPlayer>().FrostMelee = true;
-
+            player.buffImmune[BuffID.Chilled] = true;
+            player.buffImmune[BuffID.Frostburn] = true;
         } 	
         public override void SetDefaults()
         {

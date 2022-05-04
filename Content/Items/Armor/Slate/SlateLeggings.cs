@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Slate Leggings");
-            Tooltip.SetDefault("5% increased movment speed");
+            Tooltip.SetDefault("5% increased movement speed");
         }
         public override void SetDefaults()
         {
