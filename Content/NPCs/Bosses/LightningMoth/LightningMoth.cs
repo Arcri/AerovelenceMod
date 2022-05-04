@@ -50,8 +50,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             //bossBag = ModContent.ItemType<SnowriumBag>();
             music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/LightningMoth");
         }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
+
             var effects = npc.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Texture2D glowTex = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/LightningMoth/LightningMoth_Glow");
             Texture2D auraTex = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/LightningMoth/LightningMoth_Aura");
@@ -433,6 +435,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
         }
 
+        private void Circular()
+        {
+
+        }
+
         private void Teleport()
         {
             UpdateFrame(0.3f, 0, 5);
@@ -446,6 +453,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
 
             if (attackCounter == 100)
             {
+
                 Main.PlaySound(SoundID.Item, (int)npc.position.X, (int)npc.position.Y, 66);
                 Projectile.NewProjectile(npc.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 int rot = Main.rand.Next(360);
@@ -455,7 +463,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= player.position / 2;
+                npc.velocity *= 0.95f;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -474,7 +482,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= player.position / 2;
+                npc.velocity *= 0.95f;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -493,7 +501,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= player.position / 2;
+                npc.velocity *= 0.95f;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -512,8 +520,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
                 npc.position.Y = player.Center.Y + (int)(distance * angley);
 
                 colorLerp = MathHelper.Lerp(colorLerp, 0f, 0.1f);
-                npc.velocity *= 1.005f;
-                npc.position = player.position * 5;
+                npc.velocity *= 0.95f;
 
                 npc.netUpdate = true;
                 for (int i = 0; i < 50; i++)
@@ -1423,6 +1430,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             DrawPos = projectile.position;
         }
     }
+
 
     public class LightningGem : ModProjectile
     {
