@@ -125,6 +125,20 @@ namespace AerovelenceMod.Common.Globals.Tiles
                     Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<TitaniumCluster>());
                 }
             }
+            if (type == TileID.Adamantite && fail == false)
+            {
+                if (Main.rand.NextBool(351))
+                {
+                    Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<AdamantiteSuperCluster>());
+                }
+            }
+            if (type == TileID.Titanium && fail == false)
+            {
+                if (Main.rand.NextBool(351))
+                {
+                    Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<TitaniumSuperCluster>());
+                }
+            }
         }
     }
 }

@@ -19,12 +19,14 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
 		}
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Summons a Shiver to fight for you";
-            if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("ShiverMinion")) == -1)
+            player.setBonus = "Summons a Shiver to fight for you [Not Implemented Yet]\nImmune to Chilled and Frostburn debuffs";
+            player.buffImmune[BuffID.Chilled] = true;
+            player.buffImmune[BuffID.Frostburn] = true;
+            /*if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("ShiverMinion")) == -1)
             {
-                player.AddBuff(mod.BuffType("ShiverMinionBuff"), 100, false);
-                for (int m = 0; m < 1; m++) { Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("ShiverMinion"), (int)(25f * player.minionDamage), player.minionKB, player.whoAmI); }
-            }
+                //player.AddBuff(mod.BuffType("ShiverMinionBuff"), 100, false);
+                //for (int m = 0; m < 1; m++) { Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("ShiverMinion"), (int)(25f * player.minionDamage), player.minionKB, player.whoAmI); }
+            }*/
         }
         public override void SetDefaults()
         {

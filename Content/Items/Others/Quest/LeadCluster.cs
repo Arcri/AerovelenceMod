@@ -9,6 +9,7 @@ namespace AerovelenceMod.Content.Items.Others.Quest
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lead Cluster");
+            Tooltip.SetDefault("'The Rock Collector might like this...'");
         }
         public override void SetDefaults()
         {

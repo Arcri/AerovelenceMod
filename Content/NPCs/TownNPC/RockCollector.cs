@@ -9,6 +9,7 @@ using AerovelenceMod.Content.Items.Others.Quest;
 using AerovelenceMod.Content.Items.Others.UIButton;
 using AerovelenceMod.Content.Items.Tools;
 using AerovelenceMod.Content.Items.Weapons.Magic;
+using AerovelenceMod.Content.Items.Weapons.Ranged;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
 using Terraria.ID;
@@ -150,7 +151,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 					}
 				case 5:
                     {
-						return "Yo mama so fat she burger. She bigger than the Crystal Tumbler!";
+						return "People say I have a great poker face. I'm really not sure why.";
 					}
 				default:
 					return "Hooks? Pickaxes? Cool mining accessories? You want it? It's yours my friend, as long as you have enough ores.";
@@ -168,18 +169,35 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 				Main.LocalPlayer.HasItem(ModContent.ItemType<PlatinumCluster>()) ||
 				Main.LocalPlayer.HasItem(ModContent.ItemType<GoldCluster>()) ||
 				Main.LocalPlayer.HasItem(ModContent.ItemType<SlateCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<CobaltCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<PalladiumCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<OrichalcumCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<MythrilCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteSuperCluster>()) ||
+				Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumSuperCluster>()) ||
 								Main.LocalPlayer.HasItem(ModContent.ItemType<PhanticCluster>()))
 				button = "Turn in ore chunks";
 		}
 		public override void OnChatButtonClicked(bool firstButton, ref bool shop)
 		{
 			int[] itemsToReceive = new int[] { ModContent.ItemType<ReinforcedPlatinumGrapple>(), ModContent.ItemType<MiningSack>(), ModContent.ItemType<AmuletOfGlory>() };
+			int[] itemSuperAdamantite = new int[] { ModContent.ItemType<AdamantitePulsar>() };
+			int[] itemSuperTitanium = new int[] { ModContent.ItemType<TitaniumRocketLauncher>() };
 
 			int[] searchForItems = {
 		ModContent.ItemType<CopperCluster>(), ModContent.ItemType<TinCluster>(),
 		ModContent.ItemType<IronCluster>(), ModContent.ItemType<LeadCluster>(),
 		ModContent.ItemType<SilverCluster>(), ModContent.ItemType<TungstenCluster>(),
-		ModContent.ItemType<PlatinumCluster>(), ModContent.ItemType<GoldCluster>(), ModContent.ItemType<PhanticCluster>(), ModContent.ItemType<SlateCluster>() };
+		ModContent.ItemType<PlatinumCluster>(), ModContent.ItemType<GoldCluster>(), 
+		ModContent.ItemType<PhanticCluster>(), ModContent.ItemType<SlateCluster>(),
+		ModContent.ItemType<CobaltCluster>(), ModContent.ItemType<PalladiumCluster>(),
+		ModContent.ItemType<OrichalcumCluster>(), ModContent.ItemType<MythrilCluster>(),
+		ModContent.ItemType<TitaniumCluster>(), ModContent.ItemType<AdamantiteCluster>() };
+
+			int[] searchForSuperClusters = {
+		ModContent.ItemType<AdamantiteSuperCluster>(), ModContent.ItemType<TitaniumSuperCluster>() };
 			if (firstButton)
 			{
 
@@ -191,7 +209,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 						continue;
 					}
 
-					if (searchForItems.Contains(Main.LocalPlayer.inventory[i].type))
+					if (searchForItems.Contains(Main.LocalPlayer.inventory[i].type) || searchForSuperClusters.Contains(Main.LocalPlayer.inventory[i].type))
 					{
 						selectedIndex = i;
 						break;
@@ -200,14 +218,38 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 				if (selectedIndex != -1)
 				{
-					Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
-					int itemToReceive = itemsToReceive[Main.rand.Next(itemsToReceive.Length)];
-					Main.PlaySound(SoundID.Item37); // Reforge/Anvil sound
-					Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemToReceive)}";
+					
 
-					Main.LocalPlayer.QuickSpawnItem(itemToReceive);
+					if (Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteSuperCluster>()))
+                    {
+						Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
+						int itemGetSuperAdamantite = itemSuperAdamantite[Main.rand.Next(itemSuperAdamantite.Length)];
+						Main.PlaySound(SoundID.Item37); // Reforge/Anvil sound
+						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperAdamantite)}";
+
+						Main.LocalPlayer.QuickSpawnItem(itemGetSuperAdamantite);
+					}
+
+					else if(Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumSuperCluster>()))
+					{
+						Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
+						int itemGetSuperTitanium = itemSuperTitanium[Main.rand.Next(itemSuperTitanium.Length)];
+						Main.PlaySound(SoundID.Item37); // Reforge/Anvil sound
+						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperTitanium)}";
+
+						Main.LocalPlayer.QuickSpawnItem(itemGetSuperTitanium);
+					}
+
+                    else 
+					{
+						Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
+						int itemToReceive = itemsToReceive[Main.rand.Next(itemsToReceive.Length)];
+						Main.PlaySound(SoundID.Item37); // Reforge/Anvil sound
+						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemToReceive)}";
+
+						Main.LocalPlayer.QuickSpawnItem(itemToReceive);
+					}
 				}
-
 				shop = true;
 			}
 		}

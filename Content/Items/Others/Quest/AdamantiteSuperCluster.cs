@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Others.Quest
 {
-    public class PalladiumCluster : ModItem
+    public class AdamantiteSuperCluster : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Palladium Cluster");
-            Tooltip.SetDefault("'The Rock Collector might like this...'");
+            DisplayName.SetDefault("Adamantite Super Cluster");
+            Tooltip.SetDefault("'The Rock Collector might really like this...'");
         }
         public override void SetDefaults()
         {
