@@ -55,6 +55,7 @@ namespace AerovelenceMod
 		public bool Minicry;
 		public bool charmingBush;
 		public bool huntressSummon;
+		public bool crabSummon;
 
 		public bool IsETPBeingLinked;
 		public bool TravellingByETP;
@@ -345,8 +346,9 @@ namespace AerovelenceMod
 			Minicry = false;
 			charmingBush = false;
 			huntressSummon = false;
+			crabSummon = false;
 
-			ShieldOn = false;
+		ShieldOn = false;
 		}
 		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
 		{

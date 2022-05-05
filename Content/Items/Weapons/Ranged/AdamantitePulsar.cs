@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.NPCs.Bosses.LightningMoth;
 using AerovelenceMod.Content.Projectiles.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -31,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<AdamantitePulsarProj>();
+            item.shoot = ModContent.ProjectileType<VortexProjectile>();
             item.shootSpeed = 16f;
         }
         public override void AddRecipes()

@@ -7,6 +7,9 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
     [AutoloadEquip(EquipType.Head)]
     public class SeashineHelmet : ModItem
     {
+
+        bool canSpawnCrab = false;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Seashine Helmet");
@@ -23,7 +26,17 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
             {
                 player.moveSpeed += 0.22f;
             }
+            if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("SeaCrab")) == -1)
+            {
+                player.AddBuff(mod.BuffType("CrabBuff"), 100, false);
+                if(player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Weapons.Summoning.SeaCrab>()] <= 0)
+                {
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("SeaCrab"), (int)(25f * player.minionDamage), player.minionKB, player.whoAmI);
+                }
+            }
         } 	
+
+        
         public override void SetDefaults()
         {
             item.width = 22;
