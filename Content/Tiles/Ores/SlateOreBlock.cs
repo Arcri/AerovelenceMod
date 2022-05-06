@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
 {
     public class SlateOreBlock : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 1f;
 			minPick = 35;

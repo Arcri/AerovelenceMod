@@ -13,30 +13,29 @@ namespace AerovelenceMod.Content.Items.Tools
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 6;
-            item.melee = true;
-            item.width = 36;
-            item.height = 36;
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.useTurn = true;
-            item.pick = 60;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 0, 20, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 6;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 36;
+            Item.height = 36;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.useTurn = true;
+            Item.pick = 60;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 0, 20, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
         }
 		public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 35);
-            recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<SlateOre>(), 35)
+                .AddRecipeGroup("Wood", 15)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

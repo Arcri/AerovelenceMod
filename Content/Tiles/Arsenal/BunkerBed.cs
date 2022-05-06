@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 {
     public class BunkerBed : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
@@ -36,14 +36,14 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 		{
 			num = 1;
 		}
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
-			int spawnX = i - tile.frameX / 18;
+			int spawnX = i - tile.TileFrameX / 18;
 			int spawnY = j + 2;
-			spawnX += tile.frameX >= 72 ? 5 : 2;
-			if (tile.frameY % 38 != 0)
+			spawnX += tile.TileFrameX >= 72 ? 5 : 2;
+			if (tile.TileFrameY % 38 != 0)
 			{
 				spawnY--;
 			}

@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
 	public class GlimmeringChandelier : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX == 0)
+			if (tile.TileFrameX == 0)
 			{
 				r = 0f;
 				g = 0.75f;

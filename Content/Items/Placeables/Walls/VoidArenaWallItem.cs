@@ -11,17 +11,17 @@ namespace AerovelenceMod.Content.Items.Placeables.Walls
 
 		public override void SetDefaults()
 		{
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-			item.maxStack = 999;
-            item.useTime = 7;
-            item.useAnimation = 15;
+			Item.maxStack = 999;
+            Item.useTime = 7;
+            Item.useAnimation = 15;
 
-            item.createWall = WallType<VoidArenaWall>();
+            Item.createWall = WallType<VoidArenaWall>();
 
-			item.useStyle = ItemUseStyleID.SwingThrow;
+			Item.useStyle = ItemUseStyleID.Swing;
         }
 	}
 }

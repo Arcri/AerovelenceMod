@@ -12,24 +12,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.channel = true;		
-            item.crit = 20;
-            item.damage = 36;
-            item.melee = true;
-            item.width = 32;
-            item.height = 32;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 8;
-            item.value = Item.sellPrice(0, 8, 0, 0);
-            item.rare = ItemRarityID.Pink;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("ExodiousProjectile");
-            item.shootSpeed = 2f;
+            Item.channel = true;		
+            Item.crit = 20;
+            Item.damage = 36;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 8;
+            Item.value = Item.sellPrice(0, 8, 0, 0);
+            Item.rare = ItemRarityID.Pink;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("ExodiousProjectile").Type;
+            Item.shootSpeed = 2f;
         }
     }
 
@@ -37,21 +37,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 440f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 24f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 30;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 440f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 24f;
         }
         public override void AI()
         {
             if (Main.rand.Next(2) == 0)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 58, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
         }
 

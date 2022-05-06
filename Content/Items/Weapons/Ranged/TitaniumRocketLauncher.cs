@@ -3,6 +3,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -15,32 +16,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 120;
-			item.ranged = true;
-			item.width = 62;
-			item.height = 32;
-			item.useTime = 50;
-			item.useAnimation = 50;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.noMelee = true;
-			item.knockBack = 0.2f;
-			item.value = Item.sellPrice(0, 1, 50, 0);
-			item.rare = ItemRarityID.Orange;
-			item.UseSound = SoundID.Item11;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<TitaniumRocket>();
-			item.shootSpeed = 15f;
-			item.useAmmo = AmmoID.Rocket;
+			Item.damage = 120;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 62;
+			Item.height = 32;
+			Item.useTime = 50;
+			Item.useAnimation = 50;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.noMelee = true;
+			Item.knockBack = 0.2f;
+			Item.value = Item.sellPrice(0, 1, 50, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.UseSound = SoundID.Item11;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<TitaniumRocket>();
+			Item.shootSpeed = 15f;
+			Item.useAmmo = AmmoID.Rocket;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ItemID.TitaniumBar, 15);
-			modRecipe.AddIngredient(ItemID.SoulofMight, 10);
-			modRecipe.AddIngredient(ItemID.HallowedBar, 5);
-			modRecipe.AddTile(TileID.MythrilAnvil);
-			modRecipe.SetResult(this);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.TitaniumBar, 15)
+				.AddIngredient(ItemID.SoulofMight, 10)
+				.AddIngredient(ItemID.HallowedBar, 5)
+				.AddTile(TileID.MythrilAnvil)
+				.Register();
 		}
 		public override Vector2? HoldoutOffset()
 		{
@@ -63,16 +63,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			public override void SetDefaults()
 			{
-				projectile.width = 58;
-				projectile.height = 22;
-				projectile.maxPenetrate = 1;
-				projectile.damage = 11;
-				projectile.hostile = false;
-				projectile.tileCollide = true;
-				projectile.ignoreWater = true;
-				projectile.friendly = true;
-				projectile.ranged = true;
-				projectile.timeLeft = 200;
+				Projectile.width = 58;
+				Projectile.height = 22;
+				Projectile.maxPenetrate = 1;
+				Projectile.damage = 11;
+				Projectile.hostile = false;
+				Projectile.tileCollide = true;
+				Projectile.ignoreWater = true;
+				Projectile.friendly = true;
+				Projectile.DamageType = DamageClass.Ranged;
+				Projectile.timeLeft = 200;
 			}
 			int i;
 			private readonly int oneHelixRevolutionInUpdateTicks = 30;
@@ -80,25 +80,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			public override void AI()
 			{
 				i++;
-				++projectile.localAI[0];
+				++Projectile.localAI[0];
 				float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
-				Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
-				Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 91);
+				Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * Projectile.height;
+				Dust newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 91);
 				newDust.noGravity = true;
 				newDustPosition.Y *= -1;
-				newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 91);
+				newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 91);
 				newDust.noGravity = true;
 				newDust.velocity *= 0f;
-				projectile.rotation = projectile.velocity.ToRotation();
-				if (Math.Abs(projectile.velocity.X) >= 8f || Math.Abs(projectile.velocity.Y) >= 8f)
+				Projectile.rotation = Projectile.velocity.ToRotation();
+				if (Math.Abs(Projectile.velocity.X) >= 8f || Math.Abs(Projectile.velocity.Y) >= 8f)
 				{
 					for (int i = 0; i < 2; i++)
 					{
-						int num255 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y) - projectile.velocity * 0.5f, projectile.width - 8, projectile.height - 8, 91, 0f, 0f, 100);
+						int num255 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y) - Projectile.velocity * 0.5f, Projectile.width - 8, Projectile.height - 8, 91, 0f, 0f, 100);
 						Dust dust = Main.dust[num255];
 
 						Main.dust[num255].noGravity = true;
-						num255 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y), projectile.width, projectile.height, 91, 0f, 0f, 100, default(Color), 0.5f);
+						num255 = Dust.NewDust(new Vector2(Projectile.Center.X, Projectile.Center.Y), Projectile.width, Projectile.height, 91, 0f, 0f, 100, default(Color), 0.5f);
 						Main.dust[num255].fadeIn = 1f + Main.rand.Next(5) * 0.1f;
 						dust = Main.dust[num255];
 						Main.dust[num255].noGravity = true;
@@ -117,21 +117,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 			public override void Kill(int timeLeft)
 			{
-				Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 14);
+				SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 14);
 
-				projectile.position.X = projectile.position.X + (projectile.width / 2);
-				projectile.position.Y = projectile.position.Y + (projectile.width / 2);
-				projectile.width = 30;
-				projectile.height = 30;
-				projectile.position.X = projectile.position.X - (projectile.width / 2);
-				projectile.position.Y = projectile.position.Y - (projectile.width / 2);
+				Projectile.position.X = Projectile.position.X + (Projectile.width / 2);
+				Projectile.position.Y = Projectile.position.Y + (Projectile.width / 2);
+				Projectile.width = 30;
+				Projectile.height = 30;
+				Projectile.position.X = Projectile.position.X - (Projectile.width / 2);
+				Projectile.position.Y = Projectile.position.Y - (Projectile.width / 2);
 
 				for (int i = 0; i < 35; i++)
 				{
-					int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 91, 0f, 0f, 100, default, 1f);
+					int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 1f);
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].velocity *= 5f;
-					dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 91, 0f, 0f, 100, default, 1f);
+					dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 1f);
 					Main.dust[dust].velocity *= 2f;
 				}
 			}

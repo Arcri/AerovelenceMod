@@ -27,17 +27,17 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 
 		public override Texture2D GetTexture()
 		{
-			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree");
+			return mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/CrystalTree").Value;
 		}
 
 		public override Texture2D GetTopTextures(int i, int j, ref int frame, ref int frameWidth, ref int frameHeight, ref int xOffsetLeft, ref int yOffset)
 		{
-			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Tops");
+			return mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Tops").Value;
 		}
 
 		public override Texture2D GetBranchTextures(int i, int j, int trunkOffset, ref int frame)
 		{
-			return mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Branches");
+			return mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/CrystalTree_Branches").Value;
 		}
 	}
 }

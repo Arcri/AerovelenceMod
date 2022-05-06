@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -15,22 +16,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.crit = 7;
-            item.damage = 150;
-            item.melee = true;
-            item.width = 44;
-            item.height = 48;
-            item.shootSpeed = 3f;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.shoot = mod.ProjectileType("EnergyBladeProj");
-            item.value = Item.sellPrice(0, 25, 65, 20);
-            item.rare = ItemRarityID.Red;
-            item.autoReuse = true;
+            Item.useTurn = true;
+            Item.crit = 7;
+            Item.damage = 150;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 44;
+            Item.height = 48;
+            Item.shootSpeed = 3f;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.shoot = Mod.Find<ModProjectile>("EnergyBladeProj").Type;
+            Item.value = Item.sellPrice(0, 25, 65, 20);
+            Item.rare = ItemRarityID.Red;
+            Item.autoReuse = true;
         }
     }
 
@@ -45,28 +46,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 72;
-            projectile.height = 72;
-            projectile.friendly = true;
-            projectile.penetrate = 15;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 600;
+            Projectile.width = 72;
+            Projectile.height = 72;
+            Projectile.friendly = true;
+            Projectile.penetrate = 15;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 600;
         }
         public override void AI()
         {
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
             i++;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 67);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 67);
             }
-            projectile.velocity *= 1.03f;
+            Projectile.velocity *= 1.03f;
             if (!e)
             {
-                projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+                Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
                 e = true;
             }
         }
@@ -75,26 +76,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             for (int k = 0; k < 5; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 67, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 67, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             return true;
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = ModContent.GetTexture(Texture + "_Glow");
+            Texture2D texture = ModContent.Request<Texture2D>(Texture + "_Glow");
             spriteBatch.Draw(
                 texture,
                 new Vector2
                 (
-                    projectile.Center.Y - Main.screenPosition.X,
-                    projectile.Center.X - Main.screenPosition.Y
+                    Projectile.Center.Y - Main.screenPosition.X,
+                    Projectile.Center.X - Main.screenPosition.Y
                 ),
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 Color.White,
-                projectile.rotation,
+                Projectile.rotation,
                 texture.Size(),
-                projectile.scale,
+                Projectile.scale,
                 SpriteEffects.None,
                 0f
             );

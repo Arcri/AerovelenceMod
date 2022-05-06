@@ -16,23 +16,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item41;
-            item.crit = 8;
-            item.damage = 28;
-            item.ranged = true;
-            item.width = 46;
-            item.height = 28;
-            item.useTime = 18;
-            item.useAnimation = 18;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 3, 50, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<MallowBulletProj>();
-            item.useAmmo = ModContent.ItemType<MallowBullet>();
-            item.shootSpeed = 0.05f;
+            Item.UseSound = SoundID.Item41;
+            Item.crit = 8;
+            Item.damage = 28;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 46;
+            Item.height = 28;
+            Item.useTime = 18;
+            Item.useAnimation = 18;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 3, 50, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
+            Item.shoot = ModContent.ProjectileType<MallowBulletProj>();
+            Item.useAmmo = ModContent.ItemType<MallowBullet>();
+            Item.shootSpeed = 0.05f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -47,13 +47,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddRecipeGroup("IronBar", 4);
-            recipe.AddIngredient(ItemID.Marshmallow, 5);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddRecipeGroup("Wood", 15)
+                .AddRecipeGroup("IronBar", 4)
+                .AddIngredient(ItemID.Marshmallow, 5)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

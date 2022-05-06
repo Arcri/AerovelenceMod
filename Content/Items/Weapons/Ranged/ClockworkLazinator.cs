@@ -16,22 +16,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			item.crit = 9;
-			item.damage = 52;
-			item.ranged = true;
-			item.width = 74;
-			item.height = 34;
-			item.useAnimation = 12;
-			item.useTime = 2;
-			item.reuseDelay = 14;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.noMelee = true;
-			item.knockBack = 8;
-			item.value = 10000;
-			item.rare = ItemRarityID.Blue;
-			item.autoReuse = true;
-			item.shoot = ProjectileID.MiniRetinaLaser;
-			item.shootSpeed = 15f;
+			Item.crit = 9;
+			Item.damage = 52;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 74;
+			Item.height = 34;
+			Item.useAnimation = 12;
+			Item.useTime = 2;
+			Item.reuseDelay = 14;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.noMelee = true;
+			Item.knockBack = 8;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Blue;
+			Item.autoReuse = true;
+			Item.shoot = ProjectileID.MiniRetinaLaser;
+			Item.shootSpeed = 15f;
 		}
 		public override Vector2? HoldoutOffset()
 		{
@@ -55,19 +55,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Clockwork Lazinator", "Artifact Weapon")
+			line = new TooltipLine(Mod, "Clockwork Lazinator", "Artifact Weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

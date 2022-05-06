@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -18,38 +19,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 40;
-            item.useTime = 40;
-            item.shootSpeed = 15f;
-            item.knockBack = 4f;
-            item.UseSound = SoundID.Item116;
-            item.shoot = ModContent.ProjectileType<ElectromagnetismProjectile>();
-            item.value = Item.sellPrice(gold: 15);
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.channel = true;
-            item.autoReuse = true;
-            item.melee = true;
-            item.damage = 12;
+            Item.width = 16;
+            Item.height = 16;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 40;
+            Item.useTime = 40;
+            Item.shootSpeed = 15f;
+            Item.knockBack = 4f;
+            Item.UseSound = SoundID.Item116;
+            Item.shoot = ModContent.ProjectileType<ElectromagnetismProjectile>();
+            Item.value = Item.sellPrice(gold: 15);
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.channel = true;
+            Item.autoReuse = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.damage = 12;
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
+            var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
             tooltips.Add(line);
 
-            line = new TooltipLine(mod, "Electromagnetism", "Artifact")
+            line = new TooltipLine(Mod, "Electromagnetism", "Artifact")
             {
                 overrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                if (line2.Mod == "Terraria" && line2.Name == "ItemName")
                 {
-                    line2.overrideColor = new Color(255, 132, 000);
+                    line2.OverrideColor = new Color(255, 132, 000);
                 }
             }
             tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
@@ -62,9 +63,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile projectile = Projectile.NewProjectileDirect(player.RotatedRelativePoint(player.MountedCenter), new Vector2(speedX, speedY), type, damage, knockBack, player.whoAmI, 0f, direction);
             if (projectile.modProjectile is ElectromagnetismProjectile modItem)
             {
-                modItem.firingSpeed = item.shootSpeed * 2f;
-                modItem.firingAnimation = item.useAnimation;
-                modItem.firingTime = item.useTime;
+                modItem.firingSpeed = Item.shootSpeed * 2f;
+                modItem.firingAnimation = Item.useAnimation;
+                modItem.firingTime = Item.useTime;
             }
             return false;
         }
@@ -85,26 +86,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.usesLocalNPCImmunity = true;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.usesLocalNPCImmunity = true;
         }
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
-            projectile.rotation = projectile.velocity.ToRotation() + MathHelper.ToRadians(-90f);
-            projectile.spriteDirection = projectile.direction;
-            projectile.timeLeft = 2;
-            player.ChangeDir(projectile.direction);
-            player.heldProj = projectile.whoAmI;
+            Player player = Main.player[Projectile.owner];
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(-90f);
+            Projectile.spriteDirection = Projectile.direction;
+            Projectile.timeLeft = 2;
+            player.ChangeDir(Projectile.direction);
+            player.heldProj = Projectile.whoAmI;
             player.itemTime = 2;
             player.itemAnimation = 2;
-            player.itemRotation = (projectile.velocity * projectile.direction).ToRotation();
+            player.itemRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 
             for (int i = 0; i < 3; i++)
             {
@@ -114,28 +115,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             }
             Lighting.AddLight(chainHeadPosition, Color.White.ToVector3() * 0.4f);
 
-            if (projectile.localAI[1] > 0f)
+            if (Projectile.localAI[1] > 0f)
             {
-                projectile.localAI[1] -= 1f;
+                Projectile.localAI[1] -= 1f;
             }
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                projectile.localAI[0] = projectile.rotation;
+                Projectile.localAI[0] = Projectile.rotation;
             }
-            float direction = (projectile.localAI[0].ToRotationVector2().X >= 0f).ToDirectionInt();
-            Vector2 rotation = (direction * (projectile.ai[0] / firingAnimation * MathHelper.ToRadians(360f) + MathHelper.ToRadians(-90f))).ToRotationVector2();
-            rotation.Y *= (float)Math.Sin(projectile.ai[1]);
+            float direction = (Projectile.localAI[0].ToRotationVector2().X >= 0f).ToDirectionInt();
+            Vector2 rotation = (direction * (Projectile.ai[0] / firingAnimation * MathHelper.ToRadians(360f) + MathHelper.ToRadians(-90f))).ToRotationVector2();
+            rotation.Y *= (float)Math.Sin(Projectile.ai[1]);
 
-            rotation = rotation.RotatedBy(projectile.localAI[0]);
+            rotation = rotation.RotatedBy(Projectile.localAI[0]);
 
-            projectile.ai[0] += 1f;
-            if (projectile.ai[0] < firingTime)
+            Projectile.ai[0] += 1f;
+            if (Projectile.ai[0] < firingTime)
             {
-                projectile.velocity += (firingSpeed * rotation).RotatedBy(MathHelper.ToRadians(90f));
+                Projectile.velocity += (firingSpeed * rotation).RotatedBy(MathHelper.ToRadians(90f));
             }
             else
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
             Vector2 offset = Main.OffsetsPlayerOnhand[player.bodyFrame.Y / 56] * 2f;
             if (player.direction == -1)
@@ -147,22 +148,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 offset.Y = player.bodyFrame.Height - offset.Y;
             }
             offset += new Vector2(4f, -6f) * new Vector2(player.direction, player.gravDir);
-            offset -= new Vector2(player.bodyFrame.Width - projectile.width, player.bodyFrame.Height - 42) * 0.5f;
-            projectile.Center = player.RotatedRelativePoint(player.position + offset) - projectile.velocity;
+            offset -= new Vector2(player.bodyFrame.Width - Projectile.width, player.bodyFrame.Height - 42) * 0.5f;
+            Projectile.Center = player.RotatedRelativePoint(player.position + offset) - Projectile.velocity;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             int cooldown = 3;
-            if (projectile.localAI[1] <= 0f)
+            if (Projectile.localAI[1] <= 0f)
             {
-                Projectile explosion = Projectile.NewProjectileDirect(target.Center, Vector2.Zero, ModContent.ProjectileType<ElectromagnetismExplosion>(), damage, 10f, projectile.owner, 0f, 1f);
+                Projectile explosion = Projectile.NewProjectileDirect(target.Center, Vector2.Zero, ModContent.ProjectileType<ElectromagnetismExplosion>(), damage, 10f, Projectile.owner, 0f, 1f);
                 Vector2 radius = new Vector2(90f, 90f);
                 explosion.Hitbox = new Rectangle(explosion.getRect().X - (int)(radius.X / 2), explosion.getRect().Y - (int)(radius.Y / 2), explosion.getRect().Width + (int)radius.X, explosion.getRect().Height + (int)radius.Y);
-                projectile.localAI[1] = cooldown;
+                Projectile.localAI[1] = cooldown;
             }
-            projectile.localNPCImmunity[target.whoAmI] = 6;
-            target.immune[projectile.owner] = cooldown;
+            Projectile.localNPCImmunity[target.whoAmI] = 6;
+            target.immune[Projectile.owner] = cooldown;
         }
 
         public override bool? CanCutTiles()
@@ -174,13 +175,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void CutTiles()
         {
             DelegateMethods.tilecut_0 = TileCuttingContext.AttackProjectile;
-            Utils.PlotTileLine(projectile.Center, projectile.Center + projectile.velocity, (projectile.width + projectile.height) * 0.5f * projectile.scale, DelegateMethods.CutTiles);
+            Utils.PlotTileLine(Projectile.Center, Projectile.Center + Projectile.velocity, (Projectile.width + Projectile.height) * 0.5f * Projectile.scale, DelegateMethods.CutTiles);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float collisionPoint = 0f;
-            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), projectile.Center, projectile.Center + projectile.velocity, (projectile.width + projectile.height) * 0.5f * projectile.scale, ref collisionPoint))
+            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.velocity, (Projectile.width + Projectile.height) * 0.5f * Projectile.scale, ref collisionPoint))
             {
                 return true;
             }
@@ -189,7 +190,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = Main.projectileTexture[Projectile.type];
             Color color = lightColor;
 
             Rectangle chainHandle = new Rectangle(0, 2, texture.Width, 40);
@@ -197,21 +198,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Rectangle chainLink = new Rectangle(0, 46, texture.Width, 18);
             Rectangle chainHead = new Rectangle(0, 90, texture.Width, 48);
 
-            if (projectile.velocity == Vector2.Zero)
+            if (Projectile.velocity == Vector2.Zero)
             {
                 return false;
             }
 
-            float chainDistance = projectile.velocity.Length() + 16f;
+            float chainDistance = Projectile.velocity.Length() + 16f;
             bool distanceCheck = chainDistance < 100f;
-            Vector2 direction = Vector2.Normalize(projectile.velocity);
+            Vector2 direction = Vector2.Normalize(Projectile.velocity);
             Rectangle rectangle = chainHandle;
-            Vector2 yOffset = new Vector2(0f, Main.player[projectile.owner].gfxOffY);
+            Vector2 yOffset = new Vector2(0f, Main.player[Projectile.owner].gfxOffY);
             float rotation = direction.ToRotation() + MathHelper.ToRadians(-90f);
-            spriteBatch.Draw(texture, projectile.Center - Main.screenPosition + yOffset, rectangle, color, rotation, rectangle.Size() / 2f - Vector2.UnitY * 4f, projectile.scale, SpriteEffects.None, 0f);
-            chainDistance -= 40f * projectile.scale;
-            Vector2 position = projectile.Center;
-            position += direction * projectile.scale * 24f;
+            spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + yOffset, rectangle, color, rotation, rectangle.Size() / 2f - Vector2.UnitY * 4f, Projectile.scale, SpriteEffects.None, 0f);
+            chainDistance -= 40f * Projectile.scale;
+            Vector2 position = Projectile.Center;
+            position += direction * Projectile.scale * 24f;
             rectangle = chainLinkEnd;
             if (chainDistance > 0f)
             {
@@ -222,14 +223,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     {
                         rectangle.Height = (int)(chainDistance - chains);
                     }
-                    spriteBatch.Draw(texture, position - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)position.X / 16, (int)position.Y / 16), rotation, new Vector2(rectangle.Width / 2, 0f), projectile.scale, SpriteEffects.None, 0f);
-                    chains += rectangle.Height * projectile.scale;
-                    position += direction * rectangle.Height * projectile.scale;
+                    spriteBatch.Draw(texture, position - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)position.X / 16, (int)position.Y / 16), rotation, new Vector2(rectangle.Width / 2, 0f), Projectile.scale, SpriteEffects.None, 0f);
+                    chains += rectangle.Height * Projectile.scale;
+                    position += direction * rectangle.Height * Projectile.scale;
                 }
             }
             Vector2 chainEnd = position;
-            position = projectile.Center;
-            position += direction * projectile.scale * 24f;
+            position = Projectile.Center;
+            position += direction * Projectile.scale * 24f;
             rectangle = chainLink;
             int offset = distanceCheck ? 9 : 18;
             float chainLinkDistance = chainDistance;
@@ -246,13 +247,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     {
                         spacing *= 0.75f;
                     }
-                    spriteBatch.Draw(texture, position - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)position.X / 16, (int)position.Y / 16), rotation, new Vector2(rectangle.Width / 2, 0f), projectile.scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, position - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)position.X / 16, (int)position.Y / 16), rotation, new Vector2(rectangle.Width / 2, 0f), Projectile.scale, SpriteEffects.None, 0f);
                     chains += spacing;
                     position += direction * spacing;
                 }
             }
             rectangle = chainHead;
-            spriteBatch.Draw(texture, chainEnd - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)chainEnd.X / 16, (int)chainEnd.Y / 16), rotation, texture.Frame().Top(), projectile.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, chainEnd - Main.screenPosition + yOffset, rectangle, Lighting.GetColor((int)chainEnd.X / 16, (int)chainEnd.Y / 16), rotation, texture.Frame().Top(), Projectile.scale, SpriteEffects.None, 0f);
             chainHeadPosition = chainEnd;
 
             return false;
@@ -264,54 +265,54 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Electromagnetic Explosion");
-            Main.projFrames[projectile.type] = 5;
+            Main.projFrames[Projectile.type] = 5;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 52;
-            projectile.height = 52;
-            projectile.friendly = true;
-            projectile.alpha = 255;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 60;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.usesLocalNPCImmunity = true;
+            Projectile.width = 52;
+            Projectile.height = 52;
+            Projectile.friendly = true;
+            Projectile.alpha = 255;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 60;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
         }
 
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
-            projectile.ai[1] += 0.01f;
-            projectile.scale = projectile.ai[1];
-            if (projectile.ai[0] == 0)
+            Player player = Main.player[Projectile.owner];
+            Projectile.ai[1] += 0.01f;
+            Projectile.scale = Projectile.ai[1];
+            if (Projectile.ai[0] == 0)
             {
-                Main.PlaySound(SoundID.Item14, projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
             }
 
-            projectile.ai[0]++;
-            if (projectile.ai[0] >= 3 * Main.projFrames[projectile.type])
+            Projectile.ai[0]++;
+            if (Projectile.ai[0] >= 3 * Main.projFrames[Projectile.type])
             {
-                projectile.Kill();
+                Projectile.Kill();
                 return;
             }
 
-            if (++projectile.frameCounter >= 3)
+            if (++Projectile.frameCounter >= 3)
             {
-                projectile.frameCounter = 0;
-                if (++projectile.frame >= Main.projFrames[projectile.type])
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= Main.projFrames[Projectile.type])
                 {
-                    projectile.hide = true;
+                    Projectile.hide = true;
                 }
             }
-            projectile.alpha -= 63;
-            if (projectile.alpha < 0)
+            Projectile.alpha -= 63;
+            if (Projectile.alpha < 0)
             {
-                projectile.alpha = 0;
+                Projectile.alpha = 0;
             }
 
-            projectile.Damage();
+            Projectile.Damage();
 
             int dusts = 5;
             for (int i = 0; i < dusts; i++)
@@ -320,7 +321,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 {
                     float speed = 6f;
                     Vector2 velocity = new Vector2(0f, -speed * Main.rand.NextFloat(0.5f, 1.2f)).RotatedBy(MathHelper.ToRadians(360f / i * dusts + Main.rand.NextFloat(-50f, 50f)));
-                    Dust dust1 = Dust.NewDustPerfect(projectile.Center, 59, velocity, 150, default, 1.5f);
+                    Dust dust1 = Dust.NewDustPerfect(Projectile.Center, 59, velocity, 150, default, 1.5f);
                     dust1.noGravity = true;
                 }
             }
@@ -329,19 +330,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             int cooldown = 4;
-            projectile.localNPCImmunity[target.whoAmI] = 6;
-            target.immune[projectile.owner] = cooldown;
+            Projectile.localNPCImmunity[target.whoAmI] = 6;
+            target.immune[Projectile.owner] = cooldown;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Rectangle rectangle = texture.Frame(1, Main.projFrames[projectile.type], 0, projectile.frame);
-            Color color = projectile.GetAlpha(lightColor);
+            Texture2D texture = Main.projectileTexture[Projectile.type];
+            Rectangle rectangle = texture.Frame(1, Main.projFrames[Projectile.type], 0, Projectile.frame);
+            Color color = Projectile.GetAlpha(lightColor);
 
-            if (!projectile.hide)
+            if (!Projectile.hide)
             {
-                spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, rectangle, color, projectile.rotation, rectangle.Size() * 0.5f, projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, rectangle, color, Projectile.rotation, rectangle.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
             }
             return false;
         }

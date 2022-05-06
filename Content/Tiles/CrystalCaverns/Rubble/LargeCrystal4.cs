@@ -2,6 +2,7 @@ using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
@@ -11,7 +12,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 {
     public class LargeCrystal4 : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Large Crystal");
@@ -38,9 +39,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 			b = 0.078f;
 		}
 
-		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
+		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
 		{
-			drawColor *= 0.6f;
+			//drawColor *= 0.6f;
 
 			if (Main.rand.NextBool(400))
 			{
@@ -61,14 +62,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 			spriteBatch.End();
 			spriteBatch.Begin(default, default, default, default, default, default);
 		}
-		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height)
+		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
 		{
 			offsetY = 2;
 		}
 		public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
 		{
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-			if (!tileBelow.active() || tileBelow.halfBrick() || tileBelow.topSlope())
+			if (!tileBelow.HasTile || tileBelow.IsHalfBlock || tileBelow.TopSlope)
 			{
 				WorldGen.KillTile(i, j);
 			}

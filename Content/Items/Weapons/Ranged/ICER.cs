@@ -20,35 +20,34 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item12;
-			item.crit = 20;
-            item.damage = 73;
-            item.magic = true;
-            item.width = 44;
-            item.height = 26; 
-            item.useTime = 28;
-            item.useAnimation = 28;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.LightPurple;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("ICERProj");
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 36f;
+			Item.UseSound = SoundID.Item12;
+			Item.crit = 20;
+            Item.damage = 73;
+            Item.DamageType = DamageClass.Magic;
+            Item.width = 44;
+            Item.height = 26; 
+            Item.useTime = 28;
+            Item.useAnimation = 28;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 8;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.LightPurple;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("ICERProj").Type;
+            Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 36f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.AshBlock, 25);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddIngredient(ModContent.ItemType<EmberFragment>(), 3);
-            modRecipe.AddRecipeGroup("IronBar", 3);
-            modRecipe.AddTile(TileID.Hellforge);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.AshBlock, 25)
+                .AddIngredient(ItemID.HellstoneBar, 10)
+                .AddIngredient(ModContent.ItemType<EmberFragment>(), 3)
+                .AddRecipeGroup("IronBar", 3)
+                .AddTile(TileID.Hellforge)
+                .Register();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -67,19 +66,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 24;
-            projectile.height = 8;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 3;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			projectile.light = 1f;
-			projectile.timeLeft = 60;
-			projectile.alpha = 100;
+            Projectile.width = 24;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 3;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			Projectile.light = 1f;
+			Projectile.timeLeft = 60;
+			Projectile.alpha = 100;
         }
 		public override Color? GetAlpha(Color lightColor)
 		{
@@ -93,9 +92,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void AI()
         {
-			Lighting.AddLight(projectile.Center, 0f, 0.25f, 1f);
-			Dust.NewDust(projectile.position + projectile.velocity, 0, 0, 92, 0, 0);
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Lighting.AddLight(Projectile.Center, 0f, 0.25f, 1f);
+			Dust.NewDust(Projectile.position + Projectile.velocity, 0, 0, 92, 0, 0);
+            Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
         }
     }
 }

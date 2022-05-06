@@ -7,7 +7,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public class SoulFire : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Soul Fire");
 			Description.SetDefault("You are burning with rage deep within");

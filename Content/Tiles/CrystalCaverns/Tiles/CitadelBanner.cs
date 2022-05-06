@@ -7,7 +7,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class CitadelBanner : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;

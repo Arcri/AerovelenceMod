@@ -9,27 +9,27 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 	public class CrystalGrass : ModTile
 	{
 		public static int _type;
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			SetModTree(new CrystalTree());
-			Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
+			Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
 			Main.tileBlendAll[this.Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			AddMapEntry(new Color(100, 155, 255));
-			drop = mod.ItemType("CrystalDirt");
+			ItemDrop = Mod.Find<ModItem>("CrystalDirt").Type;
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
-			TileID.Sets.NeedsGrassFramingDirt[Type] = mod.TileType("CrystalDirt");
+			TileID.Sets.NeedsGrassFramingDirt[Type] = Mod.Find<ModTile>("CrystalDirt").Type;
 		}
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
 			if (!effectOnly)
 			{
 				fail = true;
-				Main.tile[i, j].type = (ushort)mod.TileType("CrystalDirt");
+				Main.tile[i, j].TileType = (ushort)Mod.Find<ModTile>("CrystalDirt").Type;
 				WorldGen.SquareTileFrame(i, j, true);
 				Dust.NewDust(new Vector2(i * 16, j * 16), 16, 16, DustID.Marble, 0f, 0f, 0, new Color(121, 121, 121), 1f);
 			}
@@ -53,14 +53,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			Tile tile = Framing.GetTileSafely(i, j);
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
 			Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-			if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.Lava)
 			{
-				if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+				if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
 				{
-					tileAbove.type = (ushort)ModContent.TileType<CrystalFlora>();
-					tileAbove.active(true);
-					tileAbove.frameY = 0;
-					tileAbove.frameX = (short)(WorldGen.genRand.Next(8) * 18);
+					tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
+					tileAbove.HasTile;
+					tileAbove.TileFrameY = 0;
+					tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{
@@ -68,12 +68,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 					}
 				}
 			}
-			if (WorldGen.genRand.NextBool(15) && !tileBelow.active() && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && !tileBelow.lava)
 			{
-				if (!tile.bottomSlope())
+				if (!tile.BottomSlope)
 				{
-					tileBelow.type = (ushort)ModContent.TileType<CrystalVines>();
-					tileBelow.active(true);
+					tileBelow.TileType = (ushort)ModContent.TileType<CrystalVines>();
+					tileBelow.HasTile;
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{
@@ -89,9 +89,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 					tileX = i + x1;
 					tileY = j + y;
 					if (!WorldGen.InWorld(i, j, 0)) continue;
-					if (Main.tile[tileX, tileY].type == TileID.MushroomGrass && Main.rand.Next(4) == 0)
+					if (Main.tile[tileX, tileY].TileType == TileID.MushroomGrass && Main.rand.NextBool(4))
 					{
-						Main.tile[tileX, tileY].type = (ushort)mod.TileType("CrystalGrass");
+						Main.tile[tileX, tileY].TileType = (ushort)Mod.Find<ModTile>("CrystalGrass").Type;
 						WorldGen.SquareTileFrame(tileX, tileY, true);
 					}
 				}
@@ -100,18 +100,18 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			{
 				for (int y = j - 1; y <= j + 1; y++)
 				{
-					if ((x != i || j != y) && Main.tile[x, y].active() && Main.tile[x, y].type == mod.TileType("CrystalDirt"))
+					if ((x != i || j != y) && Main.tile[x, y].HasTile && Main.tile[x, y].TileType == Mod.Find<ModTile>("CrystalDirt").Type)
 					{
-						WorldGen.SpreadGrass(x, y, mod.TileType("CrystalDirt"), Type, false, Main.tile[i, j].color());
-						if (Main.tile[x, y].type == Type)
+						WorldGen.SpreadGrass(x, y, Mod.Find<ModTile>("CrystalDirt").Type, Type, false, Main.tile[i, j].TileColor);
+						if (Main.tile[x, y].TileType == Type)
 						{
 							WorldGen.SquareTileFrame(x, y, true);
 						}
 					}
-					if ((x != i || j != y) && Main.tile[x, y].active() && Main.tile[x, y].type == TileID.Dirt)
+					if ((x != i || j != y) && Main.tile[x, y].HasTile && Main.tile[x, y].TileType == TileID.Dirt)
 					{
-						WorldGen.SpreadGrass(x, y, TileID.Dirt, TileID.CorruptGrass, false, Main.tile[i, j].color());
-						if (Main.tile[x, y].type == Type)
+						WorldGen.SpreadGrass(x, y, TileID.Dirt, TileID.CorruptGrass, false, Main.tile[i, j].TileColor);
+						if (Main.tile[x, y].TileType == Type)
 						{
 							WorldGen.SquareTileFrame(x, y, true);
 						}
@@ -122,7 +122,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 		public override int SaplingGrowthType(ref int style)
 		{
 			style = 0;
-			return mod.TileType("CrystalSapling");
+			return Mod.Find<ModTile>("CrystalSapling").Type;
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{

@@ -27,17 +27,17 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 
 		public override Texture2D GetTexture()
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/ValleyTree");
+			return mod.Assets.Request<Texture2D>("Blocks/CrystalCaverns/Tiles/ValleyTree").Value;
 		}
 
 		public override Texture2D GetTopTextures(int i, int j, ref int frame, ref int frameWidth, ref int frameHeight, ref int xOffsetLeft, ref int yOffset)
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/ValleyTree_Tops");
+			return mod.Assets.Request<Texture2D>("Blocks/CrystalCaverns/Tiles/ValleyTree_Tops").Value;
 		}
 
 		public override Texture2D GetBranchTextures(int i, int j, int trunkOffset, ref int frame)
 		{
-			return mod.GetTexture("Blocks/CrystalCaverns/Tiles/ValleyTree_Branches");
+			return mod.Assets.Request<Texture2D>("Blocks/CrystalCaverns/Tiles/ValleyTree_Branches").Value;
 		}
 	}
 }

@@ -5,6 +5,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
@@ -13,56 +15,58 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hive Projectile");
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 35;
+            Projectile.width = Projectile.height = 35;
            
-            projectile.aiStyle = -1;
+            Projectile.aiStyle = -1;
 
-            projectile.friendly = projectile.ranged = projectile.tileCollide = true;                       
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;                       
         }
 
         int Timer = 0;
         public override void AI()
         {
-            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            projectile.velocity.X *= 0.984f;
-            projectile.velocity.Y += 0.28f;
+            Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
+            Projectile.velocity.X *= 0.984f;
+            Projectile.velocity.Y += 0.28f;
 
-            projectile.ai[0]++;
+            Projectile.ai[0]++;
             if(Timer >= 15)
             {
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
-                projectile.ai[0] = 0;
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(Projectile.damage * .5f), 0, Projectile.owner);
+                Projectile.ai[0] = 0;
             }
         }
 
         public override void Kill(int timeLeft)
         { 
-            Main.PlaySound(SoundID.NPCDeath19, projectile.position);
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-2, 5) * .25f, Main.rand.Next(-2, 7) * .25f, ProjectileID.Wasp, (int)(projectile.damage * .5f), 0, projectile.owner);
+            SoundEngine.PlaySound(SoundID.NPCDeath19, Projectile.position);
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.Y - 16f, Main.rand.Next(-10, 9) * .25f, Main.rand.Next(-10, 5) * .25f, ProjectileID.Wasp, (int)(Projectile.damage * .5f), 0, Projectile.owner);
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.Y - 16f, Main.rand.Next(-2, 5) * .25f, Main.rand.Next(-2, 7) * .25f, ProjectileID.Wasp, (int)(Projectile.damage * .5f), 0, Projectile.owner);
 
             for(int i = 0; i < 12; ++i)
             { 
                float random = Main.rand.NextFloat(-6f, 6f);
-               Dust dust = Dust.NewDustDirect(projectile.position, 0 , 0, 153, random, random);
+               Dust dust = Dust.NewDustDirect(Projectile.position, 0 , 0, 153, random, random);
                dust.scale = 0.8f;
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Main.instance.LoadProjectile(Projectile.type);
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(projectile.frame)) / 2f) * 0.5f;
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+            Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(Projectile.frame)) / 2f) * 0.5f;
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Main.spriteBatch.Draw(texture, projectile.oldPos[i] + projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, projectile.oldRot[i], rectangle.Size() / 2f, 1f, projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, Projectile.oldRot[i], rectangle.Size() / 2f, 1f, Projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
             }
 
             return true;

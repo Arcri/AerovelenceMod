@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 {
@@ -16,17 +17,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         Vector2 storedpos = new Vector2();
         public override void SetDefaults()
         {
-            projectile.width = 1;
-            projectile.height = 1;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.penetrate = 1;
-            projectile.alpha = 0;
-            projectile.timeLeft = 300;
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 1;
+            Projectile.alpha = 0;
+            Projectile.timeLeft = 300;
             aiType = ProjectileID.Bullet;
-            storedpos.X = projectile.velocity.X;
-            storedpos.Y = projectile.velocity.Y;
+            storedpos.X = Projectile.velocity.X;
+            storedpos.Y = Projectile.velocity.Y;
         }
 
         float angle = 0;
@@ -41,8 +42,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             
             for (int j = 0; j < 10; j++)
             {
-                float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
-                float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                float x = Projectile.position.X - Projectile.velocity.X / 10f * (float)j;
+                float y = Projectile.position.Y - Projectile.velocity.Y / 10f * (float)j;
                 Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 206,0,0,0,Color.DarkBlue, 0.9f);
                 dust.position.X = x;
                 dust.position.Y = y;
@@ -66,12 +67,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             angle += (float)Math.Abs((Math.PI * i / 180.0));
             storedpos.Y += (float)(3 * Math.Sin(angle));
             storedpos.X = 15 * direction;
-            projectile.velocity = new Vector2((float)(storedpos.X*Math.Cos(mouseangleAlpha) - storedpos.Y*Math.Sin(mouseangleAlpha)), (float)(storedpos.X*Math.Sin(mouseangleAlpha)+storedpos.Y*Math.Cos(mouseangleAlpha)) * direction);
+            Projectile.velocity = new Vector2((float)(storedpos.X*Math.Cos(mouseangleAlpha) - storedpos.Y*Math.Sin(mouseangleAlpha)), (float)(storedpos.X*Math.Sin(mouseangleAlpha)+storedpos.Y*Math.Cos(mouseangleAlpha)) * direction);
         }
         public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
         public override void Kill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
         }
     }
 }

@@ -14,28 +14,28 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
 
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
-            projectile.aiStyle = 0;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
-            projectile.penetrate = -1;
+            Projectile.width = 50;
+            Projectile.height = 50;
+            Projectile.aiStyle = 0;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = -1;
         }
 
         public override void AI()
         {
-            projectile.velocity = Vector2.Zero;
-            projectile.alpha += 10;
-            if (projectile.alpha > 200)
+            Projectile.velocity = Vector2.Zero;
+            Projectile.alpha += 10;
+            if (Projectile.alpha > 200)
             {
-                projectile.friendly = false;
+                Projectile.friendly = false;
             }
-            if (projectile.alpha >= 255)
+            if (Projectile.alpha >= 255)
             {
-                projectile.active = false;
+                Projectile.active = false;
             }
-            projectile.rotation += MathHelper.ToRadians(3);
+            Projectile.rotation += MathHelper.ToRadians(3);
         }
     }
 }

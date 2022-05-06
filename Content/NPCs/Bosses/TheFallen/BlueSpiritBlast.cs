@@ -14,39 +14,39 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
         }
         public override void SetDefaults()
         {
-            projectile.width = 5;
-            projectile.height = 5;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.extraUpdates = 2;
-            projectile.scale = 1f;
-            projectile.timeLeft = 600;
-            projectile.magic = true;
-            projectile.ignoreWater = true;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            Projectile.width = 5;
+            Projectile.height = 5;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.extraUpdates = 2;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 600;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.ignoreWater = true;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
         public override void AI()
         {
-            projectile.velocity *= 1.01f;
+            Projectile.velocity *= 1.01f;
             int num294 = Main.rand.Next(3, 7);
             for (int num295 = 0; num295 < num294; num295++)
             {
                 counter++;
                 if (counter >= 17)
                 {
-                    int num296 = Dust.NewDust(projectile.Center - projectile.velocity / 2f, 0, 0, DustID.FlameBurst, 0f, 0f, 100, default, 2.1f);
+                    int num296 = Dust.NewDust(Projectile.Center - Projectile.velocity / 2f, 0, 0, DustID.FlameBurst, 0f, 0f, 100, default, 2.1f);
                     Dust dust105 = Main.dust[num296];
                     Dust dust2 = dust105;
                     dust2.velocity *= 2f;
                     Main.dust[num296].noGravity = true;
                 }
             }
-            if (projectile.ai[1] != 1f)
+            if (Projectile.ai[1] != 1f)
             {
-                projectile.ai[1] = 1f;
-                projectile.position += projectile.velocity;
-                projectile.velocity = projectile.velocity;
+                Projectile.ai[1] = 1f;
+                Projectile.position += Projectile.velocity;
+                Projectile.velocity = Projectile.velocity;
             }
         }
     }

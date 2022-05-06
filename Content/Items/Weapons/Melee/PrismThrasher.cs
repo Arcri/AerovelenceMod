@@ -4,6 +4,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -16,24 +18,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.width = 66;
-            item.height = 70;
-            item.useAnimation = 25;
-            item.useTime = 15;
-            item.useStyle = 5;
-            item.rare = ItemRarityID.Green;
-            item.noUseGraphic = true;
-            item.channel = true;
-            item.noMelee = true;
-            item.damage = 27;
-            item.knockBack = 4f;
-            item.autoReuse = false;
-            item.noMelee = true;
-            item.melee = true;
-            item.shoot = mod.ProjectileType("PrismSlash");
-            item.value = 40000;
-            item.shootSpeed = 15f;
-            item.UseSound = SoundID.Item109;
+            Item.width = 66;
+            Item.height = 70;
+            Item.useAnimation = 25;
+            Item.useTime = 15;
+            Item.useStyle = 5;
+            Item.rare = ItemRarityID.Green;
+            Item.noUseGraphic = true;
+            Item.channel = true;
+            Item.noMelee = true;
+            Item.damage = 27;
+            Item.knockBack = 4f;
+            Item.autoReuse = false;
+            Item.noMelee = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.shoot = Mod.Find<ModProjectile>("PrismSlash").Type;
+            Item.value = 40000;
+            Item.shootSpeed = 15f;
+            Item.UseSound = SoundID.Item109;
         }
 
         public override bool AltFunctionUse(Player player)
@@ -46,42 +48,42 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             if (player.altFunctionUse == 2)
             {
-                item.width = 66;
-                item.height = 70;
-                item.useAnimation = 21;
-                item.useTime = 21;
-                item.useStyle = ItemUseStyleID.SwingThrow;
-                item.rare = ItemRarityID.Green;
-                item.noUseGraphic = false;
-                item.channel = false;
-                item.noMelee = false;
-                item.damage = 40;
-                item.knockBack = 6f;
-                item.autoReuse = true;
-                item.melee = true;
-                item.shoot = ProjectileID.None;
-                item.UseSound = SoundID.Item4;
+                Item.width = 66;
+                Item.height = 70;
+                Item.useAnimation = 21;
+                Item.useTime = 21;
+                Item.useStyle = ItemUseStyleID.Swing;
+                Item.rare = ItemRarityID.Green;
+                Item.noUseGraphic = false;
+                Item.channel = false;
+                Item.noMelee = false;
+                Item.damage = 40;
+                Item.knockBack = 6f;
+                Item.autoReuse = true;
+                Item.DamageType = DamageClass.Melee;
+                Item.shoot = ProjectileID.None;
+                Item.UseSound = SoundID.Item4;
             }
             else
             {
-                item.width = 66;
-                item.height = 70;
-                item.useAnimation = 25;
-                item.useTime = 15;
-                item.useStyle = 5;
-                item.rare = ItemRarityID.Green;
-                item.noUseGraphic = true;
-                item.channel = true;
-                item.noMelee = true;
-                item.damage = 25;
-                item.knockBack = 4f;
-                item.autoReuse = false;
-                item.noMelee = true;
-                item.melee = true;
-                item.shoot = mod.ProjectileType("PrismSlash");
-                item.value = 40000;
-                item.shootSpeed = 15f;
-                item.UseSound = SoundID.Item109;
+                Item.width = 66;
+                Item.height = 70;
+                Item.useAnimation = 25;
+                Item.useTime = 15;
+                Item.useStyle = 5;
+                Item.rare = ItemRarityID.Green;
+                Item.noUseGraphic = true;
+                Item.channel = true;
+                Item.noMelee = true;
+                Item.damage = 25;
+                Item.knockBack = 4f;
+                Item.autoReuse = false;
+                Item.noMelee = true;
+                Item.DamageType = DamageClass.Melee;
+                Item.shoot = Mod.Find<ModProjectile>("PrismSlash").Type;
+                Item.value = 40000;
+                Item.shootSpeed = 15f;
+                Item.UseSound = SoundID.Item109;
             }
             return base.CanUseItem(player);
         }
@@ -93,7 +95,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 10;
+            Main.projFrames[Projectile.type] = 10;
         }
 
         public override void SetDefaults()
@@ -107,14 +109,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             projectile.ownerHitCheck = true; //so you can't hit enemies through walls
             projectile.melee = true;*/
 
-            projectile.width = 84;
-            projectile.height = 98;
-            projectile.aiStyle = 75;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.melee = true;
-            projectile.penetrate = -1;
-            projectile.ownerHitCheck = true;
+            Projectile.width = 84;
+            Projectile.height = 98;
+            Projectile.aiStyle = 75;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = -1;
+            Projectile.ownerHitCheck = true;
         }
 
         
@@ -127,38 +129,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override Color? GetAlpha(Color lightColor)
         {
             //return Color.White;
-            return new Color(255, 255, 255, 0) * (1f - (float)projectile.alpha / 255f);
+            return new Color(255, 255, 255, 0) * (1f - (float)Projectile.alpha / 255f);
         }
         public override void AI()
         {
             float num = (float)Math.PI / 2f;
 
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
             num = 0f;
-            if (projectile.spriteDirection == -1)
+            if (Projectile.spriteDirection == -1)
             {
                 num = (int)(float)Math.PI;
             }
-            if (++projectile.frame >= Main.projFrames[projectile.type])
+            if (++Projectile.frame >= Main.projFrames[Projectile.type])
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
-            projectile.soundDelay--;
-            if (projectile.soundDelay <= 0)
+            Projectile.soundDelay--;
+            if (Projectile.soundDelay <= 0)
             {
-                Main.PlaySound(SoundID.Item1, projectile.Center);
-                projectile.soundDelay = 12;
+                SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
+                Projectile.soundDelay = 12;
             }
-            if (Main.myPlayer == projectile.owner)
+            if (Main.myPlayer == Projectile.owner)
             {
                 if (player.channel && !player.noItems && !player.CCed)
                 {
                     float num33 = 1f;
-                    if (player.inventory[player.selectedItem].shoot == projectile.type)
+                    if (player.inventory[player.selectedItem].shoot == Projectile.type)
                     {
-                        num33 = player.inventory[player.selectedItem].shootSpeed * projectile.scale;
+                        num33 = player.inventory[player.selectedItem].shootSpeed * Projectile.scale;
                     }
                     Vector2 vector8 = Main.MouseWorld - vector;
                     vector8.Normalize();
@@ -167,46 +169,46 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                         vector8 = Vector2.UnitX * player.direction;
                     }
                     vector8 *= num33;
-                    if (vector8.X != projectile.velocity.X || vector8.Y != projectile.velocity.Y)
+                    if (vector8.X != Projectile.velocity.X || vector8.Y != Projectile.velocity.Y)
                     {
-                        projectile.netUpdate = true;
+                        Projectile.netUpdate = true;
                     }
-                    projectile.velocity = vector8;
+                    Projectile.velocity = vector8;
                 }
                 else
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                 }
             }
-            Vector2 vector9 = projectile.Center + projectile.velocity * 3f;
+            Vector2 vector9 = Projectile.Center + Projectile.velocity * 3f;
             Lighting.AddLight(vector9, 0.8f, 0.8f, 0.8f);
             if (Main.rand.Next(3) == 0)
             {
-                int num34 = Dust.NewDust(vector9 - projectile.Size / 2f, projectile.width, projectile.height, 63, projectile.velocity.X, projectile.velocity.Y, 100, default(Color), 2f);
+                int num34 = Dust.NewDust(vector9 - Projectile.Size / 2f, Projectile.width, Projectile.height, 63, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 2f);
                 Main.dust[num34].noGravity = true;
-                Main.dust[num34].position -= projectile.velocity;
+                Main.dust[num34].position -= Projectile.velocity;
             }
         }
 
         // Some advanced drawing because the texture image isn't centered or symetrical.
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor) {
         {
             SpriteEffects spriteEffects = SpriteEffects.None;
-            if (projectile.spriteDirection == -1)
+            if (Projectile.spriteDirection == -1)
             {
                 spriteEffects = SpriteEffects.FlipHorizontally;
             }
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            int frameHeight = Main.projectileTexture[projectile.type].Height / Main.projFrames[projectile.type];
-            int startY = frameHeight * projectile.frame;
+            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
+            int frameHeight = TextureAssets.Projectile[Projectile.type].Height() / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
             Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
             Vector2 origin = sourceRectangle.Size() / 2f;
-            origin.X = (float)((projectile.spriteDirection == 1) ? (sourceRectangle.Width - 40) : 40);
+            origin.X = (float)((Projectile.spriteDirection == 1) ? (sourceRectangle.Width - 40) : 40);
 
-            Color drawColor = projectile.GetAlpha(lightColor);
-            Main.spriteBatch.Draw(texture,
-            projectile.Center - Main.screenPosition + new Vector2(0f, projectile.gfxOffY),
-            sourceRectangle, drawColor, projectile.rotation, origin, projectile.scale, spriteEffects, 0f);
+            Color drawColor = Projectile.GetAlpha(lightColor);
+            Main.EntitySpriteDraw(texture,
+            Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+            sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);
 
             return false;
         }

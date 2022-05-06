@@ -13,28 +13,27 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 26;
-            item.height = 26;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 26;
+            Item.height = 26;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.meleeDamage += 0.1f;
-			player.minionDamage += 0.1f;
-			player.magicDamage += 0.1f;
-			player.rangedDamage += 0.1f;
-			player.thrownDamage += 0.1f;
+			player.GetDamage(DamageClass.Melee) += 0.1f;
+			player.GetDamage(DamageClass.Summon) += 0.1f;
+			player.GetDamage(DamageClass.Magic) += 0.1f;
+			player.GetDamage(DamageClass.Ranged) += 0.1f;
+			player.GetDamage(DamageClass.Throwing) += 0.1f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 3);
-            recipe.AddIngredient(ItemID.Diamond, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.FallenStar, 3)
+                .AddIngredient(ItemID.Diamond, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

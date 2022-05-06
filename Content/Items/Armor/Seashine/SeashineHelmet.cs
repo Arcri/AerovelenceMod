@@ -26,12 +26,12 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
             {
                 player.moveSpeed += 0.22f;
             }
-            if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(mod.BuffType("SeaCrab")) == -1)
+            if (Main.myPlayer == player.whoAmI && player.FindBuffIndex(Mod.Find<ModBuff>("SeaCrab").Type) == -1)
             {
-                player.AddBuff(mod.BuffType("CrabBuff"), 100, false);
+                player.AddBuff(Mod.Find<ModBuff>("CrabBuff").Type, 100, false);
                 if(player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Weapons.Summoning.SeaCrab>()] <= 0)
                 {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("SeaCrab"), (int)(25f * player.minionDamage), player.minionKB, player.whoAmI);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("SeaCrab").Type, (int)(25f * player.GetDamage(DamageClass.Summon)), player.GetKnockback(DamageClass.Summon).Base, player.whoAmI);
                 }
             }
         } 	
@@ -39,27 +39,26 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
         
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 1;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 1;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.minionDamage += 0.06f;
+            player.GetDamage(DamageClass.Summon) += 0.06f;
             player.manaCost -= 0.08f;
             player.maxMinions += 1;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.SandBlock, 20);
-            modRecipe.AddIngredient(ItemID.Seashell, 5);
-            modRecipe.AddIngredient(ItemID.Starfish, 3);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.SandBlock, 20)
+                .AddIngredient(ItemID.Seashell, 5)
+                .AddIngredient(ItemID.Starfish, 3)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

@@ -10,28 +10,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
 		public override void SetStaticDefaults()
 		{
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 			DisplayName.SetDefault("Cthulhu's Wrath");
 			Tooltip.SetDefault("Its angered essence is trapped");
 		}
         public override void SetDefaults()
         {
-            item.crit = 7;
-            item.damage = 16;
-            item.magic = true;
-			item.mana = 5;
-            item.width = 40;
-            item.height = 40;
-            item.useTime = 8;
-            item.useAnimation = 8;
-            item.UseSound = SoundID.Item20;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.knockBack = 6;
-			item.value = Item.sellPrice(0, 5, 30, 0);
-			item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.Flames;
-            item.shootSpeed = 12f;
+            Item.crit = 7;
+            Item.damage = 16;
+            Item.DamageType = DamageClass.Magic;
+			Item.mana = 5;
+            Item.width = 40;
+            Item.height = 40;
+            Item.useTime = 8;
+            Item.useAnimation = 8;
+            Item.UseSound = SoundID.Item20;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 6;
+			Item.value = Item.sellPrice(0, 5, 30, 0);
+			Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.Flames;
+            Item.shootSpeed = 12f;
         }
 
         public override bool AltFunctionUse(Player player)
@@ -42,21 +42,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		{
 			if (player.altFunctionUse == 2)
 			{
-				item.useStyle = ItemUseStyleID.HoldingOut;
-				item.useTime = 70;
-				item.useAnimation = 70;
-				item.damage = 55;
-				item.mana = 0;
+				Item.useStyle = ItemUseStyleID.Shoot;
+				Item.useTime = 70;
+				Item.useAnimation = 70;
+				Item.damage = 55;
+				Item.mana = 0;
 			}
 			else
 			{
-				item.useStyle = ItemUseStyleID.HoldingOut;
-				item.useTime = 12;
-				item.useAnimation = 12;
-				item.damage = 10;
-				item.mana = 5;
-				item.shoot = ProjectileID.Flames;
-				item.shootSpeed = 12f;
+				Item.useStyle = ItemUseStyleID.Shoot;
+				Item.useTime = 12;
+				Item.useAnimation = 12;
+				Item.damage = 10;
+				Item.mana = 5;
+				Item.shoot = ProjectileID.Flames;
+				Item.shootSpeed = 12f;
 			}
 			return base.CanUseItem(player);
 		}
@@ -88,19 +88,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "Why do I exist, dawg");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "Why do I exist, dawg");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Cthulhu's Wrath", "Artifact weapon")
+			line = new TooltipLine(Mod, "Cthulhu's Wrath", "Artifact weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

@@ -16,33 +16,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void SetDefaults()
 		{
-			item.UseSound = SoundID.Item5;
-			item.crit = 4;
-			item.damage = 25;
-			item.ranged = true;
-			item.width = 20;
-			item.height = 40;
-			item.useTime = 26;
-			item.useAnimation = 26;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.noMelee = true;
-			item.knockBack = 2;
-			item.value = Item.sellPrice(0, 0, 20, 0);
-			item.rare = ItemRarityID.Blue;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<HarshStreamStream>();
-			item.useAmmo = AmmoID.Arrow;
-			item.shootSpeed = 10f;
+			Item.UseSound = SoundID.Item5;
+			Item.crit = 4;
+			Item.damage = 25;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 20;
+			Item.height = 40;
+			Item.useTime = 26;
+			Item.useAnimation = 26;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.noMelee = true;
+			Item.knockBack = 2;
+			Item.value = Item.sellPrice(0, 0, 20, 0);
+			Item.rare = ItemRarityID.Blue;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<HarshStreamStream>();
+			Item.useAmmo = AmmoID.Arrow;
+			Item.shootSpeed = 10f;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 2);
-			recipe.AddIngredient(ItemID.Sandstone, 25);
-			recipe.AddIngredient(ItemID.Cactus, 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 2)
+				.AddIngredient(ItemID.Sandstone, 25)
+				.AddIngredient(ItemID.Cactus, 5)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -54,31 +53,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 	{
         public override void SetDefaults()
         {
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.penetrate = 5;
-			projectile.timeLeft = 600;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
-			projectile.alpha = 255;
-			projectile.timeLeft = 500;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.aiStyle = 1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.penetrate = 5;
+			Projectile.timeLeft = 600;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
+			Projectile.alpha = 255;
+			Projectile.timeLeft = 500;
 		}
         public override void AI()
 		{
-			projectile.velocity.Y += 0.10f;
+			Projectile.velocity.Y += 0.10f;
 			for (int t = 0; t < 1; t++)
 			{
 				for (int num600 = 0; num600 < 6; num600++)
 				{
-					float num601 = projectile.velocity.X / 6f * num600;
-					float num602 = projectile.velocity.Y / 6f * num600;
+					float num601 = Projectile.velocity.X / 6f * num600;
+					float num602 = Projectile.velocity.Y / 6f * num600;
 					int num603 = 6;
-					int num604 = Dust.NewDust(new Vector2(projectile.position.X + num603, projectile.position.Y + num603), projectile.width - num603 * 2, projectile.height - num603 * 2, DustID.AmberBolt, 0f, 0f, 75, default(Color), 1.2f);
+					int num604 = Dust.NewDust(new Vector2(Projectile.position.X + num603, Projectile.position.Y + num603), Projectile.width - num603 * 2, Projectile.height - num603 * 2, DustID.AmberBolt, 0f, 0f, 75, default(Color), 1.2f);
 					Dust dust94;
 					Dust dust2;
 					if (Main.rand.Next(2) == 0)
@@ -105,8 +104,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 					dust2.velocity *= 0.3f;
 					dust94 = Main.dust[num604];
 					dust2 = dust94;
-					dust2.velocity += projectile.velocity * 0.5f;
-					Main.dust[num604].position = projectile.Center;
+					dust2.velocity += Projectile.velocity * 0.5f;
+					Main.dust[num604].position = Projectile.Center;
 					Main.dust[num604].position.X -= num601;
 					Main.dust[num604].position.Y -= num602;
 					dust94 = Main.dust[num604];
@@ -116,22 +115,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 				if (Main.rand.Next(4) == 0)
 				{
 					int num605 = 6;
-					int num606 = Dust.NewDust(new Vector2(projectile.position.X + num605, projectile.position.Y + num605), projectile.width - num605 * 2, projectile.height - num605 * 2, DustID.AmberBolt, 0f, 0f, 75, default(Color), 0.65f);
+					int num606 = Dust.NewDust(new Vector2(Projectile.position.X + num605, Projectile.position.Y + num605), Projectile.width - num605 * 2, Projectile.height - num605 * 2, DustID.AmberBolt, 0f, 0f, 75, default(Color), 0.65f);
 					Dust dust95 = Main.dust[num606];
 					Dust dust2 = dust95;
 					dust2.velocity *= 0.5f;
 					dust95 = Main.dust[num606];
 					dust2 = dust95;
-					dust2.velocity += projectile.velocity * 0.5f;
+					dust2.velocity += Projectile.velocity * 0.5f;
 				}
 			}
 		}
 		public override void Kill(int timeLeft)
 		{
-			projectile.velocity = projectile.oldVelocity * 0.2f;
+			Projectile.velocity = Projectile.oldVelocity * 0.2f;
 			for (int num361 = 0; num361 < 100; num361++)
 			{
-				int num362 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.AmberBolt, 0f, 0f, 75, default(Color), 1.2f);
+				int num362 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.AmberBolt, 0f, 0f, 75, default(Color), 1.2f);
 				Dust dust120;
 				Dust dust2;
 				if (Main.rand.Next(2) == 0)
@@ -165,13 +164,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 				dust2.velocity *= 0.3f;
 				dust120 = Main.dust[num362];
 				dust2 = dust120;
-				dust2.velocity += projectile.velocity;
+				dust2.velocity += Projectile.velocity;
 				dust120 = Main.dust[num362];
 				dust2 = dust120;
 				dust2.velocity *= 1f + Main.rand.Next(-100, 101) * 0.01f;
 				Main.dust[num362].velocity.X += Main.rand.Next(-50, 51) * 0.015f;
 				Main.dust[num362].velocity.Y += Main.rand.Next(-50, 51) * 0.015f;
-				Main.dust[num362].position = projectile.Center;
+				Main.dust[num362].position = Projectile.Center;
 			}
 		}
 	}

@@ -15,42 +15,42 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 26;
-            npc.lifeMax = 350;
-            npc.damage = 27;
-            npc.defense = 24;
-            npc.knockBackResist = 0.3f;
-            npc.width = 58;
-            npc.height = 60;
-            npc.value = Item.buyPrice(0, 3, 0, 0);
-            npc.lavaImmune = true;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = 26;
+            NPC.lifeMax = 350;
+            NPC.damage = 27;
+            NPC.defense = 24;
+            NPC.knockBackResist = 0.3f;
+            NPC.width = 58;
+            NPC.height = 60;
+            NPC.value = Item.buyPrice(0, 3, 0, 0);
+            NPC.lavaImmune = true;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
                 }
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/OvergrownTumblerockGore1"), 1f);
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/OvergrownTumblerockGore2"), 1f);
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/OvergrownTumblerockGore3"), 1f);
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/OvergrownTumblerockGore4"), 1f);
+                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/OvergrownTumblerockGore1"), 1f);
+                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/OvergrownTumblerockGore2"), 1f);
+                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/OvergrownTumblerockGore3"), 1f);
+                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/OvergrownTumblerockGore4"), 1f);
             }
         }
         
         public override void AI()
         {
-            npc.rotation += npc.velocity.X * 0.05f;
+            NPC.rotation += NPC.velocity.X * 0.05f;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
+            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
     }
 }

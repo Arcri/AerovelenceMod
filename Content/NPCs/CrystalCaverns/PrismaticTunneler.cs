@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -15,19 +16,19 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		public override void SetDefaults()
 		{
 			// Head is 10 defence, body 20, tail 30.
-			npc.CloneDefaults(NPCID.DiggerHead);
-			npc.aiStyle = -1;
-			npc.defense = 10;
-			npc.width = 58;
-			npc.lifeMax = 1000;
-			npc.height = 50;
-			npc.damage = 70;
+			NPC.CloneDefaults(NPCID.DiggerHead);
+			NPC.aiStyle = -1;
+			NPC.defense = 10;
+			NPC.width = 58;
+			NPC.lifeMax = 1000;
+			NPC.height = 50;
+			NPC.damage = 70;
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 2000;  //boss life scale in expertmode
-			npc.damage = 20;  //boss damage increase in expermode
+			NPC.lifeMax = 2000;  //boss life scale in expertmode
+			NPC.damage = 20;  //boss damage increase in expermode
 		}
 
 		public override void Init()
@@ -38,17 +39,17 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 				for (int k = 0; k < 20; k++)
 				{
-					Dust.NewDust(npc.position, npc.width, npc.height, DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+					Dust.NewDust(NPC.position, NPC.width, NPC.height, DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
+                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
 			}
 		}
-		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
+		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
 
 		private int attackCounter;
 		public override void SendExtraAI(BinaryWriter writer)
@@ -70,14 +71,14 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 					attackCounter--;
 				}
 
-				Player target = Main.player[npc.target];
-				if (attackCounter <= 0 && Vector2.Distance(npc.Center, target.Center) < 200 && Collision.CanHit(npc.Center, 1, 1, target.Center, 1, 1))
+				Player target = Main.player[NPC.target];
+				if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
 				{
-					Vector2 direction = (target.Center - npc.Center).SafeNormalize(Vector2.UnitX);
+					Vector2 direction = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
 					direction = direction.RotatedByRandom(MathHelper.ToRadians(10));
 
 					attackCounter = 500;
-					npc.netUpdate = true;
+					NPC.netUpdate = true;
 				}
 			}
 		}
@@ -88,29 +89,29 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 		public override void SetDefaults()
 		{
-			npc.CloneDefaults(NPCID.DiggerBody);
-			npc.aiStyle = -1;
-			npc.defense = 10;
-			npc.lifeMax = 1000;
-			npc.damage = 10;
-			npc.width = 58;
-			npc.height = 28;
+			NPC.CloneDefaults(NPCID.DiggerBody);
+			NPC.aiStyle = -1;
+			NPC.defense = 10;
+			NPC.lifeMax = 1000;
+			NPC.damage = 10;
+			NPC.width = 58;
+			NPC.height = 28;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 2000;  //boss life scale in expertmode
-			npc.damage = 20;  //boss damage increase in expermode
+			NPC.lifeMax = 2000;  //boss life scale in expertmode
+			NPC.damage = 20;  //boss damage increase in expermode
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 				for (int k = 0; k < 20; k++)
 				{
-					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreBody"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreBody"), 1f);
 			}
 		}
 	}
@@ -120,18 +121,18 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 		public override void SetDefaults()
 		{
-			npc.CloneDefaults(NPCID.DiggerTail);
-			npc.aiStyle = -1;
-			npc.defense = 10;
-			npc.width = 58;
-			npc.height = 26;
-			npc.lifeMax = 1000;
-			npc.damage = 10;
+			NPC.CloneDefaults(NPCID.DiggerTail);
+			NPC.aiStyle = -1;
+			NPC.defense = 10;
+			NPC.width = 58;
+			NPC.height = 26;
+			NPC.lifeMax = 1000;
+			NPC.damage = 10;
 		}
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
-			npc.lifeMax = 2000;  //boss life scale in expertmode
-			npc.damage = 20;  //boss damage increase in expermode
+			NPC.lifeMax = 2000;  //boss life scale in expertmode
+			NPC.damage = 20;  //boss damage increase in expermode
 		}
 
 		public override void Init()
@@ -142,13 +143,13 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
-			if (npc.life <= 0)
+			if (NPC.life <= 0)
 			{
 				for (int k = 0; k < 20; k++)
 				{
-					Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CrystalDiggerGoreTail"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreTail"), 1f);
 			}
 		}
 	}
@@ -194,73 +195,73 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 		public override void AI()
 		{
-			if (npc.localAI[1] == 0f)
+			if (NPC.localAI[1] == 0f)
 			{
-				npc.localAI[1] = 1f;
+				NPC.localAI[1] = 1f;
 				Init();
 			}
-			if (npc.ai[3] > 0f)
+			if (NPC.ai[3] > 0f)
 			{
-				npc.realLife = (int)npc.ai[3];
+				NPC.realLife = (int)NPC.ai[3];
 			}
-			if (!head && npc.timeLeft < 300)
+			if (!head && NPC.timeLeft < 300)
 			{
-				npc.timeLeft = 300;
+				NPC.timeLeft = 300;
 			}
-			if (npc.target < 0 || npc.target == 255 || Main.player[npc.target].dead)
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead)
 			{
-				npc.TargetClosest(true);
+				NPC.TargetClosest(true);
 			}
-			if (Main.player[npc.target].dead && npc.timeLeft > 300)
+			if (Main.player[NPC.target].dead && NPC.timeLeft > 300)
 			{
-				npc.timeLeft = 300;
+				NPC.timeLeft = 300;
 			}
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (!tail && npc.ai[0] == 0f)
+				if (!tail && NPC.ai[0] == 0f)
 				{
 					if (head)
 					{
-						npc.ai[3] = npc.whoAmI;
-						npc.realLife = npc.whoAmI;
-						npc.ai[2] = Main.rand.Next(minLength, maxLength + 1);
-						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), bodyType, npc.whoAmI);
+						NPC.ai[3] = NPC.whoAmI;
+						NPC.realLife = NPC.whoAmI;
+						NPC.ai[2] = Main.rand.Next(minLength, maxLength + 1);
+						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), bodyType, NPC.whoAmI);
 					}
-					else if (npc.ai[2] > 0f)
+					else if (NPC.ai[2] > 0f)
 					{
-						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), npc.type, npc.whoAmI);
+						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), NPC.type, NPC.whoAmI);
 					}
 					else
 					{
-						npc.ai[0] = NPC.NewNPC((int)(npc.position.X + npc.width / 1), (int)(npc.position.Y + npc.height), tailType, npc.whoAmI);
+						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), tailType, NPC.whoAmI);
 					}
-					Main.npc[(int)npc.ai[0]].ai[3] = npc.ai[3];
-					Main.npc[(int)npc.ai[0]].realLife = npc.realLife;
-					Main.npc[(int)npc.ai[0]].ai[1] = npc.whoAmI;
-					Main.npc[(int)npc.ai[0]].ai[2] = npc.ai[2] - 1f;
-					npc.netUpdate = true;
+					Main.npc[(int)NPC.ai[0]].ai[3] = NPC.ai[3];
+					Main.npc[(int)NPC.ai[0]].realLife = NPC.realLife;
+					Main.npc[(int)NPC.ai[0]].ai[1] = NPC.whoAmI;
+					Main.npc[(int)NPC.ai[0]].ai[2] = NPC.ai[2] - 1f;
+					NPC.netUpdate = true;
 				}
-				if (!head && (!Main.npc[(int)npc.ai[1]].active || Main.npc[(int)npc.ai[1]].type != headType && Main.npc[(int)npc.ai[1]].type != bodyType))
+				if (!head && (!Main.npc[(int)NPC.ai[1]].active || Main.npc[(int)NPC.ai[1]].type != headType && Main.npc[(int)NPC.ai[1]].type != bodyType))
 				{
-					npc.life = 0;
-					npc.HitEffect(0, 10.0);
-					npc.active = false;
+					NPC.life = 0;
+					NPC.HitEffect(0, 10.0);
+					NPC.active = false;
 				}
-				if (!tail && (!Main.npc[(int)npc.ai[0]].active || Main.npc[(int)npc.ai[0]].type != bodyType && Main.npc[(int)npc.ai[0]].type != tailType))
+				if (!tail && (!Main.npc[(int)NPC.ai[0]].active || Main.npc[(int)NPC.ai[0]].type != bodyType && Main.npc[(int)NPC.ai[0]].type != tailType))
 				{
-					npc.life = 0;
-					npc.HitEffect(0, 10.0);
-					npc.active = false;
+					NPC.life = 0;
+					NPC.HitEffect(0, 10.0);
+					NPC.active = false;
 				}
-				if (!npc.active && Main.netMode == NetmodeID.Server)
+				if (!NPC.active && Main.netMode == NetmodeID.Server)
 				{
-					NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
+					NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, NPC.whoAmI, -1f, 0f, 0f, 0, 0, 0);
 				}
 			}
-			int num180 = (int)(npc.position.X / 16f) - 1;
-			int num181 = (int)((npc.position.X + npc.width) / 16f) + 2;
-			int num182 = (int)(npc.position.Y / 16f) - 1;
-			int num183 = (int)((npc.position.Y + npc.height) / 16f) + 2;
+			int num180 = (int)(NPC.position.X / 16f) - 1;
+			int num181 = (int)((NPC.position.X + NPC.width) / 16f) + 2;
+			int num182 = (int)(NPC.position.Y / 16f) - 1;
+			int num183 = (int)((NPC.position.Y + NPC.height) / 16f) + 2;
 			if (num180 < 0)
 			{
 				num180 = 0;
@@ -284,21 +285,21 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					for (int num185 = num182; num185 < num183; num185++)
 					{
-						if (Main.tile[num184, num185] != null && (Main.tile[num184, num185].nactive() && (Main.tileSolid[(int)Main.tile[num184, num185].type] || Main.tileSolidTop[(int)Main.tile[num184, num185].type] && Main.tile[num184, num185].frameY == 0) || Main.tile[num184, num185].liquid > 64))
+						if (Main.tile[num184, num185] != null && (Main.tile[num184, num185].HasUnactuatedTile && (Main.tileSolid[(int)Main.tile[num184, num185].TileType] || Main.tileSolidTop[(int)Main.tile[num184, num185].TileType] && Main.tile[num184, num185].TileFrameY == 0) || Main.tile[num184, num185].liquid > 64))
 						{
 							Vector2 vector17;
 							vector17.X = num184 * 16;
 							vector17.Y = num185 * 16;
-							if (npc.position.X + npc.width > vector17.X && npc.position.X < vector17.X + 16f && npc.position.Y + (float)npc.height > vector17.Y && npc.position.Y < vector17.Y + 16f)
+							if (NPC.position.X + NPC.width > vector17.X && NPC.position.X < vector17.X + 16f && NPC.position.Y + (float)NPC.height > vector17.Y && NPC.position.Y < vector17.Y + 16f)
 							{
 								flag18 = true;
-								if (Main.rand.NextBool(100) && npc.behindTiles && Main.tile[num184, num185].nactive())
+								if (Main.rand.NextBool(100) && NPC.behindTiles && Main.tile[num184, num185].HasUnactuatedTile)
 								{
 									WorldGen.KillTile(num184, num185, true, true, false);
 								}
-								if (Main.netMode != NetmodeID.MultiplayerClient && Main.tile[num184, num185].type == 2)
+								if (Main.netMode != NetmodeID.MultiplayerClient && Main.tile[num184, num185].TileType == 2)
 								{
-									ushort arg_BFCA_0 = Main.tile[num184, num185 - 1].type;
+									ushort arg_BFCA_0 = Main.tile[num184, num185 - 1].TileType;
 								}
 							}
 						}
@@ -307,7 +308,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			}
 			if (!flag18 && head)
 			{
-				Rectangle rectangle = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
+				Rectangle rectangle = new Rectangle((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height);
 				int num186 = 1000;
 				bool flag19 = true;
 				for (int num187 = 0; num187 < 255; num187++)
@@ -329,20 +330,20 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			}
 			if (directional)
 			{
-				if (npc.velocity.X < 0f)
+				if (NPC.velocity.X < 0f)
 				{
-					npc.spriteDirection = 1;
+					NPC.spriteDirection = 1;
 				}
-				else if (npc.velocity.X > 0f)
+				else if (NPC.velocity.X > 0f)
 				{
-					npc.spriteDirection = -1;
+					NPC.spriteDirection = -1;
 				}
 			}
 			float num188 = speed;
 			float num189 = turnSpeed;
-			Vector2 vector18 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
-			float num191 = Main.player[npc.target].position.X + (float)(Main.player[npc.target].width / 2);
-			float num192 = Main.player[npc.target].position.Y + (float)(Main.player[npc.target].height / 2);
+			Vector2 vector18 = new Vector2(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
+			float num191 = Main.player[NPC.target].position.X + (float)(Main.player[NPC.target].width / 2);
+			float num192 = Main.player[NPC.target].position.Y + (float)(Main.player[NPC.target].height / 2);
 			num191 = (float)((int)(num191 / 16f) * 16);
 			num192 = (float)((int)(num192 / 16f) * 16);
 			vector18.X = (float)((int)(vector18.X / 16f) * 16);
@@ -350,35 +351,35 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			num191 -= vector18.X;
 			num192 -= vector18.Y;
 			float num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
-			if (npc.ai[1] > 0f && npc.ai[1] < (float)Main.npc.Length)
+			if (NPC.ai[1] > 0f && NPC.ai[1] < (float)Main.npc.Length)
 			{
 				try
 				{
-					vector18 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
-					num191 = Main.npc[(int)npc.ai[1]].position.X + (float)(Main.npc[(int)npc.ai[1]].width / 2) - vector18.X;
-					num192 = Main.npc[(int)npc.ai[1]].position.Y + (float)(Main.npc[(int)npc.ai[1]].height / 2) - vector18.Y;
+					vector18 = new Vector2(NPC.position.X + (float)NPC.width * 0.5f, NPC.position.Y + (float)NPC.height * 0.5f);
+					num191 = Main.npc[(int)NPC.ai[1]].position.X + (float)(Main.npc[(int)NPC.ai[1]].width / 2) - vector18.X;
+					num192 = Main.npc[(int)NPC.ai[1]].position.Y + (float)(Main.npc[(int)NPC.ai[1]].height / 2) - vector18.Y;
 				}
 				catch
 				{
 				}
-				npc.rotation = (float)System.Math.Atan2(num192, num191) + 1.57f;
+				NPC.rotation = (float)System.Math.Atan2(num192, num191) + 1.57f;
 				num193 = (float)System.Math.Sqrt((double)(num191 * num191 + num192 * num192));
-				int num194 = npc.width;
+				int num194 = NPC.width;
 				num193 = (num193 - (float)num194) / num193;
 				num191 *= num193;
 				num192 *= num193;
-				npc.velocity = Vector2.Zero;
-				npc.position.X = npc.position.X + num191;
-				npc.position.Y = npc.position.Y + num192;
+				NPC.velocity = Vector2.Zero;
+				NPC.position.X = NPC.position.X + num191;
+				NPC.position.Y = NPC.position.Y + num192;
 				if (directional)
 				{
 					if (num191 < 0f)
 					{
-						npc.spriteDirection = 1;
+						NPC.spriteDirection = 1;
 					}
 					if (num191 > 0f)
 					{
-						npc.spriteDirection = -1;
+						NPC.spriteDirection = -1;
 					}
 				}
 			}
@@ -386,49 +387,49 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			{
 				if (!flag18)
 				{
-					npc.TargetClosest(true);
-					npc.velocity.Y = npc.velocity.Y + 0.11f;
-					if (npc.velocity.Y > num188)
+					NPC.TargetClosest(true);
+					NPC.velocity.Y = NPC.velocity.Y + 0.11f;
+					if (NPC.velocity.Y > num188)
 					{
-						npc.velocity.Y = num188;
+						NPC.velocity.Y = num188;
 					}
-					if (System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y) < num188 * 0.4)
+					if (System.Math.Abs(NPC.velocity.X) + System.Math.Abs(NPC.velocity.Y) < num188 * 0.4)
 					{
-						if (npc.velocity.X < 0f)
+						if (NPC.velocity.X < 0f)
 						{
-							npc.velocity.X = npc.velocity.X - num189 * 1.1f;
+							NPC.velocity.X = NPC.velocity.X - num189 * 1.1f;
 						}
 						else
 						{
-							npc.velocity.X = npc.velocity.X + num189 * 1.1f;
+							NPC.velocity.X = NPC.velocity.X + num189 * 1.1f;
 						}
 					}
-					else if (npc.velocity.Y == num188)
+					else if (NPC.velocity.Y == num188)
 					{
-						if (npc.velocity.X < num191)
+						if (NPC.velocity.X < num191)
 						{
-							npc.velocity.X = npc.velocity.X + num189;
+							NPC.velocity.X = NPC.velocity.X + num189;
 						}
-						else if (npc.velocity.X > num191)
+						else if (NPC.velocity.X > num191)
 						{
-							npc.velocity.X = npc.velocity.X - num189;
+							NPC.velocity.X = NPC.velocity.X - num189;
 						}
 					}
-					else if (npc.velocity.Y > 4f)
+					else if (NPC.velocity.Y > 4f)
 					{
-						if (npc.velocity.X < 0f)
+						if (NPC.velocity.X < 0f)
 						{
-							npc.velocity.X = npc.velocity.X + num189 * 0.9f;
+							NPC.velocity.X = NPC.velocity.X + num189 * 0.9f;
 						}
 						else
 						{
-							npc.velocity.X = npc.velocity.X - num189 * 0.9f;
+							NPC.velocity.X = NPC.velocity.X - num189 * 0.9f;
 						}
 					}
 				}
 				else
 				{
-					if (!flies && npc.behindTiles && npc.soundDelay == 0)
+					if (!flies && NPC.behindTiles && NPC.soundDelay == 0)
 					{
 						float num195 = num193 / 40f;
 						if (num195 < 10f)
@@ -439,8 +440,8 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 						{
 							num195 = 20f;
 						}
-						npc.soundDelay = (int)num195;
-						Main.PlaySound(SoundID.Roar, npc.position, 1);
+						NPC.soundDelay = (int)num195;
+						SoundEngine.PlaySound(SoundID.Roar, NPC.position, 1);
 					}
 					num193 = (float)System.Math.Sqrt(num191 * num191 + num192 * num192);
 					float num196 = System.Math.Abs(num191);
@@ -460,15 +461,15 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 						}
 						if (flag20)
 						{
-							if (Main.netMode != NetmodeID.MultiplayerClient && npc.position.Y / 16f > (Main.rockLayer + Main.maxTilesY) / 2.0)
+							if (Main.netMode != NetmodeID.MultiplayerClient && NPC.position.Y / 16f > (Main.rockLayer + Main.maxTilesY) / 2.0)
 							{
-								npc.active = false;
-								int num200 = (int)npc.ai[0];
-								while (num200 > 0 && num200 < 200 && Main.npc[num200].active && Main.npc[num200].aiStyle == npc.aiStyle)
+								NPC.active = false;
+								int num200 = (int)NPC.ai[0];
+								while (num200 > 0 && num200 < 200 && Main.npc[num200].active && Main.npc[num200].aiStyle == NPC.aiStyle)
 								{
 									int num201 = (int)Main.npc[num200].ai[0];
 									Main.npc[num200].active = false;
-									npc.life = 0;
+									NPC.life = 0;
 									if (Main.netMode == NetmodeID.Server)
 									{
 										NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, num200, 0f, 0f, 0f, 0, 0, 0);
@@ -477,7 +478,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 								}
 								if (Main.netMode == NetmodeID.Server)
 								{
-									NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npc.whoAmI, 0f, 0f, 0f, 0, 0, 0);
+									NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, NPC.whoAmI, 0f, 0f, 0f, 0, 0, 0);
 								}
 							}
 							num191 = 0f;
@@ -485,82 +486,82 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 						}
 					}
 					bool flag21 = false;
-					if (npc.type == NPCID.WyvernHead)
+					if (NPC.type == NPCID.WyvernHead)
 					{
-						if ((npc.velocity.X > 0f && num191 < 0f || npc.velocity.X < 0f && num191 > 0f || npc.velocity.Y > 0f && num192 < 0f || npc.velocity.Y < 0f && num192 > 0f) && System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y) > num189 / 2f && num193 < 300f)
+						if ((NPC.velocity.X > 0f && num191 < 0f || NPC.velocity.X < 0f && num191 > 0f || NPC.velocity.Y > 0f && num192 < 0f || NPC.velocity.Y < 0f && num192 > 0f) && System.Math.Abs(NPC.velocity.X) + System.Math.Abs(NPC.velocity.Y) > num189 / 2f && num193 < 300f)
 						{
 							flag21 = true;
-							if (System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y) < num188)
+							if (System.Math.Abs(NPC.velocity.X) + System.Math.Abs(NPC.velocity.Y) < num188)
 							{
-								npc.velocity *= 1.1f;
+								NPC.velocity *= 1.1f;
 							}
 						}
-						if (npc.position.Y > Main.player[npc.target].position.Y || Main.player[npc.target].position.Y / 16f > Main.worldSurface || Main.player[npc.target].dead)
+						if (NPC.position.Y > Main.player[NPC.target].position.Y || Main.player[NPC.target].position.Y / 16f > Main.worldSurface || Main.player[NPC.target].dead)
 						{
 							flag21 = true;
-							if (System.Math.Abs(npc.velocity.X) < num188 / 2f)
+							if (System.Math.Abs(NPC.velocity.X) < num188 / 2f)
 							{
-								if (npc.velocity.X == 0f)
+								if (NPC.velocity.X == 0f)
 								{
-									npc.velocity.X = npc.velocity.X - npc.direction;
+									NPC.velocity.X = NPC.velocity.X - NPC.direction;
 								}
-								npc.velocity.X = npc.velocity.X * 1.1f;
+								NPC.velocity.X = NPC.velocity.X * 1.1f;
 							}
 							else
 							{
-								if (npc.velocity.Y > -num188)
+								if (NPC.velocity.Y > -num188)
 								{
-									npc.velocity.Y = npc.velocity.Y - num189;
+									NPC.velocity.Y = NPC.velocity.Y - num189;
 								}
 							}
 						}
 					}
 					if (!flag21)
 					{
-						if (npc.velocity.X > 0f && num191 > 0f || npc.velocity.X < 0f && num191 < 0f || npc.velocity.Y > 0f && num192 > 0f || npc.velocity.Y < 0f && num192 < 0f)
+						if (NPC.velocity.X > 0f && num191 > 0f || NPC.velocity.X < 0f && num191 < 0f || NPC.velocity.Y > 0f && num192 > 0f || NPC.velocity.Y < 0f && num192 < 0f)
 						{
-							if (npc.velocity.X < num191)
+							if (NPC.velocity.X < num191)
 							{
-								npc.velocity.X = npc.velocity.X + num189;
+								NPC.velocity.X = NPC.velocity.X + num189;
 							}
 							else
 							{
-								if (npc.velocity.X > num191)
+								if (NPC.velocity.X > num191)
 								{
-									npc.velocity.X = npc.velocity.X - num189;
+									NPC.velocity.X = NPC.velocity.X - num189;
 								}
 							}
-							if (npc.velocity.Y < num192)
+							if (NPC.velocity.Y < num192)
 							{
-								npc.velocity.Y = npc.velocity.Y + num189;
+								NPC.velocity.Y = NPC.velocity.Y + num189;
 							}
 							else
 							{
-								if (npc.velocity.Y > num192)
+								if (NPC.velocity.Y > num192)
 								{
-									npc.velocity.Y = npc.velocity.Y - num189;
+									NPC.velocity.Y = NPC.velocity.Y - num189;
 								}
 							}
-							if (System.Math.Abs(num192) < num188 * 0.2 && (npc.velocity.X > 0f && num191 < 0f || npc.velocity.X < 0f && num191 > 0f))
+							if (System.Math.Abs(num192) < num188 * 0.2 && (NPC.velocity.X > 0f && num191 < 0f || NPC.velocity.X < 0f && num191 > 0f))
 							{
-								if (npc.velocity.Y > 0f)
+								if (NPC.velocity.Y > 0f)
 								{
-									npc.velocity.Y = npc.velocity.Y + num189 * 2f;
+									NPC.velocity.Y = NPC.velocity.Y + num189 * 2f;
 								}
 								else
 								{
-									npc.velocity.Y = npc.velocity.Y - num189 * 2f;
+									NPC.velocity.Y = NPC.velocity.Y - num189 * 2f;
 								}
 							}
-							if (System.Math.Abs(num191) < num188 * 0.2 && (npc.velocity.Y > 0f && num192 < 0f || npc.velocity.Y < 0f && num192 > 0f))
+							if (System.Math.Abs(num191) < num188 * 0.2 && (NPC.velocity.Y > 0f && num192 < 0f || NPC.velocity.Y < 0f && num192 > 0f))
 							{
-								if (npc.velocity.X > 0f)
+								if (NPC.velocity.X > 0f)
 								{
-									npc.velocity.X = npc.velocity.X + num189 * 2f;
+									NPC.velocity.X = NPC.velocity.X + num189 * 2f;
 								}
 								else
 								{
-									npc.velocity.X = npc.velocity.X - num189 * 2f;
+									NPC.velocity.X = NPC.velocity.X - num189 * 2f;
 								}
 							}
 						}
@@ -568,73 +569,73 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 						{
 							if (num196 > num197)
 							{
-								if (npc.velocity.X < num191)
+								if (NPC.velocity.X < num191)
 								{
-									npc.velocity.X = npc.velocity.X + num189 * 1.1f;
+									NPC.velocity.X = NPC.velocity.X + num189 * 1.1f;
 								}
-								else if (npc.velocity.X > num191)
+								else if (NPC.velocity.X > num191)
 								{
-									npc.velocity.X = npc.velocity.X - num189 * 1.1f;
+									NPC.velocity.X = NPC.velocity.X - num189 * 1.1f;
 								}
-								if ((double)(System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y)) < (double)num188 * 0.5)
+								if ((double)(System.Math.Abs(NPC.velocity.X) + System.Math.Abs(NPC.velocity.Y)) < (double)num188 * 0.5)
 								{
-									if (npc.velocity.Y > 0f)
+									if (NPC.velocity.Y > 0f)
 									{
-										npc.velocity.Y = npc.velocity.Y + num189;
+										NPC.velocity.Y = NPC.velocity.Y + num189;
 									}
 									else
 									{
-										npc.velocity.Y = npc.velocity.Y - num189;
+										NPC.velocity.Y = NPC.velocity.Y - num189;
 									}
 								}
 							}
 							else
 							{
-								if (npc.velocity.Y < num192)
+								if (NPC.velocity.Y < num192)
 								{
-									npc.velocity.Y = npc.velocity.Y + num189 * 1.1f;
+									NPC.velocity.Y = NPC.velocity.Y + num189 * 1.1f;
 								}
-								else if (npc.velocity.Y > num192)
+								else if (NPC.velocity.Y > num192)
 								{
-									npc.velocity.Y = npc.velocity.Y - num189 * 1.1f;
+									NPC.velocity.Y = NPC.velocity.Y - num189 * 1.1f;
 								}
-								if ((double)(System.Math.Abs(npc.velocity.X) + System.Math.Abs(npc.velocity.Y)) < (double)num188 * 0.5)
+								if ((double)(System.Math.Abs(NPC.velocity.X) + System.Math.Abs(NPC.velocity.Y)) < (double)num188 * 0.5)
 								{
-									if (npc.velocity.X > 0f)
+									if (NPC.velocity.X > 0f)
 									{
-										npc.velocity.X = npc.velocity.X + num189;
+										NPC.velocity.X = NPC.velocity.X + num189;
 									}
 									else
 									{
-										npc.velocity.X = npc.velocity.X - num189;
+										NPC.velocity.X = NPC.velocity.X - num189;
 									}
 								}
 							}
 						}
 					}
 				}
-				npc.rotation = (float)System.Math.Atan2((double)npc.velocity.Y, (double)npc.velocity.X) + 1.57f;
+				NPC.rotation = (float)System.Math.Atan2((double)NPC.velocity.Y, (double)NPC.velocity.X) + 1.57f;
 				if (head)
 				{
 					if (flag18)
 					{
-						if (npc.localAI[0] != 1f)
+						if (NPC.localAI[0] != 1f)
 						{
-							npc.netUpdate = true;
+							NPC.netUpdate = true;
 						}
-						npc.localAI[0] = 1f;
+						NPC.localAI[0] = 1f;
 					}
 					else
 					{
-						if (npc.localAI[0] != 0f)
+						if (NPC.localAI[0] != 0f)
 						{
-							npc.netUpdate = true;
+							NPC.netUpdate = true;
 						}
-						npc.localAI[0] = 0f;
+						NPC.localAI[0] = 0f;
 					}
-					if ((npc.velocity.X > 0f && npc.oldVelocity.X < 0f || npc.velocity.X < 0f && npc.oldVelocity.X > 0f || npc.velocity.Y > 0f && npc.oldVelocity.Y < 0f || npc.velocity.Y < 0f && npc.oldVelocity.Y > 0f) && !npc.justHit)
+					if ((NPC.velocity.X > 0f && NPC.oldVelocity.X < 0f || NPC.velocity.X < 0f && NPC.oldVelocity.X > 0f || NPC.velocity.Y > 0f && NPC.oldVelocity.Y < 0f || NPC.velocity.Y < 0f && NPC.oldVelocity.Y > 0f) && !NPC.justHit)
 					{
-						npc.netUpdate = true;
+						NPC.netUpdate = true;
 						return;
 					}
 				}

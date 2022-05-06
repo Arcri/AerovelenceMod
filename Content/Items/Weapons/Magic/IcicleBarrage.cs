@@ -18,40 +18,39 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 		public override void SetStaticDefaults()
 		{
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.width = 46;
-			item.height = 52;
-			item.rare = ItemRarityID.Purple;
-			item.value = Item.sellPrice(0, 10, 50, 0);
+			Item.width = 46;
+			Item.height = 52;
+			Item.rare = ItemRarityID.Purple;
+			Item.value = Item.sellPrice(0, 10, 50, 0);
 
-			item.crit = 11;
-			item.mana = 20;
-			item.damage = 32;
-			item.knockBack = 6f;
+			Item.crit = 11;
+			Item.mana = 20;
+			Item.damage = 32;
+			Item.knockBack = 6f;
 
-			item.useTime = item.useAnimation = 65;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			Item.useTime = Item.useAnimation = 65;
+			Item.useStyle = ItemUseStyleID.Shoot;
 
-			item.magic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 
-			item.shootSpeed = 15f;
-			item.shoot = ModContent.ProjectileType<WallOfIce>();
+			Item.shootSpeed = 15f;
+			Item.shoot = ModContent.ProjectileType<WallOfIce>();
 
-			item.UseSound = SoundID.Item100;
+			Item.UseSound = SoundID.Item100;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
-			recipe.AddIngredient(ItemID.SoulofLight, 10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<FrostShard>(), 20)
+				.AddIngredient(ItemID.SoulofLight, 10)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -73,9 +72,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			int y = tileY;
 
-			for (; tileY < Main.maxTilesY - 10 && tileY - y < 30 && !WorldGen.SolidTile(tileX, tileY) && !TileID.Sets.Platforms[Main.tile[tileX, tileY].type]; tileY++) ;
+			for (; tileY < Main.maxTilesY - 10 && tileY - y < 30 && !WorldGen.SolidTile(tileX, tileY) && !TileID.Sets.Platforms[Main.tile[tileX, tileY].TileType]; tileY++) ;
 
-			if (!WorldGen.SolidTile(tileX, tileY) && !TileID.Sets.Platforms[Main.tile[tileX, tileY].type])
+			if (!WorldGen.SolidTile(tileX, tileY) && !TileID.Sets.Platforms[Main.tile[tileX, tileY].TileType])
 			{
 				return (false);
 			}

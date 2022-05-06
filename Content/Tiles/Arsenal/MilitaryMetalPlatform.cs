@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 {
     public class MilitaryMetalPlatform : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;

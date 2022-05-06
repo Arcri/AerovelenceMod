@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class FreshGlimmerwood : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 1.0f;
             Main.tileSolid[Type] = true;

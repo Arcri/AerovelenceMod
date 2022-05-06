@@ -21,30 +21,29 @@ namespace AerovelenceMod.Content.Items.Armor.Starglass
         {
             player.setBonus = "20% increased minion damage and increased minion knockback\nTaking damage will release damaging shards of crystal";
             player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
-            player.minionDamage += 0.15f;
-            player.minionKB += 0.05f;
+            player.GetDamage(DamageClass.Summon) += 0.15f;
+            player.GetKnockback(DamageClass.Summon).Base += 0.05f;
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 4;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 4;
         }
 		public override void UpdateEquip(Player player)
         {
             player.maxMinions += 2;
-            player.minionDamage += 0.05f;
+            player.GetDamage(DamageClass.Summon) += 0.05f;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 8);
-            modRecipe.AddIngredient(ItemID.CrystalShard, 5);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BurnshockBar>(), 8)
+                .AddIngredient(ItemID.CrystalShard, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

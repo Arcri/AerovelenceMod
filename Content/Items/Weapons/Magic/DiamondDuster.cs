@@ -9,29 +9,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Diamond Duster");
             Tooltip.SetDefault("A spell book found deep within the caverns");
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 20;
-            item.magic = true;
-            item.mana = 5;
-            item.width = 36;
-            item.height = 34;
-            item.useTime = 14;
-            item.useAnimation = 14;
-            item.UseSound = SoundID.Item101;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 1, 30, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("CrystalShard");
-            item.shootSpeed = 12f;
+            Item.crit = 4;
+            Item.damage = 20;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 5;
+            Item.width = 36;
+            Item.height = 34;
+            Item.useTime = 14;
+            Item.useAnimation = 14;
+            Item.UseSound = SoundID.Item101;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 1, 30, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("CrystalShard").Type;
+            Item.shootSpeed = 12f;
         }
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {

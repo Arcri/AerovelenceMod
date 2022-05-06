@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 {
 	public class SnowWall : ModWall
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;
 			drop = ItemType<SnowWallItem>();

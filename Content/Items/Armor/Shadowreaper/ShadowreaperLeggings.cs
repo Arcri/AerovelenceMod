@@ -14,12 +14,12 @@ namespace AerovelenceMod.Content.Items.Armor.Shadowreaper
         }
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 22;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 155;
+			Item.accessory = true;
+            Item.width = 22;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 155;
         }
 
         public override void UpdateAccessory(Player player, bool isVisible)

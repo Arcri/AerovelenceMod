@@ -5,7 +5,7 @@ namespace AerovelenceMod.Content.Buffs
 {
     public class LiftedSpiritsDebuff : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lifted Spirits");
             Description.SetDefault("'Oh god, a rat'");

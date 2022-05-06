@@ -9,60 +9,60 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     {
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 3;
+            Main.npcFrameCount[NPC.type] = 3;
         }
 
         private readonly int i;
 
         public override void SetDefaults()
         {
-            npc.aiStyle = 10;
-            npc.lifeMax = 100;
-            npc.damage = 12;
-            npc.defense = 8;
-            npc.knockBackResist = 0f;
-            npc.width = 20;
-            npc.height = 30;
-            npc.value = Item.buyPrice(0, 0, 60, 45);
-            npc.npcSlots = 1f;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = 10;
+            NPC.lifeMax = 100;
+            NPC.damage = 12;
+            NPC.defense = 8;
+            NPC.knockBackResist = 0f;
+            NPC.width = 20;
+            NPC.height = 30;
+            NPC.value = Item.buyPrice(0, 0, 60, 45);
+            NPC.npcSlots = 1f;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 150;
-            npc.damage = 20;
+            NPC.lifeMax = 150;
+            NPC.damage = 20;
         }
         public override void AI()
         {
             if (i % 215 == 10)
             {
                 Vector2 offset = new Vector2(0, -100);
-                Projectile.NewProjectile(npc.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileID.FrostBlastHostile, 6, 1f, Main.myPlayer);
+                Projectile.NewProjectile(NPC.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileID.FrostBlastHostile, 6, 1f, Main.myPlayer);
             }
         }
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
+            NPC.frameCounter++;
             {
-                if (npc.frameCounter < 6)
+                if (NPC.frameCounter < 6)
                 {
-                    npc.frame.Y = 0 * frameHeight;
+                    NPC.frame.Y = 0 * frameHeight;
                 }
-                else if (npc.frameCounter < 8)
+                else if (NPC.frameCounter < 8)
                 {
-                    npc.frame.Y = 1 * frameHeight;
+                    NPC.frame.Y = 1 * frameHeight;
                 }
-                else if (npc.frameCounter < 12)
+                else if (NPC.frameCounter < 12)
                 {
-                    npc.frame.Y = 2 * frameHeight;
+                    NPC.frame.Y = 2 * frameHeight;
                 }
                 else
                 {
-                    npc.frameCounter = 0;
+                    NPC.frameCounter = 0;
                 }
             }
         }

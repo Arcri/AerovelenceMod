@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class VoidArena : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
 			minPick = 59;

@@ -36,18 +36,18 @@ namespace AerovelenceMod.Common.ShieldSystem
 
         public sealed override void SetDefaults()
         {
-            item.accessory = true;
+            Item.accessory = true;
 
             SafeSetDefaults();
         }
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo0", $"{RealData.Capacity} HP capacity " + GetBonus(variableData.Capacity, false)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo1", $"{RealData.Delay} second delay " + GetBonus(variableData.Delay, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo2", $"{RealData.RechargeRate} second recharge rate " + GetBonus(variableData.RechargeRate, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo3", $"{RealData.HPPenalty} HP burden " + GetBonus(variableData.HPPenalty, true)));
-            tooltips.Add(new TooltipLine(mod, "ShieldInfo4", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
+            tooltips.Add(new TooltipLine(Mod, "ShieldInfo0", $"{RealData.Capacity} HP capacity " + GetBonus(variableData.Capacity, false)));
+            tooltips.Add(new TooltipLine(Mod, "ShieldInfo1", $"{RealData.Delay} second delay " + GetBonus(variableData.Delay, true)));
+            tooltips.Add(new TooltipLine(Mod, "ShieldInfo2", $"{RealData.RechargeRate} second recharge rate " + GetBonus(variableData.RechargeRate, true)));
+            tooltips.Add(new TooltipLine(Mod, "ShieldInfo3", $"{RealData.HPPenalty} HP burden " + GetBonus(variableData.HPPenalty, true)));
+            tooltips.Add(new TooltipLine(Mod, "ShieldInfo4", $"{RealData.Radius / 16d} tile radius " + GetBonus((float)(variableData.Radius / 16d), false)));
         }
 
         private string GetBonus(float variedVal, bool negativeDesired)
@@ -90,7 +90,7 @@ namespace AerovelenceMod.Common.ShieldSystem
             for (int i = 3; i < 3 + maxAccessoryIndex; i++)
             {
                 Item otherAccessory = Main.LocalPlayer.armor[i];
-                if (!otherAccessory.IsAir && !item.IsTheSameAs(otherAccessory) && otherAccessory.modItem is ModShield)
+                if (!otherAccessory.IsAir && !Item.IsTheSameAs(otherAccessory) && otherAccessory.modItem is ModShield)
                     return false;
             }
             return true;

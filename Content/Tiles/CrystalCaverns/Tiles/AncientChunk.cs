@@ -8,22 +8,22 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class AncientChunk : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            mineResist = 2.5f;
-            minPick = 200;
+            MineResist = 2.5f;
+            MinPick = 200;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = true;
             Main.tileBlockLight[Type] = true;
             AddMapEntry(new Color(046, 045, 072));
-            dustType = 59;
-            soundType = SoundID.Tink;
-            drop = ModContent.ItemType<Items.Placeables.Blocks.AncientChunk>();
+            DustType = 59;
+            SoundType = SoundID.Tink;
+            ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.AncientChunk>();
 
         }
-        public static Vector2 TileOffset => Lighting.lightMode > 1 ? Vector2.Zero : Vector2.One * 12;
+        public static Vector2 TileOffset => Lighting.LegacyEngine.Mode > 1 ? Vector2.Zero : Vector2.One * 12;
 
         public static Vector2 TileCustomPosition(int i, int j, Vector2? off = null)
         {
@@ -37,8 +37,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             {
                 zero = Vector2.Zero;
             }
-            int height = tile.frameY == 36 ? 18 : 16;
-            Main.spriteBatch.Draw(mod.GetTexture("Content/Tiles/CrystalCaverns/Tiles/AncientChunk_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            int height = tile.TileFrameY == 36 ? 18 : 16;
+            Main.EntitySpriteDraw(Mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/AncientChunk_Glowmask").Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
     }
 }

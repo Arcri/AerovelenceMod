@@ -15,25 +15,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.useTurn = true;
-			item.UseSound = SoundID.Item1;
-			item.crit = 7;
-            item.damage = 56;
-            item.melee = true;
-            item.width = 36;
-            item.height = 80; 
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 3, 25, 0);
-            item.rare = ItemRarityID.LightPurple;
-            item.autoReuse = false;
+			Item.useTurn = true;
+			Item.UseSound = SoundID.Item1;
+			Item.crit = 7;
+            Item.damage = 56;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 36;
+            Item.height = 80; 
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 3, 25, 0);
+            Item.rare = ItemRarityID.LightPurple;
+            Item.autoReuse = false;
         }
 		public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
 		{
 			target.AddBuff(BuffID.OnFire, 200);
-            Projectile.NewProjectile(target.position, target.velocity, ProjectileID.DD2ExplosiveTrapT3Explosion, item.damage / 2, player.whoAmI);
+            Projectile.NewProjectile(target.position, target.velocity, ProjectileID.DD2ExplosiveTrapT3Explosion, Item.damage / 2, player.whoAmI);
 		}
     }
 }

@@ -15,21 +15,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 40;
-            item.useTime = 40;
-            item.width = 50;
-            item.height = 18;
-            item.shoot = ModContent.ProjectileType<RainbowCannonProj1>();
-            item.UseSound = SoundID.Item67;
-            item.damage = 45;
-            item.knockBack = 2.5f;
-            item.shootSpeed = 16f;
-            item.noMelee = true;
-            item.value = 350000;
-            item.rare = ItemRarityID.Yellow;
-            item.magic = true;
-            item.mana = 20;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 40;
+            Item.useTime = 40;
+            Item.width = 50;
+            Item.height = 18;
+            Item.shoot = ModContent.ProjectileType<RainbowCannonProj1>();
+            Item.UseSound = SoundID.Item67;
+            Item.damage = 45;
+            Item.knockBack = 2.5f;
+            Item.shootSpeed = 16f;
+            Item.noMelee = true;
+            Item.value = 350000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 20;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -41,67 +41,67 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 12;
-            projectile.height = 12;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.alpha = 255;
-            projectile.ignoreWater = true;
-            projectile.scale = 1.25f;
+            Projectile.width = 12;
+            Projectile.height = 12;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.alpha = 255;
+            Projectile.ignoreWater = true;
+            Projectile.scale = 1.25f;
         }
         public override void AI()
         {
             int num433 = 1200;
-            if (projectile.type == ModContent.ProjectileType<RainbowCannonProj1>())
+            if (Projectile.type == ModContent.ProjectileType<RainbowCannonProj1>())
             {
-                if (projectile.owner == Main.myPlayer)
+                if (Projectile.owner == Main.myPlayer)
                 {
-                    projectile.localAI[0] += 1f;
-                    if (projectile.localAI[0] > 4f)
+                    Projectile.localAI[0] += 1f;
+                    if (Projectile.localAI[0] > 4f)
                     {
-                        projectile.localAI[0] = 3f;
-                        Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X * 0.001f, projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), projectile.damage, projectile.knockBack, projectile.owner);
+                        Projectile.localAI[0] = 3f;
+                        Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
-                    if (projectile.timeLeft > num433)
+                    if (Projectile.timeLeft > num433)
                     {
-                        projectile.timeLeft = num433;
+                        Projectile.timeLeft = num433;
                     }
                 }
-                projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 return;
             }
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                if (projectile.velocity.X > 0f)
+                if (Projectile.velocity.X > 0f)
                 {
-                    projectile.spriteDirection = -1;
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                    Projectile.spriteDirection = -1;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 }
                 else
                 {
-                    projectile.spriteDirection = 1;
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                    Projectile.spriteDirection = 1;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 }
-                projectile.localAI[0] = 1f;
+                Projectile.localAI[0] = 1f;
             }
-            projectile.velocity.X *= 0.98f;
-            projectile.velocity.Y *= 0.98f;
-            if (projectile.rotation == 0f)
+            Projectile.velocity.X *= 0.98f;
+            Projectile.velocity.Y *= 0.98f;
+            if (Projectile.rotation == 0f)
             {
-                projectile.alpha = 255;
+                Projectile.alpha = 255;
             }
-            else if (projectile.timeLeft < 10)
+            else if (Projectile.timeLeft < 10)
             {
-                projectile.alpha = 255 - (int)(255f * projectile.timeLeft / 10f);
+                Projectile.alpha = 255 - (int)(255f * Projectile.timeLeft / 10f);
             }
-            else if (projectile.timeLeft > num433 - 10)
+            else if (Projectile.timeLeft > num433 - 10)
             {
-                int num436 = num433 - projectile.timeLeft;
-                projectile.alpha = 255 - (int)(255f * num436 / 10f);
+                int num436 = num433 - Projectile.timeLeft;
+                Projectile.alpha = 255 - (int)(255f * num436 / 10f);
             }
             else
             {
-                projectile.alpha = 0;
+                Projectile.alpha = 0;
             }
         }
     }
@@ -110,65 +110,65 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 14;
-            projectile.height = 14;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.magic = true;
-            projectile.alpha = 255;
-            projectile.light = 0.3f;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.scale = 1.25f;
-            projectile.timeLeft = 50;
+            Projectile.width = 14;
+            Projectile.height = 14;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.alpha = 255;
+            Projectile.light = 0.3f;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.scale = 1.25f;
+            Projectile.timeLeft = 50;
         }
         public override void AI()
         {
             int num433 = 50;
-            if (projectile.type == ModContent.ProjectileType<RainbowCannonProj1>())
+            if (Projectile.type == ModContent.ProjectileType<RainbowCannonProj1>())
             {
-                if (projectile.owner == Main.myPlayer)
+                if (Projectile.owner == Main.myPlayer)
                 {
-                    projectile.localAI[0] += 1f;
-                    if (projectile.localAI[0] > 4f)
+                    Projectile.localAI[0] += 1f;
+                    if (Projectile.localAI[0] > 4f)
                     {
-                        projectile.localAI[0] = 3f;
-                        Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X * 0.001f, projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), projectile.damage, projectile.knockBack, projectile.owner);
+                        Projectile.localAI[0] = 3f;
+                        Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }
-                projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 return;
             }
-            if (projectile.localAI[0] == 0f)
+            if (Projectile.localAI[0] == 0f)
             {
-                if (projectile.velocity.X > 0f)
+                if (Projectile.velocity.X > 0f)
                 {
-                    projectile.spriteDirection = -1;
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                    Projectile.spriteDirection = -1;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 }
                 else
                 {
-                    projectile.spriteDirection = 1;
-                    projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) - 1.57f;
+                    Projectile.spriteDirection = 1;
+                    Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;
                 }
-                projectile.localAI[0] = 1f;
+                Projectile.localAI[0] = 1f;
             }
-            if (projectile.rotation == 0f)
+            if (Projectile.rotation == 0f)
             {
-                projectile.alpha = 255;
+                Projectile.alpha = 255;
             }
-            else if (projectile.timeLeft < 10)
+            else if (Projectile.timeLeft < 10)
             {
-                projectile.alpha = 255 - (int)(255f * projectile.timeLeft / 10f);
+                Projectile.alpha = 255 - (int)(255f * Projectile.timeLeft / 10f);
             }
-            else if (projectile.timeLeft > num433 - 10)
+            else if (Projectile.timeLeft > num433 - 10)
             {
-                int num436 = num433 - projectile.timeLeft;
-                projectile.alpha = 255 - (int)(255f * num436 / 10f);
+                int num436 = num433 - Projectile.timeLeft;
+                Projectile.alpha = 255 - (int)(255f * num436 / 10f);
             }
             else
             {
-                projectile.alpha = 0;
+                Projectile.alpha = 0;
             }
         }
     }

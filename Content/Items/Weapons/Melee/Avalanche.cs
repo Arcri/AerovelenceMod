@@ -15,22 +15,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item1;
-			item.crit = 20;
-            item.damage = 24;
-            item.melee = true;
-            item.width = 64;
-            item.height = 72;
-            item.useTime = 24;
-			item.useAnimation = 24;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 7, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.FrostBoltSword;
-            item.shootSpeed = 8f;
-            Item.staff[item.type] = true;
+			Item.UseSound = SoundID.Item1;
+			Item.crit = 20;
+            Item.damage = 24;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 64;
+            Item.height = 72;
+            Item.useTime = 24;
+			Item.useAnimation = 24;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 7, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.FrostBoltSword;
+            Item.shootSpeed = 8f;
+            Item.staff[Item.type] = true;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -48,12 +48,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
-            recipe.AddIngredient(ItemID.HellstoneBar, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 15)
+                .AddIngredient(ItemID.HellstoneBar, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
     public class AvalancheBoltProj : GlobalProjectile
@@ -94,7 +93,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
         {
-            if (projectile.type == ProjectileID.FrostBoltSword && Main.player[Main.myPlayer].GetModPlayer<AeroPlayer>().player.HeldItem.type == ModContent.ItemType<Avalanche>())
+            if (projectile.type == ProjectileID.FrostBoltSword && Main.player[Main.myPlayer].GetModPlayer<AeroPlayer>().Player.HeldItem.type == ModContent.ItemType<Avalanche>())
                 target.immune[projectile.owner] = 0;
         }
     }

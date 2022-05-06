@@ -15,33 +15,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {	
-            item.damage = 20;
-            item.melee = true;
-            item.width = item.height = 40;
+            Item.damage = 20;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = Item.height = 40;
             
-            item.useTime = item.useAnimation = 24;
+            Item.useTime = Item.useAnimation = 24;
             
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<GlacierProjectile>();
-            item.UseSound = SoundID.Item1;
-            item.shootSpeed = 10f;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = false;
+            Item.shoot = ModContent.ProjectileType<GlacierProjectile>();
+            Item.UseSound = SoundID.Item1;
+            Item.shootSpeed = 10f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-            recipe.AddRecipeGroup("IronBar", 5);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 8)
+                .AddRecipeGroup("IronBar", 5)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<GlacierProjectile>()] < 1;
     }
@@ -52,24 +51,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Glacier");
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 40;
+            Projectile.width = Projectile.height = 40;
             
-            projectile.aiStyle = 3;
+            Projectile.aiStyle = 3;
 
-            projectile.penetrate = -1;
+            Projectile.penetrate = -1;
 
-            projectile.ranged =  projectile.friendly = true;
+            Projectile.DamageType =  // projectile.friendly = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
-            projectile.melee = true;
+            Projectile.DamageType = DamageClass.Melee;
             
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
         }
 
         public override void AI()
@@ -77,22 +76,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i % 10 == 0)
             {
-                Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X - 2f, projectile.velocity.Y - 2, ModContent.ProjectileType<GlacierProjectile2>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X - 2f, Projectile.velocity.Y - 2, ModContent.ProjectileType<GlacierProjectile2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             }
-            int num622 = Dust.NewDust(new Vector2(projectile.position.X - projectile.velocity.X, projectile.position.Y - projectile.velocity.Y), projectile.width, projectile.height, 191, 0f, 0f, 100, default, 2f);
+            int num622 = Dust.NewDust(new Vector2(Projectile.position.X - Projectile.velocity.X, Projectile.position.Y - Projectile.velocity.Y), Projectile.width, Projectile.height, 191, 0f, 0f, 100, default, 2f);
             Main.dust[num622].noGravity = true;
             Main.dust[num622].scale = 0.5f;
-            projectile.rotation += 0.1f;
+            Projectile.rotation += 0.1f;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(Color.LightPink) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(Color.LightPink) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }
@@ -103,35 +102,35 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void SetDefaults()
         {
-            projectile.width = 30;
-            projectile.height = 10;
-            projectile.aiStyle = -1;
-            projectile.friendly = projectile.melee = projectile.ignoreWater = true;
-            projectile.hostile = projectile.tileCollide = false;
+            Projectile.width = 30;
+            Projectile.height = 10;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.hostile = Projectile.tileCollide = false;
             
-            projectile.penetrate = 3;
-            projectile.timeLeft = 200;
-            projectile.light = 0.5f;
+            Projectile.penetrate = 3;
+            Projectile.timeLeft = 200;
+            Projectile.light = 0.5f;
              
-            projectile.extraUpdates = 1;
+            Projectile.extraUpdates = 1;
         }
         public override void AI()  
         {
-            projectile.velocity *= 0.90f;
-            projectile.alpha = 255;
-            projectile.scale *= 0.99f;
-            if (projectile.alpha <= 0.4)
+            Projectile.velocity *= 0.90f;
+            Projectile.alpha = 255;
+            Projectile.scale *= 0.99f;
+            if (Projectile.alpha <= 0.4)
             {
-                projectile.active = false;
+                Projectile.active = false;
             }
             if (Main.rand.NextFloat() < 0.5f)
             {
-                int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, 0f, 0f, 0, default, 1.118421f);
+                int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 20, 0f, 0f, 0, default, 1.118421f);
                 Dust dust = Main.dust[dustIndex];
                 dust.noGravity = true;
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
         }
     }
 }

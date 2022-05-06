@@ -13,40 +13,39 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 	{
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 32;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 18, 30);
+			Item.width = 24;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 18, 30);
 
-			item.crit = 4;
-			item.mana = 15;
-			item.damage = 35;
-			item.knockBack = 1;
+			Item.crit = 4;
+			Item.mana = 15;
+			Item.damage = 35;
+			Item.knockBack = 1;
 
-			item.useTime = item.useAnimation = 25;
-			item.useStyle = ItemUseStyleID.HoldingUp;
+			Item.useTime = Item.useAnimation = 25;
+			Item.useStyle = ItemUseStyleID.HoldUp;
 			
-			item.summon = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 			
-			item.shootSpeed = 10;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.OmegaFireCrystalCore_Proj>();
+			Item.shootSpeed = 10;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.OmegaFireCrystalCore_Proj>();
 			
-			item.UseSound = SoundID.Item101;
+			Item.UseSound = SoundID.Item101;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ModContent.ItemType<EmberFragment>(), 15);
-			modRecipe.AddIngredient(ModContent.ItemType<ShiningCrystalCore>(), 1);
-			modRecipe.AddRecipeGroup("AerovelenceMod:CobaltBars", 15);
-			modRecipe.SetResult(this, 1);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<EmberFragment>(), 15)
+				.AddIngredient(ModContent.ItemType<ShiningCrystalCore>(), 1)
+				.AddRecipeGroup("AerovelenceMod:CobaltBars", 15)
+				.Register();
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.ownedProjectileCounts[item.shoot] < 10;
+			=> player.ownedProjectileCounts[Item.shoot] < 10;
 
 	}
 }

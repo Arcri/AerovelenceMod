@@ -19,24 +19,24 @@ namespace AerovelenceMod.Content.Items.Armor.Shadowreaper
 		public override void UpdateArmorSet(Player player)
 		{
 			player.setBonus = "Potato";
-			player.meleeDamage += 0.100f;
+			player.GetDamage(DamageClass.Melee) += 0.100f;
 			player.moveSpeed += 500.75f;
 			player.maxRunSpeed *= 5.0f;
 		} 	
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 150;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 150;
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.meleeDamage += 0.50f;
-			player.rangedDamage += 0.50f;
-			player.magicDamage += 0.50f;
+            player.GetDamage(DamageClass.Melee) += 0.50f;
+			player.GetDamage(DamageClass.Ranged) += 0.50f;
+			player.GetDamage(DamageClass.Magic) += 0.50f;
         }
     }
 }

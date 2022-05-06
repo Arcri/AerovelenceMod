@@ -13,11 +13,11 @@ namespace AerovelenceMod.Content.Items.Others.Quest
         }
         public override void SetDefaults()
         {
-            item.value = Item.sellPrice(0, 0, 20, 0);
-            item.maxStack = 1;
-            item.width = 30;
-            item.height = 28;
-            item.rare = ItemRarityID.Quest;
+            Item.value = Item.sellPrice(0, 0, 20, 0);
+            Item.maxStack = 1;
+            Item.width = 30;
+            Item.height = 28;
+            Item.rare = ItemRarityID.Quest;
         }
     }
 }

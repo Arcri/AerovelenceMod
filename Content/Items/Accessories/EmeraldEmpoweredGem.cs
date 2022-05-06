@@ -13,26 +13,25 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 20;
-            item.height = 20;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.rangedDamage += 0.1f;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+			player.GetDamage(DamageClass.Ranged) += 0.1f;
+            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
             modPlayer.EmeraldEmpoweredGem = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 3);
-            recipe.AddIngredient(ItemID.Emerald, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.FallenStar, 3)
+                .AddIngredient(ItemID.Emerald, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

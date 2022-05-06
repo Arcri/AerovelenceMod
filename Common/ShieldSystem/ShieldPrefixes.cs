@@ -34,8 +34,8 @@ namespace AerovelenceMod.Common.ShieldSystem
 				shieldPrefixes = new List<byte>();
 				foreach (ShieldPrefixType prefix in Enum.GetValues(typeof(ShieldPrefixType)))
 				{
-					mod.AddPrefix(prefix.ToString(), new ShieldPrefixes((byte)((int)prefix % 4 + 1), (int)prefix % 8 < 4 ? -1 : 1, (byte)prefix));
-					shieldPrefixes.Add(mod.GetPrefix(prefix.ToString()).Type);
+					Mod.AddPrefix(prefix.ToString(), new ShieldPrefixes((byte)((int)prefix % 4 + 1), (int)prefix % 8 < 4 ? -1 : 1, (byte)prefix));
+					shieldPrefixes.Add(Mod.GetPrefix(prefix.ToString()).Type);
 				}
 			}
 			return false;

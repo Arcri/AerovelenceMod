@@ -34,18 +34,17 @@ namespace AerovelenceMod.Content.Items.Equipment
 				this.value = 20000;
 			*/
 			// Instead of copying these values, we can clone and modify the ones we want to copy
-			item.CloneDefaults(ItemID.AmethystHook);
-			item.shootSpeed = 18f;
-			item.shoot = ModContent.ProjectileType<IronHookProjectile>();
+			Item.CloneDefaults(ItemID.AmethystHook);
+			Item.shootSpeed = 18f;
+			Item.shoot = ModContent.ProjectileType<IronHookProjectile>();
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.IronBar, 10);
-			recipe.AddIngredient(ItemID.Chain, 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.IronBar, 10)
+				.AddIngredient(ItemID.Chain, 5)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 
@@ -68,14 +67,14 @@ namespace AerovelenceMod.Content.Items.Equipment
 				this.tileCollide = false;
 				this.timeLeft *= 10;
 			*/
-			projectile.CloneDefaults(ProjectileID.GemHookAmethyst);
+			Projectile.CloneDefaults(ProjectileID.GemHookAmethyst);
 		}
 		public override bool? CanUseGrapple(Player player)
 		{
 			int hooksOut = 0;
 			for (int l = 0; l < 1000; l++)
 			{
-				if (Main.projectile[l].active && Main.projectile[l].owner == Main.myPlayer && Main.projectile[l].type == projectile.type)
+				if (Main.projectile[l].active && Main.projectile[l].owner == Main.myPlayer && Main.projectile[l].type == Projectile.type)
 				{
 					hooksOut++;
 				}
@@ -104,16 +103,16 @@ namespace AerovelenceMod.Content.Items.Equipment
 		}
 		public override void GrappleTargetPoint(Player player, ref float grappleX, ref float grappleY)
 		{
-			Vector2 dirToPlayer = projectile.DirectionTo(player.Center);
+			Vector2 dirToPlayer = Projectile.DirectionTo(player.Center);
 			float hangDist = 50f;
 			grappleX += dirToPlayer.X * hangDist;
 			grappleY += dirToPlayer.Y * hangDist;
 		}
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Items/Equipment/IronHookChain");
-			Vector2 vector = projectile.Center;
-			Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;
+			Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Equipment/IronHookChain");
+			Vector2 vector = Projectile.Center;
+			Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter;
 			Rectangle? sourceRectangle = null;
 			Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
 			float num = texture.Height;
@@ -141,7 +140,7 @@ namespace AerovelenceMod.Content.Items.Equipment
 					vector += value * num;
 					vector2 = mountedCenter - vector;
 					Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16.0));
-					color = projectile.GetAlpha(color);
+					color = Projectile.GetAlpha(color);
 					Main.spriteBatch.Draw(texture, vector - Main.screenPosition, sourceRectangle, color, rotation, origin, 1f, SpriteEffects.None, 0f);
 				}
 			}

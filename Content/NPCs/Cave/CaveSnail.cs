@@ -9,24 +9,24 @@ namespace AerovelenceMod.Content.NPCs.Cave
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cave Snail");
-            Main.npcFrameCount[npc.type] = 6;
+            Main.npcFrameCount[NPC.type] = 6;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 67;
-            npc.lifeMax = 30;
-            npc.defense = 5;
-            npc.knockBackResist = 0f;
-            npc.width = 38;
-            npc.height = 18;
-            npc.value = Item.buyPrice(0, 0, 4, 50);
-            npc.lavaImmune = true;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
-            npc.damage = 0;
-            npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath1;
-            npc.buffImmune[24] = true;
+            NPC.aiStyle = 67;
+            NPC.lifeMax = 30;
+            NPC.defense = 5;
+            NPC.knockBackResist = 0f;
+            NPC.width = 38;
+            NPC.height = 18;
+            NPC.value = Item.buyPrice(0, 0, 4, 50);
+            NPC.lavaImmune = true;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
+            NPC.damage = 0;
+            NPC.HitSound = SoundID.NPCHit2;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.buffImmune[24] = true;
         }
         private const int Frame_AdobeSnail_0 = 0;
         private const int Frame_AdobeSnail_1 = 1;
@@ -38,39 +38,39 @@ namespace AerovelenceMod.Content.NPCs.Cave
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
-            if (npc.frameCounter < 10)
+            NPC.frameCounter++;
+            if (NPC.frameCounter < 10)
             {
-                npc.frame.Y = Frame_AdobeSnail_0 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_0 * frameHeight;
             }
-            else if (npc.frameCounter < 20)
+            else if (NPC.frameCounter < 20)
             {
-                npc.frame.Y = Frame_AdobeSnail_1 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_1 * frameHeight;
             }
-            else if (npc.frameCounter < 30)
+            else if (NPC.frameCounter < 30)
             {
-                npc.frame.Y = Frame_AdobeSnail_2 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_2 * frameHeight;
             }
-            else if (npc.frameCounter < 40)
+            else if (NPC.frameCounter < 40)
             {
-                npc.frame.Y = Frame_AdobeSnail_3 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_3 * frameHeight;
             }
-            else if (npc.frameCounter < 50)
+            else if (NPC.frameCounter < 50)
             {
-                npc.frame.Y = Frame_AdobeSnail_4 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_4 * frameHeight;
             }
-            else if (npc.frameCounter < 60)
+            else if (NPC.frameCounter < 60)
             {
-                npc.frame.Y = Frame_AdobeSnail_5 * frameHeight;
+                NPC.frame.Y = Frame_AdobeSnail_5 * frameHeight;
             }
             else
             {
-                npc.frameCounter = 0;
+                NPC.frameCounter = 0;
             }
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.player.ZoneRockLayerHeight ? .2f : 0f;
+            return spawnInfo.Player.ZoneRockLayerHeight ? .2f : 0f;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Buffs
 {
     public class BurnshineStaffBuff: ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Neutron Star");
 			Description.SetDefault("A neutron star is protecting you");

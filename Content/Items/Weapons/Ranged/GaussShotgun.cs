@@ -17,22 +17,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			item.damage = 21;
-			item.rare = ItemRarityID.Yellow;
-			item.width = 58;
-			item.height = 20;
-			item.useAnimation = 40;
-			item.useTime = 40;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.shootSpeed = 7f;
-			item.knockBack = 6f;
-			item.ranged = true;
-			item.autoReuse = true;
-			item.noMelee = true;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.shoot = ProjectileID.Bullet;
-			item.UseSound = SoundID.Item92;
-			item.useAmmo = AmmoID.Bullet;
+			Item.damage = 21;
+			Item.rare = ItemRarityID.Yellow;
+			Item.width = 58;
+			Item.height = 20;
+			Item.useAnimation = 40;
+			Item.useTime = 40;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.shootSpeed = 7f;
+			Item.knockBack = 6f;
+			Item.DamageType = DamageClass.Ranged;
+			Item.autoReuse = true;
+			Item.noMelee = true;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.shoot = ProjectileID.Bullet;
+			Item.UseSound = SoundID.Item92;
+			Item.useAmmo = AmmoID.Bullet;
 		}
 		public override Vector2? HoldoutOffset()
 		{

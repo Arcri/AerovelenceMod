@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
     public class ElectricTravelPylon : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
@@ -43,8 +43,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			i -= Main.tile[i, j].frameX / 18 % 2;
-			j -= Main.tile[i, j].frameY / 18 % 3;
+			i -= Main.tile[i, j].TileFrameX / 18 % 2;
+			j -= Main.tile[i, j].TileFrameY / 18 % 3;
 			Vector2 position = new Vector2(i * 16, (j - 3) * 16);
 			Item.NewItem(i * 16, j * 16, 64, 32, ItemType<ElectricTravelPylonItem>());
 			foreach (KeyValuePair<Vector2, Vector2> entry in AeroWorld.ETPLinks)
@@ -56,11 +56,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			}
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			var player = Main.LocalPlayer.GetModPlayer<AeroPlayer>();
-			i -= Main.tile[i, j].frameX / 18 % 2;
-			j -= Main.tile[i, j].frameY / 18 % 3;
+			i -= Main.tile[i, j].TileFrameX / 18 % 2;
+			j -= Main.tile[i, j].TileFrameY / 18 % 3;
 			Vector2 position = new Vector2(i * 16, (j - 3) * 16);
 			if (!player.TravellingByETP)
 			{
@@ -117,8 +117,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		}
 		public override bool CanKillTile(int i, int j, ref bool blockDamaged)
 		{
-			i -= Main.tile[i, j].frameX / 18 % 2;
-			j -= Main.tile[i, j].frameY / 18 % 3;
+			i -= Main.tile[i, j].TileFrameX / 18 % 2;
+			j -= Main.tile[i, j].TileFrameY / 18 % 3;
 			Vector2 position = new Vector2(i * 16, (j - 3) * 16);
 			if (Main.netMode > NetmodeID.SinglePlayer && Main.player.Any(p => p.active && p.GetModPlayer<AeroPlayer>().ETPDestination == new Vector2(AeroWorld.ETPLinks[position].X, AeroWorld.ETPLinks[position].Y + 40f)))
 			{

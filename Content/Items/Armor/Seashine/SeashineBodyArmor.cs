@@ -14,30 +14,29 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
         } 			
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 3;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 3;
         }
 
         public override void UpdateEquip(Player player)
         {
-			player.magicCrit += 3;
-            player.rangedCrit += 3;
-            player.meleeCrit += 3;
-            player.minionKB += 0.02f;
+			player.GetCritChance(DamageClass.Magic) += 3;
+            player.GetCritChance(DamageClass.Ranged) += 3;
+            player.GetCritChance(DamageClass.Melee) += 3;
+            player.GetKnockback(DamageClass.Summon).Base += 0.02f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.SandBlock, 25);
-            modRecipe.AddIngredient(ItemID.Seashell, 5);
-            modRecipe.AddIngredient(ItemID.Starfish, 5);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.SandBlock, 25)
+                .AddIngredient(ItemID.Seashell, 5)
+                .AddIngredient(ItemID.Starfish, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

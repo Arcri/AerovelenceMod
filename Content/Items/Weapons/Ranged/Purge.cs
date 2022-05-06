@@ -15,22 +15,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-			item.value = Item.sellPrice(0, 25, 0, 0);
-			item.UseSound = SoundID.Item40;
-			item.crit = 20;
-            item.ranged = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 13;
-			item.useAnimation = 13;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.rare = ItemRarityID.Cyan;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Bullet;
-			item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 8f;
+			Item.value = Item.sellPrice(0, 25, 0, 0);
+			Item.UseSound = SoundID.Item40;
+			Item.crit = 20;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 13;
+			Item.useAnimation = 13;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.rare = ItemRarityID.Cyan;
+            Item.autoReuse = true;
+            Item.shoot = AmmoID.Bullet;
+			Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 8f;
         }
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

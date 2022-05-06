@@ -14,23 +14,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item41;
-            item.crit = 4;
-            item.damage = 11;
-            item.ranged = true;
-            item.width = 46;
-            item.height = 28;
-            item.useTime = 10;
-            item.useAnimation = 10;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 0;
-            item.value = Item.sellPrice(0, 9, 0, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 8f;
+            Item.UseSound = SoundID.Item41;
+            Item.crit = 4;
+            Item.damage = 11;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 46;
+            Item.height = 28;
+            Item.useTime = 10;
+            Item.useAnimation = 10;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 0;
+            Item.value = Item.sellPrice(0, 9, 0, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.Bullet;
+            Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 8f;
         }
         public override bool ConsumeAmmo(Player player)
         {
@@ -54,14 +54,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.Minishark, 1);
-            modRecipe.AddIngredient(ItemID.FlareGun, 1);
-            modRecipe.AddIngredient(ItemID.IllegalGunParts, 1);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 15);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.Minishark, 1)
+                .AddIngredient(ItemID.FlareGun, 1)
+                .AddIngredient(ItemID.IllegalGunParts, 1)
+                .AddIngredient(ItemID.HellstoneBar, 15)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

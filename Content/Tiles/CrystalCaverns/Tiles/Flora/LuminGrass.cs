@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 {
 	public class LuminGrass : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileCut[Type] = true;
@@ -27,9 +27,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
 			Color colour = Color.White;
 
-			Texture2D glow = ModContent.GetTexture("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminGrass_Glow");
+			Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminGrass_Glow");
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
-			spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.frameX, tile.frameY, 16, 16), colour);
+			spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), colour);
 		}
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{

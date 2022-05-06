@@ -17,27 +17,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 
         public override void SetDefaults()
         {
-            item.mana = 8;
-            item.damage = 26;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.noMelee = true;
-            item.knockBack = 1f;
-            item.rare = ItemRarityID.Pink;
-            item.value = Item.sellPrice(0, 2, 0, 0);
-            item.UseSound = SoundID.Item8;
-            item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<BurningNeutronStar>();
-            item.shootSpeed = 0f;
-            item.summon = true;
-            item.buffType = ModContent.BuffType<BurnshineStaffBuff>();
+            Item.mana = 8;
+            Item.damage = 26;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.noMelee = true;
+            Item.knockBack = 1f;
+            Item.rare = ItemRarityID.Pink;
+            Item.value = Item.sellPrice(0, 2, 0, 0);
+            Item.UseSound = SoundID.Item8;
+            Item.autoReuse = false;
+            Item.shoot = ModContent.ProjectileType<BurningNeutronStar>();
+            Item.shootSpeed = 0f;
+            Item.DamageType = DamageClass.Summon;
+            Item.buffType = ModContent.BuffType<BurnshineStaffBuff>();
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            player.AddBuff(item.buffType, 2);
+            player.AddBuff(Item.buffType, 2);
             position = Main.MouseWorld;
             return true;
         }

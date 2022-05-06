@@ -12,14 +12,14 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.VoidReaver
 
         public override void SetDefaults()
         {
-            projectile.width = 200;
-            projectile.height = 200;
-            projectile.aiStyle = 18;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.penetrate = 999;
-            projectile.timeLeft = 600;
-            projectile.alpha = 100;
+            Projectile.width = 200;
+            Projectile.height = 200;
+            Projectile.aiStyle = 18;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.penetrate = 999;
+            Projectile.timeLeft = 600;
+            Projectile.alpha = 100;
         }
     }
 }

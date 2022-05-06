@@ -17,26 +17,25 @@ namespace AerovelenceMod.Content.Items.Placeables.CrystalCaverns
 
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 48;
-            item.maxStack = 999;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.consumable = true;
-            item.createTile = ModContent.TileType<ElectricTravelPylon>();
+            Item.width = 32;
+            Item.height = 48;
+            Item.maxStack = 999;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<ElectricTravelPylon>();
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 9);
-            modRecipe.AddIngredient(RecipeGroupID.IronBar, 6);
-            modRecipe.AddIngredient(ItemID.Wire, 12);
-            modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CavernCrystal>(), 9)
+                .AddIngredient(RecipeGroupID.IronBar, 6)
+                .AddIngredient(ItemID.Wire, 12)
+                .AddTile(ModContent.TileType<CrystallineFabricator>())
+                .Register();
         }
     }
 }

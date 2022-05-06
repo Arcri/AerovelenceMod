@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
 {
     public class BurnshockOreBlock : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 1.0f;
 			minPick = 180;

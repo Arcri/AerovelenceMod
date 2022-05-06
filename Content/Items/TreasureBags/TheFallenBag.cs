@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 {
 	public class TheFallenBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("TheFallen");
+		public override int BossBagNPC => Mod.Find<ModNPC>("TheFallen").Type;
 
 		public override void SetStaticDefaults()
 		{
@@ -16,12 +16,12 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 42;
-			item.height = 32;
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 42;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
 		}
 
 		public override bool CanRightClick()
@@ -31,9 +31,9 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(mod.ItemType("GlassDeflector"));
+			player.QuickSpawnItem(Mod.Find<ModItem>("GlassDeflector").Type);
 			player.QuickSpawnItem(ItemID.GoldCoin, 15);
-			player.QuickSpawnItem(mod.ItemType("CrystalShard"), Main.rand.Next(15) + 15);
+			player.QuickSpawnItem(Mod.Find<ModItem>("CrystalShard").Type, Main.rand.Next(15) + 15);
 
 			int drop = Main.rand.Next(3);
 
@@ -42,16 +42,16 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 			switch (Main.rand.Next(5))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("CrystalKnife"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("CrystalKnife").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(mod.ItemType("WindboundWave"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("WindboundWave").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("OzoneShredder"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("OzoneShredder").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(mod.ItemType("StormRazor"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("StormRazor").Type);
 					break;
 			}
 		}

@@ -26,29 +26,28 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
         } 	
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 6;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 6;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.magicDamage += 0.1f;
+            player.GetDamage(DamageClass.Magic) += 0.1f;
             player.manaCost -= 0.1f;
             player.statManaMax2 += 35;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-            modRecipe.AddIngredient(ModContent.ItemType<KelvinCore>(), 1);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 8);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 8)
+                .AddIngredient(ModContent.ItemType<KelvinCore>(), 1)
+                .AddIngredient(ItemID.IceBlock, 35)
+                .AddIngredient(ItemID.HellstoneBar, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

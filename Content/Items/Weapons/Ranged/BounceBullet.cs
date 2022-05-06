@@ -9,20 +9,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 3;
             DisplayName.SetDefault("Power Cloud");
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 30;
-            projectile.height = 16;
+            Projectile.width = 30;
+            Projectile.height = 16;
             //Dimensions should always be of the upscaled sprite (or the framesize thereof).
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.timeLeft = 600;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.timeLeft = 600;
             //Ensure the projectile doesn't take up extra, unnecessary projectile slots in Main.projectile[]. Lasts for 10 sec (plenty of time).
-            projectile.penetrate = 2;
+            Projectile.penetrate = 2;
             //Number of bounces, easily modified.
         }
 
@@ -41,16 +41,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 NPC npc = Main.npc[i];
 
-                if (!npc.friendly && npc.lifeMax > 5 && npc.type != NPCID.TargetDummy && !npc.immortal && npc.immune[projectile.owner] == 0 && npc.whoAmI != target.whoAmI && !npc.townNPC && projectile.DistanceSQ(npc.Center) < 102400f && Collision.CanHitLine(projectile.Center, projectile.width, projectile.height, npc.Center, npc.width, npc.height) && npc.active && npc.life > 0)
+                if (!npc.friendly && npc.lifeMax > 5 && npc.type != NPCID.TargetDummy && !npc.immortal && npc.immune[Projectile.owner] == 0 && npc.whoAmI != target.whoAmI && !npc.townNPC && Projectile.DistanceSQ(npc.Center) < 102400f && Collision.CanHitLine(Projectile.Center, Projectile.width, Projectile.height, npc.Center, npc.width, npc.height) && npc.active && npc.life > 0)
                 //Living, active, hostile NPCs that aren't critters/townies/target dummies, aren't immortal, haven't just been hit by the player, can be hit (collision line), and are within 20 tiles
                 {
-                    projectile.velocity = projectile.DirectionTo(npc.Center + (npc.velocity * 1.8f)) * projectile.velocity.Length();
-                    projectile.timeLeft = 600;
+                    Projectile.velocity = Projectile.DirectionTo(npc.Center + (npc.velocity * 1.8f)) * Projectile.velocity.Length();
+                    Projectile.timeLeft = 600;
                     //reset timeLeft
                     return;
                 }
             }
-            projectile.Kill();
+            Projectile.Kill();
             //Kill the projectile then and there if there are no other NPCs.
         }
 
@@ -59,12 +59,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             base.AI();
 
             //Animation
-            if (++projectile.frameCounter >= 3)
+            if (++Projectile.frameCounter >= 3)
             {
-                projectile.frameCounter = 0;
-                if (++projectile.frame >= 3)
+                Projectile.frameCounter = 0;
+                if (++Projectile.frame >= 3)
                 {
-                    projectile.frame = 0;
+                    Projectile.frame = 0;
                 }
             }
         }

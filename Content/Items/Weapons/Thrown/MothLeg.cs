@@ -16,24 +16,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {	
-            item.crit = 8;
-            item.damage = 20;
-            item.melee = true;
-            item.width = 20;
-            item.height = 30;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("MothLegProjectile");
-            item.UseSound = SoundID.Item1;
-            item.shootSpeed = 20f;
+            Item.crit = 8;
+            Item.damage = 20;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 20;
+            Item.height = 30;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("MothLegProjectile").Type;
+            Item.UseSound = SoundID.Item1;
+            Item.shootSpeed = 20f;
         }
 
 
@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             for (int i = 0; i < 1000; ++i)
             {
-                if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot)
+                if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == Item.shoot)
                 {
                     return false;
                 }
@@ -59,33 +59,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void SetDefaults()
         {
-            projectile.width = 90;
-            projectile.height = 82;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.magic = false;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 600;
+            Projectile.width = 90;
+            Projectile.height = 82;
+            Projectile.aiStyle = 3;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            // projectile.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 600;
         }
 
         public override void AI()
         {
-            int num622 = Dust.NewDust(new Vector2(projectile.position.X - projectile.velocity.X, projectile.position.Y - projectile.velocity.Y), projectile.width, projectile.height, 191, 0f, 0f, 100, default, 2f);
+            int num622 = Dust.NewDust(new Vector2(Projectile.position.X - Projectile.velocity.X, Projectile.position.Y - Projectile.velocity.Y), Projectile.width, Projectile.height, 191, 0f, 0f, 100, default, 2f);
             Main.dust[num622].noGravity = true;
             Main.dust[num622].scale = 0.5f;
-            projectile.rotation += 0.05f;
+            Projectile.rotation += 0.05f;
         }
         public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit)
         {
-            if (projectile.tileCollide)
+            if (Projectile.tileCollide)
             {
-                int proj = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<MothLegProj2>(), projectile.damage, projectile.knockBack, projectile.owner, target.whoAmI);
+                int proj = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<MothLegProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner, target.whoAmI);
                 if (Main.netMode != NetmodeID.Server)
                 {
                     AerovelenceMod.primitives.CreateTrail(new LegPrimTrail(Main.projectile[proj]));
                 }
-                target.immune[projectile.owner] = 3;
+                target.immune[Projectile.owner] = 3;
             }
         }
     }
@@ -98,51 +98,51 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 		}
 
         private NPC Target {
-			get => Main.npc[(int)projectile.ai[1]];
-			set { projectile.ai[1] = value.whoAmI; }
+			get => Main.npc[(int)Projectile.ai[1]];
+			set { Projectile.ai[1] = value.whoAmI; }
 		}
 
 		private Vector2 Origin {
-			get => new Vector2(projectile.localAI[0], projectile.localAI[1]);
+			get => new Vector2(Projectile.localAI[0], Projectile.localAI[1]);
 			set {
-				projectile.localAI[0] = value.X;
-				projectile.localAI[1] = value.Y;
+				Projectile.localAI[0] = value.X;
+				Projectile.localAI[1] = value.Y;
 			}
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.penetrate = 5;
-			projectile.timeLeft = 300;
-			projectile.aiStyle = -1;
-			projectile.height = 7;
-			projectile.width = 7;
-            projectile.tileCollide = false;
-			projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.penetrate = 5;
+			Projectile.timeLeft = 300;
+			Projectile.aiStyle = -1;
+			Projectile.height = 7;
+			Projectile.width = 7;
+            Projectile.tileCollide = false;
+			Projectile.alpha = 255;
 		}
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			projectile.velocity = Vector2.Zero;
-			hit[projectile.penetrate - 1] = target;
+			Projectile.velocity = Vector2.Zero;
+			hit[Projectile.penetrate - 1] = target;
 			target = TargetNext(target);
 			if (target != null)
             {
-                projectile.Center = target.Center;
+                Projectile.Center = target.Center;
             }
 			else
-				projectile.Kill();
+				Projectile.Kill();
 
-			projectile.netUpdate = true;
+			Projectile.netUpdate = true;
 		}
         private NPC TargetNext(NPC current)
 		{
 			float range = 25 * 14;
 			range *= range;
 			NPC target = null;
-			var center = projectile.Center;
+			var center = Projectile.Center;
 			for (int i = 0; i < 200; ++i) {
 				NPC npc = Main.npc[i];
 				//if npc is a valid target (active, not friendly, and not a critter)

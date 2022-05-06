@@ -13,19 +13,18 @@ namespace AerovelenceMod.Content.Items.Others.Crafting
         }		
         public override void SetDefaults()
         {
-			item.maxStack = 999;
-            item.width = 26;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
+			Item.maxStack = 999;
+            Item.width = 26;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 3);
-            recipe.AddTile(TileID.Furnaces);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CavernCrystal>(), 3)
+                .AddTile(TileID.Furnaces)
+                .Register();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public sealed class CrabBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Seashine Crab");
 			Description.SetDefault("");

@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
     public class GlimmeringDoorClosed : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			dustType = 59;

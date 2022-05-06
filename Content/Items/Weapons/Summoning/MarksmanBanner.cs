@@ -19,29 +19,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 		}
 		public override void SetDefaults()
 		{
-			item.width = item.height = 22;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 81, 20);
+			Item.width = Item.height = 22;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 81, 20);
 
-			item.crit = 4;
-			item.mana = 12;
-			item.damage = 25;
-			item.knockBack = 3f;
+			Item.crit = 4;
+			Item.mana = 12;
+			Item.damage = 25;
+			Item.knockBack = 3f;
 			
-			item.useTime = item.useAnimation = 25;
-			item.useStyle = ItemUseStyleID.HoldingUp;
+			Item.useTime = Item.useAnimation = 25;
+			Item.useStyle = ItemUseStyleID.HoldUp;
             
-			item.summon = true;
-			item.noMelee = true;
-			item.useTurn = false;
+			Item.DamageType = DamageClass.Summon;
+			Item.noMelee = true;
+			Item.useTurn = false;
 
-			item.buffTime = 3600;
-			item.buffType = ModContent.BuffType<HuntressBuff>();
+			Item.buffTime = 3600;
+			Item.buffType = ModContent.BuffType<HuntressBuff>();
 
-			item.shootSpeed = 10f;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.Huntress>();
+			Item.shootSpeed = 10f;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.Huntress>();
 			
-			item.UseSound = SoundID.Item44;
+			Item.UseSound = SoundID.Item44;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 				damage += 7;
 			}
 
-			player.AddBuff(item.buffType, item.buffTime);
+			player.AddBuff(Item.buffType, Item.buffTime);
 			Projectile.NewProjectile(Main.MouseWorld, Vector2.Zero, type, damage, knockBack, player.whoAmI, summonType);
 
 			return (false);

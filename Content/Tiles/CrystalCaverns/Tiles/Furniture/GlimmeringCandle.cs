@@ -15,7 +15,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
 	internal class GlimmeringCandle : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;
@@ -43,11 +43,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
         public override void RightClick(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
-			int topY = j - tile.frameY / 18 % 1;
-			short frameAdjustment = (short)(tile.frameX > 0 ? -18 : 18);
-			Main.tile[i, topY].frameX += frameAdjustment;
-			Main.tile[i, topY + 1].frameX += frameAdjustment;
-			Main.tile[i, topY + 2].frameX += frameAdjustment;
+			int topY = j - tile.TileFrameY / 18 % 1;
+			short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
+			Main.tile[i, topY].TileFrameX += frameAdjustment;
+			Main.tile[i, topY + 1].TileFrameX += frameAdjustment;
+			Main.tile[i, topY + 2].TileFrameX += frameAdjustment;
 			Wiring.SkipWire(i, topY);
 			Wiring.SkipWire(i, topY + 1);
 			Wiring.SkipWire(i, topY + 2);
@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX == 0)
+			if (tile.TileFrameX == 0)
 			{
 				r = 0f;
 				g = 0.75f;

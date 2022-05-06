@@ -13,16 +13,16 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 34;
-            item.height = 34;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 34;
+            Item.height = 34;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.rangedDamage += 0.1f;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+			player.GetDamage(DamageClass.Ranged) += 0.1f;
+            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
             modPlayer.EmeraldEmpoweredGem = true;
         }
     }

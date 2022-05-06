@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Buffs
 {
     public sealed class CharmingBushBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Charming Bush");
 			Description.SetDefault("");

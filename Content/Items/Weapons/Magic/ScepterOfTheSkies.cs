@@ -10,30 +10,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Scepter of the skies");
             Tooltip.SetDefault("Unleashes the power from the sky");
         }
 
         public override void SetDefaults()
         {
-            item.crit = 5;
-            item.damage = 58;
-            item.magic = true;
-            item.mana = 20;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("HomingWisp");
-            item.shootSpeed = 12f;
+            Item.crit = 5;
+            Item.damage = 58;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 20;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("HomingWisp").Type;
+            Item.shootSpeed = 12f;
         }
 
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
@@ -64,13 +64,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<Delvara>(), 1);
-            modRecipe.AddIngredient(ItemID.CrystalVileShard, 1);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 15);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<Delvara>(), 1)
+                .AddIngredient(ItemID.CrystalVileShard, 1)
+                .AddIngredient(ItemID.HallowedBar, 15)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

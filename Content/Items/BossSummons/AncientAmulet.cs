@@ -3,6 +3,7 @@ using AerovelenceMod.Content.NPCs.Bosses.TheFallen;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
@@ -16,20 +17,20 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
 		public override void SetDefaults()
 		{
-            item.consumable = true;
+            Item.consumable = true;
 
-            item.maxStack = 20;
-			item.useAnimation = 45;
-            item.useTime = 45;
+            Item.maxStack = 20;
+			Item.useAnimation = 45;
+            Item.useTime = 45;
 
-            item.useStyle = ItemUseStyleID.HoldingUp;
-			item.UseSound = SoundID.Item44;
-            item.rare = ItemRarityID.Cyan;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+			Item.UseSound = SoundID.Item44;
+            Item.rare = ItemRarityID.Cyan;
 		}
 
 		public override bool CanUseItem(Player player) => Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<TheFallen>());
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<TheFallen>());
 			Main.PlaySound(SoundID.Roar, player.position, 0);
@@ -39,12 +40,11 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
 		public override void AddRecipes()
 		{
-			var recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SoulofNight, 10);
-			recipe.AddIngredient(ItemID.HallowedBar, 5);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.SoulofNight, 10)
+				.AddIngredient(ItemID.HallowedBar, 5)
+				.AddTile(TileID.MythrilAnvil)
+				.Register();
 		}
 	}
 }

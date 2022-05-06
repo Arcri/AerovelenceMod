@@ -17,21 +17,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 12;
-            item.ranged = true;
-            item.width = 44;
-            item.height = 26;
-            item.useTime = 20;
-            item.useAnimation = 20;
-			item.UseSound = SoundID.Item5;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.knockBack = 2;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
-			item.shoot = ProjectileID.StyngerShrapnel;
-            item.autoReuse = true;
-            item.shootSpeed = 7f;
+			Item.crit = 4;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 44;
+            Item.height = 26;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+			Item.UseSound = SoundID.Item5;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 2;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Green;
+			Item.shoot = ProjectileID.StyngerShrapnel;
+            Item.autoReuse = true;
+            Item.shootSpeed = 7f;
         }
     }
 }

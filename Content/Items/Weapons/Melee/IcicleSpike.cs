@@ -14,22 +14,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 20;
-            item.damage = 26;
-            item.melee = true;
-            item.noMelee = false;
-            item.width = 52;
-            item.height = 52;
-            item.useTime = 26;
-            item.useAnimation = 26;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.WoodenArrowFriendly;
-            item.shootSpeed = 8f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 20;
+            Item.damage = 26;
+            Item.DamageType = DamageClass.Melee;
+            Item.noMelee = false;
+            Item.width = 52;
+            Item.height = 52;
+            Item.useTime = 26;
+            Item.useAnimation = 26;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.WoodenArrowFriendly;
+            Item.shootSpeed = 8f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -38,12 +38,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
-            recipe.AddRecipeGroup("IronBar", 7);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 15)
+                .AddRecipeGroup("IronBar", 7)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

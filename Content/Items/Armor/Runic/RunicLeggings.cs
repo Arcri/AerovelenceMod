@@ -14,11 +14,11 @@ namespace AerovelenceMod.Content.Items.Armor.Runic
         }		
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 2;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 2;
         }
 
         public override void UpdateEquip(Player player)

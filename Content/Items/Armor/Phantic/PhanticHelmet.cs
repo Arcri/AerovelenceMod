@@ -24,24 +24,23 @@ namespace AerovelenceMod.Content.Items.Armor.Phantic
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 6;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 6;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.meleeDamage += 0.5f;
+            player.GetDamage(DamageClass.Melee) += 0.5f;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
-            modRecipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 10);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 12)
+                .AddRecipeGroup("AerovelenceMod:EvilMaterials", 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

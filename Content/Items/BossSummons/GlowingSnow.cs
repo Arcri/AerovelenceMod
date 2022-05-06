@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Items.Others.Crafting;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
@@ -15,20 +16,20 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public override void SetDefaults()
         {
-            item.consumable = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 30;
-            item.useTime = 30;
+            Item.maxStack = 999;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
 
-            item.rare = ItemRarityID.Blue;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.value = 100;
+            Item.rare = ItemRarityID.Blue;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.value = 100;
         }
 
         //public override bool CanUseItem(Player player) => !NPC.AnyNPCs(ModContent.NPCType<Rimegeist>());
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             if (player.ZoneSnow)
                 NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Rimegeist"));
@@ -40,13 +41,12 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public override void AddRecipes()
         {
-            var recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HellstoneBar);
-            recipe.AddIngredient(ItemID.SnowBlock, 25);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 3);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.HellstoneBar)
+                .AddIngredient(ItemID.SnowBlock, 25)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 3)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

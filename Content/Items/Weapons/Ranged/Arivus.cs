@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -13,23 +14,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.shootSpeed = 24f;
-            item.crit = 8;
-            item.damage = 270;
-            item.ranged = true;
-            item.width = 32;
-            item.height = 32;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.UseSound = SoundID.Item5;
-            item.shootSpeed = 55;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 35, 20);
-            item.rare = ItemRarityID.Green;
-            item.shoot = AmmoID.Arrow;
-            item.useAmmo = AmmoID.Arrow;
-            item.autoReuse = true;
+            Item.shootSpeed = 24f;
+            Item.crit = 8;
+            Item.damage = 270;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.UseSound = SoundID.Item5;
+            Item.shootSpeed = 55;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 35, 20);
+            Item.rare = ItemRarityID.Green;
+            Item.shoot = AmmoID.Arrow;
+            Item.useAmmo = AmmoID.Arrow;
+            Item.autoReuse = true;
         }
 
 
@@ -43,13 +44,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             for (int i = 0; i < numberProjectiles; i++)
             {
 
-                Main.PlaySound(SoundID.Item72);
+                SoundEngine.PlaySound(SoundID.Item72);
                 Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
                 float scale = 1f - (Main.rand.NextFloat() * .3f);
                 if (i == 1)
                 {
                     Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 3, perturbedSpeed.Y * 3, type, damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("TumblerShockBlast"), damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("TumblerShockBlast").Type, damage, knockBack, player.whoAmI);
                     Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
                     Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 4, perturbedSpeed.Y * 4, type, damage, knockBack, player.whoAmI);
                 }

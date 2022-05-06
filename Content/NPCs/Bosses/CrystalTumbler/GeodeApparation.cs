@@ -8,44 +8,44 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     {
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 3;
+            Main.npcFrameCount[NPC.type] = 3;
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 14;
-            npc.lifeMax = 50;
-            npc.damage = 12;
-            npc.defense = 8;
-            npc.knockBackResist = 0f;
-            npc.width = 122;
-            npc.height = 126;
-            npc.value = Item.buyPrice(0, 0, 60, 45);
-            npc.npcSlots = 1f;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = false;
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = 14;
+            NPC.lifeMax = 50;
+            NPC.damage = 12;
+            NPC.defense = 8;
+            NPC.knockBackResist = 0f;
+            NPC.width = 122;
+            NPC.height = 126;
+            NPC.value = Item.buyPrice(0, 0, 60, 45);
+            NPC.npcSlots = 1f;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = false;
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
+            NPC.frameCounter++;
             {
-                if (npc.frameCounter < 5)
+                if (NPC.frameCounter < 5)
                 {
-                    npc.frame.Y = 0 * frameHeight;
+                    NPC.frame.Y = 0 * frameHeight;
                 }
-                else if (npc.frameCounter < 10)
+                else if (NPC.frameCounter < 10)
                 {
-                    npc.frame.Y = 1 * frameHeight;
+                    NPC.frame.Y = 1 * frameHeight;
                 }
-                else if (npc.frameCounter < 15)
+                else if (NPC.frameCounter < 15)
                 {
-                    npc.frame.Y = 2 * frameHeight;
+                    NPC.frame.Y = 2 * frameHeight;
                 }
                 else
                 {
-                    npc.frameCounter = 0;
+                    NPC.frameCounter = 0;
                 }
             }
         }

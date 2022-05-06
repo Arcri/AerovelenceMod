@@ -10,37 +10,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Hail Warning");
             Tooltip.SetDefault("Casts an icicle that rains more icicles from the sky");
         }
         public override void SetDefaults()
         {
-            item.crit = 6;
-            item.damage = 11;
-            item.magic = true;
-            item.mana = 15;
-            item.width = 34;
-            item.height = 40;
-            item.useTime = 15;
-            item.useAnimation = 15;
-            item.UseSound = SoundID.Item101;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 1, 30, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("HailProjectile");
-            item.shootSpeed = 40f;
+            Item.crit = 6;
+            Item.damage = 11;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 15;
+            Item.width = 34;
+            Item.height = 40;
+            Item.useTime = 15;
+            Item.useAnimation = 15;
+            Item.UseSound = SoundID.Item101;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 1, 30, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("HailProjectile").Type;
+            Item.shootSpeed = 40f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 10);
-            recipe.AddTile(TileID.Bookcases);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 10)
+                .AddTile(TileID.Bookcases)
+                .Register();
         }
     }
 
@@ -48,27 +47,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.aiStyle = -1;
-            projectile.height = 38;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            Projectile.width = 18;
+            Projectile.aiStyle = -1;
+            Projectile.height = 38;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
         }
         private int timer;
 
         public override void AI()
         {
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
             timer++;
             if (timer % 5 == 0)
             {
                 Vector2 offset = new Vector2(0, -500);
-                Projectile.NewProjectile(projectile.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<HailIcicle>(), 6, 1f, Main.myPlayer);
+                Projectile.NewProjectile(Projectile.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<HailIcicle>(), 6, 1f, Main.myPlayer);
             }
         }
     }
@@ -78,26 +77,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         int i;
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.aiStyle = -1;
-            projectile.height = 38;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            Projectile.width = 18;
+            Projectile.aiStyle = -1;
+            Projectile.height = 38;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
         }
         public override void AI()
         {
             i++;
             if (i > 100)
             {
-                projectile.tileCollide = true;
+                Projectile.tileCollide = true;
             }
-            projectile.velocity.Y += 3;
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.velocity.Y += 3;
+            Projectile.rotation = Projectile.velocity.ToRotation();
         }
     }
 }

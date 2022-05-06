@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -16,23 +17,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item11;
-            item.crit = 8;
-            item.damage = 120;
-            item.melee = true;
-            item.width = 22;
-            item.height = 38;
-            item.useTime = 80;
-            item.useAnimation = 80;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 5, 0, 0);
-            item.rare = ItemRarityID.Pink;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("DarkDaggerProjectile");
-            item.shootSpeed = 12f;
+            Item.UseSound = SoundID.Item11;
+            Item.crit = 8;
+            Item.damage = 120;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 22;
+            Item.height = 38;
+            Item.useTime = 80;
+            Item.useAnimation = 80;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.rare = ItemRarityID.Pink;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("DarkDaggerProjectile").Type;
+            Item.shootSpeed = 12f;
         }
         float dynamicCounter = 0;
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -42,7 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 Vector2 toLocation = player.Center + new Vector2(Main.rand.NextFloat(100, 240), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    damage = item.damage;
+                    damage = Item.damage;
                     Projectile.NewProjectile(toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDaggerProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
                 }
                 Vector2 toLocationVelo = toLocation - player.Center;
@@ -72,16 +73,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetDefaults()
         {
-            projectile.width = 26;
-            projectile.height = 44;
-            projectile.timeLeft = 560;
-            projectile.penetrate = -1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.damage = 56;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.extraUpdates = 1;
+            Projectile.width = 26;
+            Projectile.height = 44;
+            Projectile.timeLeft = 560;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.damage = 56;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.extraUpdates = 1;
             //projectile.netImportant = true;
         }
         public override Color? GetAlpha(Color lightColor)
@@ -90,49 +91,49 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override bool ShouldUpdatePosition()
         {
-            return projectile.timeLeft <= 420;
+            return Projectile.timeLeft <= 420;
         }
         public override void AI()
         {
-            projectile.rotation = MathHelper.ToRadians(90) + projectile.velocity.ToRotation();
-            if (projectile.timeLeft == 420)
+            Projectile.rotation = MathHelper.ToRadians(90) + Projectile.velocity.ToRotation();
+            if (Projectile.timeLeft == 420)
             {
-                Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 71, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 71, 0.75f);
                 for (int i = 0; i < 360; i += 5)
                 {
                     Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
-                    Dust dust = Dust.NewDustDirect(projectile.Center - new Vector2(5) + circular, 0, 0, 164, 0, 0, projectile.alpha);
+                    Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5) + circular, 0, 0, 164, 0, 0, Projectile.alpha);
                     dust.velocity *= 0.15f;
-                    dust.velocity += -projectile.velocity;
+                    dust.velocity += -Projectile.velocity;
                     dust.scale = 2.75f;
                     dust.noGravity = true;
                 }
             }
-            if (projectile.timeLeft > 420)
+            if (Projectile.timeLeft > 420)
             {
-                Player player = Main.player[(int)projectile.ai[0]];
+                Player player = Main.player[(int)Projectile.ai[0]];
                 if (player.active)
                 {
-                    Vector2 toPlayer = projectile.Center - Main.MouseWorld;
+                    Vector2 toPlayer = Projectile.Center - Main.MouseWorld;
                     toPlayer = toPlayer.SafeNormalize(Vector2.Zero) * 12;
-                    projectile.velocity = -toPlayer;
+                    Projectile.velocity = -toPlayer;
                 }
             }
             else
             {
-                projectile.hostile = false;
-                int dust = Dust.NewDust(projectile.Center + new Vector2(-4, -4), 0, 0, 164, 0, 0, projectile.alpha, default, 1.25f);
+                Projectile.hostile = false;
+                int dust = Dust.NewDust(Projectile.Center + new Vector2(-4, -4), 0, 0, 164, 0, 0, Projectile.alpha, default, 1.25f);
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.1f;
                 Main.dust[dust].scale *= 0.75f;
             }
-            Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 1.8f / 255f, (255 - projectile.alpha) * 0.0f / 255f, (255 - projectile.alpha) * 0.0f / 255f);
-            if (projectile.timeLeft <= 25)
-                projectile.alpha += 10;
+            Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 1.8f / 255f, (255 - Projectile.alpha) * 0.0f / 255f, (255 - Projectile.alpha) * 0.0f / 255f);
+            if (Projectile.timeLeft <= 25)
+                Projectile.alpha += 10;
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.immune[projectile.owner] = 3;
+            target.immune[Projectile.owner] = 3;
         }
     }
 }

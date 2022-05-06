@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 57;
-            item.ranged = true;
-            item.width = 20;
-            item.height = 22;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.noUseGraphic = true;
-            item.UseSound = SoundID.Item18;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<PlanteraSeed>();
-            item.shootSpeed = 16f;
+            Item.crit = 11;
+            Item.damage = 57;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 20;
+            Item.height = 22;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.noUseGraphic = true;
+            Item.UseSound = SoundID.Item18;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<PlanteraSeed>();
+            Item.shootSpeed = 16f;
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

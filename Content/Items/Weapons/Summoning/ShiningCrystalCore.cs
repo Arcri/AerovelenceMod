@@ -12,31 +12,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 	{
 		public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 32;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 18, 30);
+			Item.width = 24;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 18, 30);
 
-			item.crit = 4;
-			item.mana = 15;
-			item.damage = 25;
-			item.knockBack = 1;
+			Item.crit = 4;
+			Item.mana = 15;
+			Item.damage = 25;
+			Item.knockBack = 1;
 
-			item.useTime = item.useAnimation = 20;
-			item.useStyle = ItemUseStyleID.HoldingUp;
+			Item.useTime = Item.useAnimation = 20;
+			Item.useStyle = ItemUseStyleID.HoldUp;
 			
-			item.summon = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 			
-			item.shootSpeed = 14;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.ShiningCrystalCore_Proj>();
+			Item.shootSpeed = 14;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Summoning.ShiningCrystalCore_Proj>();
 			
-			item.UseSound = SoundID.Item101;
+			Item.UseSound = SoundID.Item101;
 		}
 
 		public override bool CanUseItem(Player player)
-			=> player.ownedProjectileCounts[item.shoot] < 5;
+			=> player.ownedProjectileCounts[Item.shoot] < 5;
 
 	}
 }

@@ -10,37 +10,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Pages of Dawn");
             Tooltip.SetDefault("'You feel hot when holding this'");
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 25;
-            item.magic = true;
-            item.mana = 6;
-            item.width = 28;
-            item.height = 44;
-            item.useTime = 65;
-            item.useAnimation = 65;
-            item.UseSound = SoundID.Item34;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.BallofFire;
-            item.shootSpeed = 6f;
+            Item.crit = 11;
+            Item.damage = 25;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 6;
+            Item.width = 28;
+            Item.height = 44;
+            Item.useTime = 65;
+            Item.useAnimation = 65;
+            Item.UseSound = SoundID.Item34;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.BallofFire;
+            Item.shootSpeed = 6f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HellstoneBar, 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.HellstoneBar, 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
         {

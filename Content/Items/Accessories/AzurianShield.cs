@@ -14,13 +14,13 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.defense = 3;
-			item.melee = true;
-			item.width = 34;
-			item.height = 38;
-			item.accessory = true;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(silver: 60);
+			Item.defense = 3;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 34;
+			Item.height = 38;
+			Item.accessory = true;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(silver: 60);
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{

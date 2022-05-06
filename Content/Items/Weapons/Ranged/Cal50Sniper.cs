@@ -14,33 +14,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.damage = 180;
-            item.ranged = true;
-            item.width = 62;
-            item.mana = 5;
-            item.height = 32;
-            item.useTime = 75;
-            item.useAnimation = 75;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 0.2f;
-            item.value = Item.sellPrice(0, 1, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.UseSound = SoundID.Item11;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.Bullet;
-            item.shootSpeed = 30f;
-            item.useAmmo = AmmoID.Bullet;
+            Item.damage = 180;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 62;
+            Item.mana = 5;
+            Item.height = 32;
+            Item.useTime = 75;
+            Item.useAnimation = 75;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 0.2f;
+            Item.value = Item.sellPrice(0, 1, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.UseSound = SoundID.Item11;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.Bullet;
+            Item.shootSpeed = 30f;
+            Item.useAmmo = AmmoID.Bullet;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.SniperRifle, 1);
-            modRecipe.AddIngredient(ItemID.ShroomiteBar, 15);
-            modRecipe.AddIngredient(ItemID.IllegalGunParts, 1);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.SniperRifle, 1)
+                .AddIngredient(ItemID.ShroomiteBar, 15)
+                .AddIngredient(ItemID.IllegalGunParts, 1)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
 
         public override Vector2? HoldoutOffset()

@@ -11,11 +11,11 @@ namespace AerovelenceMod.Content.Items.Others.Crafting
         }		
         public override void SetDefaults()
         {
-			item.maxStack = 999;
-            item.width = 26;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
+			Item.maxStack = 999;
+            Item.width = 26;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
         }
     }
 }

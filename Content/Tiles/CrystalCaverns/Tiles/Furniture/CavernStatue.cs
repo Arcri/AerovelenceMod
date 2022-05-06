@@ -3,12 +3,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
     public class CavernStatue : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
@@ -30,7 +31,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Main.PlaySound(new Terraria.Audio.LegacySoundStyle(3, 4));
+            SoundEngine.PlaySound(new Terraria.Audio.LegacySoundStyle(3, 4));
             Item.NewItem(i * 16, j * 16, 48, 48, 441);
         }
     }

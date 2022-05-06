@@ -15,18 +15,18 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		}
         public override void SetDefaults()
 		{
-			projectile.CloneDefaults(ProjectileID.Spazmamini);
-			projectile.width = 56;
-			projectile.height = 22;
-			projectile.minion = true;
-			projectile.friendly = true;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.netImportant = true;
+			Projectile.CloneDefaults(ProjectileID.Spazmamini);
+			Projectile.width = 56;
+			Projectile.height = 22;
+			Projectile.minion = true;
+			Projectile.friendly = true;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.netImportant = true;
 			aiType = ProjectileID.Spazmamini;
-			projectile.alpha = 0;
-			projectile.penetrate = -10;
-			projectile.minionSlots = 1;
+			Projectile.alpha = 0;
+			Projectile.penetrate = -10;
+			Projectile.minionSlots = 1;
 		}
 		public override bool? CanCutTiles()
 		{
@@ -39,11 +39,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		public override void AI()
 		{
 			i++;
-			projectile.rotation *= 0.1f;
+			Projectile.rotation *= 0.1f;
 
 			if (i % 2 == 0)
 			{
-				int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+				int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
 			}
 		}
 	}

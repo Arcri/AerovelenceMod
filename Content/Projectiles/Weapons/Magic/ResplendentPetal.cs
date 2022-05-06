@@ -15,26 +15,26 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 10;
+			Projectile.width = Projectile.height = 10;
 
-			projectile.timeLeft = 600;
-			projectile.penetrate = -1;
+			Projectile.timeLeft = 600;
+			Projectile.penetrate = -1;
 			
-			projectile.magic = true;
-			projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.friendly = true;
 		}
 
 		public override bool PreAI()
 		{
-			if (projectile.localAI[0] == 0)
+			if (Projectile.localAI[0] == 0)
 			{
 				SpawnDust();
 
-				projectile.scale = 1.1f;
-				projectile.localAI[0] = 1;
+				Projectile.scale = 1.1f;
+				Projectile.localAI[0] = 1;
 			}
 
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 			return (false);
 		}
@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 15; ++i)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.RedPetal>(), 0, 0, 100);
+				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.RedPetal>(), 0, 0, 100);
 			}
 		}
 
@@ -55,13 +55,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 			{
 				Vector2 spinningpoint9 = Vector2.Zero;
 				spinningpoint9 += -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / amountOfDust)) * new Vector2(1f, 4f);
-				spinningpoint9 = spinningpoint9.RotatedBy(projectile.velocity.ToRotation());
+				spinningpoint9 = spinningpoint9.RotatedBy(Projectile.velocity.ToRotation());
 
-				Dust dust = Dust.NewDustDirect(projectile.Center, 0, 0, ModContent.DustType<Dusts.RedPetal>(), 0, 0, 50, default, 0.6f);
+				Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, ModContent.DustType<Dusts.RedPetal>(), 0, 0, 50, default, 0.6f);
 
 				dust.noGravity = true;
-				dust.position = projectile.Center + spinningpoint9;
-				dust.velocity = projectile.velocity * 0f + spinningpoint9.SafeNormalize(Vector2.UnitY) * 1f;
+				dust.position = Projectile.Center + spinningpoint9;
+				dust.velocity = Projectile.velocity * 0f + spinningpoint9.SafeNormalize(Vector2.UnitY) * 1f;
 			}
 		}
 	}

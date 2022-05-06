@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 {
 	public class VividVines : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
 			TileObjectData.newTile.AnchorBottom = default;
 			TileObjectData.addTile(Type);
-			dustType = 59;
+			DustType = 59;
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Vine");
 			AddMapEntry(new Color(104, 156, 70), name);
@@ -33,9 +33,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Tile tileAbove = Framing.GetTileSafely(i, j + 1);
 			int type = -1;
 
-			if (tileAbove.active() && !tileAbove.bottomSlope())
+			if (tileAbove.HasTile && !tileAbove.BottomSlope)
 			{
-				type = tileAbove.type;
+				type = tileAbove.TileType;
 			}
 
 			if (type == ModContent.TileType<CavernStone>() || type == Type)
@@ -56,9 +56,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
 			Color colour = Color.White;
 
-			Texture2D glow = ModContent.GetTexture("Content/Tiles/CrystalCaverns/Tiles/Flora/VividVines_Glow");
+			Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/Flora/VividVines_Glow");
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
-			spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.frameX, tile.frameY, 16, 16), colour);
+			Main.spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), colour);
 		}
 	}
 }

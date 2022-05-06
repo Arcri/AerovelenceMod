@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
 {
     public class BurnshockBarPlaced : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileShine[Type] = 1100;
 			Main.tileSolid[Type] = true;
@@ -38,10 +38,10 @@ namespace AerovelenceMod.Content.Tiles.Ores
 		public override bool Drop(int i, int j)
 		{
 			Tile t = Main.tile[i, j];
-			int style = t.frameX / 18;
+			int style = t.TileFrameX / 18;
 			if (style == 0)
 			{
-				Item.NewItem(i * 16, j * 16, 16, 16, mod.ItemType("BurnshockBar"));
+				Item.NewItem(i * 16, j * 16, 16, 16, Mod.Find<ModItem>("BurnshockBar").Type);
 			}
 			return base.Drop(i, j);
 		}

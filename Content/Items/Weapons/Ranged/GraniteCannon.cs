@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -16,23 +17,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item92;
-            item.crit = 6;
-            item.damage = 29;
-            item.ranged = true;
-            item.width = 58;
-            item.height = 18;
-            item.useTime = 26;
-            item.useAnimation = 26;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 0, 55, 40);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-            item.shoot = AmmoID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 3.2f;
+            Item.UseSound = SoundID.Item92;
+            Item.crit = 6;
+            Item.damage = 29;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 58;
+            Item.height = 18;
+            Item.useTime = 26;
+            Item.useAnimation = 26;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 0, 55, 40);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
+            Item.shoot = AmmoID.Bullet;
+            Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 3.2f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -52,12 +53,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.Granite, 45);
-            modRecipe.AddIngredient(ItemID.IronBar, 5);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.Granite, 45)
+                .AddIngredient(ItemID.IronBar, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
 
     }
@@ -70,28 +70,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.penetrate = 1;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 600;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.extraUpdates = 1;
         }
         
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(lightColor) * ((projectile.oldPos.Length - k) / projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / Projectile.oldPos.Length);
+                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }
@@ -102,19 +102,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Timer++;
             if (Timer <= 12)
             {
-                if (++projectile.localAI[1] > 10)
+                if (++Projectile.localAI[1] > 10)
                 {
                     float amountOfDust = 16f;
                     for (int i = 0; i < amountOfDust; ++i)
                     {
                         Vector2 spinningpoint5 = -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / amountOfDust)) * new Vector2(1f, 4f);
-                        spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
+                        spinningpoint5 = spinningpoint5.RotatedBy(Projectile.velocity.ToRotation());
 
-                        Dust dust = Dust.NewDustPerfect(projectile.Center + spinningpoint5, 136, spinningpoint5, 0, Color.Blue, 1.3f);
+                        Dust dust = Dust.NewDustPerfect(Projectile.Center + spinningpoint5, 136, spinningpoint5, 0, Color.Blue, 1.3f);
                         dust.noGravity = true;
                     }
 
-                    projectile.localAI[1] = 0;
+                    Projectile.localAI[1] = 0;
                 }
             }
         }
@@ -123,19 +123,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
             for (double i = 0; i < 6.28; i += 0.1)
             {
-                Dust dust = Dust.NewDustPerfect(projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+                Dust dust = Dust.NewDustPerfect(Projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
                 dust.noGravity = true;
             }
 
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item93, projectile.position);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+            SoundEngine.PlaySound(SoundID.Item93, Projectile.position);
 
 
-            if (Main.myPlayer == projectile.owner)
+            if (Main.myPlayer == Projectile.owner)
             {
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(projectile.damage * 0.5f), 0, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
 
             }
         }
@@ -149,34 +149,34 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.penetrate = 5;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
-            projectile.alpha = 255;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 5;
+            Projectile.timeLeft = 600;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.extraUpdates = 1;
+            Projectile.alpha = 255;
         }
         public override void AI()
         {
 
             Dust dust;
-            projectile.velocity.Y += 0.09f;
+            Projectile.velocity.Y += 0.09f;
 
 
-            dust = Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, DustID.Electric);
+            dust = Dust.NewDustDirect(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, DustID.Electric);
             dust.scale = 0.45f;
             dust.noGravity = true;
         }
         public override void Kill(int timeLeft)
         {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
         }
     } 
 }

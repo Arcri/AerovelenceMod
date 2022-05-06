@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -16,23 +17,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 8;
-            item.damage = 12;
-            item.melee = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("CrystalGrowingKitProj");
-            item.shootSpeed = 16f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 8;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("CrystalGrowingKitProj").Type;
+            Item.shootSpeed = 16f;
         }
     }
 
@@ -43,25 +44,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 28;
-            projectile.height = 28;
-            projectile.friendly = true;
-            projectile.aiStyle = 2;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            Projectile.width = 28;
+            Projectile.height = 28;
+            Projectile.friendly = true;
+            Projectile.aiStyle = 2;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            int spawnX = (int)(projectile.Center.X / 64) * 64;
-            int spawnY = (int)((projectile.position.Y - projectile.height) / 16) * 16;
-            int index = Projectile.NewProjectile(spawnX, spawnY + 70, projectile.velocity.X, projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
-            Main.PlaySound(SoundID.Shatter, projectile.position);
-            projectile.Kill();
+            int spawnX = (int)(Projectile.Center.X / 64) * 64;
+            int spawnY = (int)((Projectile.position.Y - Projectile.height) / 16) * 16;
+            int index = Projectile.NewProjectile(spawnX, spawnY + 70, Projectile.velocity.X, Projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+            SoundEngine.PlaySound(SoundID.Shatter, Projectile.position);
+            Projectile.Kill();
             return true;
         }
         public override void AI()
@@ -69,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
             }
 			
 
@@ -81,27 +82,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 66;
-            projectile.height = 26;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.alpha = 255;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 500;
+            Projectile.width = 66;
+            Projectile.height = 26;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.alpha = 255;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 500;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.velocity *= 0f;
+            Projectile.velocity *= 0f;
             return true;
         }
         public override void AI()
         {
             int count = 0;
 
-            foreach (Projectile proj in Main.projectile.Where(x => x.active && x.whoAmI != projectile.whoAmI && x.type == projectile.type))
+            foreach (Projectile proj in Main.projectile.Where(x => x.active && x.whoAmI != Projectile.whoAmI && x.type == Projectile.type))
             {
                 count++;
 
@@ -111,12 +112,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i % 2 == 0)
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 132);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 132);
                 dust.noGravity = true;
                 dust.velocity *= 0.1f;
             }
-            projectile.alpha -= 2;
-            projectile.velocity *= 0f;
+            Projectile.alpha -= 2;
+            Projectile.velocity *= 0f;
         }
     }
 }

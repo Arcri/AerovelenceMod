@@ -10,30 +10,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Prismatic Pulsar");
             Tooltip.SetDefault("Burns with the fury of the lost souls");
         }
 
         public override void SetDefaults()
         {
-            item.crit = 5;
-            item.damage = 82;
-            item.magic = true;
-            item.mana = 25;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("HomingWisp");
-            item.shootSpeed = 14f;
+            Item.crit = 5;
+            Item.damage = 82;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 25;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("HomingWisp").Type;
+            Item.shootSpeed = 14f;
         }
 
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
@@ -64,17 +64,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<ScepterOfTheSkies>(), 1);
-            modRecipe.AddIngredient(ItemID.FrostStaff, 1);
-            modRecipe.AddIngredient(ItemID.StaffofEarth, 1);
-            modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
-            modRecipe.AddIngredient(ItemID.ShadowbeamStaff, 1);
-            modRecipe.AddIngredient(ItemID.Ectoplasm, 40);
-            modRecipe.AddIngredient(ItemID.ShroomiteBar, 15);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<ScepterOfTheSkies>(), 1)
+                .AddIngredient(ItemID.FrostStaff, 1)
+                .AddIngredient(ItemID.StaffofEarth, 1)
+                .AddIngredient(ItemID.SpectreStaff, 1)
+                .AddIngredient(ItemID.ShadowbeamStaff, 1)
+                .AddIngredient(ItemID.Ectoplasm, 40)
+                .AddIngredient(ItemID.ShroomiteBar, 15)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

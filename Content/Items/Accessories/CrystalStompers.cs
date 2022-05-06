@@ -17,11 +17,11 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 20;
-            item.value = Item.buyPrice(0, 0, 5, 0);
-            item.rare = ItemRarityID.Blue;
-            item.accessory = true;
+            Item.width = 28;
+            Item.height = 20;
+            Item.value = Item.buyPrice(0, 0, 5, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.accessory = true;
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Accessories
                     Rectangle rect = nPC.getRect();
                     if (rectangle.Intersects(rect) && (nPC.noTileCollide || player.CanHit(nPC)))
                     {
-                        float num = 30f * player.meleeDamage;
+                        float num = 30f * player.GetDamage(DamageClass.Melee);
                         float num2 = 9f;
                         bool crit = false;
                         if (player.kbGlove)
@@ -56,7 +56,7 @@ namespace AerovelenceMod.Content.Items.Accessories
                         {
                             num2 *= 1.5f;
                         }
-                        if (Main.rand.Next(100) < player.meleeCrit)
+                        if (Main.rand.Next(100) < player.GetCritChance(DamageClass.Melee))
                         {
                             crit = true;
                         }
@@ -108,12 +108,11 @@ namespace AerovelenceMod.Content.Items.Accessories
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 15);
-            recipe.AddIngredient(ItemID.Silk, 5);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this, 1);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CavernCrystal>(), 15)
+                .AddIngredient(ItemID.Silk, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -133,9 +132,9 @@ namespace AerovelenceMod.Content.Items.Accessories
         public override void ResetEffects()
         {
             bool dashAccessoryEquipped = false;
-            for (int i = 3; i < 8 + player.extraAccessorySlots; i++)
+            for (int i = 3; i < 8 + Player.extraAccessorySlots; i++)
             {
-                Item item = player.armor[i];
+                Item item = Player.armor[i];
 
                 if (item.type == ModContent.ItemType<CrystalStompers>())
                     dashAccessoryEquipped = true;
@@ -143,10 +142,10 @@ namespace AerovelenceMod.Content.Items.Accessories
                     return;
             }
 
-            if (!dashAccessoryEquipped || player.setSolar || player.mount.Active || DashActive)
+            if (!dashAccessoryEquipped || Player.setSolar || Player.mount.Active || DashActive)
                 return;
 
-            if (player.controlDown && player.releaseDown && player.doubleTapCardinalTimer[DashDown] < 15)
+            if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[DashDown] < 15)
                 DashDir = DashDown;
             else
                 return;

@@ -11,16 +11,16 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
         public override void SetDefaults()
         {
-            projectile.hostile = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.hostile = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
 
-            projectile.width = projectile.height = 80;
+            Projectile.width = Projectile.height = 80;
 
-            projectile.alpha = 255;
-            projectile.timeLeft = 5;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 5;
 
-            projectile.penetrate = -1;
+            Projectile.penetrate = -1;
         }
     }
 }

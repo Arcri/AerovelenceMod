@@ -13,11 +13,11 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 24;
-            item.height = 18;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 24;
+            Item.height = 18;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
@@ -25,12 +25,11 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 3);
-            recipe.AddIngredient(ItemID.Ruby, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.FallenStar, 3)
+                .AddIngredient(ItemID.Ruby, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

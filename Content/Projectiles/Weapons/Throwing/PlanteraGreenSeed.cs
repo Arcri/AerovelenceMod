@@ -15,12 +15,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
 
         public override void SetDefaults()
         {
-            projectile.width = 14;
-            projectile.height = 22;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
+            Projectile.width = 14;
+            Projectile.height = 22;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
         }
 
         private bool rotChanged = false;
@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
         {
             if (!rotChanged)
             {
-                projectile.rotation = projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
+                Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
                 rotChanged = true;
             }
         }
@@ -37,14 +37,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
         {
 
             target.AddBuff(BuffID.Poisoned, 180);
-            if (Main.myPlayer == projectile.owner)
+            if (Main.myPlayer == Projectile.owner)
             {
-                damage = (int)(projectile.damage * 0.5f);
+                damage = (int)(Projectile.damage * 0.5f);
 
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-10, 11) * .25f, Main.rand.Next(-10, -5) * .25f, ProjectileID.SporeGas, damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-5, 12) * .25f, Main.rand.Next(-6, 10) * .25f, ProjectileID.SporeGas, damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-2, 9) * .25f, Main.rand.Next(-3, 5) * .25f, ProjectileID.SporeGas, damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-1, 8) * .25f, Main.rand.Next(-5, 10) * .25f, ProjectileID.SporeGas, damage, 0, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-10, 11) * .25f, Main.rand.Next(-10, -5) * .25f, ProjectileID.SporeGas, damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-5, 12) * .25f, Main.rand.Next(-6, 10) * .25f, ProjectileID.SporeGas, damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-2, 9) * .25f, Main.rand.Next(-3, 5) * .25f, ProjectileID.SporeGas, damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-1, 8) * .25f, Main.rand.Next(-5, 10) * .25f, ProjectileID.SporeGas, damage, 0, Projectile.owner);
             }
         }
     }

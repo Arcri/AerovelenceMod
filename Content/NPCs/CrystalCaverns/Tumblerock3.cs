@@ -13,40 +13,40 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override void SetDefaults()
         {
-            npc.width = 38;
-            npc.height = 18;
+            NPC.width = 38;
+            NPC.height = 18;
 
-            npc.lavaImmune = true;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
+            NPC.lavaImmune = true;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
 
-            npc.lifeMax = 50;
-            npc.damage = 20;
-            npc.defense = 24;
-            npc.aiStyle = 26;
+            NPC.lifeMax = 50;
+            NPC.damage = 20;
+            NPC.defense = 24;
+            NPC.aiStyle = 26;
 
-            npc.knockBackResist = 1f;
+            NPC.knockBackResist = 1f;
 
-            npc.value = Item.buyPrice(silver: 6);
+            NPC.value = Item.buyPrice(silver: 6);
 
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
-                    Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 
                 for (int i = 0; i < 3; i++)
-                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TumbleRockV3Gore" + i));
+                    Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/TumbleRockV3Gore" + i));
             }
         }
 
-        public override void AI() => npc.rotation += npc.velocity.X * 0.05f;
+        public override void AI() => NPC.rotation += NPC.velocity.X * 0.05f;
         
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .3f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .3f : 0f;
     }
 }

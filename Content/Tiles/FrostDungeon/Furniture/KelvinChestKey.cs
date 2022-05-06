@@ -7,9 +7,9 @@ namespace AerovelenceMod.Content.Tiles.FrostDungeon.Furniture
 		public override void SetDefaults()
 		{
 			//item.CloneDefaults(ItemID.GoldenKey);
-			item.width = 14;
-			item.height = 20;
-			item.maxStack = 99;
+			Item.width = 14;
+			Item.height = 20;
+			Item.maxStack = 99;
 		}
 	}
 }

@@ -10,26 +10,25 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 15;
-            item.useTime = 10;
+            Item.maxStack = 999;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
 
-            item.createTile = ModContent.TileType<CrystalGrass>();
+            Item.createTile = ModContent.TileType<CrystalGrass>();
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
+            Item.useStyle = ItemUseStyleID.Swing;
         }
 
         public override void AddRecipes()
         {
-            var recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.DirtBlock);
-            recipe.AddTile(TileID.Furnaces);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.DirtBlock)
+                .AddTile(TileID.Furnaces)
+                .Register();
         }
     }
 }

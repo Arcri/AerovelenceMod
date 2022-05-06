@@ -14,19 +14,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 8;
-            item.damage = 26;
-            item.melee = true;
-            item.width = 36;
-            item.height = 66;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 1, 20, 25);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 8;
+            Item.damage = 26;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 36;
+            Item.height = 66;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 1, 20, 25);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
         }
 
         public override bool AltFunctionUse(Player player)
@@ -39,20 +39,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             if (player.altFunctionUse == 2)
             {
-                item.useStyle = ItemUseStyleID.SwingThrow;
-                item.useTime = 21;
-                item.useAnimation = 21;
-                item.damage = 32;
-                item.shoot = ProjectileID.None;
+                Item.useStyle = ItemUseStyleID.Swing;
+                Item.useTime = 21;
+                Item.useAnimation = 21;
+                Item.damage = 32;
+                Item.shoot = ProjectileID.None;
             }
             else
             {
-                item.useStyle = ItemUseStyleID.SwingThrow;
-                item.useTime = 30;
-                item.useAnimation = 30;
-                item.damage = 26;
-                item.shoot = ModContent.ProjectileType<CavernousCrystal>();
-                item.shootSpeed = 6f;
+                Item.useStyle = ItemUseStyleID.Swing;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
+                Item.damage = 26;
+                Item.shoot = ModContent.ProjectileType<CavernousCrystal>();
+                Item.shootSpeed = 6f;
             }
             return base.CanUseItem(player);
         }

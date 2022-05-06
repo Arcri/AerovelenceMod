@@ -16,24 +16,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.channel = true;		
-            item.crit = 2;
-            item.damage = 27;
-            item.melee = true;
-            item.width = 32;
-            item.height = 32;
-            item.useTime = 22;
-            item.useAnimation = 22;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 80, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("CrystallizerProj");
-            item.shootSpeed = 2f;
+            Item.channel = true;		
+            Item.crit = 2;
+            Item.damage = 27;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 80, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("CrystallizerProj").Type;
+            Item.shootSpeed = 2f;
         }
     }
 
@@ -42,16 +42,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         private int shootTimer;
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.damage = 10;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 6;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 216f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 13f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.damage = 10;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 6;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 216f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 13f;
         }
         public override void AI()
         {
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5 && Main.npc[k].type != NPCID.TargetDummy)
                 {
-                    Vector2 newMove = Main.npc[k].Center - projectile.Center;
+                    Vector2 newMove = Main.npc[k].Center - Projectile.Center;
                     float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
                     if (distanceTo < distance)
                     {
@@ -79,8 +79,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 {
 
                     {
-                        int type = mod.ProjectileType("CrystallizerProjectile");
-                        Vector2 offset = projectile.Center + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
+                        int type = Mod.Find<ModProjectile>("CrystallizerProjectile").Type;
+                        Vector2 offset = Projectile.Center + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
                         Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-1f, 1f), -5f + Main.rand.NextFloat(-1f, 1f)), ModContent.ProjectileType<CrystallizerProjectile>(), 5, 0.5f, Main.myPlayer);
                         shootTimer = 0;
                     }
@@ -93,7 +93,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         private void ApplyTrailFx()
         {
-            Projectile proj = projectile;
+            Projectile proj = Projectile;
             for (int dusts = 0; dusts < 1; dusts++)
             {
                 int castAheadDist = 6;
@@ -163,24 +163,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            projectile.width = 12;
-            projectile.damage = 10;
-            projectile.height = 12;
-            projectile.tileCollide = true;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.aiStyle = 2;
-            projectile.alpha = 255;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
+            Projectile.width = 12;
+            Projectile.damage = 10;
+            Projectile.height = 12;
+            Projectile.tileCollide = true;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.aiStyle = 2;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 600;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.extraUpdates = 1;
         }
         public override bool PreAI()
         {
             ApplyTrailFx();
-            projectile.velocity.Y += 0.2f;
+            Projectile.velocity.Y += 0.2f;
             return false;
         }
     }

@@ -13,30 +13,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.crit = 20;
-            item.damage = 17;
-            item.melee = true;
-            item.width = 28;
-            item.height = 36;
-            item.useTime = 10;
-            item.useAnimation = 10;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 65, 20);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+            Item.useTurn = true;
+            Item.crit = 20;
+            Item.damage = 17;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 28;
+            Item.height = 36;
+            Item.useTime = 10;
+            Item.useAnimation = 10;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 65, 20);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("IronBar", 10);
-            recipe.AddIngredient(ItemID.Vertebrae, 8);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddRecipeGroup("IronBar", 10)
+                .AddIngredient(ItemID.Vertebrae, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {

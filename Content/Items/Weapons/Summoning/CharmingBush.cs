@@ -23,38 +23,37 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 		}
 		public override void SetDefaults()
 		{
-			item.width = item.height = 22;
-			item.rare = ItemRarityID.Blue;
+			Item.width = Item.height = 22;
+			Item.rare = ItemRarityID.Blue;
 
-			item.mana = 30;
-			item.damage = 40;
-			item.knockBack = 0.5f;
+			Item.mana = 30;
+			Item.damage = 40;
+			Item.knockBack = 0.5f;
 
-			item.useTime = item.useAnimation = 25;
-			item.useStyle = ItemUseStyleID.HoldingUp;
+			Item.useTime = Item.useAnimation = 25;
+			Item.useStyle = ItemUseStyleID.HoldUp;
 
-			item.summon = true;
-			item.noMelee = true;
-			item.useTurn = false;
+			Item.DamageType = DamageClass.Summon;
+			Item.noMelee = true;
+			Item.useTurn = false;
 
-			item.buffTime = 3600;
-			item.buffType = ModContent.BuffType<CharmingBushBuff>();
+			Item.buffTime = 3600;
+			Item.buffType = ModContent.BuffType<CharmingBushBuff>();
 
-			item.shootSpeed = 10f;
-			item.shoot = ModContent.ProjectileType<CharmingBushRedFlower>();
+			Item.shootSpeed = 10f;
+			Item.shoot = ModContent.ProjectileType<CharmingBushRedFlower>();
 
-			item.UseSound = SoundID.Item44;
+			Item.UseSound = SoundID.Item44;
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddRecipeGroup("Wood", 25);
-			modRecipe.AddIngredient(ItemID.Daybloom, 3);
-			modRecipe.AddIngredient(ItemID.Fireblossom, 3);
-			modRecipe.AddIngredient(ItemID.Waterleaf, 3);
-			modRecipe.AddTile(TileID.Anvils);
-			modRecipe.SetResult(this);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddRecipeGroup("Wood", 25)
+				.AddIngredient(ItemID.Daybloom, 3)
+				.AddIngredient(ItemID.Fireblossom, 3)
+				.AddIngredient(ItemID.Waterleaf, 3)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -70,7 +69,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 				player.ownedProjectileCounts[projectileTypes[1]] +
 				player.ownedProjectileCounts[projectileTypes[2]];
 
-			player.AddBuff(item.buffType, item.buffTime);
+			player.AddBuff(Item.buffType, Item.buffTime);
 
 			if (projectileAmount != player.maxMinions)
 			{

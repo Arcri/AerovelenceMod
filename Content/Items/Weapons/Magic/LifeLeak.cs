@@ -15,18 +15,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		}
 		public override void SetDefaults()
 		{
-			item.width = 34;
-			item.height = 26;
-			item.magic = true;
-			item.damage = 26;
-			item.mana = 8;
-			item.noMelee = true;
-			item.useStyle = 5;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<LifeSyphon>();
-			item.shootSpeed = 11.4f;
+			Item.width = 34;
+			Item.height = 26;
+			Item.DamageType = DamageClass.Magic;
+			Item.damage = 26;
+			Item.mana = 8;
+			Item.noMelee = true;
+			Item.useStyle = 5;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<LifeSyphon>();
+			Item.shootSpeed = 11.4f;
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -43,53 +43,53 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.magic = true;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Magic;
 		}
 		public override void AI()
 		{
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
 			{
-				projectile.velocity.Y += .014f;
+				Projectile.velocity.Y += .014f;
 				if (Main.rand.NextFloat() < .8f)
 				{
-					Dust d = Dust.NewDustDirect(projectile.Center, 1, 1, DustID.Blood);
+					Dust d = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Blood);
 					d.scale = Main.rand.NextFloat(.9f, 1.2f);
 					d.velocity = Vector2.Zero;
 					d.alpha = 127;
 				}
 			}
-			if (projectile.ai[0] == 1)
+			if (Projectile.ai[0] == 1)
 			{
-				projectile.velocity *= .979f;
+				Projectile.velocity *= .979f;
 
 				//Dusts
 				for (int i = 0; i < 9; i++)
 				{
 					if (Main.rand.NextFloat() < .8f)
 					{
-						Dust d = Dust.NewDustDirect(projectile.Center + (Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi) * projectile.Size * .5f), 1, 1, DustID.Blood);
+						Dust d = Dust.NewDustDirect(Projectile.Center + (Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi) * Projectile.Size * .5f), 1, 1, DustID.Blood);
 						d.scale = Main.rand.NextFloat(.9f, 1.2f);
 						d.velocity = Vector2.Zero;
 						d.alpha = 127;
 					}
 				}
 			}
-			if (projectile.ai[0] == 2)
+			if (Projectile.ai[0] == 2)
 			{
-				Player player = Main.player[projectile.owner];
-				projectile.velocity = projectile.DirectionTo(player.Center) * projectile.ai[1];
-				projectile.ai[1] += .14f;
-				if (projectile.DistanceSQ(player.Center) < 36864)
+				Player player = Main.player[Projectile.owner];
+				Projectile.velocity = Projectile.DirectionTo(player.Center) * Projectile.ai[1];
+				Projectile.ai[1] += .14f;
+				if (Projectile.DistanceSQ(player.Center) < 36864)
 				{
-					player.HealEffect(projectile.damage);
-					player.statLife += projectile.damage;
-					projectile.Kill();
+					player.HealEffect(Projectile.damage);
+					player.statLife += Projectile.damage;
+					Projectile.Kill();
 				}
-				Dust d = Dust.NewDustDirect(projectile.Center, 1, 1, DustID.Blood);
+				Dust d = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Blood);
 				d.scale = Main.rand.NextFloat(.9f, 1.2f);
 				d.velocity = Vector2.Zero;
 				d.alpha = 127;
@@ -100,9 +100,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			target.GetGlobalNPC<LifeLeakNPC>().AdjustSpeed(.6f);
-			if (projectile.ai[0] == 1)
+			if (Projectile.ai[0] == 1)
 			{
-				Projectile p = Projectile.NewProjectileDirect(projectile.position, Vector2.Zero, ModContent.ProjectileType<LifeSyphon>(), projectile.damage / 3, 0f, projectile.owner, 2);
+				Projectile p = Projectile.NewProjectileDirect(Projectile.position, Vector2.Zero, ModContent.ProjectileType<LifeSyphon>(), Projectile.damage / 3, 0f, Projectile.owner, 2);
 				p.friendly = false;
 				p.netUpdate = true;
 			}

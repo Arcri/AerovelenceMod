@@ -16,39 +16,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item1;
-			item.crit = 8;
-            item.damage = 24;
-            item.melee = true;
-            item.width = 54;
-            item.height = 54; 
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-			item.value = Item.sellPrice(0, 0, 40, 20);
-            item.value = 10000;
-            item.autoReuse = true;
-            item.rare = ItemRarityID.Orange;
-            item.shoot = item.shoot = ModContent.ProjectileType<ElementScythe>();
-            item.shootSpeed = 3;
-            item.autoReuse = false;
+			Item.UseSound = SoundID.Item1;
+			Item.crit = 8;
+            Item.damage = 24;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 54;
+            Item.height = 54; 
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+			Item.value = Item.sellPrice(0, 0, 40, 20);
+            Item.value = 10000;
+            Item.autoReuse = true;
+            Item.rare = ItemRarityID.Orange;
+            Item.shoot = Item.shoot = ModContent.ProjectileType<ElementScythe>();
+            Item.shootSpeed = 3;
+            Item.autoReuse = false;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 15);
-            recipe.AddIngredient(ItemID.HellstoneBar, 15);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 5);
-            recipe.AddIngredient(ItemID.Fireblossom, 10);
-            recipe.AddIngredient(ItemID.Daybloom, 10);
-            recipe.AddIngredient(ItemID.Waterleaf, 10);
-            recipe.AddIngredient(ItemID.Moonglow, 10);
-            recipe.AddIngredient(ItemID.Shiverthorn, 10);
-            recipe.AddIngredient(ItemID.Deathweed, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 15)
+                .AddIngredient(ItemID.HellstoneBar, 15)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 5)
+                .AddIngredient(ItemID.Fireblossom, 10)
+                .AddIngredient(ItemID.Daybloom, 10)
+                .AddIngredient(ItemID.Waterleaf, 10)
+                .AddIngredient(ItemID.Moonglow, 10)
+                .AddIngredient(ItemID.Shiverthorn, 10)
+                .AddIngredient(ItemID.Deathweed, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

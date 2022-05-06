@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -13,23 +14,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public override void SetStaticDefaults() => DisplayName.SetDefault("Icicle Knife");
         public override void SetDefaults()
         {           
-            item.damage = 16;
+            Item.damage = 16;
             
-            item.width = 60;
-            item.height = 32;
-            item.useTime = item.useAnimation = 20;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = Item.useAnimation = 20;
                        
-            item.noMelee = item.consumable = item.melee = item.autoReuse = item.noUseGraphic = true;
+            Item.noMelee = Item.consumable = Item.DamageType = // item.autoReuse = item.noUseGraphic = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.maxStack = 999;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.maxStack = 999;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.UseSound = SoundID.Item1;
             
-            item.shoot = ModContent.ProjectileType<IcicleKnifeProj>();
-            item.shootSpeed = 18f;
+            Item.shoot = ModContent.ProjectileType<IcicleKnifeProj>();
+            Item.shootSpeed = 18f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -40,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 position.Y -= 500 * i;
                 position.X += Main.rand.Next(-6, 6) * 16f;
 
-                var velocity = Vector2.Normalize(Main.MouseWorld - position) * item.shootSpeed;
+                var velocity = Vector2.Normalize(Main.MouseWorld - position) * Item.shootSpeed;
 
                 Projectile.NewProjectileDirect(position, velocity, type, damage, knockBack, player.whoAmI);
             }                    
@@ -48,12 +49,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 5);
-            recipe.AddIngredient(ItemID.IronBar, 1);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this, 50);
-            recipe.AddRecipe();
+            CreateRecipe(50)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 5)
+                .AddIngredient(ItemID.IronBar, 1)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -61,28 +61,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetDefaults()
         {
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 4;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
 
-            projectile.width = 24;
-            projectile.height = 18;
-            projectile.friendly = projectile.melee = projectile.tileCollide = projectile.ignoreWater = true;
+            Projectile.width = 24;
+            Projectile.height = 18;
+            Projectile.friendly = Projectile.DamageType = // projectile.tileCollide = projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
-            projectile.penetrate = -1;
-            projectile.hostile = false;
-            projectile.aiStyle = 1;
+            Projectile.penetrate = -1;
+            Projectile.hostile = false;
+            Projectile.aiStyle = 1;
         }
         private bool rotChanged = false;   
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             for (int k = 0; k < 5; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 67, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 67, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
-            Main.PlaySound(SoundID.Item27);
-            Gore.NewGore(projectile.position, Vector2.Zero, mod.GetGoreSlot("Gores/IcicleKnifeGore1"), 1f); 
-            Gore.NewGore(projectile.position, Vector2.Zero, mod.GetGoreSlot("Gores/IcicleKnifeGore2"), 1f);
-            Gore.NewGore(projectile.position, Vector2.Zero, mod.GetGoreSlot("Gores/IcicleKnifeGore3"), 1f);
+            SoundEngine.PlaySound(SoundID.Item27);
+            Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/IcicleKnifeGore1"), 1f); 
+            Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/IcicleKnifeGore2"), 1f);
+            Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/IcicleKnifeGore3"), 1f);
             
             return true;
         }
@@ -90,16 +90,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             target.AddBuff(BuffID.Frostburn, 60);
 
-            projectile.velocity = target.position;
+            Projectile.velocity = target.position;
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = Main.projectileTexture[Projectile.type];
             Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            Color color = Color.Lerp(Color.Blue, Color.Purple, 0.5f + (float)Math.Sin(MathHelper.ToRadians(projectile.frame)) / 2f) * 0.7f;
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+            Color color = Color.Lerp(Color.Blue, Color.Purple, 0.5f + (float)Math.Sin(MathHelper.ToRadians(Projectile.frame)) / 2f) * 0.7f;
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Main.spriteBatch.Draw(texture, projectile.oldPos[i] + projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, projectile.oldRot[i], rectangle.Size() / 2f, 1f, projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, Projectile.oldRot[i], rectangle.Size() / 2f, 1f, Projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
             }
             return true;
         }
@@ -108,11 +108,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             if (!rotChanged)
             {
-                projectile.rotation = projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
+                Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
                 rotChanged = true;
             }
-            projectile.velocity.X *= 0.982f;
-            projectile.velocity.Y += 0.14f;     
+            Projectile.velocity.X *= 0.982f;
+            Projectile.velocity.Y += 0.14f;     
         }
     }
 }

@@ -19,34 +19,34 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
 		{
-			item.width = 24;
-			item.height = 32;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 20, 80);
+			Item.width = 24;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 20, 80);
 
-			item.crit = 4;
-			item.mana = 25;
-			item.damage = 23;
-			item.knockBack = 6;
+			Item.crit = 4;
+			Item.mana = 25;
+			Item.damage = 23;
+			Item.knockBack = 6;
 
-			item.useTime = item.useAnimation = 32;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			Item.useTime = Item.useAnimation = 32;
+			Item.useStyle = ItemUseStyleID.Shoot;
 
-			item.magic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 
-			item.shootSpeed = 8;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.CarbonCadence_Proj>();
+			Item.shootSpeed = 8;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.CarbonCadence_Proj>();
 
-			item.UseSound = SoundID.Item9;
+			Item.UseSound = SoundID.Item9;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
 			if (player.altFunctionUse == 2)
 			{
-				return (player.ownedProjectileCounts[item.shoot] > 0);
+				return (player.ownedProjectileCounts[Item.shoot] > 0);
 			}
 
 			return (true);
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 				for (int i = 0; i < Main.maxProjectiles; ++i)
 				{
 					Projectile p = Main.projectile[i];
-					if (p.active && p.owner == player.whoAmI && p.type == item.shoot && p.ai[0] == 1)
+					if (p.active && p.owner == player.whoAmI && p.type == Item.shoot && p.ai[0] == 1)
 					{
 						p.ai[0] = (int)Projectiles.Weapons.Magic.CarbonCadence_Proj.AIState.Explosion;
 						p.netUpdate = true;

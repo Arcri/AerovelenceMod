@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class CrystalSapling : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 
 				// Style 0 is for the ExampleTree sapling, and style 1 is for ExamplePalmTree, so here we check frameX to call the correct method.
 				// Any pixels before 54 on the tilesheet are for ExampleTree while any pixels above it are for ExamplePalmTree
-				if (tile.frameX < 54)
+				if (tile.TileFrameX < 54)
 					growSucess = WorldGen.GrowTree(i, j);
 				else
 					growSucess = WorldGen.GrowPalmTree(i, j);

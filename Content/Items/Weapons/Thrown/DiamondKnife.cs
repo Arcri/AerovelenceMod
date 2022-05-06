@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -14,33 +15,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 8;
-            item.damage = 12;
-            item.melee = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("DiamondKnifeProjectile");
-            item.shootSpeed = 16f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 8;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("DiamondKnifeProjectile").Type;
+            Item.shootSpeed = 16f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 10);
-            recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddRecipeGroup("IronBar", 3);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.FallenStar, 10)
+                .AddIngredient(ItemID.Diamond, 3)
+                .AddRecipeGroup("IronBar", 3)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -51,23 +51,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 38;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            Projectile.width = 18;
+            Projectile.height = 38;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             for (int k = 0; k < 5; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 132, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 132, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             return true;
         }
         public override void AI()
@@ -75,16 +75,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
             }
-            projectile.alpha += 2;
-            projectile.velocity *= 0.99f;
+            Projectile.alpha += 2;
+            Projectile.velocity *= 0.99f;
             if (!e)
             {
-                projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+                Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
                 e = true;
             }
-            projectile.rotation += rot;
+            Projectile.rotation += rot;
             rot *= 0.99f;
         }
     }

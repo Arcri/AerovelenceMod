@@ -25,8 +25,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		}
 		private AIState State
 		{
-			get => (AIState)projectile.ai[0];
-			set => projectile.ai[0] = (int)value;
+			get => (AIState)Projectile.ai[0];
+			set => Projectile.ai[0] = (int)value;
 		}
 
 		public override void SetStaticDefaults()
@@ -35,50 +35,50 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 12;
+			Projectile.width = Projectile.height = 12;
 
-			projectile.alpha = 100;
-			projectile.timeLeft = 600;
-			projectile.penetrate = -1;
+			Projectile.alpha = 100;
+			Projectile.timeLeft = 600;
+			Projectile.penetrate = -1;
 
-			projectile.friendly = true;
-			projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
 
-			projectile.localNPCHitCooldown = 30;
-			projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 30;
+			Projectile.usesLocalNPCImmunity = true;
 		}
 
 		public override bool PreAI()
 		{
-			Lighting.AddLight(projectile.Center, (255 - projectile.alpha) * 0f / 255f, (255 - projectile.alpha) * 0.3f / 255f, (255 - projectile.alpha) * 0.9f / 255f);
-			projectile.velocity *= 0.98f;
-			projectile.rotation = projectile.velocity.X * 0.1f;
+			Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0f / 255f, (255 - Projectile.alpha) * 0.3f / 255f, (255 - Projectile.alpha) * 0.9f / 255f);
+			Projectile.velocity *= 0.98f;
+			Projectile.rotation = Projectile.velocity.X * 0.1f;
 
 			if (State == AIState.Spawn)
 			{
-				if (projectile.velocity.Length() <= 1f)
+				if (Projectile.velocity.Length() <= 1f)
 				{
 					State = AIState.Float;
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 			}
 			else if (State == AIState.Float)
 			{
-				projectile.ai[1]++;
-				projectile.velocity.Y += (float)Math.Cos(projectile.ai[1] / 15) * 0.125f;
+				Projectile.ai[1]++;
+				Projectile.velocity.Y += (float)Math.Cos(Projectile.ai[1] / 15) * 0.125f;
 			}
 			else if (State == AIState.Explosion)
 			{
-				if (projectile.timeLeft > 3)
+				if (Projectile.timeLeft > 3)
 				{
-					projectile.timeLeft = 3;
+					Projectile.timeLeft = 3;
 				}
 
-				projectile.alpha = 255;
+				Projectile.alpha = 255;
 
-				projectile.position = projectile.Center;
-				projectile.width = projectile.height = 128;
-				projectile.Center = projectile.position;
+				Projectile.position = Projectile.Center;
+				Projectile.width = Projectile.height = 128;
+				Projectile.Center = Projectile.position;
 			}
 
 			return (false);
@@ -89,14 +89,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			if (projectile.velocity.X != oldVelocity.X)
+			if (Projectile.velocity.X != oldVelocity.X)
 			{
-				projectile.velocity.X = -oldVelocity.X;
+				Projectile.velocity.X = -oldVelocity.X;
 			}
 
-			if (projectile.velocity.Y != oldVelocity.Y)
+			if (Projectile.velocity.Y != oldVelocity.Y)
 			{
-				projectile.velocity.Y = -oldVelocity.Y;
+				Projectile.velocity.Y = -oldVelocity.Y;
 			}
 
 			return (false);
@@ -106,7 +106,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>());
+				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Crystal>());
 			}
 
 			if (State == AIState.Explosion)
@@ -115,12 +115,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 				{
 					Vector2 velocity = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 8f;
 
-					Projectile.NewProjectile(projectile.Center, velocity, ModContent.ProjectileType<DiamondCrystalShard>(), 10, 1f, projectile.owner);
+					Projectile.NewProjectile(Projectile.Center, velocity, ModContent.ProjectileType<DiamondCrystalShard>(), 10, 1f, Projectile.owner);
 				}
 
 				for (int i = 0; i < 20; ++i)
 				{
-					Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>());
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Crystal>());
 					dust.scale *= 1.5f;
 					dust.velocity *= 2f;
 					dust.noGravity = true;
@@ -129,6 +129,6 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-			=> this.DrawProjectileCentered(spriteBatch, lightColor * projectile.Opacity);
+			=> this.DrawProjectileCentered(spriteBatch, lightColor * Projectile.Opacity);
 	}
 }

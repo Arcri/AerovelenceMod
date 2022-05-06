@@ -4,6 +4,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
 {
@@ -13,54 +15,54 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Thorn Ball");
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
 
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 35;
-            projectile.height = 35;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.penetrate = 4;
-            projectile.tileCollide = true;
+            Projectile.width = 35;
+            Projectile.height = 35;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 4;
+            Projectile.tileCollide = true;
             bounces = 3;
 
         }
 
         public override void AI()
         {
-            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            projectile.velocity.X *= 0.984f;
-            projectile.velocity.Y += 0.28f;
+            Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
+            Projectile.velocity.X *= 0.984f;
+            Projectile.velocity.Y += 0.28f;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
 
-            Main.PlaySound(SoundID.Dig, projectile.position);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
 
-            projectile.velocity.Y = -projectile.oldVelocity.Y + bounces;
+            Projectile.velocity.Y = -Projectile.oldVelocity.Y + bounces;
 
-            projectile.penetrate -= 1;
+            Projectile.penetrate -= 1;
             bounces--;
 
             return bounces < 0;
         }
 
        
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor) {
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
+            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
             Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(projectile.frame)) / 2f) * 0.5f;
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+            Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(Projectile.frame)) / 2f) * 0.5f;
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Main.spriteBatch.Draw(texture, projectile.oldPos[i] + projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, projectile.oldRot[i], rectangle.Size() / 2f, 1f, projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture, Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, Projectile.oldRot[i], rectangle.Size() / 2f, 1f, Projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             }
 
             return (true);

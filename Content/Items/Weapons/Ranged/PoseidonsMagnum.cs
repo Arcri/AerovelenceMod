@@ -15,20 +15,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void SetDefaults() 
 		{
-			item.damage = 400;
-			item.ranged = true;
-			item.width = 46;
-			item.height = 32;
-			item.useTime = 23;
-			item.useAnimation = 23;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.knockBack = 3;
-			item.value = 100000;
-			item.rare = ItemRarityID.Purple;
-			item.UseSound = SoundID.Item41;
-			item.autoReuse = false;
-			item.shoot = mod.ProjectileType("PoseidonStream");
-			item.shootSpeed = 34f;
+			Item.damage = 400;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 46;
+			Item.height = 32;
+			Item.useTime = 23;
+			Item.useAnimation = 23;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.knockBack = 3;
+			Item.value = 100000;
+			Item.rare = ItemRarityID.Purple;
+			Item.UseSound = SoundID.Item41;
+			Item.autoReuse = false;
+			Item.shoot = Mod.Find<ModProjectile>("PoseidonStream").Type;
+			Item.shootSpeed = 34f;
 		}
 		public override Vector2? HoldoutOffset()
 		{
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 				for (int i = 0; i < 1; i++)
 				{
 					Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f)); 
-					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("PoseidonStream"), damage, knockBack, player.whoAmI);
+					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("PoseidonStream").Type, damage, knockBack, player.whoAmI);
 				}
 				
 			}
@@ -59,14 +59,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void AddRecipes() 
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.VenusMagnum, 1);
-			recipe.AddIngredient(ItemID.FragmentVortex, 12);
-			recipe.AddIngredient(ItemID.Starfish, 15);
-			recipe.AddIngredient(ItemID.LunarBar, 8);
-			recipe.AddTile(TileID.LunarCraftingStation);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.VenusMagnum, 1)
+				.AddIngredient(ItemID.FragmentVortex, 12)
+				.AddIngredient(ItemID.Starfish, 15)
+				.AddIngredient(ItemID.LunarBar, 8)
+				.AddTile(TileID.LunarCraftingStation)
+				.Register();
 		}
 	}
 }

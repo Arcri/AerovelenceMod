@@ -10,16 +10,16 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
     public class CavernCrystal : ModTile
     {
         private readonly int oneHelixRevolutionInUpdateTicks = 30;
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             mineResist = 2.5f;
             minPick = 40;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
-            Main.tileMerge[Type][mod.TileType("CavernCrystal")] = true;
-            Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
-            Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CavernCrystal").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(115, 230, 250));

@@ -13,20 +13,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.crit = 5;
-            item.damage = 15;
-            item.melee = true;
-            item.width = 32;
-            item.height = 32;
-            item.useTime = 19;
-            item.useAnimation = 19;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = 10000;
-            item.rare = ItemRarityID.Blue;
-            item.useTurn = true;
-            item.autoReuse = true;
+            Item.crit = 5;
+            Item.damage = 15;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 19;
+            Item.useAnimation = 19;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Blue;
+            Item.useTurn = true;
+            Item.autoReuse = true;
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
@@ -37,11 +37,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
 		public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddRecipeGroup("AerovelenceMod:GoldBars", 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

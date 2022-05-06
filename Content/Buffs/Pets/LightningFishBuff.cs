@@ -5,7 +5,7 @@ namespace AerovelenceMod.Content.Buffs.Pets
 {
     public class LightningFishBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{ 
 			DisplayName.SetDefault("Fish Partner");
 			Description.SetDefault("\"I now pronounce you Terrarian and Fish\"");

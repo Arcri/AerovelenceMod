@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public class AetherVisionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mini Cyvercry");
 			Description.SetDefault("A mini Cyvercry is protecting you");

@@ -12,21 +12,21 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
         {
             DisplayName.SetDefault("Crimson Reach");
 
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[NPC.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            npc.lifeMax = 250;
+            NPC.lifeMax = 250;
 
-            npc.width = 80;
-            npc.height = 40;
-            npc.damage = 40;
+            NPC.width = 80;
+            NPC.height = 40;
+            NPC.damage = 40;
 
-            npc.knockBackResist = 0f;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath44;
-            npc.aiStyle = -1;
+            NPC.knockBackResist = 0f;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = -1;
             aiType = -1;
         }
 
@@ -34,13 +34,13 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
+            NPC.frameCounter++;
 
-            if (npc.frameCounter >= 5f)
+            if (NPC.frameCounter >= 5f)
             {
                 frame++;
 
-                npc.frameCounter = 0f;
+                NPC.frameCounter = 0f;
             }
 
             if (frame > 3)
@@ -48,13 +48,13 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
                 frame = 0;
             }
 
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         private float ShootTimer
         {
-            get => npc.ai[0];
-            set => npc.ai[0] = value;
+            get => NPC.ai[0];
+            set => NPC.ai[0] = value;
         }
 
         private Vector2 scale = Vector2.Zero;
@@ -71,7 +71,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
                 {
                     Vector2 velocity = new Vector2(Main.rand.NextFloat(-3f, 3f), -3f);
 
-                    Projectile.NewProjectile(npc.Center, velocity, ModContent.ProjectileType<CrimsonReachBall>(), npc.damage, 2f);
+                    Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<CrimsonReachBall>(), NPC.damage, 2f);
                 }
 
                 ShootTimer = 0f;
@@ -80,13 +80,13 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            Texture2D texture = Main.npcTexture[npc.type];
+            Texture2D texture = Main.npcTexture[NPC.type];
 
-            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-            Vector2 drawPosition = npc.Center - Main.screenPosition + new Vector2(0f, npc.gfxOffY);
+            Vector2 drawPosition = NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
 
-            spriteBatch.Draw(texture, drawPosition, npc.frame, drawColor, npc.rotation, npc.frame.Size() / 2f, scale, effects, 0f);
+            spriteBatch.Draw(texture, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, scale, effects, 0f);
 
             return false;
         }

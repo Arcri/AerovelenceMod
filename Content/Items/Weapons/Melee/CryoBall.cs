@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -17,23 +18,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.channel = true;
-            item.damage = 29;
-            item.melee = true;
-            item.width = 34;
-            item.height = 40;
+            Item.channel = true;
+            Item.damage = 29;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 34;
+            Item.height = 40;
             
-            item.useAnimation = item.useTime = 24;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 3, 75, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<CryoBallProjectile>();
-            item.shootSpeed = 16f;
+            Item.useAnimation = Item.useTime = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 3, 75, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = false;
+            Item.shoot = ModContent.ProjectileType<CryoBallProjectile>();
+            Item.shootSpeed = 16f;
         }
     }
 
@@ -41,13 +42,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         public static bool DrawProjectileCenteredWithTexture(this ModProjectile p, Texture2D texture, SpriteBatch spriteBatch, Color lightColor)
         {
-            Rectangle frame = texture.Frame(1, Main.projFrames[p.projectile.type], 0, p.projectile.frame);
+            Rectangle frame = texture.Frame(1, Main.projFrames[p.Projectile.type], 0, p.Projectile.frame);
             Vector2 origin = frame.Size() / 2 + new Vector2(p.drawOriginOffsetX, p.drawOriginOffsetY);
-            SpriteEffects effects = p.projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effects = p.Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Vector2 drawPosition = p.projectile.Center - Main.screenPosition + new Vector2(p.drawOffsetX, 0);
+            Vector2 drawPosition = p.Projectile.Center - Main.screenPosition + new Vector2(p.drawOffsetX, 0);
 
-            spriteBatch.Draw(texture, drawPosition, frame, lightColor, p.projectile.rotation, origin, p.projectile.scale, effects, 0f);
+            spriteBatch.Draw(texture, drawPosition, frame, lightColor, p.Projectile.rotation, origin, p.Projectile.scale, effects, 0f);
 
             return (false);
         }
@@ -57,19 +58,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 13;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 245f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 16f;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 13;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 245f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 16f;
 
-            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
 
-            projectile.width = projectile.height = 16;
+            Projectile.width = Projectile.height = 16;
 
-            projectile.aiStyle = 99;
+            Projectile.aiStyle = 99;
 
-            projectile.friendly = true;
-            projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
         }
 
         int OnHit = 0;
@@ -78,24 +79,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             OnHit++;
             if (OnHit == 9)
             {
-                Main.PlaySound(SoundID.Item67, (int)projectile.Center.X, (int)projectile.Center.Y);
+                SoundEngine.PlaySound(SoundID.Item67, (int)Projectile.Center.X, (int)Projectile.Center.Y);
 
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, Projectile.owner);
                 OnHit = 0;
             }
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
-            Texture2D texture2D = mod.GetTexture("Assets/Glow");
-            for(int k = 0; k < projectile.oldPos.Length; k++)
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width, Main.projectileTexture[Projectile.type].Height);
+            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            for(int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .35f;
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(-9f, -11.5f);
-                Color color = projectile.GetAlpha(Color.DarkBlue) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .35f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(-9f, -11.5f);
+                Color color = Projectile.GetAlpha(Color.DarkBlue) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                
-                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0f);
             }
 
             return true;
@@ -108,15 +109,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 for (int j = 0; j < 10; j++)
                 {
                     float t = (float)Main.time * 0.1f;
-                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
-                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    float x = Projectile.position.X - Projectile.velocity.X / 10f * (float)j;
+                    float y = Projectile.position.Y - Projectile.velocity.Y / 10f * (float)j;
                     Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.LightBlue, 0.9f);
                     dust.position.X = x;
                     dust.position.Y = y;
                     dust.velocity *= 0f;
                     dust.noGravity = true;
                     dust.scale = 0.9f;
-                    dust.position = projectile.Center + new Vector2((float)Math.Sin(2 * t) / 2f, -(float)Math.Cos(3 * t) / 3f) * 100f;
+                    dust.position = Projectile.Center + new Vector2((float)Math.Sin(2 * t) / 2f, -(float)Math.Cos(3 * t) / 3f) * 100f;
                 }
             }
             if (OnHit >= 6)
@@ -124,15 +125,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 for (int j = 0; j < 10; j++)
                 {
                     float t = (float)Main.time * 0.1f;
-                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
-                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    float x = Projectile.position.X - Projectile.velocity.X / 10f * (float)j;
+                    float y = Projectile.position.Y - Projectile.velocity.Y / 10f * (float)j;
                     Dust dust2 = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.LightBlue, 0.9f);
                     dust2.position.X = x;
                     dust2.position.Y = y;
                     dust2.velocity *= 0f;
                     dust2.noGravity = true;
                     dust2.scale = 0.9f;
-                    dust2.position = projectile.Center + new Vector2((float)Math.Sin(4 * t) / 2f, -(float)Math.Cos(2 * t) / 3f) * 100f;
+                    dust2.position = Projectile.Center + new Vector2((float)Math.Sin(4 * t) / 2f, -(float)Math.Cos(2 * t) / 3f) * 100f;
                 }
             }
         }
@@ -142,18 +143,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 200;
+            Projectile.width = Projectile.height = 200;
 
-            projectile.aiStyle = -1;
-            projectile.friendly = projectile.melee = projectile.ignoreWater = true;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
-            projectile.penetrate = -1;
-            projectile.timeLeft = 60;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 60;
 
-            projectile.tileCollide = false;
-            projectile.extraUpdates = 1;
+            Projectile.tileCollide = false;
+            Projectile.extraUpdates = 1;
 
-            projectile.alpha = 255;
+            Projectile.alpha = 255;
         }
         public override void AI()
         {
@@ -161,7 +162,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 float randomDust = Main.rand.NextFloat(-4, 4);
                 float randomDust2 = Main.rand.NextFloat(4, -4);
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, randomDust, randomDust2);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 20, randomDust, randomDust2);
             }
 
         }

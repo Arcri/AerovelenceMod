@@ -8,14 +8,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class CrystalSand : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
 			minPick = 59;
             Main.tileSolid[Type] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalDirt")] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
-            Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalDirt").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;

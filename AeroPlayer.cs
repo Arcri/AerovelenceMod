@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.ShieldSystem;
 using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
 using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
+using Terraria.Audio;
 
 namespace AerovelenceMod
 {
@@ -122,8 +123,8 @@ namespace AerovelenceMod
 
 					if (AmbrosiaBonus)
 					{
-						Terraria.Projectile.NewProjectile(player.Center, (Terraria.Main.MouseWorld - player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
-						player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 100);
+						Terraria.Projectile.NewProjectile(Player.Center, (Terraria.Main.MouseWorld - Player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
+						Player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 100);
 					}
 		}
 		public override void OnHitNPC(Terraria.Item item, Terraria.NPC target, int damage, float knockback, bool crit)
@@ -159,14 +160,14 @@ namespace AerovelenceMod
 		{
 			if (ShieldOn)
 			{
-				foreach (Item item in player.armor)
+				foreach (Item item in Player.armor)
 				{
 					if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)) && ShieldCapacity > 200)
 					{
 						ShieldCapacity -= 200;
 						if (ShieldType == ShieldTypes.Bubble || (ShieldType == ShieldTypes.Impact && Main.rand.Next(1, 3) % 3 == 0) || ShieldType == ShieldTypes.Nova && (damageSource.SourceNPCIndex != -1 || damageSource.SourceProjectileIndex != -1))
 						{
-							player.ShadowDodge();
+							Player.ShadowDodge();
 							return false;
 						}
 					}
@@ -181,7 +182,7 @@ namespace AerovelenceMod
 				if (damage > 10)
 				{
 					Vector2 offset = new Vector2(0, -100);
-					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(Player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
 			}
 		}
@@ -190,7 +191,7 @@ namespace AerovelenceMod
 			if (QueensStinger)
 				if (proj.type != 181)
 					if (Terraria.Main.rand.NextBool(10))
-						Terraria.Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, player.whoAmI);
+						Terraria.Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, Player.whoAmI);
 
 			if (EmeraldEmpoweredGem)
 				target.AddBuff(39, 40);
@@ -215,18 +216,18 @@ namespace AerovelenceMod
 				float rot = Terraria.Main.rand.NextFloat(MathHelper.TwoPi);
 				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
 				Vector2 velocity = Vector2.One.RotatedBy(rot) * -1 * 12f;
-				Terraria.Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, player.HeldItem.knockBack, player.whoAmI, 0, 0);
+				Terraria.Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, Player.HeldItem.knockBack, Player.whoAmI, 0, 0);
 			}
 		}
 		public override void PreUpdate()
 		{
 			if (TravellingByETP)
 			{
-				if (player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24 - 16, (int)ETPDestination.Y - 16, 24, 48)))
+				if (Player.Hitbox.Intersects(new Rectangle((int)ETPDestination.X + 24 - 16, (int)ETPDestination.Y - 16, 24, 48)))
 				{
 					TravellingByETP = false;
 					ETPDestination = new Vector2(0, 0);
-					player.velocity *= 0.05f;
+					Player.velocity *= 0.05f;
 					for (int i2 = 0; i2 < 4; i2++)
 					{
 						Dust Dust1 = Dust.NewDustDirect(new Vector2(ETPDestination.X + 8f, ETPDestination.Y - 8f), 20, 20, DustID.Electric, 0f, 0f, 100, default, 1f);
@@ -241,30 +242,30 @@ namespace AerovelenceMod
 					ETPDustDelay--;
 					if (ETPDustDelay <= 0)
 					{
-						Terraria.Dust Dust1 = Terraria.Dust.NewDustPerfect(player.Center, 229, default, 0, Color.DarkBlue, 2f);
+						Terraria.Dust Dust1 = Terraria.Dust.NewDustPerfect(Player.Center, 229, default, 0, Color.DarkBlue, 2f);
 						Dust1.noGravity = true;
 						ETPDustDelay = 3;
 					}
 					ETPSoundDelay--;
 					if (ETPSoundDelay <= 0)
 					{
-						Main.PlaySound(SoundID.Item93, player.Center);
+						SoundEngine.PlaySound(SoundID.Item93, Player.Center);
 						ETPSoundDelay = 20;
 					}
-					Terraria.Lighting.AddLight((int)player.Center.X / 16, (int)player.Center.Y / 16, 0.3f, 0.8f, 1.1f);
-					player.AddBuff(BuffID.Cursed, 2);
-					player.AddBuff(BuffID.Invisibility, 2);
-					player.gravity = 0f;
-					player.direction = player.velocity.X > 0 ? 1 : -1;
-					player.velocity = player.DirectionTo(ETPDestination) * 6f;
-					player.position += player.velocity;
+					Terraria.Lighting.AddLight((int)Player.Center.X / 16, (int)Player.Center.Y / 16, 0.3f, 0.8f, 1.1f);
+					Player.AddBuff(BuffID.Cursed, 2);
+					Player.AddBuff(BuffID.Invisibility, 2);
+					Player.gravity = 0f;
+					Player.direction = Player.velocity.X > 0 ? 1 : -1;
+					Player.velocity = Player.DirectionTo(ETPDestination) * 6f;
+					Player.position += Player.velocity;
 				}
 			}
 		}
 		public override void SetControls()
 		{
 			if (TravellingByETP)
-				player.controlDown = true;
+				Player.controlDown = true;
 		}
 		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Terraria.Player self, int i)
 		{
@@ -281,8 +282,8 @@ namespace AerovelenceMod
 			{
 				if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
 				{
-					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
-						player.height + 4, ModContent.DustType<WispDust>(), player.velocity.X * 0.4f, player.velocity.Y * 0.4f,
+					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
+						Player.height + 4, ModContent.DustType<WispDust>(), Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f,
 						100, default, 3f);
 
 					Terraria.Main.dust[dust].noGravity = true;
@@ -303,8 +304,8 @@ namespace AerovelenceMod
 			{
 				if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
 				{
-					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), player.width + 4,
-						player.height + 4, DustID.AncientLight, player.velocity.X * 0.4f, player.velocity.Y * 0.4f, 100,
+					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
+						Player.height + 4, DustID.AncientLight, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100,
 						default, 3f);
 					Terraria.Main.dust[dust].noGravity = true;
 					Terraria.Main.dust[dust].velocity *= 1.8f;
@@ -362,7 +363,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.badHeal)
 			{
-				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Buffs/SoulFire");
+				Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Buffs/SoulFire");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
@@ -383,7 +384,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.MiningAbilityCooldown)
 			{
-				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Buffs/MiningAbilityCooldown");
+				Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Buffs/MiningAbilityCooldown");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
@@ -404,7 +405,7 @@ namespace AerovelenceMod
 
 			if (modPlayer.Electrified)
 			{
-				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Buffs/Electrified");
+				Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Buffs/Electrified");
 
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Terraria.Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Terraria.Main.screenPosition.Y);
@@ -427,17 +428,17 @@ namespace AerovelenceMod
             {
 				Texture2D texture;
 				Color color;
-				Vector2 position = modPlayer.player.Center - Main.screenPosition;
+				Vector2 position = modPlayer.Player.Center - Main.screenPosition;
 				if (modPlayer.ShieldType == ShieldTypes.Bubble)
                 {
-					texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/BubbleShield");
+					texture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/BubbleShield");
 					color = new Color(160, 160, 160, 160);
 				}
 				else 
 				{ 
-					texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/NovaShield");
+					texture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/NovaShield");
 					color = Color.White;
-					position = modPlayer.player.Center - Main.screenPosition + new Vector2(0,5);
+					position = modPlayer.Player.Center - Main.screenPosition + new Vector2(0,5);
 				}
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
@@ -454,11 +455,11 @@ namespace AerovelenceMod
 			AeroPlayer modPlayer = drawPlayer.GetModPlayer<AeroPlayer>();
 			if (modPlayer.ShieldType == ShieldTypes.Nova && !modPlayer.ShieldBroken && modPlayer.ShieldOn)
 			{
-				Texture2D texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/NovaShield_Back");
+				Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/NovaShield_Back");
 				int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
 				int drawY = (int)(drawInfo.position.Y - 4f - Main.screenPosition.Y);
 
-				DrawData data = new DrawData(texture, modPlayer.player.Center - Main.screenPosition + new Vector2(0, 5), null, Color.White, 0f,
+				DrawData data = new DrawData(texture, modPlayer.Player.Center - Main.screenPosition + new Vector2(0, 5), null, Color.White, 0f,
 					new Vector2(texture.Width / 2f, texture.Height / 2f), MathHelper.Lerp(0.9f + ShieldProjectile.sizeBoost, 1f + ShieldProjectile.sizeBoost, ShieldProjectile.scale), SpriteEffects.None, 0);
 
 				Main.playerDrawData.Add(data);

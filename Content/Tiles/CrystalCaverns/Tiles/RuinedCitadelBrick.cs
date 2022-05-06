@@ -7,14 +7,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class RuinedCitadelBrick : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             mineResist = 2.5f;
             Main.tileSolid[Type] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
-            Main.tileMerge[Type][mod.TileType("CavernCrystal")] = true;
-            Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
-            Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CavernCrystal").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlendAll[Type] = true;
             Main.tileMergeDirt[Type] = true;
@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             AddMapEntry(new Color(102, 108, 117));
             dustType = 116;
             soundType = SoundID.Tink;
-            drop = mod.ItemType("CrystalDirtItem");
+            drop = Mod.Find<ModItem>("CrystalDirtItem").Type;
         }
         public override bool CanExplode(int i, int j)
         {

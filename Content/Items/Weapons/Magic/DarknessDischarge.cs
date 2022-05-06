@@ -18,25 +18,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
 		{
-			item.damage = 62;
-			item.crit = 8;
-			item.magic = true;
-			item.mana = 12;
-			item.width = 36;
-			item.magic = true;
-			item.height = 38;
-			item.useTime = 17;
-			item.useAnimation = 25;
-			item.useStyle = ItemUseStyleID.HoldingUp;
-			item.noMelee = true;
-			item.knockBack = 5;
-			item.value = 10000;
-			item.rare = ItemRarityID.Lime;
-			item.UseSound = SoundID.Item20;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<DischargeBlade>();
-			item.shootSpeed = 0f;
-			Item.staff[item.type] = true;
+			Item.damage = 62;
+			Item.crit = 8;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 12;
+			Item.width = 36;
+			Item.DamageType = DamageClass.Magic;
+			Item.height = 38;
+			Item.useTime = 17;
+			Item.useAnimation = 25;
+			Item.useStyle = ItemUseStyleID.HoldUp;
+			Item.noMelee = true;
+			Item.knockBack = 5;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Lime;
+			Item.UseSound = SoundID.Item20;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<DischargeBlade>();
+			Item.shootSpeed = 0f;
+			Item.staff[Item.type] = true;
 		}
 
 	}
@@ -46,24 +46,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		private int orbitTimer;
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 7;
-			ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 7;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 34;
-			projectile.height = 38;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.magic = true;
-			projectile.penetrate = 5;
-			projectile.timeLeft = 400;
-			projectile.light = 0.5f;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.extraUpdates = 1;
+			Projectile.width = 34;
+			Projectile.height = 38;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.penetrate = 5;
+			Projectile.timeLeft = 400;
+			Projectile.light = 0.5f;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.extraUpdates = 1;
 
 		}
 		public override void AI()
@@ -71,45 +71,45 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			if (Main.rand.NextFloat() < 0.8289474f)
 			{
-				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, 164, 0f, 0f, 0, new Color(155, 0, 124), 1.118421f);
+				int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 164, 0f, 0f, 0, new Color(155, 0, 124), 1.118421f);
 				Dust dust = Main.dust[dustIndex];
 				dust.shader = GameShaders.Armor.GetSecondaryShader(0, Main.LocalPlayer);
 				dust.noGravity = true;
 				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
 			}
 
-			projectile.rotation += 0.15f;
+			Projectile.rotation += 0.15f;
 			projTimer++;
-			Player player = Main.player[projectile.owner];
+			Player player = Main.player[Projectile.owner];
 			if (projTimer <= 150)
 			{
 				orbitTimer += 2;
 				Vector2 orbitPos = player.Center + new Vector2(70, 0).RotatedBy(MathHelper.ToRadians(orbitTimer));
-				projectile.velocity = (10 * projectile.velocity + orbitPos - projectile.Center) / 20f;
+				Projectile.velocity = (10 * Projectile.velocity + orbitPos - Projectile.Center) / 20f;
 			}
 			if (projTimer >= 150)
 			{
-				if (projectile.localAI[0] == 0f)
+				if (Projectile.localAI[0] == 0f)
 				{
 					Vector2 mousePos = Main.MouseWorld;
-					Vector2 vector8 = new Vector2(projectile.position.X + (projectile.width * 0.5f), projectile.position.Y + (projectile.height * 0.5f));
+					Vector2 vector8 = new Vector2(Projectile.position.X + (Projectile.width * 0.5f), Projectile.position.Y + (Projectile.height * 0.5f));
 					float Speed = 5f;
 					float rotation = (float)Math.Atan2(vector8.Y - mousePos.Y, vector8.X - mousePos.X);
-					projectile.velocity = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
-					projectile.localAI[0] = 1f;
+					Projectile.velocity = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
+					Projectile.localAI[0] = 1f;
 				}
-				projectile.velocity *= 1.035f;
+				Projectile.velocity *= 1.035f;
 			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-			for (int k = 0; k < projectile.oldPos.Length; k++)
+			Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+			for (int k = 0; k < Projectile.oldPos.Length; k++)
 			{
-				Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-				Color color = projectile.GetAlpha(Color.LightPink) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-				spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+				Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+				Color color = Projectile.GetAlpha(Color.LightPink) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+				spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
 			}
 			return true;
 		}
@@ -120,7 +120,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			for (int i = 0; i < 10; i++)
 			{
 				int dustType = 164;
-				int dustIndex = Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType, 0f, 0f, 0, new Color(155, 0, 124));
+				int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType, 0f, 0f, 0, new Color(155, 0, 124));
 				Dust dust = Main.dust[dustIndex];
 				dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
 				dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;

@@ -11,18 +11,18 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
         public override void SetDefaults()
         {
 
-            item.useTurn = true;
-            item.consumable = true;
-            item.autoReuse = true;
+            Item.useTurn = true;
+            Item.consumable = true;
+            Item.autoReuse = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 15;
-            item.useTime = 10;
+            Item.maxStack = 999;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
 
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.CavernStone>();
+            Item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.CavernStone>();
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 0, 0);
+            Item.useStyle = ItemUseStyleID.Swing;
+			Item.value = Item.sellPrice(0, 0, 0, 0);
         }
     }
 }

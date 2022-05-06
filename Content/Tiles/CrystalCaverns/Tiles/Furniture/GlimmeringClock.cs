@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
     public class GlimmeringClock : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			adjTiles = new int[] { TileID.GrandfatherClocks };
 		}
 
-		public override bool NewRightClick(int x, int y)
+		public override bool RightClick(int x, int y)
 		{
 			string text = "AM";
 			//Get current weird time

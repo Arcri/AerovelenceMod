@@ -9,21 +9,21 @@ namespace AerovelenceMod.Content.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 1;
-			projectile.height = 1;
-			projectile.alpha = 255;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = true;
-			projectile.magic = true;	
+			Projectile.width = 1;
+			Projectile.height = 1;
+			Projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
+			Projectile.DamageType = DamageClass.Magic;	
 		}
 
 		public override void AI()
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				float x = projectile.position.X - projectile.velocity.X / 10f * j;
-				float y = projectile.position.Y - projectile.velocity.Y / 10f * j;
+				float x = Projectile.position.X - Projectile.velocity.X / 10f * j;
+				float y = Projectile.position.Y - Projectile.velocity.Y / 10f * j;
 				Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 160);
 				dust.position.X = x;
 				dust.position.Y = y;
@@ -31,11 +31,11 @@ namespace AerovelenceMod.Content.Projectiles
 				dust.noGravity = true;
 			}
 
-			if(projectile.ai[0] > 120)
+			if(Projectile.ai[0] > 120)
 			{ 
-				projectile.Kill(); 
+				Projectile.Kill(); 
 			}
-			projectile.ai[0]++;
+			Projectile.ai[0]++;
 		}
 
 		public override string Texture => "Terraria/Projectile_" + ProjectileID.None;

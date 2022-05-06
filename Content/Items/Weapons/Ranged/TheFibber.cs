@@ -22,36 +22,35 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.crit = 20;
-            item.damage = 132;
-            item.ranged = true;
-            item.width = 50;
-            item.height = 24;
-            item.useTime = 21;
-            item.useAnimation = 21;
-            item.UseSound = SoundID.Item36;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Yellow;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 24f;
+            Item.crit = 20;
+            Item.damage = 132;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 50;
+            Item.height = 24;
+            Item.useTime = 21;
+            Item.useAnimation = 21;
+            Item.UseSound = SoundID.Item36;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 8;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.autoReuse = true;
+            Item.shoot = AmmoID.Bullet;
+            Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 24f;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<EmberFragment>(), 6);
-            modRecipe.AddIngredient(ItemID.LunarBar, 25);
-            modRecipe.AddIngredient(ItemID.FragmentVortex, 30);
-            modRecipe.AddIngredient(ItemID.VortexBeater, 1);
-            modRecipe.AddIngredient(ItemID.VenusMagnum, 1);
-            modRecipe.AddIngredient(ItemID.PhoenixBlaster, 1);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<EmberFragment>(), 6)
+                .AddIngredient(ItemID.LunarBar, 25)
+                .AddIngredient(ItemID.FragmentVortex, 30)
+                .AddIngredient(ItemID.VortexBeater, 1)
+                .AddIngredient(ItemID.VenusMagnum, 1)
+                .AddIngredient(ItemID.PhoenixBlaster, 1)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

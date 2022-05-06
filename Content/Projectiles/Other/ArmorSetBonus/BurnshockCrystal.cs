@@ -6,15 +6,15 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 	{
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 1;
-			projectile.width = 16;
-			projectile.height = 8;
-			projectile.alpha =  0;
-			projectile.penetrate = 10;
-			projectile.damage = 45;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = false;
+			Projectile.aiStyle = 1;
+			Projectile.width = 16;
+			Projectile.height = 8;
+			Projectile.alpha =  0;
+			Projectile.penetrate = 10;
+			Projectile.damage = 45;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = false;
 		}
 	}
 }

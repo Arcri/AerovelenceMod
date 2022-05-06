@@ -15,11 +15,11 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 38;
-            item.height = 38;
-			item.value = Item.sellPrice(0, 5, 0, 0);
-			item.rare = ItemRarityID.Expert;
+			Item.accessory = true;
+            Item.width = 38;
+            Item.height = 38;
+			Item.value = Item.sellPrice(0, 5, 0, 0);
+			Item.rare = ItemRarityID.Expert;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -28,13 +28,13 @@ namespace AerovelenceMod.Content.Items.Accessories
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+            var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                if (line2.Mod == "Terraria" && line2.Name == "ItemName")
                 {
-                    line2.overrideColor = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
+                    line2.OverrideColor = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
                 }
             }
         }

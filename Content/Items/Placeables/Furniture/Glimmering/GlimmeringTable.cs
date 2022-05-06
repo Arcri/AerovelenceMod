@@ -13,25 +13,24 @@ namespace AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering
 		}
         public override void SetDefaults()
         {
-            item.width = 16;
-            item.height = 16;
-            item.maxStack = 999;
-            item.useTurn = true;
-            item.consumable = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(0, 0, 0, 0);
-            item.createTile = mod.TileType("GlimmeringTable");
+            Item.width = 16;
+            Item.height = 16;
+            Item.maxStack = 999;
+            Item.useTurn = true;
+            Item.consumable = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+			Item.value = Item.sellPrice(0, 0, 0, 0);
+            Item.createTile = Mod.Find<ModTile>("GlimmeringTable").Type;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 8);
-            modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<Glimmerwood>(), 8)
+                .AddTile(ModContent.TileType<CrystallineFabricator>())
+                .Register();
         }
     }
 }

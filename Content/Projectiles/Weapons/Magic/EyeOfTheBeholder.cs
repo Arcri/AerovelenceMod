@@ -11,18 +11,18 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
         public override void SetDefaults()
         {
-            projectile.width = 150;
-            projectile.height = 100;
-            projectile.aiStyle = 0;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = false;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.penetrate = 999;
+            Projectile.width = 150;
+            Projectile.height = 100;
+            Projectile.aiStyle = 0;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = false;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.penetrate = 999;
         }
         public override void AI()
         {
-            projectile.alpha += 2;
+            Projectile.alpha += 2;
         }
     }
 }

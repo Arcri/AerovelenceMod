@@ -8,23 +8,23 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 		int i;
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.aiStyle = 27;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 600;
-			projectile.alpha = 255;
-			projectile.timeLeft = 30;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.aiStyle = 27;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 600;
+			Projectile.alpha = 255;
+			Projectile.timeLeft = 30;
 		}
 
 		public override bool PreAI()
 		{
-			projectile.tileCollide = false;
+			Projectile.tileCollide = false;
 			i++;
 			if (i % 2 == 0)
 			{
-				int dust = Dust.NewDust(projectile.position + projectile.velocity, projectile.width * 2, projectile.height * 2, 59, 0f, 0f);
+				int dust = Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width * 2, Projectile.height * 2, 59, 0f, 0f);
 				Main.dust[dust].noGravity = true;
 			}
 			return false;

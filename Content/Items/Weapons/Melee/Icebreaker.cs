@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -18,20 +19,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 8;
-            item.damage = 14;
-            item.melee = true;
-            item.width = 50;
-            item.height = 54; 
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 0, 40, 20);
-            item.value = 10000;
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 8;
+            Item.damage = 14;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 50;
+            Item.height = 54; 
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 0, 40, 20);
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = false;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -46,19 +47,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
+            var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
             tooltips.Add(line);
 
-            line = new TooltipLine(mod, "Icebreaker", "Artifact")
+            line = new TooltipLine(Mod, "Icebreaker", "Artifact")
             {
                 overrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                if (line2.Mod == "Terraria" && line2.Name == "ItemName")
                 {
-                    line2.overrideColor = new Color(255, 132, 000);
+                    line2.OverrideColor = new Color(255, 132, 000);
                 }
             }
             tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
@@ -69,41 +70,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.aiStyle = -1;
-            projectile.height = 38;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.alpha = 255;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 120;
+            Projectile.width = 18;
+            Projectile.aiStyle = -1;
+            Projectile.height = 38;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.alpha = 255;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 120;
         }
         public override void AI()
         {
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.velocity.Y += 3;
-            projectile.rotation += projectile.velocity.X * 0.01f;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.velocity.Y += 3;
+            Projectile.rotation += Projectile.velocity.X * 0.01f;
             DelegateMethods.v3_1 = new Vector3(0.6f, 1f, 1f) * 0.2f;
-            Utils.PlotTileLine(projectile.Center, projectile.Center + projectile.velocity * 10f, 8f, DelegateMethods.CastLightOpen);
-            if (projectile.alpha > 0)
+            Utils.PlotTileLine(Projectile.Center, Projectile.Center + Projectile.velocity * 10f, 8f, DelegateMethods.CastLightOpen);
+            if (Projectile.alpha > 0)
             {
-                Main.PlaySound(SoundID.Item9, projectile.Center);
-                projectile.alpha = 0;
-                projectile.scale = 1.1f;
+                SoundEngine.PlaySound(SoundID.Item9, Projectile.Center);
+                Projectile.alpha = 0;
+                Projectile.scale = 1.1f;
                 float num101 = 16f;
                 for (int num102 = 0; num102 < num101; num102++)
                 {
                     Vector2 spinningpoint5 = Vector2.UnitX * 0f;
                     spinningpoint5 += -Vector2.UnitY.RotatedBy((float)num102 * ((float)Math.PI * 2f / num101)) * new Vector2(1f, 4f);
-                    spinningpoint5 = spinningpoint5.RotatedBy(projectile.velocity.ToRotation());
-                    int num103 = Dust.NewDust(projectile.Center, 0, 0, 180);
+                    spinningpoint5 = spinningpoint5.RotatedBy(Projectile.velocity.ToRotation());
+                    int num103 = Dust.NewDust(Projectile.Center, 0, 0, 180);
                     Main.dust[num103].scale = 1.5f;
                     Main.dust[num103].noGravity = true;
-                    Main.dust[num103].position = projectile.Center + spinningpoint5;
-                    Main.dust[num103].velocity = projectile.velocity * 0f + spinningpoint5.SafeNormalize(Vector2.UnitY) * 1f;
+                    Main.dust[num103].position = Projectile.Center + spinningpoint5;
+                    Main.dust[num103].velocity = Projectile.velocity * 0f + spinningpoint5.SafeNormalize(Vector2.UnitY) * 1f;
                 }
             }
         }

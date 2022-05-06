@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 {
     internal class LuminVines : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileBlockLight[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -32,9 +32,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
             Color colour = Color.White;
 
-            Texture2D glow = ModContent.GetTexture("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminVines_Glow");
+            Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminVines_Glow");
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
-            spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.frameX, tile.frameY, 16, 16), colour);
+            spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), colour);
         }
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 59;
 
@@ -42,36 +42,36 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
         {
             Tile tileBelow = Framing.GetTileSafely(i, j - 1);
             Tile tileAbove = Framing.GetTileSafely(i, j + 1);
-            if (!tileBelow.active() && !tileBelow.active() && tileBelow.type != TileType<CavernStone>() && tileBelow.liquid > 250)
+            if (!tileBelow.HasTile && !tileBelow.HasTile && tileBelow.TileType != TileType<CavernStone>() && tileBelow.liquid > 250)
             {
-                Framing.GetTileSafely(i, j).frameX = 36;
-                Framing.GetTileSafely(i, j).frameY = (short)(Main.rand.Next(2) * 18);
+                Framing.GetTileSafely(i, j).TileFrameX = 36;
+                Framing.GetTileSafely(i, j).TileFrameY = (short)(Main.rand.Next(2) * 18);
             }
-            else if (!tileAbove.active() && !tileAbove.active() && tileAbove.type != TileType<CavernStone>() && tileBelow.liquid > 250)
+            else if (!tileAbove.HasTile && !tileAbove.HasTile && tileAbove.TileType != TileType<CavernStone>() && tileBelow.liquid > 250)
             {
-                Framing.GetTileSafely(i, j).frameX = 18;
-                Framing.GetTileSafely(i, j).frameY = (short)(Main.rand.Next(2) * 18);
+                Framing.GetTileSafely(i, j).TileFrameX = 18;
+                Framing.GetTileSafely(i, j).TileFrameY = (short)(Main.rand.Next(2) * 18);
             }
             else
             {
-                Framing.GetTileSafely(i, j).frameX = 0;
-                Framing.GetTileSafely(i, j).frameY = (short)(Main.rand.Next(2) * 18);
+                Framing.GetTileSafely(i, j).TileFrameX = 0;
+                Framing.GetTileSafely(i, j).TileFrameY = (short)(Main.rand.Next(2) * 18);
             }
 
-            if (!tileAbove.active() && !tileAbove.active() && tileAbove.type != TileType<CavernStone>() && tileBelow.liquid > 250 && !tileBelow.active() && !tileBelow.active() && (tileBelow.type != TileType<CavernStone>() && tileBelow.liquid > 250))
+            if (!tileAbove.HasTile && !tileAbove.HasTile && tileAbove.TileType != TileType<CavernStone>() && tileBelow.liquid > 250 && !tileBelow.HasTile && !tileBelow.HasTile && (tileBelow.TileType != TileType<CavernStone>() && tileBelow.liquid > 250))
             {
-                Framing.GetTileSafely(i, j).frameX = 0;
-                Framing.GetTileSafely(i, j).frameY = (short)((Main.rand.Next(2) * 18) + 36);
+                Framing.GetTileSafely(i, j).TileFrameX = 0;
+                Framing.GetTileSafely(i, j).TileFrameY = (short)((Main.rand.Next(2) * 18) + 36);
             }
 
             //if (Framing.GetTileSafely(i, j).frameX == 0)
             //    Framing.GetTileSafely(i, j).frameY = (short)(Main.rand.Next(2) * 18);
             //else
             {
-                if (Framing.GetTileSafely(i, j).frameY < 36)
-                    Framing.GetTileSafely(i, j).frameY = (short)(Main.rand.Next(2) * 18);
+                if (Framing.GetTileSafely(i, j).TileFrameY < 36)
+                    Framing.GetTileSafely(i, j).TileFrameY = (short)(Main.rand.Next(2) * 18);
                 else
-                    Framing.GetTileSafely(i, j).frameY = (short)((Main.rand.Next(2) * 18) + 36);
+                    Framing.GetTileSafely(i, j).TileFrameY = (short)((Main.rand.Next(2) * 18) + 36);
             }
             return false;
         }
@@ -87,14 +87,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
             Tile tileBelow = Framing.GetTileSafely(i, j - 1);
             Tile tileAbove = Framing.GetTileSafely(i, j + 1);
 
-            if (!Main.tile[i, j + 1].active() && tileAbove.liquid > 250 && Main.rand.Next(7) == 0)
+            if (!Main.tile[i, j + 1].HasTile && tileAbove.liquid > 250 && Main.rand.Next(7) == 0)
                 WorldGen.PlaceTile(i, j + 1, Type);
-            if (!Main.tile[i, j - 1].active() && tileBelow.liquid > 250 && Main.rand.Next(7) == 0)
+            if (!Main.tile[i, j - 1].HasTile && tileBelow.liquid > 250 && Main.rand.Next(7) == 0)
                 WorldGen.PlaceTile(i, j - 1, Type);
 
-            if (Framing.GetTileSafely(i, j).frameX != 0 && Framing.GetTileSafely(i, j).frameY < 36 && Main.rand.Next(2) == 0)
+            if (Framing.GetTileSafely(i, j).TileFrameX != 0 && Framing.GetTileSafely(i, j).TileFrameY < 36 && Main.rand.Next(2) == 0)
             {
-                Framing.GetTileSafely(i, j).frameY = (short)((Main.rand.Next(2) * 18) + 36);
+                Framing.GetTileSafely(i, j).TileFrameY = (short)((Main.rand.Next(2) * 18) + 36);
             }
         }
 

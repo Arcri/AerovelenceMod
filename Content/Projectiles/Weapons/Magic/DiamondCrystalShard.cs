@@ -18,39 +18,39 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
 
-			Main.projFrames[projectile.type] = 3;
+			Main.projFrames[Projectile.type] = 3;
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 6;
+			Projectile.width = Projectile.height = 6;
 
-			projectile.light = 0.1f;
-			projectile.penetrate = 2;
-			projectile.timeLeft = 300;
+			Projectile.light = 0.1f;
+			Projectile.penetrate = 2;
+			Projectile.timeLeft = 300;
 
-			projectile.ranged = true;
-			projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.friendly = true;
 		}
 
 		public override bool PreAI()
 		{
-			if (projectile.localAI[0] == 0)
+			if (Projectile.localAI[0] == 0)
 			{
-				projectile.localAI[0] = 1;
-				projectile.frame = Main.rand.Next(Main.projFrames[projectile.type]);
+				Projectile.localAI[0] = 1;
+				Projectile.frame = Main.rand.Next(Main.projFrames[Projectile.type]);
 			}
 
-			projectile.velocity *= 0.99f;
-			projectile.velocity.Y += 0.2f;
+			Projectile.velocity *= 0.99f;
+			Projectile.velocity.Y += 0.2f;
 
-			projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
+			Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
 
 			if (Main.rand.Next(20) == 0)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100);
+				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Crystal>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
 			}
 
 			return (false);
@@ -58,13 +58,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			if (projectile.velocity.X != oldVelocity.X)
+			if (Projectile.velocity.X != oldVelocity.X)
 			{
-				projectile.velocity.X = -oldVelocity.X;
+				Projectile.velocity.X = -oldVelocity.X;
 			}
-			if (projectile.velocity.Y != oldVelocity.Y)
+			if (Projectile.velocity.Y != oldVelocity.Y)
 			{
-				projectile.velocity.Y = -oldVelocity.Y * 0.7f;
+				Projectile.velocity.Y = -oldVelocity.Y * 0.7f;
 			}
 			return (false);
 		}
@@ -73,7 +73,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 5; ++i)
 			{
-				Dust newDust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Crystal>(), 0, 0, 100)];
+				Dust newDust = Main.dust[Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Crystal>(), 0, 0, 100)];
 				newDust.noGravity = true;
 
 				if (Main.rand.Next(3) == 0)

@@ -8,12 +8,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
 	public class GlimmeringChest : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
@@ -38,7 +39,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			dustType = ModContent.DustType<Sparkle>();
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Containers };
-			chestDrop = mod.ItemType("GlimmeringChestItem");
+			chestDrop = Mod.Find<ModItem>("GlimmeringChestItem").Type;
 			chest = "Glimmering Chest";
 		}
 
@@ -47,11 +48,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			int left = i;
 			int top = j;
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
@@ -83,24 +84,24 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.mouseRightRelease = false;
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
 			if (player.sign >= 0)
 			{
-				Main.PlaySound(SoundID.MenuClose);
+				SoundEngine.PlaySound(SoundID.MenuClose);
 				player.sign = -1;
 				Main.editSign = false;
 				Main.npcChatText = "";
 			}
 			if (Main.editChest)
 			{
-				Main.PlaySound(SoundID.MenuTick);
+				SoundEngine.PlaySound(SoundID.MenuTick);
 				Main.editChest = false;
 				Main.npcChatText = "";
 			}
@@ -115,7 +116,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				{
 					player.chest = -1;
 					Recipe.FindRecipes();
-					Main.PlaySound(SoundID.MenuClose);
+					SoundEngine.PlaySound(SoundID.MenuClose);
 				}
 				else
 				{
@@ -132,7 +133,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 					if (chest == player.chest)
 					{
 						player.chest = -1;
-						Main.PlaySound(SoundID.MenuClose);
+						SoundEngine.PlaySound(SoundID.MenuClose);
 					}
 					else
 					{
@@ -141,7 +142,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 						Main.recBigList = false;
 						player.chestX = left;
 						player.chestY = top;
-						Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+						SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
 					}
 					Recipe.FindRecipes();
 				}
@@ -154,11 +155,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Tile tile = Main.tile[i, j];
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
@@ -173,7 +174,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Glimmering Chest";
 				if (player.showItemIconText == "Glimmering Chest")
 				{
-					player.showItemIcon2 = mod.ItemType("GlimmeringChestItem");
+					player.showItemIcon2 = Mod.Find<ModItem>("GlimmeringChestItem").Type;
 					player.showItemIconText = "";
 				}
 			}

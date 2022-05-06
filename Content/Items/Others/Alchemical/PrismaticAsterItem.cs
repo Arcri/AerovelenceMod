@@ -13,12 +13,12 @@ namespace AerovelenceMod.Content.Items.Others.Alchemical
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 34;
-            item.value = 1000;
-            item.rare = ItemRarityID.Orange;
+            Item.width = 20;
+            Item.height = 34;
+            Item.value = 1000;
+            Item.rare = ItemRarityID.Orange;
 
-            item.maxStack = 999;
+            Item.maxStack = 999;
         }
     }
 }

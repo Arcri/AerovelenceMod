@@ -22,31 +22,30 @@ namespace AerovelenceMod.Content.Items.Armor.Starglass
 		{
 			player.setBonus = "11% increased melee damage\nTaking damage will release damaging shards of crystal";
             player.GetModPlayer<AeroPlayer>().BurnshockArmorBonus = true;
-            player.meleeDamage += 0.11f;
+            player.GetDamage(DamageClass.Melee) += 0.11f;
         } 	
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 20;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 20;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.meleeDamage += 0.10f;
-            player.meleeSpeed += 0.10f;
-            player.meleeCrit += 8;
+            player.GetDamage(DamageClass.Melee) += 0.10f;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.10f;
+            player.GetCritChance(DamageClass.Melee) += 8;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 8);
-            modRecipe.AddIngredient(ItemID.CrystalShard, 5);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BurnshockBar>(), 8)
+                .AddIngredient(ItemID.CrystalShard, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

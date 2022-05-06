@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 {
     public class MilitaryMetal : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
 			minPick = 59;

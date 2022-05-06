@@ -8,27 +8,27 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
     public class LushGrowth : ModTile
     {
 		public static int _type;
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			SetModTree(new CrystalTree());
-			Main.tileMerge[Type][mod.TileType("CavernStone")] = true;
+			Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
 			Main.tileBlendAll[this.Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			AddMapEntry(new Color(105, 211, 029));
-			drop = mod.ItemType("LushGrowthItem");
+			drop = Mod.Find<ModItem>("LushGrowthItem").Type;
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
-			TileID.Sets.NeedsGrassFramingDirt[Type] = mod.TileType("CavernStone");
+			TileID.Sets.NeedsGrassFramingDirt[Type] = Mod.Find<ModTile>("CavernStone").Type;
 		}
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
 			if (!effectOnly)
 			{
 				fail = true;
-				Main.tile[i, j].type = (ushort)mod.TileType("CavernStone");
+				Main.tile[i, j].TileType = (ushort)Mod.Find<ModTile>("CavernStone").Type;
 				WorldGen.SquareTileFrame(i, j, true);
 				Dust.NewDust(new Vector2(i * 16, j * 16), 16, 16, DustID.Marble, 0f, 0f, 0, new Color(121, 121, 121), 1f);
 			}
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 		public override int SaplingGrowthType(ref int style)
 		{
 			style = 0;
-			return mod.TileType("CrystalSapling");
+			return Mod.Find<ModTile>("CrystalSapling").Type;
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{

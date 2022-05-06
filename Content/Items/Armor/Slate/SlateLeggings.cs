@@ -15,11 +15,11 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
         }
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Blue;
-            item.defense = 4;
+            Item.width = 22;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Blue;
+            Item.defense = 4;
         }
         public override void UpdateEquip(Player player)
         {
@@ -27,12 +27,11 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 55);
-            recipe.AddRecipeGroup("Wood", 20);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<SlateOre>(), 55)
+                .AddRecipeGroup("Wood", 20)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

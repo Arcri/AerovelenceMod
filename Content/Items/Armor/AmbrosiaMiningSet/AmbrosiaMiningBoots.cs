@@ -16,11 +16,11 @@ namespace AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet
         }
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 22;
-            item.height = 18;
-            item.value = Item.sellPrice(0, 2, 0, 0);
-            item.rare = ItemRarityID.Blue;
+			Item.accessory = true;
+            Item.width = 22;
+            Item.height = 18;
+            Item.value = Item.sellPrice(0, 2, 0, 0);
+            Item.rare = ItemRarityID.Blue;
         }
         public override void UpdateAccessory(Player player, bool isVisible)
         {

@@ -13,23 +13,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item11;
-            item.crit = 8;
-            item.damage = 61;
-            item.ranged = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 14;
-            item.useAnimation = 14;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 25, 0, 0);
-            item.rare = ItemRarityID.Lime;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("EtherealBolt");
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 18;
+            Item.UseSound = SoundID.Item11;
+            Item.crit = 8;
+            Item.damage = 61;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 14;
+            Item.useAnimation = 14;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 25, 0, 0);
+            Item.rare = ItemRarityID.Lime;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("EtherealBolt").Type;
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 18;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             for (int i = 0; i < numberProjectiles; i++)
             {
                 Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, item.shoot, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Item.shoot, damage, knockBack, player.whoAmI);
             }
             return false;
         }
@@ -49,27 +49,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 6;
-            projectile.height = 6;
-            projectile.friendly = true;
-            projectile.penetrate = 5;
-            projectile.hostile = false;
-            projectile.magic = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 420;
+            Projectile.width = 6;
+            Projectile.height = 6;
+            Projectile.friendly = true;
+            Projectile.penetrate = 5;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 420;
         }
         public override void AI()
         {
-            projectile.localAI[0] += 1f;
-            if (projectile.localAI[0] > 9)
+            Projectile.localAI[0] += 1f;
+            if (Projectile.localAI[0] > 9)
             {
                 int numDust = 6;
                 for (int i = 0; i < numDust; i++)
                 {
-                    Vector2 position = projectile.position;
-                    position -= projectile.velocity * ((float)i / numDust);
-                    projectile.alpha = 255;
+                    Vector2 position = Projectile.position;
+                    position -= Projectile.velocity * ((float)i / numDust);
+                    Projectile.alpha = 255;
                     int anotherOneBitesThis = Dust.NewDust(position, 1, 1, 132, 0f, 0f, 100, default(Color), 1f);
                     Main.dust[anotherOneBitesThis].position = position;
                     Main.dust[anotherOneBitesThis].velocity *= 0.2f;

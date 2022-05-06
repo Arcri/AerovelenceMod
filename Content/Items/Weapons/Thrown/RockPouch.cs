@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -16,23 +17,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 8;
-            item.damage = 12;
-            item.melee = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("RockPouchProj");
-            item.shootSpeed = 16f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 8;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("RockPouchProj").Type;
+            Item.shootSpeed = 16f;
         }
     }
 
@@ -43,21 +44,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 18;
-            projectile.friendly = true;
-            projectile.aiStyle = 2;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.friendly = true;
+            Projectile.aiStyle = 2;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Main.PlaySound(SoundID.Item50, projectile.position);
-            projectile.Kill();
+            SoundEngine.PlaySound(SoundID.Item50, Projectile.position);
+            Projectile.Kill();
             return true;
         }
     }

@@ -47,67 +47,67 @@ namespace AerovelenceMod.Common.ShieldSystem
 		}
 		public override int ChoosePrefix(Item item, UnifiedRandom rand)
 		{
-			if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)))
+			if (item.ModItem != null && item.ModItem.GetType().IsSubclassOf(typeof(ShieldItem)))
 				return rand.Next(ShieldPrefixes.shieldPrefixes);
 			return -1;
 		} 
 		public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
 		{
-			if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)))
+			if (item.ModItem != null && item.ModItem.GetType().IsSubclassOf(typeof(ShieldItem)))
 			{
 
-				TooltipLine tooltip = tooltips.Find(tt => tt.mod.Equals("Terraria") && tt.Name.Equals("Tooltip0"));
+				TooltipLine tooltip = tooltips.Find(tt => tt.Mod.Equals("Terraria") && tt.Name.Equals("Tooltip0"));
 				if (tooltip != null)
 				{
-					tooltip.text = $"{capacity+capacityBoost} shield capacity";
+					tooltip.Text = $"{capacity+capacityBoost} shield capacity";
 				}
-			    tooltip = tooltips.Find(tt => tt.mod.Equals("Terraria") && tt.Name.Equals("Tooltip1"));
+			    tooltip = tooltips.Find(tt => tt.Mod.Equals("Terraria") && tt.Name.Equals("Tooltip1"));
 				if (tooltip != null)
 				{
-					tooltip.text = $"{rechargeRate + rechargeRateBoost} shield recharge rate";
+					tooltip.Text = $"{rechargeRate + rechargeRateBoost} shield recharge rate";
 				}
-				tooltip = tooltips.Find(tt => tt.mod.Equals("Terraria") && tt.Name.Equals("Tooltip2"));
+				tooltip = tooltips.Find(tt => tt.Mod.Equals("Terraria") && tt.Name.Equals("Tooltip2"));
 				if (tooltip != null)
 				{
-					tooltip.text = $"{rechargeDelay - rechargeDelayBoost}s shield recharge delay";
+					tooltip.Text = $"{rechargeDelay - rechargeDelayBoost}s shield recharge delay";
 				}
 
 				TooltipLine line;
 				if (capacityBoost!=0)
 				{
-					line = new TooltipLine(mod, "ShieldCapacityPrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + "% capacity")
+					line = new TooltipLine(Mod, "ShieldCapacityPrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + "% capacity")
 					{
-						isModifier = true
+						IsModifier = true
 					};
-					line.overrideColor =  prefixSign > 0 ? Color.LightGreen : Color.Red;
+					line.OverrideColor =  prefixSign > 0 ? Color.LightGreen : Color.Red;
 
 					tooltips.Add(line);
 				}
 				else if (rechargeRateBoost != 0)
 				{
-					line = new TooltipLine(mod, "ShieldRechargeRatePrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + " rechargeRate")
+					line = new TooltipLine(Mod, "ShieldRechargeRatePrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + " rechargeRate")
 					{
-						isModifier = true
+						IsModifier = true
 					};
-					line.overrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
+					line.OverrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
 					tooltips.Add(line);
 				}
 				else if (rechargeDelayBoost != 0)
 				{
-					line = new TooltipLine(mod, "ShieldRechargeDelayPrefix", $"{(prefixSign > 0 ? '-' : '+')}" + prefix + " delay")
+					line = new TooltipLine(Mod, "ShieldRechargeDelayPrefix", $"{(prefixSign > 0 ? '-' : '+')}" + prefix + " delay")
 					{
-						isModifier = true
+						IsModifier = true
 					};
-					line.overrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
+					line.OverrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
 					tooltips.Add(line);
 				}
 				else if (sizeBoost != 0)
 				{
-					line = new TooltipLine(mod, "ShieldSizePrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + " size")
+					line = new TooltipLine(Mod, "ShieldSizePrefix", $"{(prefixSign > 0 ? '+' : '-')}" + prefix + " size")
 					{
-						isModifier = true
+						IsModifier = true
 					};
-					line.overrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
+					line.OverrideColor = prefixSign > 0 ? Color.LightGreen : Color.Red;
 					tooltips.Add(line);
 				}
 			}
@@ -123,11 +123,11 @@ namespace AerovelenceMod.Common.ShieldSystem
 		public static bool rechargeCapacity;
 		public override void SetDefaults()
         {          
-			shield = item.GetGlobalItem<Shield>();
+			shield = Item.GetGlobalItem<Shield>();
 		}
         public static bool isItemShield(Item item)
         {
-			if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)))
+			if (item.ModItem != null && item.ModItem.GetType().IsSubclassOf(typeof(ShieldItem)))
 				return true;
 			return false;
         }
@@ -172,7 +172,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 					if (projectile.type == ModContent.ProjectileType<ShieldProjectile>())
 						projectile.Kill();
                 }																		
-				projectile =  Projectile.NewProjectileDirect(player.Center, Vector2.Zero, shield.projectileType, 20, 0, player.whoAmI);
+				projectile =  Projectile.NewProjectileDirect(source, player.Center, Vector2.Zero, shield.projectileType, 20, 0, player.whoAmI);
 				ShieldProjectile.sizeBoost = shield.sizeBoost;
 			}
 
@@ -195,14 +195,14 @@ namespace AerovelenceMod.Common.ShieldSystem
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 84;
-			projectile.height = 84;
-			projectile.friendly = true;
-			projectile.penetrate = 999;
-			projectile.timeLeft = 1;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
-			projectile.alpha = 0;
+			Projectile.width = 84;
+			Projectile.height = 84;
+			Projectile.friendly = true;
+			Projectile.penetrate = 999;
+			Projectile.timeLeft = 1;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
+			Projectile.alpha = 0;
 		}
 		public static float sizeBoost;
 		private float angle;             // The current angle of shield position around the player in grades 
@@ -215,10 +215,10 @@ namespace AerovelenceMod.Common.ShieldSystem
 			switch ((int)modPlayer.ShieldType)
 			{
 				case 0: // General Bubble Shield AI	
-					projectile.Center = player.Center;
+					Projectile.Center = player.Center;
 					for (int i = 0; i < Main.projectile.Length - 1; ++i)
 					{
-						if (Main.projectile[i].active && i != projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(projectile.Hitbox) && !modPlayer.ShieldBroken)
+						if (Main.projectile[i].active && i != Projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(Projectile.Hitbox) && !modPlayer.ShieldBroken)
 						{
 							Main.projectile[i].Kill();
 							modPlayer.ShieldCapacity -= 20;
@@ -236,7 +236,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 						if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5 && !Main.npc[k].immortal)
 						{
 							Vector2 delta = Main.npc[k].Center - player.Center;
-							Vector2 delta2 = projectile.Center - player.Center;
+							Vector2 delta2 = Projectile.Center - player.Center;
 
 							float distanceTo = (float)Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y);
 							if (distanceTo < 500f)
@@ -265,12 +265,12 @@ namespace AerovelenceMod.Common.ShieldSystem
 						}
 					}
 					angle += 1f * npcDirection;
-					projectile.ai[1] = (float)Math.Abs((Math.PI * angle / 180.0));
-					projectile.Center = player.Center - new Vector2(-player.width, player.height / 2).RotatedBy(projectile.ai[1]);
-					projectile.rotation = projectile.ai[1];
+					Projectile.ai[1] = (float)Math.Abs((Math.PI * angle / 180.0));
+					Projectile.Center = player.Center - new Vector2(-player.width, player.height / 2).RotatedBy(Projectile.ai[1]);
+					Projectile.rotation = Projectile.ai[1];
 					for (int i = 0; i < Main.projectile.Length - 1; ++i)
 					{
-						if (Main.projectile[i].active && i != projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(projectile.Hitbox) && !modPlayer.ShieldBroken && Main.rand.Next(1) == 0)
+						if (Main.projectile[i].active && i != Projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(Projectile.Hitbox) && !modPlayer.ShieldBroken && Main.rand.Next(1) == 0)
 						{
 							Main.projectile[i].Kill();
 							modPlayer.ShieldCapacity -= 20;
@@ -281,10 +281,10 @@ namespace AerovelenceMod.Common.ShieldSystem
 					break;
 
 				case 2: // General Nova Shield AI	
-					projectile.Center = player.Center + new Vector2(0,5);
+					Projectile.Center = player.Center + new Vector2(0,5);
 					for (int i = 0; i < Main.projectile.Length - 1; ++i)
 					{
-						if (Main.projectile[i].active && i != projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(projectile.Hitbox) && !modPlayer.ShieldBroken)
+						if (Main.projectile[i].active && i != Projectile.whoAmI && !Main.projectile[i].friendly && Main.projectile[i].Hitbox.Intersects(Projectile.Hitbox) && !modPlayer.ShieldBroken)
 						{
 							Main.projectile[i].Kill();
 							modPlayer.ShieldCapacity -= 20;
@@ -298,24 +298,24 @@ namespace AerovelenceMod.Common.ShieldSystem
 					break;
 			}
 			if (modPlayer.ShieldOn)
-				projectile.timeLeft++;
+				Projectile.timeLeft++;
 			if(modPlayer.ShieldBroken)
-				projectile.Size = Vector2.Zero;
+				Projectile.Size = Vector2.Zero;
 		}
 
 		//Override this for custom effects
 		protected virtual void NovaExplosionEffect() 
 		{
 			AeroPlayer modPlayer = Main.player[Main.myPlayer].GetModPlayer<AeroPlayer>();
-			projectile.Size = new Vector2(130, 130);
-			projectile.damage = 300;
-			projectile.position = Main.player[Main.myPlayer].Center;
+			Projectile.Size = new Vector2(130, 130);
+			Projectile.damage = 300;
+			Projectile.position = Main.player[Main.myPlayer].Center;
 			int counter = 0;
 			while (counter <20)
 			{
 				for (int j = 0; j < 90; j++)
 				{
-					Vector2 position = projectile.position + new Vector2(0f, -(5 * counter)).RotatedBy(MathHelper.ToRadians(360f / 90 * j));
+					Vector2 position = Projectile.position + new Vector2(0f, -(5 * counter)).RotatedBy(MathHelper.ToRadians(360f / 90 * j));
 					Dust.NewDustDirect(position, 1, 1, 197, 0, 0, 0, Color.LightCyan, 1f).noGravity = true;
 				}
 				counter += 5;
@@ -323,52 +323,52 @@ namespace AerovelenceMod.Common.ShieldSystem
 			modPlayer.ShieldBroken = true;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
 			Player player = Main.player[Main.myPlayer];
 			AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
-			Texture2D texture = ModContent.GetTexture(Texture); 
+			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Texture); 
 			bool textureExists = Texture != ("Terraria/Projectile_" + ProjectileID.None) ? true : false;
-			player.heldProj = projectile.whoAmI;
+			player.heldProj = Projectile.whoAmI;
 			increment *= scale <= 0f || scale >= 1f ? -1f : 1;
 			scale -= increment;
-			projectile.scale = MathHelper.Lerp(1f + sizeBoost, 1.1f + sizeBoost, scale);
+			Projectile.scale = MathHelper.Lerp(1f + sizeBoost, 1.1f + sizeBoost, scale);
 			if (!modPlayer.ShieldBroken)
 			{
 				switch ((int)modPlayer.ShieldType)
 				{
 					case 0: //Bubble Shield PreDraw [wip]							
 						if (!textureExists)
-							texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/BubbleShield");
-						projectile.Size = new Vector2(texture.Width, texture.Height) * projectile.scale;
-						spriteBatch.Draw(texture, projectile.position - Main.screenPosition + projectile.Size / 2, texture.Frame(), Color.Transparent, projectile.rotation, projectile.Size / (2*projectile.scale), projectile.scale, SpriteEffects.None, 1f);
+							texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/BubbleShield");
+						Projectile.Size = new Vector2(texture.Width, texture.Height) * Projectile.scale;
+						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2*Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
 						break;
 
 					case 1: //Impact Shield PreDraw [wip]
 						if (!textureExists)
-							texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/ShieldTypeTest");
-						if (projectile.ai[0] > 8)
+							texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/ShieldTypeTest");
+						if (Projectile.ai[0] > 8)
 						{
-							projectile.Size = new Vector2(44, 44) * projectile.scale;
-							spriteBatch.Draw(texture, projectile.position - Main.screenPosition + projectile.Size / 2, texture.Frame(1, 3, 0, 2), Color.White, projectile.rotation, projectile.Size / (2 * projectile.scale), projectile.scale, SpriteEffects.None, 1f);
+							Projectile.Size = new Vector2(44, 44) * Projectile.scale;
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 2), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
 						}
-						else if (projectile.ai[0] > 4)
+						else if (Projectile.ai[0] > 4)
 						{
-							projectile.Size = new Vector2(26, 26) * projectile.scale;
-							spriteBatch.Draw(texture, projectile.position - Main.screenPosition + projectile.Size / 2, texture.Frame(1, 3, 0, 1), Color.White, projectile.rotation, projectile.Size / (2 * projectile.scale), projectile.scale, SpriteEffects.None, 1f);
+							Projectile.Size = new Vector2(26, 26) * Projectile.scale;
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 1), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
 						}
 						else
 						{
-							projectile.Size = new Vector2(14, 14) * projectile.scale;
-							spriteBatch.Draw(texture, projectile.position - Main.screenPosition + projectile.Size / 2, texture.Frame(1, 3, 0, 0), Color.White, projectile.rotation, projectile.Size / (2 * projectile.scale), projectile.scale, SpriteEffects.None, 1f);
+							Projectile.Size = new Vector2(14, 14) * Projectile.scale;
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 0), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
 						}
 						break;
 
 					case 2: //Nova Shield PreDraw [wip]
 						if (!textureExists)
-							texture = ModContent.GetTexture("AerovelenceMod/Assets/Shield/NovaShield");
-						projectile.Size = new Vector2(texture.Width, texture.Height) * projectile.scale;
-						spriteBatch.Draw(texture, projectile.position - Main.screenPosition + projectile.Size / 2, texture.Frame(), Color.Transparent, projectile.rotation, projectile.Size / (2 * projectile.scale), projectile.scale, SpriteEffects.None, 1f);
+							texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/NovaShield");
+						Projectile.Size = new Vector2(texture.Width, texture.Height) * Projectile.scale;
+						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
 						break;
 					default:
 						break;
@@ -390,13 +390,13 @@ namespace AerovelenceMod.Common.ShieldSystem
 					else
 					{
 						modplayer.ShieldBroken = true;
-						projectile.Size = Vector2.Zero;
+						Projectile.Size = Vector2.Zero;
 					}
 				}
 			}
 			if (target.life <= 0 && modplayer.ShieldType == ShieldTypes.Impact)
 			{
-				projectile.ai[0]++;
+				Projectile.ai[0]++;
 				ShieldItem.rechargeCapacity = true;
 			}
 		}

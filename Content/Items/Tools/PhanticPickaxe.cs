@@ -12,30 +12,29 @@ namespace AerovelenceMod.Content.Items.Tools
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 11;
-            item.melee = true;
-            item.width = 34;
-            item.height = 34;
-            item.useTime = 13;
-            item.useAnimation = 13;
-            item.useTurn = true;
-			item.pick = 70;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 11;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 34;
+            Item.height = 34;
+            Item.useTime = 13;
+            Item.useAnimation = 13;
+            Item.useTurn = true;
+			Item.pick = 70;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
-            recipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 8);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 12)
+                .AddRecipeGroup("AerovelenceMod:EvilMaterials", 8)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

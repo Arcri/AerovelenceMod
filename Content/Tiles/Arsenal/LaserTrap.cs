@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 {
 	public class LaserTrap : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			TileID.Sets.DrawsWalls[Type] = true;
 
@@ -22,13 +22,13 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 
 		public int TrapTimer = 0;
 
-		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameY / 18);
+		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / 18);
 
-		public override bool Dangersense(int i, int j, Player player) => true;
+		public override bool IsTileDangerous(int i, int j, Player player) => true;
 
 		public override bool CreateDust(int i, int j, ref int type)
 		{
-			int style = Main.tile[i, j].frameY / 18;
+			int style = Main.tile[i, j].TileFrameY / 18;
 			if (style == 0)
 				type = 13;
 			return true;
@@ -38,10 +38,10 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 		{
 			int style = Main.LocalPlayer.HeldItem.placeStyle;
 			Tile tile = Main.tile[i, j];
-			tile.frameY = (short)(style * 18);
+			tile.TileFrameY = (short)(style * 18);
 			if (Main.LocalPlayer.direction == 1)
 			{
-				tile.frameX += 18;
+				tile.TileFrameX += 18;
 			}
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
@@ -53,10 +53,10 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 		{
 
 			Tile tile = Main.tile[i, j];
-			int style = tile.frameY / 18;
+			int style = tile.TileFrameY / 18;
 			Vector2 spawnPosition;
-			int horizontalDirection = (tile.frameX == 0) ? -1 : ((tile.frameX == 18) ? 1 : 0);
-			int verticalDirection = (tile.frameX < 36) ? 0 : ((tile.frameX < 72) ? -1 : 1);
+			int horizontalDirection = (tile.TileFrameX == 0) ? -1 : ((tile.TileFrameX == 18) ? 1 : 0);
+			int verticalDirection = (tile.TileFrameX < 36) ? 0 : ((tile.TileFrameX < 72) ? -1 : 1);
 			TrapTimer++;
 			if (TrapTimer % 50 == 0)
 			{

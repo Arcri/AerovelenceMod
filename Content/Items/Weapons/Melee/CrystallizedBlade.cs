@@ -14,68 +14,68 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 21;
-            item.melee = true;
-            item.width = 46;
-            item.height = 46;
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+            Item.crit = 4;
+            Item.damage = 21;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 46;
+            Item.height = 46;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 8;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = false;
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
-            if (target.type == mod.NPCType("CrystalSlime"))
+            if (target.type == Mod.Find<ModNPC>("CrystalSlime").Type)
             {
                 damage *= 3;
             }
             {
-                if (target.type == mod.NPCType("LuminousDefender"))
+                if (target.type == Mod.Find<ModNPC>("LuminousDefender").Type)
                 {
                     damage *= 3;
                 }
                 {
-                    if (target.type == mod.NPCType("Tumblerock1"))
+                    if (target.type == Mod.Find<ModNPC>("Tumblerock1").Type)
                     {
                         damage *= 3;
                     }
                     {
-                        if (target.type == mod.NPCType("Tumblerock2"))
+                        if (target.type == Mod.Find<ModNPC>("Tumblerock2").Type)
                         {
                             damage *= 3;
                         }
                         {
-                            if (target.type == mod.NPCType("Tumblerock3"))
+                            if (target.type == Mod.Find<ModNPC>("Tumblerock3").Type)
                             {
                                 damage *= 3;
                             }
                             {
-                                if (target.type == mod.NPCType("Tumblerock4"))
+                                if (target.type == Mod.Find<ModNPC>("Tumblerock4").Type)
                                 {
                                     damage *= 3;
                                 }
                                 {
-                                    if (target.type == mod.NPCType("LuminoJelly"))
+                                    if (target.type == Mod.Find<ModNPC>("LuminoJelly").Type)
                                     {
                                         damage *= 3;
                                     }
                                     {
-                                        if (target.type == mod.NPCType("MinorCrystalSerpentHead"))
+                                        if (target.type == Mod.Find<ModNPC>("MinorCrystalSerpentHead").Type)
                                         {
                                             damage *= 3;
                                         }
                                         {
-                                            if (target.type == mod.NPCType("CrystalWormHead"))
+                                            if (target.type == Mod.Find<ModNPC>("CrystalWormHead").Type)
                                             {
                                                 damage *= 3;
                                             }
                                             {
-                                                if (target.type == mod.NPCType("DarkseaAngler"))
+                                                if (target.type == Mod.Find<ModNPC>("DarkseaAngler").Type)
                                                 {
                                                     damage *= 3;
                                                 }
@@ -93,11 +93,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<CavernCrystal>(), 50);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CavernCrystal>(), 50)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

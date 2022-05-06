@@ -9,27 +9,27 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
     public class ValleyGrass : ModTile
 	{
 		public static int _type;
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			SetModTree(new ValleyTree());
-			Main.tileMerge[Type][mod.TileType("ValleyGrass")] = true;
+			Main.tileMerge[Type][Mod.Find<ModTile>("ValleyGrass").Type] = true;
 			Main.tileBlendAll[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			AddMapEntry(new Color(100, 155, 255));
-			drop = mod.ItemType("ValleyDirt");
+			ItemDrop = Mod.Find<ModItem>("ValleyDirt").Type;
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
-			TileID.Sets.NeedsGrassFramingDirt[Type] = mod.TileType("ValleyDirt");
+			TileID.Sets.NeedsGrassFramingDirt[Type] = Mod.Find<ModTile>("ValleyDirt").Type;
 		}
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
 			if (!effectOnly)
 			{
 				fail = true;
-				Main.tile[i, j].type = (ushort)mod.TileType("ValleyDirt");
+				Main.tile[i, j].TileType = (ushort)Mod.Find<ModTile>("ValleyDirt").Type;
 				WorldGen.SquareTileFrame(i, j, true);
 				Dust.NewDust(new Vector2(i * 16, j * 16), 16, 16, DustID.Marble, 0f, 0f, 0, new Color(121, 121, 121), 1f);
 			}
@@ -53,14 +53,14 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 			Tile tile = Framing.GetTileSafely(i, j);
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
 			Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-			if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.lava())
 			{
-				if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+				if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
 				{
-					tileAbove.type = (ushort)ModContent.TileType<CrystalFlora>();
-					tileAbove.active(true);
-					tileAbove.frameY = 0;
-					tileAbove.frameX = (short)(WorldGen.genRand.Next(8) * 18);
+					tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
+					tileAbove.HasTile;
+					tileAbove.TileFrameY = 0;
+					tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{
@@ -68,12 +68,12 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 					}
 				}
 			}
-			if (WorldGen.genRand.NextBool(15) && !tileBelow.active() && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && !tileBelow.lava())
 			{
-				if (!tile.bottomSlope())
+				if (!tile.BottomSlope)
 				{
-					tileBelow.type = (ushort)ModContent.TileType<CrystalVines>();
-					tileBelow.active(true);
+					tileBelow.TileType = (ushort)ModContent.TileType<CrystalVines>();
+					tileBelow.HasTile;
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{

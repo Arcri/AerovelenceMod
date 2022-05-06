@@ -16,37 +16,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.crit = 4;
-            item.damage = 17;
-            item.ranged = true;
-            item.width = 30;
-            item.height = 54;
-            item.useTime = 22;
-            item.useAnimation = 22;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 8.5f;
+            Item.UseSound = SoundID.Item5;
+            Item.crit = 4;
+            Item.damage = 17;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 30;
+            Item.height = 54;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = AmmoID.Arrow;
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 8.5f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            type = Main.rand.Next(new int[] { type, type, mod.ProjectileType("PhantomSongArrow") });
+            type = Main.rand.Next(new int[] { type, type, Mod.Find<ModProjectile>("PhantomSongArrow") .Type});
             return true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 8);
-            recipe.AddRecipeGroup("AerovelenceMod:EvilMaterials", 4);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 8)
+                .AddRecipeGroup("AerovelenceMod:EvilMaterials", 4)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -57,38 +56,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public int i;
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 3;
         }
         public override void SetDefaults()
         {
-            projectile.width = 42;
-            projectile.velocity *= 1.01f;
-            projectile.height = 14;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.aiStyle = 1;
+            Projectile.width = 42;
+            Projectile.velocity *= 1.01f;
+            Projectile.height = 14;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.aiStyle = 1;
         }
         public override void AI()
         {
             i++;
             if (i % 25 == 0)
             {
-                Projectile.NewProjectile(projectile.Center, projectile.velocity * 0.99f, ModContent.ProjectileType<PhantomSongAura>(), projectile.damage, projectile.knockBack);
+                Projectile.NewProjectile(Projectile.Center, Projectile.velocity * 0.99f, ModContent.ProjectileType<PhantomSongAura>(), Projectile.damage, Projectile.knockBack);
             }
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.frameCounter++;
-            if (projectile.frameCounter % 3 == 0)
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter % 3 == 0)
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
-                if (projectile.frame >= 3)
-                    projectile.frame = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 3)
+                    Projectile.frame = 0;
             }
-            Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 60);
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 60);
             dust.noGravity = true;
             dust.velocity *= 0.1f;
         }
@@ -98,27 +97,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 10;
-            projectile.penetrate = 5;
-            projectile.alpha = 3;
-            projectile.timeLeft = 100;
-            projectile.damage = 60;
-            projectile.scale = 1f;
+            Projectile.width = Projectile.height = 10;
+            Projectile.penetrate = 5;
+            Projectile.alpha = 3;
+            Projectile.timeLeft = 100;
+            Projectile.damage = 60;
+            Projectile.scale = 1f;
 
-            projectile.friendly = true;
+            Projectile.friendly = true;
         }
         public override bool PreAI()
         {
-            projectile.scale *= 0.99f;
-            projectile.velocity *= 0.000001f;
-            Vector2 from = projectile.position;
+            Projectile.scale *= 0.99f;
+            Projectile.velocity *= 0.000001f;
+            Vector2 from = Projectile.position;
             for (int i = 0; i < 360; i += 20)
             {
-                Vector2 circular = new Vector2(24 * projectile.scale, 0).RotatedBy(MathHelper.ToRadians(i));
+                Vector2 circular = new Vector2(24 * Projectile.scale, 0).RotatedBy(MathHelper.ToRadians(i));
                 circular.X *= 0.7f;
-                circular = circular.RotatedBy(Math.Atan2(projectile.velocity.Y, projectile.velocity.X));
-                Vector2 dustVelo = new Vector2(0, 0).RotatedBy(Math.Atan2(projectile.velocity.Y, projectile.velocity.X));
-                Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, 60, 0, 0, projectile.alpha);
+                circular = circular.RotatedBy(Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X));
+                Vector2 dustVelo = new Vector2(0, 0).RotatedBy(Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X));
+                Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, 60, 0, 0, Projectile.alpha);
                 dust.velocity *= 0.15f;
                 dust.velocity += dustVelo;
                 dust.noGravity = true;

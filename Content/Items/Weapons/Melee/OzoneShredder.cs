@@ -14,21 +14,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 20;
-            item.damage = 93;
-            item.melee = true;
-            item.width = 42;
-            item.height = 56;
-            item.useTime = 27;
-            item.useAnimation = 27;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-            item.value = 10000;
-            item.rare = ItemRarityID.Yellow;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.WoodenArrowFriendly;
-            item.shootSpeed = 8f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 20;
+            Item.damage = 93;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 42;
+            Item.height = 56;
+            Item.useTime = 27;
+            Item.useAnimation = 27;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.WoodenArrowFriendly;
+            Item.shootSpeed = 8f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

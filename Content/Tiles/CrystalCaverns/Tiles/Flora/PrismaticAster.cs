@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 	public class PrismaticAster : ModTile
 	{
 		private const int FrameWidth = 18;
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileCut[Type] = true;
@@ -63,7 +63,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			PlantStage stage = GetStage(i, j);
 			if (stage != PlantStage.Grown)
 			{
-				tile.frameX += FrameWidth;
+				tile.TileFrameX += FrameWidth;
 
 				if (Main.netMode != NetmodeID.SinglePlayer)
 					NetMessage.SendTileSquare(-1, i, j, 1);
@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 		private PlantStage GetStage(int i, int j)
 		{
 			Tile tile = Framing.GetTileSafely(i, j);
-			return (PlantStage)(tile.frameX / FrameWidth);
+			return (PlantStage)(tile.TileFrameX / FrameWidth);
 		}
 	}
 }

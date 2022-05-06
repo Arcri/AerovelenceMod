@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -16,22 +17,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            item.damage = 12;
-            item.ranged = true;
-            item.width = 58;
-            item.height = 18;
-            item.useTime = item.useAnimation = 35;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 58;
+            Item.height = 18;
+            Item.useTime = Item.useAnimation = 35;
            
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.holdStyle = ItemHoldStyleID.HarpHoldingOut;
-            item.UseSound = SoundID.Item110;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 0, 55, 40);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<MarbleBullet>();
-            item.shootSpeed = 16;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.holdStyle = ItemHoldStyleID.HarpHoldingOut;
+            Item.UseSound = SoundID.Item110;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 0, 55, 40);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<MarbleBullet>();
+            Item.shootSpeed = 16;
         }
 
         int itemShoot = 0; 
@@ -55,13 +56,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.MarbleBlock, 20);
-            modRecipe.AddIngredient(ItemID.GoldBar, 5);
-            modRecipe.AddIngredient(ItemID.Musket, 1);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.MarbleBlock, 20)
+                .AddIngredient(ItemID.GoldBar, 5)
+                .AddIngredient(ItemID.Musket, 1)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override Vector2? HoldoutOffset()
         {
@@ -90,23 +90,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
 
-            projectile.width = projectile.height = 8;
+            Projectile.width = Projectile.height = 8;
             
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.timeLeft = 600;
-            projectile.alpha = 255;
-            projectile.light = 0.5f;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.timeLeft = 600;
+            Projectile.alpha = 255;
+            Projectile.light = 0.5f;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.extraUpdates = 1;
         }
 
         public override void AI()
         {
-            int dust1 = Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 159);
-            int dust2 = Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 159);
+            int dust1 = Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 159);
+            int dust2 = Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 159);
             Main.dust[dust1].noGravity = true;
             Main.dust[dust2].noGravity = true;
             Main.dust[dust1].velocity = Vector2.Zero;
@@ -117,16 +117,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.Kill();
+            Projectile.Kill();
             return true;
         }
         
         public override void Kill(int timeLeft)
         {
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 159);
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 159);
         }
     }
 

@@ -11,12 +11,13 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
 	public class GlimmeringDresser : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolidTop[Type] = true;
 			Main.tileFrameImportant[Type] = true;
@@ -51,27 +52,27 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			return true;
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
-			if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameY == 0)
+			if (Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY == 0)
 			{
 				Main.CancelClothesWindow(true);
 				Main.mouseRightRelease = false;
-				int left = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+				int left = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameX / 18);
 				left %= 3;
 				left = Player.tileTargetX - left;
-				int top = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+				int top = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY / 18);
 				if (player.sign > -1)
 				{
-					Main.PlaySound(SoundID.MenuClose);
+					SoundEngine.PlaySound(SoundID.MenuClose);
 					player.sign = -1;
 					Main.editSign = false;
 					Main.npcChatText = string.Empty;
 				}
 				if (Main.editChest)
 				{
-					Main.PlaySound(SoundID.MenuTick);
+					SoundEngine.PlaySound(SoundID.MenuTick);
 					Main.editChest = false;
 					Main.npcChatText = string.Empty;
 				}
@@ -86,7 +87,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 					{
 						player.chest = -1;
 						Recipe.FindRecipes();
-						Main.PlaySound(SoundID.MenuClose);
+						SoundEngine.PlaySound(SoundID.MenuClose);
 					}
 					else
 					{
@@ -105,14 +106,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 						{
 							player.chest = -1;
 							Recipe.FindRecipes();
-							Main.PlaySound(SoundID.MenuClose);
+							SoundEngine.PlaySound(SoundID.MenuClose);
 						}
 						else if (num213 != player.chest && player.chest == -1)
 						{
 							player.chest = num213;
 							Main.playerInventory = true;
 							Main.recBigList = false;
-							Main.PlaySound(SoundID.MenuOpen);
+							SoundEngine.PlaySound(SoundID.MenuOpen);
 							player.chestX = left;
 							player.chestY = top;
 						}
@@ -121,7 +122,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 							player.chest = num213;
 							Main.playerInventory = true;
 							Main.recBigList = false;
-							Main.PlaySound(SoundID.MenuTick);
+							SoundEngine.PlaySound(SoundID.MenuTick);
 							player.chestX = left;
 							player.chestY = top;
 						}
@@ -147,8 +148,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
 			int left = Player.tileTargetX;
 			int top = Player.tileTargetY;
-			left -= (int)(tile.frameX % 54 / 18);
-			if (tile.frameY % 36 != 0)
+			left -= (int)(tile.TileFrameX % 54 / 18);
+			if (tile.TileFrameY % 36 != 0)
 			{
 				top--;
 			}
@@ -189,8 +190,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
 			int left = Player.tileTargetX;
 			int top = Player.tileTargetY;
-			left -= (int)(tile.frameX % 54 / 18);
-			if (tile.frameY % 36 != 0)
+			left -= (int)(tile.TileFrameX % 54 / 18);
+			if (tile.TileFrameY % 36 != 0)
 			{
 				top--;
 			}
@@ -218,7 +219,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			}
 			player.noThrow = 2;
 			player.showItemIcon = true;
-			if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameY > 0)
+			if (Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY > 0)
 			{
 				player.showItemIcon2 = ItemID.FamiliarShirt;
 			}

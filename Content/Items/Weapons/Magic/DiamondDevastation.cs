@@ -19,17 +19,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
-            Lighting.AddLight(item.position, 0.08f, .38f, .24f);
+            Lighting.AddLight(Item.position, 0.08f, .38f, .24f);
             Texture2D texture;
-            texture = Main.itemTexture[item.type];
+            texture = Main.itemTexture[Item.type];
             spriteBatch.Draw
             (
 
-                ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow"),
+                ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow"),
                 new Vector2
                 (
-                    item.position.X - Main.screenPosition.X + item.width * 0.5f,
-                    item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f + 2f
+                    Item.position.X - Main.screenPosition.X + Item.width * 0.5f,
+                    Item.position.Y - Main.screenPosition.Y + Item.height - texture.Height * 0.5f + 2f
                 ),
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 Color.White,
@@ -42,23 +42,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            Item.staff[item.type] = true;
-            item.damage = 45;
-            item.magic = true;
-            item.mana = 7;
-            item.width = item.height = 64;
+            Item.staff[Item.type] = true;
+            Item.damage = 45;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 7;
+            Item.width = Item.height = 64;
 
-            item.useTime = item.useAnimation = 32;
+            Item.useTime = Item.useAnimation = 32;
 
-            item.UseSound = SoundID.Item110;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.LightRed;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<DiamondBlastProjectile>(); ;
-            item.shootSpeed = 16f;
+            Item.UseSound = SoundID.Item110;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.LightRed;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<DiamondBlastProjectile>(); ;
+            Item.shootSpeed = 16f;
         }
 
         
@@ -84,13 +84,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.CrystalShard, 5);
-            modRecipe.AddIngredient(ItemID.SoulofLight, 15);
-            modRecipe.AddIngredient(ItemID.IronBar, 5);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.CrystalShard, 5)
+                .AddIngredient(ItemID.SoulofLight, 15)
+                .AddIngredient(ItemID.IronBar, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

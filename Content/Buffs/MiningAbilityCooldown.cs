@@ -5,7 +5,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public class MiningAbilityCooldown : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Mining Power Withdrawl");
 			Description.SetDefault("Can't use Ambrosia mining set bonus while this is active");

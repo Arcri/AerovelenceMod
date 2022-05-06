@@ -13,23 +13,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item41;
-			item.crit = 4;
-            item.damage = 16;
-            item.ranged = true;
-            item.width = 40;
-            item.height = 18; 
-            item.useTime = 26;
-            item.useAnimation = 26;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 0;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-            item.shoot = AmmoID.Bullet;
-			item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 7f;
+			Item.UseSound = SoundID.Item41;
+			Item.crit = 4;
+            Item.damage = 16;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 40;
+            Item.height = 18; 
+            Item.useTime = 26;
+            Item.useAnimation = 26;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 0;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
+            Item.shoot = AmmoID.Bullet;
+			Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 7f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -37,12 +37,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.GoldBar, 15);
-            recipe.AddIngredient(ItemID.Diamond, 3);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.GoldBar, 15)
+                .AddIngredient(ItemID.Diamond, 3)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

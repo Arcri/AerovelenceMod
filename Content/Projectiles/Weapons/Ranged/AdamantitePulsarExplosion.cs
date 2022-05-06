@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 {
@@ -18,33 +20,33 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
-            projectile.damage = 50;
-            projectile.friendly = true;
-            projectile.alpha = 255;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 1;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.usesLocalNPCImmunity = true;
+            Projectile.width = 50;
+            Projectile.height = 50;
+            Projectile.damage = 50;
+            Projectile.friendly = true;
+            Projectile.alpha = 255;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 1;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
         }
 
         public override void AI()
         {
-            projectile.ai[1] += 0.01f;
-            projectile.scale = projectile.ai[1];
-            if (projectile.ai[0] == 0)
+            Projectile.ai[1] += 0.01f;
+            Projectile.scale = Projectile.ai[1];
+            if (Projectile.ai[0] == 0)
             {
-                Main.PlaySound(SoundID.Item14, projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
             }
-            projectile.alpha -= 63;
-            if (projectile.alpha < 0)
+            Projectile.alpha -= 63;
+            if (Projectile.alpha < 0)
             {
-                projectile.alpha = 0;
+                Projectile.alpha = 0;
             }
 
-            projectile.Damage();
+            Projectile.Damage();
 
             int dusts = 5;
             for (int i = 0; i < dusts; i++)
@@ -53,7 +55,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
                 {
                     float speed = 6f;
                     Vector2 velocity = new Vector2(0f, -speed * Main.rand.NextFloat(0.5f, 1.2f)).RotatedBy(MathHelper.ToRadians(360f / i * dusts + Main.rand.NextFloat(-50f, 50f)));
-                    Dust dust1 = Dust.NewDustPerfect(projectile.Center, 59, velocity, 150, default, 1.5f);
+                    Dust dust1 = Dust.NewDustPerfect(Projectile.Center, 59, velocity, 150, default, 1.5f);
                     dust1.noGravity = true;
                 }
             }
@@ -62,21 +64,24 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             int cooldown = 4;
-            projectile.localNPCImmunity[target.whoAmI] = 6;
-            target.immune[projectile.owner] = cooldown;
+            Projectile.localNPCImmunity[target.whoAmI] = 6;
+            target.immune[Projectile.owner] = cooldown;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[projectile.type];
-            Rectangle rectangle = texture.Frame(1, Main.projFrames[projectile.type], 0, projectile.frame);
-            Color color = projectile.GetAlpha(lightColor);
-
-            if (!projectile.hide)
             {
-                spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, rectangle, color, projectile.rotation, rectangle.Size() * 0.5f, projectile.scale, SpriteEffects.None, 0f);
+                Main.instance.LoadProjectile(Projectile.type);
+                Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+                Rectangle rectangle = texture.Frame(1, Main.projFrames[Projectile.type], 0, Projectile.frame);
+                Color color = Projectile.GetAlpha(lightColor);
+
+                if (!Projectile.hide)
+                {
+                    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rectangle, color, Projectile.rotation, rectangle.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+                }
+                return false;
             }
-            return false;
         }
     }
 }

@@ -10,22 +10,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 64;
-            projectile.height = 64;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 30;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 10000f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 300f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 64;
+            Projectile.height = 64;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 30;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 10000f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 300f;
         }
         int t;
         public override void AI()
         {
             if (Main.rand.Next(2) == 0)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 58, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 58, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
         }
 
@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             if (Main.netMode != NetmodeID.Server)
             {
                 float rotation = Main.rand.NextFloat(-rot, rot);
-                Texture2D texture = ModContent.GetTexture(imagePath);
+                Texture2D texture = ModContent.Request<Texture2D>(imagePath);
                 int[] pixelData = new /*credits to eldrazi*/int[texture.Width * texture.Height];
 
                 texture.GetData(pixelData);
@@ -58,9 +58,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             target.life = 0;
             if (t % 50 == 0)
             {
-                SpawnDustFromTexture(projectile.position, DustID.Fire, 0.5f, "AerovelenceMod/Content/Items/Weapons/Ranged/CockSprite");
+                SpawnDustFromTexture(Projectile.position, DustID.Fire, 0.5f, "AerovelenceMod/Content/Items/Weapons/Ranged/CockSprite");
             }
-            Rectangle r = new Rectangle((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height);
+            Rectangle r = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
             CombatText.NewText(r, new Color(89, 32, 255), $"Ech");
         }
 

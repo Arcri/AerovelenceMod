@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 {
 	public class LightningMothBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("LightningMoth");
+		public override int BossBagNPC => Mod.Find<ModNPC>("LightningMoth").Type;
 
 		public override void SetStaticDefaults()
 		{
@@ -16,12 +16,12 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 36;
-			item.height = 32;
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 36;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
 		}
 
 		public override bool CanRightClick()
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(mod.ItemType("PrismaticSoul"));
+			player.QuickSpawnItem(Mod.Find<ModItem>("PrismaticSoul").Type);
 			player.QuickSpawnItem(ItemID.GoldCoin, 18);
 			player.QuickSpawnItem(ItemID.GreaterHealingPotion, Main.rand.Next(4, 12));
 
@@ -40,25 +40,25 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 			switch (Main.rand.Next(6))
 			{
 				case 0:
-					player.QuickSpawnItem(mod.ItemType("BladeOfTheSkies"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("BladeOfTheSkies").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(mod.ItemType("EyeOfTheGreatMoth"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("EyeOfTheGreatMoth").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(mod.ItemType("MothLeg"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("MothLeg").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(mod.ItemType("Florentine"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("Florentine").Type);
 					break;
 				case 4:
-					player.QuickSpawnItem(mod.ItemType("ElectrapulseCanister"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("ElectrapulseCanister").Type);
 					break;
 				case 5:
-					player.QuickSpawnItem(mod.ItemType("SongOfTheStorm"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("SongOfTheStorm").Type);
 					break;
 				case 6:
-					player.QuickSpawnItem(mod.ItemType("StaticSurge"));
+					player.QuickSpawnItem(Mod.Find<ModItem>("StaticSurge").Type);
 					break;
 			}
 		}

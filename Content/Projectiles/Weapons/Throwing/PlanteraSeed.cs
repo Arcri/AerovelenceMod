@@ -18,12 +18,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
 
         public override void SetDefaults()
         {
-            projectile.width = 14;
-            projectile.height = 22;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
+            Projectile.width = 14;
+            Projectile.height = 22;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
         }
 
         private bool rotChanged = false;
@@ -32,13 +32,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
         {
             if (!rotChanged)
             {
-                projectile.rotation = projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
+                Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2;
                 rotChanged = true;
             }
         }
         public override void Kill(int timeLeft)
         {
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<BlossomProjectile>(), projectile.damage * 2, projectile.knockBack, projectile.owner, 0f, 0f);
+            Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<BlossomProjectile>(), Projectile.damage * 2, Projectile.knockBack, Projectile.owner, 0f, 0f);
         }
     }
 }

@@ -13,27 +13,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 9;
-            item.melee = true;
-            item.width = 20;
-            item.height = 20;
-            item.useTime = 5;
-            item.useAnimation = 5;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 9;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 20;
+            Item.height = 20;
+            Item.useTime = 5;
+            Item.useAnimation = 5;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

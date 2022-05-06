@@ -15,11 +15,11 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
         }		
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 8;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 8;
         }
         public override void UpdateEquip(Player player)
         {
@@ -28,14 +28,13 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 7);
-            modRecipe.AddIngredient(ModContent.ItemType<KelvinCore>(), 1);
-            modRecipe.AddIngredient(ItemID.IceBlock, 35);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 10);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 7)
+                .AddIngredient(ModContent.ItemType<KelvinCore>(), 1)
+                .AddIngredient(ItemID.IceBlock, 35)
+                .AddIngredient(ItemID.HellstoneBar, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class CitadelShield : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileSolid[Type] = false;

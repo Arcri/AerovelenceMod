@@ -54,7 +54,7 @@ namespace AerovelenceMod.Common.Utilities
             if (Main.drawToScreen)
                 zero = Vector2.Zero;
 
-            int height = tile.frameY == 36 ? 18 : 16;
+            int height = tile.TileFrameY == 36 ? 18 : 16;
 
             Vector2 drawPosition = new Vector2
             (
@@ -66,7 +66,7 @@ namespace AerovelenceMod.Common.Utilities
             (
                 texture,
                 drawPosition,
-                new Rectangle(tile.frameX, tile.frameY, 16, height),
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height),
                 Color.White,
                 0f,
                 Vector2.Zero,

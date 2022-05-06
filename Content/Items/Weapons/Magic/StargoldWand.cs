@@ -8,38 +8,37 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Stargold Wand");
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 17;
-            item.magic = true;
-            item.mana = 8;
-            item.width = 50;
-            item.height = 50;
-            item.useTime = 5;
-            item.useAnimation = 15;
-            item.reuseDelay = 15;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 0, 40, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<SearingShard>();
-            item.shootSpeed = 12f;
+            Item.crit = 4;
+            Item.damage = 17;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 8;
+            Item.width = 50;
+            Item.height = 50;
+            Item.useTime = 5;
+            Item.useAnimation = 15;
+            Item.reuseDelay = 15;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 0, 40, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<SearingShard>();
+            Item.shootSpeed = 12f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Sandstone, 35);
-            recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.Sandstone, 35)
+                .AddRecipeGroup("Wood", 15)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

@@ -15,11 +15,11 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
         } 			
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 20;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 20;
         }
         public override void UpdateEquip(Player player)
         {
@@ -28,12 +28,11 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 15);
-            modRecipe.AddIngredient(ItemID.CrystalShard, 10);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BurnshockBar>(), 15)
+                .AddIngredient(ItemID.CrystalShard, 10)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

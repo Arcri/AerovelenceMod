@@ -14,23 +14,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.crit = 6;
-            item.damage = 75;
-            item.melee = true;
-            item.width = 60;
-            item.height = 68;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 7;
-            item.shoot = ProjectileID.FlamingArrow;
-            item.shootSpeed = 60f;
-            item.value = Item.sellPrice(0, 25, 0, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
+            Item.crit = 6;
+            Item.damage = 75;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 68;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 7;
+            Item.shoot = ProjectileID.FlamingArrow;
+            Item.shootSpeed = 60f;
+            Item.value = Item.sellPrice(0, 25, 0, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
         }
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             player.direction = (Main.MouseWorld.X - player.Center.X > 0) ? 1 : -1;
             return true;
@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 for (int i = -4; i < 4; i++)
                 {
                     position = Main.MouseWorld + new Vector2(i * 20, -850);
-                    Vector2 velocity = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero).RotatedByRandom(0.05f) * item.shootSpeed;
+                    Vector2 velocity = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero).RotatedByRandom(0.05f) * Item.shootSpeed;
                     Projectile.NewProjectile(position, velocity, type, damage, knockBack, player.whoAmI);
                 }
                 return false;
@@ -61,28 +61,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            projectile.width = 2;
-            projectile.height = 2;
+            Projectile.width = 2;
+            Projectile.height = 2;
             drawOffsetX = -45;
-            projectile.alpha = 255;
+            Projectile.alpha = 255;
             drawOriginOffsetY = 0;
-            projectile.damage = 65;
+            Projectile.damage = 65;
             drawOriginOffsetX = 23;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = 5;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 600;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 5;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 600;
         }
 
         public override void AI()
         {
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
             i++;
             if (i % 1 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 164);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 164);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
     public class CitadelPlatform : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;

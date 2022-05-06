@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class SmoothCavernStone : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
             Main.tileSolid[Type] = true;

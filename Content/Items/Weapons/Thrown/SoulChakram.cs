@@ -18,44 +18,43 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {	
-            item.crit = 20;
-            item.maxStack = 5;
-            item.damage = 16;
-            item.melee = true;
-            item.width = 20;
-            item.height = 30;
-            item.useTime = 14;
-            item.useAnimation = 14;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("SoulChakramProjectile");
-            item.UseSound = SoundID.Item1;
-            item.shootSpeed = 14f;
+            Item.crit = 20;
+            Item.maxStack = 5;
+            Item.damage = 16;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 20;
+            Item.height = 30;
+            Item.useTime = 14;
+            Item.useAnimation = 14;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("SoulChakramProjectile").Type;
+            Item.UseSound = SoundID.Item1;
+            Item.shootSpeed = 14f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 6);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 6)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override bool CanUseItem(Player player)
         {
             
             for (int i = 0; i < Main.projectile.Length; i++)
             {
-                if (Main.projectile[i].active == true && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot && Main.projectile[i] != previousProjectile)
+                if (Main.projectile[i].active == true && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == Item.shoot && Main.projectile[i] != previousProjectile)
                 {
                     amount++;
-                    if (amount >= item.stack)
+                    if (amount >= Item.stack)
                     {
                         return false;
                     }
@@ -81,15 +80,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 30;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.magic = false;
-            projectile.penetrate = 3;
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            Projectile.width = 20;
+            Projectile.height = 30;
+            Projectile.aiStyle = 3;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            // projectile.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.penetrate = 3;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
         }
 
         public override void AI()
@@ -97,12 +96,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i == 45)
             {
-                projectile.damage *= 2;
+                Projectile.damage *= 2;
             }
-            int num622 = Dust.NewDust(new Vector2(projectile.position.X - projectile.velocity.X, projectile.position.Y - projectile.velocity.Y), projectile.width, projectile.height, 191, 0f, 0f, 100, default, 2f);
+            int num622 = Dust.NewDust(new Vector2(Projectile.position.X - Projectile.velocity.X, Projectile.position.Y - Projectile.velocity.Y), Projectile.width, Projectile.height, 191, 0f, 0f, 100, default, 2f);
             Main.dust[num622].noGravity = true;
             Main.dust[num622].scale = 0.5f;
-            projectile.rotation += 0.1f;
+            Projectile.rotation += 0.1f;
         }
     }
 }

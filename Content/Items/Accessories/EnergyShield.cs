@@ -16,15 +16,15 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.defense = 2;
-			item.melee = true;
-			item.damage = 50;
-			item.width = 34;
-			item.height = 38;
-			item.knockBack = 9f;
-			item.accessory = true;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(silver: 60);
+			Item.defense = 2;
+			Item.DamageType = DamageClass.Melee;
+			Item.damage = 50;
+			Item.width = 34;
+			Item.height = 38;
+			Item.knockBack = 9f;
+			Item.accessory = true;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(silver: 60);
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 					Rectangle rect = nPC.getRect();
 					if (rectangle.Intersects(rect) && (nPC.noTileCollide || player.CanHit(nPC)))
 					{
-						float num = 30f * player.meleeDamage;
+						float num = 30f * player.GetDamage(DamageClass.Melee);
 						float num2 = 9f;
 						bool crit = false;
 						if (player.kbGlove)
@@ -52,7 +52,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 						{
 							num2 *= 1.5f;
 						}
-						if (Main.rand.Next(100) < player.meleeCrit)
+						if (Main.rand.Next(100) < player.GetCritChance(DamageClass.Melee))
 						{
 							crit = true;
 						}
@@ -134,9 +134,9 @@ namespace AerovelenceMod.Content.Items.Accessories
 			public override void ResetEffects()
 			{
 				bool dashAccessoryEquipped = false;
-				for (int i = 3; i < 8 + player.extraAccessorySlots; i++)
+				for (int i = 3; i < 8 + Player.extraAccessorySlots; i++)
 				{
-					Item item = player.armor[i];
+					Item item = Player.armor[i];
 
 					if (item.type == ModContent.ItemType<EnergyShield>())
 						dashAccessoryEquipped = true;
@@ -144,16 +144,16 @@ namespace AerovelenceMod.Content.Items.Accessories
 						return;
 				}
 
-				if (!dashAccessoryEquipped || player.setSolar || player.mount.Active || DashActive)
+				if (!dashAccessoryEquipped || Player.setSolar || Player.mount.Active || DashActive)
 					return;
 
-				if (player.controlDown && player.releaseDown && player.doubleTapCardinalTimer[DashDown] < 15)
+				if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[DashDown] < 15)
 					DashDir = DashDown;
-				else if (player.controlUp && player.releaseUp && player.doubleTapCardinalTimer[DashUp] < 15)
+				else if (Player.controlUp && Player.releaseUp && Player.doubleTapCardinalTimer[DashUp] < 15)
 					DashDir = DashUp;
-				else if (player.controlRight && player.releaseRight && player.doubleTapCardinalTimer[DashRight] < 15)
+				else if (Player.controlRight && Player.releaseRight && Player.doubleTapCardinalTimer[DashRight] < 15)
 					DashDir = DashRight;
-				else if (player.controlLeft && player.releaseLeft && player.doubleTapCardinalTimer[DashLeft] < 15)
+				else if (Player.controlLeft && Player.releaseLeft && Player.doubleTapCardinalTimer[DashLeft] < 15)
 					DashDir = DashLeft;
 				else
 					return;

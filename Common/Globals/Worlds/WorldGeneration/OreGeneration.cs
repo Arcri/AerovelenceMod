@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
 {

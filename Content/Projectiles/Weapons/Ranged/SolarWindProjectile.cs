@@ -13,11 +13,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         int dustType = 0;
         public override void SetDefaults()
         {
-            projectile.width = 6;
-            projectile.height = 6;
-            projectile.friendly = true;
-            projectile.penetrate = 1;
-            projectile.ranged = true;
+            Projectile.width = 6;
+            Projectile.height = 6;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.DamageType = DamageClass.Ranged;
             switch (new Random().Next(0, 2))
             {
                 case 0:
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-			Projectile.NewProjectile(projectile.position, projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), projectile.damage, projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
 			StarExplosion();
             return true;
         }
@@ -39,9 +39,9 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			int numDust = 5;
 			for (int i = 0; i < numDust; i++)
 			{
-				Vector2 position = projectile.position;
-				position -= projectile.velocity * ((float)i / numDust);
-				projectile.alpha = 255;
+				Vector2 position = Projectile.position;
+				position -= Projectile.velocity * ((float)i / numDust);
+				Projectile.alpha = 255;
 				int anotherOneBitesThis = Dust.NewDust(position, 1, 1, dustType, 0f, 0f, 100, default, 1f);
 				Main.dust[anotherOneBitesThis].position = position;
 				Main.dust[anotherOneBitesThis].velocity *= 0.2f;
@@ -51,7 +51,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			Projectile.NewProjectile(projectile.position, projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), projectile.damage, projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
 			StarExplosion();
 		}
 		private void StarExplosion()
@@ -70,7 +70,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 					{
 						Vector2 value18 = Vector2.Lerp(vector16, value17, num656 / explosionSize);
 						float scaleFactor = MathHelper.Lerp(num652, value16, num656 / explosionSize);
-						int num657 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), 6, 6, 127, 0f, 0f, 100, default(Color), 1.3f);
+						int num657 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), 6, 6, 127, 0f, 0f, 100, default(Color), 1.3f);
 						Dust dust = Main.dust[num657];
 						Dust dust2 = dust;
 						dust2.velocity *= 0.1f;
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 					{
 						Vector2 value20 = Vector2.Lerp(vector16, value19, num660 / explosionSize);
 						float scaleFactor2 = MathHelper.Lerp(num652, value16, num660 / explosionSize) / 2f;
-						int dust3 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), 6, 6, 135, 0f, 0f, 100, default, 1.3f);
+						int dust3 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), 6, 6, 135, 0f, 0f, 100, default, 1.3f);
 						Dust dust194 = Main.dust[dust3];
 						Dust dust2 = dust194;
 						dust2.velocity *= 0.1f;

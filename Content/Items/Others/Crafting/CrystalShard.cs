@@ -12,11 +12,11 @@ namespace AerovelenceMod.Content.Items.Others.Crafting
         }
         public override void SetDefaults()
         {
-            item.value = Item.sellPrice(0, 0, 2, 35);
-            item.maxStack = 999;
-            item.width = 30;
-            item.height = 28;
-            item.rare = ItemRarityID.LightRed;
+            Item.value = Item.sellPrice(0, 0, 2, 35);
+            Item.maxStack = 999;
+            Item.width = 30;
+            Item.height = 28;
+            Item.rare = ItemRarityID.LightRed;
         }
     }
 }

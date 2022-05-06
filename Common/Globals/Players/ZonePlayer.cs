@@ -67,7 +67,7 @@ namespace AerovelenceMod.Common.Globals.Players
         public override Texture2D GetMapBackgroundImage()
         {
             if (ZoneCrystalCaverns)
-                return mod.GetTexture("Backgrounds/CrystalCaverns/CrystalCavernsMapBackground");
+                return Mod.Assets.Request<Texture2D>("Backgrounds/CrystalCaverns/CrystalCavernsMapBackground").Value;
             
             return null;
         }

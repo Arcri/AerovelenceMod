@@ -15,11 +15,11 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
 		public override void SetDefaults()
 		{
-			item.width = 36;
-			item.height = 30;
-			item.value = 10000;
-			item.rare = ItemRarityID.Yellow;
-			item.accessory = true;
+			Item.width = 36;
+			Item.height = 30;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Yellow;
+			Item.accessory = true;
 		}
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
@@ -41,13 +41,12 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 6);
-			modRecipe.AddIngredient(ItemID.CrystalShard, 2);
-			modRecipe.AddIngredient(ItemID.SoulofFlight, 20);
-			modRecipe.AddTile(TileID.MythrilAnvil);
-			modRecipe.SetResult(this, 1);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<BurnshockBar>(), 6)
+				.AddIngredient(ItemID.CrystalShard, 2)
+				.AddIngredient(ItemID.SoulofFlight, 20)
+				.AddTile(TileID.MythrilAnvil)
+				.Register();
 		}
 	}
 }

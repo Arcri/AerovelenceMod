@@ -13,11 +13,11 @@ namespace AerovelenceMod.Content.Items.Others.Misc
 		}
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 36;
-			item.height = 32;
-			item.rare = ItemRarityID.Green;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 36;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Green;
 		}
 
 		public override bool CanRightClick()

@@ -17,33 +17,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item60;
-            item.crit = 8;
-            item.damage = 50;
-            item.reuseDelay = 10;
-            item.ranged = true;
-            item.width = 30;
-            item.height = 54;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 5, 0, 0);
-            item.rare = ItemRarityID.Pink;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<VortexProjectile>();
-            item.shootSpeed = 16f;
+            Item.UseSound = SoundID.Item60;
+            Item.crit = 8;
+            Item.damage = 50;
+            Item.reuseDelay = 10;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 30;
+            Item.height = 54;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 5, 0, 0);
+            Item.rare = ItemRarityID.Pink;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<VortexProjectile>();
+            Item.shootSpeed = 16f;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.AdamantiteBar, 15);
-            modRecipe.AddIngredient(ItemID.SoulofMight, 10);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 5);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.AdamantiteBar, 15)
+                .AddIngredient(ItemID.SoulofMight, 10)
+                .AddIngredient(ItemID.HallowedBar, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

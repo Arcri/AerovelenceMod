@@ -13,11 +13,11 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 34;
-            item.height = 34;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 34;
+            Item.height = 34;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Accessories
             player.starCloak = true;
             player.panic = true;
             player.bee = true;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
             modPlayer.QueensStinger = true;
 		}
         public override void UpdateEquip(Player player)
@@ -42,14 +42,13 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.BeeCloak, 1);
-            modRecipe.AddIngredient(ItemID.SweetheartNecklace, 1);
-            modRecipe.AddIngredient(ModContent.ItemType<DiamondEmpoweredGem>(), 1);
-            modRecipe.AddIngredient(ModContent.ItemType<QueensStinger>(), 1);
-            modRecipe.AddTile(TileID.TinkerersWorkbench);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.BeeCloak, 1)
+                .AddIngredient(ItemID.SweetheartNecklace, 1)
+                .AddIngredient(ModContent.ItemType<DiamondEmpoweredGem>(), 1)
+                .AddIngredient(ModContent.ItemType<QueensStinger>(), 1)
+                .AddTile(TileID.TinkerersWorkbench)
+                .Register();
         }
     }
 }

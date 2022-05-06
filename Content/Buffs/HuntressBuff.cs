@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public sealed class HuntressBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Huntress");
 			Description.SetDefault("");

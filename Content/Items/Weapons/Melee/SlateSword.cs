@@ -5,6 +5,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -16,22 +17,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 15;
-            item.melee = true;
-            item.width = 40;
-            item.height = 40;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.useTurn = true;
-            item.UseSound = SoundID.Item1;
-            item.shoot = ProjectileID.PurificationPowder;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 20, 0);
-            item.rare = ItemRarityID.Blue;
-            item.shootSpeed = 4.85f;
-            item.autoReuse = false;
+            Item.crit = 4;
+            Item.damage = 15;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 40;
+            Item.height = 40;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.useTurn = true;
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = ProjectileID.PurificationPowder;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 20, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.shootSpeed = 4.85f;
+            Item.autoReuse = false;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -44,12 +45,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 45);
-            recipe.AddRecipeGroup("Wood", 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<SlateOre>(), 45)
+                .AddRecipeGroup("Wood", 15)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
     public class SlateChunk : ModProjectile
@@ -60,30 +60,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.aiStyle = 1;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.penetrate = 1;
-            projectile.timeLeft = 600;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.extraUpdates = 1;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.aiStyle = 1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 600;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.extraUpdates = 1;
         }
 
         int Timer = 0;
         public override void AI()
         {
-            projectile.rotation += 100;
+            Projectile.rotation += 100;
         }
         public override void Kill(int timeLeft)
         {
-            Dust dust = Dust.NewDustPerfect(projectile.Center, 4, projectile.velocity);
+            Dust dust = Dust.NewDustPerfect(Projectile.Center, 4, Projectile.velocity);
             dust.noGravity = true;
-            Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item73, projectile.position);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+            SoundEngine.PlaySound(SoundID.Item73, Projectile.position);
         }
     }
 }

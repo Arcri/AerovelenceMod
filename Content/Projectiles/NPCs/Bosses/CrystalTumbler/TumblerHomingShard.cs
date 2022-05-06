@@ -12,36 +12,36 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 14;
-			projectile.maxPenetrate = 1;
-			projectile.height = 36;
-			projectile.damage = 11;
-			projectile.hostile = true;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = true;
-			projectile.friendly = false;
-			projectile.magic = true;
-			projectile.timeLeft = 200;
+			Projectile.width = 14;
+			Projectile.maxPenetrate = 1;
+			Projectile.height = 36;
+			Projectile.damage = 11;
+			Projectile.hostile = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
+			Projectile.friendly = false;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.timeLeft = 200;
 		}
 
 		public override void AI()
 		{
-			if (projectile.localAI[0] == 0f)
+			if (Projectile.localAI[0] == 0f)
 			{
-				AdjustMagnitude(ref projectile.velocity);
-				projectile.localAI[0] = 1f;
+				AdjustMagnitude(ref Projectile.velocity);
+				Projectile.localAI[0] = 1f;
 			}
 			Vector2 move = Vector2.Zero;
 			float distance = 1000f;
 			bool target = false;
 			for (int k = 0; k < Main.player.Length; k++)
 			{
-				Vector2 newMove = Main.player[k].Center - projectile.Center;
+				Vector2 newMove = Main.player[k].Center - Projectile.Center;
 				float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
 				if (distanceTo < distance)
 				{
@@ -49,17 +49,17 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 					distance = distanceTo;
 					target = true;
 				}
-				projectile.rotation += projectile.velocity.X * 0.099f;
+				Projectile.rotation += Projectile.velocity.X * 0.099f;
 			}
 			if (target)
 			{
 				AdjustMagnitude(ref move);
-				projectile.velocity = (10 * projectile.velocity + move) / 11f;
-				AdjustMagnitude(ref projectile.velocity);
+				Projectile.velocity = (10 * Projectile.velocity + move) / 11f;
+				AdjustMagnitude(ref Projectile.velocity);
 			}
-			if (projectile.alpha <= 30)
+			if (Projectile.alpha <= 30)
 			{
-				int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustType<WispDust>());
+				int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType<WispDust>());
 				Main.dust[dust].velocity *= 1f;
 			}
 		}
@@ -74,7 +74,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 		}
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-			projectile.Kill();
+			Projectile.Kill();
         }
     }
 }

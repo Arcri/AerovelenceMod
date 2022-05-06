@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 {
     public class HardenedIce : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
 			minPick = 59;
@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
             Main.tileMerge[Type][TileID.CorruptIce] = true;
             Main.tileMerge[Type][TileID.FleshIce] = true;
             Main.tileMerge[Type][TileID.HallowedIce] = true;
-            Main.tileMerge[Type][mod.TileType("ValleyGrass")] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("ValleyGrass").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;

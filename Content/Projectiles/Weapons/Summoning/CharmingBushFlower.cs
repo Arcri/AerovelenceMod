@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 {
     internal class CharmingBushFlower : ModProjectile
 	{
-		protected bool JustSpawned => projectile.localAI[0] == 0;
+		protected bool JustSpawned => Projectile.localAI[0] == 0;
 
 		protected virtual float ShootRange => 300;
 		protected virtual int ShootCooldown => 60;
@@ -28,36 +28,36 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 22;
+			Projectile.width = Projectile.height = 22;
 
-			projectile.minionSlots = 1f;
+			Projectile.minionSlots = 1f;
 
-			projectile.minion = true;
-			projectile.friendly = true;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
-			projectile.netImportant = true;
+			Projectile.minion = true;
+			Projectile.friendly = true;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.netImportant = true;
 		}
 
 		public override bool PreAI()
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			AeroPlayer ap = owner.GetModPlayer<AeroPlayer>();
 
 			if (JustSpawned)
 			{
 				for (int i = 0; i < 20; ++i)
 				{
-					Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.Leaves>(), 0, 0, 100);
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Leaves>(), 0, 0, 100);
 					dust.velocity *= 1.5f;
 				}
 
-				projectile.localAI[0] = 1;
+				Projectile.localAI[0] = 1;
 			}
 
 			if (!owner.active)
 			{
-				projectile.active = false;
+				Projectile.active = false;
 				return (false);
 			}
 
@@ -67,21 +67,21 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			}
 			if (ap.charmingBush)
 			{
-				projectile.timeLeft = 2;
+				Projectile.timeLeft = 2;
 			}
 
 			FollowOwner(owner);
 
-			if ((int)(++projectile.localAI[1]) % ShootCooldown == 0)
+			if ((int)(++Projectile.localAI[1]) % ShootCooldown == 0)
 			{
 				int target = -1;
 				float distance = ShootRange;
 
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
-					if (Main.npc[i].CanBeChasedBy(projectile))
+					if (Main.npc[i].CanBeChasedBy(Projectile))
 					{
-						float currentDistance = projectile.Distance(Main.npc[i].Center);
+						float currentDistance = Projectile.Distance(Main.npc[i].Center);
 
 						if (currentDistance < distance)
 						{
@@ -93,7 +93,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 				if (target != -1)
 				{
-					if (Main.myPlayer == projectile.owner)
+					if (Main.myPlayer == Projectile.owner)
 					{
 						ShootAt(Main.npc[target]);
 					}
@@ -111,12 +111,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			// Make sure the projectiles draw behind the other projectiles when they're at the top of their rotation.
 			if (drawBehindOtherProjectiles)
 			{
-				projectile.hide = true;
+				Projectile.hide = true;
 				drawCacheProjsBehindProjectiles.Add(index);
 			}
 			else
 			{
-				projectile.hide = false;
+				Projectile.hide = false;
 			}
 		}
 
@@ -125,21 +125,21 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		public override bool PreDrawExtras(SpriteBatch spriteBatch)
 		{
-			Texture2D chain = ModContent.GetTexture(this.Texture + "_Chain");
+			Texture2D chain = ModContent.Request<Texture2D>(this.Texture + "_Chain");
 			Rectangle frame = chain.Frame(1, 1, 0, 0);
 			Vector2 chainOrigin = frame.Size() / 2;
 
 			bool drawChain = true;
-			float chainWidth = chain.Width * projectile.scale;
+			float chainWidth = chain.Width * Projectile.scale;
 
-			Vector2 chainDirection = Vector2.Normalize(Main.player[projectile.owner].Center - projectile.Center);
-			Vector2 chainPosition = projectile.Center + chainDirection * chainWidth / 3;
+			Vector2 chainDirection = Vector2.Normalize(Main.player[Projectile.owner].Center - Projectile.Center);
+			Vector2 chainPosition = Projectile.Center + chainDirection * chainWidth / 3;
 			float chainRotation = chainDirection.ToRotation();
 
 			while (drawChain)
 			{
 				Color lightColor = Lighting.GetColor((int)chainPosition.X / 16, (int)chainPosition.Y / 16);
-				float currentLength = (chainPosition - Main.player[projectile.owner].Center).Length();
+				float currentLength = (chainPosition - Main.player[Projectile.owner].Center).Length();
 
 				if (currentLength <= chainWidth + 4)
 				{
@@ -147,7 +147,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 					frame.Width = (int)currentLength;
 				}
 
-				spriteBatch.Draw(chain, chainPosition - Main.screenPosition, frame, lightColor, chainRotation, chainOrigin, projectile.scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(chain, chainPosition - Main.screenPosition, frame, lightColor, chainRotation, chainOrigin, Projectile.scale, SpriteEffects.None, 0f);
 
 				chainPosition += chainDirection * chainWidth;
 			}
@@ -161,9 +161,9 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			this.drawBehindOtherProjectiles = false;
 
 			float rotationOffset = 0;
-			if (projectile.ai[0] != 0)
+			if (Projectile.ai[0] != 0)
 			{
-				rotationOffset = MathHelper.TwoPi / projectile.ai[0] * projectile.ai[1];
+				rotationOffset = MathHelper.TwoPi / Projectile.ai[0] * Projectile.ai[1];
 			}
 
 			float currentRotation = ((float)Main.time / 60 + rotationOffset) % MathHelper.TwoPi;
@@ -179,11 +179,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			targetPosition.X += owner.width / 2 + xOffset;
 			targetPosition.Y -= 100 + yOffset;
 
-			projectile.Center = Vector2.Lerp(projectile.Center, targetPosition, 0.2f);
-			projectile.velocity *= 0.8f;
-			projectile.direction = projectile.spriteDirection = owner.direction;
+			Projectile.Center = Vector2.Lerp(Projectile.Center, targetPosition, 0.2f);
+			Projectile.velocity *= 0.8f;
+			Projectile.direction = Projectile.spriteDirection = owner.direction;
 
-			projectile.rotation = (float)Math.Sin(projectile.localAI[1] / 15) * 0.2f;
+			Projectile.rotation = (float)Math.Sin(Projectile.localAI[1] / 15) * 0.2f;
 		}
 
 		protected virtual void ShootAt(NPC target) { }

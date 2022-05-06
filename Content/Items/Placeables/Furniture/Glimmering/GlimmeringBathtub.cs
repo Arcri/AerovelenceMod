@@ -11,26 +11,25 @@ namespace AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 15;
-            item.useTime = 10;
+            Item.maxStack = 999;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
 
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.Furniture.GlimmeringBathtub>(); //put your CustomBlock Tile name
+            Item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.Furniture.GlimmeringBathtub>(); //put your CustomBlock Tile name
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
+            Item.useStyle = ItemUseStyleID.Swing;
         }
 
         public override void AddRecipes()
         {
-            var modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<Glimmerwood>(), 14);
-            modRecipe.AddTile(ModContent.TileType<CrystallineFabricator>());
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<Glimmerwood>(), 14)
+                .AddTile(ModContent.TileType<CrystallineFabricator>())
+                .Register();
         }
     }
 }

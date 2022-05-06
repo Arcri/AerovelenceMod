@@ -16,22 +16,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
 		public override void SetDefaults()
 		{
-			item.UseSound = SoundID.Item45;
-			item.crit = 4;
-			item.damage = 25;
-			item.melee = true;
-			item.width = 20;
-			item.height = 40;
-			item.useTime = 26;
-			item.useAnimation = 26;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.noMelee = true;
-			item.knockBack = 2;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-			item.rare = ItemRarityID.Orange;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<SlimyKnivesProj>();
-			item.shootSpeed = 17f;
+			Item.UseSound = SoundID.Item45;
+			Item.crit = 4;
+			Item.damage = 25;
+			Item.DamageType = DamageClass.Melee;
+			Item.width = 20;
+			Item.height = 40;
+			Item.useTime = 26;
+			Item.useAnimation = 26;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.noMelee = true;
+			Item.knockBack = 2;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
+			Item.rare = ItemRarityID.Orange;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<SlimyKnivesProj>();
+			Item.shootSpeed = 17f;
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -47,34 +47,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.SlimeBlock, 30);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.SlimeBlock, 30)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 	public class SlimyKnivesProj : ModProjectile
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 600;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
 		}
         public override void AI()
         {
-			projectile.alpha += 2;
-			if (projectile.alpha >= 220)
-				projectile.Kill();
-			projectile.rotation = projectile.velocity.ToRotation();
+			Projectile.alpha += 2;
+			if (Projectile.alpha >= 220)
+				Projectile.Kill();
+			Projectile.rotation = Projectile.velocity.ToRotation();
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
@@ -82,10 +81,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void Kill(int timeLeft)
 		{
-			projectile.velocity = projectile.oldVelocity * 0.2f;
+			Projectile.velocity = Projectile.oldVelocity * 0.2f;
 			for (int num361 = 0; num361 < 30; num361++)
 			{
-				int num362 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 33, 0f, 0f, 75, default(Color), 1.2f);
+				int num362 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 33, 0f, 0f, 75, default(Color), 1.2f);
 				Dust dust120;
 				Dust dust2;
 				if (Main.rand.Next(2) == 0)
@@ -119,13 +118,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 				dust2.velocity *= 0.3f;
 				dust120 = Main.dust[num362];
 				dust2 = dust120;
-				dust2.velocity += projectile.velocity;
+				dust2.velocity += Projectile.velocity;
 				dust120 = Main.dust[num362];
 				dust2 = dust120;
 				dust2.velocity *= 1f + Main.rand.Next(-100, 101) * 0.01f;
 				Main.dust[num362].velocity.X += Main.rand.Next(-50, 51) * 0.015f;
 				Main.dust[num362].velocity.Y += Main.rand.Next(-50, 51) * 0.015f;
-				Main.dust[num362].position = projectile.Center;
+				Main.dust[num362].position = Projectile.Center;
 			}
 		}
 	}

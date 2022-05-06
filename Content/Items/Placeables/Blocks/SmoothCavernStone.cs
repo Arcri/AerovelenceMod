@@ -9,26 +9,25 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 15;
-            item.useTime = 10;
+            Item.maxStack = 999;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
 
-            item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.SmoothCavernStone>();
+            Item.createTile = ModContent.TileType<Tiles.CrystalCaverns.Tiles.SmoothCavernStone>();
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
+            Item.useStyle = ItemUseStyleID.Swing;
         }
 
         public override void AddRecipes()
         {
-            var modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<CavernStone>());
-            modRecipe.AddTile(TileID.WorkBenches);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CavernStone>())
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

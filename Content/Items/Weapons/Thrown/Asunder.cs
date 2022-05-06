@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item11;
-            item.crit = 8;
-            item.damage = 32;
-            item.melee = true;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 25, 0, 0);
-            item.rare = ItemRarityID.Lime;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("AsunderProjectile");
-            item.shootSpeed = 12f;
+            Item.UseSound = SoundID.Item11;
+            Item.crit = 8;
+            Item.damage = 32;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 25, 0, 0);
+            Item.rare = ItemRarityID.Lime;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("AsunderProjectile").Type;
+            Item.shootSpeed = 12f;
         }
     }
 
@@ -39,23 +39,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetDefaults()
         {
-            projectile.width = 72;
-            projectile.height = 74;
-            projectile.friendly = true;
-            projectile.penetrate = 1;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 60;
+            Projectile.width = 72;
+            Projectile.height = 74;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 60;
         }
         public override void AI()
         {
-            projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X) + ((float)Math.PI / 4);
-            if (projectile.timeLeft % 30 == 0 && projectile.alpha != 255)
+            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + ((float)Math.PI / 4);
+            if (Projectile.timeLeft % 30 == 0 && Projectile.alpha != 255)
             {
-                var proj = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X, projectile.velocity.Y, projectile.type, projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
-                Main.projectile[proj].alpha = projectile.alpha + (255 / 3);
+                var proj = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X, Projectile.velocity.Y, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, 0f);
+                Main.projectile[proj].alpha = Projectile.alpha + (255 / 3);
             }
         }
     }

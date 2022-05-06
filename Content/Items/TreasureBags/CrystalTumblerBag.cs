@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 {
 	public class CrystalTumblerBag : ModItem
 	{
-		public override int BossBagNPC => mod.NPCType("CrystalTumbler");
+		public override int BossBagNPC => Mod.Find<ModNPC>("CrystalTumbler").Type;
 
 		public override void SetStaticDefaults()
 		{
@@ -22,12 +22,12 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 999;
-			item.consumable = true;
-			item.width = 36;
-			item.height = 32;
-			item.rare = ItemRarityID.Purple;
-			item.expert = true;
+			Item.maxStack = 999;
+			Item.consumable = true;
+			Item.width = 36;
+			Item.height = 32;
+			Item.rare = ItemRarityID.Purple;
+			Item.expert = true;
 		}
 
 		public override bool CanRightClick()

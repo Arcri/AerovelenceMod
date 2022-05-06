@@ -24,32 +24,31 @@ namespace AerovelenceMod.Content.Items.Armor.SpiritCultist
             player.wingTimeMax *= 2;
             player.jumpSpeedBoost += 1.5f;
             player.setBonus = "+15% increase to all damage\nIncreased flight time\nIncreased jump speed\n10% increased movement speed\nYou leave a trail of deadly spirits";
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(mod, "AeroPlayer");
+            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
             modPlayer.SpiritCultistBonus = true;
         }
     
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = Item.sellPrice(0, 1, 30, 0);
-            item.rare = ItemRarityID.Yellow;
-            item.defense = 13;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = Item.sellPrice(0, 1, 30, 0);
+            Item.rare = ItemRarityID.Yellow;
+            Item.defense = 13;
         }
 		public override void UpdateEquip(Player player)
         {
-			player.rangedDamage += 0.05f;
-            player.rangedCrit += 8;
+			player.GetDamage(DamageClass.Ranged) += 0.05f;
+            player.GetCritChance(DamageClass.Ranged) += 8;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<CrystalShard>(), 8);
-            modRecipe.AddIngredient(ItemID.FallenStar, 6);
-            modRecipe.AddIngredient(ModContent.ItemType<EmeraldEmpoweredGem>(), 1);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CrystalShard>(), 8)
+                .AddIngredient(ItemID.FallenStar, 6)
+                .AddIngredient(ModContent.ItemType<EmeraldEmpoweredGem>(), 1)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

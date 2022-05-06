@@ -13,16 +13,16 @@ namespace AerovelenceMod.Content.Items.Accessories
 		}
         public override void SetDefaults()
         {
-			item.accessory = true;
-            item.width = 14;
-            item.height = 20;
-            item.value = 60000;
-            item.rare = ItemRarityID.Green;
+			Item.accessory = true;
+            Item.width = 14;
+            Item.height = 20;
+            Item.value = 60000;
+            Item.rare = ItemRarityID.Green;
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-			player.meleeDamage += 0.10f;
-			player.meleeSpeed =+ 1.2f;
+			player.GetDamage(DamageClass.Melee) += 0.10f;
+			player.GetAttackSpeed(DamageClass.Melee) =+ 1.2f;
 			player.maxRunSpeed -= 0.3f;
         }
     }

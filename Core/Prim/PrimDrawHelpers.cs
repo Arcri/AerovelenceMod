@@ -36,7 +36,7 @@ namespace AerovelenceMod.Core.Prim
             {
                 if (effect.HasParameter("noiseTexture"))
                 {
-                    effect.Parameters["noiseTexture"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/noise"));
+                    effect.Parameters["noiseTexture"].SetValue(ModContent.GetInstance<AerovelenceMod>().Assets.Request<Texture2D>("Assets/noise").Value);
                 }
                 if (effect.HasParameter("arcLashColorTwo"))
                 {

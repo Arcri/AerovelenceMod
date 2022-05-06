@@ -3,6 +3,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.General
 {
@@ -11,96 +12,96 @@ namespace AerovelenceMod.Content.NPCs.General
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Slate Demon");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[NPC.type] = 5;
         }
         public override void SetDefaults()
         {
-            npc.lifeMax = 70;
-            npc.aiStyle = 22;
-            npc.damage = 15;
-            npc.defense = 24;
-            npc.knockBackResist = 0f;
-            npc.width = 44;
-            npc.height = 32;
-            npc.value = Item.buyPrice(0, 0, 15, 0);
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = false;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.lifeMax = 70;
+            NPC.aiStyle = 22;
+            NPC.damage = 15;
+            NPC.defense = 24;
+            NPC.knockBackResist = 0f;
+            NPC.width = 44;
+            NPC.height = 32;
+            NPC.value = Item.buyPrice(0, 0, 15, 0);
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = false;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
         int speed = 3;
         int maxFrames = 3;
         int frame;
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
-            if (npc.frameCounter >= speed)
+            NPC.frameCounter++;
+            if (NPC.frameCounter >= speed)
             {
                 frame++;
-                npc.frameCounter = 0;
+                NPC.frameCounter = 0;
             }
 
             if (frame > maxFrames)
                 frame = 0;
 
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
 		public override void AI()
 		{
-            Player player = Main.player[npc.target];
-            Vector2 distanceNorm = player.position - npc.position;
+            Player player = Main.player[NPC.target];
+            Vector2 distanceNorm = player.position - NPC.position;
             distanceNorm.Normalize();
-            npc.ai[0]++;
-            float optimalRotation = (float)Math.Atan2(player.position.Y - npc.position.Y, player.position.X - npc.position.X) - 3.14159265f;
-            if (npc.ai[0] % 256 == 0)
+            NPC.ai[0]++;
+            float optimalRotation = (float)Math.Atan2(player.position.Y - NPC.position.Y, player.position.X - NPC.position.X) - 3.14159265f;
+            if (NPC.ai[0] % 256 == 0)
             {
-                Main.PlaySound(SoundID.Item, (int)npc.Center.X, (int)npc.Center.Y, 94, 0.75f);
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.GoldenShowerHostile, 30, 0f, Main.myPlayer, 0f, 0f);
+                SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
+                Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.GoldenShowerHostile, 30, 0f, Main.myPlayer, 0f, 0f);
             }
-            if (npc.direction == 1)
+            if (NPC.direction == 1)
             {
-                npc.spriteDirection = 1;
+                NPC.spriteDirection = 1;
             }
-            if (npc.direction == -1)
+            if (NPC.direction == -1)
             {
-                npc.spriteDirection = -1;
+                NPC.spriteDirection = -1;
             }
-            if (!npc.noTileCollide)
+            if (!NPC.noTileCollide)
             {
-                if (npc.collideX)
+                if (NPC.collideX)
                 {
-                    npc.velocity.X = npc.oldVelocity.X * -0.5f;
-                    if (npc.direction == -1 && npc.velocity.X > 0f && npc.velocity.X < 2f)
+                    NPC.velocity.X = NPC.oldVelocity.X * -0.5f;
+                    if (NPC.direction == -1 && NPC.velocity.X > 0f && NPC.velocity.X < 2f)
                     {
-                        npc.velocity.X = 2f;
+                        NPC.velocity.X = 2f;
                     }
-                    if (npc.direction == 1 && npc.velocity.X < 0f && npc.velocity.X > -2f)
+                    if (NPC.direction == 1 && NPC.velocity.X < 0f && NPC.velocity.X > -2f)
                     {
-                        npc.velocity.X = -2f;
+                        NPC.velocity.X = -2f;
                     }
                 }
-                if (npc.collideY)
+                if (NPC.collideY)
                 {
-                    npc.velocity.Y = npc.oldVelocity.Y * -0.5f;
-                    if (npc.velocity.Y > 0f && npc.velocity.Y < 1f)
+                    NPC.velocity.Y = NPC.oldVelocity.Y * -0.5f;
+                    if (NPC.velocity.Y > 0f && NPC.velocity.Y < 1f)
                     {
-                        npc.velocity.Y = 1f;
+                        NPC.velocity.Y = 1f;
                     }
-                    if (npc.velocity.Y < 0f && npc.velocity.Y > -1f)
+                    if (NPC.velocity.Y < 0f && NPC.velocity.Y > -1f)
                     {
-                        npc.velocity.Y = -1f;
+                        NPC.velocity.Y = -1f;
                     }
                 }
             }
-            if (Main.dayTime && npc.position.Y <= Main.worldSurface * 16.0)
+            if (Main.dayTime && NPC.position.Y <= Main.worldSurface * 16.0)
             {
-                if (npc.timeLeft > 10)
+                if (NPC.timeLeft > 10)
                 {
-                    npc.timeLeft = 10;
+                    NPC.timeLeft = 10;
                 }
-                npc.directionY = -1;
-                npc.velocity.Y += -0.5f;
+                NPC.directionY = -1;
+                NPC.velocity.Y += -0.5f;
             }
 		}
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -110,13 +111,13 @@ namespace AerovelenceMod.Content.NPCs.General
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life <= 0 || npc.life >= 0)
+            if (NPC.life <= 0 || NPC.life >= 0)
             {
                 int d = 193;
                 for (int k = 0; k < 12; k++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
-                    Dust.NewDust(npc.position, npc.width, npc.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
                 }
             }
         }

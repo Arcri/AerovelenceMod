@@ -11,29 +11,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Beholder's Staff");
             Tooltip.SetDefault("Does Something");
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 82;
-            item.magic = true;
-            item.mana = 20;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 65;
-            item.useAnimation = 65;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("BeholderOrb");
-            item.shootSpeed = 40f;
+            Item.crit = 11;
+            Item.damage = 82;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 20;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 65;
+            Item.useAnimation = 65;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("BeholderOrb").Type;
+            Item.shootSpeed = 40f;
         }
         public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
@@ -66,16 +66,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostRay>(), 1);
-            modRecipe.AddIngredient(ItemID.StaffofEarth, 1);
-            modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
-            modRecipe.AddIngredient(ItemID.ShadowbeamStaff, 1);
-            modRecipe.AddIngredient(ItemID.Ectoplasm, 40);
-            modRecipe.AddIngredient(ItemID.ShroomiteBar, 15);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostRay>(), 1)
+                .AddIngredient(ItemID.StaffofEarth, 1)
+                .AddIngredient(ItemID.SpectreStaff, 1)
+                .AddIngredient(ItemID.ShadowbeamStaff, 1)
+                .AddIngredient(ItemID.Ectoplasm, 40)
+                .AddIngredient(ItemID.ShroomiteBar, 15)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

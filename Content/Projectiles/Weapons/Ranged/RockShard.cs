@@ -9,20 +9,20 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 	{
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 1;
-			projectile.width = 14;
-			projectile.height = 18;
-			projectile.alpha =  0;
-			projectile.damage = 6;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = true;
+			Projectile.aiStyle = 1;
+			Projectile.width = 14;
+			Projectile.height = 18;
+			Projectile.alpha =  0;
+			Projectile.damage = 6;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
 		}
 		public override void AI()
 		{
-			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X, projectile.velocity.Y, 0, Color.Blue, 1);
+			Projectile.velocity *= 1.01f;
+			int dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X, Projectile.velocity.Y, 0, Color.Blue, 1);
 			Main.dust[dust1].velocity /= 2f;
 		}
 	}

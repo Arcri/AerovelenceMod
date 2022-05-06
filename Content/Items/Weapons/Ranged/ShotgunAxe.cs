@@ -16,22 +16,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			item.damage = 48;
-			item.rare = ItemRarityID.Yellow;
-			item.width = 78;
-			item.height = 32;
-			item.useAnimation = 35;
-			item.useTime = 35;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.shootSpeed = 7f;
-			item.knockBack = 6f;
-			item.ranged = true;
-			item.autoReuse = true;
-			item.UseSound = SoundID.Item36;
-			item.noMelee = true;
-			item.value = Item.buyPrice(0, 1, 0, 0);
-			item.shoot = ProjectileID.Bullet;
-			item.useAmmo = AmmoID.Bullet;
+			Item.damage = 48;
+			Item.rare = ItemRarityID.Yellow;
+			Item.width = 78;
+			Item.height = 32;
+			Item.useAnimation = 35;
+			Item.useTime = 35;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.shootSpeed = 7f;
+			Item.knockBack = 6f;
+			Item.DamageType = DamageClass.Ranged;
+			Item.autoReuse = true;
+			Item.UseSound = SoundID.Item36;
+			Item.noMelee = true;
+			Item.value = Item.buyPrice(0, 1, 0, 0);
+			Item.shoot = ProjectileID.Bullet;
+			Item.useAmmo = AmmoID.Bullet;
 		}
 
 		public override bool AltFunctionUse(Player player)
@@ -42,36 +42,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				item.crit = 4;
-				item.damage = 73;
-				item.width = 78;
-				item.height = 32;
-				item.noMelee = false;
-				item.useTime = 60;
-				item.useAnimation = 60;
-				item.shoot = ProjectileID.None;
-				item.UseSound = SoundID.Item1;
-				item.useStyle = ItemUseStyleID.SwingThrow;
-				item.knockBack = 4;
-				item.autoReuse = false;
+				Item.crit = 4;
+				Item.damage = 73;
+				Item.width = 78;
+				Item.height = 32;
+				Item.noMelee = false;
+				Item.useTime = 60;
+				Item.useAnimation = 60;
+				Item.shoot = ProjectileID.None;
+				Item.UseSound = SoundID.Item1;
+				Item.useStyle = ItemUseStyleID.Swing;
+				Item.knockBack = 4;
+				Item.autoReuse = false;
 			}
 			else
 			{
-				item.damage = 48;
-				item.rare = ItemRarityID.Yellow;
-				item.width = 78;
-				item.height = 32;
-				item.useAnimation = 35;
-				item.useTime = 35;
-				item.useStyle = ItemUseStyleID.HoldingOut;
-				item.shootSpeed = 7f;
-				item.knockBack = 6f;
-				item.ranged = true;
-				item.autoReuse = true;
-				item.UseSound = SoundID.Item36;
-				item.noMelee = true;
-				item.shoot = ProjectileID.Bullet;
-				item.useAmmo = AmmoID.Bullet;
+				Item.damage = 48;
+				Item.rare = ItemRarityID.Yellow;
+				Item.width = 78;
+				Item.height = 32;
+				Item.useAnimation = 35;
+				Item.useTime = 35;
+				Item.useStyle = ItemUseStyleID.Shoot;
+				Item.shootSpeed = 7f;
+				Item.knockBack = 6f;
+				Item.DamageType = DamageClass.Ranged;
+				Item.autoReuse = true;
+				Item.UseSound = SoundID.Item36;
+				Item.noMelee = true;
+				Item.shoot = ProjectileID.Bullet;
+				Item.useAmmo = AmmoID.Bullet;
 			}
 			return base.CanUseItem(player);
 		}

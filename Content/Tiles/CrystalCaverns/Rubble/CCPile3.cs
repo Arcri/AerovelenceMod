@@ -7,7 +7,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 {
     public class CCPile3 : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = false;
@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-            if (!tileBelow.active() || tileBelow.halfBrick() || tileBelow.topSlope())
+            if (!tileBelow.HasTile || tileBelow.IsHalfBlock || tileBelow.TopSlope)
             {
                 WorldGen.KillTile(i, j);
             }

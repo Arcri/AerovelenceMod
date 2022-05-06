@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			for (int i = 0; i < markedNPCs.Length; i++)
 			{
-				Projectile p = Projectile.NewProjectileDirect(Main.npc[markedNPCs[i]].Center, Vector2.Zero, ProjectileID.Grenade, damage, 0, player.whoAmI);
+				Projectile p = Projectile.NewProjectileDirect(Main.npc[markedNPCs[i]].Center, Vector2.Zero, ProjectileID.Grenade, damage, 0, Player.whoAmI);
 				p.friendly = true;
 				p.hostile = false;
 				p.timeLeft = 3;
@@ -61,36 +61,35 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 54;
+			Item.damage = 54;
 			//item.damage affects explosion damage only
 
-			item.width = 30; //Sprite width
-			item.height = 30; //Sprite height
-			item.ranged = true; //Ranged damage
-			item.noMelee = true; //No melee hitbox
-			item.knockBack = 3f;
-			item.rare = 4; //Rarity value
-			item.useTime = 23;
-			item.useAnimation = 23;
-			item.useStyle = 5;
-			item.useAmmo = AmmoID.Bullet;
-			item.shoot = ModContent.ProjectileType<MarkShot>();
-			item.shootSpeed = 9f;
+			Item.width = 30; //Sprite width
+			Item.height = 30; //Sprite height
+			Item.DamageType = DamageClass.Ranged; //Ranged damage
+			Item.noMelee = true; //No melee hitbox
+			Item.knockBack = 3f;
+			Item.rare = 4; //Rarity value
+			Item.useTime = 23;
+			Item.useAnimation = 23;
+			Item.useStyle = 5;
+			Item.useAmmo = AmmoID.Bullet;
+			Item.shoot = ModContent.ProjectileType<MarkShot>();
+			Item.shootSpeed = 9f;
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			type = item.shoot;
+			type = Item.shoot;
 			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.IllegalGunParts);
-			recipe.AddIngredient(ItemID.Minishark);
-			recipe.AddIngredient(ItemID.Bomb, 10); //10 bombs
-			recipe.AddTile(TileID.Hellforge);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.IllegalGunParts)
+				.AddIngredient(ItemID.Minishark)
+				.AddIngredient(ItemID.Bomb, 10)
+				.AddTile(TileID.Hellforge)
+				.Register();
 		}
 	}
 	//This is a very generic beam projectile
@@ -101,19 +100,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		public override string Texture => "Terraria/Projectile_0"; //Comment this line out if projectile has a sprite.
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.timeLeft = 600;
-			projectile.ranged = true;
-			projectile.extraUpdates = 30;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 600;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.extraUpdates = 30;
 		}
 		public override void AI()
 		{
 			if (Main.rand.NextFloat() < .6f)
 			{
-				Dust d = Dust.NewDustDirect(projectile.position, 4, 4, 228); //Need to update to DustID
+				Dust d = Dust.NewDustDirect(Projectile.position, 4, 4, 228); //Need to update to DustID
 				d.velocity = Vector2.Zero;
 				d.scale = .8f;
 			}
@@ -128,7 +127,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit)
 		{
-			MarkPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<MarkPlayer>();
+			MarkPlayer modPlayer = Main.player[Projectile.owner].GetModPlayer<MarkPlayer>();
 			if (modPlayer.markShots < 3 || !modPlayer.AllNPCsActive())
 			{
 				//Main.NewText("1");
@@ -145,7 +144,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			{
 				//Main.NewText("3");
 				//Main.NewText("Should be exploding.");
-				modPlayer.ExplodeNPCs(projectile.damage);
+				modPlayer.ExplodeNPCs(Projectile.damage);
 			}
 		}
 	}

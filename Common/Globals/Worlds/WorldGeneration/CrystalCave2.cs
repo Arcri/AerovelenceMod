@@ -14,7 +14,7 @@ using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -69,7 +69,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                     for (int l = i - 40; l < i + 40; l++)
                         for (int m = j - 18; m < j + 21; m++)
                         {
-                            int type = Main.tile[l, m].type;
+                            int type = Main.tile[l, m].TileType;
                             if (type == TileID.BlueDungeonBrick || type == TileID.GreenDungeonBrick || type == TileID.PinkDungeonBrick ||
                                 type == TileID.Cloud || type == TileID.RainCloud || type == 368 || type == 367 || type == 226)
                                 placementOK = false;
@@ -86,7 +86,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
             {
                 int x = WorldGen.genRand.Next(Main.maxTilesX);
                 int y = WorldGen.genRand.Next(Main.maxTilesY);
-                while (Framing.GetTileSafely(x, y).type != ModContent.TileType<CavernStone>())
+                while (Framing.GetTileSafely(x, y).TileType != ModContent.TileType<CavernStone>())
                 {
                     x = WorldGen.genRand.Next(Main.maxTilesX);
                     y = WorldGen.genRand.Next(Main.maxTilesY);
@@ -2533,86 +2533,86 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                         switch (_CrystalCaveNoTouch[y, x])
                         {
                             case 1:
-                                tile.active(false);
+                                tile.HasTile;
                                 break;
 
                         }
                         switch (_CrystalCaveshape[y, x])
                         {
                             case 1:
-                                tile.type = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
+                                tile.HasTile;
                                 break;
                             case 2:
-                                tile.type = (ushort)ModContent.TileType<CrystalGrass>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CrystalGrass>();
+                                tile.HasTile;
                                 break;
                             case 3:
-                                tile.type = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
+                                tile.HasTile;
                                 break;
                             case 4:
-                                tile.type = (ushort)ModContent.TileType<CavernCrystal>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CavernCrystal>();
+                                tile.HasTile;
                                 break;
                             case 5:
-                                tile.type = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
+                                tile.HasTile;
                                 break;
                             case 6:
-                                tile.type = (ushort)ModContent.TileType<CavernStone>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CavernStone>();
+                                tile.HasTile;
                                 break;
                             case 7:
-                                tile.type = (ushort)ModContent.TileType<CitadelBrick>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CitadelBrick>();
+                                tile.HasTile;
                                 break;
                             case 8:
-                                tile.type = (ushort)ModContent.TileType<LushGrowth>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<LushGrowth>();
+                                tile.HasTile;
                                 break;
                             case 9:
-                                tile.type = (ushort)ModContent.TileType<ChargedStone>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<ChargedStone>();
+                                tile.HasTile;
                                 break;
                             case 10:
-                                tile.type = (ushort)ModContent.TileType<CrystalSand>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CrystalSand>();
+                                tile.HasTile;
                                 break;
                             case 11:
-                                tile.type = (ushort)ModContent.TileType<CitadelBrick>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<CitadelBrick>();
+                                tile.HasTile;
                                 break;
                             case 12:
-                                tile.type = (ushort)ModContent.TileType<SmoothCavernStone>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<SmoothCavernStone>();
+                                tile.HasTile;
                                 break;
                             case 13:
-                                tile.type = (ushort)ModContent.TileType<GlimmerwoodTile>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<GlimmerwoodTile>();
+                                tile.HasTile;
                                 break;
                             case 14:
-                                tile.type = (ushort)ModContent.TileType<LushGrowth>();
-                                tile.active(true);
+                                tile.TileType = (ushort)ModContent.TileType<LushGrowth>();
+                                tile.HasTile;
                                 break;
                         }
 
                         switch (_CrystalCaveWall[y, x])
                         {
                             case 1:
-                                tile.wall = (ushort)ModContent.WallType<CavernDirtWall>();
+                                tile.WallType = (ushort)ModContent.WallType<CavernDirtWall>();
                                 break;
                             case 2:
-                                tile.wall = (ushort)ModContent.WallType<CavernWallUnsafe>();
+                                tile.WallType = (ushort)ModContent.WallType<CavernWallUnsafe>();
                                 break;
                             case 3:
-                                tile.wall = (ushort)ModContent.WallType<LushGrowthWall>();
+                                tile.WallType = (ushort)ModContent.WallType<LushGrowthWall>();
                                 break;
                             case 4:
-                                tile.wall = (ushort)ModContent.WallType<CitadelBrickWall>();
+                                tile.WallType = (ushort)ModContent.WallType<CitadelBrickWall>();
                                 break;
                             case 5:
-                                tile.wall = (ushort)ModContent.WallType<GlimmerwoodWall>();
+                                tile.WallType = (ushort)ModContent.WallType<GlimmerwoodWall>();
                                 break;
                         }
 

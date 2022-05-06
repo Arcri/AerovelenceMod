@@ -16,8 +16,8 @@ namespace AerovelenceMod.Content.Items.Shields
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			item.accessory = true;
-			item.rare = ItemRarityID.Orange;
+			Item.accessory = true;
+			Item.rare = ItemRarityID.Orange;
 			shield.capacity = 50;
 			shield.rechargeRate = 7.5f;
 			shield.rechargeDelay = 15;

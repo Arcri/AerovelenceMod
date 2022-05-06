@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 {
@@ -11,30 +12,30 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 		int t;
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 1;
-			projectile.width = 10;
-			projectile.height = 22;
-			projectile.alpha =  0;
-			projectile.damage = 6;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
+			Projectile.aiStyle = 1;
+			Projectile.width = 10;
+			Projectile.height = 22;
+			Projectile.alpha =  0;
+			Projectile.damage = 6;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
 		}
 		public override void AI()
 		{
 			t++;
-			projectile.velocity *= 1.01f;
-			int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Sparkle>(), projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
+			Projectile.velocity *= 1.01f;
+			int dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Sparkle>(), Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 1);
 			Main.dust[dust1].velocity /= 2f;
 			if (t > 100)
 			{
-				projectile.tileCollide = true;
+				Projectile.tileCollide = true;
 			}
 		}
 		public override void Kill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 73, 0.75f);
+			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 73, 0.75f);
 		}
 	}
 }

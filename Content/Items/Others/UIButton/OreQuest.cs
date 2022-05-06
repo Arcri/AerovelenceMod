@@ -12,11 +12,11 @@ namespace AerovelenceMod.Content.Items.Others.UIButton
         }
         public override void SetDefaults()
         {
-            item.value = Item.sellPrice(0, 0, 0, 0);
-            item.maxStack = 999;
-            item.width = 30;
-            item.height = 28;
-            item.rare = ItemRarityID.Green;
+            Item.value = Item.sellPrice(0, 0, 0, 0);
+            Item.maxStack = 999;
+            Item.width = 30;
+            Item.height = 28;
+            Item.rare = ItemRarityID.Green;
         }
     }
 }

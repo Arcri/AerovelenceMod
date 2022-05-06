@@ -15,33 +15,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
 		public override void SetDefaults()
 		{
-            item.damage = 25;
-            item.crit = 4;
-            item.ranged = true;
-            item.width = 44;
-            item.height = 30;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Green;
-            item.UseSound = SoundID.Item11;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.PurificationPowder;
-            item.shootSpeed = 8f;
-            item.useAmmo = AmmoID.Bullet;
+            Item.damage = 25;
+            Item.crit = 4;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 44;
+            Item.height = 30;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.UseSound = SoundID.Item11;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.PurificationPowder;
+            Item.shootSpeed = 8f;
+            Item.useAmmo = AmmoID.Bullet;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("AerovelenceMod:GoldBars", 12);
-            recipe.AddIngredient(ItemID.SunplateBlock, 20);
-            recipe.AddIngredient(ItemID.Cloud, 10);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddRecipeGroup("AerovelenceMod:GoldBars", 12)
+                .AddIngredient(ItemID.SunplateBlock, 20)
+                .AddIngredient(ItemID.Cloud, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
 
         public override Vector2? HoldoutOffset()

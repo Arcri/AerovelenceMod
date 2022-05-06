@@ -13,10 +13,10 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.Cryst
 		protected override bool PaintTileInner(int i, int j, float percToEdge)
 		{
 			Tile t = Framing.GetTileSafely(i, j);
-			bool changed = t.active() || t.wall != (ushort)ModContent.WallType<CavernWall>() || t.liquid > 0;
+			bool changed = t.HasTile || t.WallType != (ushort)ModContent.WallType<CavernWall>() || t.liquid > 0;
 
-			t.active(false);
-			t.wall = (ushort)ModContent.WallType<CavernWall>();
+			t.HasTile;
+			t.WallType = (ushort)ModContent.WallType<CavernWall>();
 			t.liquid = 0;
 			return changed;
 		}
@@ -24,14 +24,14 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.Cryst
 		protected override bool PaintTileOuter(int i, int j, float percToEdge)
 		{
 			Tile t = Framing.GetTileSafely(i, j);
-			bool changed = !t.active()
-					|| t.type != (ushort)ModContent.TileType<CavernStone>()
-					|| t.wall != (ushort)ModContent.WallType<CavernWall>();
+			bool changed = !t.HasTile
+					|| t.TileType != (ushort)ModContent.TileType<CavernStone>()
+					|| t.WallType != (ushort)ModContent.WallType<CavernWall>();
 
-			t.type = (ushort)ModContent.TileType<CavernStone>();
-			t.wall = (ushort)ModContent.WallType<CavernWall>();
+			t.TileType = (ushort)ModContent.TileType<CavernStone>();
+			t.WallType = (ushort)ModContent.WallType<CavernWall>();
 			t.slope(0);
-			t.active(true);
+			t.HasTile;
 			return changed;
 		}
 	}

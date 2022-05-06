@@ -12,25 +12,25 @@ namespace AerovelenceMod.Content.Items.Tools
         }
         public override void SetDefaults()
         {
-            item.damage = 35;
-            item.melee = true;
-            item.width = 50;
-            item.height = 16;
-            item.useTime = 7;
-            item.useAnimation = 25;
-            item.channel = true;
-            item.noUseGraphic = true;
-            item.noMelee = true;
-            item.pick = 210;
-            item.tileBoost++;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.knockBack = 6;
-            item.value = Item.buyPrice(0, 1, 50, 0);
-            item.rare = ItemRarityID.Cyan;
-            item.UseSound = SoundID.Item23;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("StarglassDrillProj");
-            item.shootSpeed = 40f;
+            Item.damage = 35;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 50;
+            Item.height = 16;
+            Item.useTime = 7;
+            Item.useAnimation = 25;
+            Item.channel = true;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.pick = 210;
+            Item.tileBoost++;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.knockBack = 6;
+            Item.value = Item.buyPrice(0, 1, 50, 0);
+            Item.rare = ItemRarityID.Cyan;
+            Item.UseSound = SoundID.Item23;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("StarglassDrillProj").Type;
+            Item.shootSpeed = 40f;
         }
     }
 
@@ -38,20 +38,20 @@ namespace AerovelenceMod.Content.Items.Tools
     {
         public override void SetDefaults()
         {
-            projectile.width = 16;
-            projectile.height = 50;
-            projectile.aiStyle = 20;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.hide = true;
-            projectile.ownerHitCheck = true;
-            projectile.melee = true;
+            Projectile.width = 16;
+            Projectile.height = 50;
+            Projectile.aiStyle = 20;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.hide = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.DamageType = DamageClass.Melee;
         }
 
         public override void AI()
         {
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100, default, 1.9f);
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 6, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default, 1.9f);
             Main.dust[dust].noGravity = true;
         }
     }

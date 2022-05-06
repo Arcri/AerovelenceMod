@@ -11,27 +11,27 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 {
     public class CavernStone : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            mineResist = 2.5f;
-            minPick = 40;
+            MineResist = 2.5f;
+            MinPick = 40;
             Main.tileSolid[Type] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalDirt")] = true;
-            Main.tileMerge[Type][mod.TileType("CrystalGrass")] = true;
-            Main.tileMerge[Type][mod.TileType("ChargedStone")] = true;
-            Main.tileMerge[Type][mod.TileType("FieldStone")] = true;
-            Main.tileMerge[Type][mod.TileType("CitadelStone")] = true;
-            Main.tileMerge[Type][mod.TileType("LushGrowth")] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalDirt").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("ChargedStone").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("CitadelStone").Type] = true;
+            Main.tileMerge[Type][Mod.Find<ModTile>("LushGrowth").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(065, 065, 085));
-            dustType = 59;
-            soundType = SoundID.Tink;
-            drop = ModContent.ItemType<Items.Placeables.Blocks.CavernStone>();
+            DustType = 59;
+            SoundType = SoundID.Tink;
+            ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.CavernStone>();
 
         }
-        public static Vector2 TileOffset => Lighting.lightMode > 1 ? Vector2.Zero : Vector2.One * 12;
+        public static Vector2 TileOffset => Lighting.LegacyEngine.Mode > 1 ? Vector2.Zero : Vector2.One * 12;
 
         public static Vector2 TileCustomPosition(int i, int j, Vector2? off = null)
         {
@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                 zero = Vector2.Zero;
             }
             int height = tile.frameY == 36 ? 18 : 16;
-            Main.spriteBatch.Draw(mod.GetTexture("Blocks/CrystalCaverns/Tiles/CavernStone_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.Main.EntitySpriteDraw(mod.GetTexture("Blocks/CrystalCaverns/Tiles/CavernStone_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }*/
         public static bool PlaceObject(int x, int y, int type, bool mute = false, int style = 0, int alternate = 0, int random = -1, int direction = -1)
         {
@@ -67,14 +67,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Tile tile = Framing.GetTileSafely(i, j);
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
             Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.lava())
             {
-                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
-                    tileAbove.type = (ushort)ModContent.TileType<CrystalGrowth>();
-                    tileAbove.active(true);
-                    tileAbove.frameY = 0;
-                    tileAbove.frameX = (short)(WorldGen.genRand.Next(15) * 18);
+                    tileAbove.TileType = (ushort)ModContent.TileType<CrystalGrowth>();
+                    tileAbove.HasTile;
+                    tileAbove.TileFrameY = 0;
+                    tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(15) * 18);
                     WorldGen.SquareTileFrame(i, j + 1, true);
                     if (Main.netMode == NetmodeID.Server)
                     {
@@ -82,14 +82,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.active() && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.Lava)
             {
-                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
-                    tileAbove.type = (ushort)ModContent.TileType<CavernsRubbleFloor>();
-                    tileAbove.active(true);
-                    tileAbove.frameY = 0;
-                    tileAbove.frameX = (short)(WorldGen.genRand.Next(13) * 18);
+                    tileAbove.TileType = (ushort)ModContent.TileType<CavernsRubbleFloor>();
+                    tileAbove.HasTile;
+                    tileAbove.TileFrameY = 0;
+                    tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(13) * 18);
                     WorldGen.SquareTileFrame(i, j + 2, true);
                     if (Main.netMode == NetmodeID.Server)
                     {
@@ -97,12 +97,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(25) && tileAbove.liquid > 250 && !tileAbove.active() && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(25) && tileAbove.liquid > 250 && !tileAbove.HasTile && !tileBelow.lava())
             {
-                if (!tile.bottomSlope() && !tile.topSlope() && !tile.halfBrick() && !tile.topSlope())
+                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
-                    tileAbove.type = (ushort)ModContent.TileType<LuminVines>();
-                    tileAbove.active(true);
+                    tileAbove.TileType = (ushort)ModContent.TileType<LuminVines>();
+                    tileAbove.HasTile;
                     WorldGen.SquareTileFrame(i, j - 1, true);
                     if (Main.netMode == NetmodeID.Server)
                     {
@@ -110,12 +110,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(15) && tileBelow.liquid > 250 && !tileBelow.active() && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(15) && tileBelow.liquid > 250 && !tileBelow.HasTile && !tileBelow.lava())
             {
-                if (!tile.bottomSlope())
+                if (!tile.BottomSlope)
                 {
-                    tileBelow.type = (ushort)ModContent.TileType<LuminVines>();
-                    tileBelow.active(true);
+                    tileBelow.TileType = (ushort)ModContent.TileType<LuminVines>();
+                    tileBelow.HasTile;
                     WorldGen.SquareTileFrame(i, j + 1, true);
                     if (Main.netMode == NetmodeID.Server)
                     {

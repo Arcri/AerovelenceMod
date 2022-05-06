@@ -10,13 +10,13 @@ namespace AerovelenceMod.Content.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 1;
-			projectile.height = 1;
-			projectile.alpha = 255;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = true;
-			projectile.magic = true;
+			Projectile.width = 1;
+			Projectile.height = 1;
+			Projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
+			Projectile.DamageType = DamageClass.Magic;
 		}
 
 		Vector2 projectileOldPosition;
@@ -24,17 +24,17 @@ namespace AerovelenceMod.Content.Projectiles
 		float originOffsetX = 0;
 		public override void AI()
 		{
-			if (projectile.ai[0] == 0)
+			if (Projectile.ai[0] == 0)
 			{
 				Random rand = new Random();
 				originOffsetX = rand.Next(-360, 360);
-				projectileOldPosition = new Vector2(projectile.position.X - originOffsetX, projectile.position.Y);
-				var Y = 1080 - (Main.player[Main.myPlayer].position.Y - projectile.position.Y);
+				projectileOldPosition = new Vector2(Projectile.position.X - originOffsetX, Projectile.position.Y);
+				var Y = 1080 - (Main.player[Main.myPlayer].position.Y - Projectile.position.Y);
 				playerOldPositionY = Main.player[Main.myPlayer].position.Y;
 				originOffsetX /= (180 / (1080 / Y));
 			}
 
-			if (projectile.ai[0] < 25)
+			if (Projectile.ai[0] < 25)
 			{
 				base.AI();
 
@@ -47,9 +47,9 @@ namespace AerovelenceMod.Content.Projectiles
 				
 				int offsetX = 5;
 				int	height = 0;
-				if (projectile.ai[0] % 5 == 0)
+				if (Projectile.ai[0] % 5 == 0)
 				{
-					for (int j = 0; j < (Main.screenHeight * projectile.ai[0] / 5) / 6; j++)
+					for (int j = 0; j < (Main.screenHeight * Projectile.ai[0] / 5) / 6; j++)
 					{
 						if (height > 1080)
 						{
@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Projectiles
 						height++;
 					}
 				}
-				projectile.ai[0]++;
+				Projectile.ai[0]++;
 			}
 		}
 

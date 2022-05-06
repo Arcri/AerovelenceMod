@@ -20,34 +20,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-			item.crit = 20;
-            item.damage = 38;
-            item.ranged = true;
-            item.width = 66;
-            item.height = 22;
-            item.useTime = 24;
-            item.useAnimation = 24;
-			item.UseSound = SoundID.Item36;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 8;
-            item.value = Item.sellPrice(0, 15, 0, 0);
-            item.rare = ItemRarityID.Pink;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("HydraulicBlasterProj");
-			item.useAmmo = AmmoID.Bullet;
-            item.shootSpeed = 15f;
+			Item.crit = 20;
+            Item.damage = 38;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 66;
+            Item.height = 22;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+			Item.UseSound = SoundID.Item36;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 8;
+            Item.value = Item.sellPrice(0, 15, 0, 0);
+            Item.rare = ItemRarityID.Pink;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("HydraulicBlasterProj").Type;
+			Item.useAmmo = AmmoID.Bullet;
+            Item.shootSpeed = 15f;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 10);
-            modRecipe.AddIngredient(ItemID.Starfish, 5);
-            modRecipe.AddIngredient(ItemID.SoulofSight, 3);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddIngredient(ItemID.Starfish, 5)
+                .AddIngredient(ItemID.SoulofSight, 3)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
 
 
@@ -71,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
             for (int i = 0; i < 3; ++i)
             {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, mod.ProjectileType("HydraulicBlasterProj"), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, Mod.Find<ModProjectile>("HydraulicBlasterProj").Type, damage, knockBack, player.whoAmI);
             }
             return false;
         }
@@ -81,53 +80,53 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		int i;
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 1;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			projectile.timeLeft = 120;
-			projectile.alpha = 100;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 1;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			Projectile.timeLeft = 120;
+			Projectile.alpha = 100;
         }
         public override void AI()
         {
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 			i++;
 			/*if (i % 3 == 0)
 			{
 				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 56, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
 			}*/
-			projectile.velocity.Y += 0.1f;
-			projectile.velocity *= 0.98f;
+			Projectile.velocity.Y += 0.1f;
+			Projectile.velocity *= 0.98f;
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
-            Texture2D texture2D = mod.GetTexture("Assets/Glow");
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
-                Color color = projectile.GetAlpha(Color.Aqua) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[Projectile.type].Size() / 3f;
+                Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, Main.projectileTexture[projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, Main.projectileTexture[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
             }
 
             return true;
         }
         public override bool OnTileCollide(Vector2 oldVelocity) 
 		{
-			Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), mod.ProjectileType("HydraulicBlasterProjSmall"), 10, 2, Main.player[0].whoAmI);
+			Projectile.NewProjectile(Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, 10, 2, Main.player[0].whoAmI);
 			return true;
 		}		
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), mod.ProjectileType("HydraulicBlasterProjSmall"), damage / 2, knockback, Main.player[0].whoAmI);
+			Projectile.NewProjectile(Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, damage / 2, knockback, Main.player[0].whoAmI);
 		}
     }
 		public class HydraulicBlasterProjSmall : ModProjectile
@@ -135,44 +134,44 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		int i;
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = -1;
-            projectile.ranged = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = false;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-			projectile.timeLeft = 60;
-			projectile.alpha = 100;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = false;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			Projectile.timeLeft = 60;
+			Projectile.alpha = 100;
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
-            Texture2D texture2D = mod.GetTexture("Assets/Glow");
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                float scale = projectile.scale * (projectile.oldPos.Length - k) / projectile.oldPos.Length * .45f;
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[projectile.type].Size() / 3f;
-                Color color = projectile.GetAlpha(Color.Aqua) * ((projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[Projectile.type].Size() / 3f;
+                Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, projectile.rotation, Main.projectileTexture[projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, Main.projectileTexture[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
             }
 
             return true;
         }
         public override void AI()
         {
-			projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + 1.57f;
 			i++;
 		/*	if (i % 3 == 0)
 			{
 				Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 56, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
 			}*/
-			projectile.velocity.Y += 0.1f;
-			projectile.velocity *= 0.98f;
+			Projectile.velocity.Y += 0.1f;
+			Projectile.velocity *= 0.98f;
         }
     }
 }

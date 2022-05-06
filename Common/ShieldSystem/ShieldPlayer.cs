@@ -19,7 +19,7 @@ namespace AerovelenceMod.Common.ShieldSystem
         {
             if (wornShieldItem != null && WornShield.capacity > 0)
             {
-                player.statLifeMax2 -= WornShield.RealData.HPPenalty;
+                Player.statLifeMax2 -= WornShield.RealData.HPPenalty;
 
                 ReflectProjectiles();
             }
@@ -31,21 +31,21 @@ namespace AerovelenceMod.Common.ShieldSystem
             for (int i = 0; i < Main.maxProjectiles; ++i)
             {
                 Projectile proj = Main.projectile[i];
-                if (proj.active && proj.hostile && proj.DistanceSQ(player.Center) < WornShield.RealData.Radius * WornShield.RealData.Radius)
+                if (proj.active && proj.hostile && proj.DistanceSQ(Player.Center) < WornShield.RealData.Radius * WornShield.RealData.Radius)
                 {
-                    if (proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[player.whoAmI] <= 0 && WornShield.CanEffectProjectile(player, proj))
+                    if (proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[Player.whoAmI] <= 0 && WornShield.CanEffectProjectile(Player, proj))
                     {
-                        WornShield.OnEffectProjectile(player, proj);
+                        WornShield.OnEffectProjectile(Player, proj);
 
-                        WornShield.capacity -= WornShield.GetCapacityDeplete(player, proj);
+                        WornShield.capacity -= WornShield.GetCapacityDeplete(Player, proj);
                         WornShield.rechargeTimer = WornShield.delayTimer = 0;
 
                         if (WornShield.capacity <= 0)
-                            WornShield.OnBreak(player, proj);
+                            WornShield.OnBreak(Player, proj);
                     }
 
                     if (proj.active)
-                        proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[player.whoAmI] = GetProjectileShieldIFrames();
+                        proj.GetGlobalProjectile<ShieldGlobalProjectile>().shieldImmune[Player.whoAmI] = GetProjectileShieldIFrames();
                 }
             }
         }

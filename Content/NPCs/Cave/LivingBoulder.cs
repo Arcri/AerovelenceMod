@@ -12,33 +12,33 @@ namespace AerovelenceMod.Content.NPCs.Cave
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 26;
-            npc.lifeMax = 50;
-            npc.damage = 12;
-            npc.defense = 24;
-            npc.knockBackResist = 1f;
-            npc.width = 38;
-            npc.height = 18;
-            npc.value = Item.buyPrice(0, 0, 4, 0);
-            npc.lavaImmune = false;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = 26;
+            NPC.lifeMax = 50;
+            NPC.damage = 12;
+            NPC.defense = 24;
+            NPC.knockBackResist = 1f;
+            NPC.width = 38;
+            NPC.height = 18;
+            NPC.value = Item.buyPrice(0, 0, 4, 0);
+            NPC.lavaImmune = false;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.damage = 20;
-            npc.lifeMax = 75;
-            npc.defense = 10;
+            NPC.damage = 20;
+            NPC.lifeMax = 75;
+            NPC.defense = 10;
         }
         public override void AI()
         {
-            npc.rotation += npc.velocity.X * 0.05f;
+            NPC.rotation += NPC.velocity.X * 0.05f;
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.player.ZoneRockLayerHeight ? .3f : 0f;
+            return spawnInfo.Player.ZoneRockLayerHeight ? .3f : 0f;
         }
     }
 }

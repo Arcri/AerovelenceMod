@@ -12,20 +12,20 @@ namespace AerovelenceMod.Content.Items.Tools
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 5;
-            item.melee = true;
-            item.width = 34;
-            item.height = 34;
-            item.useTime = 6;
-            item.useAnimation = 6;
-			item.pick = 50;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 3, 0, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 5;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 34;
+            Item.height = 34;
+            Item.useTime = 6;
+            Item.useAnimation = 6;
+			Item.pick = 50;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 3, 0, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
         }
     }
 }

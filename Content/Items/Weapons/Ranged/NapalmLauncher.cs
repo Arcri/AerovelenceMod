@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.crit = 11;
-            item.damage = 125;
-            item.ranged = true;
-            item.width = 92;
-            item.height = 30;
-            item.useTime = 12;
-            item.useAnimation = 12;
-			item.UseSound = SoundID.Item11;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 8;
-            item.value = Item.sellPrice(0, 11, 40, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.useAmmo = AmmoID.Gel; 
-            item.shoot = ProjectileID.Flames;
-            item.shootSpeed = 10f;
+			Item.crit = 11;
+            Item.damage = 125;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 92;
+            Item.height = 30;
+            Item.useTime = 12;
+            Item.useAnimation = 12;
+			Item.UseSound = SoundID.Item11;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 8;
+            Item.value = Item.sellPrice(0, 11, 40, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.useAmmo = AmmoID.Gel; 
+            Item.shoot = ProjectileID.Flames;
+            Item.shootSpeed = 10f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -70,19 +70,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Napalm Launcher", "Artifact Weapon")
+			line = new TooltipLine(Mod, "Napalm Launcher", "Artifact Weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

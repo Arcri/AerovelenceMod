@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen;
 using AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.CrystalCaves;
 using Terraria;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
 {

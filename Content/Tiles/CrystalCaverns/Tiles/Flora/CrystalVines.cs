@@ -7,7 +7,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 {
 	public class CrystalVines : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileCut[Type] = true;
 			Main.tileBlockLight[Type] = true;
@@ -15,15 +15,15 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Main.tileNoFail[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			Main.tileLighted[Type] = false;
-			soundType = SoundID.Grass;
-			dustType = 116;
+			SoundType = SoundID.Grass;
+			DustType = 116;
 			AddMapEntry(new Color(100, 125, 255));
 		}
 
 		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
 			Tile tile = Framing.GetTileSafely(i, j + 1);
-			if (tile.active() && tile.type == Type)
+			if (tile.HasTile && tile.TileType == Type)
 			{
 				WorldGen.KillTile(i, j + 1);
 			}
@@ -34,9 +34,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 		{
 			Tile tileAbove = Framing.GetTileSafely(i, j - 2);
 			int type = -1;
-			if (tileAbove.active() && !tileAbove.bottomSlope())
+			if (tileAbove.HasTile && !tileAbove.BottomSlope)
 			{
-				type = tileAbove.type;
+				type = tileAbove.TileType;
 			}
 
 			if (type == ModContent.TileType<CrystalGrass>() || type == Type)
@@ -51,18 +51,18 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 		public override void RandomUpdate(int i, int j)
 		{
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-			if (WorldGen.genRand.NextBool(15) && !tileBelow.active() && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && !tileBelow.Lava)
 			{
 				bool placeVine = false;
 				int yTest = j;
 				while (yTest > j - 10)
 				{
 					Tile testTile = Framing.GetTileSafely(i, yTest);
-					if (testTile.bottomSlope())
+					if (testTile.BottomSlope)
 					{
 						break;
 					}
-					else if (!testTile.active() || testTile.type != ModContent.TileType<CrystalGrass>())
+					else if (!testTile.HasTile || testTile.TileType != ModContent.TileType<CrystalGrass>())
 					{
 						yTest--;
 						continue;
@@ -72,8 +72,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 				}
 				if (placeVine)
 				{
-					tileBelow.type = Type;
-					tileBelow.active(true);
+					tileBelow.TileType = Type;
+					tileBelow.HasTile;
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{

@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Core.Prim;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -17,22 +18,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item109;
-            item.damage = 12;
-            item.melee = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 37;
-            item.useAnimation = 37;
-            item.mana = 10;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<ElectricSphereProj>();
-            item.shootSpeed = 6f;
+            Item.UseSound = SoundID.Item109;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 37;
+            Item.useAnimation = 37;
+            Item.mana = 10;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<ElectricSphereProj>();
+            Item.shootSpeed = 6f;
         }
     }
 
@@ -43,28 +44,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public int i;
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 5;
+            Main.projFrames[Projectile.type] = 5;
         }
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 38;
-            projectile.friendly = true;
-            projectile.aiStyle = 0;
-            projectile.penetrate = 2;
-            projectile.hostile = false;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 80;
+            Projectile.width = 38;
+            Projectile.height = 38;
+            Projectile.friendly = true;
+            Projectile.aiStyle = 0;
+            Projectile.penetrate = 2;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 80;
         }
         public override void Kill(int timeLeft)
         {
             //Main.PlaySound(SoundID.Item70, projectile.Center);
-             Main.PlaySound(SoundID.Item113, projectile.Center);
+             SoundEngine.PlaySound(SoundID.Item113, Projectile.Center);
             for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
             {
-                int lightningproj = Projectile.NewProjectile(projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 1.1f, ModContent.ProjectileType<ElectricSphereProj2>(), projectile.damage, projectile.knockBack, projectile.owner);
+                int lightningproj = Projectile.NewProjectile(Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 1.1f, ModContent.ProjectileType<ElectricSphereProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                 if (Main.netMode != NetmodeID.Server)
                 {
                     AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));
@@ -72,7 +73,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             }
             for (double i = 0; i < 6.28; i+= 0.1)
             {
-                Dust dust = Dust.NewDustPerfect(projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+                Dust dust = Dust.NewDustPerfect(Projectile.Center, 226, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
                 dust.noGravity = true;
             }
         }
@@ -81,19 +82,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             i++;
             if (i % 4 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
             }
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.frameCounter++;
-            if (projectile.frameCounter % 3 == 0) //does the exact same thing but more elegant
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter % 3 == 0) //does the exact same thing but more elegant
             {
-                projectile.frame++;
-                projectile.frameCounter = 0;
-                if (projectile.frame >= 5)
-                    projectile.frame = 0;
+                Projectile.frame++;
+                Projectile.frameCounter = 0;
+                if (Projectile.frame >= 5)
+                    Projectile.frame = 0;
             }
         }
-        public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit) => projectile.Kill();
+        public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit) => Projectile.Kill();
     }
     public class ElectricSphereProj2 : ModProjectile
     {
@@ -105,18 +106,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.aiStyle = -1;
-            projectile.melee = true;
-            projectile.penetrate = -1;
-            projectile.hostile = false;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.damage = 0;
-            projectile.timeLeft = 120;
-            projectile.alpha = 255;
-            projectile.extraUpdates = 5;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.aiStyle = -1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = -1;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.damage = 0;
+            Projectile.timeLeft = 120;
+            Projectile.alpha = 255;
+            Projectile.extraUpdates = 5;
         }
 
         Vector2 initialVelocity = Vector2.Zero;
@@ -128,11 +129,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
             if (initialVelocity == Vector2.Zero)
             {
-                initialVelocity = projectile.velocity;
+                initialVelocity = Projectile.velocity;
             }
-            if (projectile.timeLeft % 10 == 0)
+            if (Projectile.timeLeft % 10 == 0)
             {
-                projectile.velocity = initialVelocity.RotatedBy(Main.rand.NextFloat(-1, 1));
+                Projectile.velocity = initialVelocity.RotatedBy(Main.rand.NextFloat(-1, 1));
             }
             /* if (projectile.timeLeft % 2 == 0)
              {
@@ -141,7 +142,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                  dust.scale = (float)Math.Sqrt(projectile.timeLeft) / 4;
                  dust.velocity = Vector2.Zero;
              }*/
-            DrawPos = projectile.position;
+            DrawPos = Projectile.position;
         }
     }
 }

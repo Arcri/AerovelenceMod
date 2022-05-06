@@ -6,16 +6,16 @@ namespace AerovelenceMod.Content.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.aiStyle = 1;
-			projectile.penetrate = -1;
-			projectile.width = 14;
-			projectile.height = 18;
-			projectile.alpha = 0;
-			projectile.damage = 6;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
+			Projectile.aiStyle = 1;
+			Projectile.penetrate = -1;
+			Projectile.width = 14;
+			Projectile.height = 18;
+			Projectile.alpha = 0;
+			Projectile.damage = 6;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
 		}
 
 		private int TimeLeft = 0;
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Projectiles
 			TimeLeft++;
 			if (TimeLeft % 1 == 0)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 		}
 	}

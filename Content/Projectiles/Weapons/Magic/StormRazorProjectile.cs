@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {
@@ -13,96 +15,96 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Storm Razor");
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 6;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.penetrate = 15;
-            projectile.timeLeft = 200;
-            projectile.alpha = 100;
+            Projectile.width = 50;
+            Projectile.height = 50;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.penetrate = 15;
+            Projectile.timeLeft = 200;
+            Projectile.alpha = 100;
         }
-        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 vector = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+        Vector2 vector = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Vector2 position = projectile.oldPos[i] - Main.screenPosition + vector + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length);
-                sb.Draw(Main.projectileTexture[projectile.type], position, null, color, projectile.rotation, vector, projectile.scale, SpriteEffects.None, 0f);
+                Vector2 position = Projectile.oldPos[i] - Main.screenPosition + vector + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+                Main.spriteBatch.Draw((Texture2D)TextureAssets.Projectile[Projectile.type], position, null, color, Projectile.rotation, vector, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Projectiles/Weapons/Magic/StormRazorProjectile_Glow");
-            spriteBatch.Draw(
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Projectiles/Weapons/Magic/StormRazorProjectile_Glow");
+            Main.EntitySpriteDraw(
                 texture,
                 new Vector2
                 (
-                    projectile.Center.Y - Main.screenPosition.X,
-                    projectile.Center.X - Main.screenPosition.Y
+                    Projectile.Center.Y - Main.screenPosition.X,
+                    Projectile.Center.X - Main.screenPosition.Y
                 ),
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 Color.White,
-                projectile.rotation,
+                Projectile.rotation,
                 texture.Size(),
-                projectile.scale,
+                Projectile.scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
         public override void AI()
         {
-            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 63, projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
+            Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 63, Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 1);
             Main.dust[dust].velocity /= 1.2f;
             Main.dust[dust].noGravity = true;
-            if (projectile.ai[0] > 0) projectile.ai[0]--;
+            if (Projectile.ai[0] > 0) Projectile.ai[0]--;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Vector2 offset = new Vector2(0, 0);
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             {
-                projectile.penetrate--;
-                if (projectile.penetrate <= 0)
+                Projectile.penetrate--;
+                if (Projectile.penetrate <= 0)
                 {
-                    projectile.Kill();
+                    Projectile.Kill();
                 }
                 else
                 {
-                    if (projectile.velocity.X != oldVelocity.X && Math.Abs(oldVelocity.X) > 1f)
+                    if (Projectile.velocity.X != oldVelocity.X && Math.Abs(oldVelocity.X) > 1f)
                     {
-                        projectile.velocity.X = oldVelocity.X * -2;
+                        Projectile.velocity.X = oldVelocity.X * -2;
                     }
-                    if (projectile.velocity.Y != oldVelocity.Y && Math.Abs(oldVelocity.Y) > 1f)
+                    if (Projectile.velocity.Y != oldVelocity.Y && Math.Abs(oldVelocity.Y) > 1f)
                     {
-                        projectile.velocity.Y = oldVelocity.Y * -2;
+                        Projectile.velocity.Y = oldVelocity.Y * -2;
                     }
-                    projectile.velocity *= 0.75f;
-                    if (projectile.velocity.Length() > maxVelocity)
+                    Projectile.velocity *= 0.75f;
+                    if (Projectile.velocity.Length() > maxVelocity)
                     {
-                        projectile.velocity = projectile.velocity.SafeNormalize(projectile.velocity) * maxVelocity;
+                        Projectile.velocity = Projectile.velocity.SafeNormalize(Projectile.velocity) * maxVelocity;
                     }
-                    Main.PlaySound(SoundID.Item10, projectile.position);
+                    SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
                     //Kinda bandaid fix for projectile having an aneurysm on confined spaces, maybe someone finds a better fix ~Exitium
-                    if (projectile.ai[0] > 0)
+                    if (Projectile.ai[0] > 0)
                     {
-                        projectile.velocity = projectile.velocity.RotatedByRandom(MathHelper.ToRadians(360));
+                        Projectile.velocity = Projectile.velocity.RotatedByRandom(MathHelper.ToRadians(360));
                     }
-                    projectile.ai[0] = 5;
+                    Projectile.ai[0] = 5;
                 }
                 for (float i = 0; i < 360; i += 0.5f)
                 {
                     float ang = (float)(i * Math.PI) / 180;
-                    float x = (float)(Math.Cos(ang) * 15) + projectile.Center.X;
-                    float y = (float)(Math.Sin(ang) * 15) + projectile.Center.Y;
-                    Vector2 vel = Vector2.Normalize(new Vector2(x - projectile.Center.X, y - projectile.Center.Y)) * 7;
+                    float x = (float)(Math.Cos(ang) * 15) + Projectile.Center.X;
+                    float y = (float)(Math.Sin(ang) * 15) + Projectile.Center.Y;
+                    Vector2 vel = Vector2.Normalize(new Vector2(x - Projectile.Center.X, y - Projectile.Center.Y)) * 7;
                     int dustIndex = Dust.NewDust(new Vector2(x - 3, y - 3), 6, 6, 63, vel.X, vel.Y);
                     Main.dust[dustIndex].noGravity = true;
                 }

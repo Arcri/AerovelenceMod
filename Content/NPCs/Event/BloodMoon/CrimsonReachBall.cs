@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 {
@@ -13,44 +14,44 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
         public override void SetDefaults()
         {
-            projectile.hostile = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
 
-            projectile.width = projectile.height = 4;
+            Projectile.width = Projectile.height = 4;
 
-            projectile.alpha = 1;
-            projectile.timeLeft = 180;
-            projectile.aiStyle = 0;
-            projectile.damage = 30;
+            Projectile.alpha = 1;
+            Projectile.timeLeft = 180;
+            Projectile.aiStyle = 0;
+            Projectile.damage = 30;
         }
 
         public override void AI()
         {
-            projectile.rotation += projectile.velocity.X * 0.2f;
+            Projectile.rotation += Projectile.velocity.X * 0.2f;
 
-            projectile.ai[0]++;
+            Projectile.ai[0]++;
 
-            if (projectile.ai[0] > 20f)
+            if (Projectile.ai[0] > 20f)
             {
-                projectile.velocity.Y += 0.2f;
+                Projectile.velocity.Y += 0.2f;
             }
 
             if (Main.rand.NextBool(20))
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Blood, -projectile.velocity.X / 2f, -projectile.velocity.Y / 2f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, -Projectile.velocity.X / 2f, -Projectile.velocity.Y / 2f);
                 dust.noGravity = true;
                 dust.fadeIn = 1f;
                 dust.scale = Main.rand.NextFloat(0.6f, 1f);
 
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
             }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Main.PlaySound(SoundID.Dig, projectile.position);
-            Collision.HitTiles(projectile.position, projectile.velocity, projectile.width, projectile.height);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
+            Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
 
             return true;
         }

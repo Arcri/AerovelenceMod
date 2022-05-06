@@ -15,30 +15,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.width = item.height = 16;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.sellPrice(0, 0, 60, 0);
+			Item.width = Item.height = 16;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.sellPrice(0, 0, 60, 0);
 			
-			item.mana = 3;
-			item.crit = 5;
-			item.damage = 25;
-			item.knockBack = 3f;
+			Item.mana = 3;
+			Item.crit = 5;
+			Item.damage = 25;
+			Item.knockBack = 3f;
 
-			item.useTime = 6;
-			item.useAnimation = 18;
-			item.reuseDelay = item.useAnimation + 10;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			Item.useTime = 6;
+			Item.useAnimation = 18;
+			Item.reuseDelay = Item.useAnimation + 10;
+			Item.useStyle = ItemUseStyleID.Shoot;
 			
-			item.magic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 			
-			item.shootSpeed = 8f;
-			item.shoot = ModContent.ProjectileType<ResplendentPollen>();
+			Item.shootSpeed = 8f;
+			Item.shoot = ModContent.ProjectileType<ResplendentPollen>();
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -65,9 +65,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			}
 
 			Vector2 velocity = Main.MouseWorld - spawnPos;
-			Vector2 safeVelocity = new Vector2(speedX, speedY).SafeNormalize(Vector2.UnitY) * item.shootSpeed;
+			Vector2 safeVelocity = new Vector2(speedX, speedY).SafeNormalize(Vector2.UnitY) * Item.shootSpeed;
 
-			velocity = velocity.SafeNormalize(safeVelocity) * item.shootSpeed;
+			velocity = velocity.SafeNormalize(safeVelocity) * Item.shootSpeed;
 			velocity = Vector2.Lerp(velocity, safeVelocity, 0.25f);
 
 			Projectile.NewProjectile(spawnPos, velocity, projectileTypes[Main.rand.Next(projectileTypes.Length)], damage, knockBack, player.whoAmI);

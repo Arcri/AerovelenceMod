@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Dusts
 		public override bool Autoload(ref string name, ref string texture)
 		{
 			texture = "AerovelenceMod/Assets/Dusts/Petal";
-			return (mod.Properties.Autoload);
+			return (Mod.Properties.Autoload);
 		}
 
 		public override void OnSpawn(Dust dust)

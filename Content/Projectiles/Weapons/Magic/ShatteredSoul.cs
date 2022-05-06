@@ -13,33 +13,33 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.Homing[projectile.type] = true;
+			ProjectileID.Sets.Homing[Projectile.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.alpha = 175;
-			projectile.friendly = true;
-			projectile.tileCollide = true;
-			projectile.ignoreWater = true;
-			projectile.ranged = true;
-			projectile.extraUpdates = 2;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.alpha = 175;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.extraUpdates = 2;
 		}
 		int counter = 0;
 		public override void AI()
 		{
-			if (projectile.alpha > 30)
+			if (Projectile.alpha > 30)
 			{
-				projectile.alpha -= 15;
-				if (projectile.alpha < 30)
+				Projectile.alpha -= 15;
+				if (Projectile.alpha < 30)
 				{
-					projectile.alpha = 30;
+					Projectile.alpha = 30;
 				}
 			}
-			if (projectile.alpha <= 30)
+			if (Projectile.alpha <= 30)
 			{
-				int dust = Dust.NewDust(projectile.Center - new Vector2(5), 0, 0, DustType<WispDust>());
+				int dust = Dust.NewDust(Projectile.Center - new Vector2(5), 0, 0, DustType<WispDust>());
 				Main.dust[dust].velocity *= 0.1f;
 				counter++;
 				if(counter >= 10)
@@ -50,19 +50,19 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 					float dY = 0f;
 					float distance = 0;
 					float speed = 1.4f;
-					if (projectile.friendly == true && projectile.hostile == false)
+					if (Projectile.friendly == true && Projectile.hostile == false)
 					{
 						for (int i = 0; i < Main.npc.Length; i++)
 						{
 							NPC target = Main.npc[i];
 							if (!target.friendly && target.dontTakeDamage == false && target.lifeMax > 5 && target.active && target.CanBeChasedBy())
 							{
-								dX = target.Center.X - projectile.Center.X;
-								dY = target.Center.Y - projectile.Center.Y;
+								dX = target.Center.X - Projectile.Center.X;
+								dY = target.Center.Y - Projectile.Center.Y;
 								distance = (float)Math.Sqrt((double)(dX * dX + dY * dY));
 								if (distance < minDist)
 								{
-									bool lineOfSight = Collision.CanHitLine(projectile.position, projectile.width, projectile.height, target.position, target.width, target.height);
+									bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, target.position, target.width, target.height);
 									if (lineOfSight)
 									{
 										minDist = distance;
@@ -76,12 +76,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 							NPC toHit = Main.npc[target2];
 							if (toHit.active == true)
 							{
-								dX = toHit.Center.X - projectile.Center.X;
-								dY = toHit.Center.Y - projectile.Center.Y;
+								dX = toHit.Center.X - Projectile.Center.X;
+								dY = toHit.Center.Y - Projectile.Center.Y;
 								distance = (float)Math.Sqrt((double)(dX * dX + dY * dY));
 								speed /= distance;
-								projectile.velocity *= 0.85f;
-								projectile.velocity += new Vector2(dX * speed, dY * speed);
+								Projectile.velocity *= 0.85f;
+								Projectile.velocity += new Vector2(dX * speed, dY * speed);
 							}
 						}
 					}
@@ -92,9 +92,9 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			for (int i = 0; i < 20; i++)
 			{
-				Dust dust = Dust.NewDustDirect(projectile.Center - new Vector2(5), 0, 0, DustType<WispDust>(), 0, 0, projectile.alpha);
+				Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5), 0, 0, DustType<WispDust>(), 0, 0, Projectile.alpha);
 				dust.velocity *= 0.55f;
-				dust.velocity += projectile.velocity * 0.5f;
+				dust.velocity += Projectile.velocity * 0.5f;
 				dust.scale *= 1.75f;
 				dust.noGravity = true;
 			}

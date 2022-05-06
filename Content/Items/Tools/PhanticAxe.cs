@@ -12,29 +12,28 @@ namespace AerovelenceMod.Content.Items.Tools
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 10;
-            item.melee = true;
-            item.width = 38;
-            item.height = 34;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useTurn = true;
-            item.axe = 14;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 10;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 38;
+            Item.height = 34;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useTurn = true;
+            Item.axe = 14;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<PhanticBar>(), 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<PhanticBar>(), 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

@@ -16,23 +16,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item1;
-			item.crit = 8;
-            item.damage = 24;
-            item.melee = true;
-            item.width = 54;
-            item.height = 54; 
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-			item.value = Item.sellPrice(0, 0, 40, 20);
-            item.value = 10000;
-            item.autoReuse = true;
-            item.rare = ItemRarityID.Orange;
-            item.shoot = item.shoot = mod.ProjectileType("ElementScythe");
-            item.shootSpeed = 5f;
-            item.autoReuse = false;
+			Item.UseSound = SoundID.Item1;
+			Item.crit = 8;
+            Item.damage = 24;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 54;
+            Item.height = 54; 
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+			Item.value = Item.sellPrice(0, 0, 40, 20);
+            Item.value = 10000;
+            Item.autoReuse = true;
+            Item.rare = ItemRarityID.Orange;
+            Item.shoot = Item.shoot = Mod.Find<ModProjectile>("ElementScythe").Type;
+            Item.shootSpeed = 5f;
+            Item.autoReuse = false;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

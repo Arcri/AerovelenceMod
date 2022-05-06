@@ -15,30 +15,29 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
         } 			
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 11;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 11;
         }
         public override void UpdateEquip(Player player)
         {
-			player.magicCrit += 10;
-            player.rangedCrit += 10;
-            player.meleeCrit += 10;
+			player.GetCritChance(DamageClass.Magic) += 10;
+            player.GetCritChance(DamageClass.Ranged) += 10;
+            player.GetCritChance(DamageClass.Melee) += 10;
             player.buffImmune[BuffID.Frozen] = true;
             player.buffImmune[BuffID.Frostburn] = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 15);
-            modRecipe.AddIngredient(ModContent.ItemType<KelvinCore>(), 1);
-            modRecipe.AddIngredient(ItemID.IceBlock, 40);
-            modRecipe.AddIngredient(ItemID.HellstoneBar, 12);
-            modRecipe.AddTile(TileID.Anvils);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 15)
+                .AddIngredient(ModContent.ItemType<KelvinCore>(), 1)
+                .AddIngredient(ItemID.IceBlock, 40)
+                .AddIngredient(ItemID.HellstoneBar, 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

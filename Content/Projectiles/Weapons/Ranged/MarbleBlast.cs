@@ -14,38 +14,38 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			projectile.width = 14;
-			projectile.height = 14;
-			projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.penetrate = -1;
-			projectile.alpha = 65;
-			projectile.light = 1f;
-			projectile.ignoreWater = false;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
+			Projectile.width = 14;
+			Projectile.height = 14;
+			Projectile.aiStyle = 1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.penetrate = -1;
+			Projectile.alpha = 65;
+			Projectile.light = 1f;
+			Projectile.ignoreWater = false;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
 		}
 
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.penetrate--;
-			if (projectile.penetrate < 0)
+			Projectile.penetrate--;
+			if (Projectile.penetrate < 0)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 			else
 			{
-				Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-				if (projectile.velocity.X != oldVelocity.X)
+				Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+				if (Projectile.velocity.X != oldVelocity.X)
 				{
-					projectile.velocity.X = -oldVelocity.X;
+					Projectile.velocity.X = -oldVelocity.X;
 				}
-				if (projectile.velocity.Y != oldVelocity.Y)
+				if (Projectile.velocity.Y != oldVelocity.Y)
 				{
-					projectile.velocity.Y = -oldVelocity.Y;
+					Projectile.velocity.Y = -oldVelocity.Y;
 				}
 			}
 			return false;
@@ -56,14 +56,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 		public override void Kill(int timeLeft)
 		{
 			// This code and the similar code above in OnTileCollide spawn dust from the tiles collided with. SoundID.Item10 is the bounce sound you hear.
-			Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
+			Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
 		}
 		public override void AI()
 		{
-			projectile.rotation = projectile.velocity.ToRotation();
+			Projectile.rotation = Projectile.velocity.ToRotation();
 			{
-				projectile.velocity *= 1.00f;
-				int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Smoke>(), projectile.velocity.X - 2, projectile.velocity.Y - 2, 0, Color.Orange, 1);
+				Projectile.velocity *= 1.00f;
+				int dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Smoke>(), Projectile.velocity.X - 2, Projectile.velocity.Y - 2, 0, Color.Orange, 1);
 				Main.dust[dust1].velocity /= 6f;
 			}
 		}

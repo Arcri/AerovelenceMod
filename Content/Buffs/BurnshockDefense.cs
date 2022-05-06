@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public sealed class BurnshockDefense : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Burnshock Shield Defense");
 			Description.SetDefault("Increased temporary defense");

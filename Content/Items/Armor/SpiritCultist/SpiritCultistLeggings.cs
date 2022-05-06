@@ -16,30 +16,29 @@ namespace AerovelenceMod.Content.Items.Armor.SpiritCultist
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Yellow;
-            item.defense = 13;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Yellow;
+            Item.defense = 13;
         }
 
         public override void UpdateEquip(Player player)
         {
             player.moveSpeed += 0.15f;
-            player.magicCrit += 5;
-            player.meleeCrit += 5;
-            player.rangedCrit += 5;
+            player.GetCritChance(DamageClass.Magic) += 5;
+            player.GetCritChance(DamageClass.Melee) += 5;
+            player.GetCritChance(DamageClass.Ranged) += 5;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ModContent.ItemType<CrystalShard>(), 10);
-            modRecipe.AddIngredient(ItemID.FallenStar, 8);
-            modRecipe.AddIngredient(ModContent.ItemType<RubyEmpoweredGem>(), 1);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<CrystalShard>(), 10)
+                .AddIngredient(ItemID.FallenStar, 8)
+                .AddIngredient(ModContent.ItemType<RubyEmpoweredGem>(), 1)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

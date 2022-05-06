@@ -12,28 +12,27 @@ namespace AerovelenceMod.Content.Items.Tools
 		}
         public override void SetDefaults()
         {
-			item.crit = 4;
-            item.damage = 33;
-            item.melee = true;
-            item.width = 50;
-            item.height = 50;
-            item.useTime = 20;
-            item.useAnimation = 20;
-			item.pick = 200;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 6;
-            item.value = 10000;
-            item.rare = ItemRarityID.Yellow;
-            item.autoReuse = true;
+			Item.crit = 4;
+            Item.damage = 33;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 50;
+            Item.height = 50;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+			Item.pick = 200;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.autoReuse = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BurnshockBar>(), 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

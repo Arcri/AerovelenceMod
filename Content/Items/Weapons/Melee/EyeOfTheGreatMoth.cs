@@ -17,24 +17,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.channel = true;		
-            item.crit = 4;
-            item.damage = 29;
-            item.melee = true;
-            item.width = 34;
-            item.height = 40;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 3, 75, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("EyeOfTheGreatMothProj");
-            item.shootSpeed = 16f;
+            Item.channel = true;		
+            Item.crit = 4;
+            Item.damage = 29;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 34;
+            Item.height = 40;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 3, 75, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("EyeOfTheGreatMothProj").Type;
+            Item.shootSpeed = 16f;
         }
     }
 
@@ -43,21 +43,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         private int shootTimer;
         public override void SetDefaults()
         {
-            projectile.extraUpdates = 0;
-            projectile.width = 16;
-            projectile.height = 16;
-            projectile.aiStyle = 99;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            ProjectileID.Sets.YoyosLifeTimeMultiplier[projectile.type] = 13;
-            ProjectileID.Sets.YoyosMaximumRange[projectile.type] = 245f;
-            ProjectileID.Sets.YoyosTopSpeed[projectile.type] = 16f;
+            Projectile.extraUpdates = 0;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.aiStyle = 99;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            ProjectileID.Sets.YoyosLifeTimeMultiplier[Projectile.type] = 13;
+            ProjectileID.Sets.YoyosMaximumRange[Projectile.type] = 245f;
+            ProjectileID.Sets.YoyosTopSpeed[Projectile.type] = 16f;
         }
         public override void AI()
         {
             if (Main.rand.Next(10) == 0)
             {
-                Dust dust = Dust.NewDustDirect(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+                Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 20, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
                 dust.scale = 0.50f;
             }
             float distance = 192f;
@@ -66,7 +66,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5 && Main.npc[k].type != NPCID.TargetDummy)
                 {
-                    Vector2 newMove = Main.npc[k].Center - projectile.Center;
+                    Vector2 newMove = Main.npc[k].Center - Projectile.Center;
                     float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
                     if (distanceTo < distance)
                     {
@@ -87,14 +87,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
                     {
                         float speed = 5f;
-                        int type = mod.ProjectileType("CryoBallProj2");
+                        int type = Mod.Find<ModProjectile>("CryoBallProj2").Type;
                         Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
+                        Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
                         shootTimer = 0;
 
                         if (Main.rand.Next(2) == 0)
                         {
-                            Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 20, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+                            Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 20, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
                         }
                     }
 

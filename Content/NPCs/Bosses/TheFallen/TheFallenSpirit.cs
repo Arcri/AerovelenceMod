@@ -3,6 +3,8 @@ using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,112 +16,112 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
         int t;
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[npc.type] = 10;    //boss frame/animation 
+            Main.npcFrameCount[NPC.type] = 10;    //boss frame/animation 
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 50000;
-            npc.damage = 12;
-            npc.defense = 55;
-            npc.knockBackResist = 0f;
-            npc.width = 386;
-            npc.height = 216;
-            npc.value = Item.buyPrice(0, 5, 60, 45);
-            npc.npcSlots = 1f;
-            npc.boss = true;
-            npc.lavaImmune = true;
-            npc.noGravity = true;
-            npc.noTileCollide = false;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen");
-            npc.HitSound = SoundID.NPCHit41;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 50000;
+            NPC.damage = 12;
+            NPC.defense = 55;
+            NPC.knockBackResist = 0f;
+            NPC.width = 386;
+            NPC.height = 216;
+            NPC.value = Item.buyPrice(0, 5, 60, 45);
+            NPC.npcSlots = 1f;
+            NPC.boss = true;
+            NPC.lavaImmune = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = false;
+            Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/TheFallen");
+            NPC.HitSound = SoundID.NPCHit41;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 67500;  //boss life scale in expertmode
-            npc.damage = 88;  //boss damage increase in expermode
+            NPC.lifeMax = 67500;  //boss life scale in expertmode
+            NPC.damage = 88;  //boss damage increase in expermode
         }
 
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life <= 0)
+            if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<Sparkle>(), npc.velocity.X, npc.velocity.Y, 0, Color.White, 1);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
                 }
             }
         }
 
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/NPCs/Bosses/TheFallen/Glowmask");
-            spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/TheFallen/Glowmask");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-
-            Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width * 0.5f, npc.height * 0.5f);
-            for (int k = 0; k < npc.oldPos.Length; k++)
+            Vector2 drawOrigin = new Vector2(TextureAssets.Npc[NPC.type].Width() * 0.5f, NPC.height * 0.5f);
+            for (int k = 0; k < NPC.oldPos.Length; k++)
             {
-                Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
-                Color color = npc.GetAlpha(lightColor) * ((float)(npc.oldPos.Length - k) / npc.oldPos.Length);
-                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, color, npc.rotation, drawOrigin, npc.scale, SpriteEffects.None, 0f);
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
+                Color color = NPC.GetAlpha(Color.White) * ((float)(NPC.oldPos.Length - k) / NPC.oldPos.Length);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], drawPos, NPC.frame, color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
             }
             return true;
         }
+        
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
+            NPC.frameCounter++;
             {
-                if (npc.frameCounter < 10)
+                if (NPC.frameCounter < 10)
                 {
-                    npc.frame.Y = 0 * frameHeight;
+                    NPC.frame.Y = 0 * frameHeight;
                 }
-                else if (npc.frameCounter < 15)
+                else if (NPC.frameCounter < 15)
                 {
-                    npc.frame.Y = 1 * frameHeight;
+                    NPC.frame.Y = 1 * frameHeight;
                 }
-                else if (npc.frameCounter < 20)
+                else if (NPC.frameCounter < 20)
                 {
-                    npc.frame.Y = 2 * frameHeight;
+                    NPC.frame.Y = 2 * frameHeight;
                 }
-                else if (npc.frameCounter < 25)
+                else if (NPC.frameCounter < 25)
                 {
-                    npc.frame.Y = 3 * frameHeight;
+                    NPC.frame.Y = 3 * frameHeight;
                 }
-                else if (npc.frameCounter < 30)
+                else if (NPC.frameCounter < 30)
                 {
-                    npc.frame.Y = 4 * frameHeight;
+                    NPC.frame.Y = 4 * frameHeight;
                 }
-                else if (npc.frameCounter < 35)
+                else if (NPC.frameCounter < 35)
                 {
-                    npc.frame.Y = 5 * frameHeight;
+                    NPC.frame.Y = 5 * frameHeight;
                 }
-                else if (npc.frameCounter < 40)
+                else if (NPC.frameCounter < 40)
                 {
-                    npc.frame.Y = 6 * frameHeight;
+                    NPC.frame.Y = 6 * frameHeight;
                 }
-                else if (npc.frameCounter < 45)
+                else if (NPC.frameCounter < 45)
                 {
-                    npc.frame.Y = 7 * frameHeight;
+                    NPC.frame.Y = 7 * frameHeight;
                 }
-                else if (npc.frameCounter < 50)
+                else if (NPC.frameCounter < 50)
                 {
-                    npc.frame.Y = 8 * frameHeight;
+                    NPC.frame.Y = 8 * frameHeight;
                 }
-                else if (npc.frameCounter < 55)
+                else if (NPC.frameCounter < 55)
                 {
-                    npc.frame.Y = 9 * frameHeight;
+                    NPC.frame.Y = 9 * frameHeight;
                 }
                 else
                 {
-                    npc.frameCounter = 0;
+                    NPC.frameCounter = 0;
                 }
             }
         }
@@ -128,69 +130,69 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
         public override void AI()
         {
             t++;
-            npc.TargetClosest(true);
-            var player = Main.player[npc.target];
-            if (player.Center.X > npc.Center.X)
+            NPC.TargetClosest(true);
+            var player = Main.player[NPC.target];
+            if (player.Center.X > NPC.Center.X)
             {
-                if (npc.velocity.X < 6)
+                if (NPC.velocity.X < 6)
                 {
-                    npc.velocity.X += 0.15f;
+                    NPC.velocity.X += 0.15f;
                 }
             }
-            if (player.Center.X < npc.Center.X)
+            if (player.Center.X < NPC.Center.X)
             {
-                if (npc.velocity.X > -6)
+                if (NPC.velocity.X > -6)
                 {
-                    npc.velocity.X -= 0.15f;
+                    NPC.velocity.X -= 0.15f;
                 }
             }
 
             if (!(t % 400 >= 0 && t % 500 <= 50))
             {
-                if (player.Center.Y > npc.Center.Y + 250)
+                if (player.Center.Y > NPC.Center.Y + 250)
                 {
-                    if (npc.velocity.Y < 4)
+                    if (NPC.velocity.Y < 4)
                     {
-                        npc.velocity.Y += 0.2f;
+                        NPC.velocity.Y += 0.2f;
                     }
                 }
             }
             else
             {
-                if (player.Center.Y > npc.Center.Y)
+                if (player.Center.Y > NPC.Center.Y)
                 {
-                    if (npc.velocity.Y < 4)
+                    if (NPC.velocity.Y < 4)
                     {
-                        npc.velocity.Y += 0.2f;
+                        NPC.velocity.Y += 0.2f;
                     }
                 }
             }
             if (!(t % 400 >= 0 && t % 500 <= 50))
             {
-                if (player.Center.Y < npc.Center.Y + 250)
+                if (player.Center.Y < NPC.Center.Y + 250)
                 {
-                    if (npc.velocity.Y > -4)
+                    if (NPC.velocity.Y > -4)
                     {
-                        npc.velocity.Y -= 0.2f;
+                        NPC.velocity.Y -= 0.2f;
                     }
                 }
             }
             else
             {
-                if (player.Center.Y < npc.Center.Y)
+                if (player.Center.Y < NPC.Center.Y)
                 {
-                    if (npc.velocity.Y > -4)
+                    if (NPC.velocity.Y > -4)
                     {
-                        npc.velocity.Y -= 0.2f;
+                        NPC.velocity.Y -= 0.2f;
                     }
                 }
             }
             if (t % 300 == 0)
             {
-                npc.velocity.Y -= 0.2f;
-                npc.velocity.X -= 0.2f;
+                NPC.velocity.Y -= 0.2f;
+                NPC.velocity.X -= 0.2f;
             }
-            npc.rotation = npc.velocity.X * 0.1f;
+            NPC.rotation = NPC.velocity.X * 0.1f;
         }
     }
 }

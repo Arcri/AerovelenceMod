@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Tiles.Trophies
 {
 	public class RimegeistTrophyPlaced : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;

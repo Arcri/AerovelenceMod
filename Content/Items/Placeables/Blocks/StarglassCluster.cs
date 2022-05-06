@@ -11,18 +11,18 @@ namespace AerovelenceMod.Content.Items.Placeables.Blocks
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useTime = 10;
-            item.useAnimation = 15;
+            Item.maxStack = 999;
+            Item.useTime = 10;
+            Item.useAnimation = 15;
 
-            item.createTile = ModContent.TileType<StarglassOreBlock>();
+            Item.createTile = ModContent.TileType<StarglassOreBlock>();
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = Item.sellPrice(silver: 12);
+            Item.useStyle = ItemUseStyleID.Swing;
+			Item.value = Item.sellPrice(silver: 12);
         }
     }
 }

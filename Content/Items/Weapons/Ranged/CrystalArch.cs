@@ -15,26 +15,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.damage = 20;
+            Item.UseSound = SoundID.Item5;
+            Item.damage = 20;
 
-            item.ranged = true;
-            item.noMelee = true;
-            item.autoReuse = true;
+            Item.DamageType = DamageClass.Ranged;
+            Item.noMelee = true;
+            Item.autoReuse = true;
 
-            item.width = 60;
-            item.height = 32;
+            Item.width = 60;
+            Item.height = 32;
 
-            item.useAnimation = item.useTime = 35;
-            item.useStyle = ItemUseStyleID.HoldingOut;
+            Item.useAnimation = Item.useTime = 35;
+            Item.useStyle = ItemUseStyleID.Shoot;
 
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Orange;
 
-            item.shoot = ModContent.ProjectileType<IceArrow>();
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 3f;
+            Item.shoot = ModContent.ProjectileType<IceArrow>();
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 3f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -67,30 +67,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 12;
-            projectile.friendly = true;
-            projectile.hostile = false;
-            projectile.penetrate = 1;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
+            Projectile.width = 20;
+            Projectile.height = 12;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = 1;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
         }
         public override void AI()
         {
 
-            projectile.rotation = projectile.velocity.ToRotation();
-            Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.AncientLight, 0f, 0f, 255);
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
             dust.noGravity = true;
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
 
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int k = 0; k < projectile.oldPos.Length; k++)
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }

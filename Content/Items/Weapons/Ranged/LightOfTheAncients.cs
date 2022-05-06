@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -14,22 +15,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item41;
-			item.crit = 8;
-            item.damage = 28;
-            item.ranged = true;
-            item.width = 46;
-            item.height = 28; 
-            item.useTime = 18;
-            item.useAnimation = 18;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 3, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = false;
-            item.shoot = ModContent.ProjectileType<LightOfTheAncientsProj>();
-            item.shootSpeed = 24f;
+			Item.UseSound = SoundID.Item41;
+			Item.crit = 8;
+            Item.damage = 28;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 46;
+            Item.height = 28; 
+            Item.useTime = 18;
+            Item.useAnimation = 18;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 3, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = false;
+            Item.shoot = ModContent.ProjectileType<LightOfTheAncientsProj>();
+            Item.shootSpeed = 24f;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -47,29 +48,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.ranged = true;
-            projectile.extraUpdates = 2;
+            Projectile.width = 4;
+            Projectile.height = 4;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 2;
 
             
         }
         public override void AI()
         {
-            projectile.rotation = projectile.velocity.ToRotation();
-            int dust = Dust.NewDust(projectile.Center - new Vector2(5), 0, 0, 127);
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            int dust = Dust.NewDust(Projectile.Center - new Vector2(5), 0, 0, 127);
             Main.dust[dust].velocity *= 1f;
             int numDust = 5;
             for (int i = 0; i < numDust; i++)
             {
                 int dustType;
                 dustType = 127;
-                Vector2 position = projectile.position;
-                position -= projectile.velocity * ((float)i / numDust);
-                projectile.alpha = 255;
+                Vector2 position = Projectile.position;
+                position -= Projectile.velocity * ((float)i / numDust);
+                Projectile.alpha = 255;
                 int anotherOneBitesThis = Dust.NewDust(position, 1, 1, dustType, 0f, 0f, 127, default, 1f);
                 Main.dust[anotherOneBitesThis].position = position;
                 Main.dust[anotherOneBitesThis].velocity *= 0.2f;
@@ -79,23 +80,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void Kill(int timeLeft)
         {
             Explode();
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             for (int i = 0; i < 20; i++)
             {
-                Dust dust = Dust.NewDustDirect(projectile.Center - new Vector2(5), 0, 0, 127, 0, 0, projectile.alpha);
+                Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5), 0, 0, 127, 0, 0, Projectile.alpha);
                 dust.velocity *= 0.55f;
-                dust.velocity += projectile.velocity * 0.5f;
+                dust.velocity += Projectile.velocity * 0.5f;
                 dust.scale *= 1.75f;
                 dust.noGravity = true;
             }
         }
         private void Explode()
         {
-            Main.PlaySound(SoundID.Item14, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<LightOfTheAncientsExplosion>(), projectile.damage, 4f);
+            Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LightOfTheAncientsExplosion>(), Projectile.damage, 4f);
 
-            projectile.active = false;
+            Projectile.active = false;
 
             for (int i = 0; i < 10; i++)
             {
@@ -103,7 +104,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
                 Vector2 velocity = rotation.ToRotationVector2() * 2f;
 
-                Dust dust = Dust.NewDustDirect(projectile.Center, 0, 0, 127, velocity.X, velocity.Y);
+                Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, 127, velocity.X, velocity.Y);
                 dust.noGravity = true;
                 dust.fadeIn = 1f;
                 dust.scale = Main.rand.NextFloat(0.6f, 1f);
@@ -115,11 +116,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 var velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
 
-                Gore.NewGore(projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
+                Gore.NewGore(Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
 
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
             }
-            projectile.netUpdate = true;
+            Projectile.netUpdate = true;
         }
     }
     public class LightOfTheAncientsExplosion : ModProjectile
@@ -128,16 +129,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
 
-            projectile.width = projectile.height = 80;
+            Projectile.width = Projectile.height = 80;
 
-            projectile.alpha = 255;
-            projectile.timeLeft = 5;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 5;
 
-            projectile.penetrate = -1;
+            Projectile.penetrate = -1;
         }
     }
 }

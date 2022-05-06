@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.crit = 4;
-            item.damage = 27;
-            item.ranged = true;
-            item.width = 24;
-            item.height = 42;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 12f;
+            Item.UseSound = SoundID.Item5;
+            Item.crit = 4;
+            Item.damage = 27;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 24;
+            Item.height = 42;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = AmmoID.Arrow;
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 12f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -56,12 +56,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<FrostShard>(), 20);
-            recipe.AddRecipeGroup("IronBar", 12);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<FrostShard>(), 20)
+                .AddRecipeGroup("IronBar", 12)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

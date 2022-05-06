@@ -10,29 +10,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Sorcerer's Staff");
             Tooltip.SetDefault("Casts water bolts\n'What should we call this? It's a sorcerer's staff.\n'Hmm... Sorcerer's Staff?'");
         }
         public override void SetDefaults()
         {
-            item.crit = 6;
-            item.damage = 22;
-            item.magic = true;
-            item.mana = 10;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 7;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<SorcerersStaffProjectile>();
-            item.shootSpeed = 5f;
+            Item.crit = 6;
+            Item.damage = 22;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 10;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 7;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<SorcerersStaffProjectile>();
+            Item.shootSpeed = 5f;
         }
     }
 
@@ -48,43 +48,43 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            projectile.width = 5;
-            projectile.height = 5;
-            projectile.friendly = true;
-            projectile.alpha = 255;
-            projectile.hostile = false;
-            projectile.extraUpdates = 2;
-            projectile.scale = 1f;
-            projectile.timeLeft = 600;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            Projectile.width = 5;
+            Projectile.height = 5;
+            Projectile.friendly = true;
+            Projectile.alpha = 255;
+            Projectile.hostile = false;
+            Projectile.extraUpdates = 2;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 600;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
         public override bool PreAI()
         {
             i++;
-            ++projectile.localAI[0];
+            ++Projectile.localAI[0];
             float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float piFractionVelocity = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float ReversepiFraction = MathHelper.Pi + oneHelixRevolutionInUpdateTicks;
-            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
-            Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 29);
+            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * Projectile.height;
+            Dust newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 29);
             newDust.noGravity = true;
             newDustPosition.Y *= -1;
-            newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 29);
+            newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 29);
             newDust.noGravity = true;
             newDust.velocity *= 0f;
-            Vector2 newDustPosition2 = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * ReversepiFraction)) * projectile.height;
-            Dust newDust2 = Dust.NewDustPerfect(projectile.Center + newDustPosition2.RotatedBy(projectile.velocity.ToRotation()), 29);
+            Vector2 newDustPosition2 = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * ReversepiFraction)) * Projectile.height;
+            Dust newDust2 = Dust.NewDustPerfect(Projectile.Center + newDustPosition2.RotatedBy(Projectile.velocity.ToRotation()), 29);
             newDust2.noGravity = true;
             newDustPosition2.Y *= -1;
-            newDust2 = Dust.NewDustPerfect(projectile.Center + newDustPosition2.RotatedBy(projectile.velocity.ToRotation()), 29);
+            newDust2 = Dust.NewDustPerfect(Projectile.Center + newDustPosition2.RotatedBy(Projectile.velocity.ToRotation()), 29);
             newDust2.noGravity = true;
             newDust2.velocity *= 0f;
-            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            Vector2 Velocity2 = new Vector2(0, (float)Math.Sin(projectile.localAI[0] % oneHelixRevolutionInUpdateTicks * piFraction)) * projectile.height;
+            Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
+            Vector2 Velocity2 = new Vector2(0, (float)Math.Sin(Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks * piFraction)) * Projectile.height;
             return (false);
         }
         public override void AI()
@@ -96,18 +96,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 counter++;
                 if (counter >= 17)
                 {
-                    int num296 = Dust.NewDust(projectile.Center - projectile.velocity / 2f, 0, 0, DustID.Electric, 0f, 0f, 100, default, 2.1f);
+                    int num296 = Dust.NewDust(Projectile.Center - Projectile.velocity / 2f, 0, 0, DustID.Electric, 0f, 0f, 100, default, 2.1f);
                     Dust dust105 = Main.dust[num296];
                     Dust dust2 = dust105;
                     dust2.velocity *= 2f;
                     Main.dust[num296].noGravity = true;
                 }
             }
-            if (projectile.ai[1] != 1f)
+            if (Projectile.ai[1] != 1f)
             {
-                projectile.ai[1] = 1f;
-                projectile.position += projectile.velocity;
-                projectile.velocity = projectile.velocity;
+                Projectile.ai[1] = 1f;
+                Projectile.position += Projectile.velocity;
+                Projectile.velocity = Projectile.velocity;
             }
         }
     }

@@ -17,14 +17,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		protected override int ShootCooldown => 50;
 
 		public override bool Autoload(ref string name)
-			=> mod.Properties.Autoload;
+			=> Mod.Properties.Autoload;
 
 		protected override void ShootAt(NPC target)
 		{
-			Vector2 shootDirection = Vector2.Normalize(target.Center - projectile.Center) * 16f;
+			Vector2 shootDirection = Vector2.Normalize(target.Center - Projectile.Center) * 16f;
 
-			Projectile.NewProjectile(projectile.Center, shootDirection, ModContent.ProjectileType<CharmingBushGreenFlowerBeam>(),
-				(int)(projectile.damage * 0.33f), projectile.knockBack, projectile.owner, projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.Center, shootDirection, ModContent.ProjectileType<CharmingBushGreenFlowerBeam>(),
+				(int)(Projectile.damage * 0.33f), Projectile.knockBack, Projectile.owner, Projectile.whoAmI);
 		}
 	}
 }

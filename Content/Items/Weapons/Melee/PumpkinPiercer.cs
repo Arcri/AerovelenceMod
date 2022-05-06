@@ -17,28 +17,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 40;
-            item.melee = true;
-            item.width = 40;
-            item.height = 40;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.useTurn = true;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 20, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+            Item.crit = 4;
+            Item.damage = 40;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 40;
+            Item.height = 40;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.useTurn = true;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 20, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = false;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Pumpkin, 15);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.Pumpkin, 15)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

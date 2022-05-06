@@ -25,19 +25,19 @@ namespace AerovelenceMod.Content.Items.Armor.Starglass
         }
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Orange;
-            item.defense = 13;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Orange;
+            Item.defense = 13;
         }
 
         public override void UpdateEquip(Player player)
         {
             player.moveSpeed += 0.11f;
-            player.magicCrit += 4;
-            player.meleeCrit += 4;
-            player.rangedCrit += 4;
+            player.GetCritChance(DamageClass.Magic) += 4;
+            player.GetCritChance(DamageClass.Melee) += 4;
+            player.GetCritChance(DamageClass.Ranged) += 4;
         }
     }
 }

@@ -13,19 +13,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 	{
 		public override void SetStaticDefaults()
 		{
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.width = item.height = 16;
+			Item.width = Item.height = 16;
 
-			item.mana = 40;
-			item.damage = 5;
+			Item.mana = 40;
+			Item.damage = 5;
 
-			item.summon = true;
-			item.noMelee = true;
+			Item.DamageType = DamageClass.Summon;
+			Item.noMelee = true;
 
-			item.shootSpeed = 10f;
+			Item.shootSpeed = 10f;
 		}
 
 		// - Bloom Eater Staff: Summons a blossomed man eater plant. It can charge up its mouth and spit a burst of charmed petals at the enemies.

@@ -13,25 +13,25 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = 52;
-			projectile.height = 30;
-			projectile.aiStyle = 1;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.melee = true;
-			projectile.penetrate = 7;
-			projectile.alpha = 65;
-			projectile.light = 1f;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = true;
-			projectile.extraUpdates = 1;
+			Projectile.width = 52;
+			Projectile.height = 30;
+			Projectile.aiStyle = 1;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.penetrate = 7;
+			Projectile.alpha = 65;
+			Projectile.light = 1f;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = true;
+			Projectile.extraUpdates = 1;
 		}
 		public override void AI()
 		{
-			projectile.rotation = projectile.velocity.ToRotation();
+			Projectile.rotation = Projectile.velocity.ToRotation();
 			{
-				projectile.velocity *= 1.00f;
-				int dust1 = Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Sparkle>(), projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
+				Projectile.velocity *= 1.00f;
+				int dust1 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Sparkle>(), Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 1);
 				Main.dust[dust1].velocity /= 2f;
 			}
 		}

@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 70;
-            item.magic = true;
-            item.mana = 16;
-            item.width = 36;
-            item.height = 42;
-            item.useTime = 25;
-            item.useAnimation = 25;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.Cyan;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<StormRazorProjectile>();
-            item.shootSpeed = 18f;
+            Item.crit = 11;
+            Item.damage = 70;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 16;
+            Item.width = 36;
+            Item.height = 42;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.Cyan;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<StormRazorProjectile>();
+            Item.shootSpeed = 18f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

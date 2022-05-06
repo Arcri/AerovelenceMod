@@ -11,25 +11,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-            item.channel = true;		
-			item.crit = 2000;
-            item.damage = 7000000;
-            item.ranged = true;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.mana = 10;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-			item.noUseGraphic = true;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Pink;
-            item.autoReuse = false;
-            item.shoot = mod.ProjectileType("BruhBladeProjectile");
-            item.shootSpeed = 2f;
+            Item.channel = true;		
+			Item.crit = 2000;
+            Item.damage = 7000000;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.mana = 10;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+			Item.noUseGraphic = true;
+            Item.knockBack = 8;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Pink;
+            Item.autoReuse = false;
+            Item.shoot = Mod.Find<ModProjectile>("BruhBladeProjectile").Type;
+            Item.shootSpeed = 2f;
         }
     }
 }

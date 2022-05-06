@@ -14,18 +14,18 @@ namespace AerovelenceMod.Content.Items.Armor.Shadowreaper
         }
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 160;
+            Item.width = 30;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 160;
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.meleeCrit += 15;
-			player.rangedCrit += 15;
-			player.magicCrit += 15;
+            player.GetCritChance(DamageClass.Melee) += 15;
+			player.GetCritChance(DamageClass.Ranged) += 15;
+			player.GetCritChance(DamageClass.Magic) += 15;
         }
     }
 }

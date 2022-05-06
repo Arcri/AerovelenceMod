@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -16,28 +17,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            item.damage = 20;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 55;
-            item.useTime = 24;
-            item.shootSpeed = 1.8f;
-            item.knockBack = 5f;
-            item.width = 32;
-            item.height = 32;
-            item.scale = 1f;
-            item.rare = ItemRarityID.Green;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.melee = true;
-            item.noMelee = true; 
-            item.noUseGraphic = true;
-            item.autoReuse = true;
+            Item.damage = 20;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 55;
+            Item.useTime = 24;
+            Item.shootSpeed = 1.8f;
+            Item.knockBack = 5f;
+            Item.width = 32;
+            Item.height = 32;
+            Item.scale = 1f;
+            Item.rare = ItemRarityID.Green;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.DamageType = DamageClass.Melee;
+            Item.noMelee = true; 
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
 
-            item.UseSound = SoundID.Item1;
-            item.shoot = ModContent.ProjectileType<CavernousImpalerProjectile>();
+            Item.UseSound = SoundID.Item1;
+            Item.shoot = ModContent.ProjectileType<CavernousImpalerProjectile>();
         }
         public override bool CanUseItem(Player player)
         {
-            return player.ownedProjectileCounts[item.shoot] < 1;
+            return player.ownedProjectileCounts[Item.shoot] < 1;
         }
     }
 
@@ -49,17 +50,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 18;
-            projectile.aiStyle = 19;
-            projectile.penetrate = -1;
-            projectile.alpha = 0;
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.aiStyle = 19;
+            Projectile.penetrate = -1;
+            Projectile.alpha = 0;
 
-            projectile.hide = true;
-            projectile.ownerHitCheck = true;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.friendly = true;
+            Projectile.hide = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.friendly = true;
         }
 
         // Properties / Methods: PascalCase
@@ -67,25 +68,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         // Public / internal fields: camelCase
         public float MoveFactor
         {
-            get => projectile.ai[0];
-            set => projectile.ai[0] = value;
+            get => Projectile.ai[0];
+            set => Projectile.ai[0] = value;
         }
 
         public override void AI()
         {
-            Player projOwner = Main.player[projectile.owner];
+            Player projOwner = Main.player[Projectile.owner];
             Vector2 ownerMountedCenter = projOwner.RotatedRelativePoint(projOwner.MountedCenter, true);
-            projectile.direction = projOwner.direction;
-            projOwner.heldProj = projectile.whoAmI;
+            Projectile.direction = projOwner.direction;
+            projOwner.heldProj = Projectile.whoAmI;
             projOwner.itemTime = projOwner.itemAnimation;
-            projectile.position.X = ownerMountedCenter.X - (float)(projectile.width / 2);
-            projectile.position.Y = ownerMountedCenter.Y - projectile.height / 2;
+            Projectile.position.X = ownerMountedCenter.X - (float)(Projectile.width / 2);
+            Projectile.position.Y = ownerMountedCenter.Y - Projectile.height / 2;
             if (!projOwner.frozen)
             {
                 if (MoveFactor == 0f)
                 {
                     MoveFactor = 3f;
-                    projectile.netUpdate = true;
+                    Projectile.netUpdate = true;
                 }
                 if (projOwner.itemAnimation < projOwner.itemAnimationMax / 3)
                 {
@@ -96,33 +97,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     MoveFactor += 2.1f;
                 }
             }
-            projectile.position += projectile.velocity * MoveFactor;
+            Projectile.position += Projectile.velocity * MoveFactor;
             if (projOwner.itemAnimation == 0)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
-            projectile.rotation = projectile.velocity.ToRotation() + MathHelper.ToRadians(135f);
-            if (projectile.spriteDirection == -1)
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(135f);
+            if (Projectile.spriteDirection == -1)
             {
-                projectile.rotation -= MathHelper.ToRadians(90f);
+                Projectile.rotation -= MathHelper.ToRadians(90f);
             }
 
             if (Main.rand.NextBool(3))
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.height, projectile.width, ModContent.DustType<Sparkle>(),
-                    projectile.velocity.X * .2f, projectile.velocity.Y * .2f * projectile.alpha, 200, Scale: 1.2f);
-                dust.velocity += projectile.velocity * 0.3f;
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.height, Projectile.width, ModContent.DustType<Sparkle>(),
+                    Projectile.velocity.X * .2f, Projectile.velocity.Y * .2f * Projectile.alpha, 200, Scale: 1.2f);
+                dust.velocity += Projectile.velocity * 0.3f;
                 dust.velocity *= 0.2f;
             }
             if (Main.rand.NextBool(4))
             {
-                Dust dust = Dust.NewDustDirect(projectile.position, projectile.height, projectile.width, ModContent.DustType<Sparkle>(),
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.height, Projectile.width, ModContent.DustType<Sparkle>(),
                     0, 0, 254, Scale: 0.3f);
-                dust.velocity += projectile.velocity * 0.5f;
+                dust.velocity += Projectile.velocity * 0.5f;
                 dust.velocity *= 0.5f;
             }
             if (projOwner.itemAnimation == projOwner.itemAnimationMax - 1)
-                Projectile.NewProjectile(projectile.Center.X + projectile.velocity.X, projectile.Center.Y + projectile.velocity.Y, projectile.velocity.X * 2f, projectile.velocity.Y * 2, ModContent.ProjectileType<CavernousImpalerProjectile2>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X * 2f, Projectile.velocity.Y * 2, ModContent.ProjectileType<CavernousImpalerProjectile2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
         }
     }
 
@@ -133,46 +134,46 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 52;
-            projectile.height = 52;
-            projectile.melee = true;
-            projectile.timeLeft = 120;
-            projectile.light = 0.5f;
+            Projectile.width = 52;
+            Projectile.height = 52;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.timeLeft = 120;
+            Projectile.light = 0.5f;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             for (int k = 0; k < 5; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 132, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 132, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             return true;
         }
         public override void AI()
         {
             i++;
-            projectile.rotation += rot;
-            projectile.scale *= 1.005f;
+            Projectile.rotation += rot;
+            Projectile.scale *= 1.005f;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width / 2, projectile.height / 2, 132);
+                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
             }
-            projectile.alpha += 2;
+            Projectile.alpha += 2;
             rot *= 0.99f;
-            if (projectile.ai[0] == 0f)
+            if (Projectile.ai[0] == 0f)
             {
-                projectile.ai[0] = projectile.velocity.X;
-                projectile.ai[1] = projectile.velocity.Y;
+                Projectile.ai[0] = Projectile.velocity.X;
+                Projectile.ai[1] = Projectile.velocity.Y;
             }
-            if (Math.Sqrt(projectile.velocity.X * projectile.velocity.X + projectile.velocity.Y * projectile.velocity.Y) > 2.0)
+            if (Math.Sqrt(Projectile.velocity.X * Projectile.velocity.X + Projectile.velocity.Y * Projectile.velocity.Y) > 2.0)
             {
-                projectile.velocity *= 0.99f;
+                Projectile.velocity *= 0.99f;
             }
             for (int num437 = 0; num437 < 1000; num437++)
             {
-                if (num437 != projectile.whoAmI && Main.projectile[num437].active && Main.projectile[num437].owner == projectile.owner && Main.projectile[num437].type == projectile.type && projectile.timeLeft > Main.projectile[num437].timeLeft && Main.projectile[num437].timeLeft > 30)
+                if (num437 != Projectile.whoAmI && Main.projectile[num437].active && Main.projectile[num437].owner == Projectile.owner && Main.projectile[num437].type == Projectile.type && Projectile.timeLeft > Main.projectile[num437].timeLeft && Main.projectile[num437].timeLeft > 30)
                 {
-                    projectile.alpha += 10;
+                    Projectile.alpha += 10;
                     Main.projectile[num437].timeLeft = 30;
                 }
             }
@@ -190,8 +191,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 }
                 float num443 = Main.npc[num442].position.X + Main.npc[num442].width / 2;
                 float num444 = Main.npc[num442].position.Y + Main.npc[num442].height / 2;
-                float num445 = Math.Abs(projectile.position.X + projectile.width / 2 - num443) + Math.Abs(projectile.position.Y + projectile.height / 2 - num444);
-                if (num445 < num439 && Collision.CanHit(projectile.Center, 1, 1, Main.npc[num442].Center, 1, 1))
+                float num445 = Math.Abs(Projectile.position.X + Projectile.width / 2 - num443) + Math.Abs(Projectile.position.Y + Projectile.height / 2 - num444);
+                if (num445 < num439 && Collision.CanHit(Projectile.Center, 1, 1, Main.npc[num442].Center, 1, 1))
                 {
                     if (num438 < 20)
                     {
@@ -203,7 +204,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     flag14 = true;
                 }
             }
-            if (projectile.timeLeft < 30)
+            if (Projectile.timeLeft < 30)
             {
                 flag14 = false;
             }
@@ -213,13 +214,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 num446 = array[num446];
                 num440 = Main.npc[num446].position.X + Main.npc[num446].width / 2;
                 num441 = Main.npc[num446].position.Y + Main.npc[num446].height / 2;
-                projectile.localAI[0] += 1f;
-                if (projectile.localAI[0] > 8f)
+                Projectile.localAI[0] += 1f;
+                if (Projectile.localAI[0] > 8f)
                 {
-                    projectile.localAI[0] = 0f;
+                    Projectile.localAI[0] = 0f;
                     float num447 = 6f;
-                    Vector2 vector31 = new Vector2(projectile.position.X + projectile.width * 0.5f, projectile.position.Y + projectile.height * 0.5f);
-                    vector31 += projectile.velocity * 4f;
+                    Vector2 vector31 = new Vector2(Projectile.position.X + Projectile.width * 0.5f, Projectile.position.Y + Projectile.height * 0.5f);
+                    vector31 += Projectile.velocity * 4f;
                     float num448 = num440 - vector31.X;
                     float num449 = num441 - vector31.Y;
                     float num450 = (float)Math.Sqrt(num448 * num448 + num449 * num449);
@@ -227,7 +228,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     num450 = num447 / num450;
                     num448 *= num450;
                     num449 *= num450;
-                    Projectile.NewProjectile(vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<CavernousImpalerProjectile3>(), projectile.damage, projectile.knockBack, projectile.owner);
+                    Projectile.NewProjectile(vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<CavernousImpalerProjectile3>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                 }
             }
         }
@@ -237,25 +238,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            projectile.width = 8;
-            projectile.height = 8;
-            projectile.damage = 4;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.extraUpdates = 100;
-            projectile.timeLeft = 100;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.damage = 4;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.extraUpdates = 100;
+            Projectile.timeLeft = 100;
         }
         public override void AI()
         {
             for (int num452 = 0; num452 < 4; num452++)
             {
-                Vector2 position = projectile.position;
-                position -= projectile.velocity * (num452 * 0.25f);
-                projectile.alpha = 255;
+                Vector2 position = Projectile.position;
+                position -= Projectile.velocity * (num452 * 0.25f);
+                Projectile.alpha = 255;
                 int num453 = Dust.NewDust(position, 1, 1, 160);
                 Main.dust[num453].position = position;
-                Main.dust[num453].position.X += projectile.width / 2;
-                Main.dust[num453].position.Y += projectile.height / 2;
+                Main.dust[num453].position.X += Projectile.width / 2;
+                Main.dust[num453].position.Y += Projectile.height / 2;
                 Main.dust[num453].scale = Main.rand.Next(70, 110) * 0.013f;
                 Dust dust77 = Main.dust[num453];
                 Dust dust2 = dust77;

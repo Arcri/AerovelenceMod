@@ -12,38 +12,37 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Frost Ray");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.UseSound = SoundID.Item43;
-			item.damage = 24;
-			item.magic = true;
-			item.mana = 6;
+			Item.UseSound = SoundID.Item43;
+			Item.damage = 24;
+			Item.DamageType = DamageClass.Magic;
+			Item.mana = 6;
 
-			item.width = item.height = 44;
+			Item.width = Item.height = 44;
 			
-			item.useTime = item.useAnimation = 24;
+			Item.useTime = Item.useAnimation = 24;
 			
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.noMelee = true;
-			item.knockBack = 6;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.autoReuse = true;
-			item.shoot = ModContent.ProjectileType<ShadowbeamStaffCloneProjectile>();
-			item.shootSpeed = 6f;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.noMelee = true;
+			Item.knockBack = 6;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.autoReuse = true;
+			Item.shoot = ModContent.ProjectileType<ShadowbeamStaffCloneProjectile>();
+			Item.shootSpeed = 6f;
 		}
        
         public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ModContent.ItemType<FrostShard>(), 8);
-			modRecipe.AddIngredient(ItemID.IceBlock, 30);
-			modRecipe.AddIngredient(ItemID.HellstoneBar, 8);
-			modRecipe.AddTile(TileID.Anvils);
-			modRecipe.SetResult(this);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<FrostShard>(), 8)
+				.AddIngredient(ItemID.IceBlock, 30)
+				.AddIngredient(ItemID.HellstoneBar, 8)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 
@@ -53,13 +52,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		int bounces;
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 4;
-			projectile.friendly = true;
-			projectile.magic = true;
-			projectile.extraUpdates = 100;
-			projectile.timeLeft = 300;
-			projectile.penetrate = 300;
+			Projectile.width = 4;
+			Projectile.height = 4;
+			Projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.extraUpdates = 100;
+			Projectile.timeLeft = 300;
+			Projectile.penetrate = 300;
 			bounces = 1;
 
 		}
@@ -67,13 +66,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			if (projectile.velocity.X != oldVelocity.X)
+			if (Projectile.velocity.X != oldVelocity.X)
 			{
-				projectile.velocity.X = -oldVelocity.X * 0.75f;
+				Projectile.velocity.X = -oldVelocity.X * 0.75f;
 			}
-			if (projectile.velocity.Y != oldVelocity.Y)
+			if (Projectile.velocity.Y != oldVelocity.Y)
 			{
-				projectile.velocity.Y = -oldVelocity.Y * 0.75f;
+				Projectile.velocity.Y = -oldVelocity.Y * 0.75f;
 			}
 			return false;
 		}
@@ -82,24 +81,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
 			target.AddBuff(BuffID.Frostburn, 120);
 
-			projectile.velocity.X = -projectile.oldVelocity.X * 0.75f;
-			if (projectile.oldVelocity.Y > 0)
+			Projectile.velocity.X = -Projectile.oldVelocity.X * 0.75f;
+			if (Projectile.oldVelocity.Y > 0)
 			{
-				projectile.velocity.Y = -projectile.oldVelocity.Y * 0.5f;
+				Projectile.velocity.Y = -Projectile.oldVelocity.Y * 0.5f;
 			}
 		}
 
 
         public override void AI()
 		{
-			projectile.localAI[0] += 1f;
-			if (projectile.localAI[0] > 9f)
+			Projectile.localAI[0] += 1f;
+			if (Projectile.localAI[0] > 9f)
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					Vector2 projectilePosition = projectile.position;
-					projectilePosition -= projectile.velocity * ((float)i * 0.25f);
-					projectile.alpha = 255;
+					Vector2 projectilePosition = Projectile.position;
+					projectilePosition -= Projectile.velocity * ((float)i * 0.25f);
+					Projectile.alpha = 255;
 					int dust = Dust.NewDust(projectilePosition, 1, 1, 20, 0f, 0f, 0, default(Color), 1f);
 					Main.dust[dust].noGravity = true;
 					Main.dust[dust].position = projectilePosition;

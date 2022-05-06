@@ -43,8 +43,8 @@ namespace AerovelenceMod.Common.Globals.NPCs
 					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
 
 					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].active())
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("PhanticOreBlock"));
+                        if (Main.tile[EEXX, WHHYY].HasTile)
+                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("PhanticOreBlock").Type);
                 }
 
 				Main.NewText("Phantom stones formed in the caves!", 180, 60, 140);
@@ -58,8 +58,8 @@ namespace AerovelenceMod.Common.Globals.NPCs
 					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
 
 					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].active())
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("BurnshockOreBlock"));
+                        if (Main.tile[EEXX, WHHYY].HasTile)
+                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("BurnshockOreBlock").Type);
                 }
 
 				Main.NewText("Electric gemstones light the caverns!", 180, 60, 140);

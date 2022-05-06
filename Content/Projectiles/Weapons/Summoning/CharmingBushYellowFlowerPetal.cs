@@ -16,24 +16,24 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.MinionShot[projectile.type] = true;
+			ProjectileID.Sets.MinionShot[Projectile.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 4;
+			Projectile.width = Projectile.height = 4;
 
-			projectile.friendly = true;
+			Projectile.friendly = true;
 		}
 
 		public override bool PreAI()
 		{
-			if (projectile.localAI[0] == 0)
+			if (Projectile.localAI[0] == 0)
 			{
 				DustEffect();
-				projectile.localAI[0] = 1;
+				Projectile.localAI[0] = 1;
 			}
 
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 			return (false);
 		}
@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		{
 			for (int i = 0; i < 5; ++i)
 			{
-				Dust.NewDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<Dusts.YellowPetal>(), projectile.velocity.X * 0.2f, projectile.velocity.Y * 0.2f, 100, default, 0.5f);
+				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.YellowPetal>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default, 0.5f);
 			}
 		}
 	}

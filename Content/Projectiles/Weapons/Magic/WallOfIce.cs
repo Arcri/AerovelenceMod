@@ -19,25 +19,25 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 16;
+			Projectile.width = Projectile.height = 16;
 
-			projectile.alpha = 255;
-			projectile.penetrate = 10;
-			projectile.timeLeft = 2700;
+			Projectile.alpha = 255;
+			Projectile.penetrate = 10;
+			Projectile.timeLeft = 2700;
 
-			projectile.friendly = true;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
 		}
 
 		public override bool PreAI()
 		{
-			projectile.position.Y = projectile.ai[0];
-			projectile.height = (int)projectile.ai[1];
+			Projectile.position.Y = Projectile.ai[0];
+			Projectile.height = (int)Projectile.ai[1];
 
-			projectile.direction = System.Math.Sign(projectile.Center.X - Main.player[projectile.owner].Center.X);
+			Projectile.direction = System.Math.Sign(Projectile.Center.X - Main.player[Projectile.owner].Center.X);
 
-			projectile.velocity.X = projectile.direction * 1E-06f;
+			Projectile.velocity.X = Projectile.direction * 1E-06f;
 
 			RemoveDuplicate();
 
@@ -48,14 +48,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		private void RemoveDuplicate()
 		{
-			if (projectile.owner == Main.myPlayer)
+			if (Projectile.owner == Main.myPlayer)
 			{
 				for (int i = 0; i < Main.maxProjectiles; ++i)
 				{
-					if (Main.projectile[i].active && i != projectile.whoAmI && Main.projectile[i].type == projectile.type &&
-						Main.projectile[i].owner == projectile.owner && Main.projectile[i].timeLeft > projectile.timeLeft)
+					if (Main.projectile[i].active && i != Projectile.whoAmI && Main.projectile[i].type == Projectile.type &&
+						Main.projectile[i].owner == Projectile.owner && Main.projectile[i].timeLeft > Projectile.timeLeft)
 					{
-						projectile.Kill();
+						Projectile.Kill();
 						return;
 					}
 				}
@@ -64,11 +64,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 		private void SpawnDust()
 		{
-			float dustAmount = projectile.width * projectile.height * 0.0045f;
+			float dustAmount = Projectile.width * Projectile.height * 0.0045f;
 
 			for (int i = 0; i < dustAmount; ++i)
 			{
-				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Vortex, 0f, 0f, 100);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Vortex, 0f, 0f, 100);
 				dust.noGravity = true;
 				dust.velocity *= 0.5f;
 				dust.velocity.Y -= 0.5f;

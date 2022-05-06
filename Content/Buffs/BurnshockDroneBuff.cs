@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Buffs
 {
     public class BurnshockDroneBuff : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Starshock Drone");
             Description.SetDefault("A Starshock drone is protecting you");

@@ -16,16 +16,16 @@ namespace AerovelenceMod.Content.Items.Equipment
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.ZephyrFish);
-			item.shoot = ModContent.ProjectileType<LightningFish>();
-			item.buffType = ModContent.BuffType<LightningFishBuff>();
+			Item.CloneDefaults(ItemID.ZephyrFish);
+			Item.shoot = ModContent.ProjectileType<LightningFish>();
+			Item.buffType = ModContent.BuffType<LightningFishBuff>();
 		}
 
 		public override void UseStyle(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 2, true);
+				player.AddBuff(Item.buffType, 2, true);
 			}
 		}
 	}

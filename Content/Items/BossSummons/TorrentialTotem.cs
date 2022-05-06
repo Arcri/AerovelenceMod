@@ -5,6 +5,7 @@ using AerovelenceMod.Content.NPCs.Bosses.LightningMoth;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
@@ -18,20 +19,20 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public override void SetDefaults()
         {
-            item.consumable = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 30;
-            item.useTime = 30;
+            Item.maxStack = 999;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
 
-            item.rare = ItemRarityID.Blue;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.value = 100;
+            Item.rare = ItemRarityID.Blue;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.value = 100;
         }
 
         public override bool CanUseItem(Player player) => player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && !NPC.AnyNPCs(ModContent.NPCType<LightningMoth>());
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
             NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("LightningMoth"));
             Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
@@ -41,12 +42,11 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public override void AddRecipes()
         {
-            var recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<ChargedStoneItem>(), 15);
-            recipe.AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1);
-            recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<ChargedStoneItem>(), 15)
+                .AddIngredient(ModContent.ItemType<LustrousCrystal>(), 1)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 }

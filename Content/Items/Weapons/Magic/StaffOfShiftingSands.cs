@@ -9,28 +9,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
             DisplayName.SetDefault("Staff Of Shifting Sands");
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 17;
-            item.magic = true;
-            item.mana = 5;
-            item.width = 50;
-            item.height = 50;
-            item.useTime = 16;
-            item.useAnimation = 16;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 0, 40, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.RubyBolt;
-            item.shootSpeed = 12f;
+            Item.crit = 4;
+            Item.damage = 17;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 5;
+            Item.width = 50;
+            Item.height = 50;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 0, 40, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.RubyBolt;
+            Item.shootSpeed = 12f;
 		}
     }
 }

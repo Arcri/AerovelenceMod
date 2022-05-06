@@ -44,7 +44,7 @@ namespace AerovelenceMod.Core.Loaders
 
 		internal static void LoadShader(string shaderName, string shaderPath)
 		{
-			var shaderRef = new Ref<Effect>(AerovelenceMod.Instance.GetEffect(shaderPath));
+			var shaderRef = new Ref<Effect>(AerovelenceMod.Instance.Assets.Request<Effect>(shaderPath).Value);
 
 			if (AerovelenceMod.DEBUG)
 			{

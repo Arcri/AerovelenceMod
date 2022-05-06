@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -16,32 +17,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.crit = 4;
-            item.damage = 25;
-            item.ranged = true;
-            item.width = 20;
-            item.height = 40;
-            item.useTime = 26;
-            item.useAnimation = 26;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 2;
-            item.value = Item.sellPrice(0, 0, 20, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<BoomArrow>();
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 4.5f;
+            Item.UseSound = SoundID.Item5;
+            Item.crit = 4;
+            Item.damage = 25;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 20;
+            Item.height = 40;
+            Item.useTime = 26;
+            Item.useAnimation = 26;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 2;
+            Item.value = Item.sellPrice(0, 0, 20, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<BoomArrow>();
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 4.5f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<BloodChunk>(), 20);
-            recipe.AddRecipeGroup("Wood", 20);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BloodChunk>(), 20)
+                .AddRecipeGroup("Wood", 20)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -53,41 +53,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 22;
-            projectile.height = 22;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.ranged = true;
-            projectile.extraUpdates = 2;
+            Projectile.width = 22;
+            Projectile.height = 22;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 2;
         }
         public override void AI()
         {
-            projectile.velocity.Y += 0.03f;
-            projectile.rotation = projectile.velocity.ToRotation();
-            int dust = Dust.NewDust(projectile.Center - new Vector2(5), 0, 0, DustID.Blood);
+            Projectile.velocity.Y += 0.03f;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            int dust = Dust.NewDust(Projectile.Center - new Vector2(5), 0, 0, DustID.Blood);
             Main.dust[dust].velocity *= 1f;
         }
         public override void Kill(int timeLeft)
         {
             Explode();
-            Main.PlaySound(SoundID.Item10);
+            SoundEngine.PlaySound(SoundID.Item10);
             for (int i = 0; i < 20; i++)
             {
-                Dust dust = Dust.NewDustDirect(projectile.Center - new Vector2(5), 0, 0, DustID.Blood, 0, 0, projectile.alpha);
+                Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5), 0, 0, DustID.Blood, 0, 0, Projectile.alpha);
                 dust.velocity *= 0.55f;
-                dust.velocity += projectile.velocity * 0.5f;
+                dust.velocity += Projectile.velocity * 0.5f;
                 dust.scale *= 1.75f;
                 dust.noGravity = true;
             }
         }
         private void Explode()
         {
-            Main.PlaySound(SoundID.Item14, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<BoomArrowExplosion>(), projectile.damage, 4f);
+            Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BoomArrowExplosion>(), Projectile.damage, 4f);
 
-            projectile.active = false;
+            Projectile.active = false;
 
             for (int i = 0; i < 10; i++)
             {
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
                 Vector2 velocity = rotation.ToRotationVector2() * 2f;
 
-                Dust dust = Dust.NewDustDirect(projectile.Center, 0, 0, DustID.Blood, velocity.X, velocity.Y);
+                Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, DustID.Blood, velocity.X, velocity.Y);
                 dust.noGravity = true;
                 dust.fadeIn = 1f;
                 dust.scale = Main.rand.NextFloat(0.6f, 1f);
@@ -107,11 +107,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 var velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
 
-                Gore.NewGore(projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
+                Gore.NewGore(Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
 
-                projectile.netUpdate = true;
+                Projectile.netUpdate = true;
             }
-            projectile.netUpdate = true;
+            Projectile.netUpdate = true;
         }
     }
     public class BoomArrowExplosion : ModProjectile
@@ -120,16 +120,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
 
-            projectile.width = projectile.height = 80;
+            Projectile.width = Projectile.height = 80;
 
-            projectile.alpha = 255;
-            projectile.timeLeft = 5;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 5;
 
-            projectile.penetrate = -1;
+            Projectile.penetrate = -1;
         }
     }
 }

@@ -13,20 +13,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.UseSound = SoundID.Item1;
-			item.crit = 8;
-            item.damage = 14;
-            item.melee = true;
-            item.width = 50;
-            item.height = 52; 
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 5;
-			item.value = Item.sellPrice(0, 0, 40, 20);
-            item.value = 10000;
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = false;
+			Item.UseSound = SoundID.Item1;
+			Item.crit = 8;
+            Item.damage = 14;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 50;
+            Item.height = 52; 
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 5;
+			Item.value = Item.sellPrice(0, 0, 40, 20);
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = false;
         }
     }
 }

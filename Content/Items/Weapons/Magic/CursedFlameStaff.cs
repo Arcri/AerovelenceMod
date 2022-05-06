@@ -10,38 +10,37 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Cursed Flame Staff");
             Tooltip.SetDefault("Fires 3 cursed flames");
         }
         public override void SetDefaults()
         {
-            item.crit = 6;
-            item.damage = 38;
-            item.magic = true;
-            item.mana = 7;
-            item.width = 28;
-            item.height = 44;
-            item.useTime = 65;
-            item.useAnimation = 65;
-            item.UseSound = SoundID.Item34;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 2, 50, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.CursedFlameFriendly;
-            item.shootSpeed = 9f;
+            Item.crit = 6;
+            Item.damage = 38;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 7;
+            Item.width = 28;
+            Item.height = 44;
+            Item.useTime = 65;
+            Item.useAnimation = 65;
+            Item.UseSound = SoundID.Item34;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.CursedFlameFriendly;
+            Item.shootSpeed = 9f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.SoulofNight, 15);
-            recipe.AddIngredient(ItemID.CursedFlames, 15);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.SoulofNight, 15)
+                .AddIngredient(ItemID.CursedFlames, 15)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
         {

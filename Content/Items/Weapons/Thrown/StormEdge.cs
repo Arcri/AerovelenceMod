@@ -15,34 +15,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {	
-            item.crit = 4;
-            item.damage = 52;
-            item.melee = true;
-            item.width = 38;
-            item.height = 38;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.knockBack = 3;
-            item.value = Item.sellPrice(0, 2, 45, 0);
-            item.rare = ItemRarityID.Yellow;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<StormEdgeProjectile>();
-            item.UseSound = SoundID.Item1;
-            item.shootSpeed = 13f;
+            Item.crit = 4;
+            Item.damage = 52;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 38;
+            Item.height = 38;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.knockBack = 3;
+            Item.value = Item.sellPrice(0, 2, 45, 0);
+            Item.rare = ItemRarityID.Yellow;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<StormEdgeProjectile>();
+            Item.UseSound = SoundID.Item1;
+            Item.shootSpeed = 13f;
         }
 
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<BurnshockBar>(), 6);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<BurnshockBar>(), 6)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -57,15 +56,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 38;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.ranged = true;
-            projectile.magic = false;
-            projectile.penetrate = 3;
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            Projectile.width = 38;
+            Projectile.height = 38;
+            Projectile.aiStyle = 3;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            // projectile.magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.penetrate = 3;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
         }
 
         public override void AI()
@@ -73,10 +72,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             i++;
             if (i % 2 == 0)
             {
-                int dust = Dust.NewDust(projectile.position, 36, 30, 15, -0.2631578f, -2.631579f, 0, new Color(255, 255, 255));
+                int dust = Dust.NewDust(Projectile.position, 36, 30, 15, -0.2631578f, -2.631579f, 0, new Color(255, 255, 255));
             }
-            projectile.rotation += 0.1f;
-            Vector2 origin = new Vector2(projectile.Center.X, projectile.Center.Y);
+            Projectile.rotation += 0.1f;
+            Vector2 origin = new Vector2(Projectile.Center.X, Projectile.Center.Y);
             float radius = 48;
             int numLocations = 30;
             if (i % 2 == 0)
@@ -88,24 +87,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
         }
-
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            Texture2D texture = ModContent.GetTexture("AerovelenceMod/Content/Items/Weapons/Thrown/StormEdgeProjectile_GlowMask");
-            spriteBatch.Draw(
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Thrown/StormEdgeProjectile_GlowMask");
+            Main.EntitySpriteDraw(
                 texture,
                 new Vector2
                 (
-                    projectile.Center.Y - Main.screenPosition.X,
-                    projectile.Center.X - Main.screenPosition.Y
+                    Projectile.Center.Y - Main.screenPosition.X,
+                    Projectile.Center.X - Main.screenPosition.Y
                 ),
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 Color.White,
-                projectile.rotation,
+                Projectile.rotation,
                 texture.Size(),
-                projectile.scale,
+                Projectile.scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }

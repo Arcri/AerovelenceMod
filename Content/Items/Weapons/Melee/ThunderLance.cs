@@ -14,28 +14,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
 		public override void SetDefaults()
 		{
-			item.damage = 65;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.useAnimation = 20;
-			item.useTime = 20;
-			item.shootSpeed = 3.7f;
-			item.knockBack = 6.5f;
-			item.width = 58;
-			item.height = 58;
-			item.scale = 1f;
-			item.rare = ItemRarityID.Yellow;
-			item.value = Item.sellPrice(0, 1, 0, 0);
-			item.melee = true;
-			item.noMelee = true; 
-			item.noUseGraphic = true;
-			item.autoReuse = true;
+			Item.damage = 65;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.useAnimation = 20;
+			Item.useTime = 20;
+			Item.shootSpeed = 3.7f;
+			Item.knockBack = 6.5f;
+			Item.width = 58;
+			Item.height = 58;
+			Item.scale = 1f;
+			Item.rare = ItemRarityID.Yellow;
+			Item.value = Item.sellPrice(0, 1, 0, 0);
+			Item.DamageType = DamageClass.Melee;
+			Item.noMelee = true; 
+			Item.noUseGraphic = true;
+			Item.autoReuse = true;
 
-			item.UseSound = SoundID.Item1;
-			item.shoot = ProjectileType<ThunderLanceProjectile>();
+			Item.UseSound = SoundID.Item1;
+			Item.shoot = ProjectileType<ThunderLanceProjectile>();
 		}
 		public override bool CanUseItem(Player player)
 		{
-			return player.ownedProjectileCounts[item.shoot] < 1;
+			return player.ownedProjectileCounts[Item.shoot] < 1;
 		}
 	}
 }

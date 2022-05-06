@@ -9,29 +9,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Static Surge");
             Tooltip.SetDefault("Casts lightning volleys that explode on contact");
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 43;
-            item.magic = true;
-            item.mana = 20;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 65;
-            item.useAnimation = 65;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 10, 50, 0);
-            item.rare = ItemRarityID.LightRed;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.DiamondBolt;
-            item.shootSpeed = 15f;
+            Item.crit = 11;
+            Item.damage = 43;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 20;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 65;
+            Item.useAnimation = 65;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 10, 50, 0);
+            Item.rare = ItemRarityID.LightRed;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.DiamondBolt;
+            Item.shootSpeed = 15f;
         }
         public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
         {

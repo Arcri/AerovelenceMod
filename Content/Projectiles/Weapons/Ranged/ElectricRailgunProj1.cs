@@ -8,6 +8,7 @@ using AerovelenceMod.Core.Prim;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 {
@@ -26,17 +27,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.width = 2;
-			projectile.height = 2;
-			projectile.aiStyle = -1;
-			projectile.friendly = false;
-			projectile.penetrate = 1;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 999999;
-			projectile.ignoreWater = true;
-			projectile.hide = true;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.width = 2;
+			Projectile.height = 2;
+			Projectile.aiStyle = -1;
+			Projectile.friendly = false;
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 999999;
+			Projectile.ignoreWater = true;
+			Projectile.hide = true;
 		}
         private bool spawned;
         public override void AI()
@@ -44,17 +45,17 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             if (!spawned)
             {
                 spawned = true;
-                Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorCharge"));
+                SoundEngine.PlaySound(SoundLoader.customSoundType, (int)Projectile.position.X, (int)Projectile.position.Y, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorCharge"));
             }
 
             
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
 			player.ChangeDir(Main.MouseWorld.X > player.position.X ? 1 : -1);
 
 			player.itemTime = 45; // Set item time to 2 frames while we are used
 			player.itemAnimation = 45; // Set item animation time to 2 frames while we are used
-			projectile.position = player.Center;
-			projectile.velocity = Vector2.Zero;
+			Projectile.position = player.Center;
+			Projectile.velocity = Vector2.Zero;
 
 			Vector2 direction = Main.MouseWorld - player.Center;
 			direction.Normalize();
@@ -83,8 +84,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			else
 			{
                 //Play firing sound!
-                Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorShot"));
-                Projectile proj = Projectile.NewProjectileDirect(player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
+                SoundEngine.PlaySound(SoundLoader.customSoundType, (int)Projectile.position.X, (int)Projectile.position.Y, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorShot"));
+                Projectile proj = Projectile.NewProjectileDirect(player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(Projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
 				if (Main.netMode != NetmodeID.Server)
 			    {
                     ElectricRailgunPrimTrail trail = new ElectricRailgunPrimTrail(proj, charge);
@@ -93,7 +94,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
                     mp.trail = trail;
                 }
 				player.GetModPlayer<AeroPlayer>().Shake += (int)(16 * charge);
-				projectile.active = false;
+				Projectile.active = false;
 			}
 
 		}
@@ -102,7 +103,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 	{
 
 		private List<NPC> hit = new List<NPC>();
-		private float Charge => projectile.ai[0];
+		private float Charge => Projectile.ai[0];
 
         public ElectricRailgunPrimTrail trail;
         public override void SetStaticDefaults()
@@ -112,43 +113,43 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			projectile.hostile = false;
-			projectile.ranged = true;
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.tileCollide = false;
-            projectile.timeLeft = 60;
-			projectile.ignoreWater = true;
-			projectile.hide = true;
-            projectile.extraUpdates = 10;
+			Projectile.hostile = false;
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = false;
+            Projectile.timeLeft = 60;
+			Projectile.ignoreWater = true;
+			Projectile.hide = true;
+            Projectile.extraUpdates = 10;
 		}
 
         private float rotDifference(float angleA, float angleB) => Math.Abs(((((angleA - angleB) % 6.28f) + 9.42f) % 6.28f) - 3.14f);
 
         public override void AI()
         {
-			var target = Main.npc.Where(n => n.active && !n.friendly && !hit.Contains(n) && !n.immortal && !n.dontTakeDamage).OrderBy(n => (projectile.Center - n.Center).Length()).FirstOrDefault();
+			var target = Main.npc.Where(n => n.active && !n.friendly && !hit.Contains(n) && !n.immortal && !n.dontTakeDamage).OrderBy(n => (Projectile.Center - n.Center).Length()).FirstOrDefault();
             if (target != default)
             {
-                Vector2 direction = target.Center - projectile.Center;
-                if (direction.Length() < 400 && (hit.Count > 0 || rotDifference(projectile.DirectionTo(target.Center).ToRotation(), projectile.velocity.ToRotation()) < 1f))
+                Vector2 direction = target.Center - Projectile.Center;
+                if (direction.Length() < 400 && (hit.Count > 0 || rotDifference(Projectile.DirectionTo(target.Center).ToRotation(), Projectile.velocity.ToRotation()) < 1f))
                 {
                     direction.Normalize();
                     direction *= 15;
-                    projectile.velocity = direction;
-                    projectile.timeLeft = 60;
+                    Projectile.velocity = direction;
+                    Projectile.timeLeft = 60;
                 }
                 else if (hit.Count > 0)
-                    projectile.active = false;
+                    Projectile.active = false;
             }
             else if (hit.Count > 0)
-                projectile.active = false;
+                Projectile.active = false;
 
             trail?.AddPoint();
             if (trail != null)
-                trail.TrailLength += projectile.velocity.Length();
+                trail.TrailLength += Projectile.velocity.Length();
         }
 
         public override bool? CanHitNPC(NPC target)
@@ -161,7 +162,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
 			if (hit.Count < (int)(Charge * 5) + 400)
-				projectile.penetrate++;
+				Projectile.penetrate++;
             hit.Add(target);
         }
     }
@@ -238,10 +239,10 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
         public override void SetShaders()
         {
             Effect effect = AerovelenceMod.RailgunShader;
-            effect.Parameters["baseTexture"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/GlowTrail"));
-            effect.Parameters["pnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/noise"));
-            effect.Parameters["vnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/vnoise"));
-            effect.Parameters["wnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().GetTexture("Assets/wnoise"));
+            effect.Parameters["baseTexture"].SetValue(ModContent.GetInstance<AerovelenceMod>().Assets.Request<Texture2D>("Assets/GlowTrail").Value);
+            effect.Parameters["pnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().Assets.Request<Texture2D>("Assets/noise").Value);
+            effect.Parameters["vnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().Assets.Request<Texture2D>("Assets/vnoise").Value);
+            effect.Parameters["wnoise"].SetValue(ModContent.GetInstance<AerovelenceMod>().Assets.Request<Texture2D>("Assets/wnoise").Value);
             effect.Parameters["repeats"].SetValue(TrailLength / 1000f);
             PrepareShader(effect, "MainPS", _counter * 0.6f);
         }

@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -13,36 +14,35 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
             DisplayName.SetDefault("The Laser Pointer");
             Tooltip.SetDefault("Fires quick beams of LASERS\n'Have you tried playing with a cat?'");
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
         {
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 20;
-            item.useTime = 20;
-            item.shootSpeed = 20f;
-            item.knockBack = 2f;
-            item.width = 70;
-            item.height = 38;
-            item.damage = 45;
-            item.shoot = mod.ProjectileType("TheLaserPointerProj");
-            item.rare = ItemRarityID.LightPurple;
-            item.value = Item.sellPrice(0, 10, 0, 0);
-            item.noMelee = true;
-            item.noUseGraphic = true;
-            item.magic = true;
-            item.channel = true;
-            item.mana = 4;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
+            Item.shootSpeed = 20f;
+            Item.knockBack = 2f;
+            Item.width = 70;
+            Item.height = 38;
+            Item.damage = 45;
+            Item.shoot = Mod.Find<ModProjectile>("TheLaserPointerProj").Type;
+            Item.rare = ItemRarityID.LightPurple;
+            Item.value = Item.sellPrice(0, 10, 0, 0);
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.DamageType = DamageClass.Magic;
+            Item.channel = true;
+            Item.mana = 4;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.SoulofLight, 15);
-            modRecipe.AddIngredient(ModContent.ItemType<TheFlashlight>(), 1);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 10);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.SoulofLight, 15)
+                .AddIngredient(ModContent.ItemType<TheFlashlight>(), 1)
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 
@@ -50,33 +50,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
-            projectile.friendly = true;
-            projectile.magic = true;
-            projectile.extraUpdates = 100;
-            projectile.timeLeft = 300;
-            projectile.tileCollide = true;
-            projectile.penetrate = 300;
+            Projectile.width = 4;
+            Projectile.height = 4;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.extraUpdates = 100;
+            Projectile.timeLeft = 300;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 300;
         }
         public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
 
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            projectile.damage = (int)(projectile.damage * 0.8);
+            Projectile.damage = (int)(Projectile.damage * 0.8);
         }
 
         public override void AI()
         {
-            projectile.localAI[0] += 1f;
-            if (projectile.localAI[0] > 3f)
+            Projectile.localAI[0] += 1f;
+            if (Projectile.localAI[0] > 3f)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Vector2 projectilePosition = projectile.position;
-                    projectilePosition -= projectile.velocity * ((float)i * 0.25f);
-                    projectile.alpha = 255;
+                    Vector2 projectilePosition = Projectile.position;
+                    projectilePosition -= Projectile.velocity * ((float)i * 0.25f);
+                    Projectile.alpha = 255;
                     int dust = Dust.NewDust(projectilePosition, 1, 1, 60, 0f, 0f, 0, default, 1f);
                     Main.dust[dust].noGravity = true;
                     Main.dust[dust].position = projectilePosition;
@@ -97,85 +97,85 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Laser Pointer");
-            Main.projFrames[projectile.type] = 6;
+            Main.projFrames[Projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 26;
-            projectile.height = 38;
-            projectile.aiStyle = 75;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.hide = true;
-            projectile.ranged = true;
-            projectile.ignoreWater = true;
+            Projectile.width = 26;
+            Projectile.height = 38;
+            Projectile.aiStyle = 75;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.hide = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.ignoreWater = true;
         }
         public override void AI()
         {
-            Player player = Main.player[projectile.owner];
+            Player player = Main.player[Projectile.owner];
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
             {
-                projectile.ai[0] += 1f;
+                Projectile.ai[0] += 1f;
                 int num2 = 0;
-                if (projectile.ai[0] >= 30f)
+                if (Projectile.ai[0] >= 30f)
                 {
                     num2++;
                 }
-                if (projectile.ai[0] >= 90f)
+                if (Projectile.ai[0] >= 90f)
                 {
                     num2++;
                 }
-                if (projectile.ai[0] >= 130f)
+                if (Projectile.ai[0] >= 130f)
                 {
                     num2++;
                 }
                 int num3 = 24;
                 int num4 = 6;
-                projectile.ai[1] += 1f;
+                Projectile.ai[1] += 1f;
                 bool flag = false;
-                if (projectile.ai[1] >= num3 - num4 * num2)
+                if (Projectile.ai[1] >= num3 - num4 * num2)
                 {
-                    projectile.ai[1] = 0f;
+                    Projectile.ai[1] = 0f;
                     flag = true;
                 }
-                projectile.frameCounter += 1 + num2;
-                if (projectile.frameCounter >= 4)
+                Projectile.frameCounter += 1 + num2;
+                if (Projectile.frameCounter >= 4)
                 {
-                    projectile.frameCounter = 0;
-                    projectile.frame++;
-                    if (projectile.frame >= 6)
+                    Projectile.frameCounter = 0;
+                    Projectile.frame++;
+                    if (Projectile.frame >= 6)
                     {
-                        projectile.frame = 0;
+                        Projectile.frame = 0;
                     }
                 }
-                if (projectile.soundDelay <= 0)
+                if (Projectile.soundDelay <= 0)
                 {
-                    projectile.soundDelay = num3 - num4 * num2;
-                    if (projectile.ai[0] != 1f)
+                    Projectile.soundDelay = num3 - num4 * num2;
+                    if (Projectile.ai[0] != 1f)
                     {
-                        Main.PlaySound(SoundID.Item91, projectile.position);
+                        SoundEngine.PlaySound(SoundID.Item91, Projectile.position);
                     }
                 }
-                if (projectile.ai[1] == 1f && projectile.ai[0] != 1f)
+                if (Projectile.ai[1] == 1f && Projectile.ai[0] != 1f)
                 {
                     Vector2 spinningpoint = Vector2.UnitX * 24f;
-                    spinningpoint = spinningpoint.RotatedBy(projectile.rotation - (float)Math.PI / 2f);
-                    Vector2 value = projectile.Center + spinningpoint;
+                    spinningpoint = spinningpoint.RotatedBy(Projectile.rotation - (float)Math.PI / 2f);
+                    Vector2 value = Projectile.Center + spinningpoint;
                     for (int i = 0; i < 2; i++)
                     {
-                        int num5 = Dust.NewDust(value - Vector2.One * 8f, 16, 16, 159, projectile.velocity.X / 2f, projectile.velocity.Y / 2f, 100);
+                        int num5 = Dust.NewDust(value - Vector2.One * 8f, 16, 16, 159, Projectile.velocity.X / 2f, Projectile.velocity.Y / 2f, 100);
                         Main.dust[num5].velocity *= 0.66f;
                         Main.dust[num5].noGravity = true;
                         Main.dust[num5].scale = 1.4f;
                     }
                 }
-                if (flag && Main.myPlayer == projectile.owner)
+                if (flag && Main.myPlayer == Projectile.owner)
                 {
                     if (player.channel && player.CheckMana(player.inventory[player.selectedItem], -1, pay: true) && !player.noItems && !player.CCed)
                     {
-                        float num6 = player.inventory[player.selectedItem].shootSpeed * projectile.scale;
+                        float num6 = player.inventory[player.selectedItem].shootSpeed * Projectile.scale;
                         Vector2 value2 = vector;
                         Vector2 value3 = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - value2;
                         if (player.gravDir == -1f)
@@ -188,29 +188,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                             velocity = -Vector2.UnitY;
                         }
                         velocity *= num6;
-                        if (velocity.X != projectile.velocity.X || velocity.Y != projectile.velocity.Y)
+                        if (velocity.X != Projectile.velocity.X || velocity.Y != Projectile.velocity.Y)
                         {
-                            projectile.netUpdate = true;
+                            Projectile.netUpdate = true;
                         }
-                        projectile.velocity = velocity;
+                        Projectile.velocity = velocity;
                         float scaleFactor = 14f;
                         int num8 = 2;
                         int FlashlightProj = ModContent.ProjectileType<LaserPointerProjectile>();
                         for (int j = 0; j < 1; j++)
                         {
-                            value2 = projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
-                            Vector2 spinningpoint2 = Vector2.Normalize(projectile.velocity) * scaleFactor;
+                            value2 = Projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
+                            Vector2 spinningpoint2 = Vector2.Normalize(Projectile.velocity) * scaleFactor;
                             spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.00004954631328583 - 0.000004773156642914);
                             if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
                             {
                                 spinningpoint2 = -Vector2.UnitY;
                             }
-                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, FlashlightProj, projectile.damage, projectile.knockBack, projectile.owner);
+                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, FlashlightProj, Projectile.damage, Projectile.knockBack, Projectile.owner);
                         }
                     }
                     else
                     {
-                        projectile.Kill();
+                        Projectile.Kill();
                     }
                 }
             }

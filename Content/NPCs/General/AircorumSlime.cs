@@ -10,35 +10,35 @@ namespace AerovelenceMod.Content.NPCs.General
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Aircorum Slime");
-            Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.BlueSlime];
+            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
         }
         public override void SetDefaults()
         {
-            npc.aiStyle = 1;
-            npc.lifeMax = 70;
-            npc.damage = 15;
-            npc.defense = 24;
-            npc.knockBackResist = 0f;
+            NPC.aiStyle = 1;
+            NPC.lifeMax = 70;
+            NPC.damage = 15;
+            NPC.defense = 24;
+            NPC.knockBackResist = 0f;
             animationType = NPCID.BlueSlime;
-            npc.width = 38;
-            npc.height = 18;
-            npc.value = Item.buyPrice(0, 0, 7, 0);
-            npc.lavaImmune = true;
-            npc.noGravity = false;
-            npc.noTileCollide = false;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath44;
+            NPC.width = 38;
+            NPC.height = 18;
+            NPC.value = Item.buyPrice(0, 0, 7, 0);
+            NPC.lavaImmune = true;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath44;
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
-            if (npc.life <= 0 || npc.life >= 0)
+            if (NPC.life <= 0 || NPC.life >= 0)
             {
                 int d = 193;
                 for (int k = 0; k < 12; k++)
                 {
-                    Dust.NewDust(npc.position, npc.width, npc.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
-                    Dust.NewDust(npc.position, npc.width, npc.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
                 }
             }
         }

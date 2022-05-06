@@ -20,22 +20,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void SetDefaults()
 		{
-			item.value = Item.sellPrice(1);
-			item.damage = 25;
-			item.ranged = true;
-			item.width = 1;
-			item.height = 1;
-			item.useTime = 32;
-			item.useAnimation = 32;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.knockBack = 5f;
-			item.rare = ItemRarityID.Orange;
-			item.noMelee = true;
-			item.UseSound = SoundID.Item11;
-			item.autoReuse = true;
-            item.shootSpeed = 14f;
-            item.shoot = AmmoID.Bullet;
-            item.useAmmo = AmmoID.Bullet;
+			Item.value = Item.sellPrice(1);
+			Item.damage = 25;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 1;
+			Item.height = 1;
+			Item.useTime = 32;
+			Item.useAnimation = 32;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.knockBack = 5f;
+			Item.rare = ItemRarityID.Orange;
+			Item.noMelee = true;
+			Item.UseSound = SoundID.Item11;
+			Item.autoReuse = true;
+            Item.shootSpeed = 14f;
+            Item.shoot = AmmoID.Bullet;
+            Item.useAmmo = AmmoID.Bullet;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -48,11 +48,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe modRecipe = new ModRecipe(mod);
-			modRecipe.AddIngredient(ItemID.FlintlockPistol, 1);
-			modRecipe.AddRecipeGroup("IronBar", 15);
-			modRecipe.SetResult(this, 1);
-			modRecipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.FlintlockPistol, 1)
+				.AddRecipeGroup("IronBar", 15)
+				.Register();
 		}
 	}
 }

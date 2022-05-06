@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 {
 	public class ValleyTreeSapling : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -57,7 +57,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 			{
 				Tile tile = Framing.GetTileSafely(i, j);
 				bool growSucess;
-				if (tile.frameX < 54)
+				if (tile.TileFrameX < 54)
 					growSucess = WorldGen.GrowTree(i, j);
 				else
 					growSucess = WorldGen.GrowPalmTree(i, j);

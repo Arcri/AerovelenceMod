@@ -17,30 +17,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		}
 		public override void SetDefaults()
 		{
-			item.height = 41;
-			item.width = 39;
-			item.rare = ItemRarityID.Green;
-			item.value = Item.sellPrice(0, 0, 60, 0);
+			Item.height = 41;
+			Item.width = 39;
+			Item.rare = ItemRarityID.Green;
+			Item.value = Item.sellPrice(0, 0, 60, 0);
 
-			item.mana = 10;
-			item.damage = 20;
-			item.knockBack = 5;
+			Item.mana = 10;
+			Item.damage = 20;
+			Item.knockBack = 5;
 			
-			item.useTime = item.useAnimation = 15;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			Item.useTime = Item.useAnimation = 15;
+			Item.useStyle = ItemUseStyleID.Shoot;
 			
-			item.magic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.noMelee = true;
+			Item.autoReuse = true;
 
-			item.shootSpeed = 7.5f;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.RedSeed>();
+			Item.shootSpeed = 7.5f;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.RedSeed>();
 			
-			item.UseSound = SoundID.Item20;
+			Item.UseSound = SoundID.Item20;
 		}
 
         public override bool CanUseItem(Player player)
-			=> player.ownedProjectileCounts[item.shoot] < 8;
+			=> player.ownedProjectileCounts[Item.shoot] < 8;
 
         /*public override void AddRecipes()
 		{

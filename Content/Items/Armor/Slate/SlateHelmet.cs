@@ -32,34 +32,33 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
 			if(player.ZoneRockLayerHeight)
             {
                 player.statDefense += 7;
-                player.meleeSpeed += 0.05f;
+                player.GetAttackSpeed(DamageClass.Melee) += 0.05f;
             }
             player.allDamage += 0.10f;
-            player.minionDamage += 0.15f;
+            player.GetDamage(DamageClass.Summon) += 0.15f;
 
         } 	
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Blue;
-            item.defense = 3;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Blue;
+            Item.defense = 3;
         }
         public override void UpdateEquip(Player player)
         {
-            player.meleeDamage += 0.02f;
-			player.rangedDamage += 0.02f;
-			player.magicDamage += 0.02f;
+            player.GetDamage(DamageClass.Melee) += 0.02f;
+			player.GetDamage(DamageClass.Ranged) += 0.02f;
+			player.GetDamage(DamageClass.Magic) += 0.02f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<SlateOre>(), 55);
-            recipe.AddRecipeGroup("Wood", 20);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<SlateOre>(), 55)
+                .AddRecipeGroup("Wood", 20)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

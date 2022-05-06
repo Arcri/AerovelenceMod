@@ -11,29 +11,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
             DisplayName.SetDefault("Dark Crystal Staff");
             Tooltip.SetDefault("Fires a lightning bolt");
         }
         public override void SetDefaults()
         {
-            item.crit = 4;
-            item.damage = 30;
-            item.magic = true;
-            item.mana = 10;
-            item.width = 64;
-            item.height = 64;
-            item.useTime = 24;
-            item.useAnimation = 24;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 5;
-            item.value = Item.sellPrice(0, 1, 15, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<InvisibleProj>();
-            item.shootSpeed = 12f;
+            Item.crit = 4;
+            Item.damage = 30;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 10;
+            Item.width = 64;
+            Item.height = 64;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 5;
+            Item.value = Item.sellPrice(0, 1, 15, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<InvisibleProj>();
+            Item.shootSpeed = 12f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

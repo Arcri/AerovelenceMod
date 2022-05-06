@@ -15,23 +15,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.crit = 4;
-            item.damage = 16;
-            item.melee = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = mod.ProjectileType("CrystalKunaiProj");
-            item.shootSpeed = 6f;
+            Item.UseSound = SoundID.Item1;
+            Item.crit = 4;
+            Item.damage = 16;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = Mod.Find<ModProjectile>("CrystalKunaiProj").Type;
+            Item.shootSpeed = 6f;
         }
     }
 
@@ -42,21 +42,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 14;
-            projectile.height = 14;
-            projectile.friendly = true;
-            projectile.penetrate = 1;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.aiStyle = 1;
+            Projectile.width = 14;
+            Projectile.height = 14;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.aiStyle = 1;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            int index = Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), projectile.damage, projectile.knockBack * 0.85f, projectile.owner, 0f, 0f);
-            Main.projectile[index].rotation = (float)(projectile.rotation + 3.14);
-            projectile.Kill();
+            int index = Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+            Main.projectile[index].rotation = (float)(Projectile.rotation + 3.14);
+            Projectile.Kill();
             return true;
         }
     }
@@ -68,20 +68,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         public int i;
         public override void SetDefaults()
         {
-            projectile.width = 2;
-            projectile.height = 2;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 300;
-            projectile.aiStyle = 2;
+            Projectile.width = 2;
+            Projectile.height = 2;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 300;
+            Projectile.aiStyle = 2;
         }
         public override void AI()
         {
-            projectile.velocity *= 0f;
+            Projectile.velocity *= 0f;
         }
     }
 }

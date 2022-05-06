@@ -18,23 +18,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            item.crit = 11;
-            item.damage = 97;
-            item.magic = true;
-            item.mana = 5;
-            item.width = 30;
-            item.height = 34;
-            item.useTime = 7;
-            item.useAnimation = 7;
-            item.UseSound = SoundID.Item21;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 20, 50, 0);
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<CrystalGladeProj>();
-            item.shootSpeed = 14f;
+            Item.crit = 11;
+            Item.damage = 97;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 5;
+            Item.width = 30;
+            Item.height = 34;
+            Item.useTime = 7;
+            Item.useAnimation = 7;
+            Item.UseSound = SoundID.Item21;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 20, 50, 0);
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<CrystalGladeProj>();
+            Item.shootSpeed = 14f;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -43,19 +43,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var line = new TooltipLine(mod, "Verbose:RemoveMe", "Why do I exist, dawg");
+            var line = new TooltipLine(Mod, "Verbose:RemoveMe", "Why do I exist, dawg");
             tooltips.Add(line);
 
-            line = new TooltipLine(mod, "Crystal Glade", "Legendary item")
+            line = new TooltipLine(Mod, "Crystal Glade", "Legendary item")
             {
-                overrideColor = new Color(255, 241, 000)
+                OverrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.mod == "Terraria" && line2.Name == "ItemName")
+                if (line2.Mod == "Terraria" && line2.Name == "ItemName")
                 {
-                    line2.overrideColor = new Color(255, 132, 000);
+                    line2.OverrideColor = new Color(255, 132, 000);
                 }
             }
             tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
@@ -67,28 +67,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         private readonly int oneHelixRevolutionInUpdateTicks = 30;
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 18;
-            projectile.alpha = 0;
-            projectile.penetrate = 4;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = false;
+            Projectile.width = 38;
+            Projectile.height = 18;
+            Projectile.alpha = 0;
+            Projectile.penetrate = 4;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
         }
         public override bool PreAI()
         {
-            ++projectile.localAI[0];
+            ++Projectile.localAI[0];
             float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
-            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
-            Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * Projectile.height;
+            Dust newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 61);
             newDust.noGravity = true;
             newDustPosition.Y *= -1;
-            newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 61);
+            newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 61);
             newDust.noGravity = true;
-            projectile.rotation = projectile.velocity.ToRotation();
+            Projectile.rotation = Projectile.velocity.ToRotation();
             return (false);
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-            => this.DrawAroundOrigin(spriteBatch, lightColor * projectile.Opacity);
+		public override bool PreDraw(ref Color lightColor) 
+            => this.DrawAroundOrigin(Main.spriteBatch, lightColor * Projectile.Opacity);
     }
 }

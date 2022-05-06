@@ -9,7 +9,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
 {
     public class StarglassOreBlock : ModTile
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
 			mineResist = 2.5f;
 			minPick = 55;

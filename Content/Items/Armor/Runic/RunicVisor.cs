@@ -26,15 +26,15 @@ namespace AerovelenceMod.Content.Items.Armor.Runic
         } 	
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 1;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 1;
         }
 		public override void UpdateEquip(Player player)
         {
-            player.minionDamage += 0.06f;
+            player.GetDamage(DamageClass.Summon) += 0.06f;
             player.manaCost -= 0.08f;
             player.maxMinions += 1;
         }

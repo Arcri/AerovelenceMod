@@ -16,29 +16,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		{
 			DisplayName.SetDefault("Thorns of Agony");
 			Tooltip.SetDefault("Casts an agonizing thorny flower that can pierce");
-			Item.staff[item.type] = true;
+			Item.staff[Item.type] = true;
 		}
 		public override void SetDefaults()
 		{
-			item.width = item.height = 16;
-			item.rare = ItemRarityID.Blue;
-			item.value = Item.sellPrice(0, 0, 78, 80);
+			Item.width = Item.height = 16;
+			Item.rare = ItemRarityID.Blue;
+			Item.value = Item.sellPrice(0, 0, 78, 80);
 
-			item.crit = 4;
-			item.mana = 20;
-			item.damage = 18;
-			item.knockBack = 5f;
+			Item.crit = 4;
+			Item.mana = 20;
+			Item.damage = 18;
+			Item.knockBack = 5f;
 
-			item.useTime = item.useAnimation = 28;
-			item.useStyle = ItemUseStyleID.HoldingOut;
+			Item.useTime = Item.useAnimation = 28;
+			Item.useStyle = ItemUseStyleID.Shoot;
 			
-			item.magic = true;
-			item.noMelee = true;
+			Item.DamageType = DamageClass.Magic;
+			Item.noMelee = true;
 
-			item.shootSpeed = 12f;
-			item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.ThornsOfAgony>();
+			Item.shootSpeed = 12f;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.ThornsOfAgony>();
 
-			item.UseSound = SoundID.Item69;
+			Item.UseSound = SoundID.Item69;
 		}
 
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -53,13 +53,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		}
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Vine, 10);
-			recipe.AddRecipeGroup("Wood", 15);
-			recipe.AddIngredient(ItemID.JungleSpores, 7);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe(1)
+				.AddIngredient(ItemID.Vine, 10)
+				.AddRecipeGroup("Wood", 15)
+				.AddIngredient(ItemID.JungleSpores, 7)
+				.AddTile(TileID.WorkBenches)
+				.Register();
 		}
 	}
 }

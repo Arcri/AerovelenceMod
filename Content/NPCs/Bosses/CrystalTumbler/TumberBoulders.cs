@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -13,82 +14,82 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 		private NPC owner => Main.npc[NPC.FindFirstNPC(NPCType<CrystalTumbler>())];
         public override void SetStaticDefaults()
         {
-			Main.projFrames[projectile.type] = 3;
+			Main.projFrames[Projectile.type] = 3;
 		}
 		bool isntThrown = true;
         public override void SetDefaults()
 		{
-			projectile.width = 60;
-			projectile.height = 46;
-			projectile.alpha =  255;
-			projectile.damage = 12;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.tileCollide = false;
-			projectile.ignoreWater = true;
+			Projectile.width = 60;
+			Projectile.height = 46;
+			Projectile.alpha =  255;
+			Projectile.damage = 12;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.tileCollide = false;
+			Projectile.ignoreWater = true;
 		}
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
 			if (isntThrown == true)
 			{
-				projectile.netUpdate = true;
-				Texture2D texture = GetTexture(Texture + "Glow");
-				Rectangle frame = texture.Frame(1, 3, 0, projectile.frame);
-				spriteBatch.Draw(
+				Projectile.netUpdate = true;
+				Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Texture + "Glow");
+				Rectangle frame = texture.Frame(1, 3, 0, Projectile.frame);
+				Main.EntitySpriteDraw(
 					texture,
-					projectile.Center - Main.screenPosition,
+					Projectile.Center - Main.screenPosition,
 					frame,
 					Color.White,
-					projectile.rotation,
+					Projectile.rotation,
 					frame.Size() / 2,
-					projectile.scale + 0.1f,
+					Projectile.scale + 0.1f,
 					SpriteEffects.None,
-					0f
+					0
 				);
 			}
 			return true;
 		}
 		public override bool PreAI()
 		{
-			projectile.alpha -= 10;
-			Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.Blood, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 0, Color.Black, 1);
+			Projectile.alpha -= 10;
+			Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 0, Color.Black, 1);
 
 			NPC ownerNPC = owner;
-			if (projectile.ai[1] == 0)
+			if (Projectile.ai[1] == 0)
 			{
-				projectile.frame = Main.rand.Next(3);
-				projectile.netUpdate = true;
+				Projectile.frame = Main.rand.Next(3);
+				Projectile.netUpdate = true;
 			}
 
-			if (++projectile.ai[1] >= 120)
+			if (++Projectile.ai[1] >= 120)
 			{
-				projectile.tileCollide = true;
-				projectile.netUpdate = true;
-				if (projectile.ai[1] == 120)
+				Projectile.tileCollide = true;
+				Projectile.netUpdate = true;
+				if (Projectile.ai[1] == 120)
 				{
-					Vector2 desiredVelocity = Vector2.Normalize(Main.player[ownerNPC.target].Center - projectile.Center) * 16f;
+					Vector2 desiredVelocity = Vector2.Normalize(Main.player[ownerNPC.target].Center - Projectile.Center) * 16f;
 					isntThrown = false;
-					projectile.velocity = desiredVelocity;
+					Projectile.velocity = desiredVelocity;
 
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 			}
 			else
 			{
-				Vector2 desiredPosition = ownerNPC.Center + new Vector2(-150 + (150 * projectile.ai[0]), -150 + 25 * (float)Math.Sin(projectile.ai[1] / 15));
+				Vector2 desiredPosition = ownerNPC.Center + new Vector2(-150 + (150 * Projectile.ai[0]), -150 + 25 * (float)Math.Sin(Projectile.ai[1] / 15));
 
-				Vector2 desiredVelocity = desiredPosition - projectile.Center;
+				Vector2 desiredVelocity = desiredPosition - Projectile.Center;
 
 				float speed = MathHelper.Lerp(0.1f, 12f, desiredVelocity.Length() / 100);
-				projectile.velocity = Vector2.Normalize(desiredVelocity) * speed;
-				projectile.netUpdate = true;
+				Projectile.velocity = Vector2.Normalize(desiredVelocity) * speed;
+				Projectile.netUpdate = true;
 			}
 
 			return (false);
 		}
         public override void Kill(int timeLeft)
         {
-			Main.PlaySound(SoundID.Item, (int)projectile.Center.X, (int)projectile.Center.Y, 62, 0.75f);
+			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 62, 0.75f);
 		}
     }
 }

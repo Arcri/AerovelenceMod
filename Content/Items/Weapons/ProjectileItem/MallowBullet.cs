@@ -13,27 +13,26 @@ namespace AerovelenceMod.Content.Items.Weapons.ProjectileItem
 		}
 		public override void SetDefaults()
         {
-            item.damage = 6;
-            item.ranged = true;
-            item.width = 8;
-            item.height = 12;
-            item.knockBack = 4;
-            item.rare = ItemRarityID.Blue;
-			item.maxStack = 999;
-			item.consumable = true;
-            item.shoot = ModContent.ProjectileType<MallowBulletProj>();
-            item.shootSpeed = 10f;
-            item.value = Item.sellPrice(0, 0, 1, 10);
-            item.ammo = item.type;
+            Item.damage = 6;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 8;
+            Item.height = 12;
+            Item.knockBack = 4;
+            Item.rare = ItemRarityID.Blue;
+			Item.maxStack = 999;
+			Item.consumable = true;
+            Item.shoot = ModContent.ProjectileType<MallowBulletProj>();
+            Item.shootSpeed = 10f;
+            Item.value = Item.sellPrice(0, 0, 1, 10);
+            Item.ammo = Item.type;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.MusketBall, 50);
-            modRecipe.AddIngredient(ItemID.Marshmallow, 1);
-            modRecipe.AddTile(TileID.WorkBenches);
-            modRecipe.SetResult(this, 50);
-            modRecipe.AddRecipe();
+            CreateRecipe(50)
+                .AddIngredient(ItemID.MusketBall, 50)
+                .AddIngredient(ItemID.Marshmallow, 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

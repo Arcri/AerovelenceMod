@@ -12,39 +12,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
             DisplayName.SetDefault("Crystal Spray");
             Tooltip.SetDefault("Casts homing water streams to chase your foes\nAqua Sceptre++");
-            Item.staff[item.type] = true;
+            Item.staff[Item.type] = true;
         }
 
         public override void SetDefaults()
         {
-            item.mana = 6;
-            item.autoReuse = true;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.useAnimation = 16;
-            item.useTime = 8;
-            item.knockBack = 5f;
-            item.width = 38;
-            item.crit = 5;
-            item.height = 10;
-            item.damage = 78;
-            item.scale = 1f;
-            item.shoot = ModContent.ProjectileType<CrystalSprayProjectile>();
-            item.shootSpeed = 12.5f;
-            item.UseSound = SoundID.Item13;
-            item.noMelee = true;
-            item.rare = ItemRarityID.Yellow;
-            item.value = 27000;
-            item.magic = true;
+            Item.mana = 6;
+            Item.autoReuse = true;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 16;
+            Item.useTime = 8;
+            Item.knockBack = 5f;
+            Item.width = 38;
+            Item.crit = 5;
+            Item.height = 10;
+            Item.damage = 78;
+            Item.scale = 1f;
+            Item.shoot = ModContent.ProjectileType<CrystalSprayProjectile>();
+            Item.shootSpeed = 12.5f;
+            Item.UseSound = SoundID.Item13;
+            Item.noMelee = true;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = 27000;
+            Item.DamageType = DamageClass.Magic;
         }
         public override void AddRecipes()
         {
-            ModRecipe modRecipe = new ModRecipe(mod);
-            modRecipe.AddIngredient(ItemID.AquaScepter, 1);
-            modRecipe.AddIngredient(ItemID.SpectreStaff, 1);
-            modRecipe.AddIngredient(ItemID.HallowedBar, 15);
-            modRecipe.AddTile(TileID.MythrilAnvil);
-            modRecipe.SetResult(this, 1);
-            modRecipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ItemID.AquaScepter, 1)
+                .AddIngredient(ItemID.SpectreStaff, 1)
+                .AddIngredient(ItemID.HallowedBar, 15)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 
@@ -53,7 +52,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         private void ApplyTrailFx()
         {
-            Projectile proj = projectile;
+            Projectile proj = Projectile;
 
             //proj.velocity.Y += 0.2f;
 
@@ -147,18 +146,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             //this.projectile.aiStyle = CrystalSprayProjectile.SpectreStaffAiStyle;	// both aiStyle and aiType needed?
             //this.aiType = ProjectileID.LostSoulFriendly;
 
-            this.projectile.width = 12;
-            this.projectile.height = 12;
-            this.projectile.tileCollide = true;
-            this.projectile.friendly = true;         //Can the projectile deal damage to enemies?
-            this.projectile.hostile = false;         //Can the projectile deal damage to the player?
-            this.projectile.magic = true;
-            this.projectile.alpha = 255;
-            this.projectile.timeLeft = 600;          //The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
-            this.projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
-            this.projectile.tileCollide = true;          //Can the projectile collide with tiles?
+            this.Projectile.width = 12;
+            this.Projectile.height = 12;
+            this.Projectile.tileCollide = true;
+            this.Projectile.friendly = true;         //Can the projectile deal damage to enemies?
+            this.Projectile.hostile = false;         //Can the projectile deal damage to the player?
+            this.Projectile.DamageType = DamageClass.Magic;
+            this.Projectile.alpha = 255;
+            this.Projectile.timeLeft = 600;          //The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+            this.Projectile.ignoreWater = true;          //Does the projectile's speed be influenced by water?
+            this.Projectile.tileCollide = true;          //Can the projectile collide with tiles?
             //this.projectile.penetrate = -1;           //How many monsters the projectile can penetrate.
-            this.projectile.extraUpdates = 1;   // 2 = aqua sceptre
+            this.Projectile.extraUpdates = 1;   // 2 = aqua sceptre
         }
 
 
@@ -202,7 +201,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
     {
         private void RunHomingAI()
         {
-            Projectile proj = this.projectile;
+            Projectile proj = this.Projectile;
 
             float projPosMidX = proj.position.X + (float)(proj.width / 2);
             float projPosMidY = proj.position.Y + (float)(proj.height / 2);

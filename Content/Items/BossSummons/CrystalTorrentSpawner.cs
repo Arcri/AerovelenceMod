@@ -7,19 +7,19 @@ namespace AerovelenceMod.Content.Items.BossSummons
     {
         public override void SetDefaults()
         {
-            item.maxStack = 99;
-            item.useTime = 30;
-            item.useAnimation = 30;
+            Item.maxStack = 99;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
 
-            item.consumable = true;
+            Item.consumable = true;
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.UseSound = SoundID.Item1;
-            item.rare = ItemRarityID.Orange;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.UseSound = SoundID.Item1;
+            Item.rare = ItemRarityID.Orange;
 
-            item.value = Item.buyPrice(gold: 1);
+            Item.value = Item.buyPrice(gold: 1);
         }
 
-        public override bool UseItem(Player player) => false;
+        public override bool? UseItem(Player player) => false;
     }
 }

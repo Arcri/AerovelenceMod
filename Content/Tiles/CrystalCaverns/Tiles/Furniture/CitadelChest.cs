@@ -10,12 +10,13 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
 	public class CitadelChest : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
@@ -48,11 +49,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			chestDrop = ItemType<CitadelChestItem>();
 		}
 
-		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].frameX / 36);
+		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
 
 		public override bool HasSmartInteract() => true;
 
-		public override bool IsLockedChest(int i, int j) => Main.tile[i, j].frameX / 36 == 1;
+		public override bool IsLockedChest(int i, int j) => Main.tile[i, j].TileFrameX / 36 == 1;
 
 		public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
 		{
@@ -67,11 +68,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			int left = i;
 			int top = j;
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
@@ -99,31 +100,31 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Chest.DestroyChest(i, j);
 		}
 
-		public override bool NewRightClick(int i, int j)
+		public override bool RightClick(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
 			Main.mouseRightRelease = false;
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
 			if (player.sign >= 0)
 			{
-				Main.PlaySound(SoundID.MenuClose);
+				SoundEngine.PlaySound(SoundID.MenuClose);
 				player.sign = -1;
 				Main.editSign = false;
 				Main.npcChatText = "";
 			}
 			if (Main.editChest)
 			{
-				Main.PlaySound(SoundID.MenuTick);
+				SoundEngine.PlaySound(SoundID.MenuTick);
 				Main.editChest = false;
 				Main.npcChatText = "";
 			}
@@ -139,7 +140,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				{
 					player.chest = -1;
 					Recipe.FindRecipes();
-					Main.PlaySound(SoundID.MenuClose);
+					SoundEngine.PlaySound(SoundID.MenuClose);
 				}
 				else {
 					NetMessage.SendData(MessageID.RequestChestOpen, -1, -1, null, left, (float)top, 0f, 0f, 0, 0, 0);
@@ -168,7 +169,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 						if (chest == player.chest)
 						{
 							player.chest = -1;
-							Main.PlaySound(SoundID.MenuClose);
+							SoundEngine.PlaySound(SoundID.MenuClose);
 						}
 						else
 						{
@@ -177,7 +178,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 							Main.recBigList = false;
 							player.chestX = left;
 							player.chestY = top;
-							Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+							SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
 						}
 						Recipe.FindRecipes();
 					}
@@ -192,11 +193,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Tile tile = Main.tile[i, j];
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.TileFrameX % 36 != 0)
 			{
 				left--;
 			}
-			if (tile.frameY != 0)
+			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
@@ -211,7 +212,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				if (player.showItemIconText == "Citadel Chest")
 				{
 					player.showItemIcon2 = ItemType<CitadelChestItem>();
-					if (Main.tile[left, top].frameX / 36 == 1)
+					if (Main.tile[left, top].TileFrameX / 36 == 1)
 						player.showItemIcon2 = ItemType<CitadelChestKey>();
 					player.showItemIconText = "";
 				}

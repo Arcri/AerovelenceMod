@@ -13,14 +13,14 @@ namespace AerovelenceMod.Content.Projectiles
 	{
         public override void SetDefaults()
 		{
-			projectile.width = 0;
-			projectile.height = 0;
-			projectile.alpha = 255;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false; 
-			projectile.ignoreWater = true;
-			projectile.magic = true;
+			Projectile.width = 0;
+			Projectile.height = 0;
+			Projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false; 
+			Projectile.ignoreWater = true;
+			Projectile.DamageType = DamageClass.Magic;
 		}
 
 		public Vector2 spiralCenter;
@@ -29,15 +29,15 @@ namespace AerovelenceMod.Content.Projectiles
 
 		public override void AI()
 		{
-			if(projectile.ai[0] == 1)
+			if(Projectile.ai[0] == 1)
             {
 				dust = DustType<WispDustAlt>();
 			}
 
 			if (t==7f)
             {
-				spiralCenter = projectile.position;
-				projectile.velocity = Vector2.Zero;
+				spiralCenter = Projectile.position;
+				Projectile.velocity = Vector2.Zero;
             }
 
 			if (t > 0)
@@ -50,21 +50,21 @@ namespace AerovelenceMod.Content.Projectiles
 				}
 			}
 
-			if (t<=0 && projectile.ai[1]<40)
+			if (t<=0 && Projectile.ai[1]<40)
             {
-				projectile.Size = new Vector2(130, 130);
-				projectile.position = spiralCenter-projectile.Size/2;
+				Projectile.Size = new Vector2(130, 130);
+				Projectile.position = spiralCenter-Projectile.Size/2;
 				for (int i = 0; i < 90; i++)
 				{
-					Vector2 position = spiralCenter + new Vector2(0f, -(2*projectile.ai[1])).RotatedBy(MathHelper.ToRadians(360f/90*i)); //credit Pyroknight#5804 for the formula
+					Vector2 position = spiralCenter + new Vector2(0f, -(2*Projectile.ai[1])).RotatedBy(MathHelper.ToRadians(360f/90*i)); //credit Pyroknight#5804 for the formula
 					Dust.NewDustDirect(position, 1, 1, dust, 0, 0, 0, default, 0.5f);
 				}
-				projectile.ai[1] += 5f;
+				Projectile.ai[1] += 5f;
 			}
 
-			if (projectile.ai[1] >= 40)
+			if (Projectile.ai[1] >= 40)
             {
-				projectile.Kill();
+				Projectile.Kill();
             }
 		}
 

@@ -15,22 +15,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
         public override void SetDefaults()
         {
-			item.crit = 20;
-            item.damage = 56;
-            item.ranged = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 24;
-            item.useAnimation = 24;
-			item.UseSound = SoundID.Item14;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.noMelee = true;
-            item.knockBack = 8;
-            item.value = 10000;
-            item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
-            item.shoot = ProjectileID.ScutlixLaser;
-            item.shootSpeed = 82f;
+			Item.crit = 20;
+            Item.damage = 56;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 24;
+            Item.useAnimation = 24;
+			Item.UseSound = SoundID.Item14;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.noMelee = true;
+            Item.knockBack = 8;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
+            Item.shoot = ProjectileID.ScutlixLaser;
+            Item.shootSpeed = 82f;
         }
 
 		public override Color? GetAlpha(Color lightColor)
@@ -40,19 +40,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Plarovene Blaster", "Artifact Weapon")
+			line = new TooltipLine(Mod, "Plarovene Blaster", "Artifact Weapon")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

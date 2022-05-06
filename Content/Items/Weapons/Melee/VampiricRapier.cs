@@ -15,19 +15,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		}
         public override void SetDefaults()
         {
-			item.crit = 20;
-            item.damage = 45;
-            item.melee = true;
-            item.width = 44;
-            item.height = 44;
-            item.useTime = 11;
-            item.useAnimation = 11;
-			item.UseSound = SoundID.Item1;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.knockBack = 8;
-			item.value = Item.sellPrice(0, 10, 50, 0);
-			item.rare = ItemRarityID.Purple;
-            item.autoReuse = true;
+			Item.crit = 20;
+            Item.damage = 45;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 44;
+            Item.height = 44;
+            Item.useTime = 11;
+            Item.useAnimation = 11;
+			Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 8;
+			Item.value = Item.sellPrice(0, 10, 50, 0);
+			Item.rare = ItemRarityID.Purple;
+            Item.autoReuse = true;
         }
 
 
@@ -49,19 +49,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwooooooah");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwooooooah");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "VampiricRapier", "Artifact")
+			line = new TooltipLine(Mod, "VampiricRapier", "Artifact")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

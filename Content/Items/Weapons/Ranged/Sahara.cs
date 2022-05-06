@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,33 +18,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.crit = 4;
-            item.damage = 17;
-            item.ranged = true;
-            item.width = 30;
-            item.height = 54;
-            item.useTime = 60;
-            item.useAnimation = 60;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = ItemRarityID.Green;
-            item.autoReuse = true;
-            item.shoot = AmmoID.Arrow;
-            item.useAmmo = AmmoID.Arrow;
-            item.shootSpeed = 8.5f;
+            Item.UseSound = SoundID.Item5;
+            Item.crit = 4;
+            Item.damage = 17;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 30;
+            Item.height = 54;
+            Item.useTime = 60;
+            Item.useAnimation = 60;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 1, 0, 0);
+            Item.rare = ItemRarityID.Green;
+            Item.autoReuse = true;
+            Item.shoot = AmmoID.Arrow;
+            Item.useAmmo = AmmoID.Arrow;
+            Item.shootSpeed = 8.5f;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 3);
-            recipe.AddIngredient(ItemID.Sandstone, 30);
-            recipe.AddIngredient(ItemID.Cactus, 7);
-            recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe(1)
+                .AddIngredient(ModContent.ItemType<HugeAntlionMandible>(), 3)
+                .AddIngredient(ItemID.Sandstone, 30)
+                .AddIngredient(ItemID.Cactus, 7)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -55,36 +55,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 6;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.penetrate = 7;
-            projectile.timeLeft = 200;
-            projectile.alpha = 100;
+            Projectile.width = 50;
+            Projectile.height = 50;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = 7;
+            Projectile.timeLeft = 200;
+            Projectile.alpha = 100;
         }
-        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 vector = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
-            for (int i = 0; i < projectile.oldPos.Length; i++)
+            Vector2 vector = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Vector2 position = projectile.oldPos[i] - Main.screenPosition + vector + new Vector2(0f, projectile.gfxOffY);
-                Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length);
-                sb.Draw(Main.projectileTexture[projectile.type], position, null, color, projectile.rotation, vector, projectile.scale, SpriteEffects.None, 0f);
+                Vector2 position = Projectile.oldPos[i] - Main.screenPosition + vector + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+                Main.spriteBatch.Draw((Texture2D)TextureAssets.Projectile[Projectile.type], position, null, color, Projectile.rotation, vector, Projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }
         private int shootTimer;
         public override void AI()
         {
-            projectile.velocity *= 0.95f;
-            projectile.rotation += 100;
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 63, projectile.velocity.X, projectile.velocity.Y, 0, Color.White, 1);
+            Projectile.velocity *= 0.95f;
+            Projectile.rotation += 100;
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 63, Projectile.velocity.X, Projectile.velocity.Y, 0, Color.White, 1);
             Main.dust[dust].velocity /= 1.2f;
             Main.dust[dust].noGravity = true;
             shootTimer++;
@@ -93,12 +93,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 float speed = 2f;
                 int type = ProjectileID.MolotovFire;
                 Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
                 shootTimer = 0;
             }
-            if(Math.Abs(projectile.velocity.X) < 0.02f)
+            if(Math.Abs(Projectile.velocity.X) < 0.02f)
             {
-                projectile.Kill();
+                Projectile.Kill();
             }
         }
     
@@ -109,7 +109,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 float speed = 2f;
                 int type = ProjectileID.MolotovFire;
                 Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                Projectile.NewProjectile(projectile.Center, velocity, type, projectile.damage, 5f, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
             }
         }
     }

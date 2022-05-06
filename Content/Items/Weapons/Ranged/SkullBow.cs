@@ -15,22 +15,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 		public override void SetDefaults()
 		{
-			item.shootSpeed = 24f;
-			item.crit = 6;
-			item.damage = 13;
-			item.ranged = true;
-			item.width = 26;
-			item.height = 42;
-			item.useTime = 12;
-			item.useAnimation = 12;
-			item.UseSound = SoundID.Item5;
-			item.useStyle = ItemUseStyleID.HoldingOut;
-			item.knockBack = 4;
-			item.value = Item.sellPrice(0, 3, 80, 0);
-			item.rare = ItemRarityID.Purple;
-			item.shoot = ProjectileID.Bone;
-			item.useAmmo = AmmoID.Arrow;
-			item.autoReuse = true;
+			Item.shootSpeed = 24f;
+			Item.crit = 6;
+			Item.damage = 13;
+			Item.DamageType = DamageClass.Ranged;
+			Item.width = 26;
+			Item.height = 42;
+			Item.useTime = 12;
+			Item.useAnimation = 12;
+			Item.UseSound = SoundID.Item5;
+			Item.useStyle = ItemUseStyleID.Shoot;
+			Item.knockBack = 4;
+			Item.value = Item.sellPrice(0, 3, 80, 0);
+			Item.rare = ItemRarityID.Purple;
+			Item.shoot = ProjectileID.Bone;
+			Item.useAmmo = AmmoID.Arrow;
+			Item.autoReuse = true;
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
@@ -44,19 +44,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			var line = new TooltipLine(mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
+			var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This tooltip won't show in-game");
 			tooltips.Add(line);
 
-			line = new TooltipLine(mod, "Skull Bow", "Legendary item")
+			line = new TooltipLine(Mod, "Skull Bow", "Legendary item")
 			{
 				overrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == "Terraria" && line2.Name == "ItemName")
+				if (line2.Mod == "Terraria" && line2.Name == "ItemName")
 				{
-					line2.overrideColor = new Color(255, 132, 000);
+					line2.OverrideColor = new Color(255, 132, 000);
 				}
 			}
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));

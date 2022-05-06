@@ -14,22 +14,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item5;
-            item.crit = 4;
-            item.damage = 12;
-            item.ranged = true;
-            item.width = 60;
-            item.height = 32;
-            item.useTime = 65;
-            item.useAnimation = 65;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.noMelee = true;
-            item.knockBack = 6;
-            item.value = Item.sellPrice(0, 0, 50, 0);
-            item.rare = ItemRarityID.Blue;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("ShiningShooterProj");
-            item.shootSpeed = 6f;
+            Item.UseSound = SoundID.Item5;
+            Item.crit = 4;
+            Item.damage = 12;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 60;
+            Item.height = 32;
+            Item.useTime = 65;
+            Item.useAnimation = 65;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 6;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+            Item.rare = ItemRarityID.Blue;
+            Item.autoReuse = true;
+            Item.shoot = Mod.Find<ModProjectile>("ShiningShooterProj").Type;
+            Item.shootSpeed = 6f;
         }
     }
 
@@ -38,16 +38,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 40;
-            projectile.friendly = true;
-            projectile.penetrate = 3;
-            projectile.hostile = false;
-            projectile.ranged = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 300;
-            projectile.aiStyle = 1;
+            Projectile.width = 20;
+            Projectile.height = 40;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 300;
+            Projectile.aiStyle = 1;
         }
     }
 }

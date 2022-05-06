@@ -25,10 +25,10 @@ namespace AerovelenceMod.Content.Items.Armor.AmbrosiaMiningSet
         }
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 22;
-            item.value = Item.sellPrice(0, 2, 0, 0);
-            item.rare = ItemRarityID.Blue;
+            Item.width = 22;
+            Item.height = 22;
+            Item.value = Item.sellPrice(0, 2, 0, 0);
+            Item.rare = ItemRarityID.Blue;
         }
       /*  public override void AddRecipes()
         {

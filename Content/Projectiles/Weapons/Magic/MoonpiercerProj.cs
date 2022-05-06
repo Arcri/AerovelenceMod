@@ -16,52 +16,52 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
         public int Damage;
         public override void SetDefaults()
         {
-            projectile.width = 48;
-            projectile.height = 10;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 900;
+            Projectile.width = 48;
+            Projectile.height = 10;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 900;
         }
         public override void AI()
         {
-            if (projectile.timeLeft == 900)
+            if (Projectile.timeLeft == 900)
             {       
-                Damage = projectile.damage;
+                Damage = Projectile.damage;
             }
-            if (projectile.owner == Main.myPlayer && !Strike)
+            if (Projectile.owner == Main.myPlayer && !Strike)
             {
-                if (!Main.mouseLeft && projectile.damage == 0)
+                if (!Main.mouseLeft && Projectile.damage == 0)
                 {
                     Strike = true;
-                    projectile.rotation = (projectile.Center - Main.MouseWorld).ToRotation();
-                    projectile.damage = Damage;
+                    Projectile.rotation = (Projectile.Center - Main.MouseWorld).ToRotation();
+                    Projectile.damage = Damage;
                     float MaxSpeed = 32f;
-                    Vector2 VectorCursor = Main.MouseWorld - projectile.Center;
+                    Vector2 VectorCursor = Main.MouseWorld - Projectile.Center;
                     float Distance = VectorCursor.Length();
                     if (Distance > MaxSpeed)
                     {
                         Distance = MaxSpeed / Distance;
                         VectorCursor *= Distance;
                     }
-                    projectile.velocity = VectorCursor;
-                    projectile.netUpdate = true;
+                    Projectile.velocity = VectorCursor;
+                    Projectile.netUpdate = true;
                 }
                 else
                 {
-                    projectile.damage = 0;
-                    projectile.rotation = (projectile.Center - Main.MouseWorld).ToRotation();
+                    Projectile.damage = 0;
+                    Projectile.rotation = (Projectile.Center - Main.MouseWorld).ToRotation();
                     List<int> Rotato = new List<int>();
                     for (int i = 0; i < Main.maxProjectiles; i++)
                     {
-                        if (Main.projectile[i].type == projectile.type && !(Main.projectile[i].modProjectile as MoonpiercerProj).Strike)
+                        if (Main.projectile[i].type == Projectile.type && !(Main.projectile[i].modProjectile as MoonpiercerProj).Strike)
                         {
                             Rotato.Add(i);
                         }
                     }
                     for (int i2 = 0; i2 < Rotato.Count; i2++)
                     {
-                        Main.projectile[Rotato[i2]].Center = Main.player[projectile.owner].Center + new Vector2(0f, -40f - (6f * Rotato.Count)).RotatedBy(MathHelper.ToRadians(360f / Rotato.Count * i2));
+                        Main.projectile[Rotato[i2]].Center = Main.player[Projectile.owner].Center + new Vector2(0f, -40f - (6f * Rotato.Count)).RotatedBy(MathHelper.ToRadians(360f / Rotato.Count * i2));
                         Main.projectile[Rotato[i2]].netUpdate = true;
                     }
                 }

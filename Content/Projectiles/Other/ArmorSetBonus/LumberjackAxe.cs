@@ -18,20 +18,20 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 	{
 		private int Target
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		private float AttackTimer
 		{
-			get => projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		private int AttackDirection
 		{
-			get => (int)projectile.localAI[1];
-			set => projectile.localAI[1] = value;
+			get => (int)Projectile.localAI[1];
+			set => Projectile.localAI[1] = value;
 		}
 
 		private readonly float MaxTargetingDistance = 500f;
@@ -42,23 +42,23 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.TrailingMode[projectile.type] = 2;
-			ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = projectile.height = 20;
+			Projectile.width = Projectile.height = 20;
 
-			projectile.penetrate = -1;
+			Projectile.penetrate = -1;
 
-			projectile.friendly = true;
-			projectile.tileCollide = false;
-			projectile.netImportant = true;
+			Projectile.friendly = true;
+			Projectile.tileCollide = false;
+			Projectile.netImportant = true;
 		}
 
 		public override bool PreAI()
 		{
-			Player owner = Main.player[projectile.owner];
+			Player owner = Main.player[Projectile.owner];
 			AeroPlayer ep = owner.GetModPlayer<AeroPlayer>();
 
 			CheckAliveState(ep);
@@ -69,11 +69,11 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 
 				for (int i = 0; i < Main.maxNPCs; ++i)
 				{
-					if (!Main.npc[i].CanBeChasedBy(projectile))
+					if (!Main.npc[i].CanBeChasedBy(Projectile))
 						continue;
 
-					float distanceToNPC = projectile.Distance(Main.npc[i].Center);
-					if (distanceToNPC < distance && Collision.CanHitLine(projectile.Center, 1, 1, Main.npc[i].Center, 1, 1))
+					float distanceToNPC = Projectile.Distance(Main.npc[i].Center);
+					if (distanceToNPC < distance && Collision.CanHitLine(Projectile.Center, 1, 1, Main.npc[i].Center, 1, 1))
 					{
 						Target = i + 1;
 						distance = distanceToNPC;
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 				if (Target != 0)
 				{
 					AttackTimer = 0;
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 				else
 				{
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			{
 				NPC npc = Main.npc[Target - 1];
 
-				if (!npc.CanBeChasedBy(projectile) || projectile.Distance(owner.Center) >= 1000)
+				if (!npc.CanBeChasedBy(Projectile) || Projectile.Distance(owner.Center) >= 1000)
 				{
 					Target = 0;
 					return (false);
@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 				AttackNPC(npc);
 			}
 
-			projectile.velocity *= 0.8f;
+			Projectile.velocity *= 0.8f;
 
 			return (false);
 		}
@@ -122,13 +122,13 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 		{
 			if (Target != 0 && AttackTimer >= AttackWarmup)
 			{
-				Texture2D texture = Main.projectileTexture[projectile.type];
+				Texture2D texture = Main.projectileTexture[Projectile.type];
 				Vector2 origin = texture.Size() / 2;
 
-				for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[projectile.type]; ++i)
+				for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[Projectile.type]; ++i)
 				{
-					spriteBatch.Draw(texture, projectile.oldPos[i] + origin / 2 - Main.screenPosition, null, lightColor * (0.8f - 0.1f * i), projectile.oldRot[i], origin,
-						projectile.scale, projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+					spriteBatch.Draw(texture, Projectile.oldPos[i] + origin / 2 - Main.screenPosition, null, lightColor * (0.8f - 0.1f * i), Projectile.oldRot[i], origin,
+						Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 				}
 			}
 
@@ -139,10 +139,10 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 		{
 			if (!ep.lumberjackSetBonus)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 				return;
 			}
-			projectile.timeLeft = 10;
+			Projectile.timeLeft = 10;
 		}
 
 		private void FollowOwner(Player owner)
@@ -153,18 +153,18 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 
 			targetPosition.X -= (25 + owner.width / 2) * owner.direction;
 			targetPosition.Y -= 30f + (float)Math.Sin(AttackTimer / 20) * 8f;
-			projectile.rotation = (float)Math.Sin(AttackTimer / 35) * 0.33f;
+			Projectile.rotation = (float)Math.Sin(AttackTimer / 35) * 0.33f;
 
-			projectile.Center = Vector2.Lerp(projectile.Center, targetPosition, 0.15f);
-			projectile.velocity *= 0.8f;
-			projectile.direction = projectile.spriteDirection = owner.direction;
+			Projectile.Center = Vector2.Lerp(Projectile.Center, targetPosition, 0.15f);
+			Projectile.velocity *= 0.8f;
+			Projectile.direction = Projectile.spriteDirection = owner.direction;
 		}
 
 		private void AttackNPC(NPC npc)
 		{
 			if (AttackTimer == 0)
 			{
-				projectile.netUpdate = true;
+				Projectile.netUpdate = true;
 				AttackDirection = Main.rand.Next(2) * 2 - 1;
 			}
 
@@ -177,9 +177,9 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			{
 				targetPosition.X -= positionOffset.X * AttackDirection;
 				targetPosition.Y -= positionOffset.Y + (float)Math.Sin(AttackTimer / 10f) * 8f;
-				projectile.rotation = MathHelper.Lerp(projectile.rotation, (projectile.oldPosition.X - projectile.position.X) * 0.01f, 0.1f);
+				Projectile.rotation = MathHelper.Lerp(Projectile.rotation, (Projectile.oldPosition.X - Projectile.position.X) * 0.01f, 0.1f);
 
-				projectile.spriteDirection = projectile.direction = AttackDirection;
+				Projectile.spriteDirection = Projectile.direction = AttackDirection;
 			}
 			// Slash attack.
 			else
@@ -190,23 +190,23 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 				float cos = (float)Math.Cos(piFraction);
 
 				Vector2 offset = positionOffset * new Vector2(-Math.Abs(cos) * AttackDirection, -cos);
-				offset.X += projectile.width * 2 * AttackDirection;
+				offset.X += Projectile.width * 2 * AttackDirection;
 
 				float desiredRotation = ((offset.Y + positionOffset.Y) / (2 * positionOffset.Y)) * MathHelper.Pi * AttackDirection;
-				projectile.rotation = projectile.rotation.AngleLerp(desiredRotation, 0.1f);
+				Projectile.rotation = Projectile.rotation.AngleLerp(desiredRotation, 0.1f);
 
 				amount = 0.2f;
 				targetPosition += offset;
 
-				Dust.NewDustPerfect(projectile.Center + (projectile.rotation - MathHelper.PiOver2).ToRotationVector2() * projectile.width,
-					ModContent.DustType<Dusts.Wood>(), projectile.velocity * 0.2f, 100);
+				Dust.NewDustPerfect(Projectile.Center + (Projectile.rotation - MathHelper.PiOver2).ToRotationVector2() * Projectile.width,
+					ModContent.DustType<Dusts.Wood>(), Projectile.velocity * 0.2f, 100);
 
 				if (AttackTimer >= CompleteAttackTime)
 				{
 					AttackTimer = 0;
 				}
 			}
-			projectile.Center = Vector2.Lerp(projectile.Center, targetPosition, amount);
+			Projectile.Center = Vector2.Lerp(Projectile.Center, targetPosition, amount);
 		}
 
 		#region Networking

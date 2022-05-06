@@ -6,7 +6,7 @@ namespace AerovelenceMod.Content.Buffs
 {
 	public class ShiverMinionBuff : ModBuff
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Shiver Spirit");
 			Description.SetDefault("The icy spirit will fight for you");

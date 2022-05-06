@@ -14,19 +14,19 @@ namespace AerovelenceMod.Content.Items.Armor.Runic
         } 			
         public override void SetDefaults()
         {
-            item.width = 18;
-            item.height = 18;
-            item.value = 10;
-            item.rare = ItemRarityID.Green;
-            item.defense = 3;
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Green;
+            Item.defense = 3;
         }
 
         public override void UpdateEquip(Player player)
         {
-			player.magicCrit += 3;
-            player.rangedCrit += 3;
-            player.meleeCrit += 3;
-            player.minionKB += 0.02f;
+			player.GetCritChance(DamageClass.Magic) += 3;
+            player.GetCritChance(DamageClass.Ranged) += 3;
+            player.GetCritChance(DamageClass.Melee) += 3;
+            player.GetKnockback(DamageClass.Summon).Base += 0.02f;
         }
     }
 }

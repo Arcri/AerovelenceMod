@@ -7,7 +7,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 {
     public class CavernsPots : ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;

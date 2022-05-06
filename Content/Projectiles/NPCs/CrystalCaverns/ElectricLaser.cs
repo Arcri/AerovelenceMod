@@ -18,42 +18,42 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
         }
         public override void SetDefaults()
         {
-            projectile.width = 5;
-            projectile.height = 5;
-            projectile.friendly = false;
-            projectile.alpha = 255;
-            projectile.hostile = true;
-            projectile.extraUpdates = 2;
-            projectile.scale = 1f;
-            projectile.timeLeft = 600;
-            projectile.magic = true;
-            projectile.ignoreWater = true;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 15;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
+            Projectile.width = 5;
+            Projectile.height = 5;
+            Projectile.friendly = false;
+            Projectile.alpha = 255;
+            Projectile.hostile = true;
+            Projectile.extraUpdates = 2;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 600;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.ignoreWater = true;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
         public override bool PreAI()
         {
             i++;
-            ++projectile.localAI[0];
+            ++Projectile.localAI[0];
             float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float piFractionVelocity = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
             float ReversepiFraction = MathHelper.Pi + oneHelixRevolutionInUpdateTicks;
-            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * projectile.height;
-            Dust newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 67);
+            Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * Projectile.height;
+            Dust newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 67);
             newDust.noGravity = true;
             newDustPosition.Y *= -1;
-            newDust = Dust.NewDustPerfect(projectile.Center + newDustPosition.RotatedBy(projectile.velocity.ToRotation()), 67);
+            newDust = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), 67);
             newDust.noGravity = true;
             newDust.velocity *= 0f;
-            Vector2 newDustPosition2 = new Vector2(0, (float)Math.Sin((projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * ReversepiFraction)) * projectile.height;
-            Dust newDust2 = Dust.NewDustPerfect(projectile.Center + newDustPosition2.RotatedBy(projectile.velocity.ToRotation()), 68);
+            Vector2 newDustPosition2 = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * ReversepiFraction)) * Projectile.height;
+            Dust newDust2 = Dust.NewDustPerfect(Projectile.Center + newDustPosition2.RotatedBy(Projectile.velocity.ToRotation()), 68);
             newDust2.noGravity = true;
             newDustPosition2.Y *= -1;
-            newDust2 = Dust.NewDustPerfect(projectile.Center + newDustPosition2.RotatedBy(projectile.velocity.ToRotation()), 160);
+            newDust2 = Dust.NewDustPerfect(Projectile.Center + newDustPosition2.RotatedBy(Projectile.velocity.ToRotation()), 160);
             newDust2.noGravity = true;
             newDust2.velocity *= 0f;
-            projectile.rotation += projectile.velocity.Length() * 0.1f * projectile.direction;
-            Vector2 Velocity2 = new Vector2(0, (float)Math.Sin(projectile.localAI[0] % oneHelixRevolutionInUpdateTicks * piFraction)) * projectile.height;
+            Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
+            Vector2 Velocity2 = new Vector2(0, (float)Math.Sin(Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks * piFraction)) * Projectile.height;
             return (false);
         }
         public override void AI()
@@ -65,18 +65,18 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
                 counter++;
                 if (counter >= 17)
                 {
-                    int num296 = Dust.NewDust(projectile.Center - projectile.velocity / 2f, 0, 0, DustID.Electric, 0f, 0f, 100, default, 2.1f);
+                    int num296 = Dust.NewDust(Projectile.Center - Projectile.velocity / 2f, 0, 0, DustID.Electric, 0f, 0f, 100, default, 2.1f);
                     Dust dust105 = Main.dust[num296];
                     Dust dust2 = dust105;
                     dust2.velocity *= 2f;
                     Main.dust[num296].noGravity = true;
                 }
             }
-            if (projectile.ai[1] != 1f)
+            if (Projectile.ai[1] != 1f)
             {
-                projectile.ai[1] = 1f;
-                projectile.position += projectile.velocity;
-                projectile.velocity = projectile.velocity;
+                Projectile.ai[1] = 1f;
+                Projectile.position += Projectile.velocity;
+                Projectile.velocity = Projectile.velocity;
             }
         }
     }

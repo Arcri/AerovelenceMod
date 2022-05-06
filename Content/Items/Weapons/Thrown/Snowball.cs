@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -14,21 +15,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item1;
-            item.damage = 34;
-            item.ranged = true;
-            item.width = 30;
-            item.height = 32;
-            item.useTime = item.useAnimation = 36;
+            Item.UseSound = SoundID.Item1;
+            Item.damage = 34;
+            Item.DamageType = DamageClass.Ranged;
+            Item.width = 30;
+            Item.height = 32;
+            Item.useTime = Item.useAnimation = 36;
             
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.noMelee = true;
-            item.value = Item.sellPrice(0, 6, 10, 0);
-            item.rare = ItemRarityID.Orange;
-            item.autoReuse = true;
-            item.noUseGraphic = true;
-            item.shoot = ModContent.ProjectileType<SnowballProjectile>();
-            item.shootSpeed = 9f;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.noMelee = true;
+            Item.value = Item.sellPrice(0, 6, 10, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.noUseGraphic = true;
+            Item.shoot = ModContent.ProjectileType<SnowballProjectile>();
+            Item.shootSpeed = 9f;
         }
     }
 
@@ -40,22 +41,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 30;
+            Projectile.width = Projectile.height = 30;
 
-            projectile.CloneDefaults(ProjectileID.Shuriken);
-            projectile.friendly = projectile.ranged = true;
+            Projectile.CloneDefaults(ProjectileID.Shuriken);
+            Projectile.friendly = Projectile.DamageType = DamageClass.Ranged;
 
-            projectile.tileCollide = true;
-            projectile.penetrate = 1;
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
         }
 
         public override void AI()
         {
             for (int j = 0; j < 5; j++)
             {
-                Dust dust = Dust.NewDustPerfect(projectile.Center + (10 * ((projectile.rotation - 0.78f).ToRotationVector2())), 20);
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + (10 * ((Projectile.rotation - 0.78f).ToRotationVector2())), 20);
                 dust.noGravity = true;
                 dust.scale = Main.rand.NextFloat(0.09f, 0.2f);
                 dust.fadeIn = 1.5f;
@@ -63,19 +64,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void Kill(int timeLeft)
         {
-            Main.PlaySound(SoundID.Item, (int)projectile.position.X, (int)projectile.position.Y, 10);
+            SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 
-            int damage = (int)(projectile.damage);
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, projectile.owner);
+            int damage = (int)(Projectile.damage);
+            Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, Projectile.owner);
 
-            if (Main.myPlayer == projectile.owner)
+            if (Main.myPlayer == Projectile.owner)
             {
-                damage = (int)(projectile.damage * 0.5f);
+                damage = (int)(Projectile.damage * 0.5f);
 
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 0, 5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, 0, -5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, -5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 0, 5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 0, -5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, -5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
             }
 
         }
@@ -85,30 +86,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
             public override void SetDefaults()
             {
-                projectile.width = projectile.height = 8;
+                Projectile.width = Projectile.height = 8;
 
-                projectile.friendly = projectile.ranged = true;
+                Projectile.friendly = Projectile.DamageType = DamageClass.Ranged;
 
-                projectile.aiStyle = -1;
+                Projectile.aiStyle = -1;
 
-                projectile.penetrate = -1;
+                Projectile.penetrate = -1;
 
-                projectile.timeLeft = 140;
+                Projectile.timeLeft = 140;
 
-                projectile.tileCollide = false;
+                Projectile.tileCollide = false;
 
-                projectile.extraUpdates = 4;
+                Projectile.extraUpdates = 4;
 
             }
             public override void AI()
             {
-                projectile.velocity.X *= 1.01f;
-                projectile.velocity = projectile.velocity.RotatedBy(System.Math.PI / 40);
+                Projectile.velocity.X *= 1.01f;
+                Projectile.velocity = Projectile.velocity.RotatedBy(System.Math.PI / 40);
 
                 for (int j = 0; j < 10; j++)
                 {
-                    float x = projectile.position.X - projectile.velocity.X / 10f * (float)j;
-                    float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)j;
+                    float x = Projectile.position.X - Projectile.velocity.X / 10f * (float)j;
+                    float y = Projectile.position.Y - Projectile.velocity.Y / 10f * (float)j;
                     Dust dust = Dust.NewDustDirect(new Vector2(x, y), 1, 1, 20, 0, 0, 0, Color.Blue, 0.9f);
                     dust.position.X = x;
                     dust.position.Y = y;
@@ -122,18 +123,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
             public override void SetDefaults()
             {
-                projectile.width = projectile.height = 20;
+                Projectile.width = Projectile.height = 20;
 
-                projectile.aiStyle = -1;
-                projectile.friendly = projectile.melee = projectile.ignoreWater = true;
+                Projectile.aiStyle = -1;
+                Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
-                projectile.penetrate = -1;
-                projectile.timeLeft = 60;
+                Projectile.penetrate = -1;
+                Projectile.timeLeft = 60;
 
-                projectile.tileCollide = false;
-                projectile.extraUpdates = 1;
+                Projectile.tileCollide = false;
+                Projectile.extraUpdates = 1;
 
-                projectile.alpha = 255;
+                Projectile.alpha = 255;
             }
             public override void AI()
             {
@@ -141,7 +142,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 {
                     float randomDust = Main.rand.NextFloat(-3, 3);
                     float randomDust2 = Main.rand.NextFloat(3, -3);
-                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 20, randomDust, randomDust2);
+                    int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 20, randomDust, randomDust2);
                 }
 
             }

@@ -18,28 +18,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.useAnimation = 30;
-            item.useTime = 30;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            item.UseSound = SoundID.Item4;
-            item.consumable = false;
-            item.rare = ItemRarityID.Blue;
-            item.shoot = mod.ProjectileType("SnailRainManager");
+            Item.width = 20;
+            Item.height = 20;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = SoundID.Item4;
+            Item.consumable = false;
+            Item.rare = ItemRarityID.Blue;
+            Item.shoot = Mod.Find<ModProjectile>("SnailRainManager").Type;
         }
         public override bool CanUseItem(Player player)
         {
             for (int i = 0; i < 200; i++)
             {
-                if (Main.projectile[i].type == mod.ProjectileType("SnailRainManager"))
+                if (Main.projectile[i].type == Mod.Find<ModProjectile>("SnailRainManager").Type)
                     return false;
             }
             return true;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Projectile.NewProjectile(position.X, position.Y, 0, 0, mod.ProjectileType("SnailRainManager"), 0, knockBack, player.whoAmI);
+            Projectile.NewProjectile(position.X, position.Y, 0, 0, Mod.Find<ModProjectile>("SnailRainManager").Type, 0, knockBack, player.whoAmI);
             return false;
         }
     }
@@ -48,26 +48,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
     {
         public override void SetDefaults()
         {
-            projectile.width = 1;
-            projectile.height = 1;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 160;
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 160;
         }
 
         public override void AI()
         {
-            Vector2 playerpos = projectile.position;
+            Vector2 playerpos = Projectile.position;
             int randX = new Random().Next(-1200, 1201);
-            int right = Projectile.NewProjectile(playerpos.X + randX, playerpos.Y - 1000, 15, 0, mod.ProjectileType("FLYINGSNAIL"), 0, 0f, Main.myPlayer, 0f, 0f);
-            if (projectile.timeLeft == 1)
+            int right = Projectile.NewProjectile(playerpos.X + randX, playerpos.Y - 1000, 15, 0, Mod.Find<ModProjectile>("FLYINGSNAIL").Type, 0, 0f, Main.myPlayer, 0f, 0f);
+            if (Projectile.timeLeft == 1)
             {
                 for (int i = 0; i < Main.npc.Length; i++)
                 {
                     var calamity = ModLoader.GetMod("CalamityMod");
                     if (calamity != null)
                     {
-                        if (Main.npc[i].type == calamity.NPCType("SupremeCalamitas"))
+                        if (Main.npc[i].type == calamity.Find<ModNPC>("SupremeCalamitas").Type)
                         {
                             for (int j = 0; j < 6000; j++)
                             {
@@ -87,7 +87,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
                     Main.npc[i].NPCLoot();
                     Main.npc[i].active = false;
                 }
-                projectile.active = false;
+                Projectile.active = false;
             }
         }
         private void KillAllProjectiles()
@@ -105,18 +105,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
     {
         public override void SetDefaults()
         {
-            projectile.width = 1;
-            projectile.height = 1;
-            projectile.friendly = false;
-            projectile.hostile = false;
-            projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.timeLeft = 160;
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 160;
         }
         public override void AI()
         {
-            projectile.velocity.X = 0;
-            projectile.velocity.Y = 9;
+            Projectile.velocity.X = 0;
+            Projectile.velocity.Y = 9;
         }
     }
 }

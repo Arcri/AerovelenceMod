@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen {
 	/// <summary>

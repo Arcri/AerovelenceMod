@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 {
@@ -13,41 +15,41 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
         {
             DisplayName.SetDefault("Blood Moth");
 
-            Main.npcFrameCount[npc.type] = 10;
+            Main.npcFrameCount[NPC.type] = 10;
 
-            NPCID.Sets.TrailCacheLength[npc.type] = 8;
-            NPCID.Sets.TrailingMode[npc.type] = 3;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 8;
+            NPCID.Sets.TrailingMode[NPC.type] = 3;
         }
 
         public override void SetDefaults()
         {
-            npc.lifeMax = 250;
+            NPC.lifeMax = 250;
 
-            npc.width = npc.height = 42;
+            NPC.width = NPC.height = 42;
 
-            npc.noGravity = true;
+            NPC.noGravity = true;
 
-            npc.knockBackResist = 1f;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath44;
-            npc.aiStyle = -1;
-            npc.damage = 20;
-            aiType = -1;
+            NPC.knockBackResist = 1f;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath44;
+            NPC.aiStyle = -1;
+            NPC.damage = 20;
+            AIType = -1;
         }
 
         private int frame;
 
         public override void FindFrame(int frameHeight)
         {
-            npc.spriteDirection = npc.direction;
+            NPC.spriteDirection = NPC.direction;
 
-            npc.frameCounter++;
+            NPC.frameCounter++;
 
-            if (npc.frameCounter >= 5f)
+            if (NPC.frameCounter >= 5f)
             {
                 frame++;
 
-                npc.frameCounter = 0f;
+                NPC.frameCounter = 0f;
             }
 
             int maxFrame = dashing ? 9 : 4;
@@ -58,64 +60,64 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
                 frame = minFrame;
             }
 
-            npc.frame.Y = frame * frameHeight;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         private float SineProgress 
         { 
-            get => npc.ai[0]; 
-            set => npc.ai[0] = value; 
+            get => NPC.ai[0]; 
+            set => NPC.ai[0] = value; 
         }
 
         private float DashCooldown 
         { 
-            get => npc.ai[1]; 
-            set => npc.ai[1] = value; 
+            get => NPC.ai[1]; 
+            set => NPC.ai[1] = value; 
         }
 
         private bool dashing;
 
         public override void AI()
         {
-            npc.TargetClosest();
+            NPC.TargetClosest();
 
-            Player player = Main.player[npc.target];
+            Player player = Main.player[NPC.target];
 
-            float rotation = dashing ? npc.velocity.ToRotation() : npc.velocity.X * 0.1f;
+            float rotation = dashing ? NPC.velocity.ToRotation() : NPC.velocity.X * 0.1f;
 
-            npc.rotation = rotation;
+            NPC.rotation = rotation;
 
-            if (npc.spriteDirection == -1 && dashing)
+            if (NPC.spriteDirection == -1 && dashing)
             {
-                npc.rotation += MathHelper.Pi;
+                NPC.rotation += MathHelper.Pi;
             }
 
-            if (npc.collideX)
+            if (NPC.collideX)
             {
-                int yDirection = Math.Sign(player.position.Y - npc.position.Y);
+                int yDirection = Math.Sign(player.position.Y - NPC.position.Y);
 
-                npc.velocity.Y += 0.01f * yDirection;
+                NPC.velocity.Y += 0.01f * yDirection;
             }
             else
             {
                 float maxSpeed = dashing ? 12f : 4f;
 
-                float distance = Vector2.Distance(npc.Center, player.Center);
+                float distance = Vector2.Distance(NPC.Center, player.Center);
                 distance = MathHelper.Clamp(distance, -maxSpeed, maxSpeed);
 
-                Vector2 direction = npc.DirectionTo(player.Center) * distance;
+                Vector2 direction = NPC.DirectionTo(player.Center) * distance;
 
-                npc.velocity = Vector2.SmoothStep(npc.velocity, direction, 0.1f);
+                NPC.velocity = Vector2.SmoothStep(NPC.velocity, direction, 0.1f);
 
-                bool canHit = Collision.CanHit(npc.position, npc.width, npc.height, player.position, player.width, player.height);
+                bool canHit = Collision.CanHit(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
 
                 DashCooldown++;
 
-                if (DashCooldown >= 5 * 60 && canHit && npc.HasValidTarget)
+                if (DashCooldown >= 5 * 60 && canHit && NPC.HasValidTarget)
                 {
                     dashing = true;
 
-                    if (DashCooldown >= 6 * 60 || !canHit || !npc.HasValidTarget)
+                    if (DashCooldown >= 6 * 60 || !canHit || !NPC.HasValidTarget)
                     {
                         dashing = false;
 
@@ -127,53 +129,53 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
 
                 float sine = (float)Math.Sin(SineProgress / 20f) * 0.05f;
 
-                npc.velocity.Y += sine;
+                NPC.velocity.Y += sine;
             }
 
             if (Main.rand.NextBool(20))
             {
-                Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.Blood);
+                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Blood);
                 dust.noGravity = true;
                 dust.fadeIn = 1f;
                 dust.scale = Main.rand.NextFloat(0.6f, 1f);
 
-                npc.netUpdate = true;
+                NPC.netUpdate = true;
             }
         }
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = Main.npcTexture[npc.type];
+            Main.instance.LoadNPC(NPC.type);
+            Texture2D texture = TextureAssets.Npc[NPC.type].Value;
 
-            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-            for (int i = 0; i < NPCID.Sets.TrailCacheLength[npc.type]; i++)
+            for (int i = 0; i < NPCID.Sets.TrailCacheLength[NPC.type]; i++)
             {
                 float opacity = 0.8f - 0.2f * i;
 
-                Vector2 trailPosition = npc.oldPos[i] + npc.Hitbox.Size() / 2f - Main.screenPosition + new Vector2(0f, npc.gfxOffY);
+                Vector2 trailPosition = NPC.oldPos[i] + NPC.Hitbox.Size() / 2f - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
 
-                spriteBatch.Draw(texture, trailPosition, npc.frame, drawColor * opacity, npc.oldRot[i], npc.frame.Size() / 2f, npc.scale, effects, 0f);
+                Main.EntitySpriteDraw(texture, trailPosition, NPC.frame, drawColor * opacity, NPC.oldRot[i], NPC.frame.Size() / 2f, NPC.scale, effects, 0);
             }
 
-            Vector2 drawPosition = npc.Center - Main.screenPosition + new Vector2(0f, npc.gfxOffY);
+            Vector2 drawPosition = NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
 
-            spriteBatch.Draw(texture, drawPosition, npc.frame, drawColor, npc.rotation, npc.frame.Size() / 2f, npc.scale, effects, 0f);
+            Main.EntitySpriteDraw(texture, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0);
 
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.GetTexture(Texture + "_Glow");
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Texture + "_Glow");
 
-            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
-            Vector2 drawPosition = npc.Center - Main.screenPosition + new Vector2(0f, npc.gfxOffY);
+            Vector2 drawPosition = NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
 
-            spriteBatch.Draw(texture, drawPosition, npc.frame, Color.White, npc.rotation, npc.frame.Size() / 2f, npc.scale, effects, 0f);
+            Main.EntitySpriteDraw(texture, drawPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? SpawnCondition.OverworldNightMonster.Chance * 0.5f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? SpawnCondition.OverworldNightMonster.Chance * 0.5f : 0;
     }
 }
