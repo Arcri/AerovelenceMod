@@ -11,8 +11,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
     {
         public override void SetStaticDefaults()
         {
-			mineResist = 2.5f;
-			minPick = 59;
+			MineResist = 2.5f;
+			MinPick = 59;
             Main.tileSolid[Type] = true;
             Main.tileMerge[Type][Mod.Find<ModTile>("CrystalDirt").Type] = true;
             Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
@@ -21,9 +21,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
 			AddMapEntry(new Color(061, 079, 110));
-			dustType = 59;
-			soundType = SoundID.Tink;
-            drop = ModContent.ItemType<Items.Placeables.Blocks.AfflictionCrystal>();
+			DustType = 59;
+			SoundType = SoundID.Tink;
+            ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.AfflictionCrystal>();
 
         }
     }

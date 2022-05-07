@@ -7,6 +7,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria.GameContent;
 
 #endregion
 
@@ -40,16 +41,16 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-			Texture2D texture = Main.projectileTexture[Projectile.type];
+			Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
 			Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, Projectile.height * 0.5f);
 
 			for (int k = 0; k < Projectile.oldPos.Length; k++)
 			{
 				Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
 				Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / Projectile.oldPos.Length);
-				spriteBatch.Draw(texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(texture, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
 			}
 
 			return (true);
@@ -91,7 +92,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			if (Main.myPlayer == Projectile.owner)
 			{
-				Projectile.NewProjectile(Projectile.position, Vector2.Zero, ModContent.ProjectileType<GrowthFlower>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+				Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<GrowthFlower>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 			}
 		}
 	}

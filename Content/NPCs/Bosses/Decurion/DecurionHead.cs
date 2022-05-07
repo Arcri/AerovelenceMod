@@ -84,9 +84,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             NPC.netAlways = true;
             NPC.HitSound = SoundID.NPCHit1; //Change me if you want (Rock hit sound)
             NPC.DeathSound = SoundID.NPCDeath1; //Change me if you want (Heavy grunt sound)
-            music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SkyWraith");
+            //music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/SkyWraith");
         }
-        public override void NPCLoot()
+        /*public override void NPCLoot()
         {
             if (Main.expertMode)
             {
@@ -106,17 +106,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                     Item.NewItem(NPC.getRect(), Mod.Find<ModItem>("SkyfractureBar").Type);
                     break;
             }
-        }
+        }*/
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             NPC.lifeMax = 200000; //Change me
             NPC.damage = 300;
             NPC.defense = 50;
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Decurion/DecurionHead_Glow");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Decurion/DecurionHead_Glow");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
         }
         public override bool CheckActive()
         {
@@ -124,6 +124,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         }
         public override void AI()
         {
+            var entitySource = NPC.GetSource_FromAI();
             NPC.chaseable = !NPC.AnyNPCs(Mod.Find<ModNPC>("WormProbeCircler").Type);
             NPC.TargetClosest(false);
             var player = Main.player[NPC.target];
@@ -153,7 +154,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                     {
                         segment = ModContent.NPCType<DecurionTail>();
                     }
-                    int spawned = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, segment, NPC.whoAmI, 0f, 0f, 0f, 0f, 255);
+                    int spawned = NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y, segment, NPC.whoAmI, 0f, 0f, 0f, 0f, 255);
                     segmentIDs.Add(spawned);
                     if (i == 0)
                         firstSegment = spawned;
@@ -213,9 +214,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                             for (int j = 0; j < 2; j++)
                             {
                                 float angle = 3.141592f * 2 / 4 * j;
-                                NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyGun1>(), NPC.whoAmI, segmentIDs[i], angle);
+                                NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyGun1>(), NPC.whoAmI, segmentIDs[i], angle);
 
-                                NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyGun2>(), NPC.whoAmI, segmentIDs[i], angle);
+                                NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyGun2>(), NPC.whoAmI, segmentIDs[i], angle);
                             }
                         }
                     }
@@ -226,9 +227,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                             for (int j = 0; j < 2; j++)
                             {
                                 float angle = 3.141592f * 2 / 4 * j;
-                                NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyRocket1>(), NPC.whoAmI, segmentIDs[i], angle);
+                                NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyRocket1>(), NPC.whoAmI, segmentIDs[i], angle);
 
-                                NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyRocket2>(), NPC.whoAmI, segmentIDs[i], angle);
+                                NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<DecurionBodyRocket2>(), NPC.whoAmI, segmentIDs[i], angle);
                             }
                         }
                     }

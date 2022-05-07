@@ -108,9 +108,9 @@ namespace AerovelenceMod.Content.Items.Equipment
 			grappleX += dirToPlayer.X * hangDist;
 			grappleY += dirToPlayer.Y * hangDist;
 		}
-		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override void PostDraw(Color lightColor)
 		{
-			Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Equipment/IronHookChain");
+			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Equipment/IronHookChain");
 			Vector2 vector = Projectile.Center;
 			Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter;
 			Rectangle? sourceRectangle = null;
@@ -141,7 +141,7 @@ namespace AerovelenceMod.Content.Items.Equipment
 					vector2 = mountedCenter - vector;
 					Color color = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16.0));
 					color = Projectile.GetAlpha(color);
-					Main.spriteBatch.Draw(texture, vector - Main.screenPosition, sourceRectangle, color, rotation, origin, 1f, SpriteEffects.None, 0f);
+					Main.EntitySpriteDraw(texture, vector - Main.screenPosition, sourceRectangle, color, rotation, origin, 1f, SpriteEffects.None, 0);
 				}
 			}
 		}

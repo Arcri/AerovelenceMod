@@ -149,12 +149,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 			return false;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
 			var player = Main.player[Projectile.owner];
 
 			Vector2 mountedCenter = player.MountedCenter;
-			Texture2D chainTexture = ModContent.Request<Texture2D>(ChainTexturePath);
+			Texture2D chainTexture = (Texture2D)ModContent.Request<Texture2D>(ChainTexturePath);
 
 			var drawPosition = Projectile.Center;
 			var remainingVectorToPlayer = mountedCenter - drawPosition;
@@ -178,7 +178,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 				drawPosition += remainingVectorToPlayer * 12 / length;
 				remainingVectorToPlayer = mountedCenter - drawPosition;
 				Color color = Lighting.GetColor((int)drawPosition.X / 16, (int)(drawPosition.Y / 16f));
-				spriteBatch.Draw(chainTexture, drawPosition - Main.screenPosition, null, color, rotation, chainTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(chainTexture, drawPosition - Main.screenPosition, null, color, rotation, chainTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0);
 			}
 
 			return true;

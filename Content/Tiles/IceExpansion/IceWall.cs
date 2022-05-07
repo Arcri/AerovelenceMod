@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;
-			drop = ItemType<IceWallItem>();
+			ItemDrop = ItemType<IceWallItem>();
 			AddMapEntry(new Color(54, 87, 129));
 		}
 

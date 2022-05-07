@@ -2,6 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -65,12 +67,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             return posArray;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
+        Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
             for (int i = 0; i < 3; ++i)
             {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, Mod.Find<ModProjectile>("HydraulicBlasterProj").Type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, speeds[i].X, speeds[i].Y, Mod.Find<ModProjectile>("HydraulicBlasterProj").Type, damage, 2f, player.whoAmI);
             }
             return false;
         }
@@ -104,29 +106,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Projectile.velocity.Y += 0.1f;
 			Projectile.velocity *= 0.98f;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[Projectile.type].Size() / 3f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + (Texture2D)TextureAssets.Projectile[Projectile.type].Size() / 3f;
                 Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, Main.projectileTexture[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, (Texture2D)TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
             }
 
             return true;
         }
         public override bool OnTileCollide(Vector2 oldVelocity) 
 		{
-			Projectile.NewProjectile(Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, 10, 2, Main.player[0].whoAmI);
+            var entitySource = Projectile.GetSource_FromAI();
+			Projectile.NewProjectile(entitySource, Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, 10, 2, Main.player[0].whoAmI);
 			return true;
 		}		
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			Projectile.NewProjectile(Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, damage / 2, knockback, Main.player[0].whoAmI);
+			Projectile.NewProjectile(entitySource, Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, damage / 2, knockback, Main.player[0].whoAmI);
 		}
     }
 		public class HydraulicBlasterProjSmall : ModProjectile
@@ -147,17 +150,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Projectile.timeLeft = 60;
 			Projectile.alpha = 100;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[Projectile.type].Size() / 3f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
                 Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, Main.projectileTexture[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
             }
 
             return true;

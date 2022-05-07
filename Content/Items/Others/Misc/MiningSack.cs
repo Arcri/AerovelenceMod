@@ -27,9 +27,10 @@ namespace AerovelenceMod.Content.Items.Others.Misc
 
 		public override void RightClick(Player player)
 		{
-			player.QuickSpawnItem(ItemID.GoldCoin, 3);
+			var s = player.GetSource_OpenItem(Type);
+			player.QuickSpawnItem(s, ItemID.GoldCoin, 3);
 
-			int drop = Main.rand.Next(7);
+			int ItemDrop = Main.rand.Next(7);
 			int chance = Main.rand.Next(5);
 
 			if (!Main.hardMode)
@@ -37,141 +38,141 @@ namespace AerovelenceMod.Content.Items.Others.Misc
 				switch (Main.rand.Next(5))
 				{
 					case 0:
-						player.QuickSpawnItem(ItemID.IronOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s, ItemID.IronOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 1:
-						player.QuickSpawnItem(ItemID.LeadOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.LeadOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 2:
-						player.QuickSpawnItem(ItemID.SilverOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.SilverOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 3:
-						player.QuickSpawnItem(ItemID.TungstenOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.TungstenOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 4:
-						player.QuickSpawnItem(ItemID.GoldOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.GoldOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 5:
-						player.QuickSpawnItem(ItemID.PlatinumOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.PlatinumOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 				}
@@ -181,141 +182,141 @@ namespace AerovelenceMod.Content.Items.Others.Misc
 				switch (Main.rand.Next(5))
 				{
 					case 0:
-						player.QuickSpawnItem(ItemID.CobaltOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.CobaltOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 1:
-						player.QuickSpawnItem(ItemID.PalladiumOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.PalladiumOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 2:
-						player.QuickSpawnItem(ItemID.OrichalcumOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.OrichalcumOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 3:
-						player.QuickSpawnItem(ItemID.MythrilOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.MythrilOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 4:
-						player.QuickSpawnItem(ItemID.AdamantiteOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.AdamantiteOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 					case 5:
-						player.QuickSpawnItem(ItemID.TitaniumOre, Main.rand.Next(20, 30));
+						player.QuickSpawnItem(s,ItemID.TitaniumOre, Main.rand.Next(20, 30));
 						if (chance == 0)
 						{
-							player.QuickSpawnItem(ItemID.Topaz, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Topaz, Main.rand.Next(2, 8));
 						}
 						else if (chance == 1)
 						{
-							player.QuickSpawnItem(ItemID.Sapphire, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Sapphire, Main.rand.Next(2, 8));
 						}
 						else if (chance == 2)
 						{
-							player.QuickSpawnItem(ItemID.Ruby, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Ruby, Main.rand.Next(2, 8));
 						}
 						else if (chance == 3)
 						{
-							player.QuickSpawnItem(ItemID.Emerald, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Emerald, Main.rand.Next(2, 8));
 						}
 						else
 						{
-							player.QuickSpawnItem(ItemID.Diamond, Main.rand.Next(2, 8));
+							player.QuickSpawnItem(s,ItemID.Diamond, Main.rand.Next(2, 8));
 						}
 						break;
 				}

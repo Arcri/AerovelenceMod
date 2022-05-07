@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -66,9 +67,9 @@ namespace AerovelenceMod.Content.Items.Patreon
 
         int i;
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            i++;
+        i++;
 
             if (player.altFunctionUse == 2)
             {
@@ -113,10 +114,10 @@ namespace AerovelenceMod.Content.Items.Patreon
             Projectile.alpha = 0;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
             var effects = Projectile.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            Texture2D auraTex = ModContent.Request<Texture2D>("AerovelenceMod/Assets/YellowGlow");
+            Texture2D auraTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/YellowGlow");
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -124,7 +125,7 @@ namespace AerovelenceMod.Content.Items.Patreon
 
             for (int i = 0; i <= 4; i++)
             {
-                spriteBatch.Draw(auraTex, Projectile.Center + new Vector2(Main.rand.Next(-3, 4), Main.rand.Next(-3, 4)) - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, auraTex.Width, auraTex.Height), Color.Lerp(new Color(15, 15, 25), Color.Yellow, colorLerp), Projectile.rotation, auraTex.Size() / 2, ((1f + ((float)Math.Cos(cos1 / 12) * 0.1f)) * Glow) + MathHelper.Lerp(colorLerp, colorLerp / 2, Glow), effects, 0);
+                Main.EntitySpriteDraw(auraTex, Projectile.Center + new Vector2(Main.rand.Next(-3, 4), Main.rand.Next(-3, 4)) - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, auraTex.Width, auraTex.Height), Color.Lerp(new Color(15, 15, 25), Color.Yellow, colorLerp), Projectile.rotation, auraTex.Size() / 2, ((1f + ((float)Math.Cos(cos1 / 12) * 0.1f)) * Glow) + MathHelper.Lerp(colorLerp, colorLerp / 2, Glow), effects, 0);
             }
 
 

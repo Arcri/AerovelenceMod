@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phantic Soul");
-            ProjectileID.Sets.Homing[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
         }
 
         public override void SetDefaults()
@@ -102,13 +102,13 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 
 
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D tex = ModContent.Request<Texture2D>(Texture);
+            Texture2D tex = (Texture2D)ModContent.Request<Texture2D>(Texture);
             float sin = 1 + (float)Math.Sin(Projectile.ai[1]);
             float cos = 1 + (float)Math.Cos(Projectile.ai[1]);
             Color color = new Color(0.5f + cos * 0.2f, 0.8f, 0.5f + sin * 0.2f);
-            spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, tex.Frame(), color, Projectile.rotation, tex.Size() / 2, Projectile.scale, 0, 0);
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, tex.Frame(), color, Projectile.rotation, tex.Size() / 2, Projectile.scale, 0, 0);
 
             return false;
         }

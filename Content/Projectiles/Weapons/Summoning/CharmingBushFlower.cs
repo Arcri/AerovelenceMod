@@ -23,8 +23,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		private bool drawBehindOtherProjectiles = false;
 
-		public override bool Autoload(ref string name)
-			=> false;
+		//public override bool Autoload(ref string name)
+			//=> false;
 
 		public override void SetDefaults()
 		{
@@ -103,16 +103,16 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			return (false);
 		}
 
-		public override bool CanDamage()
+		public override bool? CanDamage()
 			=> false;
 
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
-		{
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
 			// Make sure the projectiles draw behind the other projectiles when they're at the top of their rotation.
 			if (drawBehindOtherProjectiles)
 			{
 				Projectile.hide = true;
-				drawCacheProjsBehindProjectiles.Add(index);
+				behindProjectiles.Add(index);
 			}
 			else
 			{
@@ -120,12 +120,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			}
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-			=> this.DrawProjectileCentered(spriteBatch, lightColor);
+        public override bool PreDraw(ref Color lightColor)
+        => this.DrawProjectileCentered(Main.spriteBatch, lightColor);
 
-		public override bool PreDrawExtras(SpriteBatch spriteBatch)
-		{
-			Texture2D chain = ModContent.Request<Texture2D>(this.Texture + "_Chain");
+        public override bool PreDrawExtras()
+        {
+        Texture2D chain = (Texture2D)ModContent.Request<Texture2D>(Texture + "_Chain");
 			Rectangle frame = chain.Frame(1, 1, 0, 0);
 			Vector2 chainOrigin = frame.Size() / 2;
 
@@ -147,7 +147,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 					frame.Width = (int)currentLength;
 				}
 
-				spriteBatch.Draw(chain, chainPosition - Main.screenPosition, frame, lightColor, chainRotation, chainOrigin, Projectile.scale, SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(chain, chainPosition - Main.screenPosition, frame, lightColor, chainRotation, chainOrigin, Projectile.scale, SpriteEffects.None, 0);
 
 				chainPosition += chainDirection * chainWidth;
 			}

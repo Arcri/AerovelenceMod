@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
 {
@@ -39,19 +40,19 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
             Projectile.timeLeft = 480;
             Projectile.alpha = 255;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[Projectile.type];
+            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
             Vector2 origin = new Vector2(texture.Width / 2, Projectile.height / 2);
             Color color = Color.Black;
             for (int i = 0; i < 360; i += 60)
             {
                 Vector2 circular = new Vector2(length + Main.rand.NextFloat(3.5f, 5), 0).RotatedBy(MathHelper.ToRadians(i + length * 2.5f));
                 color = new Color(130, 130, 150, 0);
-                Main.spriteBatch.Draw(texture, Projectile.Center + circular - Main.screenPosition, null, color * ((255f - Projectile.alpha) / 255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0.0f);
+                Main.EntitySpriteDraw(texture, Projectile.Center + circular - Main.screenPosition, null, color * ((255f - Projectile.alpha) / 255f), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
             }
             color = Projectile.GetAlpha(Color.White);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0.0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
             return false;
         }
         public override void Kill(int timeLeft)
@@ -79,7 +80,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
                 for (int k = 0; k < 3; k++)
                 {
                     Vector2 circular = new Vector2(7, 0).RotatedBy(MathHelper.ToRadians(120 * k) + Projectile.rotation);
-                    Projectile.NewProjectile(Projectile.Center, circular, ModContent.ProjectileType<IcyShardBaby>(), (int)Projectile.damage, Projectile.knockBack, Main.myPlayer);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, circular, ModContent.ProjectileType<IcyShardBaby>(), (int)Projectile.damage, Projectile.knockBack, Main.myPlayer);
                 }
         }
         float rotationCounter = 0;

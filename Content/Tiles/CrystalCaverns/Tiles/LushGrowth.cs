@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			Main.tileLighted[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			AddMapEntry(new Color(105, 211, 029));
-			drop = Mod.Find<ModItem>("LushGrowthItem").Type;
+			ItemDrop = Mod.Find<ModItem>("LushGrowthItem").Type;
 			TileID.Sets.Grass[Type] = true;
 			TileID.Sets.NeedsGrassFraming[Type] = true;
 			TileID.Sets.NeedsGrassFramingDirt[Type] = Mod.Find<ModTile>("CavernStone").Type;

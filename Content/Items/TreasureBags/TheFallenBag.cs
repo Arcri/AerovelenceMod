@@ -31,27 +31,27 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(Mod.Find<ModItem>("GlassDeflector").Type);
-			player.QuickSpawnItem(ItemID.GoldCoin, 15);
-			player.QuickSpawnItem(Mod.Find<ModItem>("CrystalShard").Type, Main.rand.Next(15) + 15);
+			var entitySource = player.GetSource_OpenItem(Type);
+			player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("GlassDeflector").Type);
+			player.QuickSpawnItem(entitySource, ItemID.GoldCoin, 15);
+			player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("CrystalShard").Type, Main.rand.Next(15) + 15);
 
-			int drop = Main.rand.Next(3);
+			int ItemDrop = Main.rand.Next(3);
 
-			player.TryGettingDevArmor();
 
 			switch (Main.rand.Next(5))
 			{
 				case 0:
-					player.QuickSpawnItem(Mod.Find<ModItem>("CrystalKnife").Type);
+					player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("CrystalKnife").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(Mod.Find<ModItem>("WindboundWave").Type);
+					player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("WindboundWave").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(Mod.Find<ModItem>("OzoneShredder").Type);
+					player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("OzoneShredder").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(Mod.Find<ModItem>("StormRazor").Type);
+					player.QuickSpawnItem(entitySource, Mod.Find<ModItem>("StormRazor").Type);
 					break;
 			}
 		}

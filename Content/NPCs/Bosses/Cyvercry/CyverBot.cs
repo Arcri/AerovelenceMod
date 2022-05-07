@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -120,41 +121,45 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public void FireLaser(int type, float speed = 6f, float recoilMult = 2f, float ai1 = 0, float ai2 = 0)
         {
+
+            var entitySource = NPC.GetSource_FromAI();
+
+
             Player player = Main.player[NPC.target];
             Vector2 toPlayer = player.Center - NPC.Center;
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
             int damage = 50;
-            if (Main.expertMode)
+            /*if (Main.expertMode)
             {
                 damage = (int)(damage / Main.expertDamage);
-            }
+            }*/
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
+                Projectile.NewProjectile(entitySource, from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
             }
             NPC.velocity -= toPlayer * recoilMult;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D primaryTexture = Main.npcTexture[NPC.type];
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/CyverBotRed");
+        Texture2D primaryTexture = (Texture2D)TextureAssets.Npc[NPC.type];
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/CyverBotRed");
             Vector2 drawOrigin = new Vector2(NPC.width * 0.5f, NPC.height * 0.5f);
             Color color2 = new Color(100, 100, 100, 0);
             if (NPC.ai[2] == -1)
                 for (int i = 0; i < 360; i += 30)
                 {
                     Vector2 rotationalPos = new Vector2(Main.rand.NextFloat(2, 3), 0).RotatedBy(MathHelper.ToRadians(i));
-                    spriteBatch.Draw(texture, NPC.Center - Main.screenPosition + rotationalPos, NPC.frame, color2 * ((255f - NPC.alpha) / 255f) * ((255f - NPC.alpha) / 255f), NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition + rotationalPos, NPC.frame, color2 * ((255f - NPC.alpha) / 255f) * ((255f - NPC.alpha) / 255f), NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
                 }
-            spriteBatch.Draw(primaryTexture, NPC.Center - Main.screenPosition, NPC.frame, NPC.GetAlpha(drawColor), NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(primaryTexture, NPC.Center - Main.screenPosition, NPC.frame, NPC.GetAlpha(drawColor), NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
             return false;
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
         }
         public override void FindFrame(int frameHeight)
         {

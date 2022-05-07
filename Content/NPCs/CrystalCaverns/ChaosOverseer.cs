@@ -57,21 +57,22 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.frame.Y = frame * frameHeight;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/CrystalCaverns/ChaosOverseer_Glow");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/CrystalCaverns/ChaosOverseer_Glow");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
+            var deathSource = NPC.GetSource_Death();
             if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 
                 for (int i = 0; i < 3; i++)
-                    Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/ChaosOverseerGore" + i));
+                    Gore.NewGore(deathSource, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/ChaosOverseerGore" + i));
             }
         }
 
@@ -86,7 +87,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             if (NPC.ai[0] % 100 == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
-                NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<ElectricOrb>(), Main.myPlayer);
+                NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<ElectricOrb>(), Main.myPlayer);
             }
         }
 

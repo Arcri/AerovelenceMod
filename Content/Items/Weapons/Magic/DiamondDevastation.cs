@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Lighting.AddLight(Item.position, 0.08f, .38f, .24f);
             Texture2D texture;
             texture = Main.itemTexture[Item.type];
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
 
-                ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow"),
+                (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Magic/DiamondDevastation_Glow"),
                 new Vector2
                 (
                     Item.position.X - Main.screenPosition.X + Item.width * 0.5f,
@@ -37,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 texture.Size() * 0.5f,
                 scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
         public override void SetDefaults()
@@ -61,10 +62,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shootSpeed = 16f;
         }
 
-        
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2 muzzleOffset = Vector2.Normalize(new Vector2(speedX, speedY - 1 )) * 61f;
+        Vector2 muzzleOffset = Vector2.Normalize(new Vector2(speedX, speedY - 1 )) * 61f;
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
                 position += muzzleOffset;
@@ -77,7 +78,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
                 float scale = 1f - (Main.rand.NextFloat() * .3f);
                 perturbedSpeed = perturbedSpeed * scale;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
             }
 
             return false;

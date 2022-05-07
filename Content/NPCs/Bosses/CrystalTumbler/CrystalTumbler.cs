@@ -14,6 +14,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent.ItemDropRules;
+using AerovelenceMod.Content.Items.Placeables.Trophies;
+using AerovelenceMod.Content.Items.Armor.Vanity;
 
 //using AerovelenceMod.Items.BossBags;
 
@@ -97,11 +100,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 			NPC.noGravity = false;
 			NPC.noTileCollide = false;
 
-			bossBag = ModContent.ItemType<CrystalTumblerBag>();
-
 			NPC.HitSound = SoundID.NPCHit41;
 			NPC.DeathSound = SoundID.NPCDeath44;
-			music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
+
+			if (!Main.dedServ)
+			{
+				Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Rimegeist");
+			}
 		}
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
@@ -113,6 +118,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 		public override bool PreAI()
 		{
+			var entitySource = NPC.GetSource_FromAI();
+
 			NPC.TargetClosest(true);
 			Player target = Main.player[NPC.target];
 
@@ -202,19 +209,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				if (AttackTimer++ == 0)
 				{
 					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
-					Projectile.NewProjectile(NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 0);
+					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 0);
 					NPC.netUpdate = true;
 				}
 				else if (AttackTimer == 10)
 				{
 					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
-					Projectile.NewProjectile(NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 1);
+					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 1);
 					NPC.netUpdate = true;
 				}
 				else if (AttackTimer == 20)
 				{
 					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
-					Projectile.NewProjectile(NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 2);
+					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 2);
 					NPC.netUpdate = true;
 					AttackTimer = 0;
 					State = CrystalTumblerState.IdleRoll;
@@ -264,12 +271,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 					{
 						if (Main.rand.NextBool(2))
 						{
-							Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							Projectile.NewProjectile(entitySource, NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 15, 0f, Main.myPlayer, 0f, 0f);
 							NPC.netUpdate = true;
 						}
 						else
 						{
-							Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 0f, Main.myPlayer, 0f, 0f);
+							Projectile.NewProjectile(entitySource, NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 0f, Main.myPlayer, 0f, 0f);
 							NPC.netUpdate = true;
 						}
 					}
@@ -278,17 +285,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 						int randomProj = Main.rand.Next(3);
 						if (randomProj == 0)
 						{
-							Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 20, 10f, Main.myPlayer, 0f, 0f);
+							Projectile.NewProjectile(entitySource, NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike1>(), 20, 10f, Main.myPlayer, 0f, 0f);
 							NPC.netUpdate = true;
 						}
 						else if (randomProj == 1)
 						{
-							Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 10f, Main.myPlayer, 0f, 0f);
+							Projectile.NewProjectile(entitySource, NPC.Center, velocity, ModContent.ProjectileType<TumblerSpike2>(), 15, 10f, Main.myPlayer, 0f, 0f);
 							NPC.netUpdate = true;
 						}
 						else
 						{
-							Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<TumblerHomingShard>(), 20, 0f, Main.myPlayer, 0f, 0f);
+							Projectile.NewProjectile(entitySource, NPC.Center, velocity, ModContent.ProjectileType<TumblerHomingShard>(), 20, 0f, Main.myPlayer, 0f, 0f);
 							NPC.netUpdate = true;
 						}
 					}
@@ -349,7 +356,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 					int damage = Main.expertMode ? 20 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
 					int type = Mod.Find<ModProjectile>("TumblerOrb").Type;
 					float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-					Projectile.NewProjectile(vector8.X, vector8.Y, (float)(Math.Cos(rotation) * Speed * -1), (float)(Math.Sin(rotation) * Speed * -1), type, damage, 0f, 0);
+					Projectile.NewProjectile(entitySource, vector8.X, vector8.Y, (float)(Math.Cos(rotation) * Speed * -1), (float)(Math.Sin(rotation) * Speed * -1), type, damage, 0f, 0);
 					NPC.netUpdate = true;
 				}
 				AttackTimer = 0;
@@ -372,7 +379,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 					}
 					if (AttackTimer == 100)
 					{
-						Projectile.NewProjectile(target.position, default, ModContent.ProjectileType<TeleportCharge>(), 12, 1f, Main.myPlayer, 1);
+						Projectile.NewProjectile(entitySource, target.position, default, ModContent.ProjectileType<TeleportCharge>(), 12, 1f, Main.myPlayer, 1);
 						NPC.netUpdate = true;
 					}
 					if (teleported == true)
@@ -425,12 +432,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				{
 					if (Main.rand.NextBool(2))
 					{
-						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike1>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						Projectile.NewProjectile(entitySource, target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike1>(), 30, 0f, Main.myPlayer, 0f, 0f);
 						NPC.netUpdate = true;
 					}
 					else
 					{
-						Projectile.NewProjectile(target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike2>(), 30, 0f, Main.myPlayer, 0f, 0f);
+						Projectile.NewProjectile(entitySource, target.Center.X + i * 20, target.Center.Y - 380, i * 2, -2, ModContent.ProjectileType<TumblerSpike2>(), 30, 0f, Main.myPlayer, 0f, 0f);
 						NPC.netUpdate = true;
 					}
 				}
@@ -493,68 +500,83 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 		}
 
-        public override void BossLoot(ref string name, ref int potionType)
-        {
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			var entitySource = NPC.GetSource_Death();
+
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<RimegeistBag>()));
+
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CrystalTumblerTrophy>(), 10));
+
+			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<RimegeistRelic>()));
+
+			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<RimegeistPetItem>(), 4));
+
+			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+			notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CrystalTumblerMask>(), 7));
+
+			npcLoot.Add(notExpertRule);
+
+
+			Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("CavernCrystal").Type, Main.rand.Next(10, 20), false, 0, false, false);
+			switch (Main.rand.Next(0, 8))
+			{
+				case 0:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CavernMauler>());
+					break;
+				case 1:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CavernousImpaler>());
+					break;
+				case 2:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CrystallineQuadshot>());
+					break;
+				case 3:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<PrismThrasher>());
+					break;
+				case 4:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<PrismPiercer>());
+					break;
+				case 5:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CarbonCadence>());
+					break;
+				case 6:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<DarkCrystalStaff>());
+					break;
+				case 7:
+					Item.NewItem(entitySource, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<ShiningCrystalCore>());
+					break;
+			}
+		}
+
+		public override void BossLoot(ref string name, ref int potionType)
+		{
 			DownedWorld.DownedCrystalTumbler = true;
 
 			if (Main.netMode == NetmodeID.Server)
 				NetMessage.SendData(MessageID.WorldData);
-        }
 
-        public override void NPCLoot()
-		{
-			if (Main.expertMode)
-                NPC.DropBossBags();
-
-			if (!Main.expertMode)
-			{
-				Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.LesserHealingPotion, Main.rand.Next(4, 12));
-				switch (Main.rand.Next(0, 8))
-				{
-					case 0:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CavernMauler>());
-						break;
-					case 1:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CavernousImpaler>());
-						break;
-					case 2:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CrystallineQuadshot>());
-						break;
-					case 3:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<PrismThrasher>());
-						break;
-					case 4:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<PrismPiercer>());
-						break;
-					case 5:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<CarbonCadence>());
-						break;
-					case 6:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<DarkCrystalStaff>());
-						break;
-					case 7:
-						Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<ShiningCrystalCore>());
-						break;
-				}
-			}
+			potionType = ItemID.HealingPotion;
 		}
+
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
+			var entitySource = NPC.GetSource_Death();
 			if (NPC.life <= 0)
 			{
 				for (int k = 0; k < 20; k++)
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 
                 for (int i = 0; i < 7; i++)
-                    Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/TumblerGore" + i));
+					Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/TumblerGore" + i).Type);
 			}
 		}
 
-		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
-			Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/Glowmask");
-			spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/Glowmask");
+			Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
 		}
 
         public override void BossHeadRotation(ref float rotation) => rotation = NPC.rotation;

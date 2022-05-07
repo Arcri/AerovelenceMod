@@ -33,10 +33,10 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 			AddMapEntry(new Color(068, 077, 098));
 
-			dustType = ModContent.DustType<Sparkle>();
-			drop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodPlatformItem>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Platforms };
+			DustType = ModContent.DustType<Sparkle>();
+			ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodPlatformItem>();
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Platforms };
 		}
 
 		public override void PostSetDefaults()

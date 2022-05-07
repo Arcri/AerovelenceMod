@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -73,10 +74,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public override void AI()
         {
+            var entitySource = Projectile.GetSource_FromAI();
             i++;
             if (i % 10 == 0)
             {
-                Projectile.NewProjectile(Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X - 2f, Projectile.velocity.Y - 2, ModContent.ProjectileType<GlacierProjectile2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(entitySource, Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X - 2f, Projectile.velocity.Y - 2, ModContent.ProjectileType<GlacierProjectile2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             }
             int num622 = Dust.NewDust(new Vector2(Projectile.position.X - Projectile.velocity.X, Projectile.position.Y - Projectile.velocity.Y), Projectile.width, Projectile.height, 191, 0f, 0f, 100, default, 2f);
             Main.dust[num622].noGravity = true;
@@ -84,14 +86,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Projectile.rotation += 0.1f;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(Color.LightPink) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
             return true;
         }
@@ -105,8 +107,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Projectile.width = 30;
             Projectile.height = 10;
             Projectile.aiStyle = -1;
-            Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
-            Projectile.hostile = Projectile.tileCollide = false;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
             
             Projectile.penetrate = 3;
             Projectile.timeLeft = 200;

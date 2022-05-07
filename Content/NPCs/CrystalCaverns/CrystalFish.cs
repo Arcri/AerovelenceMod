@@ -5,6 +5,7 @@ using AerovelenceMod.Content.Items.Others.Alchemical;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -38,14 +39,14 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			NPC.aiStyle = 16;
 			NPC.noGravity = true;
 			NPC.npcSlots = 0;
-			aiType = NPCID.Goldfish;
+			AIType = NPCID.Goldfish;
 			NPC.dontCountMe = true;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			var effects = NPC.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-			spriteBatch.Draw(Main.npcTexture[NPC.type], NPC.Center - Main.screenPosition + new Vector2(0, NPC.gfxOffY), NPC.frame,
+			Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], NPC.Center - Main.screenPosition + new Vector2(0, NPC.gfxOffY), NPC.frame,
 							 drawColor, NPC.rotation, NPC.frame.Size() / 2, NPC.scale, effects, 0);
 			return false;
 		}
@@ -94,11 +95,12 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override void OnCatchNPC(Player player, Item item)
 		{
+			var source = NPC.GetSource_FromAI();
 			if (!Main.expertMode)
             {
 				if (Main.rand.Next(500) == 0)
 				{
-					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
 				}
 			}
 
@@ -106,20 +108,21 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			{
 				if (Main.rand.Next(400) == 0)
 				{
-					Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
 				}
 			}
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.water ? .2f : 0f;
+            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? .2f : 0f;
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
+			var source = NPC.GetSource_Death();
 			if (NPC.life <= 0)
 			{
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalFishHead"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalFishTail"), 1f);
+				Gore.NewGore(source, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalFishHead").Type);
+				Gore.NewGore(source, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalFishTail").Type);
 				NPC.position.X = NPC.position.X + (NPC.width / 2.0f);
 				NPC.position.Y = NPC.position.Y + (NPC.height / 2.0f);
 				NPC.width = 30;

@@ -11,16 +11,16 @@ namespace AerovelenceMod.Content.Tiles.Ores
     {
         public override void SetStaticDefaults()
         {
-			mineResist = 1f;
-			minPick = 35;
+			MineResist = 1f;
+			MinPick = 35;
             Main.tileSolid[Type] = true;
             Main.tileSpelunker[Type] = true;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = false;
-            drop = ModContent.ItemType<SlateOre>();
-			dustType = 4;
-			soundType = SoundID.Tink;			
+            ItemDrop = ModContent.ItemType<SlateOre>();
+			DustType = 4;
+			SoundType = SoundID.Tink;			
             AddMapEntry(new Color(108, 114, 116), Language.GetText("Slate Slab"));
         }
     }

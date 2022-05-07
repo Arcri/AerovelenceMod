@@ -10,7 +10,7 @@ namespace AerovelenceMod.Common.Utilities
         {
             SpriteEffects effects = npc.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 npc.Center - Main.screenPosition + new Vector2(0f, npc.gfxOffY),
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Common.Utilities
                 item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f + 2f
             );
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 drawPosition,
@@ -42,7 +42,7 @@ namespace AerovelenceMod.Common.Utilities
                 texture.Size() / 2f,
                 scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
 
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Common.Utilities
                 j * 16 - (int)Main.screenPosition.Y
             ) + zero;
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 drawPosition,
@@ -72,7 +72,7 @@ namespace AerovelenceMod.Common.Utilities
                 Vector2.Zero,
                 1f,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }

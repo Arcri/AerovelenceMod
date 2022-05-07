@@ -6,6 +6,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -43,12 +44,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         public static bool DrawProjectileCenteredWithTexture(this ModProjectile p, Texture2D texture, SpriteBatch spriteBatch, Color lightColor)
         {
             Rectangle frame = texture.Frame(1, Main.projFrames[p.Projectile.type], 0, p.Projectile.frame);
-            Vector2 origin = frame.Size() / 2 + new Vector2(p.drawOriginOffsetX, p.drawOriginOffsetY);
+            Vector2 origin = frame.Size() / 2 + new Vector2(p.DrawOriginOffsetX, p.DrawOriginOffsetY);
             SpriteEffects effects = p.Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Vector2 drawPosition = p.Projectile.Center - Main.screenPosition + new Vector2(p.drawOffsetX, 0);
+            Vector2 drawPosition = p.Projectile.Center - Main.screenPosition + new Vector2(p.DrawOffsetX, 0);
 
-            spriteBatch.Draw(texture, drawPosition, frame, lightColor, p.Projectile.rotation, origin, p.Projectile.scale, effects, 0f);
+            Main.EntitySpriteDraw(texture, drawPosition, frame, lightColor, p.Projectile.rotation, origin, p.Projectile.scale, effects, 0);
 
             return (false);
         }
@@ -81,14 +82,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             {
                 SoundEngine.PlaySound(SoundID.Item67, (int)Projectile.Center.X, (int)Projectile.Center.Y);
 
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, Projectile.owner);
                 OnHit = 0;
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width, Main.projectileTexture[Projectile.type].Height);
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width(), TextureAssets.Projectile[Projectile.type].Height());
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             for(int k = 0; k < Projectile.oldPos.Length; k++)
             {
@@ -96,7 +97,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(-9f, -11.5f);
                 Color color = Projectile.GetAlpha(Color.DarkBlue) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                
-                spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0);
             }
 
             return true;
@@ -146,7 +147,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile.width = Projectile.height = 200;
 
             Projectile.aiStyle = -1;
-            Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;// projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
             Projectile.penetrate = -1;
             Projectile.timeLeft = 60;

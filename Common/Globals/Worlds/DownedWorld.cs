@@ -9,7 +9,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
     /// <summary>
     /// ModWorld responsible for holding "permanent" save data.
     /// </summary>
-	public class DownedWorld : ModWorld
+	public class DownedWorld : ModSystem
     {
 		public static bool DownedCrystalTumbler;
 		public static bool DownedRimegeist;

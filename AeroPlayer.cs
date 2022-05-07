@@ -162,7 +162,7 @@ namespace AerovelenceMod
 			{
 				foreach (Item item in Player.armor)
 				{
-					if (item.modItem != null && item.modItem.GetType().IsSubclassOf(typeof(ShieldItem)) && ShieldCapacity > 200)
+					if (item.ModItem != null && item.ModItem.GetType().IsSubclassOf(typeof(ShieldItem)) && ShieldCapacity > 200)
 					{
 						ShieldCapacity -= 200;
 						if (ShieldType == ShieldTypes.Bubble || (ShieldType == ShieldTypes.Impact && Main.rand.Next(1, 3) % 3 == 0) || ShieldType == ShieldTypes.Nova && (damageSource.SourceNPCIndex != -1 || damageSource.SourceProjectileIndex != -1))
@@ -204,14 +204,14 @@ namespace AerovelenceMod
 					target.AddBuff(BuffID.Frostburn, 120);
 
 
-			if (SpiritCultistBonus && proj.magic && !target.boss)
+			if (SpiritCultistBonus && proj.DamageType == DamageClass.Magic && !target.boss)
 			{
 				if (target.FindBuffIndex(ModContent.BuffType<LiftedSpiritsDebuff>()) < 1)
 					target.velocity.Y -= 20;
 
 				target.AddBuff(ModContent.BuffType<LiftedSpiritsDebuff>(), 210);
 			}
-			if (PhanticRangedBonus && proj.ranged && Terraria.Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
+			if (PhanticRangedBonus && proj.DamageType == DamageClass.Ranged && Terraria.Main.rand.NextFloat() < 0.15f && proj.type != ModContent.ProjectileType<PhanticSoul>())
 			{
 				float rot = Terraria.Main.rand.NextFloat(MathHelper.TwoPi);
 				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
@@ -269,15 +269,15 @@ namespace AerovelenceMod
 		}
 		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Terraria.Player self, int i)
 		{
-			if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.magic && Terraria.Main.rand.NextFloat() < 0.125f)
+			if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.DamageType == DamageClass.Magic && Terraria.Main.rand.NextFloat() < 0.125f)
 				if (!self.releaseUseItem && self.itemAnimation == self.HeldItem.useAnimation - 1 && self.itemAnimation != 0)
-					Terraria.Projectile.NewProjectile(self.Center, self.DirectionTo(Terraria.Main.MouseWorld) * self.HeldItem.shootSpeed / 2,
+					Terraria.Projectile.NewProjectile((IEntitySource)self, self.Center, self.DirectionTo(Terraria.Main.MouseWorld) * self.HeldItem.shootSpeed / 2,
 						ModContent.ProjectileType<PhanticSoul>(), 40, self.HeldItem.knockBack, self.whoAmI);
 
 			orig(self, i);
 		}
-		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
-		{
+        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        {
 			if (SoulFire)
 			{
 				if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
@@ -351,7 +351,7 @@ namespace AerovelenceMod
 
 		ShieldOn = false;
 		}
-		public static readonly PlayerLayer MiscEffects = new PlayerLayer("AerovelenceMod", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
+		public static readonly PlayerDrawLayers MiscEffects = new PlayerDrawLayer("AerovelenceMod", "MiscEffects", PlayerDrawLayers.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)
 				return;

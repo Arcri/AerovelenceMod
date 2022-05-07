@@ -1,5 +1,4 @@
-﻿using DiscordRPC;
-using System;
+﻿using System;
 using System.Linq;
 using Terraria;
 using Terraria.ID;

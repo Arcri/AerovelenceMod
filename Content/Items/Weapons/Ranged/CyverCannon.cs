@@ -63,6 +63,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override void AI()
         {
+            var entitySource = Projectile.GetSource_FromAI();
             Player player = Main.player[Projectile.owner];
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
             {
@@ -154,7 +155,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                             {
                                 spinningpoint2 = -Vector2.UnitY;
                             }
-                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, DarkLaser, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                            Projectile.NewProjectile(entitySource, value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, DarkLaser, Projectile.damage, Projectile.knockBack, Projectile.owner);
                         }
                     }
                     else
@@ -164,10 +165,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 }
             }
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ranged/CyverCannonProj_Glow");
-            spriteBatch.Draw(
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ranged/CyverCannonProj_Glow");
+            Main.EntitySpriteDraw(
                 texture,
                 new Vector2
                 (
@@ -180,7 +181,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 texture.Size(),
                 Projectile.scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }
@@ -205,7 +206,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void AI()
         {
-
+            var entitySource = Projectile.GetSource_FromAI();
             int num294 = Main.rand.Next(3, 7);
             for (int num295 = 0; num295 < num294; num295++)
             {
@@ -228,7 +229,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             i++;
             if (i % Main.rand.Next(1, 50) == 0)
             {
-                Projectile.NewProjectile(Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X - 2f, Projectile.velocity.Y - 2, ModContent.ProjectileType<CannonSplit>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(entitySource, Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X - 2f, Projectile.velocity.Y - 2, ModContent.ProjectileType<CannonSplit>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             }
         }
     }
@@ -238,7 +239,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public int i;
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.Homing[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
         }
         public override void SetDefaults()
         {

@@ -39,10 +39,10 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Torch");
 			AddMapEntry(new Color(200, 200, 200), name);
-			drop = ItemType<Items.Placeables.CrystalCaverns.GlimmeringTorchItem>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Torches };
-			torch = true;
+			ItemDrop = ItemType<Items.Placeables.CrystalCaverns.GlimmeringTorchItem>();
+			DisableSmartCursor = true;
+			AdjTiles = new int[] { TileID.Torches };
+			Torch = true;
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			}
 		}
 
-		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height)
+		public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
 		{
 			offsetY = 0;
 			if (WorldGen.SolidTile(i, j - 1)) {
@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			for (int k = 0; k < 7; k++) {
 				float x = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
 				float y = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
-				Main.spriteBatch.Draw(Mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/Furniture/GlimmeringTorch_Flame").Value, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(Mod.Assets.Request<Texture2D>("Content/Tiles/CrystalCaverns/Tiles/Furniture/GlimmeringTorch_Flame").Value, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + x, (float)(j * 16 - (int)Main.screenPosition.Y + offsetY) + y) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0);
 			}
 		}
 	}

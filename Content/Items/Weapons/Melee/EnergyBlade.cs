@@ -81,10 +81,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             SoundEngine.PlaySound(SoundID.Item10);
             return true;
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Texture + "_Glow");
-            spriteBatch.Draw(
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Texture + "_Glow");
+            Main.EntitySpriteDraw(
                 texture,
                 new Vector2
                 (
@@ -97,7 +97,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 texture.Size(),
                 Projectile.scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }

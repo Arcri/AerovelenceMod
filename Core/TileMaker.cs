@@ -11,7 +11,7 @@ namespace AerovelenceMod.Core
         /// <summary>
         /// Make <paramref name="tilesToMergeWith"></paramref> null to not merge with any specific tile(s).
         /// </summary>
-        public static void SimpleFramedTile(this ModTile tile, int drop, int soundType, int dustType, Color mapColor, int minPick, 
+        public static void SimpleFramedTile(this ModTile tile, int drop, int soundType, int DustType, Color mapColor, int MinPick, 
             string mapName = "", bool mergeDirt = false, bool stone = false, params int[] tilesToMergeWith)
         {
             Main.tileBlockLight[tile.Type] = true;
@@ -33,13 +33,13 @@ namespace AerovelenceMod.Core
                 }
             }
 
-            tile.drop = drop;
-            tile.soundType = soundType;
-            tile.dustType = dustType;
-            tile.minPick = minPick;
+            tile.ItemDrop = drop;
+            tile.SoundType = soundType;
+            tile.DustType = DustType;
+            tile.MinPick = MinPick;
         }
 
-        public static void SimpleFrameImportantTile(this ModTile tile, int width, int height, int soundType, int dustType, Color mapColor,
+        public static void SimpleFrameImportantTile(this ModTile tile, int width, int height, int soundType, int DustType, Color mapColor,
             string mapName = "", bool solid = false, bool solidTop = true, AnchorData anchorBottom = default, AnchorData anchorTop = default)
         {
             Main.tileFrameImportant[tile.Type] = true;
@@ -74,17 +74,17 @@ namespace AerovelenceMod.Core
             name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
 
-            tile.soundType = soundType;
-            tile.dustType = dustType;
+            tile.SoundType = soundType;
+            tile.DustType = DustType;
         }
 
-        public static void SimpleWall(this ModWall wall, int drop, int soundType, int dustType, Color mapColor, bool house = false)
+        public static void SimpleWall(this ModWall wall, int drop, int soundType, int DustType, Color mapColor, bool house = false)
         {
             Main.wallHouse[wall.Type] = house;
 
-            wall.drop = drop;
-            wall.soundType = soundType;
-            wall.dustType = dustType;
+            wall.ItemDrop = drop;
+            wall.SoundType = soundType;
+            wall.DustType = DustType;
 
             wall.AddMapEntry(mapColor);
         }

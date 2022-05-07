@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -41,13 +42,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             return false;
         }
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Decurion/DecurionBody_Glow");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Decurion/DecurionBody_Glow");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
         }
         public override bool PreAI()
         {
+            var entitySource = NPC.GetSource_FromAI();
             if (NPC.ai[1] == 0)
             {
                 NPC.frame.Y = Main.rand.Next(3);
@@ -59,7 +61,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             NPC.localAI[0] += new Random().Next(4);
             if (NPC.localAI[0] >= (float)Main.rand.Next(3300, 12000))
             {
-                int ball = Projectile.NewProjectile(NPC.Center.X,
+                int ball = Projectile.NewProjectile(entitySource, NPC.Center.X,
                     NPC.Center.Y,
                     new Random().Next(-1, 2) * 8,
                     new Random().Next(-1, 2) * 8,
@@ -118,13 +120,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             projectile.penetrate--;
         }
 
-        public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteEffects spriteEffects = 0;
+        SpriteEffects spriteEffects = 0;
             Color alpha = NPC.GetAlpha(drawColor);
             Color color = Lighting.GetColor((int)((double)NPC.position.X + (double)NPC.width * 0.5) / 16, (int)(((double)NPC.position.Y + (double)NPC.height * 0.5) / 16.0));
-            Texture2D texture2D = Main.npcTexture[NPC.type];
-            int num = Main.npcTexture[NPC.type].Height / Main.npcFrameCount[NPC.type];
+            Texture2D texture2D = (Texture2D)TextureAssets.Npc[NPC.type];
+            int num = TextureAssets.Npc[NPC.type].Height() / Main.npcFrameCount[NPC.type];
             int num2 = num * (int)NPC.frameCounter;
             Rectangle rectangle = new Rectangle(0, num2, texture2D.Width, num);
             Vector2 vector = rectangle.Size() / 2f;
@@ -144,11 +146,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
                 color2 *= num8 / ((float)NPCID.Sets.TrailCacheLength[NPC.type] * 1.5f);
                 Vector2 vector2 = NPC.oldPos[num7];
                 float rotation = NPC.rotation;
-                Main.spriteBatch.Draw(texture2D, vector2 + NPC.Size / 2f - Main.screenPosition + new Vector2(0f, NPC.gfxOffY), new Rectangle?(rectangle), color2, rotation + NPC.rotation * num6 * (float)(num7 - 1) * -(float)spriteEffects.HasFlag(SpriteEffects.FlipHorizontally).ToDirectionInt(), vector, NPC.scale, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2D, vector2 + NPC.Size / 2f - Main.screenPosition + new Vector2(0f, NPC.gfxOffY), new Rectangle?(rectangle), color2, rotation + NPC.rotation * num6 * (float)(num7 - 1) * -(float)spriteEffects.HasFlag(SpriteEffects.FlipHorizontally).ToDirectionInt(), vector, NPC.scale, spriteEffects, 0);
                 num7 += num4;
             }
             SpriteEffects spriteEffects2 = (NPC.direction == -1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            spriteBatch.Draw(texture2D, NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY), new Rectangle?(NPC.frame), alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, spriteEffects2, 0f);
+            Main.EntitySpriteDraw(texture2D, NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY), new Rectangle?(NPC.frame), alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, spriteEffects2, 0);
             return false;
         }
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)

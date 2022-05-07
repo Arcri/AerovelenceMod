@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 
 #endregion
 
@@ -49,7 +50,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			Main.projPet[Projectile.type] = true;
 			Main.projFrames[Projectile.type] = 3;
 
-			ProjectileID.Sets.Homing[Projectile.type] = true;
+			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
 			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 		}
@@ -103,14 +104,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 
 		public override bool OnTileCollide(Vector2 oldVelocity) => false;
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-		{
-			Texture2D texture = Main.projectileTexture[Projectile.type];
+        public override bool PreDraw(ref Color lightColor)
+        {
+        Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
 			Rectangle frame = texture.Frame(3, 3, SummonType, Projectile.frame);
 			Vector2 origin = frame.Size() / 2;
 			SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-			spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, frame, lightColor, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, lightColor, Projectile.rotation, origin, Projectile.scale, effects, 0);
 
 			return (false);
 		}
@@ -645,7 +646,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 						newProjectileVelocity.Y -= newVelocityYModifier;
 
 						newProjectileVelocity = Vector2.Normalize(newProjectileVelocity) * ShotProjectileSpeed;
-						Projectile.NewProjectile(newProjectilePosition, newProjectileVelocity, newProjectileType, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0, Projectile.whoAmI);
+						Projectile.NewProjectile(Projectile.GetSource_FromAI(), newProjectilePosition, newProjectileVelocity, newProjectileType, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0, Projectile.whoAmI) ;
 
 						if (newProjectileVelocity.X < 0f)
 						{

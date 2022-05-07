@@ -10,16 +10,16 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
     {
         public override void SetStaticDefaults()
         {
-			mineResist = 2.5f;
-			minPick = 59;
+			MineResist = 2.5f;
+			MinPick = 59;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(061, 079, 110));
-			dustType = 59;
-			soundType = SoundID.Tink;
-            drop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodBeam>();
+			DustType = 59;
+			SoundType = SoundID.Tink;
+            ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodBeam>();
 
         }
     }

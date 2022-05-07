@@ -54,18 +54,20 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
             return bounces < 0;
         }
 
-       
-		public override bool PreDraw(ref Color lightColor) {
-        {
-            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
-            Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
-            Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(Projectile.frame)) / 2f) * 0.5f;
-            for (int i = 0; i < Projectile.oldPos.Length; i++)
-            {
-                Main.EntitySpriteDraw(texture, Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, Projectile.oldRot[i], rectangle.Size() / 2f, 1f, Projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
-            }
 
-            return (true);
+        public override bool PreDraw(ref Color lightColor)
+        {
+            {
+                Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
+                Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+                Color color = Color.Lerp(Color.Red, Color.Pink, 0.5f + (float)Math.Sin(MathHelper.ToRadians(Projectile.frame)) / 2f) * 0.5f;
+                for (int i = 0; i < Projectile.oldPos.Length; i++)
+                {
+                    Main.EntitySpriteDraw(texture, Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition, new Microsoft.Xna.Framework.Rectangle?(rectangle), color, Projectile.oldRot[i], rectangle.Size() / 2f, 1f, Projectile.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+                }
+
+                return (true);
+            }
         }
     }
 }

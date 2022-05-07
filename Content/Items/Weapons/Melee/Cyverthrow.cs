@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -92,7 +93,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                         float speed = 5f;
                         int type = Mod.Find<ModProjectile>("CyverthrowBolt").Type;
                         Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
                         shootTimer = 0;
                     }
                 }
@@ -114,7 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     }
                     for (int a = 0; a < 9; a++)
                     {
-                        Projectile proj = Main.projectile[Projectile.NewProjectile(Projectile.Center, new Vector2(7, 7).RotatedBy(MathHelper.ToRadians(360 / 8 * a)), ProjectileID.MartianTurretBolt, Projectile.damage, 0f, Projectile.owner)];
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, new Vector2(7, 7).RotatedBy(MathHelper.ToRadians(360 / 8 * a)), ProjectileID.MartianTurretBolt, Projectile.damage, 0f, Projectile.owner)];
                         proj.hostile = false;
                         proj.friendly = true;
                     }
@@ -122,10 +123,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 }
             }
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override void PostDraw(Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Melee/CyverthrowProj_Glow");
-            spriteBatch.Draw(
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Melee/CyverthrowProj_Glow");
+            Main.EntitySpriteDraw(
                 texture,
                 new Vector2
                 (
@@ -138,7 +139,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 texture.Size(),
                 Projectile.scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }
@@ -181,16 +182,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
-            for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(Color.LightPink) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+                Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
+                for (int k = 0; k < Projectile.oldPos.Length; k++)
+                {
+                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                    Color color = Projectile.GetAlpha(Color.LightPink) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                    Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+                }
+                return true;
             }
-            return true;
         }
     }
 }

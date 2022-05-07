@@ -16,8 +16,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Main.tileNoFail[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-			dustType = 116;
-			soundType = SoundID.Grass;
+			DustType = 116;
+			SoundType = SoundID.Grass;
 			AddMapEntry(new Color(100, 125, 255));
 			TileObjectData.addTile(Type);
 		}
@@ -27,9 +27,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
 			Color colour = Color.White;
 
-			Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminGrass_Glow");
+			Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Tiles/Flora/LuminGrass_Glow");
 			Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
-			spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), colour);
+			Main.spriteBatch.Draw(glow, new Vector2(i * 16, j * 16) - Main.screenPosition + zero, new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), colour);
 		}
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{

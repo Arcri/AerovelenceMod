@@ -11,6 +11,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -39,11 +41,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             NPC.boss = true;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
-            bossBag = ModContent.ItemType<CyvercryBag>();
             NPC.HitSound = SoundID.NPCHit4;
             NPC.DeathSound = SoundID.NPCDeath14;
-            music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry");
             NPC.value = Item.buyPrice(0, 22, 11, 5);
+            if (!Main.dedServ)
+            {
+                Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Rimegeist");
+            }
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
@@ -85,6 +89,46 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 }
             }
         }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            var entitySource = NPC.GetSource_Death();
+
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CyvercryBag>()));
+
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CyvercryTrophy>(), 10));
+
+            //npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<RimegeistRelic>()));
+
+            //npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<RimegeistPetItem>(), 4));
+
+            LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CyvercryMask>(), 7));
+
+            npcLoot.Add(notExpertRule);
+
+            if (!Main.expertMode)
+            {
+                if (Main.rand.NextBool(7))
+                {
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyvercryMask>());
+                }
+                if (Main.rand.NextBool(10))
+                {
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyvercryTrophy>());
+                }
+                int rand = Main.rand.Next(4);
+                if (rand == 0)
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyverCannon>());
+                if (rand == 1)
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<Cyverthrow>());
+                if (rand == 2)
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<DarknessDischarge>());
+                if (rand == 3)
+                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<Oblivion>());
+            }
+        }
+
+
         public override void BossLoot(ref string name, ref int potionType)
         {
             potionType = ItemID.GreaterHealingPotion;
@@ -92,49 +136,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             DownedWorld.DownedCyvercry = true;
                 if (Main.netMode == NetmodeID.Server)
                     NetMessage.SendData(MessageID.WorldData);
-                
-            if (Main.expertMode)
-            {
-                NPC.DropBossBags();
-                return;
-            }
-            if (!Main.expertMode)
-            {
-                if (Main.rand.NextBool(7))
-                {
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<CyvercryMask>());
-                }
-                if (Main.rand.NextBool(10))
-                {
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<CyvercryTrophy>());
-                }
-                int rand = Main.rand.Next(4);
-                if (rand == 0)
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<CyverCannon>());
-                if (rand == 1)
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<Cyverthrow>());
-                if (rand == 2)
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<DarknessDischarge>());
-                if (rand == 3)
-                    Item.NewItem(NPC.getRect(), ModContent.ItemType<Oblivion>());
-            }
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            float alpha = 1f;
+        float alpha = 1f;
             if (nextAttack == 1)
             {
                 alpha = (240 - ai1 + ai2) / 240f;
             }
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Glowmask");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White * alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Glowmask");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White * alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.npcTexture[NPC.type].Width * 0.5f, NPC.height * 0.5f);
+        Vector2 drawOrigin = new Vector2(TextureAssets.Npc[NPC.type].Width() * 0.5f, NPC.height * 0.5f);
             float alpha = 1f;
             float shade = 1f;
-            Color color = lightColor;
+            Color color = drawColor;
             Color color2 = new Color(100, 100, 100, 0);
             if (nextAttack == 1)
             {
@@ -162,18 +180,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 {
                     Vector2 rotationalPos = new Vector2(Main.rand.NextFloat(2, 3), 0).RotatedBy(MathHelper.ToRadians(i));
                     texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyvercryRed").Value;
-                    spriteBatch.Draw(texture, NPC.Center - Main.screenPosition + rotationalPos, NPC.frame, color2 * alpha, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition + rotationalPos, NPC.frame, color2 * alpha, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
                 }
             }
             texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Cyvercry").Value;
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, color * alpha, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, color * alpha, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
             if(shadowTrail)
             {
                 for (int k = 0; k < NPC.oldPos.Length; k++)
                 {
                     Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
-                    color = NPC.GetAlpha(lightColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
-                    spriteBatch.Draw(Main.npcTexture[NPC.type], drawPos, NPC.frame, color * 0.5f, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0f);
+                    color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                    Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], drawPos, NPC.frame, color * 0.5f, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
                 }
             }
             return false;
@@ -210,6 +228,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         float speed = 12;
         public override void AI()
         {
+            var entitySource = NPC.GetSource_FromAI();
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
                 NPC.netUpdate = true;
             Player player = Main.player[NPC.target];
@@ -420,7 +440,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         {
                             NPC.Center = player.Center + new Vector2(1256, 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(360)));
                             ai3++;
-                            SoundEngine.PlaySound(SoundLoader.customSoundType, -1, -1, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/Test"));
+                            //SoundEngine.PlaySound(SoundLoader.customSoundType, -1, -1, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/Test"));
                             FireLaser(ModContent.ProjectileType<ShadowCyvercry>(), 20, 0, 0, !runOncePhase2 ? -1 : 0);
                         }
                     }
@@ -473,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                             circular.X *= 0.6f;
                             circular = circular.RotatedBy(NPC.rotation);
                             Vector2 dustVelo = -circular * 0.1f;
-                            Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkFlame, 0, 0, NPC.alpha);
+                            Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
                             dust.velocity *= 0.15f;
                             dust.velocity += dustVelo;
                             dust.scale = 1.25f;
@@ -487,7 +507,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = -circular * 0.09f;
-                        Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkFlame, 0, 0, NPC.alpha);
+                        Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
                         dust.velocity *= 0.1f;
                         dust.scale = 1.5f;
                         dust.noGravity = true;
@@ -523,7 +543,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     {
                         if(Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            int num = NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y + 20, ModContent.NPCType<CyverBot>(), 0, player.whoAmI, 0, !runOncePhase2 ? -1 : 0);
+                            int num = NPC.NewNPC(entitySource, (int)NPC.Center.X, (int)NPC.Center.Y + 20, ModContent.NPCType<CyverBot>(), 0, player.whoAmI, 0, !runOncePhase2 ? -1 : 0);
                             NPC bot = Main.npc[num];
                             bot.netUpdate = true;
                         }
@@ -582,11 +602,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int damage = 70;
-                            if (Main.expertMode)
+                            /*if (Main.expertMode)
                             {
                                 damage = (int)(damage / Main.expertDamage);
-                            }
-                            Projectile.NewProjectile(toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDagger>(), damage, 0, Main.myPlayer, player.whoAmI);
+                            }*/
+                            Projectile.NewProjectile(entitySource, toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDagger>(), damage, 0, Main.myPlayer, player.whoAmI);
                         }
                         Vector2 toLocationVelo = toLocation - NPC.Center;
                         Vector2 from = NPC.Center;
@@ -612,6 +632,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         }
         public void FireLaser(int type, float speed = 6f, float recoilMult = 2f, float ai1 = 0, float ai2 = 0)
         {
+            var entitySource = NPC.GetSource_FromAI();
             Player player = Main.player[NPC.target];
             Vector2 toPlayer = player.Center - NPC.Center;
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
@@ -620,11 +641,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             int damage = 75;
             if (Main.expertMode)
             {
-                damage = (int)(damage / Main.expertDamage);
+                damage = (int)(damage * 1.5f);
             }
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
+                Projectile.NewProjectile(entitySource, from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
             }
             NPC.velocity -= toPlayer * recoilMult;
         }
@@ -708,7 +729,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
                 Vector2 dustVelo = circular * 0.5f;
-                Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5) + circular, 0, 0, DustID.PinkFlame, 0, 0, Projectile.alpha);
+                Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5) + circular, 0, 0, DustID.PinkCrystalShard, 0, 0, Projectile.alpha);
                 dust.velocity *= 0.15f;
                 dust.velocity += dustVelo;
                 dust.scale = 1.75f;
@@ -796,12 +817,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         }
         public override void Kill(int timeLeft)
         {
+            var entitySource = Projectile.GetSource_FromAI();
             SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 12, 1f);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < 360; i += 20)
                 {
-                    Projectile.NewProjectile(Projectile.Center, new Vector2(4, 0).RotatedBy(MathHelper.ToRadians(i)), ProjectileID.RayGunnerLaser, Projectile.damage, 0, Main.myPlayer);
+                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(4, 0).RotatedBy(MathHelper.ToRadians(i)), ProjectileID.RayGunnerLaser, Projectile.damage, 0, Main.myPlayer);
                 }
             }
             base.Kill(timeLeft);

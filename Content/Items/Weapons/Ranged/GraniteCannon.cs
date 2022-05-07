@@ -5,6 +5,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -39,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             return new Vector2(-4, 0);
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5));
             speedX = perturbedSpeed.X;
@@ -50,7 +52,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             }
             return true;
         }
-
         public override void AddRecipes()
         {
             CreateRecipe(1)
@@ -84,14 +85,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 drawOrigin = new Vector2(Main.projectileTexture[Projectile.type].Width * 0.5f, Projectile.height * 0.5f);
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / Projectile.oldPos.Length);
-                spriteBatch.Draw(Main.projectileTexture[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
             return true;
         }
@@ -133,9 +134,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
             if (Main.myPlayer == Projectile.owner)
             {
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<GraniteShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
 
             }
         }

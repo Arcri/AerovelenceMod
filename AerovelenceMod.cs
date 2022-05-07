@@ -43,9 +43,6 @@ namespace AerovelenceMod
 		public const string Abbreviation = "AM";
 		public const string AbbreviationPrefix = Abbreviation + ":";
 
-		// Hotkeys
-		public static ModHotKey ArmorHotKey;
-
 		// UI
 		internal UserInterface MarauderUserInterface;
 		internal UserInterface RockCollectorUserInterface;
@@ -63,13 +60,7 @@ namespace AerovelenceMod
         {
             Instance = this;
 
-            Properties = new ModProperties
-            {
-                Autoload = true,
-                AutoloadBackgrounds = true,
-                AutoloadGores = true,
-                AutoloadSounds = true
-            };
+
         }
 		public override void PostSetupContent()
 		{
@@ -231,7 +222,7 @@ namespace AerovelenceMod
 			}
 			GemGrapplingRange.Load();
 
-            ArmorHotKey = RegisterHotKey("Armor Set Bonus", "F");
+            
 
 			Filters.Scene["AerovelenceMod:FoggyFields"] = 
                 new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
@@ -249,13 +240,6 @@ namespace AerovelenceMod
 
             if (Main.netMode != NetmodeID.Server)
 			{
-                AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"), ItemType("CrystalCavernsBoxItem"), TileType("CrystalCavernsBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler"), ItemType("CrystalTumblerBoxItem"), TileType("CrystalTumblerBox"));
-			//	AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist"), ItemType("RimegeistBoxItem"), TileType("RimegeistBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Snowrium"), ItemType("SnowriumBoxItem"), TileType("SnowriumBox"));
-				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/TheFallen"), ItemType("TheFallenBoxItem"), TileType("TheFallenBox"));
-				AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/Cyvercry"), ItemType("CyvercryBoxItem"), TileType("CyvercryBox"));
-				//AddMusicBox(GetSoundSlot(SoundType.Music, "Sounds/Music/CursedMachine"), ItemType("CursedMachineBoxItem"), TileType("CursedMachineBox"));
 
 				LegElectricity = Instance.Assets.Request<Effect>("Effects/LegElectricity").Value;
 				RailgunShader = Instance.Assets.Request<Effect>("Effects/RailgunShader").Value;
@@ -266,7 +250,7 @@ namespace AerovelenceMod
                 MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
 				DiscordRichPresence.Initialize();
-				Main.OnTick += DiscordRichPresence.Update;
+				Main.OnTickForThirdPartySoftwareOnly += DiscordRichPresence.Update;
 			}
 
 			primitives = new PrimTrailManager();
@@ -274,100 +258,25 @@ namespace AerovelenceMod
 			LoadDetours();
 		}
 
-        public override void Unload()
-        {
+		public override void Unload()
+		{
 			if (!Main.dedServ)
 			{
 				DiscordRichPresence.Deinitialize();
-				Main.OnTick -= DiscordRichPresence.Update;
+				Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
 			}
 			UnloadDetours();
 			FargosModMutant = false;
-            ArmorHotKey = null;
-            Instance = null;
+			Instance = null;
 			LegElectricity = null;
 			RailgunShader = null;
 		}
 
-		public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
-
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-		{
-			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-			if (inventoryIndex != -1)
-			{
-				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
-					"AerovelenceMod: Marauder UI",
-					delegate
-					{
-                        MarauderUserInterface.Draw(Main.spriteBatch, new GameTime());
-						return true;
-					},
-					InterfaceScaleType.UI)
-				);
-			}
-			if (inventoryIndex != -1)
-			{
-				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
-					"AerovelenceMod: RockCollector UI",
-					delegate
-					{
-                        RockCollectorUserInterface.Draw(Main.spriteBatch, new GameTime());
-						return true;
-					},
-					InterfaceScaleType.UI)
-				);
-			}
-		}
-
 		public override void Close()
 		{
-			var slots = new [] 
-            {
-				GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns"),
-				GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel")
-		    };
 
-			foreach (var slot in slots)
-                if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
-                    Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
-
-            foreach (var slot in slots)
-                if (Main.music.IndexInRange(slot) && Main.music[slot]?.IsPlaying == true)
-                    Main.music[slot].Stop(Microsoft.Xna.Framework.Audio.AudioStopOptions.Immediate);
-
-            base.Close();
+			base.Close();
 		}
-
-		public override void UpdateMusic(ref int music, ref MusicPriority priority)
-		{
-			if (Main.gameMenu)
-                return;
-			
-			Player player = Main.LocalPlayer;
-            var zonePlayer = player.GetModPlayer<ZonePlayer>();
-
-            if (zonePlayer == null)
-                return;
-
-            if (zonePlayer.ZoneCrystalCaverns)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalCaverns");
-                priority = MusicPriority.BiomeHigh;
-            }
-
-            if (zonePlayer.ZoneCrystalCitadel)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
-                priority = MusicPriority.BiomeHigh;
-			}
-
-            /*if (!Main.dayTime && DarkNightWorld.DarkNight)
-            {
-                music = GetSoundSlot(SoundType.Music, "Sounds/Music/Citadel");
-                priority = MusicPriority.Environment;
-            }*/
-        }
 
         public override void AddRecipeGroups()
         {
@@ -418,59 +327,7 @@ namespace AerovelenceMod
             }
         }
 
-		public override void AddRecipes()
-		{
-			Mod.CreateRecipe(ItemID.MagicMirror, 1)
-				.AddIngredient(ItemID.IceMirror, 1)
-				.AddTile(TileID.Anvils)
-				.Register();
-			Mod.CreateRecipe(ItemID.WormholePotion, 1)
-				.AddIngredient(ModContent.ItemType<CavernCrystal>(), 2)
-				.AddIngredient(ItemID.Bottle, 1)
-				.AddTile(TileID.Bottles)
-				.Register();
-			Mod.CreateRecipe(ItemID.LuckyHorseshoe, 1)
-				.AddRecipeGroup("AerovelenceMod:GoldBars", 5)
-				.AddIngredient(ItemID.Cloud, 5)
-				.AddIngredient(ItemID.SunplateBlock, 3)
-				.AddTile(TileID.SkyMill)
-				.Register();
-			Mod.CreateRecipe(ItemID.CloudinaBottle, 1)
-				.AddIngredient(ItemID.Cloud, 25)
-				.AddIngredient(ItemID.Bottle, 1)
-				.AddTile(TileID.SkyMill)
-				.Register();
-			Mod.CreateRecipe(ItemID.SandstorminaBottle, 1)
-				.AddIngredient(ItemID.SandBlock, 25)
-				.AddIngredient(ItemID.Bottle, 1)
-				.AddTile(TileID.SkyMill)
-				.Register();
-			Mod.CreateRecipe(ItemID.BlizzardinaBottle, 1)
-				.AddIngredient(ItemID.SnowBlock, 25)
-				.AddIngredient(ItemID.Bottle, 1)
-				.AddTile(TileID.SkyMill)
-				.Register();
-			Mod.CreateRecipe(ItemID.TsunamiInABottle, 1)
-				.AddIngredient(ItemID.Starfish, 12)
-				.AddIngredient(ItemID.Seashell, 12)
-				.AddIngredient(ItemID.Bottle, 1)
-				.AddTile(TileID.SkyMill)
-				.Register();
-			Mod.CreateRecipe(ItemID.Aglet, 1)
-				.AddRecipeGroup("IronBar", 5)
-				.AddTile(TileID.Anvils)
-				.Register();
-			Mod.CreateRecipe(ItemID.AnkletoftheWind, 1)
-				.AddRecipeGroup("IronBar", 4)
-				.AddIngredient(ItemID.Stinger, 10)
-				.AddTile(TileID.Anvils)
-				.Register();
-			Mod.CreateRecipe(ItemID.LavaCharm, 1)
-				.AddIngredient(ItemID.HellstoneBar, 10)
-				.AddTile(TileID.Anvils)
-				.Register();
-
-		}
+		
 
 		private void LoadDetours()
 		{
@@ -486,13 +343,6 @@ namespace AerovelenceMod
 			AeroPlayer aeroPlayer = new AeroPlayer();
 			On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
-		}
-		public override void MidUpdateProjectileItem()
-        {
-			if (Main.netMode != NetmodeID.Server)
-            {
-                primitives.UpdateTrails();
-            }
 		}
 		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
 		{

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -27,7 +28,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath44;
             NPC.aiStyle = -1;
-            aiType = -1;
+            AIType = -1;
         }
 
         private int frame;
@@ -71,22 +72,22 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
                 {
                     Vector2 velocity = new Vector2(Main.rand.NextFloat(-3f, 3f), -3f);
 
-                    Projectile.NewProjectile(NPC.Center, velocity, ModContent.ProjectileType<CrimsonReachBall>(), NPC.damage, 2f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, ModContent.ProjectileType<CrimsonReachBall>(), NPC.damage, 2f);
                 }
 
                 ShootTimer = 0f;
             }
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = Main.npcTexture[NPC.type];
+        Texture2D texture = (Texture2D)TextureAssets.Npc[NPC.type];
 
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             Vector2 drawPosition = NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
 
-            spriteBatch.Draw(texture, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, scale, effects, 0f);
+            Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, scale, effects, 0);
 
             return false;
         }

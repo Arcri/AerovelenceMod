@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 
 #endregion
 
@@ -87,10 +88,10 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			return (false);
 		}
 
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
-		{
-			base.DrawBehind(index, drawCacheProjsBehindNPCsAndTiles, drawCacheProjsBehindNPCs, drawCacheProjsBehindProjectiles, drawCacheProjsOverWiresUI);
-		}
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
+        }
 
 		public override void CutTiles()
 		{
@@ -109,19 +110,19 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			return (false);
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-		{
+        public override bool PreDraw(ref Color lightColor)
+        {
 			if (Projectile.velocity == Vector2.Zero)
 			{
 				return (false);
 			}
-			Texture2D texture2D15 = Main.projectileTexture[Projectile.type];
+			Texture2D texture2D15 = (Texture2D)TextureAssets.Projectile[Projectile.type];
 			float num175 = Projectile.localAI[1];
 			Color color37 = new Color(255, 255, 255, 0) * 0.9f;
 			Rectangle rectangle14 = new Rectangle(0, 0, texture2D15.Width, 22);
 			Vector2 value16 = new Vector2(0f, Main.player[Projectile.owner].gfxOffY);
 
-			spriteBatch.Draw(texture2D15, Projectile.Center.Floor() - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, rectangle14.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+			Main.EntitySpriteDraw(texture2D15, Projectile.Center.Floor() - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, rectangle14.Size() / 2f, Projectile.scale, SpriteEffects.None, 0);
 			num175 -= 33f * Projectile.scale;
 			Vector2 value17 = Projectile.Center.Floor();
 			value17 += Projectile.velocity * Projectile.scale * 10.5f;
@@ -135,14 +136,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 					{
 						rectangle14.Height = (int)(num175 - num176);
 					}
-					spriteBatch.Draw(texture2D15, value17 - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, new Vector2(rectangle14.Width / 2, 0f), Projectile.scale, SpriteEffects.None, 0f);
+					Main.EntitySpriteDraw(texture2D15, value17 - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, new Vector2(rectangle14.Width / 2, 0f), Projectile.scale, SpriteEffects.None, 0);
 					num176 += rectangle14.Height * Projectile.scale;
 					value17 += Projectile.velocity * rectangle14.Height * Projectile.scale;
 				}
 			}
 
 			rectangle14 = new Rectangle(0, 56, texture2D15.Width, 22);
-			spriteBatch.Draw(texture2D15, value17 - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, texture2D15.Frame().Top(), Projectile.scale, SpriteEffects.None, 0f);
+			Main.EntitySpriteDraw(texture2D15, value17 - Main.screenPosition + value16, rectangle14, color37, Projectile.rotation, texture2D15.Frame().Top(), Projectile.scale, SpriteEffects.None, 0);
 			return (false);
 		}
 

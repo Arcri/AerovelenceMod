@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.damage = 30;
             NPC.defense = 32;
             NPC.knockBackResist = 0f;
-            animationType = NPCID.BlueSlime;
+            AnimationType = NPCID.BlueSlime;
             NPC.width = 70;
             NPC.height = 46;
             NPC.value = Item.buyPrice(0, 15, 7, 0);
@@ -83,7 +84,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                         vector2.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
                         vector2.Normalize();
                         vector2 *= 4f + (float)Main.rand.Next(-50, 51) * 0.01f;
-                        Projectile.NewProjectile(NPC.position.X, NPC.position.Y, vector2.X, vector2.Y, ModContent.ProjectileType<LuminoShard>(), NPC.damage, 0f);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.position.X, NPC.position.Y, vector2.X, vector2.Y, ModContent.ProjectileType<LuminoShard>(), NPC.damage, 0f);
                     }
                 }
                 if (NPC.ai[1] > 600)
@@ -98,20 +99,20 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             return true;
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (AI_State == -1)
             {
-                Vector2 drawOrigin = new Vector2(Main.npcTexture[NPC.type].Width * 0.5f, (NPC.height / Main.npcFrameCount[NPC.type]) * 0.5f);
+                Vector2 drawOrigin = new Vector2(TextureAssets.Npc[NPC.type].Width() * 0.5f, (NPC.height / Main.npcFrameCount[NPC.type]) * 0.5f);
                 for (int i = 0; i < NPC.oldPos.Length; i++)
                 {
                     Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
                     Color color = NPC.GetAlpha(Color.White) * ((float)(NPC.oldPos.Length - i) / (float)NPC.oldPos.Length);
-                    spriteBatch.Draw(Main.npcTexture[NPC.type], drawPos, new Rectangle?(NPC.frame), color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0f);
+                    Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], drawPos, new Rectangle?(NPC.frame), color, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
                 }
                 if (NPC.collideY)
                 {   
-                    aura = Projectile.NewProjectileDirect(NPC.position, new Vector2(2, 2), ModContent.ProjectileType<EnergyAura>(), NPC.damage, 0f);
+                    aura = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.position, new Vector2(2, 2), ModContent.ProjectileType<EnergyAura>(), NPC.damage, 0f);
                     AI_State += 2;
                     NPC.ai[1] = 0;
                 }

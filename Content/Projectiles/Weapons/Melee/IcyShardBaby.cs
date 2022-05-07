@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
 {
@@ -25,18 +26,18 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 30;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Main.projectileTexture[Projectile.type];
+            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
             Vector2 origin = new Vector2(texture.Width / 2, Projectile.height / 2);
             Color color = new Color(130, 130, 150, 0);
             for (int i = 0; i < 360; i += 60)
             {
                 Vector2 circular = new Vector2(Main.rand.NextFloat(1.5f, 2.5f), 0).RotatedBy(MathHelper.ToRadians(i * 2.5f));
-                Main.spriteBatch.Draw(texture, Projectile.Center + circular - Main.screenPosition, null, color * ((255f - Projectile.alpha) / 255f), Projectile.rotation, origin, Projectile.scale * 0.8f, SpriteEffects.None, 0.0f) ;
+                Main.EntitySpriteDraw(texture, Projectile.Center + circular - Main.screenPosition, null, color * ((255f - Projectile.alpha) / 255f), Projectile.rotation, origin, Projectile.scale * 0.8f, SpriteEffects.None, 0);
             }
             //color = projectile.GetAlpha(Color.White);
-            //Main.spriteBatch.Draw(texture, projectile.Center - Main.screenPosition, null, color, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0.0f);
+            //Main.EntitySpriteDraw(texture, projectile.Center - Main.screenPosition, null, color, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0.0f);
             return false;
         }
         public override void Kill(int timeLeft)

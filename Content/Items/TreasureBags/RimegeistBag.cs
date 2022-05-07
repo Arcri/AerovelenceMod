@@ -31,29 +31,30 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(Mod.Find<ModItem>("FragileIceCrystal").Type);
-			player.QuickSpawnItem(ItemID.GoldCoin, 15);
-			player.QuickSpawnItem(Mod.Find<ModItem>("FrostShard").Type, Main.rand.Next(10) + 10);
-			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 20));
+			var s = player.GetSource_OpenItem(Type);
+			player.QuickSpawnItem(s,Mod.Find<ModItem>("FragileIceCrystal").Type);
+			player.QuickSpawnItem(s,ItemID.GoldCoin, 15);
+			player.QuickSpawnItem(s,Mod.Find<ModItem>("FrostShard").Type, Main.rand.Next(10) + 10);
+			player.QuickSpawnItem(s,ItemID.HealingPotion, Main.rand.Next(4, 20));
 
-			int drop = Main.rand.Next(7);
+			int ItemDrop = Main.rand.Next(7);
 
 			switch (Main.rand.Next(5))
 			{
 				case 0:
-					player.QuickSpawnItem(Mod.Find<ModItem>("CrystalArch").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("CrystalArch").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(Mod.Find<ModItem>("IcySaber").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("IcySaber").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(Mod.Find<ModItem>("CryoBall").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("CryoBall").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(Mod.Find<ModItem>("DeepFreeze").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("DeepFreeze").Type);
 					break;
 				case 4:
-					player.QuickSpawnItem(Mod.Find<ModItem>("Snowball").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("Snowball").Type);
 					break;
 			}
 		}

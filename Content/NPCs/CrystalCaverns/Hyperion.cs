@@ -84,7 +84,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             if (NPC.ai[0] % 256 == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
-                Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<ElectricLaser>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<ElectricLaser>(), 30, 0f, Main.myPlayer, 0f, 0f);
             }
             NPC.TargetClosest(false);
             if (player.dead)
@@ -150,10 +150,10 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             Main.dust[dust].velocity.Y *= 0.1f;
             Main.dust[dust].noGravity = true;
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/CrystalCaverns/Hyperion_Glow");
-            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/CrystalCaverns/Hyperion_Glow");
+            Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) => 

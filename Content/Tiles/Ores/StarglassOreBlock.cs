@@ -11,16 +11,16 @@ namespace AerovelenceMod.Content.Tiles.Ores
     {
         public override void SetStaticDefaults()
         {
-			mineResist = 2.5f;
-			minPick = 55;
+			MineResist = 2.5f;
+			MinPick = 55;
             Main.tileSolid[Type] = true;
             Main.tileSpelunker[Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            drop = ModContent.ItemType<StarglassCluster>();
-			dustType = 10;
-			soundType = SoundID.Tink;			
+            ItemDrop = ModContent.ItemType<StarglassCluster>();
+			DustType = 10;
+			SoundType = SoundID.Tink;			
             AddMapEntry(new Color(255, 090, 090), Language.GetText("Starglass Cluster"));
         }
     }

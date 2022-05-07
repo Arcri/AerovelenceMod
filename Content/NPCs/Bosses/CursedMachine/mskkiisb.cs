@@ -297,7 +297,7 @@ namespace AerovelenceMod.NPCs.Bosses.CursedMachine //Change me
                         num6 = Main.npc[index].Center.X - vector2.X;
                         num7 = Main.npc[index].Center.Y - vector2.Y;
                         Color color2 = Lighting.GetColor((int)vector2.X / 16, (int)(vector2.Y / 16f));
-                        Main.spriteBatch.Draw(mod.GetTexture("NPCs/Bosses/CursedMachine/CursedChain"), new Vector2(vector2.X - Main.screenPosition.X, vector2.Y - Main.screenPosition.Y), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, 30, num8)), color2, rotation2, new Vector2(30 * 0.5f, 26 * 0.5f), 1f, SpriteEffects.None, 0f);
+                        Main.EntitySpriteDraw(mod.GetTexture("NPCs/Bosses/CursedMachine/CursedChain"), new Vector2(vector2.X - Main.screenPosition.X, vector2.Y - Main.screenPosition.Y), new Microsoft.Xna.Framework.Rectangle?(new Rectangle(0, 0, 30, num8)), color2, rotation2, new Vector2(30 * 0.5f, 26 * 0.5f), 1f, SpriteEffects.None, 0f);
                     }
                 }
             }

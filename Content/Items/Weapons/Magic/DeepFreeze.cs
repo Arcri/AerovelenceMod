@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.GameContent;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -49,7 +50,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
             line = new TooltipLine(Mod, "Book of Bees", "Artifact Weapon")
             {
-                overrideColor = new Color(255, 241, 000)
+                OverrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
@@ -75,21 +76,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 40;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
         {
-            // Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width, Main.projectileTexture[projectile.type].Height);
+            // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * 1.0f;
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + Main.projectileTexture[Projectile.type].Size() / 3f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
                 Color color = Projectile.GetAlpha(fetchRainbow()) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 for (int i = 0; i < 6; i++)
                 {
                     if (i == 0)
-                        spriteBatch.Draw(texture2D, drawPos, null, color, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
-                    spriteBatch.Draw(texture2D, drawPos + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), null, Color.White.MultiplyRGBA(color * 0.5f), Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0f);
+                        Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, origin, scale, SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(texture2D, drawPos + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), null, Color.White.MultiplyRGBA(color * 0.5f), Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0);
                 }
             }
             return false;

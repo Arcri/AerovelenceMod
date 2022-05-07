@@ -31,29 +31,29 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(Mod.Find<ModItem>("EnergyShield").Type);
-			player.QuickSpawnItem(ItemID.GoldCoin, 9);
+			var s = player.GetSource_OpenItem(Type);
+			player.QuickSpawnItem(s,Mod.Find<ModItem>("EnergyShield").Type);
+			player.QuickSpawnItem(s,ItemID.GoldCoin, 9);
 
-			int drop = Main.rand.Next(7);
+			int ItemDrop = Main.rand.Next(7);
 
-			player.TryGettingDevArmor();
 
 			switch (Main.rand.Next(4))
 			{
 				case 0:
-					player.QuickSpawnItem(Mod.Find<ModItem>("DarknessDischarge").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("DarknessDischarge").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(Mod.Find<ModItem>("Oblivion").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("Oblivion").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(Mod.Find<ModItem>("CyverCannon").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("CyverCannon").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(Mod.Find<ModItem>("Cyverthrow").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("Cyverthrow").Type);
 					break;
 				case 4:
-					player.QuickSpawnItem(Mod.Find<ModItem>("AetherVision").Type);
+					player.QuickSpawnItem(s,Mod.Find<ModItem>("AetherVision").Type);
 					break;
 			}
 		}

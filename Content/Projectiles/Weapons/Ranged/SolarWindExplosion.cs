@@ -68,17 +68,19 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             target.immune[Projectile.owner] = cooldown;
         }
 
-		public override bool PreDraw(ref Color lightColor) {
+        public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
-            Rectangle rectangle = texture.Frame(1, Main.projFrames[Projectile.type], 0, Projectile.frame);
-            Color color = Projectile.GetAlpha(lightColor);
-
-            if (!Projectile.hide)
             {
-                Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rectangle, color, Projectile.rotation, rectangle.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
+                Rectangle rectangle = texture.Frame(1, Main.projFrames[Projectile.type], 0, Projectile.frame);
+                Color color = Projectile.GetAlpha(lightColor);
+
+                if (!Projectile.hide)
+                {
+                    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rectangle, color, Projectile.rotation, rectangle.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+                }
+                return false;
             }
-            return false;
         }
     }
 }

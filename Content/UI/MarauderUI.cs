@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.UI
 			base.DrawSelf(spriteBatch);
 
 			// This will hide the crafting menu similar to the reforge menu. For best results this UI is placed before "Vanilla: Inventory" to prevent 1 frame of the craft menu showing.
-			Main.HidePlayerCraftingMenu = true;
+			Main.hidePlayerCraftingMenu = true;
 
 			// Here we have a lot of code. This code is mainly adapted from the vanilla code for the reforge option.
 			// This code draws "Place an item here" when no item is in the slot and draws the reforge cost and a reforge button when an item is in the slot.
@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.UI
 				int reforgeY = slotY + 40;
 				bool hoveringOverReforgeButton = Main.mouseX > reforgeX - 15 && Main.mouseX < reforgeX + 15 && Main.mouseY > reforgeY - 15 && Main.mouseY < reforgeY + 15 && !PlayerInput.IgnoreMouseInterface;
 				Texture2D reforgeTexture = Main.reforgeTexture[hoveringOverReforgeButton ? 1 : 0];
-				Main.spriteBatch.Draw(reforgeTexture, new Vector2(reforgeX, reforgeY), null, Color.White, 0f, reforgeTexture.Size() / 2f, 0.8f, SpriteEffects.None, 0f);
+				Main.EntitySpriteDraw(reforgeTexture, new Vector2(reforgeX, reforgeY), null, Color.White, 0f, reforgeTexture.Size() / 2f, 0.8f, SpriteEffects.None, 0);
 				if (hoveringOverReforgeButton)
 				{
 					Main.hoverItemName = Language.GetTextValue("LegacyInterface.19");

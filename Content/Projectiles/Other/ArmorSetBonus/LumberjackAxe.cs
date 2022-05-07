@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 
 #endregion
 
@@ -109,7 +110,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			return (false);
 		}
 
-		public override bool CanDamage()
+		public override bool? CanDamage()
 			=> Target != 0 && AttackTimer >= AttackWarmup;
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -118,17 +119,17 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			return (projHitbox.Intersects(targetHitbox));
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-		{
+        public override bool PreDraw(ref Color lightColor)
+        {
 			if (Target != 0 && AttackTimer >= AttackWarmup)
 			{
-				Texture2D texture = Main.projectileTexture[Projectile.type];
+				Texture2D texture = (Texture2D)TextureAssets.Projectile[Projectile.type];
 				Vector2 origin = texture.Size() / 2;
 
 				for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[Projectile.type]; ++i)
 				{
-					spriteBatch.Draw(texture, Projectile.oldPos[i] + origin / 2 - Main.screenPosition, null, lightColor * (0.8f - 0.1f * i), Projectile.oldRot[i], origin,
-						Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+					Main.EntitySpriteDraw(texture, Projectile.oldPos[i] + origin / 2 - Main.screenPosition, null, lightColor * (0.8f - 0.1f * i), Projectile.oldRot[i], origin,
+						Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
 				}
 			}
 

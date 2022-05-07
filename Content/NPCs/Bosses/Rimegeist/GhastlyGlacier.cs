@@ -34,45 +34,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             NPC.HitSound = SoundID.NPCHit5;
             NPC.DeathSound = SoundID.NPCHit5;
             NPC.buffImmune[24] = true;
-            bossBag = ModContent.ItemType<RimegeistBag>();
-            music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Rimegeist");
         }
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/Glowmask").Value;
+        Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/Glowmask").Value;
             Vector2 drawPos = NPC.Center + new Vector2(0, NPC.gfxOffY) - Main.screenPosition;
             //keep an eye on the width and height when doing this. It matters
-            spriteBatch.Draw(texture, drawPos, NPC.frame, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-        }
-        public override void NPCLoot()
-        {
-            if (Main.expertMode)
-            {
-                NPC.DropBossBags();
-            }
-            if (!Main.expertMode)
-            {
-                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ItemID.HealingPotion, Main.rand.Next(4, 12), false, 0, false, false);
-                Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("FrostShard").Type, Main.rand.Next(10, 20), false, 0, false, false);
-                switch (Main.rand.Next(5))
-                {
-                    case 0:
-                        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("CrystalArch").Type, 1, false, 0, false, false);
-                        break;
-                    case 1:
-                        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("DeepFreeze").Type, 1, false, 0, false, false);
-                        break;
-                    case 2:
-                        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("IcySaber").Type, 1, false, 0, false, false);
-                        break;
-                    case 3:
-                        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("CryoBall").Type, 1, false, 0, false, false);
-                        break;
-                    case 4:
-                        Item.NewItem((int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, Mod.Find<ModItem>("Snowball").Type, 1, false, 0, false, false);
-                        break;
-                }
-            }
+            Main.EntitySpriteDraw(texture, drawPos, NPC.frame, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
