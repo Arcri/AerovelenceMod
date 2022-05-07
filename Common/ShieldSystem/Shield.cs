@@ -172,7 +172,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 					if (projectile.type == ModContent.ProjectileType<ShieldProjectile>())
 						projectile.Kill();
                 }																		
-				projectile =  Projectile.NewProjectileDirect(source, player.Center, Vector2.Zero, shield.projectileType, 20, 0, player.whoAmI);
+				projectile =  Projectile.NewProjectileDirect(null, player.Center, Vector2.Zero, shield.projectileType, 20, 0, player.whoAmI);
 				ShieldProjectile.sizeBoost = shield.sizeBoost;
 			}
 
@@ -341,7 +341,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 						if (!textureExists)
 							texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/BubbleShield");
 						Projectile.Size = new Vector2(texture.Width, texture.Height) * Projectile.scale;
-						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2*Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
+						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2*Projectile.scale), Projectile.scale, SpriteEffects.None, 1);
 						break;
 
 					case 1: //Impact Shield PreDraw [wip]
@@ -350,17 +350,17 @@ namespace AerovelenceMod.Common.ShieldSystem
 						if (Projectile.ai[0] > 8)
 						{
 							Projectile.Size = new Vector2(44, 44) * Projectile.scale;
-							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 2), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 2), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1);
 						}
 						else if (Projectile.ai[0] > 4)
 						{
 							Projectile.Size = new Vector2(26, 26) * Projectile.scale;
-							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 1), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 1), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1);
 						}
 						else
 						{
 							Projectile.Size = new Vector2(14, 14) * Projectile.scale;
-							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 0), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
+							Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(1, 3, 0, 0), Color.White, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1);
 						}
 						break;
 
@@ -368,7 +368,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 						if (!textureExists)
 							texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Shield/NovaShield");
 						Projectile.Size = new Vector2(texture.Width, texture.Height) * Projectile.scale;
-						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1f);
+						Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition + Projectile.Size / 2, texture.Frame(), Color.Transparent, Projectile.rotation, Projectile.Size / (2 * Projectile.scale), Projectile.scale, SpriteEffects.None, 1);
 						break;
 					default:
 						break;

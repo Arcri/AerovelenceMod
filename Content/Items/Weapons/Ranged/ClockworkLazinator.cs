@@ -40,11 +40,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 
 
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(3));
+			Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(3));
 			speedX = perturbedSpeed.X;
-			speedY = perturbedSpeed.Y;
+			velocity.Y = perturbedSpeed.Y;
 			return true;
 		}
 
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 			line = new TooltipLine(Mod, "Clockwork Lazinator", "Artifact Weapon")
 			{
-				overrideColor = new Color(255, 241, 000)
+				OverrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)

@@ -32,10 +32,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Arrow;
 			Item.autoReuse = true;
 		}
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
 			type = Main.rand.Next(new int[] { type, type, type, ProjectileID.Skull });
-			return true;
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
@@ -49,7 +48,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 			line = new TooltipLine(Mod, "Skull Bow", "Legendary item")
 			{
-				overrideColor = new Color(255, 241, 000)
+				OverrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)

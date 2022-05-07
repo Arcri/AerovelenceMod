@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Buffs;
 using AerovelenceMod.Content.Projectiles.Weapons.Summoning;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -34,7 +35,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
             Item.DamageType = DamageClass.Summon;
             Item.buffType = ModContent.BuffType<AetherVisionBuff>();
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (player.altFunctionUse == 2)
             {
@@ -53,12 +54,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
             }
 
             player.AddBuff(Item.buffType, Item.buffTime);
-            Projectile.NewProjectile(Main.MouseWorld, Vector2.Zero, type, damage, knockBack, player.whoAmI, summonType);
+            Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, 1f, player.whoAmI, summonType);
 
             return (false);
         }
 
-        public override void UseStyle(Player player)
-         => player.itemLocation -= new Vector2(96 * player.direction, 18);
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
+        => player.itemLocation -= new Vector2(96 * player.direction, 18);
     }
 }

@@ -35,12 +35,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = Mod.Find<ModProjectile>("BeholderOrb").Type;
             Item.shootSpeed = 40f;
         }
-        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
+        public static Vector2[] randomSpread(float speedX, float velocity.Y, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.075);
-            float baseSpeed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = Math.Atan2(speedX, speedY);
+            float baseSpeed = (float)Math.Sqrt(speedX * speedX + velocity.Y * velocity.Y);
+            double baseAngle = Math.Atan2(speedX, velocity.Y);
             double randomAngle;
             for (int i = 0; i < num; ++i)
             {
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             return posArray;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             float speed = 5f;
             Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));

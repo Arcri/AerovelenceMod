@@ -45,21 +45,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            type = ModContent.ProjectileType<WispProjectileRanged>(); //IceArrow
+            type = ModContent.ProjectileType<WispProjectileRanged>();
+
+            float numberProjectiles = 3 + Main.rand.Next(3);
+            float rotation = MathHelper.ToRadians(45);
+            position += Vector2.Normalize(velocity) * 45f;
 
             for (int i = 0; i < projectileAmount; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.PiOver4 * 0.25f);
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, 2f, player.whoAmI);
+                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, 2f, player.whoAmI);
                 type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<IceBoltFriendly>() });
-            }
-
-
-            float numberProjectiles = 2 + Main.rand.Next(2);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
-            for (int i = 0; i < numberProjectiles; i++)
-            {
-
             }
             return false;
 

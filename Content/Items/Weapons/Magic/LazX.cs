@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			line = new TooltipLine(Mod, "Laz-X", "Legendary item")
 			{
-				overrideColor = new Color(255, 241, 000)
+				OverrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)

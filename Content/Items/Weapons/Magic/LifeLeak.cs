@@ -28,9 +28,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			Item.shoot = ModContent.ProjectileType<LifeSyphon>();
 			Item.shootSpeed = 11.4f;
 		}
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			Projectile p = Projectile.NewProjectileDirect(position, new Vector2(speedX, speedY), type, damage, knockBack, player.whoAmI, Main.rand.Next(new int[] { 0, 0, 0, 1 }));
+			Projectile p = Projectile.NewProjectileDirect(position, new Vector2(speedX, velocity.Y), type, damage, knockBack, player.whoAmI, Main.rand.Next(new int[] { 0, 0, 0, 1 }));
 			if (p.ai[0] == 0)
 				p.penetrate = 1;
 			p.netUpdate = true;

@@ -32,20 +32,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 8f;
         }
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             int deg = 4;
             float numberProjectiles = 5;
             float rotation = MathHelper.ToRadians(deg);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * deg;
+            position += Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * deg;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
+                Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
                 int value = player.velocity.Length() != 0 ? 2500 / (int)Math.Ceiling((double)player.velocity.Length()) : 150;
                 perturbedSpeed *= 7;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.NailFriendly, (int)MathHelper.Clamp(value, 25, 150), knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.NailFriendly, (int)MathHelper.Clamp(value, 25, 150), 1f, player.whoAmI);
             }
-			return false;
 		}
     }
 }

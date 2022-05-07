@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
@@ -36,18 +37,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.DamageType = DamageClass.Ranged;
             Item.channel = true;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float numberProjectiles = 2;
-            float rotation = MathHelper.ToRadians(6);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 10f;
+            float numberProjectiles = 1 + Main.rand.Next(2)
+            float rotation = MathHelper.ToRadians(45);
+            position += Vector2.Normalize(velocity) * 45f;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+                Projectile.NewProjectile(source, position, perturbedSpeed, type, damage, knockback, player.whoAmI);
             }
             return false;
-
         }
     }
 
@@ -168,7 +168,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                         {
                             spinningpoint2 = -Vector2.UnitY;
                         }
-                        Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, ProjectileID.Bullet, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, ProjectileID.Bullet, Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }
                 else

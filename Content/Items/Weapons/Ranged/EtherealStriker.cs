@@ -31,14 +31,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.shootSpeed = 18;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             float numberProjectiles = 7;
             float rotation = MathHelper.ToRadians(15);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 15f;
+            position += Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 15f;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
+                Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
                 Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Item.shoot, damage, knockBack, player.whoAmI);
             }
             return false;

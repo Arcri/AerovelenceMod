@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 
 			line = new TooltipLine(Mod, "Crystalline Wings", "Donator Accessory")
 			{
-				overrideColor = new Color(036, 124, 149)
+				OverrideColor = new Color(036, 124, 149)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)

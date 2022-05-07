@@ -34,18 +34,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.shootSpeed = 5f;
             Item.autoReuse = false;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             float numberProjectiles = 2 + Main.rand.Next(1);
             float rotation = MathHelper.ToRadians(20);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
+            position += Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 45f;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
+                Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(15));
                 float scale = 1f - (Main.rand.NextFloat() * .3f);
                 if (i == 1)
                 {
-                    Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<ElementScythe>(), damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ModContent.ProjectileType<ElementScythe>(), damage, knockBack, player.whoAmI);
                     Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 1, perturbedSpeed.Y * 1, type, damage, knockBack, player.whoAmI);
                 }
                 else

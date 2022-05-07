@@ -36,10 +36,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.shoot = AmmoID.Arrow;
             Item.useAmmo = AmmoID.Arrow;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             SoundEngine.PlaySound(SoundID.Item72);
-            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f));
+            Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(0f));
             Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ModContent.ProjectileType<PrismaticBolt>(), damage, knockBack, Main.myPlayer);
             return false;
         }

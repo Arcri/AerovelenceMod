@@ -37,10 +37,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
             }
             return true;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Projectile.NewProjectile(position.X, position.Y, 0, 0, Mod.Find<ModProjectile>("SnailRainManager").Type, 0, knockBack, player.whoAmI);
-            return false;
+            Projectile.NewProjectile(Item.GetSource_FromThis(), position.X, position.Y, 0, 0, Mod.Find<ModProjectile>("SnailRainManager").Type, 0, 1f, player.whoAmI);
         }
     }
 
@@ -59,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Other
         {
             Vector2 playerpos = Projectile.position;
             int randX = new Random().Next(-1200, 1201);
-            int right = Projectile.NewProjectile(playerpos.X + randX, playerpos.Y - 1000, 15, 0, Mod.Find<ModProjectile>("FLYINGSNAIL").Type, 0, 0f, Main.myPlayer, 0f, 0f);
+            int right = Projectile.NewProjectile(Projectile.GetSource_FromAI(),playerpos.X + randX, playerpos.Y - 1000, 15, 0, Mod.Find<ModProjectile>("FLYINGSNAIL").Type, 0, 0f, Main.myPlayer, 0f, 0f);
             if (Projectile.timeLeft == 1)
             {
                 for (int i = 0; i < Main.npc.Length; i++)

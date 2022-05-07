@@ -35,29 +35,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Item.shoot = ModContent.ProjectileType<DiseasedBlob>();
             Item.autoReuse = true;
         }
-        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            var posArray = new Vector2[num];
-            float spread = (float)(angle * 0.033);
-            float baseSpeed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = Math.Atan2(speedX, speedY);
-            double randomAngle;
-            for (int i = 0; i < num; ++i)
-            {
-                randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-                posArray[i] = new Vector2(baseSpeed * (float)Math.Sin(randomAngle), baseSpeed * (float)Math.Cos(randomAngle));
-            }
-            return posArray;
-        }
-
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
-            for (int i = 0; i < 3; ++i)
-            {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, Mod.Find<ModProjectile>("DiseasedBlob").Type, damage, knockBack, player.whoAmI);
-            }
-            return false;
+            velocity = velocity.RotatedByRandom(MathHelper.ToRadians(10));
         }
     }
 }

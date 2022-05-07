@@ -1,6 +1,7 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,26 +33,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.shootSpeed = 21f;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             float numberProjectiles = 2 + Main.rand.Next(1);
             float rotation = MathHelper.ToRadians(20);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
+            position += Vector2.Normalize(velocity) * 45f;
+
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(15));
-                float scale = 1f - (Main.rand.NextFloat() * .3f);
+                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
                 if (i == 1)
                 {
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
-                    Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FrostburnArrow, damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(source, position, perturbedSpeed, type, damage, knockback, player.whoAmI);
+
                 }
                 else
                 {
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 2, perturbedSpeed.Y * 2, type, damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(source, position, perturbedSpeed, AmmoID.Arrow, damage, knockback, player.whoAmI);
                 }
             }
-            return false;
+            return false; // return false to stop vanilla from calling Projectile.NewProjectile.
         }
     }
 }

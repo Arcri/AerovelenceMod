@@ -38,16 +38,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}
 
 
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5)); //the angle in which the projectile can be fired
-			speedX = perturbedSpeed.X;
-			speedY = perturbedSpeed.Y;
-			if (Main.rand.NextBool(5))
-			{
-				Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileType<SkylightProjectile>(), damage * 2, knockBack, player.whoAmI);
-			}
-			return true;
+			velocity = velocity.RotatedByRandom(MathHelper.ToRadians(10));
 		}
 	}
 }

@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.Items.Patreon
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-        i++;
+            i++;
 
             if (player.altFunctionUse == 2)
             {

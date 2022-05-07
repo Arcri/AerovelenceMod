@@ -1,6 +1,7 @@
 using AerovelenceMod.Content.Items.Others.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,16 +33,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.shootSpeed = 8f;
             Item.staff[Item.type] = true;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int rand1 = Main.rand.Next(-50, 50);
+        int rand1 = Main.rand.Next(-50, 50);
             Vector2 adjPos = player.Center + new Vector2(rand1, -700);
             Vector2 toMouse = Main.MouseWorld - adjPos;
             toMouse.Normalize();
 
             for (int i = 0; i < Main.rand.Next(1, 10); i++)
             {
-                Projectile.NewProjectileDirect(adjPos, (toMouse * 15) + new Vector2(Main.rand.NextFloat(-1.5f, 1.5f), Main.rand.NextFloat(-1.5f, 1.5f)), ProjectileID.FrostBoltSword, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectileDirect(source, adjPos, (toMouse * 15) + new Vector2(Main.rand.NextFloat(-1.5f, 1.5f), Main.rand.NextFloat(-1.5f, 1.5f)), ProjectileID.FrostBoltSword, damage, 2f, player.whoAmI);
             }
 
             return false;

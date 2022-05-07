@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
 		{
 			player.statDefense -= 20;
-            player.allDamage += 0.15f;
+            player.GetDamage(DamageClass.Generic) += 0.15f;
 		}
     }
 }

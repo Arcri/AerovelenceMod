@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items.Accessories
             if (player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
             {
                 player.statDefense += 5;
-                player.allDamage += 0.3f;
+                player.GetDamage(DamageClass.Generic) += 0.3f;
             }
         }
     }

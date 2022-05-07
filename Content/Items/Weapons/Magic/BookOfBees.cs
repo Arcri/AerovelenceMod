@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
             line = new TooltipLine(Mod, "Book of Bees", "Artifact weapon")
             {
-                overrideColor = new Color(255, 241, 000)
+                OverrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)

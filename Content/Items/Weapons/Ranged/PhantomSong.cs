@@ -34,10 +34,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.shootSpeed = 8.5f;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             type = Main.rand.Next(new int[] { type, type, Mod.Find<ModProjectile>("PhantomSongArrow") .Type});
-            return true;
         }
         public override void AddRecipes()
         {
@@ -76,7 +75,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             i++;
             if (i % 25 == 0)
             {
-                Projectile.NewProjectile(Projectile.Center, Projectile.velocity * 0.99f, ModContent.ProjectileType<PhantomSongAura>(), Projectile.damage, Projectile.knockBack);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity * 0.99f, ModContent.ProjectileType<PhantomSongAura>(), Projectile.damage, Projectile.knockBack);
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.frameCounter++;

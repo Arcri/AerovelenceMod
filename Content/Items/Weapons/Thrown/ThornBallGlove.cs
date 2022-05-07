@@ -1,6 +1,7 @@
 using AerovelenceMod.Content.Projectiles.Weapons.Throwing;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -34,21 +35,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Item.shootSpeed = 16f;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
            if(player.statLife <= player.statLifeMax2 && type == ModContent.ProjectileType<PlanteraSeed>())
            {
-                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<PlanteraSeed>(), 51, 13, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<PlanteraSeed>(), 51, 13, player.whoAmI);
 
            }
            if (player.statLife <= player.statLifeMax2 / 2 && type == ModContent.ProjectileType<PlanteraSeed>())
            {
-                type = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<PlanteraGreenSeed>(), 43, 13, player.whoAmI);
+                type = Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<PlanteraGreenSeed>(), 43, 13, player.whoAmI);
 
            }
            if (player.statLife <= player.statLifeMax2 / 3)
            {
-                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<ThornBall>(), 60, 13, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<ThornBall>(), 60, 13, player.whoAmI);
 
            }
 

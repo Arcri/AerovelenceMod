@@ -36,9 +36,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             return new Vector2(-4, 0);
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Projectile.NewProjectile(position, new Vector2(speedX, speedY), ProjectileID.FireArrow, damage, knockBack, player.whoAmI);
+            Projectile.NewProjectile(position, new Vector2(speedX, velocity.Y), ProjectileID.FireArrow, damage, knockBack, player.whoAmI);
             return false;
         }
     }

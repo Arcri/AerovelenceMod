@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
@@ -34,12 +35,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.shootSpeed = 4.85f;
             Item.autoReuse = false;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            var ap = player.GetModPlayer<AeroPlayer>();
+        var ap = player.GetModPlayer<AeroPlayer>();
             if (ap.lumberjackSetBonus)
             {
-                Projectile.NewProjectile(position, new Vector2(speedX, speedY), ModContent.ProjectileType<SlateChunk>(), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position, new Vector2(velocity.X, velocity.Y), ModContent.ProjectileType<SlateChunk>(), damage, 1f, player.whoAmI);
             }
             return false;
         }

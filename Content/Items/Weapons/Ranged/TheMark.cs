@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			for (int i = 0; i < markedNPCs.Length; i++)
 			{
-				Projectile p = Projectile.NewProjectileDirect(Main.npc[markedNPCs[i]].Center, Vector2.Zero, ProjectileID.Grenade, damage, 0, Player.whoAmI);
+				Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_None(), Main.npc[markedNPCs[i]].Center, Vector2.Zero, ProjectileID.Grenade, damage, 0, Player.whoAmI);
 				p.friendly = true;
 				p.hostile = false;
 				p.timeLeft = 3;
@@ -77,10 +77,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Item.shoot = ModContent.ProjectileType<MarkShot>();
 			Item.shootSpeed = 9f;
 		}
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			type = Item.shoot;
-			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
+			velocity = velocity.RotatedByRandom(MathHelper.ToRadians(10));
 		}
 		public override void AddRecipes()
 		{

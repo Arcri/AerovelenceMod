@@ -81,7 +81,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     {
                         int type = Mod.Find<ModProjectile>("CrystallizerProjectile").Type;
                         Vector2 offset = Projectile.Center + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
-                        Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-1f, 1f), -5f + Main.rand.NextFloat(-1f, 1f)), ModContent.ProjectileType<CrystallizerProjectile>(), 5, 0.5f, Main.myPlayer);
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), offset, new Vector2(Main.rand.NextFloat(-1f, 1f), -5f + Main.rand.NextFloat(-1f, 1f)), ModContent.ProjectileType<CrystallizerProjectile>(), 5, 0.5f, Main.myPlayer);
                         shootTimer = 0;
                     }
                 }

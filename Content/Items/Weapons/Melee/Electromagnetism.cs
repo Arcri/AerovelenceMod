@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
         float radius = 90f;
             float direction = Main.rand.NextFloat(0.25f, 1f) * Main.rand.NextBool().ToDirectionInt() * MathHelper.ToRadians(radius);
-            Projectile projectile = Projectile.NewProjectileDirect(Projectile.InheritSource(Projectile), player.RotatedRelativePoint(player.MountedCenter), new Vector2(speedX, speedY), type, damage, knockBack, player.whoAmI, 0f, direction);
+            Projectile projectile = Projectile.NewProjectileDirect(source, player.RotatedRelativePoint(player.MountedCenter), new Vector2(velocity.X, velocity.Y), type, damage, 2f, player.whoAmI, 0f, direction);
             if (projectile.ModProjectile is ElectromagnetismProjectile modItem)
             {
                 modItem.firingSpeed = Item.shootSpeed * 2f;

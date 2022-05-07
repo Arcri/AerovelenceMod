@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = Mod.Find<ModProjectile>("EnsembleMusic1").Type;
             Item.shootSpeed = 14f;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             List<int> musics = new List<int>();
             musics.Add(Mod.Find<ModProjectile>("EnsembleMusic1").Type);

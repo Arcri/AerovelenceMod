@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -36,28 +37,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shootSpeed = 14f;
         }
 
-        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
-        {
-            var posArray = new Vector2[num];
-            float spread = (float)(angle * 0.075);
-            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = System.Math.Atan2(speedX, speedY);
-            double randomAngle;
-            for (int i = 0; i < num; ++i)
-            {
-                randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-                posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
-            }
-            return posArray;
-        }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2[] speeds = randomSpread(speedX, speedY, 5, 5);
+            float numberProjectiles = 2;
+            float rotation = MathHelper.ToRadians(45);
             for (int i = 0; i < 3; ++i)
             {
+                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
                 type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<HomingWisp>(), ModContent.ProjectileType<HomingWispPurple>() });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI, 2);
+                Projectile.NewProjectile(source, position, perturbedSpeed, type, damage, 1f, player.whoAmI, 2);
             }
             return false;
         }

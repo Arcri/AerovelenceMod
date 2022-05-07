@@ -49,7 +49,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 .AddTile(TileID.Hellforge)
                 .Register();
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             if (type == ProjectileID.Bullet)
             {

@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
 			line = new TooltipLine(Mod, "SlimyKnife", "Legendary item")
 			{
-				overrideColor = new Color(255, 241, 000)
+				OverrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
@@ -57,7 +57,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 			tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
 		}
 
-		public override void UseStyle(Player player)
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
 		{
 			Vector2 targetPosition = Main.MouseWorld - Main.LocalPlayer.Center;
 			int direction = Math.Sign(targetPosition.X);

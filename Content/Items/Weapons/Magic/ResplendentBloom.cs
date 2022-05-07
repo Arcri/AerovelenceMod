@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
+using Terraria.DataStructures;
 
 #endregion
 
@@ -41,9 +42,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			Item.shoot = ModContent.ProjectileType<ResplendentPollen>();
 		}
 
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-		{
-			float	minDistance = 20f,
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+        float	minDistance = 20f,
 					maxDistance = 60f;
 
 			int[] projectileTypes = {
@@ -64,13 +65,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 				}
 			}
 
-			Vector2 velocity = Main.MouseWorld - spawnPos;
-			Vector2 safeVelocity = new Vector2(speedX, speedY).SafeNormalize(Vector2.UnitY) * Item.shootSpeed;
+			Vector2 velocity1 = Main.MouseWorld - spawnPos;
+			Vector2 safeVelocity = new Vector2(velocity.X, velocity.Y).SafeNormalize(Vector2.UnitY) * Item.shootSpeed;
 
 			velocity = velocity.SafeNormalize(safeVelocity) * Item.shootSpeed;
 			velocity = Vector2.Lerp(velocity, safeVelocity, 0.25f);
 
-			Projectile.NewProjectile(spawnPos, velocity, projectileTypes[Main.rand.Next(projectileTypes.Length)], damage, knockBack, player.whoAmI);
+			Projectile.NewProjectile(source, spawnPos, velocity, projectileTypes[Main.rand.Next(projectileTypes.Length)], damage, 1f, player.whoAmI);
 
 			return (false);
 		}

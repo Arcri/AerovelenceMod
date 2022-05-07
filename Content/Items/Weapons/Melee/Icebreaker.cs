@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             Vector2 position = target.position - Vector2.UnitY * 60;
             Vector2 velocity = target.position * 5;
-            Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+            Projectile.NewProjectile(Item.GetSource_FromThis(), position, velocity, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
             base.OnHitNPC(player, target, damage, knockBack, crit);
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -52,7 +52,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
             line = new TooltipLine(Mod, "Icebreaker", "Artifact")
             {
-                overrideColor = new Color(255, 241, 000)
+                OverrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)

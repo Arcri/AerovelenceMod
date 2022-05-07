@@ -1,19 +1,20 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
-    public class PoseidonsMagnum : ModItem
+	public class PoseidonsMagnum : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Poseidon's Magnum"); 
+			DisplayName.SetDefault("Poseidon's Magnum");
 			Tooltip.SetDefault("Fires a stream of water that inflicts Wet and Cursed Inferno\nHas a 20% chance to fire a razorblade typhoon instead");
 		}
 
-		public override void SetDefaults() 
+		public override void SetDefaults()
 		{
 			Item.damage = 400;
 			Item.DamageType = DamageClass.Ranged;
@@ -35,29 +36,33 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			return new Vector2(-2, 0);
 		}
 
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-
-        {
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			float numberProjectiles = 2;
+			float rotation = MathHelper.ToRadians(45);
 			if (Main.rand.Next(100) <= 20)
-            {
+			{
 				for (int i = 0; i < 1; i++)
 				{
-					Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f)); 
-					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * 0.4f, perturbedSpeed.Y * 0.4f, ProjectileID.Typhoon, damage, knockBack, player.whoAmI);
+
+
+					Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+					Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X * 0.4f, perturbedSpeed.Y * 0.4f, ProjectileID.Typhoon, damage, 1f, player.whoAmI);
 				}
-            }
-			else {
+			}
+			else
+			{
 				for (int i = 0; i < 1; i++)
 				{
-					Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(0f)); 
-					Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("PoseidonStream").Type, damage, knockBack, player.whoAmI);
+					Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+					Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Mod.Find<ModProjectile>("PoseidonStream").Type, damage, 1f, player.whoAmI);
 				}
-				
+
 			}
 			return false;
-        }		
+		}
 
-		public override void AddRecipes() 
+		public override void AddRecipes()
 		{
 			CreateRecipe(1)
 				.AddIngredient(ItemID.VenusMagnum, 1)

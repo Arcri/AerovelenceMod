@@ -38,12 +38,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             return new Vector2(-4, 0);
         }
 
-        public static Vector2[] RandomSpread(float speedX, float speedY, int angle, int num)
+        public static Vector2[] RandomSpread(float speedX, float velocity.Y, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.075);
-            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-            double baseAngle = System.Math.Atan2(speedX, speedY);
+            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + velocity.Y * velocity.Y);
+            double baseAngle = System.Math.Atan2(speedX, velocity.Y);
             double randomAngle;
             for (int i = 0; i < num; ++i)
             {
@@ -53,9 +53,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             return posArray;
         }
 
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2[] speeds = RandomSpread(speedX, speedY, 3, 3);
+            Vector2[] speeds = RandomSpread(speedX, velocity.Y, 3, 3);
             for (int i = 0; i < 3; ++i)
             {
                 Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
@@ -75,7 +75,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 			line = new TooltipLine(Mod, "Napalm Launcher", "Artifact Weapon")
 			{
-				overrideColor = new Color(255, 241, 000)
+				OverrideColor = new Color(255, 241, 000)
 			};
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)

@@ -11,25 +11,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 {
     public class HydraulicBlaster : ModItem
     {
-		public override Vector2? HoldoutOffset()
-		{
-			return new Vector2(-6, 0);
-		}
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Hydraulic Blaster");
-			Tooltip.SetDefault("Shoots out Bursts of water that bounces of enemies and tiles"); 
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-6, 0);
+        }
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Hydraulic Blaster");
+            Tooltip.SetDefault("Shoots out Bursts of water that bounces of enemies and tiles");
         }
         public override void SetDefaults()
         {
-			Item.crit = 20;
+            Item.crit = 20;
             Item.damage = 38;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 66;
             Item.height = 22;
             Item.useTime = 24;
             Item.useAnimation = 24;
-			Item.UseSound = SoundID.Item36;
+            Item.UseSound = SoundID.Item36;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 8;
@@ -37,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.rare = ItemRarityID.Pink;
             Item.autoReuse = false;
             Item.shoot = Mod.Find<ModProjectile>("HydraulicBlasterProj").Type;
-			Item.useAmmo = AmmoID.Bullet;
+            Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 15f;
         }
 
@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-        Vector2[] speeds = randomSpread(speedX, speedY, 3, 3);
+            Vector2[] speeds = randomSpread(velocity.X, velocity.Y, 3, 3);
             for (int i = 0; i < 3; ++i)
             {
                 Projectile.NewProjectile(source, position.X, position.Y, speeds[i].X, speeds[i].Y, Mod.Find<ModProjectile>("HydraulicBlasterProj").Type, damage, 2f, player.whoAmI);
@@ -113,10 +113,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + (Texture2D)TextureAssets.Projectile[Projectile.type].Size() / 3f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
                 Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, (Texture2D)TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0);
             }
 
             return true;
@@ -129,7 +129,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		}		
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			Projectile.NewProjectile(entitySource, Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, damage / 2, knockback, Main.player[0].whoAmI);
+			Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.position.X, Projectile.position.Y, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10), Mod.Find<ModProjectile>("HydraulicBlasterProjSmall").Type, damage / 2, knockback, Main.player[0].whoAmI);
 		}
     }
 		public class HydraulicBlasterProjSmall : ModProjectile
@@ -160,7 +160,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
                 Color color = Projectile.GetAlpha(Color.Aqua) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Size(), scale, SpriteEffects.None, 0);
             }
 
             return true;

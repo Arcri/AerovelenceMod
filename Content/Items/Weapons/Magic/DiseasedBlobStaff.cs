@@ -33,12 +33,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = Mod.Find<ModProjectile>("DiseasedBlob").Type;
             Item.shootSpeed = 6;
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             for (int i = 0; i < 7; i++)
             {
                 int rand = new Random().Next(0, 100001);
-                Projectile.NewProjectile(position.X, position.Y, speedX * (float)new Random(i + rand).NextDouble(), speedY * (float)new Random(i - 1 + rand).NextDouble(), Item.shoot, damage, knockBack, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(position.X, position.Y, speedX * (float)new Random(i + rand).NextDouble(), velocity.Y * (float)new Random(i - 1 + rand).NextDouble(), Item.shoot, damage, knockBack, player.whoAmI, 0f, 0f);
             }
             return false;
         }

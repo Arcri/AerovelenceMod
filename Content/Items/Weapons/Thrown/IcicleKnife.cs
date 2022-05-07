@@ -15,9 +15,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
     {
         public override void SetStaticDefaults() => DisplayName.SetDefault("Icicle Knife");
         public override void SetDefaults()
-        {           
+        {
             Item.damage = 16;
-            
+
             Item.width = 60;
             Item.height = 32;
             Item.useTime = Item.useAnimation = 20;
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Item.value = Item.sellPrice(0, 0, 50, 0);
             Item.rare = ItemRarityID.Orange;
             Item.UseSound = SoundID.Item1;
-            
+
             Item.shoot = ModContent.ProjectileType<IcicleKnifeProj>();
             Item.shootSpeed = 18f;
         }
@@ -46,10 +46,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 position.Y -= 500 * i;
                 position.X += Main.rand.Next(-6, 6) * 16f;
 
-                var velocity = Vector2.Normalize(Main.MouseWorld - position) * Item.shootSpeed;
+                var velocity1 = Vector2.Normalize(Main.MouseWorld - position) * Item.shootSpeed;
 
-                Projectile.NewProjectileDirect(source, position, velocity, type, damage, 2f, player.whoAmI);
-            }                    
+                Projectile.NewProjectileDirect(source, position, velocity1, type, damage, 2f, player.whoAmI);
+            }
             return false;
         }
         public override void AddRecipes()
@@ -87,10 +87,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 67, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
             SoundEngine.PlaySound(SoundID.Item27);
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore1"), 1f); 
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore2"), 1f);
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore3"), 1f);
-            
+            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore1").Type, 1f); 
+            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore2").Type, 1f);
+            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore3").Type, 1f);
+
             return true;
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
