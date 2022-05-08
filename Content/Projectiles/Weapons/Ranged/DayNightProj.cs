@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
     {
         public override void SetStaticDefaults() => DisplayName.SetDefault("Solar Wind");
 
-        int dustType = 0;
+        int DustType = 0;
 		public override void SetDefaults()
 		{
 			Projectile.width = 6;
@@ -19,14 +19,14 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			Projectile.penetrate = 1;
 			Projectile.DamageType = DamageClass.Ranged;
 			if (Main.dayTime)
-				dustType = 127;
+				DustType = 127;
 			if (!Main.dayTime)
-				dustType = 135;
+				DustType = 135;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
         {
-			Projectile.NewProjectile(Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
 			StarExplosion();
             return true;
         }
@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 				Vector2 position = Projectile.position;
 				position -= Projectile.velocity * ((float)i / numDust);
 				Projectile.alpha = 255;
-				int anotherOneBitesThis = Dust.NewDust(position, 1, 1, dustType, 0f, 0f, 100, default, 1f);
+				int anotherOneBitesThis = Dust.NewDust(position, 1, 1, DustType, 0f, 0f, 100, default, 1f);
 				Main.dust[anotherOneBitesThis].position = position;
 				Main.dust[anotherOneBitesThis].velocity *= 0.2f;
 				Main.dust[anotherOneBitesThis].noGravity = true;

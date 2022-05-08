@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -18,7 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.StyleWrapLimit = 111;
 			TileObjectData.addTile(Type);
-			disableSmartCursor = true;
+			TileID.Sets.DisableSmartCursor[Type] = true;
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Citadel Banner");
 			AddMapEntry(new Color(70, 70, 70), name);

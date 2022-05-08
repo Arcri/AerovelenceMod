@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 					num450 = num447 / num450;
 					num448 *= num450;
 					num449 *= num450;
-					Projectile.NewProjectile(vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<CavernousImpalerProjectile3>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+					Projectile.NewProjectile(Projectile.GetSource_FromThis(), vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<CavernousImpalerProjectile3>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 				}
 			}
 		}

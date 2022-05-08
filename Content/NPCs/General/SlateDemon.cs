@@ -57,7 +57,7 @@ namespace AerovelenceMod.Content.NPCs.General
             if (NPC.ai[0] % 256 == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
-                Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.GoldenShowerHostile, 30, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.GoldenShowerHostile, 30, 0f, Main.myPlayer, 0f, 0f);
             }
             if (NPC.direction == 1)
             {

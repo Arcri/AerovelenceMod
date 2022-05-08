@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.NPCs.General
             NPC.damage = 15;
             NPC.defense = 24;
             NPC.knockBackResist = 0f;
-            animationType = NPCID.BlueSlime;
+            AnimationType = NPCID.BlueSlime;
             NPC.width = 38;
             NPC.height = 18;
             NPC.value = Item.buyPrice(0, 0, 7, 0);

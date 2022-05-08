@@ -16,7 +16,9 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
             Projectile.width = Projectile.height = 8;
 
             Projectile.aiStyle = -1;
-            Projectile.friendly = Projectile.DamageType = // projectile.tileCollide = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.tileCollide = false;
 
             Projectile.penetrate = 4;
 

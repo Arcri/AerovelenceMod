@@ -90,7 +90,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 					Vector2 vector69 = array7[i] - Projectile.Center;
 					float ai = Main.rand.Next(100);
 					Vector2 vector70 = Vector2.Normalize(vector69.RotatedByRandom(0.78539818525314331)) * 7f;
-					Projectile.NewProjectile(Projectile.Center, vector70, ProjectileType<TumblerOrbArc>(), 10, 0f, Main.myPlayer, vector69.ToRotation(), ai);
+					Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vector70, ProjectileType<TumblerOrbArc>(), 10, 0f, Main.myPlayer, vector69.ToRotation(), ai);
 				}
 			}                     
 			Lighting.AddLight(Projectile.Center, 0.4f, 0.85f, 0.9f);

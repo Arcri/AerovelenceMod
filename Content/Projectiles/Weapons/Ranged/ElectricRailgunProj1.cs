@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             if (!spawned)
             {
                 spawned = true;
-                SoundEngine.PlaySound(SoundLoader.customSoundType, (int)Projectile.position.X, (int)Projectile.position.Y, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorCharge"));
+                SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Effects/AnnihilatorCharge");
             }
 
             
@@ -84,13 +84,13 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			else
 			{
                 //Play firing sound!
-                SoundEngine.PlaySound(SoundLoader.customSoundType, (int)Projectile.position.X, (int)Projectile.position.Y, Mod.GetSoundSlot(SoundType.Custom, "Sounds/Effects/AnnihilatorShot"));
-                Projectile proj = Projectile.NewProjectileDirect(player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(Projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
+                SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Effects/AnnihilatorShot");
+                Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(Projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
 				if (Main.netMode != NetmodeID.Server)
 			    {
                     ElectricRailgunPrimTrail trail = new ElectricRailgunPrimTrail(proj, charge);
                     AerovelenceMod.primitives.CreateTrail(trail);
-                    var mp = proj.modProjectile as ElectricRailgunProj2;
+                    var mp = proj.ModProjectile as ElectricRailgunProj2;
                     mp.trail = trail;
                 }
 				player.GetModPlayer<AeroPlayer>().Shake += (int)(16 * charge);

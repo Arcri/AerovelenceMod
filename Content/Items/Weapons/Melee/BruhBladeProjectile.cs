@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             }
         }
 
-        public static void /*credits to eldrazi*/ SpawnDustFromTexture(Vector2 position, int dustType, /*credits to eldrazi*/ float size, string imagePath, bool noGravity = true, float rot = 0.34f)
+        public static void /*credits to eldrazi*/ SpawnDustFromTexture(Vector2 position, int DustType, /*credits to eldrazi*/ float size, string imagePath, bool noGravity = true, float rot = 0.34f)
         {
             if (Main.netMode != NetmodeID.Server)
             {
@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                         if /*credits to eldrazi*/(pixelData[j * texture.Width + i] != 0)
                         {
                             Vector2 dustPosition = /*credits to eldrazi*/new Vector2(i - texture.Width / 2, j - texture.Height / 2) * size;
-                            Dust.NewDustPerfect(position, dustType, /*credits to eldrazi*/ dustPosition.RotatedBy(rotation)).noGravity = noGravity;
+                            Dust.NewDustPerfect(position, DustType, /*credits to eldrazi*/ dustPosition.RotatedBy(rotation)).noGravity = noGravity;
                         }
                     }
                 }

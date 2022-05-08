@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
         {
             Main.projPet[Projectile.type] = true;
             ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
-            ProjectileID.Sets.Homing[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 
             Projectile.penetrate = -1;
             Projectile.minionSlots = 1f;
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.Homing[Projectile.type] = true;
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
             ProjectileID.Sets.MinionShot[Projectile.type] = true;
         }
 

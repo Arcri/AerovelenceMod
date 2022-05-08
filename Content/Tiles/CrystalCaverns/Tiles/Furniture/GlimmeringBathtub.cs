@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -23,9 +24,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Bathtub");
 			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Bathtubs };
+			DustType = DustType<Sparkle>();
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Bathtubs };
 		}
 
 
@@ -37,7 +38,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 64, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBathtub>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 64, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBathtub>());
 		}
 	}
 }

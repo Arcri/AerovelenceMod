@@ -4,6 +4,7 @@ using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
@@ -20,8 +21,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
-			soundType = SoundID.Shatter;
-			dustType = DustType<Sparkle>();
+			SoundType = SoundID.Shatter;
+			DustType = DustType<Sparkle>();
 			Main.tileWaterDeath[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 
@@ -36,7 +37,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 16, 48, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringLamp>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 48, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringLamp>());
 		}
 
 		public override void HitWire(int i, int j)

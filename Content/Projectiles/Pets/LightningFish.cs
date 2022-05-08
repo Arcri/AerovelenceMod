@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Projectiles.Pets
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(ProjectileID.ZephyrFish);
-			aiType = ProjectileID.ZephyrFish;
+			AIType = ProjectileID.ZephyrFish;
 			Projectile.width = 28;
 			Projectile.height = 20;
 		}

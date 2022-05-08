@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Throwing
         }
         public override void Kill(int timeLeft)
         {
-            Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<BlossomProjectile>(), Projectile.damage * 2, Projectile.knockBack, Projectile.owner, 0f, 0f);
+            Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<BlossomProjectile>(), Projectile.damage * 2, Projectile.knockBack, Projectile.owner, 0f, 0f);
         }
     }
 }

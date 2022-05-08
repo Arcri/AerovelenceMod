@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 						Projectile.ai[1] = 0;
 						for (int i = 0; i < 360; i += 60)
 						{
-							Projectile.NewProjectile(Projectile.Center, new Vector2(20, 20).RotatedBy(MathHelper.ToRadians(i)), ProjectileType<WispLaser>(), Projectile.damage, 0, Main.myPlayer);
+							Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(20, 20).RotatedBy(MathHelper.ToRadians(i)), ProjectileType<WispLaser>(), Projectile.damage, 0, Main.myPlayer);
 						}
 					}
 					Projectile.ai[1]++;
@@ -92,7 +92,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		{
 			if (Projectile.ai[0] == 1)
 			{
-				Projectile.NewProjectileDirect(Projectile.position, Projectile.velocity, ProjectileType<LightBeam>(), 0, 0);
+				Projectile.NewProjectileDirect(Projectile.GetSource_OnHit(Projectile), Projectile.position, Projectile.velocity, ProjectileType<LightBeam>(), 0, 0);
 				if (Main.rand.NextBool())
 				{
 					target.AddBuff(BuffType<SoulFire>(), 300);
@@ -101,7 +101,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			if (Projectile.ai[0] == 2)
 			{
-				Projectile.NewProjectileDirect(target.position, Projectile.velocity, ProjectileType<SpiralExplosion>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 1);
+				Projectile.NewProjectileDirect(Projectile.GetSource_OnHit(Projectile), target.position, Projectile.velocity, ProjectileType<SpiralExplosion>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 1);
 			}
 		}
 	}

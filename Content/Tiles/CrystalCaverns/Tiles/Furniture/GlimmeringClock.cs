@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -16,7 +17,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
-			dustType = 59;
+			DustType = 59;
 			Main.tileLavaDeath[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
 			TileObjectData.newTile.Height = 5;
@@ -32,8 +33,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			// name.SetDefault("Example Clock"); // Automatic from .lang files
 			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			adjTiles = new int[] { TileID.GrandfatherClocks };
+			DustType = DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.GrandfatherClocks };
 		}
 
 		public override bool RightClick(int x, int y)
@@ -81,7 +82,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		{
 			if (closer)
 			{
-				Main.clock = true;
+				TileID.Sets.Clock[Type]= true;
 			}
 		}
 
@@ -92,7 +93,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 48, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringClock>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 48, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringClock>());
 		}
 	}
 }

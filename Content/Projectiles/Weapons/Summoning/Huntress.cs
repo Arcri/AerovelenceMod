@@ -320,7 +320,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 				{
 					int tileX = (int)(Projectile.Center.X / 16);
 					int tileY = (int)((Projectile.position.Y + Projectile.height) / 16) + 1;
-					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].slope() > 0)
+					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].Slope > 0)
 					{
 						try
 						{

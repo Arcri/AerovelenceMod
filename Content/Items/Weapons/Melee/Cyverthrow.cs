@@ -104,8 +104,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
                     for (int i = 0; i < 12; i++)
                     {
-                        int dustType = 170;
-                        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType);
+                        int DustType = 170;
+                        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType);
                         Dust dust = Main.dust[dustIndex];
                         dust.velocity.X = dust.velocity.X + Main.rand.Next(-10, 10) * 0.01f;
                         dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-65, -48) * 0.01f;

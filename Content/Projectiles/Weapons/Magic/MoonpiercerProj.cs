@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
                     List<int> Rotato = new List<int>();
                     for (int i = 0; i < Main.maxProjectiles; i++)
                     {
-                        if (Main.projectile[i].type == Projectile.type && !(Main.projectile[i].modProjectile as MoonpiercerProj).Strike)
+                        if (Main.projectile[i].type == Projectile.type && !(Main.projectile[i].ModProjectile as MoonpiercerProj).Strike)
                         {
                             Rotato.Add(i);
                         }

@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.UI;
 
@@ -27,8 +28,8 @@ namespace AerovelenceMod.Content.UI
 			Item = new Item();
 			Item.SetDefaults(0);
 
-			Width.Set(Main.inventoryBack9Texture.Width * scale, 0f);
-			Height.Set(Main.inventoryBack9Texture.Height * scale, 0f);
+			Width.Set(TextureAssets.InventoryBack9.Width() * scale, 0f);
+			Height.Set(TextureAssets.InventoryBack9.Height() * scale, 0f);
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch)

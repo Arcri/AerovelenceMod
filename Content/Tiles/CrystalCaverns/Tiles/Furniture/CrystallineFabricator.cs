@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -20,9 +21,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Crystalline Fabricator");
 			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = ModContent.DustType<Sparkle>();
+			DustType = ModContent.DustType<Sparkle>();
 
-			animationFrameHeight = 54;
+			AnimationFrameHeight = 54;
 
 		}
 		public override void AnimateTile(ref int frame, ref int frameCounter)
@@ -38,7 +39,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 32, 16, ModContent.ItemType<CrystallineFabricatorItem>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 16, ModContent.ItemType<CrystallineFabricatorItem>());
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

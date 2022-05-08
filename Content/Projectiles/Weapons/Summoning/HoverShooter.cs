@@ -205,7 +205,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 							}
 							shootVel.Normalize();
 							shootVel *= shootSpeed;
-							int proj = Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, shootVel.X, shootVel.Y, shoot, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0f, 0f);
+							int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X, Projectile.Center.Y, shootVel.X, shootVel.Y, shoot, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0f, 0f);
 							Main.projectile[proj].timeLeft = 300;
 							Main.projectile[proj].netUpdate = true;
 							Projectile.netUpdate = true;
@@ -215,7 +215,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			}
 		}
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			fallThrough = true;
 			return true;

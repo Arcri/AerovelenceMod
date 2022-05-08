@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
 using Terraria.Audio;
+using Terraria.GameContent.ObjectInteractions;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
@@ -29,8 +30,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
 			TileObjectData.newTile.Origin = new Point16(1, 1);
 			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16 };
-			TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
+			//TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
+			//TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
 			TileObjectData.newTile.AnchorInvalidTiles = new[] { 127 };
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
@@ -40,17 +41,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Dresser");
 			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Dressers };
-			dresser = "Glimmering Dresser";
-            dresserDrop = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
+			DustType = DustType<Sparkle>();
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Dressers };
+			//TileID.Sets.BasicDresser[Type] = "Glimmering Dresser";
+            DresserDrop = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
 		}
 
-		public override bool HasSmartInteract()
-		{
-			return true;
-		}
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
 		public override bool RightClick(int i, int j)
 		{
@@ -97,7 +95,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				}
 				else
 				{
-					player.flyingPigChest = -1;
+					//player.piggyBankProjTracker.Clear() = -1;
 					int num213 = Chest.FindChest(left, top);
 					if (num213 != -1)
 					{
@@ -135,8 +133,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				Main.playerInventory = false;
 				player.chest = -1;
 				Recipe.FindRecipes();
-				Main.dresserX = Player.tileTargetX;
-				Main.dresserY = Player.tileTargetY;
+				Main.interactedDresserTopLeftX = Player.tileTargetX;
+				Main.interactedDresserTopLeftY = Player.tileTargetY;
 				Main.OpenClothesWindow();
 			}
 			return true;
@@ -144,6 +142,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void MouseOverFar(int i, int j)
 		{
+
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
 			int left = Player.tileTargetX;
@@ -154,34 +153,34 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				top--;
 			}
 			int chestIndex = Chest.FindChest(left, top);
-			player.showItemIcon2 = -1;
+			player.cursorItemIconID = -1;
 			if (chestIndex < 0)
 			{
-				player.showItemIconText = Language.GetTextValue("LegacyDresserType.0");
+				player.cursorItemIconText = Language.GetTextValue("LegacyDresserType.0");
 			}
 			else
 			{
 				if (Main.chest[chestIndex].name != "")
 				{
-					player.showItemIconText = Main.chest[chestIndex].name;
+					player.cursorItemIconText = Main.chest[chestIndex].name;
 				}
 				else
 				{
-					player.showItemIconText = chest;
+					//player.cursorItemIconText = chest;
 				}
-				if (player.showItemIconText == chest)
+				//if (player.cursorItemIconText == Main.chest[chest])
 				{
-					player.showItemIcon2 = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
-					player.showItemIconText = "";
+					//player.cursorItemIconID = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
+					//player.cursorItemIconText = "";
 				}
 			}
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			if (player.showItemIconText == "")
+			player.cursorItemIconEnabled = true;
+			/*if (player.cursorItemIconEnabledText == "")
 			{
-				player.showItemIcon = false;
-				player.showItemIcon2 = 0;
-			}
+				player.cursorItemIconEnabled = false;
+				player.cursorItemIconID = 0;
+			}*/
 		}
 
 		public override void MouseOver(int i, int j)
@@ -196,32 +195,32 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				top--;
 			}
 			int num138 = Chest.FindChest(left, top);
-			player.showItemIcon2 = -1;
+			player.cursorItemIconID = -1;
 			if (num138 < 0)
 			{
-				player.showItemIconText = Language.GetTextValue("LegacyDresserType.0");
+				//player.cursorItemIconEnabledText = Language.GetTextValue("LegacyDresserType.0");
 			}
 			else
 			{
 				if (Main.chest[num138].name != "")
 				{
-					player.showItemIconText = Main.chest[num138].name;
+					//player.cursorItemIconEnabledText = Main.chest[num138].name;
 				}
 				else
 				{
-					player.showItemIconText = chest;
+					//player.cursorItemIconEnabledText = chest;
 				}
-				if (player.showItemIconText == chest)
-				{
-					player.showItemIcon2 = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
-					player.showItemIconText = "";
-				}
+				//if (player.cursorItemIconEnabledText == chest)
+				//{
+					//player.cursorItemIconID = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringDresser>();
+				//	player.cursorItemIconEnabledText = "";
+				//}
 			}
 			player.noThrow = 2;
-			player.showItemIcon = true;
+			player.cursorItemIconEnabled = true;
 			if (Main.tile[Player.tileTargetX, Player.tileTargetY].TileFrameY > 0)
 			{
-				player.showItemIcon2 = ItemID.FamiliarShirt;
+				player.cursorItemIconID = ItemID.FamiliarShirt;
 			}
 		}
 
@@ -232,7 +231,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 48, 32, dresserDrop);
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 48, 32, DresserDrop);
 			Chest.DestroyChest(i, j);
 		}
 	}

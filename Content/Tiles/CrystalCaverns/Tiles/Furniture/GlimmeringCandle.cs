@@ -4,6 +4,7 @@ using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
@@ -22,8 +23,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.tileNoAttach[Type] = true;
 			Main.tileWaterDeath[Type] = true;
 			Main.tileLavaDeath[Type] = true;
-			dustType = DustType<Sparkle>();
-			soundType = SoundID.Shatter;
+			DustType = DustType<Sparkle>();
+			SoundType = SoundID.Shatter;
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 			TileObjectData.newTile.WaterDeath = true;
@@ -36,12 +37,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 16, 48, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringCandle>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 48, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringCandle>());
 		}
 
-        [System.Obsolete]
-        public override void RightClick(int i, int j)
-		{
+        public override bool RightClick(int i, int j)
+        {
 			Tile tile = Main.tile[i, j];
 			int topY = j - tile.TileFrameY / 18 % 1;
 			short frameAdjustment = (short)(tile.TileFrameX > 0 ? -18 : 18);
@@ -52,6 +52,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Wiring.SkipWire(i, topY + 1);
 			Wiring.SkipWire(i, topY + 2);
 			NetMessage.SendTileSquare(-1, i, topY + 1, 3, TileChangeType.None);
+			return true;
 		}
 
 		public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)

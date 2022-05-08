@@ -65,12 +65,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             int numDust = 5;
             for (int i = 0; i < numDust; i++)
             {
-                int dustType;
-                dustType = 127;
+                int DustType;
+                DustType = 127;
                 Vector2 position = Projectile.position;
                 position -= Projectile.velocity * ((float)i / numDust);
                 Projectile.alpha = 255;
-                int anotherOneBitesThis = Dust.NewDust(position, 1, 1, dustType, 0f, 0f, 127, default, 1f);
+                int anotherOneBitesThis = Dust.NewDust(position, 1, 1, DustType, 0f, 0f, 127, default, 1f);
                 Main.dust[anotherOneBitesThis].position = position;
                 Main.dust[anotherOneBitesThis].velocity *= 0.2f;
                 Main.dust[anotherOneBitesThis].noGravity = true;

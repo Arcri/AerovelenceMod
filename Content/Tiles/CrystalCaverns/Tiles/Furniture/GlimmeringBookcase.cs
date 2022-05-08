@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -19,7 +20,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.tileLavaDeath[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
 			TileObjectData.newTile.Height = 4;
-			dustType = ModContent.DustType<Sparkle>();
+			DustType = ModContent.DustType<Sparkle>();
 			TileObjectData.newTile.Width = 3;
 			AddMapEntry(new Color(068, 077, 098));
 			TileObjectData.newTile.CoordinateHeights = new int[]
@@ -34,8 +35,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			name.SetDefault("Glimmering Bookcase");
 			AddMapEntry(new Color(179, 146, 107), name);
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Bookcases };
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Bookcases };
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -45,7 +46,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Terraria.Item.NewItem(i * 16, j * 16, 16, 32, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBookcase>());
+            Terraria.Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBookcase>());
 		}
 	}
 }

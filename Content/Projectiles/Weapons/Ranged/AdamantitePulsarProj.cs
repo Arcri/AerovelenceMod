@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,7 +11,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
     {
         public override void SetStaticDefaults() => DisplayName.SetDefault("Adamantite Pulsar");
 
-        int dustType = 0;
+        int DustType = 0;
         public override void SetDefaults()
         {
             Projectile.width = 6;
@@ -21,16 +22,16 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             switch (new Random().Next(0, 2))
             {
                 case 0:
-                    dustType = 60;
+                    DustType = 60;
                     break;
                 case 1:
-                    dustType = 60;
+                    DustType = 60;
                     break;
             }
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-			Projectile.NewProjectile(Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
 			StarExplosion();
             return true;
         }
@@ -38,11 +39,20 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
 		private float k; //k multiplier
 		private float smol = 1; //var to make the orbits smaller
-		private Projectile alpha = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 606, 50 / 3, 2, 0);
-		private Projectile beta = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 606, 50 / 3, 2, 0);  //orbits projs
-		private Projectile gamma = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 606, 50 / 3, 2, 0);
+		private Projectile alpha;
+		private Projectile beta;
+		private Projectile gamma;
 
-		public override void AI()
+
+
+
+        public override void OnSpawn(IEntitySource source)
+        {
+			alpha = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Vector2.Zero, Vector2.Zero, ProjectileID.ScutlixLaser, 50 / 3, 2, 0);
+			beta = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Vector2.Zero, Vector2.Zero, ProjectileID.ScutlixLaser, 50 / 3, 2, 0);  //orbits projs
+			gamma = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Vector2.Zero, Vector2.Zero, ProjectileID.ScutlixLaser, 50 / 3, 2, 0);
+		}
+        public override void AI()
 		{
 			//Dust and orbits
 			for (int i = 0; i < 16; i++)
@@ -91,7 +101,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 				Vector2 position = Projectile.position;
 				position -= Projectile.velocity * ((float)i / numDust);
 				Projectile.alpha = 255;
-				int anotherOneBitesThis = Dust.NewDust(position, 1, 1, dustType, 0f, 0f, 100, default, 1f);
+				int anotherOneBitesThis = Dust.NewDust(position, 1, 1, DustType, 0f, 0f, 100, default, 1f);
 				Main.dust[anotherOneBitesThis].position = position;
 				Main.dust[anotherOneBitesThis].velocity *= 0.2f;
 				Main.dust[anotherOneBitesThis].noGravity = true;
@@ -100,7 +110,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			Projectile.NewProjectile(Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
+			Projectile.NewProjectile(Projectile.GetSource_OnHit(Projectile), Projectile.position, Projectile.velocity * 0, ModContent.ProjectileType<SolarWindExplosion>(), Projectile.damage, Projectile.whoAmI);
 			StarExplosion();
 		}
 		private void StarExplosion()

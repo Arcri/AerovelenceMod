@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -17,7 +18,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
-			dustType = 59;
 			Main.tileBlockLight[Type] = true;
 			Main.tileSolid[Type] = true;
 			Main.tileNoAttach[Type] = true;
@@ -25,6 +25,20 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			TileID.Sets.NotReallySolid[Type] = true;
 			TileID.Sets.DrawsWalls[Type] = true;
 			TileID.Sets.HasOutlines[Type] = true;
+			TileID.Sets.DisableSmartCursor[Type] = true;
+
+			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+
+			DustType = ModContent.DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.ClosedDoor };
+			OpenDoorID = ModContent.TileType<GlimmeringDoorOpen>();
+
+			// Names
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Glimmering Door");
+			AddMapEntry(new Color(200, 200, 200), name);
+
+			// Placement
 			TileObjectData.newTile.Width = 1;
 			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Origin = new Point16(0, 0);
@@ -42,17 +56,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newAlternate.Origin = new Point16(0, 2);
 			TileObjectData.addAlternate(0);
 			TileObjectData.addTile(Type);
-			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Glimmering Door");
-			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.ClosedDoor };
-			openDoorID = TileType<GlimmeringDoorOpen>();
 		}
 
-		public override bool HasSmartInteract()
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
@@ -64,15 +70,15 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 16, 48, ItemType<GlimmeringDoor>());
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 48, ItemType<GlimmeringDoor>());
 		}
 
 		public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<GlimmeringDoor>();
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ItemType<GlimmeringDoor>();
 		}
 	}
 }

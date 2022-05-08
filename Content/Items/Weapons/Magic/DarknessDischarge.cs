@@ -120,8 +120,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			for (int i = 0; i < 10; i++)
 			{
-				int dustType = 164;
-				int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, dustType, 0f, 0f, 0, new Color(155, 0, 124));
+				int DustType = 164;
+				int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustType, 0f, 0f, 0, new Color(155, 0, 124));
 				Dust dust = Main.dust[dustIndex];
 				dust.velocity.X = dust.velocity.X + Main.rand.Next(-50, 51) * 0.01f;
 				dust.velocity.Y = dust.velocity.Y + Main.rand.Next(-50, 51) * 0.01f;

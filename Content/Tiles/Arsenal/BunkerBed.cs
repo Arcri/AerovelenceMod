@@ -1,7 +1,10 @@
 using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using static Terraria.ModLoader.ModContent;
@@ -15,22 +18,32 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			TileID.Sets.HasOutlines[Type] = true;
+			TileID.Sets.CanBeSleptIn[Type] = true;
+			TileID.Sets.InteractibleByNPCs[Type] = true;
+			TileID.Sets.IsValidSpawnPoint[Type] = true;
+			TileID.Sets.DisableSmartCursor[Type] = true;
+
+			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+
+			DustType = ModContent.DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.Beds };
+
+			// Placement
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
 			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
+			TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, -2);
 			TileObjectData.addTile(Type);
+
+			// Etc
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Bunker Bed");
-			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Beds };
-			bed = true;
+			AddMapEntry(new Color(200, 200, 200), name);
 		}
-
-		public override bool HasSmartInteract()
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
+
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{
@@ -51,12 +64,12 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 			if (player.SpawnX == spawnX && player.SpawnY == spawnY)
 			{
 				player.RemoveSpawn();
-				Main.NewText("Spawn point removed!", 255, 240, 20, false);
+				Main.NewText(Language.GetTextValue("Game.SpawnPointRemoved"), 255, 240, 20);
 			}
 			else if (Player.CheckSpawn(spawnX, spawnY))
 			{
 				player.ChangeSpawn(spawnX, spawnY);
-				Main.NewText("Spawn point set!", 255, 240, 20, false);
+				Main.NewText(Language.GetTextValue("Game.SpawnPointSet"), 255, 240, 20);
 			}
 			return true;
 		}
@@ -65,8 +78,8 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBed>();
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringBed>();
 		}
 	}
 }

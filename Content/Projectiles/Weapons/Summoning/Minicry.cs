@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			Projectile.ignoreWater = true;
 			Projectile.tileCollide = true;
 			Projectile.netImportant = true;
-			aiType = ProjectileID.Spazmamini;
+			AIType = ProjectileID.Spazmamini;
 			Projectile.alpha = 0;
 			Projectile.penetrate = -10;
 			Projectile.timeLeft = 18000;

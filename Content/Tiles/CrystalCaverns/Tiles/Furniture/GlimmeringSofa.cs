@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -19,13 +20,13 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
             Main.tileLavaDeath[Type] = false;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
             TileObjectData.addTile(Type);
-            dustType = DustType<Sparkle>();
-            adjTiles = new int[] { TileID.Chairs };
+            DustType = DustType<Sparkle>();
+            AdjTiles = new int[] { TileID.Chairs };
             AddMapEntry(new Color(068, 077, 098));
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringSofa>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 48, 48, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringSofa>());
         }
     }
 }

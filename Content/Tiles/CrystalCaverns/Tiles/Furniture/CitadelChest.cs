@@ -1,16 +1,15 @@
-using System;
-using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static Terraria.ModLoader.ModContent;
-using Terraria.Audio;
+using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
@@ -18,52 +17,60 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 	{
 		public override void SetStaticDefaults()
 		{
+			// Properties
 			Main.tileSpelunker[Type] = true;
 			Main.tileContainer[Type] = true;
 			Main.tileShine2[Type] = true;
 			Main.tileShine[Type] = 1200;
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
-			Main.tileValue[Type] = 500;
+			Main.tileOreFinderPriority[Type] = 500;
 			TileID.Sets.HasOutlines[Type] = true;
+			TileID.Sets.BasicChest[Type] = true;
+			TileID.Sets.DisableSmartCursor[Type] = true;
+
+			DustType = ModContent.DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.Containers };
+			ChestDrop = ModContent.ItemType<CitadelChestItem>();
+
+			// Names
+			ContainerName.SetDefault("Citadel Chest");
+
+			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Citadel Chest");
+			AddMapEntry(new Color(200, 200, 200), name, MapChestName);
+
+			name = CreateMapEntryName(Name + "_Locked"); // With multiple map entries, you need unique translation keys.
+			name.SetDefault("Locked Citadel Chest");
+			AddMapEntry(new Color(0, 141, 63), name, MapChestName);
+
+			// Placement
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
 			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
-			TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
-			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
-			TileObjectData.newTile.AnchorInvalidTiles = new[] { 127 };
+			TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
+			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
+			TileObjectData.newTile.AnchorInvalidTiles = new int[] { TileID.MagicalIceBlock };
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
 			TileObjectData.addTile(Type);
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Citadel Chest");
-			AddMapEntry(new Color(200, 200, 200), name, MapChestName);
-			name = CreateMapEntryName(Name + "_Locked"); // With multiple map entries, you need unique translation keys.
-			name.SetDefault("Locked Citadel Chest");
-			AddMapEntry(new Color(0, 141, 63), name, MapChestName);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Containers };
-			chest = "Citadel Chest";
-			chestDrop = ItemType<CitadelChestItem>();
 		}
 
 		public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
 
-		public override bool HasSmartInteract() => true;
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
 		public override bool IsLockedChest(int i, int j) => Main.tile[i, j].TileFrameX / 36 == 1;
 
 		public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
 		{
-			if (Main.dayTime)
-				return false;
-			dustType = this.dustType;
+
+			DustType = dustType;
 			return true;
 		}
 
-		public string MapChestName(string name, int i, int j)
+		public static string MapChestName(string name, int i, int j)
 		{
 			int left = i;
 			int top = j;
@@ -72,21 +79,24 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			{
 				left--;
 			}
+
 			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
+
 			int chest = Chest.FindChest(left, top);
-			if (chest < 0) {
+			if (chest < 0)
+			{
 				return Language.GetTextValue("LegacyChestType.0");
 			}
-			else if (Main.chest[chest].name == "")
+
+			if (Main.chest[chest].name == "")
 			{
 				return name;
 			}
-			else {
-				return name + ": " + Main.chest[chest].name;
-			}
+
+			return name + ": " + Main.chest[chest].name;
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -96,7 +106,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 32, 32, chestDrop);
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ChestDrop);
 			Chest.DestroyChest(i, j);
 		}
 
@@ -111,10 +121,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			{
 				left--;
 			}
+
 			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
+
 			if (player.sign >= 0)
 			{
 				SoundEngine.PlaySound(SoundID.MenuClose);
@@ -122,18 +134,21 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 				Main.editSign = false;
 				Main.npcChatText = "";
 			}
+
 			if (Main.editChest)
 			{
 				SoundEngine.PlaySound(SoundID.MenuTick);
 				Main.editChest = false;
 				Main.npcChatText = "";
 			}
+
 			if (player.editedChestName)
 			{
-				NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f, 0f, 0f, 0, 0, 0);
+				NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f);
 				player.editedChestName = false;
 			}
-			bool isLocked = IsLockedChest(left, top);
+
+			/*bool isLocked = IsLockedChest(left, top);
 			if (Main.netMode == NetmodeID.MultiplayerClient && !isLocked)
 			{
 				if (left == player.chestX && top == player.chestY && player.chest >= 0)
@@ -142,8 +157,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 					Recipe.FindRecipes();
 					SoundEngine.PlaySound(SoundID.MenuClose);
 				}
-				else {
-					NetMessage.SendData(MessageID.RequestChestOpen, -1, -1, null, left, (float)top, 0f, 0f, 0, 0, 0);
+				else
+				{
+					NetMessage.SendData(MessageID.RequestChestOpen, -1, -1, null, left, top);
 					Main.stackSplit = 600;
 				}
 			}
@@ -151,12 +167,13 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			{
 				if (isLocked)
 				{
-					int key = ItemType<CitadelChestKey>();
+					// Make sure to change the code in UnlockChest if you don't want the chest to only unlock at night.
+					int key = ModContent.ItemType<ExampleChestKey>();
 					if (player.ConsumeItem(key) && Chest.Unlock(left, top))
 					{
 						if (Main.netMode == NetmodeID.MultiplayerClient)
 						{
-							NetMessage.SendData(MessageID.Unlock, -1, -1, null, player.whoAmI, 1f, (float)left, (float)top);
+							NetMessage.SendData(MessageID.Unlock, -1, -1, null, player.whoAmI, 1f, left, top);
 						}
 					}
 				}
@@ -180,10 +197,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 							player.chestY = top;
 							SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
 						}
+
 						Recipe.FindRecipes();
 					}
 				}
-			}
+			}*/
+
 			return true;
 		}
 
@@ -197,38 +216,44 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			{
 				left--;
 			}
+
 			if (tile.TileFrameY != 0)
 			{
 				top--;
 			}
+
 			int chest = Chest.FindChest(left, top);
-			player.showItemIcon2 = -1;
 			if (chest < 0)
 			{
-				player.showItemIconText = Language.GetTextValue("LegacyChestType.0");
+				player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
 			}
-			else {
-				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Citadel Chest";
-				if (player.showItemIconText == "Citadel Chest")
+			else
+			{
+				player.cursorItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Citadel Chest";
+				if (player.cursorItemIconText == "Citadel Chest")
 				{
-					player.showItemIcon2 = ItemType<CitadelChestItem>();
-					if (Main.tile[left, top].TileFrameX / 36 == 1)
-						player.showItemIcon2 = ItemType<CitadelChestKey>();
-					player.showItemIconText = "";
+					player.cursorItemIconID = ModContent.ItemType<CitadelChestItem>();
+					/*if (Main.tile[left, top].TileFrameX / 36 == 1)
+					{
+						player.cursorItemIconID = ModContent.ItemType<ExampleChestKey>();
+					}*/
+
+					player.cursorItemIconText = "";
 				}
 			}
+
 			player.noThrow = 2;
-			player.showItemIcon = true;
+			player.cursorItemIconEnabled = true;
 		}
 
 		public override void MouseOverFar(int i, int j)
 		{
 			MouseOver(i, j);
 			Player player = Main.LocalPlayer;
-			if (player.showItemIconText == "")
+			if (player.cursorItemIconText == "")
 			{
-				player.showItemIcon = false;
-				player.showItemIcon2 = 0;
+				player.cursorItemIconEnabled = false;
+				player.cursorItemIconID = 0;
 			}
 		}
 	}

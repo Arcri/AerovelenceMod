@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			name.SetDefault("Crystal Sapling");
 			AddMapEntry(new Color(200, 200, 200), name);
 
-			sapling = true;
-			dustType = DustType<Sparkle>();
-			adjTiles = new int[] { TileID.Saplings };
+			TileID.Sets.TreeSapling[Type] = true;
+			DustType = DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.Saplings };
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

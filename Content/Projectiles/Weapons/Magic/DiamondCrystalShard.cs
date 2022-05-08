@@ -48,7 +48,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			Projectile.rotation += Projectile.velocity.Length() * 0.1f * Projectile.direction;
 
-			if (Main.rand.Next(20) == 0)
+			if (Main.rand.NextBool(20))
 			{
 				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.Crystal>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
 			}
@@ -83,11 +83,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 			}
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
-			this.DrawProjectileTrailCentered(spriteBatch, lightColor);
+			this.DrawProjectileTrailCentered(Main.spriteBatch, lightColor);
 
-			return this.DrawProjectileCentered(spriteBatch, lightColor);
+			return this.DrawProjectileCentered(Main.spriteBatch, lightColor);
 		}
 	}
 }

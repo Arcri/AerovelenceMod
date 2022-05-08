@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 	{
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.Homing[Projectile.type] = true;
+			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 		}
 		public override void SetDefaults()
 		{

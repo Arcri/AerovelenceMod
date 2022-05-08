@@ -40,9 +40,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			name.SetDefault("Torch");
 			AddMapEntry(new Color(200, 200, 200), name);
 			ItemDrop = ItemType<Items.Placeables.CrystalCaverns.GlimmeringTorchItem>();
-			DisableSmartCursor = true;
+			TileID.Sets.DisableSmartCursor[Type] = true;
 			AdjTiles = new int[] { TileID.Torches };
-			Torch = true;
+			TileID.Sets.Torch[Type] = true;
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)

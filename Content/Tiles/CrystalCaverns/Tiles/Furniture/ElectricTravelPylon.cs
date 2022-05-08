@@ -9,6 +9,8 @@ using Terraria.ObjectData;
 using System.Linq;
 using static Terraria.ModLoader.ModContent;
 using System.Collections.Generic;
+using Terraria.DataStructures;
+using Terraria.GameContent.ObjectInteractions;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
@@ -26,12 +28,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Electric Travel Pylon");
 			AddMapEntry(new Color(034, 153, 186), name);
-			dustType = DustID.Electric;
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Painting2X3 };
+			DustType = DustID.Electric;
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Painting2X3 };
 		}
 
-		public override bool HasSmartInteract()
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
@@ -46,7 +48,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			i -= Main.tile[i, j].TileFrameX / 18 % 2;
 			j -= Main.tile[i, j].TileFrameY / 18 % 3;
 			Vector2 position = new Vector2(i * 16, (j - 3) * 16);
-			Item.NewItem(i * 16, j * 16, 64, 32, ItemType<ElectricTravelPylonItem>());
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 64, 32, ItemType<ElectricTravelPylonItem>());
 			foreach (KeyValuePair<Vector2, Vector2> entry in AeroWorld.ETPLinks)
 			{
 				if (entry.Key == position || entry.Value == position)
@@ -112,8 +114,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<ElectricTravelPylonItem>();
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ItemType<ElectricTravelPylonItem>();
 		}
 		public override bool CanKillTile(int i, int j, ref bool blockDamaged)
 		{

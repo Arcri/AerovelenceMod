@@ -1,6 +1,8 @@
 using AerovelenceMod.Content.Items.Placeables.Trophies;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -16,8 +18,8 @@ namespace AerovelenceMod.Content.Tiles.Trophies
 			TileObjectData.newTile.StyleHorizontal = true;
 			TileObjectData.newTile.StyleWrapLimit = 36;
 			TileObjectData.addTile(Type);
-			dustType = 7;
-			disableSmartCursor = true;
+			DustType = 7;
+			TileID.Sets.DisableSmartCursor[Type] = true;
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("The Fallen Trophy");
 			AddMapEntry(new Color(120, 85, 60), name);
@@ -25,7 +27,7 @@ namespace AerovelenceMod.Content.Tiles.Trophies
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<TheFallenTrophy>());
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 48, 48, ModContent.ItemType<TheFallenTrophy>());
 
 		}
 	}

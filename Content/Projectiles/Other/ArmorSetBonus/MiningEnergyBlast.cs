@@ -56,19 +56,19 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 			}
 			for (int g = 0; g < 2; g++)
 			{
-				int goreIndex = Gore.NewGore(new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
+				int goreIndex = Gore.NewGore(Projectile.GetSource_Death(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
 				Main.gore[goreIndex].scale = 1.5f;
 				Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X + 1.5f;
 				Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y + 1.5f;
-				goreIndex = Gore.NewGore(new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
+				goreIndex = Gore.NewGore(Projectile.GetSource_Death(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
 				Main.gore[goreIndex].scale = 1.5f;
 				Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X - 1.5f;
 				Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y + 1.5f;
-				goreIndex = Gore.NewGore(new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
+				goreIndex = Gore.NewGore(Projectile.GetSource_Death(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
 				Main.gore[goreIndex].scale = 1.5f;
 				Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X + 1.5f;
 				Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y - 1.5f;
-				goreIndex = Gore.NewGore(new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
+				goreIndex = Gore.NewGore(Projectile.GetSource_Death(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
 				Main.gore[goreIndex].scale = 1.5f;
 				Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X - 1.5f;
 				Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y - 1.5f;
@@ -150,7 +150,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 									WorldGen.KillTile(i, j, false, false, false);
 									if (!Main.tile[i, j].HasTile && Main.netMode != NetmodeID.SinglePlayer)
 									{
-										NetMessage.SendData(MessageID.TileChange, -1, -1, null, 0, i, j, 0f, 0, 0, 0);
+										NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, i, j, 0f, 0, 0, 0);
 									}
 								}
 							}
@@ -165,7 +165,7 @@ namespace AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus
 											WorldGen.KillWall(x, y, false);
 											if (Main.tile[x, y].WallType == 0 && Main.netMode != NetmodeID.SinglePlayer)
 											{
-												NetMessage.SendData(MessageID.TileChange, -1, -1, null, 2, x, y, 0f, 0, 0, 0);
+												NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 2, x, y, 0f, 0, 0, 0);
 											}
 										}
 									}

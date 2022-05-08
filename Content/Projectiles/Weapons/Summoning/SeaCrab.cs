@@ -49,7 +49,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			Main.projPet[Projectile.type] = true;
 			Main.projFrames[Projectile.type] = 3;
 
-			ProjectileID.Sets.Homing[Projectile.type] = true;
+			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
 			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 		}
@@ -310,7 +310,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 				{
 					int tileX = (int)(Projectile.Center.X / 16);
 					int tileY = (int)((Projectile.position.Y + Projectile.height) / 16) + 1;
-					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].slope() > 0)
+					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].Slope > 0)
 					{
 						try
 						{
@@ -628,7 +628,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 						newProjectileVelocity.Y -= newVelocityYModifier;
 
 						newProjectileVelocity = Vector2.Normalize(newProjectileVelocity) * ShotProjectileSpeed;
-						Projectile.NewProjectile(newProjectilePosition, newProjectileVelocity, newProjectileType, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0, Projectile.whoAmI);
+						Projectile.NewProjectile(Projectile.GetSource_FromThis(), newProjectilePosition, newProjectileVelocity, newProjectileType, Projectile.damage, Projectile.knockBack, Main.myPlayer, 0, Projectile.whoAmI);
 
 						if (newProjectileVelocity.X < 0f)
 						{

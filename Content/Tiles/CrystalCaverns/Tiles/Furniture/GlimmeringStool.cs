@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Placeables.Furniture.Glimmering;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -31,11 +32,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Chair");
-			dustType = DustType<Sparkle>();
+			DustType = DustType<Sparkle>();
 			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<WispDust>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Chairs };
+			DustType = DustType<WispDust>();
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Chairs };
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
@@ -45,7 +46,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 16, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringStool>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 32, ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringStool>());
 		}
 	}
 }

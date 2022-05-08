@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
-			soundType = SoundID.Shatter;
-			dustType = ModContent.DustType<Sparkle>();
+			SoundType = SoundID.Shatter;
+			DustType = ModContent.DustType<Sparkle>();
 			Main.tileLavaDeath[Type] = true;
 			Main.tileLighted[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Glimmering Lantern");
 			AddMapEntry(new Color(099, 155, 255), name);
-			adjTiles = new int[] { TileID.Torches };
+			AdjTiles = new int[] { TileID.Torches };
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -49,7 +49,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-            Item.NewItem(i * 16, j * 16, 48, 48, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringLantern>());
+            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 48, 48, ModContent.ItemType<Items.Placeables.Furniture.Glimmering.GlimmeringLantern>());
 		}
 	}
 }

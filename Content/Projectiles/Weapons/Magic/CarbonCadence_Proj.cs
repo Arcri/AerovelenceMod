@@ -115,7 +115,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 				{
 					Vector2 velocity = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * 8f;
 
-					Projectile.NewProjectile(Projectile.Center, velocity, ModContent.ProjectileType<DiamondCrystalShard>(), 10, 1f, Projectile.owner);
+					Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center, velocity, ModContent.ProjectileType<DiamondCrystalShard>(), 10, 1f, Projectile.owner);
 				}
 
 				for (int i = 0; i < 20; ++i)
@@ -128,7 +128,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 			}
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-			=> this.DrawProjectileCentered(spriteBatch, lightColor * Projectile.Opacity);
+		public override bool PreDraw(ref Color lightColor)
+			=> this.DrawProjectileCentered(Main.spriteBatch, lightColor * Projectile.Opacity);
 	}
 }

@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             Projectile.penetrate = 1;
             Projectile.alpha = 0;
             Projectile.timeLeft = 300;
-            aiType = ProjectileID.Bullet;
+            AIType = ProjectileID.Bullet;
             storedpos.X = Projectile.velocity.X;
             storedpos.Y = Projectile.velocity.Y;
         }

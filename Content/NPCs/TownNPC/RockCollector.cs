@@ -16,6 +16,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC
 {
@@ -24,12 +25,6 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 	public class RockCollector : ModNPC
 	{
 		public override string Texture => "AerovelenceMod/Content/NPCs/TownNPC/RockCollector";
-
-		public override bool Autoload(ref string name)
-		{
-			name = "RockCollector";
-			return Mod.Properties.Autoload;
-		}
 
 		public override void SetStaticDefaults()
 		{
@@ -56,7 +51,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.knockBackResist = 0.5f;
-			animationType = NPCID.Guide;
+			AnimationType = NPCID.Guide;
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
@@ -84,30 +79,11 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			return false;
 		}
 
-		public override string TownNPCName()
-		{
-			switch (WorldGen.genRand.Next(7))
-			{
-				case 0:
-					return "Roxxane";
-				case 1:
-					return "Myne Err";
-				case 2:
-					return "S'tony";
-				case 3:
-					return "Dwayne";
-				case 4:
-					return "Rockgomery";
-				case 5:
-					return "Geolbert";
-				case 6:
-					return "Stephing Stone";
-				case 7:
-					return "Steve Ege";
-				default:
-					return "John Dygg";
-			}
-		}
+		public override List<string> SetNPCNameList()
+        {
+            return new List<string>() { "Roxxane", "Myne Err", "S'tony", "Dwayne", "Rockgomery", "Geolbert", "Stephing Stone", "Steve Ege", "John Dygg"};
+
+        }
 
 		public override void FindFrame(int frameHeight)
 		{
@@ -219,7 +195,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 
 				if (selectedIndex != -1)
 				{
-					
+
 
 					if (Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteSuperCluster>()))
                     {
@@ -228,7 +204,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 						SoundEngine.PlaySound(SoundID.Item37); // Reforge/Anvil sound
 						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperAdamantite)}";
 
-						Main.LocalPlayer.QuickSpawnItem(itemGetSuperAdamantite);
+						Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemGetSuperAdamantite);
 					}
 
 					else if(Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumSuperCluster>()))
@@ -238,7 +214,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 						SoundEngine.PlaySound(SoundID.Item37); // Reforge/Anvil sound
 						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperTitanium)}";
 
-						Main.LocalPlayer.QuickSpawnItem(itemGetSuperTitanium);
+						Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemGetSuperTitanium);
 					}
 
                     else 
@@ -248,7 +224,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 						SoundEngine.PlaySound(SoundID.Item37); // Reforge/Anvil sound
 						Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemToReceive)}";
 
-						Main.LocalPlayer.QuickSpawnItem(itemToReceive);
+						Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemToReceive);
 					}
 				}
 				shop = true;
@@ -300,9 +276,9 @@ namespace AerovelenceMod.Content.NPCs.TownNPC
 			nextSlot++;
 		}
 
-		public override void NPCLoot()
-		{
-			Item.NewItem(NPC.getRect(), ModContent.ItemType<RockPouch>());
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+        Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<RockPouch>());
 		}
 
 		public override bool CanGoToStatue(bool toKingStatue)

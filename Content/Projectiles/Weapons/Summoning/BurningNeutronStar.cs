@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			Projectile.ignoreWater = true;
 			Projectile.tileCollide = true;
 			Projectile.netImportant = true;
-			aiType = -1;
+			AIType = -1;
 			Projectile.alpha = 0;
 			Projectile.penetrate = -10;
 			Projectile.timeLeft = 18000;
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 						num417 = num414 / num417;
 						num415 *= num417;
 						num416 *= num417;
-						Projectile.NewProjectile(Projectile.Center.X - 4f, Projectile.Center.Y, num415, num416, ModContent.ProjectileType<SkylightProjectile>(), Player.crystalLeafDamage, Player.crystalLeafKB, Projectile.owner);
+						Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center.X - 4f, Projectile.Center.Y, num415, num416, ModContent.ProjectileType<SkylightProjectile>(), Player.crystalLeafDamage, Player.crystalLeafKB, Projectile.owner);
 						Projectile.ai[0] = 50f;
 					}
 				}

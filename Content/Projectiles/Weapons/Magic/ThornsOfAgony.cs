@@ -70,25 +70,25 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 		public override void Kill(int timeLeft)
 			=> DustSpawnEffect();
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-			=> this.DrawProjectileCentered(spriteBatch, lightColor);
+		public override bool PreDraw(ref Color lightColor)
+			=> this.DrawProjectileCentered(Main.spriteBatch, lightColor);
 
 		private void DustSpawnEffect()
 		{
 			int amount = 6;
-			int dustType = ModContent.DustType<Dusts.Wood>();
+			int DustType = ModContent.DustType<Dusts.Wood>();
 			float velocityModifier = 1f;
 
 			if (Projectile.ai[0] == 0)
 			{
 				amount = 15;
 				velocityModifier = 1.5f;
-				dustType = ModContent.DustType<Dusts.PinkPetal>();
+				DustType = ModContent.DustType<Dusts.PinkPetal>();
 			}
 
 			for (int i = 0; i < amount; ++i)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, dustType);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustType);
 				dust.velocity *= velocityModifier;
 			}
 		}
@@ -100,7 +100,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
 			Vector2 offset = (newDirection - currentDirection) / 2;
 
-			Projectile.NewProjectile(Projectile.Center + currentDirection * 22 + offset * 24, newDirection, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.ai[0] - 1);
+			Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + currentDirection * 22 + offset * 24, newDirection, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.ai[0] - 1);
 		}
 	}
 }

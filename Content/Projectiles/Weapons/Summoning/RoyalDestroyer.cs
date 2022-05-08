@@ -110,7 +110,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			Vector2 origin = frame.Size() / 2;
 			SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, lightColor, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, lightColor, Projectile.rotation, origin, Projectile.scale, effects, 0);
 
 			return (false);
 		}
@@ -319,7 +319,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 				{
 					int tileX = (int)(Projectile.Center.X / 16);
 					int tileY = (int)((Projectile.position.Y + Projectile.height) / 16) + 1;
-					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].slope() > 0)
+					if (WorldGen.SolidTile(tileX, tileY) || Main.tile[tileX, tileY].IsHalfBlock || Main.tile[tileX, tileY].Slope > 0)
 					{
 						try
 						{

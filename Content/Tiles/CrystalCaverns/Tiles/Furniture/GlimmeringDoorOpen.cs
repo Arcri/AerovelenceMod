@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -16,10 +17,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 	{
 		public override void SetStaticDefaults()
 		{
-			Main.tileFrameImportant[Type] = true;
-			Main.tileSolid[Type] = false;
-			Main.tileLavaDeath[Type] = true;
-			Main.tileNoSunLight[Type] = true;
 			TileObjectData.newTile.Width = 2;
 			TileObjectData.newTile.Height = 3;
 			TileObjectData.newTile.Origin = new Point16(0, 0);
@@ -59,19 +56,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
 			TileObjectData.addAlternate(1);
 			TileObjectData.addTile(Type);
-			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-			TileID.Sets.HousingWalls[Type] = true;
-			TileID.Sets.HasOutlines[Type] = true;
-			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Glimmering Door");
-			AddMapEntry(new Color(068, 077, 098), name);
-			dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.OpenDoor };
-			closeDoorID = TileType<GlimmeringDoorClosed>();
 		}
 
-		public override bool HasSmartInteract()
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
@@ -83,15 +70,15 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 32, 48, ItemType<GlimmeringDoor>());
+			Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 48, ItemType<GlimmeringDoor>());
 		}
 
 		public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<GlimmeringDoor>();
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ItemType<GlimmeringDoor>();
 		}
 	}
 }

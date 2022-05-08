@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 			name.SetDefault("Valley Sapling");
 			AddMapEntry(new Color(200, 200, 200), name);
 
-			sapling = true;
-			dustType = DustType<Sparkle>();
-			adjTiles = new int[] { TileID.Saplings };
+			TileID.Sets.TreeSapling[Type] = true;
+			DustType = DustType<Sparkle>();
+			AdjTiles = new int[] { TileID.Saplings };
 		}
 
 		public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
@@ -53,7 +53,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 		public override void RandomUpdate(int i, int j)
 		{
 			// A random chance to slow down growth
-			if (WorldGen.genRand.Next(20) == 0)
+			if (WorldGen.genRand.NextBool(20))
 			{
 				Tile tile = Framing.GetTileSafely(i, j);
 				bool growSucess;
