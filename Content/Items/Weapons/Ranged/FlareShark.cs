@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 8f;
         }
-        public override bool ConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Player player)
         {
             return Main.rand.NextFloat() >= .33f;
         }
@@ -42,13 +42,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(5));
-            speedX = perturbedSpeed.X;
+            Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(5));
+            velocity.X = perturbedSpeed.X;
             velocity.Y = perturbedSpeed.Y;
             {
                 {
                     type = Main.rand.Next(new int[] { type, ProjectileID.Bullet, ProjectileID.Flare });
-                    return true;
                 }
             }
         }

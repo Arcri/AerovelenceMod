@@ -137,7 +137,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 					num450 = num447 / num450;
 					num448 *= num450;
 					num449 *= num450;
-					Projectile.NewProjectile(vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<PrismPiercerProjectile2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+					Projectile.NewProjectile(Projectile.GetSource_FromAI(), vector31.X, vector31.Y, num448, num449, ModContent.ProjectileType<PrismPiercerProjectile2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 				}
 			}
 		}

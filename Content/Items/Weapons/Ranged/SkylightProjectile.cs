@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             int projectileCount = 5;
             for (int i = 0; i < projectileCount; i++)
             {
-                Projectile.NewProjectile(Projectile.position, Projectile.velocity, ProjectileType<SkylightChainProjectile>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.position, Projectile.velocity, ProjectileType<SkylightChainProjectile>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 0f, 0f);
             }
         }
     }

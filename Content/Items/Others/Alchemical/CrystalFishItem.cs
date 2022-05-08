@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Others.Alchemical
 
 		public override bool? UseItem(Player player)
 		{
-			NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, ModContent.NPCType<CrystalFish>());
+			NPC.NewNPC(player.GetSource_FromThis(), (int)player.Center.X, (int)player.Center.Y, ModContent.NPCType<CrystalFish>());
 			return true;
 		}
 

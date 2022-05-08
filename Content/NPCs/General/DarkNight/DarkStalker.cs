@@ -33,22 +33,23 @@ namespace AerovelenceMod.Content.NPCs.General.DarkNight
             NPC.value = Item.buyPrice(0, 1, 0, 0);
             NPC.buffImmune[20] = true;
             NPC.buffImmune[24] = true;
-			animationType = 0;
+			AnimationType = 0;
         }
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
+			var s = NPC.GetSource_Death();
 			if (NPC.life <= 0)
 			{
 				for (int k = 0; k < 20; k++)
 				{
 					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore1"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore2"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore3"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore4"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore5"), 1f);
+				Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore1").Type, 1f);
+				Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore2").Type, 1f);
+				Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore3").Type, 1f);
+				Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore4").Type, 1f);
+				Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore5").Type, 1f);
 
 			}
 		}
@@ -97,12 +98,12 @@ namespace AerovelenceMod.Content.NPCs.General.DarkNight
 				if(Main.netMode != NetmodeID.MultiplayerClient)
 				{
 					int damage2 = NPC.damage / 2;
-					if (Main.expertMode)
+					/*if (Main.expertMode)
 					{
 						damage2 = (int)(damage2 / Main.expertDamage);
 						NPC.netUpdate = true;
-					}
-					Projectile.NewProjectile(new Vector2(NPC.Center.X, NPC.position.Y), new Vector2(0, -Main.rand.NextFloat(5, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-10, 10) + (-20 + 20 * i))), ModContent.ProjectileType<LuminousShard>(), damage2, 3, Main.myPlayer, player);
+					}*/
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), new Vector2(NPC.Center.X, NPC.position.Y), new Vector2(0, -Main.rand.NextFloat(5, 7f)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-10, 10) + (-20 + 20 * i))), ModContent.ProjectileType<LuminousShard>(), damage2, 3, Main.myPlayer, player);
 					NPC.netUpdate = true;
 				}
             }

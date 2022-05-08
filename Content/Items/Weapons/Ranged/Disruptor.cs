@@ -35,13 +35,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             float numberProjectiles = 2;
             float rotation = MathHelper.ToRadians(6);
-            position += Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 10f;
+            position += Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 10f;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+                Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+                Projectile.NewProjectile(Item.GetSource_ItemUse(Item), position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockback, player.whoAmI);
             }
-            return false;
         }
     }
 }

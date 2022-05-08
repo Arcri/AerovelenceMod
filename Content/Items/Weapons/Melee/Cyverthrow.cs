@@ -173,7 +173,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             if (Main.rand.NextFloat() < 0.5f)
             {
-                int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 164, 0f, 0f, 0, default, 1.118421f);
+                int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.TeleportationPotion, 0f, 0f, 0, default, 1.118421f);
                 Dust dust = Main.dust[dustIndex];
                 dust.shader = GameShaders.Armor.GetSecondaryShader(41, Main.LocalPlayer);
                 dust.noGravity = true;

@@ -21,11 +21,11 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.allDamage += 0.10f;
-            player.starCloak = true;
+            player.GetDamage(DamageClass.Ranged) += 0.10f;
+            player.starCloakItem = Item;
             player.panic = true;
-            player.bee = true;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
+            player.starCloakItem_beeCloakOverrideItem = Item;
+            AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
             modPlayer.QueensStinger = true;
 		}
         public override void UpdateEquip(Player player)

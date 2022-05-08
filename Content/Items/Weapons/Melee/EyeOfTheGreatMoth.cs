@@ -55,7 +55,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AI()
         {
-            if (Main.rand.Next(10) == 0)
+            if (Main.rand.NextBool(10))
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 20, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
                 dust.scale = 0.50f;
@@ -89,7 +89,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                         float speed = 5f;
                         int type = Mod.Find<ModProjectile>("CryoBallProj2").Type;
                         Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
                         shootTimer = 0;
 
                         if (Main.rand.Next(2) == 0)

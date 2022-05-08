@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            int index = Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+            int index = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CrystalKunaiProj2>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             Main.projectile[index].rotation = (float)(Projectile.rotation + 3.14);
             Projectile.Kill();
             return true;

@@ -177,7 +177,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 Vector2 value2 = Projectile.Center + (num13 + ((num10 == -1) ? ((float)Math.PI) : 0f)).ToRotationVector2() * 30f;
                 Vector2 vector3 = num13.ToRotationVector2();
                 Vector2 value3 = vector3.RotatedBy((float)Math.PI / 2f * Projectile.spriteDirection);
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                 {
                     Dust dust4 = Dust.NewDustDirect(value2 - new Vector2(5f), 10, 10, 31, player.velocity.X, player.velocity.Y, 150);
                     dust4.velocity = Projectile.DirectionTo(dust4.position) * 0.1f + dust4.velocity * 0.1f;
@@ -202,7 +202,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                     }
                     {
                     }
-                    if (Main.rand.Next(6) != 0)
+                    if (!Main.rand.NextBool(6))
                     {
                         Dust dust5 = Dust.NewDustDirect(Projectile.position, 0, 0, 226, 0f, 0f, 100);
                         dust5.position = Projectile.Center + vector3 * (60f + Main.rand.NextFloat() * 20f) * scaleFactor3;
@@ -211,7 +211,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                         dust5.noLight = true;
                         dust5.scale = 0.5f;
                         dust5.customData = this;
-                        if (Main.rand.Next(4) == 0)
+                        if (Main.rand.NextBool(4))
                         {
                             dust5.noGravity = false;
                         }
@@ -325,7 +325,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                             scaleFactor = 0.5f;
                             break;
                     }
-                    if (Main.rand.Next(6) != 0)
+                    if (!Main.rand.NextBool(6))
                     {
                         num12 *= 1.2f;
                         Dust dust3 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 226, 0f, 0f, 100);
@@ -335,7 +335,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                         dust3.scale = 0.75f;
                         dust3.fadeIn = 0.8f;
                         dust3.customData = this;
-                        if (Main.rand.Next(3) == 0)
+                        if (Main.rand.NextBool(3))
                         {
                             dust3.noGravity = false;
                             dust3.fadeIn = 0f;

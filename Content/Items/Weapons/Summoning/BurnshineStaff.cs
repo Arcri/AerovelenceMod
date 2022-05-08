@@ -39,7 +39,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
         {
             player.AddBuff(Item.buffType, 2);
             position = Main.MouseWorld;
-            return true;
         }
     }
 }

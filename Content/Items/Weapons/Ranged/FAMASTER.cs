@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			DisplayName.SetDefault("Famaster");
 		}
-		public override bool ConsumeAmmo(Player player)
+		public override bool CanConsumeAmmo(Player player)
 		{
 			return Main.rand.NextFloat() >= .33f;
 		}
@@ -43,8 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ProjectileID.BulletHighVelocity, damage, knockBack, player.whoAmI);
-			return false;
+			Projectile.NewProjectile(Item.GetSource_ItemUse(Item), position.X, position.Y, velocity.X, velocity.Y, ProjectileID.BulletHighVelocity, damage, knockback, player.whoAmI);
 		}
     }
 }

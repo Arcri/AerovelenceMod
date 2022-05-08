@@ -70,9 +70,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
             if (Main.myPlayer == Projectile.owner)
             {
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, Main.rand.Next(-15, 15) * .25f, Main.rand.Next(-16, -7) * .25f, ModContent.ProjectileType<SandShard1>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
 
             }
         }

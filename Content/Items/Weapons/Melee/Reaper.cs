@@ -88,7 +88,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                         float speed = 3f;
                         int type = Mod.Find<ModProjectile>("ReaperProjectile").Type;
                         Vector2 velocity = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(360));
-                        Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
                         shootTimer = 0;
                     }
                 }
@@ -135,7 +135,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     dust.position.Y = dust.position.Y - dustCastAheadY;
                 }
 
-                if (Main.rand.Next(8) == 0)
+                if (Main.rand.NextBool(8))
                 {
                     int dustIdx = Dust.NewDust(
                         Position: pos,

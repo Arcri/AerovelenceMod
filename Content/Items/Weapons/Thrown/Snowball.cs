@@ -44,7 +44,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Projectile.width = Projectile.height = 30;
 
             Projectile.CloneDefaults(ProjectileID.Shuriken);
-            Projectile.friendly = Projectile.DamageType = DamageClass.Ranged;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
 
             Projectile.tileCollide = true;
             Projectile.penetrate = 1;
@@ -67,16 +68,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
 
             int damage = (int)(Projectile.damage);
-            Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, Projectile.owner);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, Projectile.owner);
 
             if (Main.myPlayer == Projectile.owner)
             {
                 damage = (int)(Projectile.damage * 0.5f);
 
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 0, 5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, 0, -5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
-                Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y - 16f, -5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, 0, 5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, 5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, 0, -5, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y - 16f, -5, 0, ModContent.ProjectileType<SnowballProjectileTwo>(), damage, 0, Projectile.owner);
             }
 
         }
@@ -88,7 +89,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             {
                 Projectile.width = Projectile.height = 8;
 
-                Projectile.friendly = Projectile.DamageType = DamageClass.Ranged;
+                Projectile.friendly = true;
+                Projectile.DamageType = DamageClass.Ranged;
 
                 Projectile.aiStyle = -1;
 
@@ -126,7 +128,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 Projectile.width = Projectile.height = 20;
 
                 Projectile.aiStyle = -1;
-                Projectile.friendly = Projectile.DamageType = // projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+                Projectile.friendly = true;
+                Projectile.DamageType = DamageClass.Melee;// projectile.ignoreWater = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
 
                 Projectile.penetrate = -1;
                 Projectile.timeLeft = 60;

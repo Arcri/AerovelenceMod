@@ -29,8 +29,8 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			NPC.aiStyle = 14;
 			NPC.noGravity = true;
 			NPC.npcSlots = 0;
-			aiType = NPCID.CaveBat;
-			animationType = NPCID.CaveBat;
+			AIType = NPCID.CaveBat;
+			AnimationType = NPCID.CaveBat;
 		}
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
 {
-    public class IceWorldgen : ModWorld
+    public class IceWorldgen : ModSystem
     {
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
@@ -39,7 +40,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                         {
                             if (tile == -2)
                             {
-                                Framing.GetTileSafely(x, y).liquid = 255;
+                                Framing.GetTileSafely(x, y).LiquidAmount = 255;
                             }
                             else if (tile == -1)
                             {
@@ -105,7 +106,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
             }
         }
 
-        private void IceExtras(GenerationProgress progress)
+        private void IceExtras(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "Ice Spikes";
 
@@ -201,7 +202,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                 }
             }
         }
-        private void IceExtras2(GenerationProgress progress)
+        private void IceExtras2(GenerationProgress progress, GameConfiguration configuration)
         {
             for (int y = 1; y < Main.maxTilesY; y++)
             {

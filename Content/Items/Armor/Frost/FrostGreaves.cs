@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Armor.Frost
         public override void UpdateEquip(Player player)
         {
 			player.moveSpeed += 0.1f;
-			player.allDamage += 0.05f;
+			player.GetDamage(DamageClass.Ranged) += 0.05f;
         }
         public override void AddRecipes()
         {

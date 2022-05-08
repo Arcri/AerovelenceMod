@@ -88,25 +88,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 				int num362 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 33, 0f, 0f, 75, default(Color), 1.2f);
 				Dust dust120;
 				Dust dust2;
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					Main.dust[num362].scale = 0.6f;
 				}

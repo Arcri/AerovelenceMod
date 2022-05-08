@@ -63,7 +63,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         {
 
             Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item73, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item73, projectile.position);
 
 
             if (Main.myPlayer == projectile.owner)
@@ -110,7 +110,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         public override void Kill(int timeLeft)
         {
             Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item10, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item10, projectile.position);
         }
     }
 }*/

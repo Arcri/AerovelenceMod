@@ -182,7 +182,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             }
             Vector2 vector9 = Projectile.Center + Projectile.velocity * 3f;
             Lighting.AddLight(vector9, 0.8f, 0.8f, 0.8f);
-            if (Main.rand.Next(3) == 0)
+            if (Main.rand.NextBool(3))
             {
                 int num34 = Dust.NewDust(vector9 - Projectile.Size / 2f, Projectile.width, Projectile.height, 63, Projectile.velocity.X, Projectile.velocity.Y, 100, default(Color), 2f);
                 Main.dust[num34].noGravity = true;

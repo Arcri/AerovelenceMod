@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -36,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Item.shootSpeed = 12f;
         }
         float dynamicCounter = 0;
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             for (int i = 0; i < 3 + (Main.expertMode ? 1 : 0); i++)
             {
@@ -44,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     damage = Item.damage;
-                    Projectile.NewProjectile(toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDaggerProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
+                    Projectile.NewProjectile(source, toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDaggerProjectile>(), damage, 0, Main.myPlayer, player.whoAmI);
                 }
                 Vector2 toLocationVelo = toLocation - player.Center;
                 Vector2 from = player.Center;

@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
             NPC.lavaImmune = true;
             NPC.noGravity = true;
             NPC.noTileCollide = false;
-            music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
+            //music = Mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CrystalTumbler");
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath44;
         }
@@ -82,7 +82,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
                 {
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
                 }
-                NPC.NewNPC((int)NPC.position.X, (int)NPC.position.Y, ModContent.NPCType<TheFallenSpirit>());
+                NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.position.X, (int)NPC.position.Y, ModContent.NPCType<TheFallenSpirit>());
             }
         }
 
@@ -142,28 +142,28 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
                 Main.NewText("Ghastly Blasts");
                 if (AttackTimer++ == 0)
                 {
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 }
                 else if (AttackTimer == 5)
                 {
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 }
                 else if (AttackTimer == 10)
                 {
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 }
                 else if (AttackTimer == 13)
                 {
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<PinkSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 }
                 else if (AttackTimer == 15)
                 {
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBlast>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBlast>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 }
                 else if (AttackTimer == 17)
                 {
                     AttackTimer = 0;
-                    Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                     State = TheFallenState.IdleFly;
                 }
 
@@ -179,7 +179,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.TheFallen
                     NPC.ai[1]++;
                     if (NPC.ai[1] >= 30)
                     {
-                        Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ModContent.ProjectileType<BlueSpiritBolt>(), 30, 0f, Main.myPlayer, 0f, 0f);
                         NPC.ai[1] = 0;
                     }
                     return;

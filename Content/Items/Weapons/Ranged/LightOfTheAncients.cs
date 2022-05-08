@@ -38,10 +38,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(3));
-            speedX = perturbedSpeed.X;
+            Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(3));
+            velocity.X = perturbedSpeed.X;
             velocity.Y = perturbedSpeed.Y;
-            return true;
         }
     }
     public class LightOfTheAncientsProj : ModProjectile
@@ -94,7 +93,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LightOfTheAncientsExplosion>(), Projectile.damage, 4f);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LightOfTheAncientsExplosion>(), Projectile.damage, 4f);
 
             Projectile.active = false;
 
@@ -116,7 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 var velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
 
-                Gore.NewGore(Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
+                Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
 
                 Projectile.netUpdate = true;
             }

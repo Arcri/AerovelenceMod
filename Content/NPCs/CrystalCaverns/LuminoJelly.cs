@@ -67,6 +67,8 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         public override void HitEffect(int hitDirection, double damage)
         {
 
+            var s = NPC.GetSource_OnHit(NPC);
+
             if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
@@ -79,15 +81,15 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.LightBlue, 0.7f);
                 }
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SpikeJellyHead"), 1f);
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SpikeJellyTentacle1"), 1f);
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/SpikeJellyTentacle2"), 1f);
+                Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/SpikeJellyHead").Type, 1f);
+                Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/SpikeJellyTentacle1").Type, 1f);
+                Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/SpikeJellyTentacle2").Type, 1f);
             }
             t++;
             Vector2 offset = NPC.Center + new Vector2(Main.rand.NextFloat(-16f, 16f), Main.rand.NextFloat(-16f, 16f));
             if (Main.rand.NextFloat() <= 0.50f)
             {
-                Projectile.NewProjectileDirect(offset, new Vector2(Main.rand.NextFloat(-2f, 2f), -5f + Main.rand.NextFloat(-2f, 2f)), ModContent.ProjectileType<LuminoShard>(), 5, 1f, Main.myPlayer);
+                Projectile.NewProjectileDirect(NPC.GetSource_OnHit(NPC), offset, new Vector2(Main.rand.NextFloat(-2f, 2f), -5f + Main.rand.NextFloat(-2f, 2f)), ModContent.ProjectileType<LuminoShard>(), 5, 1f, Main.myPlayer);
             }
         }
         public override void AI()
@@ -105,6 +107,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.water ? 8f : 0f;
+            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? 8f : 0f;
     }
 }

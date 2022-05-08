@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
 			player.jumpSpeedBoost += 2f;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
+            AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
             modPlayer.MidasCrown = true;
             player.AddBuff(75, 900, false);
         }

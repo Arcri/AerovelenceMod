@@ -37,11 +37,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
 		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
 		{
-			if (type == ProjectileID.WoodenArrowFriendly)
-			{
-				type = ModContent.ProjectileType<ForestsFrenzyProj>();
-			}
-			return true;
+			if (type == ProjectileID.WoodenArrowFriendly) type = ModContent.ProjectileType<ForestsFrenzyProj>();
+
 		}
 		public override void AddRecipes()
 		{

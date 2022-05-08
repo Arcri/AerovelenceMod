@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -31,15 +32,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.shootSpeed = 18;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float numberProjectiles = 7;
+        float numberProjectiles = 7;
             float rotation = MathHelper.ToRadians(15);
-            position += Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 15f;
+            position += Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 15f;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Item.shoot, damage, knockBack, player.whoAmI);
+                Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f; // Watch out for dividing by 0 if there is only 1 projectile.
+                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, Item.shoot, damage, knockback, player.whoAmI);
             }
             return false;
         }
@@ -70,7 +71,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     Vector2 position = Projectile.position;
                     position -= Projectile.velocity * ((float)i / numDust);
                     Projectile.alpha = 255;
-                    int anotherOneBitesThis = Dust.NewDust(position, 1, 1, 132, 0f, 0f, 100, default(Color), 1f);
+                    int anotherOneBitesThis = Dust.NewDust(position, 1, 1, DustID.Firework_Blue, 0f, 0f, 100, default, 1f);
                     Main.dust[anotherOneBitesThis].position = position;
                     Main.dust[anotherOneBitesThis].velocity *= 0.2f;
                 }

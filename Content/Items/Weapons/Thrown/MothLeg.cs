@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             if (Projectile.tileCollide)
             {
-                int proj = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<MothLegProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner, target.whoAmI);
+                int proj = Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center, Vector2.Zero, ModContent.ProjectileType<MothLegProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner, target.whoAmI);
                 if (Main.netMode != NetmodeID.Server)
                 {
                     AerovelenceMod.primitives.CreateTrail(new LegPrimTrail(Main.projectile[proj]));

@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
         }
         public override void UpdateEquip(Player player)
         {
-            player.allDamage += 0.04f;
+            player.GetDamage(DamageClass.Ranged) += 0.04f;
             player.buffImmune[BuffID.Electrified] = true;
         }
         public override void AddRecipes()

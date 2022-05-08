@@ -33,7 +33,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 		public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
 		{
 			target.AddBuff(BuffID.OnFire, 200);
-            Projectile.NewProjectile(target.position, target.velocity, ProjectileID.DD2ExplosiveTrapT3Explosion, Item.damage / 2, player.whoAmI);
+            Projectile.NewProjectile(target.GetSource_OnHit(target), target.position, target.velocity, ProjectileID.DD2ExplosiveTrapT3Explosion, Item.damage / 2, player.whoAmI);
 		}
     }
 }

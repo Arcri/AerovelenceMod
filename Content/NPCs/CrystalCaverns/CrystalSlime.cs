@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.damage = 15;
             NPC.defense = 2;
             NPC.knockBackResist = 0.2f;
-            animationType = NPCID.BlueSlime;
+            AnimationType = NPCID.BlueSlime;
             NPC.width = 38;
             NPC.height = 18;
             NPC.value = Item.buyPrice(0, 0, 7, 0);

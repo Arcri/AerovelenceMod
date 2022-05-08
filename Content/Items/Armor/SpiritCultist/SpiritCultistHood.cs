@@ -20,11 +20,11 @@ namespace AerovelenceMod.Content.Items.Armor.SpiritCultist
 		}
 		public override void UpdateArmorSet(Player player)
 		{
-            player.allDamage += 0.15f;
+            player.GetDamage(DamageClass.Generic) += 0.15f;
             player.wingTimeMax *= 2;
             player.jumpSpeedBoost += 1.5f;
             player.setBonus = "+15% increase to all damage\nIncreased flight time\nIncreased jump speed\n10% increased movement speed\nYou leave a trail of deadly spirits";
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
+            AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
             modPlayer.SpiritCultistBonus = true;
         }
     

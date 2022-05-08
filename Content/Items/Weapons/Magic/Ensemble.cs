@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,15 +33,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = Mod.Find<ModProjectile>("EnsembleMusic1").Type;
             Item.shootSpeed = 14f;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            List<int> musics = new List<int>();
+        List<int> musics = new List<int>();
             musics.Add(Mod.Find<ModProjectile>("EnsembleMusic1").Type);
             musics.Add(Mod.Find<ModProjectile>("EnsembleMusic2").Type);
             musics.Add(Mod.Find<ModProjectile>("EnsembleMusic3").Type);
             float x = (float)Math.Cos(new Random().NextDouble() * 6.283185307179587f) * (float)new Random().NextDouble() * 8;
             float y = (float)Math.Sin(new Random().NextDouble() * 6.283185307179587f) * (float)new Random().NextDouble() * 8;
-            int val = Projectile.NewProjectile(player.Center.X, player.Center.Y, x, y, musics[new Random().Next(3)], Item.damage, 0f, Main.myPlayer, 0f, 0f);
+            int val = Projectile.NewProjectile(source, player.Center.X, player.Center.Y, x, y, musics[new Random().Next(3)], Item.damage, 0f, Main.myPlayer, 0f, 0f);
             return false;
         }
     }

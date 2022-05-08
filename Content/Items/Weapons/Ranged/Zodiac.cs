@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            float numberProjectiles = 1 + Main.rand.Next(2)
+            float numberProjectiles = 1 + Main.rand.Next(2);
             float rotation = MathHelper.ToRadians(45);
             position += Vector2.Normalize(velocity) * 45f;
             for (int i = 0; i < numberProjectiles; i++)

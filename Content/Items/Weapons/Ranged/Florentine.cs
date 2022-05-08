@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,8 +13,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			DisplayName.SetDefault("Florentine");
 			Tooltip.SetDefault("Has a chance to shoot electric volleys alongside bullets\n33% chance to not consume ammo");
 		}
-		public override bool ConsumeAmmo(Player player)
-		{
+        public override bool CanConsumeAmmo(Player player)
+        {
 			return Main.rand.NextFloat() >= .33f;
 		}
         public override void SetDefaults()
@@ -42,9 +43,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			return new Vector2(-10, 0);
 		}
 
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
-			Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ProjectileID.BulletHighVelocity, damage, knockBack, player.whoAmI);
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+        Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ProjectileID.BulletHighVelocity, damage, knockback, player.whoAmI);
 			return false;
 		}
     }

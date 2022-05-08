@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
@@ -36,9 +37,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shootSpeed = 5f;
         }
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ModContent.ProjectileType<LightningSpellOrbitProj>(), damage, knockBack, player.whoAmI);
+            Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<LightningSpellOrbitProj>(), damage, 4f, player.whoAmI);
             return true;
         }
     }
@@ -143,9 +144,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
         private float k; //k multiplier
         private float smol=1; //var to make the orbits smaller
-        private Projectile alpha = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 166, 50 / 3, 2, 0);
-        private Projectile beta = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 166, 50 / 3, 2, 0);  //orbits projs
-        private Projectile gamma = Projectile.NewProjectileDirect(Vector2.Zero, Vector2.Zero, 166, 50 / 3, 2, 0);
+
+
+        private Projectile beta;
+        private Projectile gamma;
+        private Projectile alpha;
 
         public override void SetDefaults()
         {
@@ -156,7 +159,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Projectile.ignoreWater = false;
             Projectile.penetrate = 4;
         }
-        
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            beta = Projectile.NewProjectileDirect(source, Vector2.Zero, Vector2.Zero, ProjectileID.SnowBallFriendly, 50 / 3, 2, 0);
+            gamma = Projectile.NewProjectileDirect(source, Vector2.Zero, Vector2.Zero, ProjectileID.SnowBallFriendly, 50 / 3, 2, 0);
+            alpha = Projectile.NewProjectileDirect(source, Vector2.Zero, Vector2.Zero, ProjectileID.SnowBallFriendly, 50 / 3, 2, 0);
+        }
+
         public override void AI()
         {   //Homing code from above
             if(Projectile.alpha > 30)

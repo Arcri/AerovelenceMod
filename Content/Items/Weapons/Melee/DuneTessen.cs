@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Items.Others.Crafting;
 using AerovelenceMod.Content.Items.Placeables.Blocks;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,15 +34,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 			Item.shoot = ModContent.ProjectileType<DuneSpike>();
 			Item.shootSpeed = 25f;
 		}
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
-			float numberProjectiles = 3 + Main.rand.Next(3);
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+        float numberProjectiles = 3 + Main.rand.Next(3);
 			float rotation = MathHelper.ToRadians(20);
-			position += Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 45f;
+			position += Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 45f;
 			for (int i = 0; i < numberProjectiles; i++)
 			{
-				Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
-				Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+				Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+				Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, player.whoAmI);
 			}
 			return false;
 		}
@@ -85,25 +86,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 				int num362 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, DustID.AmberBolt, 0f, 0f, 75, default(Color), 1.2f);
 				Dust dust120;
 				Dust dust2;
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					dust120 = Main.dust[num362];
 					dust2 = dust120;
 					dust2.alpha += 25;
 				}
-				if (Main.rand.Next(2) == 0)
+				if (Main.rand.NextBool(2))
 				{
 					Main.dust[num362].scale = 0.6f;
 				}

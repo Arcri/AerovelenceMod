@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useTime = Item.useAnimation = 35;
            
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.holdStyle = ItemHoldStyleID.HarpHoldingOut;
+            Item.holdStyle = ItemHoldStyleID.HoldGuitar;
             Item.UseSound = SoundID.Item110;
             Item.noMelee = true;
             Item.knockBack = 6;
@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         int itemShoot = 0; 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2 muzzleOffset = Vector2.Normalize(new Vector2(speedX, velocity.Y)) * 25f;
+            Vector2 muzzleOffset = Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 25f;
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
                 position += muzzleOffset;
@@ -50,8 +50,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 damage *= 3;
                 itemShoot = 0;
             }
-            
-            return true;
         
         }
         public override void AddRecipes()
@@ -68,9 +66,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             return new Vector2(-4, 0);
         }
 
-        public override void UseStyle(Player player)
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
         {
-            Vector2 targetPosition = Main.MouseWorld - Main.LocalPlayer.Center;
+        Vector2 targetPosition = Main.MouseWorld - Main.LocalPlayer.Center;
             int direction = Math.Sign(targetPosition.X);
 
             player.ChangeDir(direction);

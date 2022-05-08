@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             int spawnX = (int)(Projectile.Center.X / 64) * 64;
             int spawnY = (int)((Projectile.position.Y - Projectile.height) / 16) * 16;
-            int index = Projectile.NewProjectile(spawnX, spawnY + 70, Projectile.velocity.X, Projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+            int index = Projectile.NewProjectile(Projectile.GetSource_FromAI(), spawnX, spawnY + 70, Projectile.velocity.X, Projectile.velocity.Y, ModContent.ProjectileType<CrystalGrowingKitField>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             SoundEngine.PlaySound(SoundID.Shatter, Projectile.position);
             Projectile.Kill();
             return true;

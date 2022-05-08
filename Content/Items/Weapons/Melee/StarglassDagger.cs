@@ -29,13 +29,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.autoReuse = true;
         }
 
-        public override void UseStyle(Player player)
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
         {
             float cosRot = (float)Math.Cos(player.itemRotation - 0.78f * player.direction * player.gravDir);
             float sinRot = (float)Math.Sin(player.itemRotation - 0.78f * player.direction * player.gravDir);
             for (int i = 0; i < 1; i++)
             {
-                float length = (Item.width * 1.2f - i * Item.width / 9) * Item.scale - 4; //length to base + arm displacemen
+                float length = (Item.width * 1.2f - i * Item.width / 9) * Item.scale - 4; //length to base + arm displacement
             }
         }
     }

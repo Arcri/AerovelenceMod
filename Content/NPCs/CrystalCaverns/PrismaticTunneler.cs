@@ -45,8 +45,8 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					Dust.NewDust(NPC.position, NPC.width, NPC.height, DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreHead"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreHead2"), 1f);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalDiggerGoreHead").Type, 1f);
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalDiggerGoreHead2").Type, 1f);
 			}
 		}
 		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
@@ -111,7 +111,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreBody"), 1f);
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalDiggerGoreBody").Type, 1f);
 			}
 		}
 	}
@@ -149,7 +149,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/CrystalDiggerGoreTail"), 1f);
+				Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalDiggerGoreTail").Type, 1f);
 			}
 		}
 	}
@@ -225,15 +225,15 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 						NPC.ai[3] = NPC.whoAmI;
 						NPC.realLife = NPC.whoAmI;
 						NPC.ai[2] = Main.rand.Next(minLength, maxLength + 1);
-						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), bodyType, NPC.whoAmI);
+						NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), bodyType, NPC.whoAmI);
 					}
 					else if (NPC.ai[2] > 0f)
 					{
-						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), NPC.type, NPC.whoAmI);
+						NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), NPC.type, NPC.whoAmI);
 					}
 					else
 					{
-						NPC.ai[0] = NPC.NewNPC((int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), tailType, NPC.whoAmI);
+						NPC.ai[0] = NPC.NewNPC(NPC.GetSource_FromAI(), (int)(NPC.position.X + NPC.width / 1), (int)(NPC.position.Y + NPC.height), tailType, NPC.whoAmI);
 					}
 					Main.npc[(int)NPC.ai[0]].ai[3] = NPC.ai[3];
 					Main.npc[(int)NPC.ai[0]].realLife = NPC.realLife;
@@ -285,7 +285,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					for (int num185 = num182; num185 < num183; num185++)
 					{
-						if (Main.tile[num184, num185] != null && (Main.tile[num184, num185].HasUnactuatedTile && (Main.tileSolid[(int)Main.tile[num184, num185].TileType] || Main.tileSolidTop[(int)Main.tile[num184, num185].TileType] && Main.tile[num184, num185].TileFrameY == 0) || Main.tile[num184, num185].liquid > 64))
+						if (Main.tile[num184, num185] != null && (Main.tile[num184, num185].HasUnactuatedTile && (Main.tileSolid[(int)Main.tile[num184, num185].TileType] || Main.tileSolidTop[(int)Main.tile[num184, num185].TileType] && Main.tile[num184, num185].TileFrameY == 0) || Main.tile[num184, num185].LiquidAmount > 64))
 						{
 							Vector2 vector17;
 							vector17.X = num184 * 16;

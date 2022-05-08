@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 #endregion
 
@@ -12,12 +13,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 {
 	public sealed class CarbonCadence : ModItem
 	{
-        public override void SetStaticDefaults()
-        {
+		public override void SetStaticDefaults()
+		{
 			DisplayName.SetDefault("Carbon Cadence");
 			Tooltip.SetDefault("Casts explosive crystal mines that shatter into shards");
-        }
-        public override void SetDefaults()
+		}
+		public override void SetDefaults()
 		{
 			Item.width = 24;
 			Item.height = 32;
@@ -55,7 +56,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 		public override bool AltFunctionUse(Player player)
 			=> true;
 
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			if (player.altFunctionUse == 2)
 			{

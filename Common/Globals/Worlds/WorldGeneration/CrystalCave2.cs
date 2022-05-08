@@ -19,11 +19,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
-
+using Terraria.IO;
 
 namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
 {
-    public class CrystalCavee : ModWorld
+    public class CrystalCavee : ModSystem
     {
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
             tasks.TryInsert(livingTreesIndex, new PassLegacy("Post Terrain", MakeCrystalCaves));
         }
 
-        private void MakeCrystalCaves(GenerationProgress progress)
+        private void MakeCrystalCaves(GenerationProgress progress, GameConfiguration configuration)
         {
 
 
@@ -2533,7 +2533,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                         switch (_CrystalCaveNoTouch[y, x])
                         {
                             case 1:
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
 
                         }
@@ -2541,59 +2541,59 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                         {
                             case 1:
                                 tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 2:
                                 tile.TileType = (ushort)ModContent.TileType<CrystalGrass>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 3:
                                 tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 4:
                                 tile.TileType = (ushort)ModContent.TileType<CavernCrystal>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 5:
                                 tile.TileType = (ushort)ModContent.TileType<CrystalDirt>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 6:
                                 tile.TileType = (ushort)ModContent.TileType<CavernStone>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 7:
                                 tile.TileType = (ushort)ModContent.TileType<CitadelBrick>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 8:
                                 tile.TileType = (ushort)ModContent.TileType<LushGrowth>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 9:
                                 tile.TileType = (ushort)ModContent.TileType<ChargedStone>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 10:
                                 tile.TileType = (ushort)ModContent.TileType<CrystalSand>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 11:
                                 tile.TileType = (ushort)ModContent.TileType<CitadelBrick>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 12:
                                 tile.TileType = (ushort)ModContent.TileType<SmoothCavernStone>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 13:
                                 tile.TileType = (ushort)ModContent.TileType<GlimmerwoodTile>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                             case 14:
                                 tile.TileType = (ushort)ModContent.TileType<LushGrowth>();
-                                tile.HasTile;
+                                tile.HasTile = true;
                                 break;
                         }
 
@@ -2619,8 +2619,8 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                         switch (_CrystalCaveWater[y, x])
                         {
                             case 1:
-                                tile.liquidType(0);
-                                tile.liquid = 255;
+                                tile.LiquidType = 0;
+                                tile.LiquidAmount = 255;
                                 break;
                         }
 

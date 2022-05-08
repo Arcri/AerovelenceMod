@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (i % 215 == 10)
             {
                 Vector2 offset = new Vector2(0, -100);
-                Projectile.NewProjectile(NPC.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileID.FrostBlastHostile, 6, 1f, Main.myPlayer);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ProjectileID.FrostBlastHostile, 6, 1f, Main.myPlayer);
             }
         }
         public override void FindFrame(int frameHeight)

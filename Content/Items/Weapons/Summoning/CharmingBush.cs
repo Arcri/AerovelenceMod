@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 
 using AerovelenceMod.Content.Projectiles.Weapons.Summoning;
 using AerovelenceMod.Content.Buffs;
+using Terraria.DataStructures;
 
 #endregion
 
@@ -55,8 +56,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 				.AddTile(TileID.Anvils)
 				.Register();
 		}
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
 			if (player.altFunctionUse == 2)
 			{
 				return (false);
@@ -76,7 +77,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 				projectileAmount++;
 			}
 
-			Projectile.NewProjectile(player.Center, Vector2.Zero, projectileTypes[Main.rand.Next(projectileTypes.Length)], damage, knockBack, player.whoAmI, projectileAmount, projectileAmount);
+			Projectile.NewProjectile(source, player.Center, Vector2.Zero, projectileTypes[Main.rand.Next(projectileTypes.Length)], damage, 1f, player.whoAmI, projectileAmount, projectileAmount);
 
 			for (int i = 0; i < Main.maxProjectiles; ++i)
 			{

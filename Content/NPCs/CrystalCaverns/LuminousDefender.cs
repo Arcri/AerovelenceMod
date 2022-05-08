@@ -50,11 +50,11 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				{
 					Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
 				}
-				/*Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore1"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore2"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore3"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore4"), 1f);
-				Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/LuminousDefenderGore5"), 1f);*/
+				/*Gore.NewGore(NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore1"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore2"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore3"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore4"), 1f);
+				Gore.NewGore(NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/LuminousDefenderGore5"), 1f);*/
 
 			}
 		}

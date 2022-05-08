@@ -2,6 +2,7 @@ using AerovelenceMod.Content.Items.Weapons.Ranged;
 using AerovelenceMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -35,13 +36,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = ModContent.ProjectileType<InvisibleProj>();
             Item.shootSpeed = 12f;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(1));
-            speedX = perturbedSpeed.X;
+        Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(1));
+            velocity.X = perturbedSpeed.X;
             velocity.Y = perturbedSpeed.Y;
             {
-                Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ModContent.ProjectileType<SkylightProjectile>(), damage * 1, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, ModContent.ProjectileType<SkylightProjectile>(), damage * 1, 1f, player.whoAmI);
             }
             return true;
         }

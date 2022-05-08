@@ -32,9 +32,9 @@ namespace AerovelenceMod.Content.Items.BossSummons
         public override bool? UseItem(Player player)
         {
             if (player.ZoneSnow)
-                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Rimegeist"));
+                NPC.SpawnOnPlayer(player.whoAmI, Mod.Find<ModNPC>("Rimegeist").Type);
             
-            Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
+            SoundEngine.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
 
             return true;
         }

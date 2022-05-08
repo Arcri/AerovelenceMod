@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Accessories
         }
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.starCloak = true;
-			player.lifeRegen =+ 2;
+            player.starCloakItem = Item;
+            player.lifeRegen =+ 2;
 			player.maxRunSpeed += 0.3f;
         }
     }

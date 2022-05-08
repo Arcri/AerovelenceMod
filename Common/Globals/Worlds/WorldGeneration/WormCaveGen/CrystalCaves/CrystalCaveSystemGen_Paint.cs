@@ -13,11 +13,11 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.Cryst
 		protected override bool PaintTileInner(int i, int j, float percToEdge)
 		{
 			Tile t = Framing.GetTileSafely(i, j);
-			bool changed = t.HasTile || t.WallType != (ushort)ModContent.WallType<CavernWall>() || t.liquid > 0;
+			bool changed = t.HasTile || t.WallType != (ushort)ModContent.WallType<CavernWall>() || t.LiquidAmount > 0;
 
-			t.HasTile;
+			t.HasTile = true;
 			t.WallType = (ushort)ModContent.WallType<CavernWall>();
-			t.liquid = 0;
+			t.LiquidAmount = 0;
 			return changed;
 		}
 
@@ -30,8 +30,8 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.Cryst
 
 			t.TileType = (ushort)ModContent.TileType<CavernStone>();
 			t.WallType = (ushort)ModContent.WallType<CavernWall>();
-			t.slope(0);
-			t.HasTile;
+			t.Slope = 0;
+			t.HasTile = true;
 			return changed;
 		}
 	}

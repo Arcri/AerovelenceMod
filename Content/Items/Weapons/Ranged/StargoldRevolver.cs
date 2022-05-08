@@ -90,7 +90,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
 
             Collision.HitTiles(projectile.position + projectile.velocity, projectile.velocity, projectile.width, projectile.height);
-            Main.PlaySound(SoundID.Item73, projectile.position);
+            SoundEngine.PlaySound(SoundID.Item73, projectile.position);
             
         }
     }

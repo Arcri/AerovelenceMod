@@ -67,12 +67,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Tile tile = Framing.GetTileSafely(i, j);
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
             Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
                     tileAbove.TileType = (ushort)ModContent.TileType<CrystalGrowth>();
-                    tileAbove.HasTile;
+                    tileAbove.HasTile = true;
                     tileAbove.TileFrameY = 0;
                     tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(15) * 18);
                     WorldGen.SquareTileFrame(i, j + 1, true);
@@ -82,12 +82,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.Lava)
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
                     tileAbove.TileType = (ushort)ModContent.TileType<CavernsRubbleFloor>();
-                    tileAbove.HasTile;
+                    tileAbove.HasTile = true;
                     tileAbove.TileFrameY = 0;
                     tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(13) * 18);
                     WorldGen.SquareTileFrame(i, j + 2, true);
@@ -97,12 +97,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(25) && tileAbove.liquid > 250 && !tileAbove.HasTile && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(25) && tileAbove.LiquidAmount > 250 && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
                     tileAbove.TileType = (ushort)ModContent.TileType<LuminVines>();
-                    tileAbove.HasTile;
+                    tileAbove.HasTile = true;
                     WorldGen.SquareTileFrame(i, j - 1, true);
                     if (Main.netMode == NetmodeID.Server)
                     {
@@ -110,12 +110,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(15) && tileBelow.liquid > 250 && !tileBelow.HasTile && !tileBelow.lava())
+            if (WorldGen.genRand.NextBool(15) && tileBelow.LiquidAmount > 250 && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope)
                 {
                     tileBelow.TileType = (ushort)ModContent.TileType<LuminVines>();
-                    tileBelow.HasTile;
+                    tileBelow.HasTile = true;
                     WorldGen.SquareTileFrame(i, j + 1, true);
                     if (Main.netMode == NetmodeID.Server)
                     {

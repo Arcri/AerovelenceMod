@@ -180,19 +180,20 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override void HitEffect(int hitDirection, double damage)
         {
+            var s = NPC.GetSource_OnHit(NPC);
             if (NPC.life <= 0)
             {
                 for (int k = 0; k < 20; k++)
                 {
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White, 1);
                 }
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/DarkseaAnglerHead"), 1f);
-                Gore.NewGore(NPC.position, NPC.velocity, Mod.GetGoreSlot("Gores/DarkseaAnglerTail"), 1f);
+                Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/DarkseaAnglerHead").Type, 1f);
+                Gore.NewGore(s, NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/DarkseaAnglerTail").Type, 1f);
             }
         }
 
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.water ? 1f : 0f;
+            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? 1f : 0f;
     }
 }

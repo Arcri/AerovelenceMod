@@ -35,12 +35,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             return new Vector2(-8, 0);
         }
-        public static Vector2[] randomSpread(float speedX, float velocity.Y, int angle, int num)
+        public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
         {
             var posArray = new Vector2[num];
             float spread = (float)(angle * 0.0125);
-            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + velocity.Y * velocity.Y);
-            double baseAngle = System.Math.Atan2(speedX, velocity.Y);
+            float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
+            double baseAngle = System.Math.Atan2(speedX, speedY);
             double randomAngle;
             for (int i = 0; i < num; ++i)
             {
@@ -51,12 +51,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2[] speeds = randomSpread(speedX, velocity.Y, 10, 10);
+            Vector2[] speeds = randomSpread(velocity.X, velocity.Y, 10, 10);
             for (int i = 0; i < 10; ++i)
             {
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X * Main.rand.NextFloat(0.9f, 1.1f), speeds[i].Y * Main.rand.NextFloat(0.9f, 1.1f), type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(Item.GetSource_ItemUse(Item), position.X, position.Y, speeds[i].X * Main.rand.NextFloat(0.9f, 1.1f), speeds[i].Y * Main.rand.NextFloat(0.9f, 1.1f), type, damage, knockback, player.whoAmI);
             }
-            return false;
         }
     }
 }

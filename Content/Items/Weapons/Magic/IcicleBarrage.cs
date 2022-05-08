@@ -54,14 +54,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 				.Register();
 		}
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-        Vector2 velocity = new Vector2(speedX, velocity.Y);
 
 			while (Collision.CanHitLine(player.position, player.width, player.height, position, 1, 1))
 			{
 				position += velocity;
-				if ((position - Main.MouseWorld).Length() < 20 + Math.Abs(speedX) + Math.Abs(velocity.Y))
+				if ((position - Main.MouseWorld).Length() < 20 + Math.Abs(velocity.X) + Math.Abs(velocity.Y))
 				{
 					position = Main.MouseWorld;
 					break;
@@ -93,7 +92,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
 			projectileYPosition = startTileY - projectileHeight;
 			position.X = (int)(position.X / 16f) * 16;
-			Projectile.NewProjectile(position, Vector2.Zero, type, damage, knockBack, player.whoAmI, projectileYPosition, projectileHeight);
+			Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, 1f, player.whoAmI, projectileYPosition, projectileHeight);
 
 			return (false);
 		}

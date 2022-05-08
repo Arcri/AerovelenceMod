@@ -195,7 +195,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                             {
                                 spinningpoint2 = -Vector2.UnitY;
                             }
-                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, FlashlightProj, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), value2.X, value2.Y, spinningpoint2.X, spinningpoint2.Y, FlashlightProj, Projectile.damage, Projectile.knockBack, Projectile.owner);
                         }
                     }
                     else

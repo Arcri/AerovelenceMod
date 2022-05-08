@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     if (Projectile.localAI[0] > 4f)
                     {
                         Projectile.localAI[0] = 3f;
-                        Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                     if (Projectile.timeLeft > num433)
                     {
@@ -133,7 +133,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                     if (Projectile.localAI[0] > 4f)
                     {
                         Projectile.localAI[0] = 3f;
-                        Projectile.NewProjectile(Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, Projectile.velocity.X * 0.001f, Projectile.velocity.Y * 0.001f, ModContent.ProjectileType<RainbowCannonProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
                 }
                 Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) - 1.57f;

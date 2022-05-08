@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 		public override void UpdateAccessory(Player player, bool hideVisual)
         {
 			player.GetDamage(DamageClass.Ranged) += 0.1f;
-            AeroPlayer modPlayer = (AeroPlayer)player.GetModPlayer(Mod, "AeroPlayer");
+            AeroPlayer modPlayer = player.GetModPlayer<AeroPlayer>();
             modPlayer.EmeraldEmpoweredGem = true;
         }
         public override void AddRecipes()

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,9 +33,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 8f;
         }
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int deg = 4;
+        int deg = 4;
             float numberProjectiles = 5;
             float rotation = MathHelper.ToRadians(deg);
             position += Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * deg;
@@ -45,6 +46,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                 perturbedSpeed *= 7;
                 Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileID.NailFriendly, (int)MathHelper.Clamp(value, 25, 150), 1f, player.whoAmI);
             }
+            return false;
 		}
     }
 }

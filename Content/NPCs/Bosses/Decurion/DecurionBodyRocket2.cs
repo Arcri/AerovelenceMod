@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             if (i % Main.rand.Next(1000, 2000) == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
-                Projectile.NewProjectile(NPC.Center.X, NPC.Center.Y, distanceNorm.X * 10, distanceNorm.Y * 10, ModContent.ProjectileType<DecurionRocket>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 10, distanceNorm.Y * 10, ModContent.ProjectileType<DecurionRocket>(), 30, 0f, Main.myPlayer, 0f, 0f);
             }
 
             NPC parent = Main.npc[(int)NPC.ai[0]];

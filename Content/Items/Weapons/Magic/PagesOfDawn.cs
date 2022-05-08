@@ -53,7 +53,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             for (int i = 0; i < 3; ++i)
             {
                 type = Main.rand.Next(new int[] { type, ProjectileID.BallofFire, ProjectileID.BallofFire });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), position.X, position.Y, velocity.X, velocity.Y, type, damage, 1f, player.whoAmI);
             }
             return false;
         }

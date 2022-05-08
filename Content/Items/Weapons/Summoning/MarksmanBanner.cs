@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 
 using Microsoft.Xna.Framework;
 using AerovelenceMod.Content.Buffs;
+using Terraria.DataStructures;
 
 #endregion
 
@@ -44,8 +45,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 			Item.UseSound = SoundID.Item44;
 		}
 
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-		{
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
 			if (player.altFunctionUse == 2)
 			{
 				return (false);
@@ -63,12 +64,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Summoning
 			}
 
 			player.AddBuff(Item.buffType, Item.buffTime);
-			Projectile.NewProjectile(Main.MouseWorld, Vector2.Zero, type, damage, knockBack, player.whoAmI, summonType);
+			Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, type, damage, knockback, player.whoAmI, summonType);
 
 			return (false);
 		}
 
-		public override void UseStyle(Player player)
-		 => player.itemLocation -= new Vector2(96 * player.direction, 18);
-	}
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
+			=> player.itemLocation -= new Vector2(96 * player.direction, 18);
+    }
 }

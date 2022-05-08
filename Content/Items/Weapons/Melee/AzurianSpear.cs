@@ -107,7 +107,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             }
             if (projOwner.itemAnimation == projOwner.itemAnimationMax - 2)
             {
-                Projectile.NewProjectile(Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X * 2f, Projectile.velocity.Y * 2, ModContent.ProjectileType<AzurianSpearBeam>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X + Projectile.velocity.X, Projectile.Center.Y + Projectile.velocity.Y, Projectile.velocity.X * 2f, Projectile.velocity.Y * 2, ModContent.ProjectileType<AzurianSpearBeam>(), Projectile.damage, Projectile.knockBack * 0.85f, Projectile.owner, 0f, 0f);
             }
         }
     }

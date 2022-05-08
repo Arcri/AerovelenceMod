@@ -33,8 +33,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, ProjectileID.BallofFrost, damage, knockBack, player.whoAmI);
-            return false;
+            Projectile.NewProjectile(Item.GetSource_ItemUse(Item), position.X, position.Y, velocity.X, velocity.Y, ProjectileID.BallofFrost, damage, knockback, player.whoAmI);
         }
         public override void AddRecipes()
         {

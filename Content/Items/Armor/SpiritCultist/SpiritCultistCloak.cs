@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Armor.SpiritCultist
         }
         public override void UpdateEquip(Player player)
         {
-            player.allDamage += 0.05f;
+            player.GetDamage(DamageClass.Ranged) += 0.05f;
             player.statLifeMax2 += 20;
         }
         public override void AddRecipes()

@@ -99,7 +99,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                 {
                     if(Main.myPlayer == Projectile.owner)
                     {
-                        Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<IcyShard>(), (int)(Projectile.damage * 0.75f), Projectile.knockBack, Main.myPlayer, Projectile.identity);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<IcyShard>(), (int)(Projectile.damage * 0.75f), Projectile.knockBack, Main.myPlayer, Projectile.identity);
                     }
                 }
                 timer = Main.rand.Next(30);

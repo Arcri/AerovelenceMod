@@ -57,14 +57,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void Kill(int timeLeft)
         {
+            var s = Projectile.GetSource_Death();
             SoundEngine.PlaySound(SoundID.Item70, Projectile.Center);
              SoundEngine.PlaySound(SoundID.Shatter, Projectile.Center);
-             Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/CanisterGore1"), 1f);
-             Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/CanisterGore2"), 1f);
-             Gore.NewGore(Projectile.position, Vector2.Zero, Mod.GetGoreSlot("Gores/CanisterGore3"), 1f);
+             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore1").Type, 1f);
+             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore2").Type, 1f);
+             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore3").Type, 1f);
             for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
             {
-                int lightningproj = Projectile.NewProjectile(Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 2.5f, ModContent.ProjectileType<ElectrapulseCanisterProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                int lightningproj = Projectile.NewProjectile(s, Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 2.5f, ModContent.ProjectileType<ElectrapulseCanisterProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                 if (Main.netMode != NetmodeID.Server)
                 {
                     AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));

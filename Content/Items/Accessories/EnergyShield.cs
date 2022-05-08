@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Accessories
 					Rectangle rect = nPC.getRect();
 					if (rectangle.Intersects(rect) && (nPC.noTileCollide || player.CanHit(nPC)))
 					{
-						float num = 30f * player.GetDamage(DamageClass.Melee);
+						float num = 30f * player.GetDamage(DamageClass.Melee).Multiplicative;
 						float num2 = 9f;
 						bool crit = false;
 						if (player.kbGlove)

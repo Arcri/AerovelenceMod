@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             if (timer % 5 == 0)
             {
                 Vector2 offset = new Vector2(0, -500);
-                Projectile.NewProjectile(Projectile.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<HailIcicle>(), 6, 1f, Main.myPlayer);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + offset, new Vector2(0 + ((float)Main.rand.Next(20) / 10) - 1, -3 + ((float)Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<HailIcicle>(), 6, 1f, Main.myPlayer);
             }
         }
     }

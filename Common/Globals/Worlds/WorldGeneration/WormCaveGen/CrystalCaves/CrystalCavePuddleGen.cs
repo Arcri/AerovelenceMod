@@ -83,8 +83,8 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration.WormCaveGen.Cryst
 			//	return;
 			//}
 
-			Main.tile[i, j].liquid = 255;
-			Main.tile[i, j].liquidType( 0 );
+			Main.tile[i, j].LiquidAmount = 255;
+			//Main.tile[i, j].LiquidType = LiquidID.Water;
 		}
 	}
 }

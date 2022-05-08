@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<Sparkle>(), NPC.velocity.X, NPC.velocity.Y, 0, Color.White);
 
                 for (int i = 0; i < 3; i++)
-                    Gore.NewGore(NPC.Center, NPC.velocity, Mod.GetGoreSlot("Gores/TumblerockV4Gore" + i));
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, Mod.Find<ModGore>("Gores/TumblerockV4Gore" + i).Type);
             }
         }
 

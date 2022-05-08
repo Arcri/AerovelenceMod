@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 
 		public override int GrowthFXGore()
 		{
-			return mod.GetGoreSlot("Gores/ExampleTreeFX");
+			return mod.Find<ModGore>("Gores/ExampleTreeFX").Type;
 		}
 
 		public override int DropWood()

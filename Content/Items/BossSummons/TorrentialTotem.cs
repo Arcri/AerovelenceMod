@@ -34,8 +34,8 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public override bool? UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("LightningMoth"));
-            Main.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
+            NPC.SpawnOnPlayer(player.whoAmI, Mod.Find<ModNPC>("LightningMoth").Type);
+            SoundEngine.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
 
             return true;
         }

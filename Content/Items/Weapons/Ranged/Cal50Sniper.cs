@@ -48,15 +48,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2 perturbedSpeed = new Vector2(speedX, velocity.Y).RotatedByRandom(MathHelper.ToRadians(3));
-            speedX = perturbedSpeed.X;
+            Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(3));
+            velocity.X = perturbedSpeed.X;
             velocity.Y = perturbedSpeed.Y;
             Vector2 muzzleOffset = new Vector2(-7, -8);
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
                 position += muzzleOffset;
             }
-            return true;
         }
     }
 }

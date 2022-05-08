@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Armor.Burnshock
             {
                 if (player.ownedProjectileCounts[ModContent.ProjectileType<BurnshockArmorProjectile>()] < 1)
                 {
-                    Projectile.NewProjectile(player.Center, default, ModContent.ProjectileType<BurnshockArmorProjectile>(), 0, 0, player.whoAmI);
+                    Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, default, ModContent.ProjectileType<BurnshockArmorProjectile>(), 0, 0, player.whoAmI);
                 }
                 player.AddBuff(ModContent.BuffType<Buffs.BurnshockShield>(), 2);
             }

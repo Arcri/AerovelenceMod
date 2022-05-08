@@ -38,8 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Projectile.NewProjectile(position, new Vector2(speedX, velocity.Y), ProjectileID.FireArrow, damage, knockBack, player.whoAmI);
-            return false;
+            Projectile.NewProjectile(Item.GetSource_ItemUse(Item), position, new Vector2(velocity.X, velocity.Y), ProjectileID.FireArrow, damage, knockback, player.whoAmI);
         }
     }
     public class FireArrow : GlobalProjectile
@@ -49,7 +48,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Player player = Main.player[projectile.owner];
             if (projectile.type == ProjectileID.FireArrow)
             {
-                if (projectile.active && projectile.type == ProjectileID.FireArrow && player.HeldItem.modItem is FlameShot fs)
+                if (projectile.active && projectile.type == ProjectileID.FireArrow && player.HeldItem.ModItem is FlameShot fs)
                 {
                     int projectiles = 3;
                     Vector2 position = projectile.Center;
@@ -61,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
                         while (i < numberProjectiles)
                         {
                             Vector2 perturbedSpeed = Utils.RotatedBy(new Vector2(projectile.velocity.X, projectile.velocity.Y), MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1f)), default) * 0.2f;
-                            var m = Projectile.NewProjectileDirect(position, new Vector2(perturbedSpeed.X, perturbedSpeed.Y), ProjectileID.MolotovFire, (int)(player.HeldItem.damage * 1.5f), 0, player.whoAmI, 0f, 0f);
+                            var m = Projectile.NewProjectileDirect(Projectile.GetSource_None(), position, new Vector2(perturbedSpeed.X, perturbedSpeed.Y), ProjectileID.MolotovFire, (int)(player.HeldItem.damage * 1.5f), 0, player.whoAmI, 0f, 0f);
                             m.friendly = true;
                             m.hostile = false;
                             i++;

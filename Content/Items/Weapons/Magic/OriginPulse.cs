@@ -40,7 +40,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Projectile.height = 36;
             
             Projectile.penetrate = -1;
-            Projectile.DamageType = // projectile.tileCollide = projectile.ignoreWater = projectile.friendly = true /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
+            Projectile.DamageType = DamageClass.Magic;
                         
             Projectile.extraUpdates = 14;
             Projectile.alpha = 255;

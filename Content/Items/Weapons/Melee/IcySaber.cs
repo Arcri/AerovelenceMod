@@ -35,7 +35,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Vector2 projectilePos = target.Center + (Main.rand.NextFloat() * MathHelper.TwoPi).ToRotationVector2() * length;
             Vector2 projectileVelocity = Vector2.Normalize(target.Center - projectilePos) * 16;
 
-            Projectile.NewProjectile(projectilePos, projectileVelocity, ModContent.ProjectileType<IcySaberProj>(), damage, knockBack);
+            Projectile.NewProjectile(target.GetSource_OnHit(target), projectilePos, projectileVelocity, ModContent.ProjectileType<IcySaberProj>(), damage, knockBack);
             SoundEngine.PlaySound(SoundID.Item27);
 
             if(crit == true)

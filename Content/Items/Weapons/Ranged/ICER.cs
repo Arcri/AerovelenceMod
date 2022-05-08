@@ -55,7 +55,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 type = ModContent.ProjectileType<ICERProj>();
             }
-            return true;
         }
     }
 

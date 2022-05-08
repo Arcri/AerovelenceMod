@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         int t;
         public override void AI()
         {
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
             {
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 58, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             if (Main.netMode != NetmodeID.Server)
             {
                 float rotation = Main.rand.NextFloat(-rot, rot);
-                Texture2D texture = ModContent.Request<Texture2D>(imagePath);
+                Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(imagePath);
                 int[] pixelData = new /*credits to eldrazi*/int[texture.Width * texture.Height];
 
                 texture.GetData(pixelData);
@@ -58,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             target.life = 0;
             if (t % 50 == 0)
             {
-                SpawnDustFromTexture(Projectile.position, DustID.Fire, 0.5f, "AerovelenceMod/Content/Items/Weapons/Ranged/CockSprite");
+                SpawnDustFromTexture(Projectile.position, DustID.Torch, 0.5f, "AerovelenceMod/Content/Items/Weapons/Ranged/CockSprite");
             }
             Rectangle r = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
             CombatText.NewText(r, new Color(89, 32, 255), $"Ech");

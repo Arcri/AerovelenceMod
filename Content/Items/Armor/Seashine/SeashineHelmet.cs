@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Armor.Seashine
                 player.AddBuff(Mod.Find<ModBuff>("CrabBuff").Type, 100, false);
                 if(player.ownedProjectileCounts[ModContent.ProjectileType<Projectiles.Weapons.Summoning.SeaCrab>()] <= 0)
                 {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("SeaCrab").Type, (int)(25f * player.GetDamage(DamageClass.Summon)), player.GetKnockback(DamageClass.Summon).Base, player.whoAmI);
+                    Projectile.NewProjectile(player.GetSource_FromThis(), player.Center.X, player.Center.Y, 0f, 0f, Mod.Find<ModProjectile>("SeaCrab").Type, (int)(25f * player.GetDamage(DamageClass.Summon).Multiplicative), player.GetKnockback(DamageClass.Summon).Base, player.whoAmI);
                 }
             }
         } 	

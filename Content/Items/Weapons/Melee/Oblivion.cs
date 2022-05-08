@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -37,15 +38,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
 
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             type = ModContent.ProjectileType<OblivionsWrath>();
             {
                 for (int i = -4; i < 4; i++)
                 {
                     position = Main.MouseWorld + new Vector2(i * 20, -850);
-                    Vector2 velocity = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero).RotatedByRandom(0.05f) * Item.shootSpeed;
-                    Projectile.NewProjectile(position, velocity, type, damage, knockBack, player.whoAmI);
+                    Vector2 velocity1 = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero).RotatedByRandom(0.05f) * Item.shootSpeed;
+                    Projectile.NewProjectile(source, position, velocity1, type, damage, 2f, player.whoAmI);
                 }
                 return false;
             }
@@ -63,11 +64,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             Projectile.width = 2;
             Projectile.height = 2;
-            drawOffsetX = -45;
+            DrawOffsetX = -45;
             Projectile.alpha = 255;
-            drawOriginOffsetY = 0;
+            DrawOriginOffsetY = 0;
             Projectile.damage = 65;
-            drawOriginOffsetX = 23;
+            DrawOriginOffsetX = 23;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.penetrate = 5;

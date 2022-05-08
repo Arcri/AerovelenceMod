@@ -46,7 +46,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             type = ModContent.ProjectileType<BoomArrow>();
-            return true;
         }
     }
     public class BoomArrow : ModProjectile
@@ -85,7 +84,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
         {
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            Projectile.NewProjectile(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BoomArrowExplosion>(), Projectile.damage, 4f);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<BoomArrowExplosion>(), Projectile.damage, 4f);
 
             Projectile.active = false;
 
@@ -107,7 +106,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             {
                 var velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
 
-                Gore.NewGore(Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
+                Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center, velocity, Main.rand.Next(61, 64), Main.rand.NextFloat(0.6f, 1f));
 
                 Projectile.netUpdate = true;
             }

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,14 +33,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.shoot = ProjectileID.WoodenArrowFriendly;
             Item.shootSpeed = 2f;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
             {
-                Projectile.NewProjectile(position.X, position.Y, speedX, velocity.Y, Mod.Find<ModProjectile>("OrnamentProjectileRed").Type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, Mod.Find<ModProjectile>("OrnamentProjectileRed").Type, damage, knockback, player.whoAmI);
             } else
             {
-                Projectile.NewProjectile(position.X + 10, position.Y + 10, speedX + 4, velocity.Y + 4, Mod.Find<ModProjectile>("OrnamentProjectileGreen").Type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X + 10, position.Y + 10, velocity.X + 4, velocity.Y + 4, Mod.Find<ModProjectile>("OrnamentProjectileGreen").Type, damage, knockback, player.whoAmI);
             }
             return false;
         }
@@ -61,14 +62,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AI()
         {
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
             {
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 58, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
 
             if (Main.rand.NextFloat() <= 0.03)
             {
-                Projectile.NewProjectile(Projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, Projectile.damage, Projectile.knockBack, Projectile.owner);
             }
         }
 
@@ -90,13 +91,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void AI()
         {
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
             {
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 58, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
             if (Main.rand.NextFloat() <= 0.03)
             {
-                Projectile.NewProjectile(Projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, Projectile.damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(Main.rand.NextFloat(-2.5f, 2.5f), Main.rand.NextFloat(-2f, -4.5f)), ProjectileID.OrnamentFriendly, Projectile.damage, Projectile.knockBack, Projectile.owner);
             }
         }
     }

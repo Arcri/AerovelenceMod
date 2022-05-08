@@ -75,14 +75,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Dust.NewDustDirect(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 240, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             int type = Mod.Find<ModProjectile>("CrystalCannonShard").Type;
             Vector2 velocity = new Vector2(Projectile.velocity.X * -0.6f, Projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(40));
-            Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Dust.NewDustDirect(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 240, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             int type = Mod.Find<ModProjectile>("CrystalCannonShard").Type;
             Vector2 velocity = new Vector2(Projectile.velocity.X * -0.6f, Projectile.velocity.Y * -0.6f).RotatedByRandom(MathHelper.ToRadians(40));
-            Projectile.NewProjectile(Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, velocity, type, Projectile.damage, 5f, Projectile.owner);
             return true;
         }
     }

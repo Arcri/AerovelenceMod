@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -42,28 +43,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
                 .AddTile(TileID.Anvils)
                 .Register();
         }
-        public static Vector2[] RandomSpread(float speedX, float velocity.Y, int angle, int num)
-        {
-            var posArray = new Vector2[num];
-            float spread = (float)(angle * 0.075);
-            float baseSpeed = (float)Math.Sqrt(speedX * speedX + velocity.Y * velocity.Y);
-            double baseAngle = Math.Atan2(speedX, velocity.Y);
-            double randomAngle;
-            for (int i = 0; i < num; ++i)
-            {
-                randomAngle = baseAngle + (Main.rand.NextFloat() - 0.1f) * spread;
-                posArray[i] = new Vector2(baseSpeed * (float)Math.Sin(randomAngle), baseSpeed * (float)Math.Cos(randomAngle));
-            }
-            return posArray;
-        }
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2[] speeds = RandomSpread(speedX, velocity.Y, 5, 5);
             for (int i = 0; i < 3; ++i)
             {
                 type = Main.rand.Next(new int[] { type, ProjectileID.CursedFlameFriendly, ProjectileID.CursedFlameFriendly });
-                Projectile.NewProjectile(position.X, position.Y, speeds[i].X, speeds[i].Y, type, damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X, velocity.Y, type, damage, 1f, player.whoAmI);
             }
             return false;
         }

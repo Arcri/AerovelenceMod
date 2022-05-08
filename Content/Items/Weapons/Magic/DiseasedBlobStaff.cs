@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,12 +34,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Item.shoot = Mod.Find<ModProjectile>("DiseasedBlob").Type;
             Item.shootSpeed = 6;
         }
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             for (int i = 0; i < 7; i++)
             {
                 int rand = new Random().Next(0, 100001);
-                Projectile.NewProjectile(position.X, position.Y, speedX * (float)new Random(i + rand).NextDouble(), velocity.Y * (float)new Random(i - 1 + rand).NextDouble(), Item.shoot, damage, knockBack, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(source, position.X, position.Y, velocity.X * (float)new Random(i + rand).NextDouble(), velocity.Y * (float)new Random(i - 1 + rand).NextDouble(), Item.shoot, damage, 1f, player.whoAmI, 0f, 0f);
             }
             return false;
         }

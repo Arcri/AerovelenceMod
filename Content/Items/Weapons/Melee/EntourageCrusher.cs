@@ -34,8 +34,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             for (int i = 121; i <= 126; i++)
             {
-                int left = Projectile.NewProjectile(target.Center.X, target.Center.Y + target.height / 2, -15, 0, i, Item.damage, 0f, Main.myPlayer, 0f, 0f);
-                int right = Projectile.NewProjectile(target.Center.X, target.Center.Y + target.height / 2, 15, 0, i, Item.damage, 0f, Main.myPlayer, 0f, 0f);
+                int left = Projectile.NewProjectile(target.GetSource_OnHit(target), target.Center.X, target.Center.Y + target.height / 2, -15, 0, i, Item.damage, 0f, Main.myPlayer, 0f, 0f);
+                int right = Projectile.NewProjectile(target.GetSource_OnHit(target), target.Center.X, target.Center.Y + target.height / 2, 15, 0, i, Item.damage, 0f, Main.myPlayer, 0f, 0f);
                 // Main.projectile[left].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 // Main.projectile[right].magic = false /* tModPorter - this is redundant, for more info see https://github.com/tModLoader/tModLoader/wiki/Update-Migration-Guide#damage-classes */ ;
                 Main.projectile[left].DamageType = DamageClass.Melee;

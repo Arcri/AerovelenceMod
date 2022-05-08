@@ -1,5 +1,6 @@
 ﻿using AerovelenceMod.Content.Buffs.Pets;
 using AerovelenceMod.Content.Projectiles.Pets;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,8 +22,8 @@ namespace AerovelenceMod.Content.Items.Equipment
 			Item.buffType = ModContent.BuffType<LightningFishBuff>();
 		}
 
-		public override void UseStyle(Player player)
-		{
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
+        {
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
 				player.AddBuff(Item.buffType, 2, true);

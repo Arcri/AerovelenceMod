@@ -61,11 +61,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
         }
         public override void Kill(int timeLeft)
         {
-            //Main.PlaySound(SoundID.Item70, projectile.Center);
+            //SoundEngine.PlaySound(SoundID.Item70, projectile.Center);
              SoundEngine.PlaySound(SoundID.Item113, Projectile.Center);
             for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
             {
-                int lightningproj = Projectile.NewProjectile(Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 1.1f, ModContent.ProjectileType<ElectricSphereProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                int lightningproj = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 1.1f, ModContent.ProjectileType<ElectricSphereProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                 if (Main.netMode != NetmodeID.Server)
                 {
                     AerovelenceMod.primitives.CreateTrail(new CanisterPrimTrail(Main.projectile[lightningproj]));

@@ -28,9 +28,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			Item.shoot = ModContent.ProjectileType<LifeSyphon>();
 			Item.shootSpeed = 11.4f;
 		}
-		public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			Projectile p = Projectile.NewProjectileDirect(position, new Vector2(speedX, velocity.Y), type, damage, knockBack, player.whoAmI, Main.rand.Next(new int[] { 0, 0, 0, 1 }));
+        Projectile p = Projectile.NewProjectileDirect(source, position, new Vector2(velocity.X, velocity.Y), type, damage, 3f, player.whoAmI, Main.rand.Next(new int[] { 0, 0, 0, 1 }));
 			if (p.ai[0] == 0)
 				p.penetrate = 1;
 			p.netUpdate = true;
@@ -102,7 +102,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			target.GetGlobalNPC<LifeLeakNPC>().AdjustSpeed(.6f);
 			if (Projectile.ai[0] == 1)
 			{
-				Projectile p = Projectile.NewProjectileDirect(Projectile.position, Vector2.Zero, ModContent.ProjectileType<LifeSyphon>(), Projectile.damage / 3, 0f, Projectile.owner, 2);
+				Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<LifeSyphon>(), Projectile.damage / 3, 0f, Projectile.owner, 2);
 				p.friendly = false;
 				p.netUpdate = true;
 			}
