@@ -2,11 +2,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Events.CrystalTorrent
 {
-    public class CrystalTorrentWorld : ModWorld
+    public class CrystalTorrentWorld : ModSystem
 	{
 		public static bool CrystalTorrents;
 
-		public override void Initialize()
+        public override void OnWorldLoad()
 		{
 			CrystalTorrents = false;
 		}

@@ -8,7 +8,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 {
     public abstract class ModShield : ModItem
     {
-        public override bool CloneNewInstances => true;
+       /*// public override bool CloneNewInstances => true;
 
         /// <summary>The type of the shield.</summary>
         public abstract ShieldTypes ShieldType { get; }
@@ -90,7 +90,7 @@ namespace AerovelenceMod.Common.ShieldSystem
             for (int i = 3; i < 3 + maxAccessoryIndex; i++)
             {
                 Item otherAccessory = Main.LocalPlayer.armor[i];
-                if (!otherAccessory.IsAir && !Item.IsTheSameAs(otherAccessory) && otherAccessory.modItem is ModShield)
+                if (!otherAccessory.IsAir && Item.type != compareItem.type(otherAccessory) && otherAccessory.modItem is ModShield)
                     return false;
             }
             return true;
@@ -179,6 +179,7 @@ namespace AerovelenceMod.Common.ShieldSystem
         /// <param name="player">Player wearing the shield.</param>
         public virtual void OnFullRecharge(Player player)
         {
-        }
+
+        }*/
     }
 }

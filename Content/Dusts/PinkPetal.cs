@@ -9,11 +9,6 @@ namespace AerovelenceMod.Content.Dusts
 {
 	public sealed class PinkPetal : ModDust
 	{
-		public override bool Autoload(ref string name, ref string texture)
-		{
-			texture = "AerovelenceMod/Assets/Dusts/Petal";
-			return (Mod.Properties.Autoload);
-		}
 
 		public override void OnSpawn(Dust dust)
 		{

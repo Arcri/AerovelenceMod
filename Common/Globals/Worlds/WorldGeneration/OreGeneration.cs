@@ -3,13 +3,14 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Tiles.Ores;
 using Terraria;
 using Terraria.GameContent.Generation;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
 {
-    public class OreGeneration : ModWorld
+    public class OreGeneration : ModSystem
     {
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
@@ -17,7 +18,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
             tasks.TryInsert(shiniesIndex, new PassLegacy("Aerovelence Ores", AerovelenceOres));
         }
 
-        private void AerovelenceOres(GenerationProgress progress)
+        private void AerovelenceOres(GenerationProgress progress, GameConfiguration gameConfiguration)
         {
             int maxTiles = Main.maxTilesX * Main.maxTilesY;
             int oreAmount = (int)(maxTiles * 0.00010);

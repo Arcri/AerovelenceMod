@@ -98,8 +98,8 @@ namespace AerovelenceMod
 				}
 			}
 		}
-		public override void Save(TagCompound tag)
-		{
+        /*public override TagCompound SaveWorldData(TagCompound tag)
+        {
 			return new TagCompound {
 		{"ETPLinksKeys", new List<Vector2>(ETPLinks.Keys)},
 		{"ETPLinksValues", new List<Vector2>(ETPLinks.Values)}
@@ -115,7 +115,7 @@ namespace AerovelenceMod
 			{
 				Values = tag.GetList<Vector2>("ETPLinksValues");
 			}
-		}
+		}*/
 	}
 }
  

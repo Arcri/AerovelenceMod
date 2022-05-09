@@ -1,9 +1,11 @@
-﻿using DiscordRPC;
-using System;
+﻿using System;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
 using AerovelenceMod.Common.Globals.Players;
+using DiscordRPC;
+using Terraria.ModLoader;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Core
 {
@@ -29,7 +31,7 @@ namespace AerovelenceMod.Core
             if (Main.netMode != NetmodeID.SinglePlayer)
                 Presence.Party = new Party
                 {
-                    Size = Main.ActivePlayersCount,
+                    Size = Main.CurrentFrameFlags.ActivePlayersCount,
                     Max = Main.maxNetPlayers
                 };
 
@@ -58,7 +60,7 @@ namespace AerovelenceMod.Core
 
             if (!Main.gameMenu)
             {
-                var zonePlayer = Main.LocalPlayer.GetModPlayer<ZonePlayer>();
+                var inBiome = Main.LocalPlayer.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>());
                 if (Main.npc.Any(n => n.active && n.boss))
                 {
                     for (int i = 0; i < Main.maxNPCs; i++)
@@ -73,7 +75,7 @@ namespace AerovelenceMod.Core
                         }
                     }
                 }
-                else if (zonePlayer.ZoneCrystalCaverns)
+                else if (inBiome)
                 {
                     Client.UpdateDetails("In the Crystal Caverns");
                     Client.UpdateLargeAsset("crystalcavern", "Aerovelence - tModLoader");

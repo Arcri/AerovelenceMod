@@ -1,18 +1,19 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Events.DarkNight
 {
-    public class DarkNightWorld : ModWorld
+    public class DarkNightWorld : ModPlayer
     {
         public static bool DarkNight;
         private static bool daytime;
         public static bool dayToNight;
 
-        public override void Initialize()
+        public override void Load()
         {
             DarkNight = false;
             daytime = Main.dayTime;
@@ -44,7 +45,7 @@ namespace AerovelenceMod.Content.Events.DarkNight
                                     if (Main.netMode == NetmodeID.SinglePlayer)
                                         Main.NewText("The essense of dark engulfs the moon", 000, 068, 193);
                                     else if (Main.netMode == NetmodeID.Server)
-                                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("The essense of dark engulfs the moon"),
+                                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("The essense of dark engulfs the moon"),
                                             new Color(000, 068, 193));
                                 }
 

@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Common.Globals.Worlds
 {
-    public class ZoneWorld : ModWorld
+    public class ZoneWorld : ModSystem
     {
 
     }

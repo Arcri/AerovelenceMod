@@ -15,7 +15,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 
         internal static List<byte> shieldPrefixes;
 
-        public override bool CanRoll(Item item) => item.modItem is ModShield;
+        public override bool CanRoll(Item item) => item.ModItem is ModShield;
         public override float RollChance(Item item) => 5f;
 
 		public ShieldPrefixes() { }
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 			_type = type;
 		}
 
-		public override bool Autoload(ref string name)
+		/*public override bool Autoload(ref string name)
 		{
 			if (base.Autoload(ref name))
 			{
@@ -39,7 +39,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 				}
 			}
 			return false;
-		}
+		}*/
 
 		public override void ModifyValue(ref float valueMult)
 		{
@@ -47,7 +47,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 			valueMult *= multiplier;
 		}
 
-		public override void Apply(Item item)
+		/*public override void Apply(Item item)
 		{
 			if (item.modItem is ModShield shield) 
 			{
@@ -61,7 +61,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 
                 shield.ApplyShieldPrefix(boost, _type, _sign);
 			}
-		}
+		}*/
     }
 
 	public enum ShieldPrefixType : byte

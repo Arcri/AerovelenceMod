@@ -17,16 +17,16 @@ namespace AerovelenceMod.Common.Globals.Worlds
 		public static bool DownedCyvercry;
 		public static bool DownedTheFallen;
 
-        public override void Initialize()
+        /*public override void Initialize()
 		{
 			DownedCrystalTumbler = false;
 			DownedRimegeist = false;
 			DownedLightningMoth = false;
 			DownedCyvercry = false;
 			DownedTheFallen = false;
-		}
+		}*/
 
-		public override TagCompound Save()
+		public override TagCompound SaveWorldData()
 		{
 			List<string> downed = new List<string>();
 

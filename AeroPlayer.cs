@@ -12,6 +12,7 @@ using AerovelenceMod.Common.ShieldSystem;
 using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
 using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Terraria.Audio;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod
 {
@@ -118,12 +119,12 @@ namespace AerovelenceMod
 		}
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
-			if (AerovelenceMod.ArmorHotKey.JustPressed)
+			if (KeybindSystem.ArmorHotKey.JustPressed)
 				if (MiningAbilityCooldown == false)
 
 					if (AmbrosiaBonus)
 					{
-						Terraria.Projectile.NewProjectile(Player.Center, (Terraria.Main.MouseWorld - Player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
+						Terraria.Projectile.NewProjectile(Player.GetSource_Misc("SetBonus_AmbrosiaSetBonus"), Player.Center, (Terraria.Main.MouseWorld - Player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
 						Player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 100);
 					}
 		}
@@ -141,7 +142,7 @@ namespace AerovelenceMod
 				if (damage > 10)
 				{
 					Vector2 offset = new Vector2(0, -100);
-					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.GetSource_OnHurt(player), player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
 			}
 			if (BurnshockArmorBonus)
@@ -150,9 +151,9 @@ namespace AerovelenceMod
 				{
 					Vector2 offset = new Vector2(0, -100);
 
-					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
-					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
-					Terraria.Projectile.NewProjectile(player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.GetSource_OnHurt(player), player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.GetSource_OnHurt(player), player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(player.GetSource_OnHurt(player), player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
 				}
 			}
 		}
@@ -182,7 +183,7 @@ namespace AerovelenceMod
 				if (damage > 10)
 				{
 					Vector2 offset = new Vector2(0, -100);
-					Terraria.Projectile.NewProjectile(Player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
+					Terraria.Projectile.NewProjectile(Projectile.GetSource_None(), Player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
 			}
 		}
@@ -191,7 +192,7 @@ namespace AerovelenceMod
 			if (QueensStinger)
 				if (proj.type != 181)
 					if (Terraria.Main.rand.NextBool(10))
-						Terraria.Projectile.NewProjectile(target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, Player.whoAmI);
+						Terraria.Projectile.NewProjectile(target.GetSource_OnHurt(target), target.Center.X, target.Center.Y, 0f, 0f, ProjectileID.Bee, 3, 2, Player.whoAmI);
 
 			if (EmeraldEmpoweredGem)
 				target.AddBuff(39, 40);
@@ -216,7 +217,7 @@ namespace AerovelenceMod
 				float rot = Terraria.Main.rand.NextFloat(MathHelper.TwoPi);
 				Vector2 position = target.Center + Vector2.One.RotatedBy(rot) * 180;
 				Vector2 velocity = Vector2.One.RotatedBy(rot) * -1 * 12f;
-				Terraria.Projectile.NewProjectile(position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, Player.HeldItem.knockBack, Player.whoAmI, 0, 0);
+				Terraria.Projectile.NewProjectile(Player.GetSource_Misc("SetBonus_PhanticSetBonus"), position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, Player.HeldItem.knockBack, Player.whoAmI, 0, 0);
 			}
 		}
 		public override void PreUpdate()
@@ -282,15 +283,15 @@ namespace AerovelenceMod
 			{
 				if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
 				{
-					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
-						Player.height + 4, ModContent.DustType<WispDust>(), Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f,
-						100, default, 3f);
+					//int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
+						//Player.height + 4, ModContent.DustType<WispDust>(), Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f,
+						//100, default, 3f);
 
-					Terraria.Main.dust[dust].noGravity = true;
-					Terraria.Main.dust[dust].velocity *= 1.8f;
-					Terraria.Main.dust[dust].velocity.Y -= 0.5f;
+					//Terraria.Main.dust[dust].noGravity = true;
+					//Terraria.Main.dust[dust].velocity *= 1.8f;
+					//Terraria.Main.dust[dust].velocity.Y -= 0.5f;
 
-					Terraria.Main.playerDrawDust.Add(dust);
+					//Terraria.Main.playerDrawDust.Add(dust);
 				}
 
 				r *= 0.1f;
@@ -304,13 +305,13 @@ namespace AerovelenceMod
 			{
 				if (Terraria.Main.rand.NextBool(4) && drawInfo.shadow == 0f)
 				{
-					int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
-						Player.height + 4, DustID.AncientLight, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100,
-						default, 3f);
-					Terraria.Main.dust[dust].noGravity = true;
-					Terraria.Main.dust[dust].velocity *= 1.8f;
-					Terraria.Main.dust[dust].velocity.Y -= 0.5f;
-					Terraria.Main.playerDrawDust.Add(dust);
+					//int dust = Terraria.Dust.NewDust(drawInfo.position - new Vector2(2f, 2f), Player.width + 4,
+					//	Player.height + 4, DustID.AncientLight, Player.velocity.X * 0.4f, Player.velocity.Y * 0.4f, 100,
+					//	default, 3f);
+					//Terraria.Main.dust[dust].noGravity = true;
+					//Terraria.Main.dust[dust].velocity *= 1.8f;
+					//Terraria.Main.dust[dust].velocity.Y -= 0.5f;
+					//Terraria.Main.playerDrawDust.Add(dust);
 				}
 
 				r *= 0.0f;
@@ -351,9 +352,9 @@ namespace AerovelenceMod
 
 		ShieldOn = false;
 		}
-		public static readonly PlayerDrawLayers MiscEffects = new PlayerDrawLayer("AerovelenceMod", "MiscEffects", PlayerDrawLayers.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
-		{
-			if (drawInfo.shadow != 0f)
+		//public static readonly PlayerDrawLayers MiscEffects = new PlayerDrawLayer("AerovelenceMod", "MiscEffects", PlayerDrawLayers.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
+		//{
+			/*if (drawInfo.shadow != 0f)
 				return;
 
 			Mod mod = ModLoader.GetMod("AerovelenceMod");
@@ -447,9 +448,9 @@ namespace AerovelenceMod
 					new Vector2(texture.Width / 2f, texture.Height / 2f), MathHelper.Lerp(0.9f + ShieldProjectile.sizeBoost, 1f + ShieldProjectile.sizeBoost, ShieldProjectile.scale), SpriteEffects.None, 0);
 
 				Main.playerDrawData.Add(data);
-			}
-		});
-		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("AerovelenceMod", "MiscEffectsBack", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+			}*/
+		//});
+		/*public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("AerovelenceMod", "MiscEffectsBack", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 		{
 			Player drawPlayer = drawInfo.drawPlayer;
 			AeroPlayer modPlayer = drawPlayer.GetModPlayer<AeroPlayer>();
@@ -464,13 +465,13 @@ namespace AerovelenceMod
 
 				Main.playerDrawData.Add(data);
 			}
-		});
-		public override void ModifyDrawLayers(List<PlayerLayer> layers)
+		});*/
+		public override void ModifyDrawLayerOrdering(IDictionary<PlayerDrawLayer, PlayerDrawLayer.Position> positions)
 		{
-			MiscEffectsBack.visible = true;
-			MiscEffects.visible = true;
-			layers.Insert(0, MiscEffectsBack);
-			layers.Add(MiscEffects);
+			//MiscEffectsBack.visible = true;
+			//MiscEffects.visible = true;
+			//layers.Insert(0, MiscEffectsBack);
+			//layers.Add(MiscEffects);
 		}
 		public override void ModifyZoom(ref float zoom)
 		{

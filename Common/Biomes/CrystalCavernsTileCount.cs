@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.Graphics.Capture;
 using Terraria.ModLoader;
 
-namespace ExampleMod.Content.Biomes
+namespace AerovelenceMod.Content.Biomes
 {
 	public class CrystalCavernsTileCount : ModSystem
 	{

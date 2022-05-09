@@ -1,13 +1,15 @@
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Events.FoggyFields
 {
-    public class FoggyFieldsWorld : ModWorld
+    public class FoggyFieldsWorld : ModPlayer
     {
         public static bool FoggyFields;
         private static bool nighttime;
@@ -37,7 +39,7 @@ namespace AerovelenceMod.Content.Events.FoggyFields
                         for (var i = 0; i < 255; i++)
                             if (Main.player[i].active)
                             {
-                                if (Main.player[i].GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
+                                if (Main.player[i].InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()));
                                 {
                                     FoggyFields = true;
                                     break;
@@ -48,7 +50,7 @@ namespace AerovelenceMod.Content.Events.FoggyFields
                                     if (Main.netMode == NetmodeID.SinglePlayer)
                                         Main.NewText("A light fog covers the crystal fields", 176, 217, 232);
                                     else if (Main.netMode == NetmodeID.Server)
-                                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("A light fog covers the crystal fields"),
+                                        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("A light fog covers the crystal fields"),
                                             new Color(176, 217, 232));
                                 }
 
