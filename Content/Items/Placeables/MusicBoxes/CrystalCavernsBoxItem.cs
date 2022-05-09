@@ -11,6 +11,8 @@ namespace AerovelenceMod.Content.Items.Placeables.MusicBoxes
 		{
 			DisplayName.SetDefault("Music Box (Crystal Caverns)");
             Tooltip.SetDefault("Composed by A44");
+
+			MusicLoader.AddMusicBox(Mod, MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalCaverns"), ModContent.ItemType<CrystalCavernsBoxItem>(), ModContent.TileType<CrystalCavernsBox>());
 		}
 		public override void SetDefaults()
 		{

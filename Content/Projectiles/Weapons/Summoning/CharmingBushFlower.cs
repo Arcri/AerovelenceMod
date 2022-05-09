@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.Utilities;
+using Terraria.ID;
 
 #endregion
 
@@ -24,7 +25,9 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 		private bool drawBehindOtherProjectiles = false;
 
 		//public override bool Autoload(ref string name)
-			//=> false;
+		//=> false;
+
+		public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
 
 		public override void SetDefaults()
 		{

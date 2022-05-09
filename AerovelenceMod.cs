@@ -64,7 +64,7 @@ namespace AerovelenceMod
         }
 		public override void PostSetupContent()
 		{
-			var bossChecklist = ModLoader.GetMod("BossChecklist");
+			/*var bossChecklist = ModLoader.GetMod("BossChecklist");
 			var terrariaAmbience = ModLoader.GetMod("TerrariaAmbience");
 			if (terrariaAmbience != null)
             {
@@ -151,7 +151,7 @@ namespace AerovelenceMod
 						ModContent.ItemType<SongOfTheStorm>(),
 						ModContent.ItemType<StaticSurge>()},
 					$"Use a [i:" + ModContent.ItemType<TorrentialTotem>() + "] at night in the Crystal Caverns"
-					);*/
+					);
 
 
 				bossChecklist.Call(
@@ -180,31 +180,31 @@ namespace AerovelenceMod
 					$"Use a [i:" + ModContent.ItemType<ObsidianEye>() + "] at night anywhere"
 					);
 
-				/*bossChecklist.Call(
-					"AddBoss",
-					12.5f,
-					ModContent.NPCType<TheFallenSpirit>(),
-					this,
-					"The Fallen",
-					(Func<bool>)(() => DownedWorld.DownedTheFallen),
-					ModContent.ItemType<GlowingSnow>(),
-					new List<int>
-					{
-						ModContent.ItemType<TheFallenMask>(),
-						ModContent.ItemType<TheFallenTrophy>(),
-						ModContent.ItemType<TheFallenBoxItem>()
-					},
+			/*bossChecklist.Call(
+				"AddBoss",
+				12.5f,
+				ModContent.NPCType<TheFallenSpirit>(),
+				this,
+				"The Fallen",
+				(Func<bool>)(() => DownedWorld.DownedTheFallen),
+				ModContent.ItemType<GlowingSnow>(),
+				new List<int>
+				{
+					ModContent.ItemType<TheFallenMask>(),
+					ModContent.ItemType<TheFallenTrophy>(),
+					ModContent.ItemType<TheFallenBoxItem>()
+				},
 
-					new List<int>
-					{
-						ModContent.ItemType<TheFallenBag>(),
-						ModContent.ItemType<OzoneShredder>(),
-						ModContent.ItemType<WindboundWave>(),
-						ModContent.ItemType<StormRazor>()
-					},
-					$"Use a [i:" + ModContent.ItemType<AncientAmulet>() + "] during the day in the sky"
-					);*/
-			}
+				new List<int>
+				{
+					ModContent.ItemType<TheFallenBag>(),
+					ModContent.ItemType<OzoneShredder>(),
+					ModContent.ItemType<WindboundWave>(),
+					ModContent.ItemType<StormRazor>()
+				},
+				$"Use a [i:" + ModContent.ItemType<AncientAmulet>() + "] during the day in the sky"
+				);
+		}*/
 		}
 
 		public static Effect LegElectricity;
@@ -249,8 +249,8 @@ namespace AerovelenceMod
             {
                 MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
-				DiscordRichPresence.Initialize();
-				Main.OnTickForThirdPartySoftwareOnly += DiscordRichPresence.Update;
+				//DiscordRichPresence.Initialize();
+				//Main.OnTickForThirdPartySoftwareOnly += DiscordRichPresence.Update;
 			}
 
 			primitives = new PrimTrailManager();
@@ -262,8 +262,8 @@ namespace AerovelenceMod
 		{
 			if (!Main.dedServ)
 			{
-				DiscordRichPresence.Deinitialize();
-				Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
+				//DiscordRichPresence.Deinitialize();
+				//Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
 			}
 			UnloadDetours();
 			FargosModMutant = false;

@@ -15,9 +15,8 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
     public class AerovelenceSystem : ModSystem
     {
 
-		public static PrimTrailManager primitives;
+        //public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
 
-		//public override void UpdateUI(GameTime gameTime) => MarauderUserInterface?.Update(gameTime);
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
@@ -45,13 +44,6 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 					},
 					InterfaceScaleType.UI)
 				);
-			}
-		}
-		public override void PostUpdateProjectiles()
-		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				primitives.UpdateTrails();
 			}
 		}
 	}

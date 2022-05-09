@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 	//All of the logic for this is within ModifyHitNPC and OnHitNPC
 	public class MarkShot : ModProjectile
 	{
-		public override string Texture => "Terraria/Projectile_0"; //Comment this line out if projectile has a sprite.
+		//public override string Texture => "Terraria/Projectile_0"; //Comment this line out if projectile has a sprite.
 		public override void SetDefaults()
 		{
 			Projectile.width = 4;

@@ -11,6 +11,8 @@ namespace AerovelenceMod.Content.Items.Placeables.MusicBoxes
 		{
 			DisplayName.SetDefault("Music Box (Cyvercry)");
             Tooltip.SetDefault("Composed by A44");
+			MusicLoader.AddMusicBox(Mod, MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Cyvercry"), ModContent.ItemType<CyvercryBoxItem>(), ModContent.TileType<CyvercryBox>());
+
 		}
 		public override void SetDefaults()
 		{
