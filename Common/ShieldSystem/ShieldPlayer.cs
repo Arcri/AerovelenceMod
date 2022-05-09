@@ -6,7 +6,7 @@ namespace AerovelenceMod.Common.ShieldSystem
 {
     public class ShieldPlayer : ModPlayer
     {
-        public ModShield WornShield => wornShieldItem.modItem as ModShield;
+        /*public ModShield WornShield => wornShieldItem.ModItem as ModShield;
 
         public Item wornShieldItem = null;
 
@@ -59,6 +59,6 @@ namespace AerovelenceMod.Common.ShieldSystem
             else if (WornShield.ShieldType == ShieldTypes.Nova)
                 return 60;
             return 0;
-        }
+        }*/
     }
 }

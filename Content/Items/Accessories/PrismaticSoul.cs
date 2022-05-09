@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -51,7 +52,7 @@ namespace AerovelenceMod.Content.Items.Accessories
             player.jumpSpeedBoost += 1.5f;
             player.maxMinions += 1;
 
-            if (player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns)
+            if (player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
                 player.statDefense += 5;
                 player.GetDamage(DamageClass.Generic) += 0.3f;

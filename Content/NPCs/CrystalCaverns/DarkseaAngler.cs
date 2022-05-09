@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -194,6 +195,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? 1f : 0f;
+            spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && spawnInfo.Water ? 1f : 0f;
     }
 }

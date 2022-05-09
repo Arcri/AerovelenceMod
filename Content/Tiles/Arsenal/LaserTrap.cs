@@ -61,7 +61,7 @@ namespace AerovelenceMod.Content.Tiles.Arsenal
 			if (TrapTimer % 50 == 0)
 			{
 				spawnPosition = new Vector2(i * 16 + 8 + 0 * horizontalDirection, j * 16 + 9 + 0 * verticalDirection);
-				Projectile.NewProjectile(spawnPosition, new Vector2(horizontalDirection, verticalDirection) * 6f, ProjectileID.FrostBlastHostile, 20, 2f, Main.myPlayer);
+				//Projectile.NewProjectile(spawnPosition, new Vector2(horizontalDirection, verticalDirection) * 6f, ProjectileID.FrostBlastHostile, 20, 2f, Main.myPlayer);
 				TrapTimer = 0;
 			}
 		}

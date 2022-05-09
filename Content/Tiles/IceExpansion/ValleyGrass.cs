@@ -53,12 +53,12 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 			Tile tile = Framing.GetTileSafely(i, j);
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
 			Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-			if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
 			{
 				if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
 				{
 					tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
-					tileAbove.HasTile;
+					tileAbove.HasTile = true;
 					tileAbove.TileFrameY = 0;
 					tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
 					WorldGen.SquareTileFrame(i, j + 1, true);
@@ -68,12 +68,12 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 					}
 				}
 			}
-			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && !tileBelow.lava())
+			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
 			{
 				if (!tile.BottomSlope)
 				{
 					tileBelow.TileType = (ushort)ModContent.TileType<CrystalVines>();
-					tileBelow.HasTile;
+					tileBelow.HasTile = true;
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{

@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.Audio;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -658,6 +659,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? 1f : 0f;
+            spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && spawnInfo.Water ? 1f : 0f;
 	}
 }

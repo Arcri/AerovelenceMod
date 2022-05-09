@@ -26,7 +26,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
 			DownedTheFallen = false;
 		}*/
 
-		public override TagCompound SaveWorldData()
+		/*public override TagCompound SaveWorldData()
 		{
 			List<string> downed = new List<string>();
 
@@ -49,9 +49,9 @@ namespace AerovelenceMod.Common.Globals.Worlds
 			{
                 {nameof(downed), downed}
 			};
-		}
+		}*/
 
-		public override void Load(TagCompound tag)
+		/*public override void Load(TagCompound tag)
 		{
 			IList<string> downed = tag.GetList<string>("downed");
 
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
 			DownedLightningMoth = downed.Contains("LightningMoth");
 			DownedCyvercry = downed.Contains("Cyvercry");
 			DownedTheFallen = downed.Contains("");
-		}
+		}*/
 
 		public override void NetSend(BinaryWriter writer)
         {

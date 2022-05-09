@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -30,7 +31,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
 			int style = t.TileFrameX / 18;
 			if (style == 0)
 			{
-				Item.NewItem(i * 16, j * 16, 16, 16, Mod.Find<ModItem>("PhanticOreBlock").Type);
+				Item.NewItem(new EntitySource_TileBreak(i, j), i* 16,j * 16, 16, 16, Mod.Find<ModItem>("PhanticOreBlock").Type);
 			}
 			return base.Drop(i, j);
 		}

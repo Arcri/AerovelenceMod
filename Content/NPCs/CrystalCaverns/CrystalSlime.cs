@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -36,7 +37,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.defense = 12;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .5f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) ? .5f : 0f;
 
         public override void HitEffect(int hitDirection, double damage)
         {

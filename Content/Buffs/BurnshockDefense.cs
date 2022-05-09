@@ -1,6 +1,7 @@
 ﻿#region Using directives
 
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 #endregion
@@ -16,8 +17,8 @@ namespace AerovelenceMod.Content.Buffs
 			
 			Main.debuff[Type] = false;
 			Main.buffNoTimeDisplay[Type] = false;
-			
-			canBeCleared = false;
+
+			BuffID.Sets.NurseCannotRemoveDebuff[Type] = false;
 		}
 
 		public override void Update(Player player, ref int buffIndex)

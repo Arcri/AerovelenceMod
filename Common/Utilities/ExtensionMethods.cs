@@ -30,7 +30,7 @@ namespace AerovelenceMod.Common.Utilities
         /// </summary>
         public static Vector2 Autosize(this Item item)
         {
-            Texture2D texture = Main.itemTexture[item.type];
+            Texture2D texture = Terraria.GameContent.TextureAssets.Item[item.type].Value;
 
             if (texture == null)
                 return Vector2.Zero;

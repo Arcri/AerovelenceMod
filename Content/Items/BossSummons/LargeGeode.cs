@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
@@ -32,7 +33,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
         }
 
         public override bool CanUseItem(Player player) => 
-            player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && !NPC.AnyNPCs(ModContent.NPCType<CrystalTumbler>());
+            player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && !NPC.AnyNPCs(ModContent.NPCType<CrystalTumbler>());
 
 
         public override bool? UseItem(Player player)

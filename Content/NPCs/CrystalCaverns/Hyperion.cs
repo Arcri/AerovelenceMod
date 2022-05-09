@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -157,7 +158,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) => 
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && !Main.dayTime && Main.hardMode ? .2f : 0f;
+            spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && !Main.dayTime && Main.hardMode ? .2f : 0f;
 
 
         public override void HitEffect(int hitDirection, double damage)

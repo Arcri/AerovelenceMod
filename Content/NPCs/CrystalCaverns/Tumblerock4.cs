@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -47,6 +48,6 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override void AI() => NPC.rotation += NPC.velocity.X * 0.05f;
         
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .3f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) ? .3f : 0f;
     }
 }

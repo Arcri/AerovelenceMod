@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Items.Others.Alchemical;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -33,7 +34,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			AnimationType = NPCID.CaveBat;
 		}
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) ? .1f : 0f;
 
 		public override void HitEffect(int hitDirection, double damage)
 		{

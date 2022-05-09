@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
 using Terraria.GameContent;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -40,7 +41,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         private int AI_State = 0;
         private Projectile aura;
         public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && Main.hardMode ? .1f : 0f;
+            spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && Main.hardMode ? .1f : 0f;
 
         public override bool PreAI()
         {

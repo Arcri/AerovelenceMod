@@ -6,7 +6,7 @@ using Terraria.Graphics.Effects;
 
 namespace AerovelenceMod.Backgrounds.Skies
 {
-    public class DarkNightSky : CustomSky
+    /*public class DarkNightSky : CustomSky
     {
         private bool _isActive;
         private float _fadeOpacity;
@@ -38,7 +38,7 @@ namespace AerovelenceMod.Backgrounds.Skies
             {
                 Main.EntitySpriteDraw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(0, 0, 0) * 0.24f);
             }
-        }*/
+        }
 
         public override float GetCloudAlpha()
         {
@@ -68,5 +68,5 @@ namespace AerovelenceMod.Backgrounds.Skies
             }
             return true;
         }
-    }
+    }*/
 }

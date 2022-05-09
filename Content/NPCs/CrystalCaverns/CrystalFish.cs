@@ -1,5 +1,6 @@
 ﻿using System;
 using AerovelenceMod.Common.Globals.Players;
+using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Items.Equipment;
 using AerovelenceMod.Content.Items.Others.Alchemical;
 using Microsoft.Xna.Framework;
@@ -114,7 +115,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo) =>
-            spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns && spawnInfo.Water ? .2f : 0f;
+            spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) && spawnInfo.Water ? .2f : 0f;
 
 		public override void HitEffect(int hitDirection, double damage)
 		{

@@ -37,35 +37,35 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(ModContent.ItemType<PrismaticSoul>());
-			player.QuickSpawnItem(ItemID.GoldCoin, 9);
-			player.QuickSpawnItem(ItemID.HealingPotion, Main.rand.Next(4, 12));
+			player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<PrismaticSoul>()), ModContent.ItemType<PrismaticSoul>());
+			player.QuickSpawnItem(player.GetSource_OpenItem(ItemID.GoldCoin), ItemID.GoldCoin, 9);
+			player.QuickSpawnItem(player.GetSource_OpenItem(ItemID.HealingPotion), ItemID.HealingPotion, Main.rand.Next(4, 12));
 
 			switch (Main.rand.Next(8))
 			{
 				case 0:
-					player.QuickSpawnItem(ModContent.ItemType<CrystallineQuadshot>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<CrystallineQuadshot>()), ModContent.ItemType<CrystallineQuadshot>());
 					break;
 				case 1:
-					player.QuickSpawnItem(ModContent.ItemType<PrismPiercer>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<PrismPiercer>()), ModContent.ItemType<PrismPiercer>());
 					break;
 				case 2:
-					player.QuickSpawnItem(ModContent.ItemType<CarbonCadence>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<CarbonCadence>()), ModContent.ItemType<CarbonCadence>());
 					break;
 				case 3:
-					player.QuickSpawnItem(ModContent.ItemType<PrismThrasher>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<PrismThrasher>()), ModContent.ItemType<PrismThrasher>());
 					break;
 				case 4:
-					player.QuickSpawnItem(ModContent.ItemType<CavernousImpaler>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<CavernousImpaler>()), ModContent.ItemType<CavernousImpaler>());
 					break;
 				case 5:
-					player.QuickSpawnItem(ModContent.ItemType<CavernMauler>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<CavernMauler>()), ModContent.ItemType<CavernMauler>());
 					break;
 				case 6:
-					player.QuickSpawnItem(ModContent.ItemType<DarkCrystalStaff>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<DarkCrystalStaff>()), ModContent.ItemType<DarkCrystalStaff>());
 					break;
 				case 7:
-					player.QuickSpawnItem(ModContent.ItemType<ShiningCrystalCore>());
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<ShiningCrystalCore>()), ModContent.ItemType<ShiningCrystalCore>());
 					break;
 			}
 		}

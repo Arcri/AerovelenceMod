@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.Audio;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -47,7 +48,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 				Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, Mod.Find<ModGore>("Gores/CrystalDiggerGoreHead2").Type, 1f);
 			}
 		}
-		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.GetModPlayer<ZonePlayer>().ZoneCrystalCaverns ? .1f : 0f;
+		public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()) ? .1f : 0f;
 
 		private int attackCounter;
 		public override void SendExtraAI(BinaryWriter writer)

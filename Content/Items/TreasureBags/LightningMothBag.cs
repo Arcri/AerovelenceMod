@@ -1,3 +1,9 @@
+using AerovelenceMod.Content.Items.Accessories;
+using AerovelenceMod.Content.Items.Weapons.Magic;
+using AerovelenceMod.Content.Items.Weapons.Melee;
+using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Summoning;
+using AerovelenceMod.Content.Items.Weapons.Thrown;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -31,34 +37,32 @@ namespace AerovelenceMod.Content.Items.TreasureBags
 
 		public override void OpenBossBag(Player player)
 		{
-			player.QuickSpawnItem(Mod.Find<ModItem>("PrismaticSoul").Type);
-			player.QuickSpawnItem(ItemID.GoldCoin, 18);
-			player.QuickSpawnItem(ItemID.GreaterHealingPotion, Main.rand.Next(4, 12));
-
-			player.TryGettingDevArmor();
+			player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<PrismaticSoul>()), Mod.Find<ModItem>("PrismaticSoul").Type);
+			player.QuickSpawnItem(player.GetSource_OpenItem(ItemID.GoldCoin), ItemID.GoldCoin, 18);
+			player.QuickSpawnItem(player.GetSource_OpenItem(ItemID.GreaterHealingPotion), ItemID.GreaterHealingPotion, Main.rand.Next(4, 12));
 
 			switch (Main.rand.Next(6))
 			{
 				case 0:
-					player.QuickSpawnItem(Mod.Find<ModItem>("BladeOfTheSkies").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<BladeOfTheSkies>()), Mod.Find<ModItem>("BladeOfTheSkies").Type);
 					break;
 				case 1:
-					player.QuickSpawnItem(Mod.Find<ModItem>("EyeOfTheGreatMoth").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<EyeOfTheGreatMoth>()), Mod.Find<ModItem>("EyeOfTheGreatMoth").Type);
 					break;
 				case 2:
-					player.QuickSpawnItem(Mod.Find<ModItem>("MothLeg").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<MothLeg>()), Mod.Find<ModItem>("MothLeg").Type);
 					break;
 				case 3:
-					player.QuickSpawnItem(Mod.Find<ModItem>("Florentine").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<Florentine>()), Mod.Find<ModItem>("Florentine").Type);
 					break;
 				case 4:
-					player.QuickSpawnItem(Mod.Find<ModItem>("ElectrapulseCanister").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<ElectrapulseCanister>()), Mod.Find<ModItem>("ElectrapulseCanister").Type);
 					break;
 				case 5:
-					player.QuickSpawnItem(Mod.Find<ModItem>("SongOfTheStorm").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<SongOfTheStorm>()), Mod.Find<ModItem>("SongOfTheStorm").Type);
 					break;
 				case 6:
-					player.QuickSpawnItem(Mod.Find<ModItem>("StaticSurge").Type);
+					player.QuickSpawnItem(player.GetSource_OpenItem(ModContent.ItemType<StaticSurge>()), Mod.Find<ModItem>("StaticSurge").Type);
 					break;
 			}
 		}

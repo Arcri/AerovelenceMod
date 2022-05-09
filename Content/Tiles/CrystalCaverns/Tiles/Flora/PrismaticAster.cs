@@ -3,6 +3,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns.Flora;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -45,15 +46,16 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 		}
 		public override bool Drop(int i, int j)
 		{
+			var source = new EntitySource_TileBreak(i, j);
 			PlantStage stage = GetStage(i, j);
 			if (stage == PlantStage.Grown)
 			{
-				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
-				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticAsterItem>());
+				Item.NewItem(source, new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
+				Item.NewItem(source, new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticAsterItem>());
 			}
 			else if (stage != PlantStage.Grown)
 			{
-				Item.NewItem(new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
+				Item.NewItem(source, new Vector2(i, j).ToWorldCoordinates(), ItemType<PrismaticSeeds>());
 			}
 			return true;
 		}

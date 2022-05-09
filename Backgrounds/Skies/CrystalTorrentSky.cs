@@ -6,7 +6,7 @@ using Terraria.Graphics.Effects;
 
 namespace AerovelenceMod.Backgrounds.Skies
 {
-    public class CrystalTorrentSky : CustomSky
+    /*public class CrystalTorrentSky : CustomSky
     {
         private bool _isActive;
         private float _fadeOpacity;
@@ -32,13 +32,13 @@ namespace AerovelenceMod.Backgrounds.Skies
             return new Color(077, 077, 091);
         }
 
-        /*public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
+        public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (maxDepth >= 0 && minDepth < 0)
             {
                 Main.EntitySpriteDraw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(0, 0, 0) * 0.24f);
             }
-        }*/
+        }
 
         public override float GetCloudAlpha()
         {
@@ -68,5 +68,5 @@ namespace AerovelenceMod.Backgrounds.Skies
             }
             return true;
         }
-    }
+    }*/
 }

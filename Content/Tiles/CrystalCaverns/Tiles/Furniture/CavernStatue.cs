@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 {
@@ -27,12 +28,12 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Cavern Statue");
             AddMapEntry(new Color(200, 200, 200), name);
-            adjTiles = new int[] { TileID.Lamps };
+            AdjTiles = new int[] { TileID.Lamps };
         }
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             SoundEngine.PlaySound(new Terraria.Audio.LegacySoundStyle(3, 4));
-            Item.NewItem(i * 16, j * 16, 48, 48, 441);
+            Item.NewItem(new EntitySource_TileBreak(i, j), i* 16,j * 16, 48, 48, 441);
         }
     }
 }

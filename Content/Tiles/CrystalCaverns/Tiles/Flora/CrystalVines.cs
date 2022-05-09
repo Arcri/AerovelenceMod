@@ -50,8 +50,10 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 
 		public override void RandomUpdate(int i, int j)
 		{
+			Tile tile = Framing.GetTileSafely(i, j);
+
 			Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && !tileBelow.Lava)
+			if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
 			{
 				bool placeVine = false;
 				int yTest = j;
@@ -73,7 +75,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 				if (placeVine)
 				{
 					tileBelow.TileType = Type;
-					tileBelow.HasTile;
+					tileBelow.HasTile = true;
 					WorldGen.SquareTileFrame(i, j + 1, true);
 					if (Main.netMode == NetmodeID.Server)
 					{
