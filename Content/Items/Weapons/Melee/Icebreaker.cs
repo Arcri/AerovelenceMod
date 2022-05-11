@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             Item.UseSound = SoundID.Item1;
             Item.crit = 4;
-            Item.damage = 12;
+            Item.damage = 10;
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 54; 
@@ -34,6 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
             Item.scale = 1f;
+            Item.alpha = 255;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -44,18 +45,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
             {
                 float variation = rnd.Next(21);
-                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 150 - 10 + variation, target.Top.Y - 150 + variation, 6f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 150 - 10 + variation, target.Top.Y - 150 + variation, 4f, 4f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
                 //The -10 is separated to clarify that it is an offset to the variation variable, so a range of negative to positive 10 can be reached. If you just put in rnd.Next(-10, 11) then it only generates positives for some reason
                 //Skip the middle variation due to it looking odd
-                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X, target.Top.Y - 160, 0f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X, target.Top.Y - 160, 0f, 4f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
                 variation = rnd.Next(21);
-                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 150 - 10 + variation, target.Top.Y - 150 + variation, -6f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 150 - 10 + variation, target.Top.Y - 150 + variation, -4f, 4f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
                 if (target.type != NPCID.TheHungry) //Balancing for the WoF fight
                 {
                     variation = rnd.Next(21);
-                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 75 - 10 + variation, target.Top.Y - 155 + variation, -3f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 75 - 10 + variation, target.Top.Y - 160 + variation, -2f, 4f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
                     variation = rnd.Next(21);
-                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 75 - 10 + variation, target.Top.Y - 155 + variation, 3f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 75 - 10 + variation, target.Top.Y - 160 + variation, 2f, 4f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
                 }
             }
             base.OnHitNPC(player, target, damage, knockBack, crit);
@@ -95,6 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 120;
             Projectile.scale = 0.85f;
+            Projectile.alpha = 255;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -121,8 +123,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.rotation -= 1.5708f; //90 degrees is 1.5708 radians
 
+            if (Projectile.alpha > 0) {
+                Projectile.alpha -= 15;
+            }
+
             if (Projectile.ai[0] % 6 == 1) {
-                Projectile.velocity *= 1.05f;
+                Projectile.velocity *= 1.10f;
             }
         }
     }
