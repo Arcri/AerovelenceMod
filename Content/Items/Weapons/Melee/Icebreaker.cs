@@ -5,34 +5,35 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Melee
 {
     public class Icebreaker : ModItem
     {
+        Random rnd = new Random();
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Icebreaker");
             Tooltip.SetDefault("'A forgotten hero's sword, lost in the tundra'\nHas a chance to rain ice above an enemy when hit");
-            Tooltip.SetDefault("This item is unfinished!");
         }
 
         public override void SetDefaults()
         {
             Item.UseSound = SoundID.Item1;
-            Item.crit = 8;
-            Item.damage = 14;
+            Item.crit = 4;
+            Item.damage = 10;
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 54; 
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 18;
+            Item.useAnimation = 18;
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.knockBack = 5;
-            Item.value = Item.sellPrice(0, 0, 40, 20);
-            Item.value = 10000;
-            Item.rare = ItemRarityID.Blue;
-            Item.autoReuse = false;
+            Item.knockBack = 4;
+            Item.value = Item.sellPrice(0, 2, 40, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.autoReuse = true;
+            Item.scale = 1f;
         }
         public override Color? GetAlpha(Color lightColor)
         {
@@ -40,21 +41,35 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            Vector2 position = target.position - Vector2.UnitY * 60;
-            Vector2 velocity = target.position * 5;
-            Projectile.NewProjectile(Item.GetSource_FromThis(), position, velocity, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+            if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+            {
+                float variation = rnd.Next(21);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 150 - 10 + variation, target.Top.Y - 150 + variation, 6f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                //The -10 is separated to clarify that it is an offset to the variation variable, so a range of negative to positive 10 can be reached. If you just put in rnd.Next(-10, 11) then it only generates positives for some reason
+                //Skip the middle variation due to it looking odd
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X, target.Top.Y - 160, 0f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                variation = rnd.Next(21);
+                Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 150 - 10 + variation, target.Top.Y - 150 + variation, -6f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                if (target.type != NPCID.TheHungry) //Balancing for the WoF fight
+                {
+                    variation = rnd.Next(21);
+                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X + 75 - 10 + variation, target.Top.Y - 155 + variation, -3f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                    variation = rnd.Next(21);
+                    Projectile.NewProjectile(Item.GetSource_FromThis(), target.Top.X - 75 - 10 + variation, target.Top.Y - 155 + variation, 3f, 6f, ModContent.ProjectileType<IcebreakerIcicle>(), damage, knockBack, player.whoAmI);
+                }
+            }
             base.OnHitNPC(player, target, damage, knockBack, crit);
+            SoundEngine.PlaySound(SoundID.Item28, player.position);
         }
+
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var line = new TooltipLine(Mod, "Verbose:RemoveMe", "This is pretty wwwwwwwwoooooeeeeedfdoah");
-            tooltips.Add(line);
-
-            line = new TooltipLine(Mod, "Icebreaker", "Artifact")
+            var line = new TooltipLine(Mod, "Icebreaker", "Artifact")
             {
                 OverrideColor = new Color(255, 241, 000)
             };
             tooltips.Add(line);
+
             foreach (TooltipLine line2 in tooltips)
             {
                 if (line2.Mod == "Terraria" && line2.Name == "ItemName")
@@ -62,7 +77,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
                     line2.OverrideColor = new Color(255, 132, 000);
                 }
             }
-            tooltips.RemoveAll(l => l.Name.EndsWith(":RemoveMe"));
         }
     }
 
@@ -74,38 +88,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             Projectile.aiStyle = -1;
             Projectile.height = 38;
             Projectile.friendly = true;
-            Projectile.penetrate = 3;
-            Projectile.alpha = 255;
-            Projectile.hostile = false;
+            Projectile.maxPenetrate = 3;
+            //Projectile.hostile = false;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 120;
+            Projectile.scale = 0.85f;
         }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Frost, 0f, 0f, 100, Color.Blue, 1f);
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Frost, 0f, 0f, 100, Color.BlueViolet, 1f);
+            base.OnSpawn(source);
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            base.OnHitNPC(target, 14, knockback, false);
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Frost, 0f, 0f, 100, Color.BlueViolet, 1f);
+            base.Kill(timeLeft);
+        }
+
         public override void AI()
         {
+            Projectile.ai[0]++;
             Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.velocity.Y += 3;
-            Projectile.rotation += Projectile.velocity.X * 0.01f;
-            DelegateMethods.v3_1 = new Vector3(0.6f, 1f, 1f) * 0.2f;
-            Utils.PlotTileLine(Projectile.Center, Projectile.Center + Projectile.velocity * 10f, 8f, DelegateMethods.CastLightOpen);
-            if (Projectile.alpha > 0)
-            {
-                SoundEngine.PlaySound(SoundID.Item9, Projectile.Center);
-                Projectile.alpha = 0;
-                Projectile.scale = 1.1f;
-                float num101 = 16f;
-                for (int num102 = 0; num102 < num101; num102++)
-                {
-                    Vector2 spinningpoint5 = Vector2.UnitX * 0f;
-                    spinningpoint5 += -Vector2.UnitY.RotatedBy((float)num102 * ((float)Math.PI * 2f / num101)) * new Vector2(1f, 4f);
-                    spinningpoint5 = spinningpoint5.RotatedBy(Projectile.velocity.ToRotation());
-                    int num103 = Dust.NewDust(Projectile.Center, 0, 0, 180);
-                    Main.dust[num103].scale = 1.5f;
-                    Main.dust[num103].noGravity = true;
-                    Main.dust[num103].position = Projectile.Center + spinningpoint5;
-                    Main.dust[num103].velocity = Projectile.velocity * 0f + spinningpoint5.SafeNormalize(Vector2.UnitY) * 1f;
-                }
+            Projectile.rotation -= 1.5708f; //90 degrees is 1.5708 radians
+
+            if (Projectile.ai[0] % 6 == 1) {
+                Projectile.velocity *= 1.05f;
             }
         }
     }
