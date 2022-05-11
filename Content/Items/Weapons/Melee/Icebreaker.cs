@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
         {
             Item.UseSound = SoundID.Item1;
             Item.crit = 4;
-            Item.damage = 10;
+            Item.damage = 12;
             Item.DamageType = DamageClass.Melee;
             Item.width = 50;
             Item.height = 54; 
