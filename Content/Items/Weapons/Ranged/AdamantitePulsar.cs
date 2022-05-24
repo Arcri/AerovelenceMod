@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = ItemRarityID.Pink;
             item.autoReuse = true;
-            item.shoot = ModContent.ProjectileType<VortexProjectile>();
+            item.shoot = ModContent.ProjectileType<AdamantitePulsarProj>();
             item.shootSpeed = 16f;
         }
         public override void AddRecipes()
