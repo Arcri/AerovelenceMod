@@ -6,6 +6,7 @@ using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
 using AerovelenceMod.Content.Items.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Melee;
 using AerovelenceMod.Content.Items.Weapons.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Magic.LazX;
 using AerovelenceMod.Content.Items.Weapons.Thrown;
 using AerovelenceMod.Content.NPCs.Cave;
 using AerovelenceMod.Content.NPCs.CrystalCaverns;
@@ -39,12 +40,12 @@ namespace AerovelenceMod.Common.Globals.NPCs
 
 				case NPCID.SkeletronPrime:
 					if (Main.rand.NextBool(51))
-                        Item.NewItem(npc.getRect(), ModContent.ItemType<LazX>());
+                        Item.NewItem(npc.getRect(), ModContent.ItemType<LazXItem>());
                     break;
 
 				case NPCID.PrimeLaser:
 					if (Main.rand.NextBool(51))
-                        Item.NewItem(npc.getRect(), ModContent.ItemType<LazX>());
+                        Item.NewItem(npc.getRect(), ModContent.ItemType<LazXItem>());
                     break;
 
 				case NPCID.Retinazer:
