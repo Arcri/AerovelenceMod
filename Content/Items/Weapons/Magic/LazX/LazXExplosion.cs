@@ -66,10 +66,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic.LazX
 		
 		    spriteBatch.End();
 		    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			return true;
-		    spriteBatch.End();
+			return true; //Shut up I don't think this messes anything up
+			spriteBatch.End(); 
 		    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			return true;
 		}
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
