@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Main.tileMergeDirt[Type] = true;
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			DustType = 116;
-			SoundType = SoundID.Grass;
+			HitSound = SoundID.Grass;
 			AddMapEntry(new Color(100, 125, 255));
 			TileObjectData.addTile(Type);
 		}
