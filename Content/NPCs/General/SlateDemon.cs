@@ -56,7 +56,7 @@ namespace AerovelenceMod.Content.NPCs.General
             float optimalRotation = (float)Math.Atan2(player.position.Y - NPC.position.Y, player.position.X - NPC.position.X) - 3.14159265f;
             if (NPC.ai[0] % 256 == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 4, distanceNorm.Y * 4, ProjectileID.GoldenShowerHostile, 30, 0f, Main.myPlayer, 0f, 0f);
             }
             if (NPC.direction == 1)
