@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.Decurion
 
 		public override void Kill(int timeLeft)
 		{
-			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 14);
+			SoundEngine.PlaySound(SoundID.Item, Projectile.position);
 
 			Projectile.position.X = Projectile.position.X + (Projectile.width / 2);
 			Projectile.position.Y = Projectile.position.Y + (Projectile.width / 2);
