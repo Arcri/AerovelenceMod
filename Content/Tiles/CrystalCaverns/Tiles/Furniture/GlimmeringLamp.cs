@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.tileLighted[Type] = true;
 			Main.tileFrameImportant[Type] = true;
 			Main.tileNoAttach[Type] = true;
-			SoundType = SoundID.Shatter;
+			HitSound = SoundID.Shatter;
 			DustType = DustType<Sparkle>();
 			Main.tileWaterDeath[Type] = true;
 			Main.tileLavaDeath[Type] = true;
