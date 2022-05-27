@@ -208,19 +208,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				// TODO: Eldrazi - Multiplayer support?
 				if (AttackTimer++ == 0)
 				{
-					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 0);
 					NPC.netUpdate = true;
 				}
 				else if (AttackTimer == 10)
 				{
-					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 1);
 					NPC.netUpdate = true;
 				}
 				else if (AttackTimer == 20)
 				{
-					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 69, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 					Projectile.NewProjectile(entitySource, NPC.Center, default, ModContent.ProjectileType<TumblerBoulder1>(), 12, 1f, Main.myPlayer, 2);
 					NPC.netUpdate = true;
 					AttackTimer = 0;
@@ -312,7 +312,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				// Fast horizontal movement and frequent jumps.
 				else
 				{
-					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 76, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 					if (NPC.velocity.Y == 0 && target.Center.Y < NPC.Center.Y - 100f)
 					{
 						TryJump(Main.rand.Next(4, 7), 60);
@@ -351,7 +351,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 				Vector2 vector8 = new Vector2(NPC.position.X + (NPC.width * 0.5f), NPC.position.Y + (NPC.height * 0.5f));
 				if (AttackTimer++ == 0)
 				{
-					SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 93, 0.75f);
+					SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 					float Speed = 1 * 0.99f;
 					int damage = Main.expertMode ? 20 : 10;// if u want to change this, 15 is for expert mode, 10 is for normal mod
 					int type = Mod.Find<ModProjectile>("TumblerOrb").Type;
@@ -399,7 +399,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 						teleported = true;
 						AttackTimer = 0;
 						NPC.netUpdate = true;
-						SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
+						SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 						for (float i = 0; i < 360; i += 0.5f)
 						{
 							float ang = (float)(i * Math.PI) / 180;
@@ -426,7 +426,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
 			else if (State == CrystalTumblerState.RockRain)
 			{
-				SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 74, 0.75f);
+				SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 
 				for (int i = -3; i <= 3; i++)
 				{
