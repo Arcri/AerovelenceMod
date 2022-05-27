@@ -349,7 +349,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.velocity += 0.4f * goTo * (speed + distance * 0.01f);
                 if(ai1 % 30 == 0 && ai1 >= -90 && ai1 <= 0)
                 {
-                    SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 12, 0.75f);
+                    SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                     FireLaser(ProjectileID.DeathLaser);
                 }
 
@@ -474,7 +474,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.velocity += toPlayer * 0.8f;
                 if (ai2 > 3)
                 {
-                    SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 12, 0.75f);
+                    SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                     FireLaser(ModContent.ProjectileType<LaserExplosionBall>(), 3f, 3f);
                     nextAttack = -1;
                     ai1 = 0;
@@ -524,7 +524,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.velocity += toPlayer * 0.8f;
                 if (ai2 > 3)
                 {
-                    SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 44, 1.25f);
+                    SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                     int type = DustID.Electric;
                     if (ai5 == 30)
                         type = 235;
@@ -818,7 +818,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void Kill(int timeLeft)
         {
             var entitySource = Projectile.GetSource_FromAI();
-            SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 12, 1f);
+            SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < 360; i += 20)
@@ -863,7 +863,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Projectile.rotation = MathHelper.ToRadians(90) + Projectile.velocity.ToRotation();
             if (Projectile.timeLeft == 420)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 71, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
                 for (int i = 0; i < 360; i += 5)
                 {
                     Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
