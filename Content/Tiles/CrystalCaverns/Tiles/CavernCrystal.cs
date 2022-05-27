@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(115, 230, 250));
             DustType = 59;
-            SoundType = SoundID.Tink;
+            HitSound = SoundID.Tink;
             ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.CavernCrystal>();
         }
         /*public override void NearbyEffects(int i, int j, bool closer)
