@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(102, 108, 117));
             DustType = 116;
-            SoundType = SoundID.Tink;
+            HitSound = SoundID.Tink;
             ItemDrop = Mod.Find<ModItem>("CrystalDirtItem").Type;
         }
         public override bool CanExplode(int i, int j)
