@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
             Main.tileLighted[Type] = false;
             ItemDrop = ModContent.ItemType<BurnshockOre>();
             DustType = 59;
-            SoundType = SoundID.Tink;
+            HitSound = SoundID.Tink;
 			
 			
             AddMapEntry(new Color(255, 090, 090), Language.GetText("Burnshock Ore"));
