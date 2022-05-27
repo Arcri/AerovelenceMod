@@ -87,7 +87,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.ai[0]++;
             if (NPC.ai[0] % 100 == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                 NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<ElectricOrb>(), Main.myPlayer);
             }
         }
