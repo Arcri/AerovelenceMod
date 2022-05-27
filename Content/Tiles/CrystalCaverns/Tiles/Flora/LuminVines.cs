@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
             //TileObjectData.addTile(Type);
             AddMapEntry(new Color(089, 161, 244));
             DustType = DustID.Grass;
-            SoundType = SoundID.Grass;
+            HitSound = SoundID.Grass;
             MinPick = 20;
             Main.tileAxe[Type] = true;
         }
