@@ -1,6 +1,7 @@
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,9 +15,10 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 			Main.tileMergeDirt[Type] = true;
 			DustType = 116;
 			ItemDrop = Mod.Find<ModItem>("CavernCrystal").Type;
-			SoundType = SoundID.Shatter;
+			HitSound = SoundID.Shatter;
 			AddMapEntry(new Color(100, 125, 255));
 		}
+
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{
 			num = 59;
