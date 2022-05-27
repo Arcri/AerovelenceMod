@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
 {
@@ -42,7 +43,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
         }
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(2, (int)Projectile.Center.X, (int)Projectile.Center.Y, 50, 0.75f, 0.1f);
+            SoundEngine.PlaySound(SoundID.Item4, Projectile.Center);
             for (int k = 0; k < 2; k++)
             {
                 float decrease = 2;
