@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             if (player.ZoneSnow)
                 NPC.SpawnOnPlayer(player.whoAmI, Mod.Find<ModNPC>("Rimegeist").Type);
             
-            SoundEngine.PlaySound(SoundID.Roar, (int)player.position.X, (int)player.position.Y, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
 
             return true;
         }
