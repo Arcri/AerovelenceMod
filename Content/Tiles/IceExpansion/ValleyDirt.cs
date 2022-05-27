@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
             Main.tileLighted[Type] = false;
 			AddMapEntry(new Color(061, 079, 110));
 			DustType = 59;
-			SoundType = SoundID.Tink;
+			HitSound = SoundID.Tink;
 			ItemDrop = ItemID.DirtBlock;
 
         }
