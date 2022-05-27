@@ -474,7 +474,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             if (attackCounter == 100)
             {
 
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.position.X, (int)NPC.position.Y, 66);
+                SoundEngine.PlaySound(SoundID.Item, NPC.position);
                 Projectile.NewProjectile(entitySource, NPC.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 int rot = Main.rand.Next(360);
                 double anglex = Math.Sin(rot * (Math.PI / 180));
@@ -493,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
             if (attackCounter == 120)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.position.X, (int)NPC.position.Y, 66);
+                SoundEngine.PlaySound(SoundID.Item, NPC.position);
                 Projectile.NewProjectile(entitySource, NPC.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 int rot = Main.rand.Next(360);
                 double anglex = Math.Sin(rot * (Math.PI / 180));
@@ -512,7 +512,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
             if (attackCounter == 140)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.position.X, (int)NPC.position.Y, 66);
+                SoundEngine.PlaySound(SoundID.Item, NPC.position);
                 Projectile.NewProjectile(entitySource, NPC.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 int rot = Main.rand.Next(360);
                 double anglex = Math.Sin(rot * (Math.PI / 180));
@@ -531,7 +531,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             }
             if (attackCounter == 160)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.position.X, (int)NPC.position.Y, 66);
+                SoundEngine.PlaySound(SoundID.Item, NPC.position);
                 Projectile.NewProjectile(entitySource, NPC.position, Vector2.Zero, ModContent.ProjectileType<LightningGem>(), 30, 0f, Main.myPlayer, 0f, 0f);
                 int rot = Main.rand.Next(360);
                 double anglex = Math.Sin(rot * (Math.PI / 180));
@@ -1618,7 +1618,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.LightningMoth
             if (Projectile.timeLeft == 420)
             {
                 Projectile.alpha = 255;
-                SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 43, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
 
                 for (double i = 0; i < 6.28; i += 0.1)
                 {
