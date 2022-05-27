@@ -22,7 +22,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(089, 120, 179));
 			DustType = 59;
-			SoundType = SoundID.Tink;
             ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.ChargedStoneItem>();
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
