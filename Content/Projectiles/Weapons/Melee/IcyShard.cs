@@ -102,7 +102,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
             }
             if (runOnce)
             {
-                SoundEngine.PlaySound(2, (int)Projectile.Center.X, (int)Projectile.Center.Y, 30, 0.75f, -0.4f);
+                SoundEngine.PlaySound(SoundID.Item4, Projectile.Center);
                 randomModifier1 = Main.rand.NextFloat(-1f, 1.75f);
                 randomModifier2 = Main.rand.NextFloat(-24, 24);
                 rotationCounter = Main.rand.NextFloat(360);
