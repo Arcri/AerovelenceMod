@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Items.Equipment;
@@ -94,22 +94,24 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 			NPC.frame.Y = frame * frameHeight;
 		}
 
-        public override void OnCatchNPC(Player player, Item item)
-		{
+        public override void OnCaughtBy(Player player, Item item, bool failed)
+        {
 			var source = NPC.GetSource_FromAI();
-			if (!Main.expertMode)
-            {
-				if (Main.rand.Next(500) == 0)
+			if (!failed) {
+				if (!Main.expertMode)
 				{
-					Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					if (Main.rand.Next(500) == 0)
+					{
+						Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					}
 				}
-			}
 
-			if (Main.expertMode)
-			{
-				if (Main.rand.Next(400) == 0)
+				if (Main.expertMode)
 				{
-					Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					if (Main.rand.Next(400) == 0)
+					{
+						Item.NewItem(source, (int)NPC.position.X, (int)NPC.position.Y, NPC.width, NPC.height, ModContent.ItemType<FishRing>());
+					}
 				}
 			}
 		}
