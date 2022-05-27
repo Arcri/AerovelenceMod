@@ -20,7 +20,15 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 
 		private bool charged = false;
 
-		public override void SetStaticDefaults()
+        //Declaring the AnnihilatorCharge sound here
+        public static readonly SoundStyle AnnihilatorCharge = new($"{nameof(AerovelenceMod)}/Sounds/Effects", SoundType.Sound)
+        {
+            //insert custom modifiers in here like Volume, Pitch, and PitchVariance
+        };
+
+        public static readonly SoundStyle AnnihilatorShot = new($"{nameof(AerovelenceMod)}/Sounds/Effects", SoundType.Sound);
+        
+        public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Electric Railgun");
 		}
@@ -45,7 +53,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             if (!spawned)
             {
                 spawned = true;
-                SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Effects/AnnihilatorCharge");
+                SoundEngine.PlaySound(AnnihilatorCharge, Projectile.position);
             }
 
             
@@ -84,7 +92,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
 			else
 			{
                 //Play firing sound!
-                SoundLoader.GetLegacySoundSlot(Mod, "Sounds/Effects/AnnihilatorShot");
+                SoundEngine.PlaySound(AnnihilatorShot, Projectile.position);
                 Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), player.Center + (direction * 70), direction * 15, ModContent.ProjectileType<ElectricRailgunProj2>(), (int)(Projectile.damage * MathHelper.Lerp(0.5f, 1.5f, charge)), 0, player.whoAmI, charge);
 				if (Main.netMode != NetmodeID.Server)
 			    {
