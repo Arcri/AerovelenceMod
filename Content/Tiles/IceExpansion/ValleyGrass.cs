@@ -12,7 +12,6 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
-			SetModTree(new ValleyTree());
 			Main.tileMerge[Type][Mod.Find<ModTile>("ValleyGrass").Type] = true;
 			Main.tileBlendAll[Type] = true;
 			Main.tileMergeDirt[Type] = true;
@@ -81,11 +80,6 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 					}
 				}
 			}
-		}
-		public override int SaplingGrowthType(ref int style)
-		{
-			style = 0;
-			return TileID.Saplings;
 		}
 	}
 }
