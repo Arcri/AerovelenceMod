@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.NPCs.General.DarkNight
 		public void FireShards(int player)
         {
 			NPC.netUpdate = true;
-			SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 101, 1.1f);
+			SoundEngine.PlaySound(SoundID.Item, NPC.Center);
 			delayBetween = 45;
 			for(int i = 0; i < 3; i++)
             {
