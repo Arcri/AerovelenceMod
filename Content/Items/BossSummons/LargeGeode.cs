@@ -40,7 +40,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
         {
             if (player.whoAmI == Main.myPlayer)
             {
-                SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+                SoundEngine.PlaySound(SoundID.Roar, player.position);
 
                 int type = NPC.NewNPC(player.GetSource_FromThis(), (int)player.position.X, (int)player.position.Y - 250, ModContent.NPCType<CrystalTumbler>());
 
