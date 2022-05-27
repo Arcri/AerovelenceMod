@@ -63,7 +63,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
                         Projectile.netUpdate = true;
                     }
                     runOnce = false;
-                    SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 8, 0.8f);
+                    SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
                     for (int i = 0; i < 360; i += 15)
                     {
                         Vector2 circular = new Vector2(8, 0).RotatedBy(MathHelper.ToRadians(i));
