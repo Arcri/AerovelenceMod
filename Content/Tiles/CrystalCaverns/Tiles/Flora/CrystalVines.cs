@@ -15,7 +15,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Main.tileNoFail[Type] = true;
 			Main.tileNoAttach[Type] = true;
 			Main.tileLighted[Type] = false;
-			SoundType = SoundID.Grass;
+			HitSound = SoundID.Grass;
 			DustType = 116;
 			AddMapEntry(new Color(100, 125, 255));
 		}
