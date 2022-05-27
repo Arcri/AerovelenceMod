@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
             Main.tileLighted[Type] = false;
             ItemDrop = ModContent.ItemType<StarglassCluster>();
 			DustType = 10;
-			SoundType = SoundID.Tink;			
+			HitSound = SoundID.Tink;			
             AddMapEntry(new Color(255, 090, 090), Language.GetText("Starglass Cluster"));
         }
     }
