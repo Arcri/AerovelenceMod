@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Tiles.Ores
             Main.tileLighted[Type] = false;
             ItemDrop = ModContent.ItemType<SlateOre>();
 			DustType = 4;
-			SoundType = SoundID.Tink;			
+			HitSound = SoundID.Tink;			
             AddMapEntry(new Color(108, 114, 116), Language.GetText("Slate Slab"));
         }
     }
