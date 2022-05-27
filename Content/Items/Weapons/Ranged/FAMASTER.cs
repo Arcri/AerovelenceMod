@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 		{
 			DisplayName.SetDefault("Famaster");
 		}
-		public override bool CanConsumeAmmo(Player player)
+		public override bool CanConsumeAmmo(Item ammo, Player player)
 		{
 			return Main.rand.NextFloat() >= .33f;
 		}
