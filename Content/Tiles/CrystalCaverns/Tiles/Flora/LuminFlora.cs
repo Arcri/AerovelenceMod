@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Flora
 			Main.tileNoFail[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			DustType = 116;
-			SoundType = SoundID.Grass;
+			HitSound = SoundID.Grass;
 			AddMapEntry(new Color(100, 125, 255));
 		}
 		public override void NumDust(int i, int j, bool fail, ref int num)
