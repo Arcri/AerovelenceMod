@@ -13,7 +13,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 			DisplayName.SetDefault("Florentine");
 			Tooltip.SetDefault("Has a chance to shoot electric volleys alongside bullets\n33% chance to not consume ammo");
 		}
-        public override bool CanConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Item ammo, Player player)
         {
 			return Main.rand.NextFloat() >= .33f;
 		}
