@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
 			AddMapEntry(new Color(052, 056, 073));
 
 			DustType = 37;
-			SoundType = SoundID.Dig;
+			HitSound = SoundID.Dig;
 			ItemDrop = ModContent.ItemType<Glimmerwood>();
         }
     }
