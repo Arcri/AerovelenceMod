@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.Bosses.CrystalTumbler
 		}
 		public override void Kill(int timeLeft)
 		{
-			SoundEngine.PlaySound(SoundID.Item, (int)Projectile.Center.X, (int)Projectile.Center.Y, 62, 0.75f);
+			SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
 		}
 	}
 }
