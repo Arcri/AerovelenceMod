@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item, (int)Projectile.position.X, (int)Projectile.position.Y, 10);
+            SoundEngine.PlaySound(SoundID.Item, Projectile.position);
 
             int damage = (int)(Projectile.damage);
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, Projectile.owner);
