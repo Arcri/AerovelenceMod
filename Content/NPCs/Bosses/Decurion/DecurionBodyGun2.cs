@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             distanceNorm.Normalize();
             if (i % Main.rand.Next(100, 250) == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item, (int)NPC.Center.X, (int)NPC.Center.Y, 94, 0.75f);
+                SoundEngine.PlaySound(SoundID.Item, NPC.Center);
                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 10, distanceNorm.Y * 10, ModContent.ProjectileType<DecurionGunBullet>(), 30, 0f, Main.myPlayer, 0f, 0f);
             }
 
