@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles.Furniture
 			Main.tileWaterDeath[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			DustType = DustType<Sparkle>();
-			SoundType = SoundID.Shatter;
+			HitSound = SoundID.Shatter;
 
 			TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
 			TileObjectData.newTile.WaterDeath = true;
