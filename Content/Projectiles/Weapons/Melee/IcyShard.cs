@@ -57,7 +57,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Melee
         }
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(2, (int)Projectile.Center.X, (int)Projectile.Center.Y, 50, 0.75f, 0.1f);
+            SoundEngine.PlaySound(SoundID.Item4, Projectile.Center);
             for (int k = 0; k < 2; k++)
             {
                 float decrease = 3;
