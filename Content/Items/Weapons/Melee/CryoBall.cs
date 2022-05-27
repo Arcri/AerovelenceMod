@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
             OnHit++;
             if (OnHit == 9)
             {
-                SoundEngine.PlaySound(SoundID.Item67, (int)Projectile.Center.X, (int)Projectile.Center.Y);
+                SoundEngine.PlaySound(SoundID.Item67, Projectile.Center);
 
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<CryoBallProj2>(), damage, 0, Projectile.owner);
                 OnHit = 0;
