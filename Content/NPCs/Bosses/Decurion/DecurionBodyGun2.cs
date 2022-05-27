@@ -8,7 +8,7 @@ using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
 {
-    public class DecurionBodyGun2 : ModNPC
+    public class DecurionBodyRocket2 : ModNPC
     {
         int i;
         public override void SetStaticDefaults()
@@ -38,12 +38,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
         {
             i++;
             Player player = Main.player[NPC.target];
+            float optimalRotation = (float)Math.Atan2(player.position.Y - NPC.position.Y, player.position.X - NPC.position.X) - 3.14159265f;
             Vector2 distanceNorm = player.position - NPC.position;
             distanceNorm.Normalize();
-            if (i % Main.rand.Next(100, 250) == 0)
+            if (i % Main.rand.Next(1000, 2000) == 0)
             {
                 SoundEngine.PlaySound(SoundID.Item, NPC.Center);
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 10, distanceNorm.Y * 10, ModContent.ProjectileType<DecurionGunBullet>(), 30, 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center.X, NPC.Center.Y, distanceNorm.X * 10, distanceNorm.Y * 10, ModContent.ProjectileType<DecurionRocket>(), 30, 0f, Main.myPlayer, 0f, 0f);
             }
 
             NPC parent = Main.npc[(int)NPC.ai[0]];
@@ -54,8 +55,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
             }
             Vector2 offset = new Vector2(24, -20);
             NPC.Center = parent.Center + offset.RotatedBy(parent.rotation);
-            NPC.rotation = parent.rotation;
-
+            
+            NPC.rotation = optimalRotation;
         }
     }
 }
