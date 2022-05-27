@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 8f;
         }
-        public override bool CanConsumeAmmo(Player player)
+        public override bool CanConsumeAmmo(Item ammo, Player player)
         {
             return Main.rand.NextFloat() >= .33f;
         }
