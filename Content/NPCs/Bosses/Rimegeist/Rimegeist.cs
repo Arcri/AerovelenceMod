@@ -599,7 +599,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             // Main.NewText("Dash Fly");
                             if (moveSpeed == 0)
                             {
-                                SoundEngine.PlaySound(new LegacySoundStyle(SoundID.Roar, 0), NPC.Center);
+                                SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                                 moveSpeed = Math.Sign(player.Center.X - NPC.Center.X) * 10;
                                 if (PhaseTwo < 1)
                                 {
@@ -716,12 +716,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     {
                         PhaseTwo = 1;
 
-                        Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(new LegacySoundStyle(SoundID.Roar, 2), NPC.Center);
+                        /*Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
                         if (snd != null)
                         {
                             snd.Pitch = -0.25f;
-                        }
+                        }*/
+
+                        SoundEngine.PlaySound(SoundID.Roar, NPC.Center); //should be pitched down but I can't figure it out rn
 
                         for (int i = 0; i < 7; i++)
                             if (Main.netMode == NetmodeID.Server)
@@ -765,13 +767,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         {
                             NPC.velocity = Vector2.Normalize(move) * 32f;
 
-                            Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(new LegacySoundStyle(SoundID.Roar, 0), NPC.Center);
-
-                            if (snd != null)
-                            {
-                                snd.Pitch = 0.50f;
-                            }
-
+                            SoundEngine.PlaySound(SoundID.ForceRoar, NPC.Center);
                         }
 
                         if (dashTimer % 10 == 0)
@@ -1461,4 +1457,3 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
     }
 }
-
