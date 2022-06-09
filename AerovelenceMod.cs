@@ -228,6 +228,8 @@ namespace AerovelenceMod
 				var shaderRef = new Ref<Effect>(Instance.GetEffect(shaderPath));
 				(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
 
+				GameShaders.Misc["AerovelenceMod:SandAura"] = new MiscShaderData(new Ref<Effect>(GetEffect("Effects/SandAura")), "Aura").UseImage("Images/Misc/Perlin");
+
 			}
 			GemGrapplingRange.Load();
 
