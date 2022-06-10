@@ -55,7 +55,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged.Sandstorm
 				Main.dust[mydust].noGravity = false;
 				
 			}
-			Main.PlaySound(SoundID.Item27.WithVolume(0.6f).WithPitchVariance(-1f), projectile.Center);
+			//Main.PlaySound(SoundID.Item27.WithVolume(0.6f).WithPitchVariance(-1f), projectile.Center);
+			Main.PlaySound(SoundID.DD2_CrystalCartImpact.WithVolume(0.6f).WithPitchVariance(-1f), projectile.Center);
 
 		}
     }
