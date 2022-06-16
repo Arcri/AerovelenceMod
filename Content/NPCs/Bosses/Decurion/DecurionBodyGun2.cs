@@ -8,7 +8,7 @@ using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Decurion
 {
-    public class DecurionBodyRocket2 : ModNPC
+    public class DecurionBodyGun2 : ModNPC
     {
         int i;
         public override void SetStaticDefaults()
