@@ -28,21 +28,20 @@ namespace AerovelenceMod.Content.Tiles.IceExpansion
 			GrowsOnTileId = new int[1] { ModContent.TileType<ValleyGrass>() };
 		}
 
-		public override void SetTreeFoliageSettings(Tile tile, int xoffset, ref int treeFrame, ref int floorY, ref int topTextureFrameWidth, ref int topTextureFrameHeight)
-		{
-			// Copied from ExampleMod on 5/26/2022 at 11:36PM EST
-			// This function is for advanced stuff
-		}
+        public override void SetTreeFoliageSettings(Tile tile, ref int xoffset, ref int treeFrame, ref int floorY, ref int topTextureFrameWidth, ref int topTextureFrameHeight)
+        {
+            throw new System.NotImplementedException();
+        }
 
 		public override int CreateDust()
 		{
 			return DustType<Sparkle>();
 		}
 
-		public override int GrowthFXGore()
-		{
-			return ModContent.Find<ModGore>("Gores/ExampleTreeFX").Type;
-		}
+		//public override int GrowthFXGore()
+		//{
+		//	return ModContent.Find<ModGore>("Gores/ExampleTreeFX").Type;
+		//}
 
 		public override int DropWood()
 		{
