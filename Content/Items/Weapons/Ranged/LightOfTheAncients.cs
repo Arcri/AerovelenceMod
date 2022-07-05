@@ -124,7 +124,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     }
     public class LightOfTheAncientsExplosion : ModProjectile
     {
-        public override string Texture => "Terraria/Item_" + ItemID.HermesBoots;
+        public override string Texture => "Terraria/Images/Item_" + ItemID.HermesBoots;
 
         public override void SetDefaults()
         {

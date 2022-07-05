@@ -171,6 +171,6 @@ namespace AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns
             Projectile.velocity.Y += 0.2f;
         }
 
-        public override string Texture => "Terraria/Projectile_"+ ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_"+ ProjectileID.None;
     }
 }

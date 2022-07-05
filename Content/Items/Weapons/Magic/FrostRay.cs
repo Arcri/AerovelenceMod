@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 			bounces = 1;
 
 		}
-		public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
+		public override string Texture { get { return "Terraria/Images/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{

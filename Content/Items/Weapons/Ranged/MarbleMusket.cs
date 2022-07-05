@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.useTime = Item.useAnimation = 35;
            
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.holdStyle = ItemHoldStyleID.HoldGuitar;
+            Item.holdStyle = ItemHoldStyleID.HoldHeavy;
             Item.UseSound = SoundID.Item110;
             Item.noMelee = true;
             Item.knockBack = 6;
@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
     }
     public class MarbleBullet : ModProjectile
     {
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Marble Bullet");

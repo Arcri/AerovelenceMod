@@ -58,7 +58,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Projectile.tileCollide = true;
             Projectile.penetrate = 300;
         }
-        public override string Texture { get { return "Terraria/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
+        public override string Texture { get { return "Terraria/Images/Projectile_" + ProjectileID.ShadowBeamFriendly; } }
 
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)

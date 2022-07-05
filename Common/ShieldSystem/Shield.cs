@@ -401,6 +401,6 @@ namespace AerovelenceMod.Common.ShieldSystem
 			}
 		}
 
-		public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+		public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
 	}
 }

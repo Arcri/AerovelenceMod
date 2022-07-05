@@ -38,6 +38,6 @@ namespace AerovelenceMod.Content.Projectiles
 			Projectile.ai[0]++;
 		}
 
-		public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+		public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
 	}
 }

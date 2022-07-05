@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
             storedpos.X = 15 * direction;
             Projectile.velocity = new Vector2((float)(storedpos.X*Math.Cos(mouseangleAlpha) - storedpos.Y*Math.Sin(mouseangleAlpha)), (float)(storedpos.X*Math.Sin(mouseangleAlpha)+storedpos.Y*Math.Cos(mouseangleAlpha)) * direction);
         }
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
         public override void Kill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item10, Projectile.position);

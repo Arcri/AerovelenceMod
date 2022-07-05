@@ -1153,7 +1153,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
     public class IceBlast : ModProjectile
     {
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.FrostBlastHostile;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.FrostBlastHostile;
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.FrostBlastHostile);
@@ -1201,8 +1201,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             Projectile.friendly = false;
             Projectile.aiStyle = -1;
             Projectile.tileCollide = false;
-            Projectile.DamageType = DamageClass.Magic;
-            Projectile.friendly = true;
             Projectile.timeLeft = 180;
         }
         int radians = 16;
@@ -1270,7 +1268,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             Projectile.height = 18;
             Projectile.aiStyle = -1;
             Projectile.tileCollide = false;
-            Projectile.DamageType = DamageClass.Magic;
             Projectile.friendly = true;
             Projectile.timeLeft = 180;
         }
@@ -1405,7 +1402,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
     public class IcyLaserProj : ModProjectile
     {
 
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
 
         public override void SetDefaults()
         {
@@ -1413,7 +1410,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
             Projectile.aiStyle = -1;
             Projectile.friendly = false;
-            Projectile.DamageType = DamageClass.Magic;
             Projectile.penetrate = 5;
 
             Projectile.timeLeft = 180;

@@ -707,7 +707,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Summoning
 			
 
 			private static int AquaSceptreAiStyle;
-			public override string Texture => "Terraria/Projectile_" + ProjectileID.WaterStream;
+			public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.WaterStream;
 			public override void SetStaticDefaults()
 			{
 				DisplayName.SetDefault("Sea Spray");

@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
     {
         public int i;
         public int counter = 0;
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
         private readonly int oneHelixRevolutionInUpdateTicks = 30;
         public override void SetStaticDefaults()
         {

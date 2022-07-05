@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             NPC.value = Item.buyPrice(0, 22, 11, 5);
             if (!Main.dedServ)
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Rimegeist");
+                Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Cyvercry");
             }
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
@@ -863,7 +863,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Projectile.rotation = MathHelper.ToRadians(90) + Projectile.velocity.ToRotation();
             if (Projectile.timeLeft == 420)
             {
-                SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
+                //SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
                 for (int i = 0; i < 360; i += 5)
                 {
                     Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));

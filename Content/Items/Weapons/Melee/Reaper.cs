@@ -164,7 +164,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
 
         ////////////////
 
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.WaterStream;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.WaterStream;
 
 
 
