@@ -11,8 +11,6 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Ranged
     public class AdamantitePulsarExplosion : ModProjectile
     {
 
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Electromagnetic Explosion");

@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using AerovelenceMod.Gores;
 
 namespace AerovelenceMod.Content.Items.Weapons.Thrown
 {
@@ -87,9 +88,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
                 Dust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, 67, Projectile.oldVelocity.X * 0.5f, Projectile.oldVelocity.Y * 0.5f);
             }
             SoundEngine.PlaySound(SoundID.Item27);
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore1").Type, 1f); 
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore2").Type, 1f);
-            Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore3").Type, 1f);
+            //Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, ModContent.GoreType<IcicleKnifeGore1>() Mod.Find<ModGore>("Gores/IcicleKnifeGore1").Type, 1f); 
+            //Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore2").Type, 1f);
+            //Gore.NewGore(entitySource, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/IcicleKnifeGore3").Type, 1f);
 
             return true;
         }

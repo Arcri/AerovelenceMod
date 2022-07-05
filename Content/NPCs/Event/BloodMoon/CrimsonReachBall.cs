@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.NPCs.Event.BloodMoon
     {
         // Set this to your mod's empty texture.
         // Since I dont have any in my test mod, I'm just using a vanilla one and setting the proj alpha to 255.
-        public override string Texture => "Terraria/Item_" + ItemID.CrimtaneOre;
+        public override string Texture => "Terraria/Images/Item_" + ItemID.CrimtaneOre;
 
         public override void SetDefaults()
         {

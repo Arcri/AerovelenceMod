@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         }
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item, Projectile.position);
+            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
 
             int damage = (int)(Projectile.damage);
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center.X, Projectile.Center.Y, 0, 0, ModContent.ProjectileType<SnowballProjectileThree>(), damage, 0, Projectile.owner);
@@ -84,7 +84,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
 
         public class SnowballProjectileTwo : ModProjectile
         {
-            public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+            public override string Texture => "Terraria/Items/Projectile_" + ProjectileID.None;
             public override void SetDefaults()
             {
                 Projectile.width = Projectile.height = 8;

@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
     {
 
         public override void SetStaticDefaults() => DisplayName.SetDefault("Diamond Blast Projectile");
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
 
 
         public override void SetDefaults()

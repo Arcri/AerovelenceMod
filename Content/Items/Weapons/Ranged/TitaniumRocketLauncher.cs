@@ -110,7 +110,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
 
 			public override void Kill(int timeLeft)
 			{
-				SoundEngine.PlaySound(SoundID.Item, Projectile.position);
+				SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion, Projectile.position);
 
 				Projectile.position.X = Projectile.position.X + (Projectile.width / 2);
 				Projectile.position.Y = Projectile.position.Y + (Projectile.width / 2);

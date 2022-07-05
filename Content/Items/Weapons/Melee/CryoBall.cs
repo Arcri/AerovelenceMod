@@ -141,7 +141,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Melee
     }
     public class CryoBallProj2 : ModProjectile
     {
-        public override string Texture => "Terraria/Projectile_" + ProjectileID.None;
+        public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.None;
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 200;

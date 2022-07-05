@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
             Vector2 muzzleOffset = Vector2.Normalize(velocity) * 25f;
 
             float numberProjectiles = 3 + Main.rand.Next(3); // 3, 4, or 5 shots
-            float rotation = MathHelper.ToRadians(45);
+            float rotation = MathHelper.ToRadians(30);
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
                 position += muzzleOffset;
@@ -77,7 +77,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Magic
 
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .2f;
+                Vector2 perturbedSpeed = velocity.RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * .6f;
 
                 float scale = 1f - (Main.rand.NextFloat() * .3f);
                 perturbedSpeed = perturbedSpeed * scale;

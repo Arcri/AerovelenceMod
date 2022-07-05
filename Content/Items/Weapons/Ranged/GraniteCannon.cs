@@ -33,7 +33,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Item.value = Item.sellPrice(0, 0, 55, 40);
             Item.rare = ItemRarityID.Green;
             Item.autoReuse = false;
-            Item.shoot = AmmoID.Bullet;
+            Item.shoot = ModContent.ProjectileType<GraniteChunk>();
             Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 3.2f;
         }
@@ -46,11 +46,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ranged
             Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(5));
             velocity.X = perturbedSpeed.X;
             velocity.Y = perturbedSpeed.Y;
-            if (type == ProjectileID.Bullet)
-            {
-                type = ModContent.ProjectileType<GraniteChunk>();
-            }
-            return true;
+
+            Projectile.NewProjectile(source, player.Center, perturbedSpeed, ModContent.ProjectileType<GraniteChunk>(), damage, knockback);
+            //if (type == ProjectileID.Bullet)
+            //{
+            //   type = ModContent.ProjectileType<GraniteChunk>();
+            //}
+            return false;
         }
         public override void AddRecipes()
         {

@@ -76,7 +76,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
         {
             Projectile.width = 26;
             Projectile.height = 44;
-            Projectile.timeLeft = 560;
+            Projectile.timeLeft = 520;
             Projectile.penetrate = -1;
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -99,7 +99,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             Projectile.rotation = MathHelper.ToRadians(90) + Projectile.velocity.ToRotation();
             if (Projectile.timeLeft == 420)
             {
-                SoundEngine.PlaySound(SoundID.Item, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item45, Projectile.Center);
                 for (int i = 0; i < 360; i += 5)
                 {
                     Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
