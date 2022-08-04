@@ -60,9 +60,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Thrown
             var s = Projectile.GetSource_Death();
             SoundEngine.PlaySound(SoundID.Item70, Projectile.Center);
              SoundEngine.PlaySound(SoundID.Shatter, Projectile.Center);
-             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore1").Type, 1f);
-             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore2").Type, 1f);
-             Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore3").Type, 1f);
+             //Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore1").Type, 1f);
+             //Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore2").Type, 1f);
+             //Gore.NewGore(s, Projectile.position, Vector2.Zero, Mod.Find<ModGore>("Gores/CanisterGore3").Type, 1f);
             for (double i = 0; i < 6.28; i += Main.rand.NextFloat(1f, 2f))
             {
                 int lightningproj = Projectile.NewProjectile(s, Projectile.Center, new Vector2((float)Math.Sin(i), (float)Math.Cos(i)) * 2.5f, ModContent.ProjectileType<ElectrapulseCanisterProj2>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
