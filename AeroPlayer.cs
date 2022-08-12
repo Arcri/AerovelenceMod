@@ -5,12 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using AerovelenceMod.Content.Buffs;
-using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework.Graphics;
-using AerovelenceMod.Common.ShieldSystem;
-using AerovelenceMod.Content.Projectiles.NPCs.CrystalCaverns;
-using AerovelenceMod.Content.Projectiles.Other.ArmorSetBonus;
 using Terraria.Audio;
 using AerovelenceMod.Common.Systems;
 
@@ -18,6 +13,7 @@ namespace AerovelenceMod
 {
 	public class AeroPlayer : ModPlayer
 	{
+		/*
 
 		public int Shake = 0;
 
@@ -119,6 +115,7 @@ namespace AerovelenceMod
 		}
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
+			
 			if (KeybindSystem.ArmorHotKey.JustPressed)
 				if (MiningAbilityCooldown == false)
 
@@ -127,15 +124,19 @@ namespace AerovelenceMod
 						Terraria.Projectile.NewProjectile(Player.GetSource_Misc("SetBonus_AmbrosiaSetBonus"), Player.Center, (Terraria.Main.MouseWorld - Player.Center) / 10, ModContent.ProjectileType<MiningEnergyBlast>(), 1, 0);
 						Player.AddBuff(ModContent.BuffType<MiningAbilityCooldown>(), 100);
 					}
+			
 		}
 		public override void OnHitNPC(Terraria.Item item, Terraria.NPC target, int damage, float knockback, bool crit)
 		{
+			
 			if (FrostMelee)
 				if (Terraria.Main.rand.NextBool(2))
 					target.AddBuff(BuffID.Frostburn, 120);
+			
 		}
 		public override void OnHitByNPC(Terraria.NPC npc, int damage, bool crit)
 		{
+			
 			Terraria.Player player = Terraria.Main.player[npc.target];
 			if (PhanticMeleeBonus)
 			{
@@ -156,9 +157,11 @@ namespace AerovelenceMod
 					Terraria.Projectile.NewProjectile(player.GetSource_OnHurt(player), player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<BurnshockCrystal>(), 40, 1f, Terraria.Main.myPlayer);
 				}
 			}
+			
 		}
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
+			
 			if (ShieldOn)
 			{
 				foreach (Item item in Player.armor)
@@ -174,10 +177,12 @@ namespace AerovelenceMod
 					}
 				}
 			}
+			
 			return true;
 		}
 		public override void OnHitByProjectile(Terraria.Projectile proj, int damage, bool crit)
 		{
+			/*
 			if (PhanticMeleeBonus)
 			{
 				if (damage > 10)
@@ -186,9 +191,11 @@ namespace AerovelenceMod
 					Terraria.Projectile.NewProjectile(Projectile.GetSource_None(), Player.Center + offset, new Vector2(0 + ((float)Terraria.Main.rand.Next(20) / 10) - 1, -3 + ((float)Terraria.Main.rand.Next(20) / 10) - 1), ModContent.ProjectileType<PhanticSoul>(), 6, 1f, Terraria.Main.myPlayer);
 				}
 			}
+			
 		}
 		public override void OnHitNPCWithProj(Terraria.Projectile proj, Terraria.NPC target, int damage, float knockback, bool crit)
 		{
+			/*
 			if (QueensStinger)
 				if (proj.type != 181)
 					if (Terraria.Main.rand.NextBool(10))
@@ -219,6 +226,7 @@ namespace AerovelenceMod
 				Vector2 velocity = Vector2.One.RotatedBy(rot) * -1 * 12f;
 				Terraria.Projectile.NewProjectile(Player.GetSource_Misc("SetBonus_PhanticSetBonus"), position, velocity, ModContent.ProjectileType<PhanticSoul>(), 30, Player.HeldItem.knockBack, Player.whoAmI, 0, 0);
 			}
+			
 		}
 		public override void PreUpdate()
 		{
@@ -270,12 +278,14 @@ namespace AerovelenceMod
 		}
 		internal void DetouredItemCheck(On.Terraria.Player.orig_ItemCheck orig, Terraria.Player self, int i)
 		{
+			
 			if (self.GetModPlayer<AeroPlayer>().PhanticMagicBonus && self.HeldItem.DamageType == DamageClass.Magic && Terraria.Main.rand.NextFloat() < 0.125f)
 				if (!self.releaseUseItem && self.itemAnimation == self.HeldItem.useAnimation - 1 && self.itemAnimation != 0)
-					Terraria.Projectile.NewProjectile((IEntitySource)self, self.Center, self.DirectionTo(Terraria.Main.MouseWorld) * self.HeldItem.shootSpeed / 2,
-						ModContent.ProjectileType<PhanticSoul>(), 40, self.HeldItem.knockBack, self.whoAmI);
+					//Terraria.Projectile.NewProjectile((IEntitySource)self, self.Center, self.DirectionTo(Terraria.Main.MouseWorld) * self.HeldItem.shootSpeed / 2,
+						//ModContent.ProjectileType<PhanticSoul>(), 40, self.HeldItem.knockBack, self.whoAmI);
 
 			orig(self, i);
+			
 		}
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
@@ -465,7 +475,7 @@ namespace AerovelenceMod
 
 				Main.playerDrawData.Add(data);
 			}
-		});*/
+		});
 		public override void ModifyDrawLayerOrdering(IDictionary<PlayerDrawLayer, PlayerDrawLayer.Position> positions)
 		{
 			//MiscEffectsBack.visible = true;
@@ -492,5 +502,7 @@ namespace AerovelenceMod
 			Main.screenPosition.X = (int)Main.screenPosition.X;
 			Main.screenPosition.Y = (int)Main.screenPosition.Y;
 		}
+
+	*/
 	}
 }

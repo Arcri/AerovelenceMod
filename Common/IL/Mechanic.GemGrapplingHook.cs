@@ -32,10 +32,10 @@ namespace AerovelenceMod.Common.IL
             {
                 AeroPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<AeroPlayer>();
 
-                if (modPlayer.UpgradedHooks)
-                {
-                    return (originalValue + 200);
-                }
+                //if (modPlayer.UpgradedHooks)
+                //{
+                    //return (originalValue + 200);
+                //}
 
                 return (originalValue);
             });

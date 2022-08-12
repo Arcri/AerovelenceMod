@@ -1,16 +1,4 @@
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.Items.Accessories;
-using AerovelenceMod.Content.Items.Others.Crafting;
-using AerovelenceMod.Content.Items.Placeables.Blocks;
-using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
-using AerovelenceMod.Content.Items.Weapons.Magic;
-using AerovelenceMod.Content.Items.Weapons.Melee;
-using AerovelenceMod.Content.Items.Weapons.Ranged;
-using AerovelenceMod.Content.Items.Weapons.Thrown;
-using AerovelenceMod.Content.NPCs.Cave;
-using AerovelenceMod.Content.NPCs.CrystalCaverns;
-using AerovelenceMod.Content.NPCs.Event.BloodMoon;
-using AerovelenceMod.Content.NPCs.General;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,68 +17,68 @@ namespace AerovelenceMod.Common.Globals.NPCs
 			{
                 // Ryan - Swapped mod.ItemType("key") to ModContent.ItemType<T>()
 				case NPCID.Probe:
-					if (Main.rand.NextBool(1001))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<PlaroveneBlaster>());
+					//if (Main.rand.NextBool(1001))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<PlaroveneBlaster>());
                     break;
 
 				case NPCID.TheDestroyer:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<PlaroveneBlaster>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<PlaroveneBlaster>());
                     break;
 
 				case NPCID.SkeletronPrime:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<LazX>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<LazX>());
                     break;
 
 				case NPCID.PrimeLaser:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<LazX>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<LazX>());
                     break;
 
 				case NPCID.Retinazer:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<ClockworkLazinator>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<ClockworkLazinator>());
                     break;
 
 				case NPCID.Plantera:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<CrystalGlade>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<CrystalGlade>());
                     break;
 
 				case NPCID.EyeofCthulhu:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<CthulhusWrath>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<CthulhusWrath>());
                     break;
 
 				case NPCID.KingSlime:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<SlimyKnife>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<SlimyKnife>());
                     break;
 
 				case NPCID.QueenBee:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<BookOfBees>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<BookOfBees>());
                     break;
 
 				case NPCID.SkeletronHead:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<SkullBow>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<SkullBow>());
                     break;
 
 				case NPCID.Golem:
-                    if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<NapalmLauncher>());
+                    //if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<NapalmLauncher>());
                     break;
 
 				case NPCID.WallofFleshEye:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<VampiricRapier>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<VampiricRapier>());
                     break;
 
 				case NPCID.Bunny:
-					if (Main.rand.NextBool(1001))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<BunnyCannon>());
+					//if (Main.rand.NextBool(1001))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<BunnyCannon>());
                     break;
 
 				/*case NPCID.PossessedArmor:
@@ -99,18 +87,18 @@ namespace AerovelenceMod.Common.Globals.NPCs
                     break;*/
 
 				case NPCID.WalkingAntlion:
-					if (Main.rand.NextBool(26))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<MandiBlaster>());
+					//if (Main.rand.NextBool(26))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<MandiBlaster>());
                     break;
 
 				case NPCID.DarkCaster:
-					if (Main.rand.NextBool(26))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<SorcerersStaff>());
+					//if (Main.rand.NextBool(26))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<SorcerersStaff>());
                     break;
 
 				case NPCID.BlueSlime:
-					if (Main.rand.NextBool(101))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<SlimyGreatsword>());
+					//if (Main.rand.NextBool(101))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<SlimyGreatsword>());
                     break;
 
 				/*case NPCID.Poltergeist:
@@ -119,13 +107,13 @@ namespace AerovelenceMod.Common.Globals.NPCs
                     break;*/
 
 				case NPCID.Hellbat:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<LightOfTheAncients>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<LightOfTheAncients>());
                     break;
 
 				case NPCID.FireImp:
-					if (Main.rand.NextBool(51))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<FlameShot>());
+					//if (Main.rand.NextBool(51))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<FlameShot>());
                     break;
 
 				/*case NPCID.TacticalSkeleton:
@@ -135,8 +123,8 @@ namespace AerovelenceMod.Common.Globals.NPCs
 
 
                 case NPCID.Hornet:
-					if (Main.rand.NextBool(26))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<Stinger>());
+					//if (Main.rand.NextBool(26))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<Stinger>());
                     break;
 
 				/*case NPCID.ChaosElemental:
@@ -150,10 +138,10 @@ namespace AerovelenceMod.Common.Globals.NPCs
 				case NPCID.IceBat:
 				case NPCID.UndeadViking:
 				case NPCID.CyanBeetle:
-					if (Main.rand.NextBool(11))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<FrostShard>());
-                    else if (DownedWorld.DownedRimegeist&& (Main.rand.Next(21) == 0))
-                        Item.NewItem(s, npc.getRect(), ModContent.ItemType<KelvinCore>());
+					//if (Main.rand.NextBool(11))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<FrostShard>());
+                    //else if (DownedWorld.DownedRimegeist&& (Main.rand.Next(21) == 0))
+                        //Item.NewItem(s, npc.getRect(), ModContent.ItemType<KelvinCore>());
                     break;
                     case NPCID.VoodooDemon:
                     case NPCID.RedDevil:
@@ -164,13 +152,14 @@ namespace AerovelenceMod.Common.Globals.NPCs
                     case NPCID.Lavabat:
                         if (Main.rand.NextBool(11))
                         {
-                            if(Main.hardMode)
-                                Item.NewItem(s, npc.getRect(), ModContent.ItemType<EmberFragment>());
+                            //if(Main.hardMode)
+                                //Item.NewItem(s, npc.getRect(), ModContent.ItemType<EmberFragment>());
                         }
 
                         break;
             }
 
+            /*
             if (npc.type == ModContent.NPCType<LuminousDefender>())
                 if (Main.rand.NextBool(2))
                     Item.NewItem(s, npc.getRect(), ModContent.ItemType<LustrousCrystal>());
@@ -249,6 +238,7 @@ namespace AerovelenceMod.Common.Globals.NPCs
             if (npc.type == ModContent.NPCType<OvergrownTumblerock>())
                 if (Main.rand.NextBool(1)) // what
                     Item.NewItem(s, npc.getRect(), ModContent.ItemType<CavernCrystal>(), Main.rand.Next(5, 15));
+            */
         }
-	}
+    }
 }

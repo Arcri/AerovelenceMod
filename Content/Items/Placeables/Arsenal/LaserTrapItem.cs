@@ -1,4 +1,3 @@
-using AerovelenceMod.Content.Tiles.Arsenal;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
             Item.useAnimation = 15;
             Item.useTime = 10;
 
-            Item.createTile = ModContent.TileType<LaserTrap>();
+            //Item.createTile = ModContent.TileType<LaserTrap>();
 
             Item.useStyle = ItemUseStyleID.Swing;
         }

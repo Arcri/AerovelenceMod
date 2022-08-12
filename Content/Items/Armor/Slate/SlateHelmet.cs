@@ -1,4 +1,3 @@
-using AerovelenceMod.Content.Items.Placeables.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,12 +21,12 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
 
             var ap = player.GetModPlayer<AeroPlayer>();
 
-            int axeProjectileType = ModContent.ProjectileType<Projectiles.Other.ArmorSetBonus.LumberjackAxe>();
-            if (player.ownedProjectileCounts[axeProjectileType] < 1)
-            {
-                Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, default, axeProjectileType, 25, 0.5f, player.whoAmI);
-            }
-            ap.lumberjackSetBonus = true;
+            //int axeProjectileType = ModContent.ProjectileType<Projectiles.Other.ArmorSetBonus.LumberjackAxe>();
+            //if (player.ownedProjectileCounts[axeProjectileType] < 1)
+            //{
+                //Projectile.NewProjectile(player.GetSource_FromThis(), player.Center, default, axeProjectileType, 25, 0.5f, player.whoAmI);
+            //}
+            //ap.lumberjackSetBonus = true;
             player.setBonus = "Defense and melee speed increased slightly while in the cavern layer\nIncreases all damage by 10% and summoning damage by 15%\nThe Slate sword will now shoot a rock that explodes\nA sharp axe accompanies you...";
 			if(player.ZoneRockLayerHeight)
             {
@@ -54,11 +53,13 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
         }
         public override void AddRecipes()
         {
+            /*
             CreateRecipe(1)
                 .AddIngredient(ModContent.ItemType<SlateOre>(), 55)
                 .AddRecipeGroup("Wood", 20)
                 .AddTile(TileID.Anvils)
                 .Register();
+            */
         }
     }
 }

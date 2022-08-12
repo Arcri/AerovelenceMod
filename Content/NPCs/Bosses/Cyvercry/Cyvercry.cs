@@ -1,10 +1,4 @@
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.Items.Armor.Vanity;
-using AerovelenceMod.Content.Items.Placeables.Trophies;
-using AerovelenceMod.Content.Items.TreasureBags;
-using AerovelenceMod.Content.Items.Weapons.Magic;
-using AerovelenceMod.Content.Items.Weapons.Melee;
-using AerovelenceMod.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -91,6 +85,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            /*
             var entitySource = NPC.GetSource_Death();
 
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CyvercryBag>()));
@@ -126,6 +121,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 if (rand == 3)
                     Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<Oblivion>());
             }
+            */
         }
 
 

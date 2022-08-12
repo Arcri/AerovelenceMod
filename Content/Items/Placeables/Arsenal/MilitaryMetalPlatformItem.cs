@@ -1,5 +1,4 @@
-﻿using AerovelenceMod.Content.Tiles.Arsenal;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
             Item.useStyle = ItemUseStyleID.Swing;
             Item.value = Item.sellPrice(0, 0, 0, 0);
             Item.consumable = true;
-            Item.createTile = ModContent.TileType<MilitaryMetalPlatform>();
+            //Item.createTile = ModContent.TileType<MilitaryMetalPlatform>();
         }
         public override void AddRecipes()
         {

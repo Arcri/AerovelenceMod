@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using AerovelenceMod.Common.Utilities;
-using AerovelenceMod.Content.Tiles.Ores;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
@@ -14,8 +13,10 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
     {
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
+            /*
             int shiniesIndex = tasks.FindIndex(i => i.Name.Equals("Shinies"));
             tasks.TryInsert(shiniesIndex, new PassLegacy("Aerovelence Ores", AerovelenceOres));
+            */
         }
 
         private void AerovelenceOres(GenerationProgress progress, GameConfiguration gameConfiguration)
@@ -31,8 +32,8 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
                 int x = WorldGen.genRand.Next(0, Main.maxTilesX);
                 int y = WorldGen.genRand.Next((int)WorldGen.rockLayerLow, Main.maxTilesY);
 
-                WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 15), WorldGen.genRand.Next(2, 15),
-                    (ushort)ModContent.TileType<SlateOreBlock>());
+                //WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 15), WorldGen.genRand.Next(2, 15),
+                    //(ushort)ModContent.TileType<SlateOreBlock>());
             }
         }
     }

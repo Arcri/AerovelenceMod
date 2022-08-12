@@ -5,7 +5,6 @@ using AerovelenceMod.Core;
 using AerovelenceMod.Backgrounds.Skies;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Common.IL;
-using AerovelenceMod.Content.Items.Placeables.Blocks;
 using AerovelenceMod.Core.Prim;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -14,21 +13,6 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
-using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
-using AerovelenceMod.Content.Items.BossSummons;
-using System;
-using AerovelenceMod.Content.Items.Weapons.Ranged;
-using AerovelenceMod.Content.Items.Weapons.Thrown;
-using AerovelenceMod.Content.Items.Weapons.Melee;
-using AerovelenceMod.Content.Items.Weapons.Magic;
-using AerovelenceMod.Content.Items.TreasureBags;
-using AerovelenceMod.Content.Items.Accessories;
-using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.Items.Placeables.Trophies;
-using AerovelenceMod.Content.Items.Armor.Vanity;
-using AerovelenceMod.Content.Items.Placeables.MusicBoxes;
-using AerovelenceMod.Content.Items.Weapons.Summoning;
-using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 
 namespace AerovelenceMod
 {
@@ -333,7 +317,7 @@ namespace AerovelenceMod
 		{
 			On.Terraria.Main.DrawProjectiles += Main_DrawProjectiles;
 			AeroPlayer aeroPlayer = new AeroPlayer();
-			On.Terraria.Player.ItemCheck += aeroPlayer.DetouredItemCheck;
+			//On.Terraria.Player.ItemCheck += aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw += DrawMoonlordLayer;
 		}
 
@@ -341,7 +325,7 @@ namespace AerovelenceMod
 		{
 			On.Terraria.Main.DrawProjectiles -= Main_DrawProjectiles;
 			AeroPlayer aeroPlayer = new AeroPlayer();
-			On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
+			//On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
 		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
