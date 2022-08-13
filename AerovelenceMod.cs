@@ -13,6 +13,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
+using ReLogic.Content;
 
 namespace AerovelenceMod
 {
@@ -224,6 +225,9 @@ namespace AerovelenceMod
 
             if (Main.netMode != NetmodeID.Server)
 			{
+
+				Ref<Effect> MiscGlow = new Ref<Effect>(Assets.Request<Effect>("Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["GlowMisc"] = new MiscShaderData(MiscGlow, "Glow");
 
 				LegElectricity = Instance.Assets.Request<Effect>("Effects/LegElectricity").Value;
 				RailgunShader = Instance.Assets.Request<Effect>("Effects/RailgunShader").Value;
