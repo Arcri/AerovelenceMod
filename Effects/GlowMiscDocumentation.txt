@@ -1,5 +1,8 @@
 This shader is a bit strange. Basically if the alpha value of a color is greater than a threshold, it makes it brighterish. This
 additional brightness can also be sin waved.
+
+It effectively makes thing look more like a lightsaber, where the color doesn't come from the center but the edges
+
 DISCLAIMER: This shader does actually draw black background of textures. Ask me (Linty) if you need help converting 
 one to transparent. Also, this shader might take some finicking to make look right
 
