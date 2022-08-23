@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +7,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
 using ReLogic.Content;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using Terraria.Graphics.Shaders;
+using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
@@ -41,9 +43,16 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
     public class CyverCannonProj : ModProjectile
     {
-        public int Timer;
+        public int Timer = 0;
         public float shootSpeed = 0.5f;
 
+        bool upOrDown = false;
+
+        float dustCycle = 0;
+
+        Vector2 storedPlayerCenter = Vector2.Zero;
+        Vector2 storedCenter = Vector2.Zero;
+        Vector2 storedMouse = Vector2.Zero;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 6;
@@ -69,9 +78,45 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void AI()
         {
-
-            var entitySource = Projectile.GetSource_FromAI();
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             Player player = Main.player[Projectile.owner];
+
+            if (Timer == 0)
+            {
+                int dustInt = 0;
+
+                switch (dustCycle)
+                {
+                    case 0:
+                        dustInt = ModContent.DustType<GlowCircleSoft>();
+                        break;
+                    case 1:
+                        dustInt = ModContent.DustType<GlowCircleRise>();
+                        break;
+                    case 2:
+                        dustInt = ModContent.DustType<GlowCircleSpinner>();
+                        break;
+                    case 3:
+                        dustInt = ModContent.DustType<GlowCircleRiseFlare>();
+                        break;
+                    case 4:
+                        dustInt = ModContent.DustType<GlowCircleQuadStar>();
+                        dustCycle = -1;
+                        break;
+                }
+                dustCycle++;
+
+                for (int j = 0; j < 20; j++)
+                {
+                    GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, dustInt, Vector2.One.RotatedByRandom(6) * 3, 
+                        Color.ForestGreen * 1.5f, 1f, 0.8f, 0f,
+                        dustShader);
+
+                }
+            }
+
+            //Fires at 23, kills at 47
+            var entitySource = Projectile.GetSource_FromAI();
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
             {
                 Projectile.ai[0] += 1f;
@@ -114,8 +159,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                     {
                         //SoundStyle style = new SoundStyle("Terraria/Sounds/Research_2") with { Volume = .4f, Pitch = -.48f, PitchVariance = .34f, MaxInstances = 0, };
                         //SoundEngine.PlaySound(style);
-                        SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1};
-                        SoundEngine.PlaySound(style);
+                        //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1};
+                        //SoundEngine.PlaySound(style);
                     }
                 }
                 if (Projectile.ai[1] == 1f && Projectile.ai[0] != 1f)
@@ -162,9 +207,19 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                             //spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914);
                             //if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
                             //{
-                              //  spinningpoint2 = -Vector2.UnitY;
+                            //  spinningpoint2 = -Vector2.UnitY;
                             //}
-                            Projectile.NewProjectile(entitySource, Projectile.Center.X, Projectile.Center.Y, velocity.X, velocity.Y, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                            if (Timer != 23)
+                            {
+                                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .8f, MaxInstances = 1 };
+                                SoundEngine.PlaySound(style);
+                                Vector2 vecToMouse = (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX);
+                                Vector2 location = Projectile.Center + vecToMouse.SafeNormalize(Vector2.UnitX) * 18;
+                                int a = Projectile.NewProjectile(entitySource, location.X, location.Y, vecToMouse.X, vecToMouse.Y, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                                Main.projectile[a].scale = 1.85f;
+                                Main.projectile[a].CritChance = 100;
+                            }
+
                         }
                     }
                     else
@@ -172,6 +227,47 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         Projectile.Kill();
                     }
                 }
+
+                if (Timer == 27 - 5 || Timer == 31 - 5 || Timer == 35 - 5)
+                {
+                    if (Timer == 27 - 5)
+                    {
+                        storedCenter = Projectile.Center;
+                        storedMouse = Main.MouseWorld;
+                        storedPlayerCenter = player.Center;
+                    }
+                    Vector2 vecToMouse = (storedMouse - storedPlayerCenter).SafeNormalize(Vector2.UnitX);
+                    Vector2 adjustedVelocity = vecToMouse.RotatedBy(MathHelper.ToRadians(4));
+                    Vector2 adjustedVelocity2 = vecToMouse.RotatedBy(MathHelper.ToRadians(-4));
+
+                    //ugly, but only runs 3 times total and is clear
+                    if (upOrDown)
+                    {
+                        if (Timer == 27 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 35 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 31 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    } else
+                    {
+                        if (Timer == 35 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 27 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 31 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                    }
+                    
+
+                    //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
+                    //SoundEngine.PlaySound(style);
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 0, Volume = 0.3f };
+                    SoundEngine.PlaySound(style);
+
+                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
+                    SoundEngine.PlaySound(style2);
+                }
+                if (Timer == 47)
+                {
+                    upOrDown = !upOrDown;
+                    Timer = -1;
+                }
+                Timer++;
             }
         }
         public override void PostDraw(Color lightColor)
@@ -221,14 +317,14 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 LaserRotation = Projectile.velocity.ToRotation();
             Projectile.velocity = Vector2.Zero;
 
-            additional = Math.Clamp(MathHelper.Lerp(additional, 120, 0.04f), 0, 50);
+            additional = Math.Clamp(MathHelper.Lerp(additional, 120 * Projectile.scale, 0.04f), 0, 50 * Projectile.scale);
 
             timer++;
         }
 
         float additional = 0f;
         public override bool PreDraw(ref Color lightColor)
-        {
+         {
             //int sin = (int)(Math.Sin(secondTimer * 0.05) * 40f);
             //var color = new Color(255, 160 + sin, 40 + sin / 2);
 
@@ -253,13 +349,15 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
 
-                float height = 50f - additional; //15
+                float height = (50f * Projectile.scale) - additional; //15
                 int width = (int)(Projectile.Center - endPoint).Length() - 24;
 
                 var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
                 var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
 
                 Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+
 
                 for (int i = 0; i < width; i += 6)
                     Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
@@ -267,9 +365,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 //Main.spriteBatch.End();
                 //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-                float progress = additional / 50f;
+                float progress = additional / (50f * Projectile.scale);
                 var spotTex = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
                 Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f - progress, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f - progress, SpriteEffects.None, 0);
+
 
                 //Main.spriteBatch.End();
                 //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -289,6 +389,20 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             // It will look for collisions on the given line using AABB
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
                 Projectile.Center + unit * 1000, 22, ref point);
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Main.NewText(Projectile.scale);
+            target.immune[Projectile.owner] = 2; //Collision only lasts for 1 frame so it doesn't matter
+            if (crit && Projectile.scale > 1)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Main.player[Projectile.owner].Center, 
+                        new Vector2(6, 0).RotatedByRandom(6), ModContent.ProjectileType<CannonSplit>(), (int)(Projectile.damage * 0.5), 0, Main.myPlayer);
+                }
+            }
         }
     }
 
@@ -343,6 +457,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
     public class CannonSplit : ModProjectile
     {
         public int i;
+        public int timer = 0;
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
@@ -352,6 +467,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Projectile.width = 5;
             Projectile.height = 5;
             Projectile.friendly = true;
+            Projectile.hostile = false;
             Projectile.extraUpdates = 2;
             Projectile.scale = 1f;
             Projectile.timeLeft = 600;
@@ -386,7 +502,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Projectile.localAI[0] = 1f;
             }
             Vector2 move = Vector2.Zero;
-            float distance = 400f;
+            float distance = 4000f;
             bool target = false;
             for (int k = 0; k < 200; k++)
             {
@@ -403,18 +519,19 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 }
                 Projectile.rotation = Projectile.velocity.ToRotation();
             }
-            if (target)
+            if (target && timer >= 20)
             {
                 AdjustMagnitude(ref move);
                 Projectile.velocity = (5 * Projectile.velocity + move) / 6f;
                 AdjustMagnitude(ref Projectile.velocity);
             }
-            if (Projectile.alpha <= 30)
+            if (Projectile.alpha <= 30 && timer % 3 == 0)
             {
                 int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 242);
                 Main.dust[dust].velocity *= 0.1f;
                 Main.dust[dust].noGravity = true;
             }
+            timer++;
         }
 
         private void AdjustMagnitude(ref Vector2 vector)
@@ -422,7 +539,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             float magnitude = (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
             if (magnitude > 3f)
             {
-                vector *= 5f / magnitude;
+                vector *= 3f / magnitude;
             }
         }
     }
