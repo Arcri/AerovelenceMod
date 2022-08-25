@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cyver-Cannon");
-            Tooltip.SetDefault("Fires lasers that split off into homing bolts");
+            Tooltip.SetDefault("Crits at the end of every burst");
         }
 
         public override void SetDefaults()
@@ -81,39 +81,22 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             Player player = Main.player[Projectile.owner];
 
+            /*
             if (Timer == 0)
             {
-                int dustInt = 0;
+                float aim = (player.Center - Main.MouseWorld).ToRotation();
 
-                switch (dustCycle)
+                for (int j = 0; j < 9; j++)
                 {
-                    case 0:
-                        dustInt = ModContent.DustType<GlowCircleSoft>();
-                        break;
-                    case 1:
-                        dustInt = ModContent.DustType<GlowCircleRise>();
-                        break;
-                    case 2:
-                        dustInt = ModContent.DustType<GlowCircleSpinner>();
-                        break;
-                    case 3:
-                        dustInt = ModContent.DustType<GlowCircleRiseFlare>();
-                        break;
-                    case 4:
-                        dustInt = ModContent.DustType<GlowCircleQuadStar>();
-                        dustCycle = -1;
-                        break;
-                }
-                dustCycle++;
+                    float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
 
-                for (int j = 0; j < 20; j++)
-                {
-                    GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, dustInt, Vector2.One.RotatedByRandom(6) * 3, 
-                        Color.ForestGreen * 1.5f, 1f, 0.8f, 0f,
+                    Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center - aim.ToRotationVector2() * 20 + new Vector2(0,16), ModContent.DustType<GlowLine1>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2), 
+                        Color.DeepPink, 0.25f, 0.6f, 0f,
                         dustShader);
-
+                    d.velocity *= 0.75f;
                 }
             }
+            */
 
             //Fires at 23, kills at 47
             var entitySource = Projectile.GetSource_FromAI();
@@ -218,6 +201,22 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                                 int a = Projectile.NewProjectile(entitySource, location.X, location.Y, vecToMouse.X, vecToMouse.Y, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                 Main.projectile[a].scale = 1.85f;
                                 Main.projectile[a].CritChance = 100;
+                                if (Main.projectile[a].ModProjectile is DarkLaser bigLaser)
+                                {
+                                    bigLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2).ToRotation());
+                                }
+
+                                float aim = (player.Center - Main.MouseWorld).ToRotation();
+
+                                for (int m = 0; m < 9; m++)
+                                {
+                                    float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
+
+                                    Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center - aim.ToRotationVector2() * 20 + new Vector2(0, 16), ModContent.DustType<GlowLine1>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
+                                        Color.DeepPink, 0.25f, 0.6f, 0f,
+                                        dustShader);
+                                    d.velocity *= 0.75f;
+                                }
                             }
 
                         }
@@ -241,18 +240,49 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                     Vector2 adjustedVelocity2 = vecToMouse.RotatedBy(MathHelper.ToRadians(-4));
 
                     //ugly, but only runs 3 times total and is clear
+
+                    int pindex = 0;
                     if (upOrDown)
                     {
-                        if (Timer == 27 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                        if (Timer == 35 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                        if (Timer == 31 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 27 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 35 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 31 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     } else
                     {
-                        if (Timer == 35 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                        if (Timer == 27 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                        if (Timer == 31 - 5) Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 35 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 27 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, adjustedVelocity2, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        if (Timer == 31 - 5) pindex = Projectile.NewProjectile(entitySource, storedCenter + vecToMouse.SafeNormalize(Vector2.UnitX) * 18, vecToMouse, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                     }
-                    
+                    Projectile laser = Main.projectile[pindex];
+
+                    int check = 0;
+                    if (laser.velocity == adjustedVelocity) check = 1;
+                    else if (laser.velocity == adjustedVelocity2) check = 2;
+
+                    if (laser.ModProjectile is DarkLaser myLaser)
+                    {
+                        if (check == 0) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2).ToRotation());
+                        if (check == 1) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2 + MathHelper.ToRadians(15)).ToRotation());
+                        if (check == 2) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2 + MathHelper.ToRadians(-15)).ToRotation());
+
+                    }
+
+                    //float aim = (player.Center - Main.MouseWorld).ToRotation();
+
+                    float aim = (storedCenter -  Main.projectile[pindex].Center).ToRotation();
+
+                    for (int j = 0; j < 2; j++)
+                    {
+                        //float dustRot = 0;
+                        //if (Main.rand.NextBool()) dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(-70 * Main.rand.NextFloat(-0.2f, 0.2f));
+                        //else dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(70 * Main.rand.NextFloat(-0.2f, 0.2f));
+                        float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
+
+                        Dust d = GlowDustHelper.DrawGlowDustPerfect(storedCenter - aim.ToRotationVector2() * 20 + new Vector2(0, 16), ModContent.DustType<GlowLine1Fast>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
+                            Color.DeepPink, 0.14f, 0.65f, 0f,
+                            dustShader);
+                        d.velocity *= 0.6f;
+                    }
 
                     //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
                     //SoundEngine.PlaySound(style);
@@ -293,10 +323,14 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
     public class DarkLaser : ModProjectile
     {
+
+        float luminos = 0.8f;
         public Vector2 endPoint;
         public float LaserRotation = (float)Math.PI / 2f;
         int timer = 0;
         int secondTimer = 0;
+
+        float extraAngle = 0;
 
         public override void SetDefaults()
         {
@@ -313,8 +347,15 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void AI()
         {
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
             if (timer == 0)
+            {
+                if (Projectile.scale > 1)
+                    luminos = 0.4f;
                 LaserRotation = Projectile.velocity.ToRotation();
+
+            }
             Projectile.velocity = Vector2.Zero;
 
             additional = Math.Clamp(MathHelper.Lerp(additional, 120 * Projectile.scale, 0.04f), 0, 50 * Projectile.scale);
@@ -324,14 +365,14 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         float additional = 0f;
         public override bool PreDraw(ref Color lightColor)
-         {
+        {
             //int sin = (int)(Math.Sin(secondTimer * 0.05) * 40f);
             //var color = new Color(255, 160 + sin, 40 + sin / 2);
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2);
             myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.8f);
+            myEffect.Parameters["uOpacity"].SetValue(luminos); //0.8
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
 
@@ -391,19 +432,40 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Projectile.Center + unit * 1000, 22, ref point);
         }
 
+        public void setExtraAngle(float input)
+        {
+            extraAngle = input;
+        }
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            Main.NewText(Projectile.scale);
-            target.immune[Projectile.owner] = 2; //Collision only lasts for 1 frame so it doesn't matter
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+            int dustTypee = (Projectile.scale > 1f ? ModContent.DustType<GlowCircleQuadStar>() : ModContent.DustType<GlowCircleDust>());
+
+            for (int j = 0; j < 3 + (Projectile.scale > 1 ? 4 : 0); j++)
+            {
+                Dust d = GlowDustHelper.DrawGlowDustPerfect(target.Center, dustTypee, Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
+                    Color.DeepPink, 0.5f * Projectile.scale, (Projectile.scale > 1f ? 0.4f : 0.7f), 0f,
+                    dustShader);
+                d.velocity *= 0.5f * (Projectile.scale > 1f ? 1.5f : 1f);
+
+            }
+
+            target.immune[Projectile.owner] = 2; //Collision only lasts for 1 frame so it doesn't matter that it is this low 
+            /*
             if (crit && Projectile.scale > 1)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Main.player[Projectile.owner].Center, 
-                        new Vector2(6, 0).RotatedByRandom(6), ModContent.ProjectileType<CannonSplit>(), (int)(Projectile.damage * 0.5), 0, Main.myPlayer);
+                    int p = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Main.player[Projectile.owner].Center, 
+                        LaserRotation.ToRotationVector2().RotatedBy(MathHelper.ToRadians(130 - (2 * (130 * i)))) * 4, 
+                        ModContent.ProjectileType<CannonSplit>(), (int)(Projectile.damage * 0.5), 0, Main.myPlayer);
                 }
             }
+            */
         }
+
     }
 
     public class DarkLaserOld : ModProjectile
@@ -464,8 +526,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         }
         public override void SetDefaults()
         {
-            Projectile.width = 5;
-            Projectile.height = 5;
+            Projectile.width = 16;
+            Projectile.height = 14;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.extraUpdates = 2;
@@ -478,8 +540,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         }
         public override void AI()
         {
-            int count = 0;
+            //int count = 0;
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
+            /*
             foreach (Projectile proj in Main.projectile.Where(x => x.active && x.whoAmI != Projectile.whoAmI && x.type == Projectile.type))
             {
                 count++;
@@ -487,6 +551,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 if (count >= 5)
                     proj.Kill();
             }
+            */
             if (Projectile.alpha > 30)
             {
                 Projectile.alpha -= 15;
@@ -502,7 +567,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Projectile.localAI[0] = 1f;
             }
             Vector2 move = Vector2.Zero;
-            float distance = 4000f;
+            float distance = 7000f;
             bool target = false;
             for (int k = 0; k < 200; k++)
             {
@@ -525,11 +590,16 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Projectile.velocity = (5 * Projectile.velocity + move) / 6f;
                 AdjustMagnitude(ref Projectile.velocity);
             }
-            if (Projectile.alpha <= 30 && timer % 3 == 0)
+            if (Projectile.alpha <= 30 && timer % 4 == 0)
             {
-                int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 242);
-                Main.dust[dust].velocity *= 0.1f;
-                Main.dust[dust].noGravity = true;
+                Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero,
+                    Color.DeepPink, 0.5f, 0.6f, 0f,
+                    dustShader);
+                //d.rotation = Vector2.One.RotatedByRandom(6).ToRotation();
+                //d.velocity += Projectile.velocity.SafeNormalize(Vector2.UnitX) * 1f;
+                //int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 242);
+                //Main.dust[dust].velocity *= 0.1f;
+                //Main.dust[dust].noGravity = true;
             }
             timer++;
         }

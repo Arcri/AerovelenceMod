@@ -152,4 +152,109 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 		public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/QuadStar";
 	}
     #endregion
+
+	//////////////////////////////////////
+	public class GlowLine1 : ModDust
+    {
+		public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/GlowLine1";
+
+		Vector3 initialColor = Color.White.ToVector3();
+		Vector3 colorToUse = Color.White.ToVector3();
+		public override void OnSpawn(Dust dust)
+        {
+			initialColor = dust.color.ToVector3();
+			colorToUse = dust.color.ToVector3();
+			dust.fadeIn = 0;
+			dust.customData = dust.scale;
+
+			dust.noGravity = true;
+			dust.frame = new Rectangle(0, 0, 128, 27);
+			dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+        }
+
+        public override bool Update(Dust dust)
+        {
+			if ((float)dust.customData != 0f)
+			{
+				dust.position -= new Vector2(13, 64) * dust.scale;
+				dust.scale = (float)dust.customData;
+				dust.customData = 0f;
+			}
+
+			dust.rotation = dust.velocity.ToRotation();
+
+
+			dust.velocity *= 0.97f;
+			dust.position += dust.velocity;
+
+			colorToUse.X = Math.Clamp(colorToUse.X * 0.95f, initialColor.X * 1f, 2f);
+			colorToUse.Y = Math.Clamp(colorToUse.Y * 0.95f, initialColor.Y * 1f, 2f);
+			colorToUse.Z = Math.Clamp(colorToUse.Z * 0.95f, initialColor.Z * 1f, 2f);
+
+			dust.color = new Color(colorToUse.X, colorToUse.Y, colorToUse.Z);
+
+			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+			
+			if (dust.fadeIn < 40)
+            {
+				dust.scale *= 0.99f;
+			}
+            else
+            {
+				dust.scale *= 0.97f;
+			}
+
+			if (dust.scale < 0.03f)
+			{
+				dust.active = false;
+			}
+
+			dust.fadeIn++;
+			//dust.color.R = Math.Clamp((float)dust.color.R, (float)initialColor.R * 0.5f, 2f);
+			//dust.color *= 0.99f;
+
+			/*
+			if (dust.fadeIn <= 0)
+				dust.shader.UseColor(Color.Transparent);
+			else
+				dust.shader.UseColor(dust.color);
+
+			dust.fadeIn++;
+
+			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+
+			if (dust.fadeIn > 60)
+				dust.active = false;
+			*/
+			/*
+			 * 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+			dust.scale *= 0.96f;
+
+			if (dust.scale < 0.03f)
+			{
+				dust.active = false;
+			}
+			 * */
+			return false;
+		}
+
+        public override Color? GetAlpha(Dust dust, Color lightColor)
+        {
+			if (dust.fadeIn <= 2)
+				return Color.Transparent;
+
+			return dust.color * MathHelper.Min(1, dust.fadeIn / 20f);
+		}
+    }
+
+	public class GlowLine1Fast : GlowLine1
+    {
+        public override bool Update(Dust dust)
+        {
+			dust.velocity *= 0.99f;
+			if (Math.Abs(dust.velocity.Length()) < 0.5f)
+				dust.active = false;
+            return base.Update(dust);
+        }
+    }
 }
