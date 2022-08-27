@@ -12,8 +12,8 @@ using Terraria.GameContent;
 using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
-{
-    public class FireFlare : ModProjectile
+{   
+    public class VenomFlare : ModProjectile
     {
         public int timer = 0;
         public float vortexRot = 0;
@@ -40,7 +40,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override void AI()
         {
 
-            Lighting.AddLight(Projectile.Center, Color.Red.ToVector3() * 1.5f);
+            Lighting.AddLight(Projectile.Center, Color.Purple.ToVector3() * 1.5f);
             if (timer == 0)
             {
                 for (int i = 0; i < randomRotation.Length; i++)
@@ -71,7 +71,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 for (int i = 0; i < 1 + Main.rand.NextFloat(0, 1); i++)
                 {
                     Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleRise>(),
-                        new Vector2(0, -2) + Projectile.velocity * -0.2f + Main.rand.NextVector2Circular(1, 1), new Color(255, 75, 50), Main.rand.NextFloat(0.3f, 0.6f), 0.7f, 1.2f, dustShader);
+                        new Vector2(0, -2) + Projectile.velocity * -0.2f + Main.rand.NextVector2Circular(1, 1), Color.Purple, Main.rand.NextFloat(0.3f, 0.6f), 0.7f, 1.2f, dustShader);
                     //p.rotation = Main.rand.NextFloat(6.28f);
                 }
 
@@ -102,93 +102,70 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override bool PreDraw(ref Color lightColor)
         {
 
+            //Draw the Circlular Glow
             var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), Color.Red, Projectile.rotation, softGlow.Size() / 2, 3.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), Color.Purple * 2.5f, Projectile.rotation, softGlow.Size() / 2, 3.3f, SpriteEffects.None, 0f);
+            
             var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
             var star2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_05").Value;
 
-            if (timer > 0 && timer < 50)
-            {
-                //Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Red, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * 3 + 45), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
-            }
-            Main.spriteBatch.Draw(star2, Projectile.Center - Main.screenPosition, star2.Frame(1, 1, 0, 0), Color.Red * 0.7f, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * -2), star2.Size() / 2, 0.20f, SpriteEffects.None, 0f);
+            //Draw the 9 point star glow
+            Main.spriteBatch.Draw(star2, Projectile.Center - Main.screenPosition, star2.Frame(1, 1, 0, 0), Color.Purple, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * -2), star2.Size() / 2, 0.20f, SpriteEffects.None, 0f);
 
 
-
-
+            //Set up Shader
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.Red.ToVector3() * 2);
+            myEffect.Parameters["uColor"].SetValue(Color.Purple.ToVector3() * 2);
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(0.6f); //0.6
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            //Draw the "lense flare"
             if (timer > 1 && timer < 50)
             {
-                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Red, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * 3 + 45), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Red, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * 3 + 45), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Purple, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * 3 + 45), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Purple, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * 3 + 45), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
             }
 
+            //Activate Shader
             myEffect.CurrentTechnique.Passes[0].Apply();
 
             //Draw Flare Center
             var FlareFlare = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/flare_01").Value;
-            //Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red, 0f, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red, (float)Math.PI, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Purple, (float)Math.PI, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
 
 
             //Draw Swirls
             var swirl = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_02").Value;
             var swirl2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_03").Value;
 
-            //Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, vortexRot + MathHelper.Pi, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, vortexRot, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(swirl2, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, MathHelper.ToRadians(vortexRotsmall * 8), swirl.Size() / 2, 0.06f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Purple, vortexRot, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
 
-            //DrawStar
-            //var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
-            //if (timer > 5 && timer < 40)
-           // {
-                //Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Red * 0.75f, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall), star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
-                //Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Red * 0.75f, randomRotation[1] + vortexRotsmall, star.Size() / 2, FlareLerp, SpriteEffects.None, 0f);
-
-            //}
-
-            Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, vortexRot, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-
-            //Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red, 0f, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red, (float)Math.PI, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
-
-            Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, vortexRot + MathHelper.Pi, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(swirl2, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red, MathHelper.ToRadians(vortexRotsmall * 8), swirl.Size() / 2, 0.06f, SpriteEffects.None, 0f);
-
+            Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Purple, vortexRot + MathHelper.Pi, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(swirl2, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Purple, MathHelper.ToRadians(vortexRotsmall * 8), swirl.Size() / 2, 0.06f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/FireFlare2").Value;
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
 
-            //var glowmask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/GlowMask1").Value;
-            //Main.spriteBatch.Draw(glowmask, Projectile.Center - Main.screenPosition, glowmask.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, glowmask.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+            //Draw Proj
+            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/VenomFlare").Value;
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
 
 
             return false;
         }
 
-        public override void PostDraw(Color lightColor)
-        {
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-        }
 
         public override void Kill(int timeLeft)
         {
@@ -202,24 +179,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleRise>(),
                     Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.7f, 0f, dustShader);
                 p.alpha = 0;
-                //p.rotation = Main.rand.NextFloat(6.28f);
             }
             
-            /*
-            for (int i = 0; i < 10; i++)
-            {
-                Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(60, 60), ModContent.DustType<Dusts.Glow>(),
-                    Main.rand.NextVector2Circular(5, 5), 0, new Color(255, 150, 50), 0.95f,);
 
-                Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(60, 60), ModContent.DustType<Dusts.CoachGunDust>(),
-                    Main.rand.NextVector2Circular(10, 10), 70 + Main.rand.Next(60), default, Main.rand.NextFloat(1.5f, 1.9f)).rotation = Main.rand.NextFloat(6.28f);
-
-                Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(60, 60), ModContent.DustType<Dusts.CoachGunDustTwo>(),
-                    Main.rand.NextVector2Circular(10, 10), 80 + Main.rand.Next(40), default, Main.rand.NextFloat(1.5f, 1.9f)).rotation = Main.rand.NextFloat(6.28f);
-
-                Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(60, 60), ModContent.DustType<Dusts.CoachGunDustFour>()).scale = 0.9f;
-            }
-            */
 
         }
 
@@ -230,12 +192,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             for (int i = 0; i < 5; i++)
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleRise>(),
-                    Main.rand.NextVector2Circular(5, 5), new Color(255, 75, 50), Main.rand.NextFloat(0.4f, 0.7f), 0.8f, 0f, dustShader);
+                    Main.rand.NextVector2Circular(5, 5), Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.7f), 0.8f, 0f, dustShader);
                 p.alpha = 0;
                 //p.rotation = Main.rand.NextFloat(6.28f);
             }
 
-            target.AddBuff(BuffID.OnFire3, 20);
+            target.AddBuff(BuffID.Frostburn, 20);
         }
     }
 } 

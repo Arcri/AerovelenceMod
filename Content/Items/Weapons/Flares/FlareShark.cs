@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.value = Item.sellPrice(0, 9, 0, 0);
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<FireFlare>();
+            Item.shoot = ModContent.ProjectileType<ChloroFlare>();
             //Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 13f;
         }
@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             {
                 {
-                    type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<FireFlare>(), ModContent.ProjectileType<FireFlare>() });
+                    type = Main.rand.Next(new int[] { type, ModContent.ProjectileType<FrostFlare>(), ModContent.ProjectileType<ChloroFlare>() });
                 }
             }
             Vector2 perturbedSpeed = new Vector2(velocity.X, velocity.Y).RotatedByRandom(MathHelper.ToRadians(5));
