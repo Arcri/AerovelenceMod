@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
 
-namespace AerovelenceMod.Content.NPCs.MiniBosses
+namespace AerovelenceMod.Content.NPCs.Minibosses
 {
     public class SlateDemon : ModNPC
     {
