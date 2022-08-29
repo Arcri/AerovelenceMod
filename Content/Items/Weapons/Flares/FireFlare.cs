@@ -8,8 +8,11 @@ using Terraria.ModLoader;
 using AerovelenceMod.Common.Utilities;
 using System;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Dusts;
+
 using Terraria.GameContent;
 using Terraria.Audio;
+using AerovelenceMod.Content.Buffs.FlareDebuffs;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {
@@ -194,10 +197,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, };
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.53f, };
             SoundEngine.PlaySound(style, Projectile.Center);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 5; i++) //2
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleRise>(),
                     Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.7f, 0f, dustShader);
@@ -227,15 +230,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++) 
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleRise>(),
-                    Main.rand.NextVector2Circular(5, 5), new Color(255, 75, 50), Main.rand.NextFloat(0.4f, 0.7f), 0.8f, 0f, dustShader);
+                    Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.4f, 0f, dustShader);
                 p.alpha = 0;
+
                 //p.rotation = Main.rand.NextFloat(6.28f);
+
+                
+                /*
+                for (int j = 0; j < 3; j++)
+                {
+
+                    Vector2 randomVecout = Main.rand.NextVector2Circular(5, 5);
+                    int a = Dust.NewDust(target.Center, 4, 4, ModContent.DustType<ColorSmoke>(), randomVecout.X, randomVecout.Y);
+
+                    Main.dust[a].scale *= 0.5f;
+
+                    Main.dust[a].rotation = Main.rand.NextFloat(6.28f);
+
+                    if (Main.dust[a].velocity.Y > 0)
+                    {
+                        Main.dust[a].velocity.Y *= -1f;
+                    }
+                }
+                */
+
             }
 
-            target.AddBuff(BuffID.OnFire3, 20);
+            target.AddBuff(ModContent.BuffType<FlareFire>(), 200);
         }
     }
 } 

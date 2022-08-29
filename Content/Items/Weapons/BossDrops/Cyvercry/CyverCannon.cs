@@ -208,7 +208,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
                                 float aim = (player.Center - Main.MouseWorld).ToRotation();
 
-                                for (int m = 0; m < 9; m++)
+                                for (int m = 0; m < 9; m++) // m < 9
                                 {
                                     float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
 
@@ -271,7 +271,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
                     float aim = (storedCenter -  Main.projectile[pindex].Center).ToRotation();
 
-                    for (int j = 0; j < 2; j++)
+                    for (int j = 0; j < 2; j++) //j < 2
                     {
                         //float dustRot = 0;
                         //if (Main.rand.NextBool()) dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(-70 * Main.rand.NextFloat(-0.2f, 0.2f));
@@ -347,8 +347,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void AI()
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
             if (timer == 0)
             {
                 if (Projectile.scale > 1)
@@ -357,7 +355,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
             }
             Projectile.velocity = Vector2.Zero;
-
             additional = Math.Clamp(MathHelper.Lerp(additional, 120 * Projectile.scale, 0.04f), 0, 50 * Projectile.scale);
 
             timer++;
@@ -391,6 +388,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
 
                 float height = (50f * Projectile.scale) - additional; //15
+
+                if (height == 0)
+                    Projectile.active = false;
+
                 int width = (int)(Projectile.Center - endPoint).Length() - 24;
 
                 var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
@@ -418,6 +419,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             secondTimer++;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            
             return false;
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

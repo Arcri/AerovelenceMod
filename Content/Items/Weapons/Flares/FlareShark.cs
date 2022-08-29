@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;
-            Item.useTime = 50;
-            Item.useAnimation = 50;
+            Item.useTime = 15;
+            Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 0;
