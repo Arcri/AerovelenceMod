@@ -35,7 +35,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Projectile.hostile = false;
             Projectile.scale = 1f;
             Projectile.timeLeft = 600;
-            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.DamageType = DamageClass.Summon;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
 
@@ -228,8 +228,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
+
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = .75f, PitchVariance = 0.2f };
+            SoundEngine.PlaySound(style);
+
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_105") with { Pitch = .55f, };
+            //SoundEngine.PlaySound(style);
+
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
+
+            int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FireFlareExplosion>(), 0, 0, Main.myPlayer);
+            Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
             for (int i = 0; i < 3; i++) 
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleRise>(),
@@ -259,7 +270,72 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
             }
 
+            //for (float i = 0f; i < 6.28f; i += 6.28f / 24f)
+            //{
+                //Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center + Vector2.One.RotatedBy(i) * 10, ModContent.DustType<GlowCircleFlare>(),
+                    //Vector2.One.RotatedBy(i) * -4.5f, Color.Red, 0.6f, 0.4f, 0f, dustShader);
+                //p.velocity *= 0.3f;
+                //int pindex = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + new Vector2(0, 150 * 1.6f), Vector2.One.RotatedBy(i) * 4.5f, ModContent.ProjectileType<StraightSaw>(), 3, 0);
+                //Main.projectile[pindex].scale = 0.1f;
+            //}
+
             target.AddBuff(ModContent.BuffType<FlareFire>(), 200);
         }
     }
+
+    public class FireFlareExplosion : ModProjectile
+    {
+        int timer = 0;
+        public override void SetDefaults()
+        {
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.scale = 0.3f; //0.3f
+            Projectile.timeLeft = 100;
+            Projectile.DamageType = DamageClass.Summon;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+
+        }
+
+        public override void AI()
+        {
+            Projectile.rotation = Projectile.rotation + MathHelper.ToRadians(timer * 0.05f);
+            timer++;
+        }
+        float scale = 0.3f;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            var Fire = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/scorch_01").Value;
+
+
+            scale = Math.Clamp(MathHelper.Lerp(scale, 0f, 0.06f), 0, 0.3f);
+            //float scaleBonus = Math.Clamp(Projectile.scale + (timer * 0.009f), 0, 0.3f);
+
+            if (scale == 0f)
+                Projectile.active = false;
+
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+            myEffect.Parameters["uColor"].SetValue(new Color(255, 75, 50).ToVector3() * 2.5f);
+            myEffect.Parameters["uTime"].SetValue(2);
+            myEffect.Parameters["uOpacity"].SetValue(0.8f); //0.6
+            myEffect.Parameters["uSaturation"].SetValue(0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(Fire, Projectile.Center - Main.screenPosition, Fire.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Fire.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Fire, Projectile.Center - Main.screenPosition, Fire.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation + 2, Fire.Size() / 2, scale * 0.2f, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return false;
+        }
+    }
+
 } 

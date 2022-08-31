@@ -17,10 +17,10 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire debuff"); // Buff display name
-            Description.SetDefault("Losing life"); // Buff description
+            DisplayName.SetDefault("Flare Fire"); // Buff display name
+            Description.SetDefault("Toasty!"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
-            Main.buffNoTimeDisplay[Type] = false;
+            //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
             BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
 
@@ -147,6 +147,13 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
                 }
                 // These lines zero out any positive lifeRegen. This is expected for all bad life regeneration effects
                 FlareFireTime++;
+            }
+        }
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (FlareFireDebuff && !projectile.npcProj && !projectile.trap && (projectile.minion || ProjectileID.Sets.MinionShot[projectile.type]))
+            {
+                damage += 5;
             }
         }
     }
