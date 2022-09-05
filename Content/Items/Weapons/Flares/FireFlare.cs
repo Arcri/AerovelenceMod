@@ -200,6 +200,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.53f, };
             SoundEngine.PlaySound(style, Projectile.Center);
 
+            //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/FlareImpact") with { Volume = 0.5f, MaxInstances = 1, PitchVariance };
+            //SoundEngine.PlaySound(style2, Projectile.Center);
+
+
             for (int i = 0; i < 5; i++) //2
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleRise>(),
@@ -229,6 +233,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
 
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/FlareImpact") with { Volume = 0.5f, PitchVariance = 0.1f};
+            SoundEngine.PlaySound(style2, Projectile.Center);
 
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = .75f, PitchVariance = 0.2f };
             SoundEngine.PlaySound(style);

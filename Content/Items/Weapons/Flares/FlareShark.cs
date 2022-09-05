@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<FireFlare>();
-            //Item.useAmmo = AmmoID.Bullet;
+            //Item.useAmmo = AmmoID.Flare;
             Item.shootSpeed = 13f;
         }
         public override bool CanConsumeAmmo(Item ammo, Player player)
