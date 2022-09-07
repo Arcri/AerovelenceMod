@@ -13,33 +13,33 @@ using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
-    public class ICER : ModItem
+    public class FirePyre : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ICER");
-            Tooltip.SetDefault("VERY UNFINISHED");
+            DisplayName.SetDefault("Fire Pyre");
+            Tooltip.SetDefault("'Send your enemies to a Firey Grave!'");
         }
         public override void SetDefaults()
         {
-            //Item.UseSound = SoundID.Research.WithPitchOffset(0.8f).WithVolumeScale(0.8f);
+            //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
             Item.crit = 4;
             Item.damage = 50;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
+            Item.useTime = 15;
+            Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 0;
             Item.value = Item.sellPrice(0, 9, 0, 0);
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<ICERHeldProj>();
+            Item.shoot = ModContent.ProjectileType<FirePyreProj>();
             //Item.useAmmo = AmmoID.Bullet;
             Item.channel = true;
-            Item.shootSpeed = 4f;
+            Item.shootSpeed = 18f;
         }
         public override Vector2? HoldoutOffset()
         {

@@ -13,6 +13,18 @@ namespace AerovelenceMod
 {
 	public class AeroPlayer : ModPlayer
 	{
+
+		public float ScreenShakePower;
+
+		public override void ModifyScreenPosition()
+		{
+			if (ScreenShakePower > 0.1f) //Kackbrise#5454 <3 <3 Thank
+			{
+				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakePower), Main.rand.NextFloat(ScreenShakePower));
+				ScreenShakePower *= 0.9f;
+			}
+		}
+
 		/*
 
 		public int Shake = 0;
