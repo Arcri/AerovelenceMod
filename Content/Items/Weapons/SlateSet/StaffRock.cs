@@ -14,12 +14,13 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 {
-    public class SlateChunk : ModProjectile
+    public class StaffRock : ModProjectile
     {
-		//If ai[1] is 2 it means it comes from Slate Bow
-		float start = 0;
 
 		private int timer;
+		Vector2 destination = Vector2.Zero;
+		Vector2 home = new Vector2(-85, 0);
+		float lerpe = 0;
 
 		public override void SetStaticDefaults()
 		{
@@ -31,10 +32,10 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 14;
-			Projectile.height = 14;
-			Projectile.aiStyle = 2;
-			Projectile.DamageType = Projectile.ai[1] == 2 ? DamageClass.Ranged : DamageClass.Melee;
+			Projectile.width = 18;
+			Projectile.height = 16;
+			Projectile.aiStyle = -1;
+			Projectile.DamageType = DamageClass.Magic;
 			Projectile.friendly = true;
 			Projectile.damage = 10;
 			Projectile.hostile = false;
@@ -43,25 +44,43 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			Projectile.timeLeft = 100;
 			Projectile.tileCollide = true;
 			Projectile.scale = 1f;
-			Projectile.alpha = 255;
 
 		}
 
         public override void AI()
         {
-			Projectile.alpha -= 15;
-			Projectile.velocity.X -= 0.02f;
-			if (Projectile.ai[1] != 2)
-            {
-				Projectile.ai[0]++;
-				Projectile.velocity.Y += 0.04f;
+			Player player = Main.player[Projectile.owner];
 
-			}
-			else
+			if (timer == 0)
             {
-				Projectile.DamageType = DamageClass.Ranged;
-				Projectile.scale = 0.8f;
-            }
+				ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+				/*
+				for (int i = 0; i < 3; i++)
+                {
+					int d = GlowDustHelper.DrawGlowDust(Projectile.Center, 2, 2, ModContent.DustType<GlowCircleFlare>(), 
+						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).X, 
+						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).Y, Color.DeepPink, 0.4f, dustShader);
+					Main.dust[d].velocity *= 0.1f;
+				}
+				*/
+
+				Projectile.timeLeft = 50;
+				Projectile.rotation = Main.rand.NextFloat(-3, 4);
+			}
+
+			//Projectile.velocity = Vector2.Lerp(Vector2.Normalize(Projectile.velocity), Vector2.Normalize(destination - player.MountedCenter), 0.12f); //slowly move towards direction of cursor
+
+			if (timer > 2)
+            {
+				Projectile.velocity = Vector2.Lerp(Projectile.velocity, destination, 0.003f);
+			}
+			Projectile.velocity.Normalize();
+
+			Projectile.Center = player.Center + Projectile.velocity.SafeNormalize(Vector2.UnitX) * 85;
+
+
+			timer++;
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -71,19 +90,10 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
         public override void Kill(int timeLeft)
         {
-			if (Projectile.ai[1] == 2)
-            {
-				SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollideBetter") with { PitchVariance = 0.3f, Volume = 0.4f, Pitch = 0.4f }, Projectile.Center);
-			}
-			else
-            {
-				SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollideBetter") with { PitchVariance = 0.3f, Volume = 0.7f }, Projectile.Center);
-			}
-			//SoundEngine.PlaySound(SoundID.Item73 with { Volume = 0.5f, Pitch = 0.5f, PitchVariance = 0.2f });
+			SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { PitchVariance = 0.1f, Volume = 0.2f, Pitch = 0.7f }, Projectile.Center);
 
-			int dustAmount = Projectile.ai[1] == 2 ? 3 : 5; //5 //10
 
-			for (int i = 0; i < dustAmount; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
@@ -110,7 +120,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 				//SoundEngine.PlaySound(SoundID.Item73, Projectile.position);
 			}
 
-			for (int j = 0; j < dustAmount + 1; j++)
+			for (int j = 0; j < 2; j++)
             {
 				Dust dust2 = Dust.NewDustDirect(Projectile.Center, 0, 0, DustID.Stone, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.3f, Scale: 1.5f * Projectile.scale);
 				//Dust dust2 = Dust.NewDustPerfect(Projectile.Center, DustID.Stone, Projectile.velocity);
@@ -126,18 +136,25 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 2; i++)
             {
 				for (int j = 0; j < 6; j++)
 				{
-					Main.spriteBatch.Draw(texture, Projectile.oldPos[j] + new Vector2(texture.Width / 2, texture.Height / 2) - Main.screenPosition, null, Color.ForestGreen, Projectile.rotation, texture.Size() / 2, 1f - (j * 0.2f), SpriteEffects.None, 0);
+					Main.spriteBatch.Draw(texture, Projectile.oldPos[j] + new Vector2(texture.Width / 2, texture.Height / 2) - Main.screenPosition, null, Color.DeepPink, Projectile.rotation, texture.Size() / 2, 1.25f - (j * 0.2f), SpriteEffects.None, 0);
 				}
 			}
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, texture.Size() / 2, 1f, SpriteEffects.None, 0f);
+
 
 			return true;
 		}
+
+		public void setDestination(Vector2 input)
+        {
+			destination = input;
+        }
 	}
 }

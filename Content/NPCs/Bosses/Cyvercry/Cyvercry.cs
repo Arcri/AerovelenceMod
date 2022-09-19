@@ -346,7 +346,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 if(ai1 % 30 == 0 && ai1 >= -90 && ai1 <= 0)
                 {
                     SoundEngine.PlaySound(SoundID.Item12, NPC.Center);
-                    FireLaser(ProjectileID.DeathLaser);
+                    FireLaser(ProjectileID.RayGunnerLaser); //Death Laser
                 }
 
                 if (ai4 >= 3 && ai1 > 0)
@@ -369,9 +369,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     if (ai1 % 5 == 0)
                     {
                         if (Main.expertMode)
-                            FireLaser(ProjectileID.DeathLaser, 13f, 0.7f);
+                            FireLaser(ProjectileID.RayGunnerLaser, 13f, 0.7f);
                         else
-                            FireLaser(ProjectileID.DeathLaser, 11f, 0.7f);
+                            FireLaser(ProjectileID.RayGunnerLaser, 11f, 0.7f);
                         ai3++;
                     }
                     if(ai3 >= 30)
@@ -641,7 +641,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             }
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(entitySource, from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
+                int p = Projectile.NewProjectile(entitySource, from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
+                if (type == ProjectileID.MartianWalkerLaser)
+                {
+                    Main.projectile[p].scale = 2f;
+                }
             }
             NPC.velocity -= toPlayer * recoilMult;
         }

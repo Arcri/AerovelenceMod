@@ -9,6 +9,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 
 
 namespace AerovelenceMod.Content.Items.Weapons.SlateSet
@@ -52,7 +53,8 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
         public override void AI()
         {
-			
+			ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
 			Vector2 storedCenter = Projectile.Center;
 
 			Player player = Main.player[Projectile.owner];
@@ -98,8 +100,24 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 			if (rockTimer < 85 && rockCounter < 1)
             {
+
+				if (timer % 5 == 0)
+				{
+					int d = GlowDustHelper.DrawGlowDust(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), 1, 1, ModContent.DustType<GlowCircleFlare>(), Color.DeepPink, 0.25f, dustShader);
+					Main.dust[d].velocity *= 0.5f;
+					Main.dust[d].scale = 0.1f;
+
+					//Dust dusty = Dust.NewDustPerfect(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), ModContent.DustType<GlowCircleDust>(), Scale: 0.1f);
+					//dusty.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.DeepPink * 1.75f);
+					//dusty.velocity *= 0.1f;
+				}
+
 				if (rockTimer % 3 == 0)
                 {
+					int d = GlowDustHelper.DrawGlowDust(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), 1, 1, 
+						ModContent.DustType<GlowCircleFlare>(), Color.DeepPink, 0.3f, dustShader);
+					Main.dust[d].velocity *= 0.5f;
+
 					//Dust dust1 = Dust.NewDustDirect(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), 1, 1, ModContent.DustType<GlowCircleDust>(), 0, 0, 0, Color.DeepPink, 0.25f);
 					//dust1.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.DeepPink * 1.5f);
 					//dust1.velocity *= 0.5f;
@@ -109,9 +127,13 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
             {
 				for (int i = 0; i < 10; i++)
 				{
+					int d = GlowDustHelper.DrawGlowDust(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), 4, 4,ModContent.DustType<GlowCircleFlare>(),
+						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).X,
+						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).Y, Color.DeepPink, 0.4f, dustShader);
+					Main.dust[d].velocity *= 0.3f;
 					//Dust mydust = Dust.NewDustDirect(player.Center + new Vector2(125, 0).RotatedBy((mousePos - player.Center).ToRotation() + Math.PI), 4, 4, ModContent.DustType<GlowCircleDust>(), 
-						//new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).X, 
-						//new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).Y, 0, Color.DeepPink, 0.4f);
+					//new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).X, 
+					//new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).Y, 0, Color.DeepPink, 0.4f);
 					//mydust.velocity *= 0.3f;
 					//mydust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.DeepPink * 1.5f);
 				}
@@ -150,6 +172,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			{
 				for (int i = 0; i < 2 + Main.rand.NextFloat(-1, 2); i++)
                 {
+					int a = GlowDustHelper.DrawGlowDust(player.Center, 1, 1, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.3f, dustShader);
 					//Dust dust1 = Dust.NewDustDirect(player.Center, 1, 1, ModContent.DustType<GlowCircleDust>(), 0, 0, 0, Color.DeepPink, 0.2f);
 					//dust1.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.DeepPink * 1.75f);
 					//dust1.velocity *= 1.25f; //1.25f

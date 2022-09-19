@@ -50,14 +50,14 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet.SlateAxe
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            Projectile.NewProjectile(source, position, velocity, ProjectileID.CrystalPulse, damage, knockback, Main.myPlayer);
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<SlateChunk>(), damage, knockback, Main.myPlayer);
             
             float aim = velocity.ToRotation() + MathHelper.Pi;
 
 
             for (int l = 0; l < 3; l++)
             {
-                Projectile.NewProjectile(source, position, velocity.RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.NextFloat(0.8f, 1.2f), ProjectileID.CrystalPulse2, damage, knockback, Main.myPlayer);
+                Projectile.NewProjectile(source, position, velocity.RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.NextFloat(0.8f, 1.2f), ModContent.ProjectileType<SlateChunk>(), damage, knockback, Main.myPlayer);
 
             }
 

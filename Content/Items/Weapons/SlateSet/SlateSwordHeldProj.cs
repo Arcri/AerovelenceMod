@@ -88,7 +88,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
             }
             
             //wait 2 frames to give it a little more oomf
-            if (maxTime > 2)
+            if (maxTime > 2) //2
             {
                 //the actual lerping
                 float sussybaka = (maxTime * 0.02f);
@@ -107,6 +107,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
             float start;
             float end;
 
+            
             if (maxTime < 3)
                 Projectile.scale = 1.15f; //12
 
@@ -127,7 +128,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
             if (maxTime >= 18)
                 Projectile.scale = 1.15f;
-
+            
 
             if (maxTime == 9)
             {
@@ -168,7 +169,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
                 //dust.scale *= 1.25f;
                 //dust.noGravity = true;
             }*/
-            //SoundEngine.PlaySound(new SoundStyle("Redux/Sounds/Item/RockCollide") with { Volume = .1f, PitchVariance = 0.3f, Pitch = -0.3f }, Projectile.Center);
+            SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { Volume = .1f, PitchVariance = 0.3f, Pitch = -0.3f }, Projectile.Center);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -177,6 +178,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
             float toAlphaMult = 0.0f;
 
+            
             switch (Projectile.scale)
             {
                 case 1.2f:
@@ -189,6 +191,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
                     toAlphaMult = 0.5f;
                     break;
             }
+            
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);

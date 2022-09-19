@@ -9,7 +9,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
-
+using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 {
@@ -143,6 +143,23 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
         public override void Kill(int timeLeft)
         {
+			
+			if (shouldHide == false)
+            {
+				for (int i = 0; i < 20; i++)
+				{
+
+					ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+					int d = GlowDustHelper.DrawGlowDust(Projectile.Center, 0, 0, ModContent.DustType<GlowCircleRise>(), 0, Projectile.velocity.Y * Main.rand.NextFloat(0.1f, 0.3f), Color.Gray * 0.7f, 0.6f + Main.rand.NextFloat(-0.3f, 0.4f), 0.8f, 0, dustShader);
+					//Main.dust[d].velocity.Y = Math.Abs(Main.dust[d].velocity.Y) * -1;
+					Main.dust[d].velocity.X *= 1.2f;
+
+				}
+			}
+			
+			
+			
 			Projectile.tileCollide = false;
 			shouldHide = true;
 			Projectile.timeLeft = 5;
@@ -152,6 +169,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			//Little Ones
 			Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, new Vector2(0,-6 + Main.rand.NextFloat(-3,4)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-25, 25))), ModContent.ProjectileType<SlateChunk>(), Projectile.damage / 4, 1, Main.myPlayer, 0, 2);
 			Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center, new Vector2(0,-6 + Main.rand.NextFloat(-3,4)).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-25, 25))), ModContent.ProjectileType<SlateChunk>(), Projectile.damage / 4, 1, Main.myPlayer, 0, 2);
+
 
 
 			onHit();
@@ -166,27 +184,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 			//myPlayer.GetModPlayer<ReduxPlayer>().ScreenShakePower = 20;
 
-
-			for (int i = 0; i < 20; i++)
-			{
-
-				//int num = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<RisingSmokeDust>(), 0f, -2f, 0, default, 0.3f);
-				//Main.dust[num].noGravity = true;
-				//Dust dust = Main.dust[num];
-				//dust.position.X += (Main.rand.Next(-30, 31) / 20) - 1.5f;
-				//dust.position.Y += (Main.rand.Next(-30, 31) / 20) - 1.5f;
-				//if (dust.position != Projectile.Center)
-				//	dust.velocity = Projectile.DirectionTo(Main.dust[num].position) * 0.1f;
-
-				//Dust dust = Dust.NewDustDirect(Projectile.Center + new Vector2(-10,0), 0, 0, ModContent.DustType<RisingSmokeDust>(), 0, 0, 100, Scale: 0.4f + Main.rand.NextFloat(-0.1f, 0.3f));
-				//dust.velocity.X *= 0.2f;
-				//dust.velocity.Y = Math.Abs(dust.velocity.Y) * -1;
-				//dust.noGravity = true;
-				//dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.Gray * 0.5f);
-
-
-				//SoundEngine.PlaySound(SoundID.Item73, Projectile.position);
-			}
 
 			for (int j = 0; j < 15; j++)
 			{
