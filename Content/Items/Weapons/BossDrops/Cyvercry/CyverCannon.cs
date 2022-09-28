@@ -212,7 +212,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                                 {
                                     float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
 
-                                    Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center - aim.ToRotationVector2() * 20 + new Vector2(0, 16), ModContent.DustType<GlowLine1>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
+                                    Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center - aim.ToRotationVector2() * 20, ModContent.DustType<GlowLine1>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
                                         Color.DeepPink, 0.25f, 0.6f, 0f,
                                         dustShader);
                                     d.velocity *= 0.75f;
@@ -278,7 +278,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         //else dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(70 * Main.rand.NextFloat(-0.2f, 0.2f));
                         float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
 
-                        Dust d = GlowDustHelper.DrawGlowDustPerfect(storedCenter - aim.ToRotationVector2() * 20 + new Vector2(0, 16), ModContent.DustType<GlowLine1Fast>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
+                        Dust d = GlowDustHelper.DrawGlowDustPerfect(storedCenter - aim.ToRotationVector2() * 20, ModContent.DustType<GlowLine1Fast>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
                             Color.DeepPink, 0.14f, 0.65f, 0f,
                             dustShader);
                         d.velocity *= 0.6f;

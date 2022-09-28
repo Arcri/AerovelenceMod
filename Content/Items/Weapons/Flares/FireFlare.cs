@@ -308,20 +308,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public override void AI()
         {
+
+            scale = Math.Clamp(MathHelper.Lerp(scale, 0f, 0.12f), 0, 0.3f);
+            //float scaleBonus = Math.Clamp(Projectile.scale + (timer * 0.009f), 0, 0.3f);
+
+            if (scale == 0f)
+                Projectile.active = false;
+
             Projectile.rotation = Projectile.rotation + MathHelper.ToRadians(timer * 0.05f);
             timer++;
         }
-        float scale = 0.3f;
+        float scale = 0.3f * 8f;
         public override bool PreDraw(ref Color lightColor)
         {
             var Fire = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/scorch_01").Value;
 
 
-            scale = Math.Clamp(MathHelper.Lerp(scale, 0f, 0.06f), 0, 0.3f);
-            //float scaleBonus = Math.Clamp(Projectile.scale + (timer * 0.009f), 0, 0.3f);
 
-            if (scale == 0f)
-                Projectile.active = false;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["uColor"].SetValue(new Color(255, 75, 50).ToVector3() * 2.5f);

@@ -14,6 +14,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using ReLogic.Content;
+using AerovelenceMod.Content.Skies;
 
 namespace AerovelenceMod
 {
@@ -204,7 +205,7 @@ namespace AerovelenceMod
 				var shaderRef = new Ref<Effect>(Instance.Assets.Request<Effect>(shaderPath).Value);
 				(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
 
-			}
+			} 
 			GemGrapplingRange.Load();
 
             
@@ -220,6 +221,8 @@ namespace AerovelenceMod
 			Filters.Scene["AerovelenceMod:DarkNights"] =
                 new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
 
+			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
+
 			Overlays.Scene.Load();
 			Filters.Scene.Load();
 
@@ -231,6 +234,11 @@ namespace AerovelenceMod
 
 				LegElectricity = Instance.Assets.Request<Effect>("Effects/LegElectricity").Value;
 				RailgunShader = Instance.Assets.Request<Effect>("Effects/RailgunShader").Value;
+
+
+				Ref<Effect> LaserShaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["LaserShader"] = new MiscShaderData(LaserShaderRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+
 			}
 
             if (!Main.dedServ)

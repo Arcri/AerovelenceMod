@@ -41,7 +41,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 		public override void AI()
 		{
 			Player player = Main.player[Projectile.owner];
-			Main.NewText(intensity);
 			if (timer == 80)
             {
 				ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");

@@ -48,48 +48,25 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			dust.customData = dust.scale;
 
 			dust.noGravity = true;
-			dust.frame = new Rectangle(0, 0, 128, 28);
+			dust.frame = new Rectangle(0, 0, 28, 128);
 			dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
 
         public override bool Update(Dust dust)
         {
-			if ((float)dust.customData != 0f)
-			{
-				dust.position -= new Vector2(64, 14) * dust.scale;
-				dust.scale = (float)dust.customData;
-				dust.customData = 0f;
-			}
 
-			dust.rotation = dust.velocity.ToRotation();
+			dust.rotation = dust.velocity.ToRotation() + MathHelper.PiOver2;
 
 
-			dust.velocity *= 0.97f;
+			dust.velocity *= 0.98f;
 			dust.position += dust.velocity;
 
-			colorToUse.X = Math.Clamp(colorToUse.X * 0.95f, initialColor.X * 1f, 2f);
-			colorToUse.Y = Math.Clamp(colorToUse.Y * 0.95f, initialColor.Y * 1f, 2f);
-			colorToUse.Z = Math.Clamp(colorToUse.Z * 0.95f, initialColor.Z * 1f, 2f);
-
-			dust.color = new Color(colorToUse.X, colorToUse.Y, colorToUse.Z);
+			dust.fadeIn++;
 
 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
-			
-			if (dust.fadeIn < 40)
-            {
-				dust.scale *= 0.99f;
-			}
-            else
-            {
-				dust.scale *= 0.97f;
-			}
 
-			if (dust.scale < 0.03f)
-			{
+			if (dust.fadeIn > 60)
 				dust.active = false;
-			}
-
-			dust.fadeIn++;
 			//dust.color.R = Math.Clamp((float)dust.color.R, (float)initialColor.R * 0.5f, 2f);
 			//dust.color *= 0.99f;
 
@@ -126,4 +103,51 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			return dust.color * MathHelper.Min(1, dust.fadeIn / 20f);
 		}
     }
+
+	public class SLRLineGlowTest : ModDust
+	{
+		public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/RoarLine_1";
+
+		public override Color? GetAlpha(Dust dust, Color lightColor)
+		{
+
+			return dust.color * MathHelper.Min(1, dust.fadeIn / 20f);
+		}
+
+		public override void OnSpawn(Dust dust)
+		{
+			dust.fadeIn = 0;
+			dust.noLight = false;
+			dust.frame = new Rectangle(0, 0, 8, 128);
+			dust.customData = dust.scale;
+			dust.scale = 0;
+			dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+		}
+
+		public override bool Update(Dust dust)
+		{
+			if ((float)dust.customData != 0f)
+			{
+				dust.position -= new Vector2(4, 64) * dust.scale;
+				dust.scale = (float)dust.customData;
+				dust.customData = 0f;
+			}
+
+			dust.rotation = dust.velocity.ToRotation() + 1.57f;
+			dust.position += dust.velocity;
+
+			dust.velocity *= 0.98f;
+			dust.color *= 0.97f;
+
+			dust.fadeIn++;
+
+			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
+
+			if (dust.fadeIn > 60)
+				dust.active = false;
+			return false;
+		}
+
+	}
 }

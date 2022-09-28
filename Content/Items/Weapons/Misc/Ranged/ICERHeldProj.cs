@@ -1,12 +1,14 @@
-﻿using System;
+﻿using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent;
-using Terraria.Audio;
 using ReLogic.Content;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
+using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -123,16 +125,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             {
                 Vector2 pos = (Projectile.position - (0.5f * (direction * OFFSET * -0.25f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f).Floor();
 
-
+                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                 //Vector2 position = new Vector2(0, 0);
                 //4f
                 //if (Player.direction == -1)
-                    //position += new Vector2(0, 4).RotatedBy(Projectile.velocity.ToRotation());
+                //position += new Vector2(0, 4).RotatedBy(Projectile.velocity.ToRotation());
                 //else
-                    //position += new Vector2(0, -4).RotatedBy(Projectile.velocity.ToRotation());
+                //position += new Vector2(0, -4).RotatedBy(Projectile.velocity.ToRotation());
                 //Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
+
                 //Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(0.75f, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
-                Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
+
+                //Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
+
+                Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType< Content.NPCs.Bosses.Cyvercry.CyverLaser>(), 40, 3, Main.myPlayer);
+
+                for (int i = 0; i < 20; i++)
+                {
+
+                    Vector2 randomStart = Main.rand.NextVector2CircularEdge(3f, 3f);
+
+                    GlowDustHelper.DrawGlowDustPerfect(Player.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart, Color.Red, 0.2f, 0.4f, 0f, dustShader);
+                }
+
 
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Volume = .56f, Pitch = .61f, };
                 SoundEngine.PlaySound(style);

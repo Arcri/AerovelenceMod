@@ -78,7 +78,8 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 			dust.velocity *= 0.94f;
 
-			Lighting.AddLight(currentCenter, dust.color.R * dust.scale * 0.005f, dust.color.G * dust.scale * 0.005f, dust.color.B * dust.scale * 0.005f);
+			if (!dust.noLight)
+				Lighting.AddLight(currentCenter, dust.color.R * dust.scale * 0.005f, dust.color.G * dust.scale * 0.005f, dust.color.B * dust.scale * 0.005f);
 
 
 			if (dust.scale < 0.05f) 
@@ -176,7 +177,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
         {
 			if ((float)dust.customData != 0f)
 			{
-				dust.position -= new Vector2(13, 64) * dust.scale;
+				//dust.position -= new Vector2(13, 64) * dust.scale;
 				dust.scale = (float)dust.customData;
 				dust.customData = 0f;
 			}

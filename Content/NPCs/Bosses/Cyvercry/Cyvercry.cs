@@ -7,6 +7,10 @@ using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.Shaders;
+using ReLogic.Content;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -19,7 +23,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
+            dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
+        ArmorShaderData dustShader = null; 
+
         public override bool CheckActive()
         {
             return false;
@@ -42,6 +49,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Cyvercry");
             }
+            dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
@@ -73,12 +81,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         circular.Y *= 0.7f;
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = new Vector2(12, 0).RotatedBy(NPC.rotation);
-                        Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, type, 0, 0, NPC.alpha);
-                        dust.velocity *= 0.15f;
-                        dust.velocity += dustVelo;
-                        dust.noGravity = true;
-                        if (type == 235)
-                            dust.scale *= 2.5f;
+
+
+                        Dust d = GlowDustHelper.DrawGlowDustPerfect(from - new Vector2(5) + circular, ModContent.DustType<GlowCircleSpinner>(), dustVelo, new Color(67, 215, 209), 0.4f, 0.6f, 0f, dustShader);
+                        d.scale = 0.4f;
+                        
+                        //int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.SkyBlue, 0.6f, 0.6f, 0f, dustShader);
+                        //Main.dust[a].velocity *= 0.15f;
+                        //Main.dust[a].velocity += dustVelo;
+                        //Main.dust[a].scale = 0.6f;
+
+                        //Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, type, 0, 0, NPC.alpha);
+                        //dust.velocity *= 0.15f;
+                        //dust.velocity += dustVelo;
+                        //dust.noGravity = true;
+                        //if (type == 235)
+                            //dust.scale *= 2.5f;
                     }
                 }
             }
@@ -346,7 +364,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 if(ai1 % 30 == 0 && ai1 >= -90 && ai1 <= 0)
                 {
                     SoundEngine.PlaySound(SoundID.Item12, NPC.Center);
-                    FireLaser(ProjectileID.RayGunnerLaser); //Death Laser
+                    FireLaser(ModContent.ProjectileType<CyverLaser>()); //Death Laser
                 }
 
                 if (ai4 >= 3 && ai1 > 0)
@@ -369,9 +387,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     if (ai1 % 5 == 0)
                     {
                         if (Main.expertMode)
-                            FireLaser(ProjectileID.RayGunnerLaser, 13f, 0.7f);
+                            FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
                         else
-                            FireLaser(ProjectileID.RayGunnerLaser, 11f, 0.7f);
+                            FireLaser(ModContent.ProjectileType<CyverLaser>(), 11f, 0.7f);
                         ai3++;
                     }
                     if(ai3 >= 30)
@@ -398,11 +416,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                             circular.X *= 0.6f;
                             circular = circular.RotatedBy(NPC.rotation);
                             Vector2 dustVelo = -circular * 0.1f;
+
+
+                            int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                            Main.dust[a].velocity *= 0.15f;
+                            Main.dust[a].velocity += dustVelo;
+
+                            /*
                             Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
                             dust.velocity *= 0.15f;
                             dust.velocity += dustVelo;
                             dust.scale = 1.2f;
                             dust.noGravity = true;
+                            */
                         }
                         ai2++;
                     }
@@ -412,10 +438,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = -circular * 0.09f;
-                        Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
-                        dust.velocity *= 0.1f;
-                        dust.scale = 1.4f;
-                        dust.noGravity = true;
+
+                        int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                        Main.dust[a].velocity *= 0.1f;
+
+                        //Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
+                        //dust.velocity *= 0.1f;
+                        //dust.scale = 1.4f;
+                        //dust.noGravity = true;
                     }
                     
                 }
@@ -489,24 +519,38 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                             circular.X *= 0.6f;
                             circular = circular.RotatedBy(NPC.rotation);
                             Vector2 dustVelo = -circular * 0.1f;
-                            Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
-                            dust.velocity *= 0.15f;
-                            dust.velocity += dustVelo;
-                            dust.scale = 1.25f;
-                            dust.noGravity = true;
+
+
+                            int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                            Main.dust[a].velocity *= 0.15f;
+                            Main.dust[a].velocity += dustVelo;
+
+                            //Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
+                            //dust.velocity *= 0.15f;
+                            //dust.velocity += dustVelo;
+                            //dust.scale = 1.25f;
+                            //dust.noGravity = true;
                         }
                         ai2++;
                     }
                     for (int j = 0; j < ai2; j++)
                     {
+
+
                         Vector2 circular = new Vector2(48, 0).RotatedBy(MathHelper.ToRadians(j * 120 + ai1 * 5));
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = -circular * 0.09f;
-                        Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
-                        dust.velocity *= 0.1f;
-                        dust.scale = 1.5f;
-                        dust.noGravity = true;
+
+
+                        int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                        Main.dust[a].velocity *= 0.1f;
+                        Main.dust[a].velocity += dustVelo;
+
+                        //Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.PinkTorch, 0, 0, NPC.alpha);
+                        //dust.velocity *= 0.1f;
+                        //dust.scale = 1.5f;
+                        //dust.noGravity = true;
                     }
                 }
             }
