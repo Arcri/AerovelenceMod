@@ -318,7 +318,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Projectile.rotation = Projectile.rotation + MathHelper.ToRadians(timer * 0.05f);
             timer++;
         }
-        float scale = 0.3f * 8f;
+        float scale = 0.3f;
         public override bool PreDraw(ref Color lightColor)
         {
             var Fire = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/scorch_01").Value;

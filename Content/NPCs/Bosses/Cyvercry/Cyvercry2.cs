@@ -143,7 +143,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         float thrusterValue = 0f;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-
+            /*
+            Texture2D CyverPink = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/CyverGlowMaskPink");
+            Vector2 drawOrigin2 = new Vector2(CyverPink.Width * 0.5f, NPC.height * 0.5f);
+            Color color = Color.White;
+            for (int k = 0; k < NPC.oldPos.Length; k++)
+            {
+                Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin2 + new Vector2(0f, NPC.gfxOffY);
+                color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
+                Main.EntitySpriteDraw(CyverPink, drawPos + new Vector2(-40,0), NPC.frame, color, NPC.rotation, drawOrigin2, NPC.scale, SpriteEffects.None, 0);
+            }
+            */
 
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -186,33 +196,58 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             return false;
         }
 
-
+        int whatAttack = 0;
         int timer = 0;
 
         public override void AI()
         {
 
-            if (timer > 100)
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
+            {
+                NPC.TargetClosest();
+            }
+            Player myPlayer = Main.player[NPC.target];
+
+            switch (whatAttack)
+            {
+                case 0:
+                    IdleLaser(myPlayer);
+                    break;
+                case 1:
+                    IdleDash(myPlayer);
+                    break;
+            }
+
+
+            if (timer == 100)
             {
                 SkyManager.Instance.Activate("AerovelenceMod:Cyvercry2");
             }
 
-            var entitySource = NPC.GetSource_FromAI();
-
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-                NPC.netUpdate = true;
-            Player player = Main.player[NPC.target];
-
-            NPC.rotation = (NPC.Center - player.Center).ToRotation();
-
-            NPC.velocity = NPC.rotation.ToRotationVector2() * -5f;
-
+            NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 4;
+            NPC.rotation = NPC.velocity.ToRotation() + MathHelper.Pi;
 
             thrusterValue = Math.Clamp(MathHelper.Lerp(thrusterValue, 3, 0.06f), 0, 2);
             pinkGlowMaskTimer++;
             timer++;
 
         }
+
+        //Laser Attacks
+        public void IdleLaser(Player myPlayer)
+        {
+
+        }
+
+
+        //Dash Attacks
+        public void IdleDash(Player myPlayer)
+        {
+
+        }
+
+        //Special Attacks
+
         public void FireLaser(int type, float speed = 6f, float recoilMult = 2f, float ai1 = 0, float ai2 = 0)
         {
             var entitySource = NPC.GetSource_FromAI();
@@ -221,18 +256,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             toPlayer = toPlayer.SafeNormalize(new Vector2(1, 0));
             toPlayer *= speed;
             Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
-            int damage = 75;
-            if (Main.expertMode)
-            {
-                damage = (int)(damage * 1.5f);
-            }
+            int damage = 75 / 4;
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int p = Projectile.NewProjectile(entitySource, from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
-                if (type == ProjectileID.MartianWalkerLaser)
-                {
-                    Main.projectile[p].scale = 2f;
-                }
             }
             NPC.velocity -= toPlayer * recoilMult;
         }
