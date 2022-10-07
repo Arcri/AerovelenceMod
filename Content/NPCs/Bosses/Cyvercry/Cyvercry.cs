@@ -345,11 +345,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 }
                 if (speed > distance) 
                 {
+                  
                     speed = distance;
                     ai3 = 0;
                 }
                 if(ai3 > 0)
                 {
+                    //SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1f, PitchVariance = .04f, Volume = 0.6f, MaxInstances = 1 };
+                    //SoundEngine.PlaySound(style, NPC.Center);
                     ai3--;
                     shadowTrail = true;
                     if (((ai3 % 6 == 0 && !Main.expertMode) || (ai3 % 5 == 0 && Main.expertMode)) && !runOncePhase2)
@@ -363,7 +366,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.velocity += 0.4f * goTo * (speed + distance * 0.01f);
                 if(ai1 % 30 == 0 && ai1 >= -90 && ai1 <= 0)
                 {
-                    SoundEngine.PlaySound(SoundID.Item12, NPC.Center);
+                    SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(stylea, NPC.Center);
+                    SoundEngine.PlaySound(stylea, NPC.Center);
+
+
+                    SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(styleb, NPC.Center);
+                    SoundEngine.PlaySound(styleb, NPC.Center);
+
+
+                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .38f, Volume = 0.7f }; //1f
+                    SoundEngine.PlaySound(stylec, NPC.Center);
+
+                    //SoundEngine.PlaySound(SoundID.Item12, NPC.Center);
                     FireLaser(ModContent.ProjectileType<CyverLaser>()); //Death Laser
                 }
 
@@ -387,9 +403,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     if (ai1 % 5 == 0)
                     {
                         if (Main.expertMode)
+                        {
+                            SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, };
+                            SoundEngine.PlaySound(stylea, NPC.Center);
+                            SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, };
+                            SoundEngine.PlaySound(styleb, NPC.Center);
                             FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
+
+                        }
                         else
+                        {
+                            SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, };
+                            SoundEngine.PlaySound(stylea, NPC.Center);
+                            SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, };
+                            SoundEngine.PlaySound(styleb, NPC.Center);
                             FireLaser(ModContent.ProjectileType<CyverLaser>(), 11f, 0.7f);
+
+                        }
                         ai3++;
                     }
                     if(ai3 >= 30)

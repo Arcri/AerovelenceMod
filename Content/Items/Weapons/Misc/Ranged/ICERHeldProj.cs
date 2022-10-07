@@ -138,7 +138,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
                 //Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
 
-                Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType< Content.NPCs.Bosses.Cyvercry.CyverLaser>(), 40, 3, Main.myPlayer);
+                Projectile.NewProjectile(null, new Vector2(0, 5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + pos + direction * 24, new Vector2(2, 0).RotatedBy(direction.ToRotation()), ModContent.ProjectileType<ICERProj>(), 40, 3, Main.myPlayer);
 
                 for (int i = 0; i < 20; i++)
                 {
