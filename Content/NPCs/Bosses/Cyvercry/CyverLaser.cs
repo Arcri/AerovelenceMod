@@ -117,4 +117,96 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             return true;
         }
     }
+
+    public class CyverLaserPulse : ModProjectile
+    {
+
+        public int ParentIndex
+        {
+            get => (int)Projectile.ai[0] - 1;
+            set => Projectile.ai[0] = value + 1;
+        }
+        int timer = 0;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("CyverPulse");
+
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 5;
+            Projectile.height = 5;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.scale = 0.5f;
+            Projectile.timeLeft = 100;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = -1;
+            Projectile.scale = 0.10f;
+
+        }
+
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
+        
+        public override void AI()
+        {
+
+            //NPC parentNPC = Main.npc[ParentIndex];
+
+            //if (parentNPC != null)
+            //{
+                //Projectile.Center = parentNPC.Center - new Vector2(90, 0).RotatedBy(parentNPC.rotation);
+            //}
+            //if (parentNPC.life <= 0)
+            //{
+                //Projectile.active = false;
+            //}
+
+            Projectile.scale = Math.Clamp(MathHelper.Lerp(Projectile.scale, -0.05f, 0.07f), 0, 0.10f);
+            if (Projectile.scale == 0)
+                Projectile.active = false;
+            timer++;
+
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            //MAKE IT STICK TO CYVERCRY AHHHH LIKE SAW SORTA
+
+            //Draw the Circlular Glow
+            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_02").Value;
+            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_05").Value;
+
+
+            //Set up Shader
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2f); //2.5f makes it more spear like
+            myEffect.Parameters["uTime"].SetValue(2);
+            myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
+            myEffect.Parameters["uSaturation"].SetValue(1.2f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+
+            //Activate Shader
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            //0.2f
+            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, Tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, Tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+
+            return false;
+        }
+    }
 } 

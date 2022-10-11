@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 {
                     NPC.frame.Y = 0;
                     NPC.frameCounter = 0;
-                }
+                }  
                 if(NPC.frame.Y == 3 * frameHeight && nextAttack != 1) //booster frame
                 {
                     Vector2 from = NPC.Center + new Vector2(64, 0).RotatedBy(NPC.rotation);

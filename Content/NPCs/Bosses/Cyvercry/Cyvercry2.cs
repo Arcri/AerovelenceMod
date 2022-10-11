@@ -13,6 +13,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using System;
 using Terraria.Graphics.Effects;
+using System.Net;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -49,7 +50,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             NPC.noTileCollide = true;
             NPC.HitSound = SoundID.NPCHit4 with { Pitch = -0.5f, PitchVariance = 0.14f};
             NPC.DeathSound = SoundID.NPCDeath14;
-            NPC.value = Item.buyPrice(0, 22, 11, 5);
+            NPC.value = Item.buyPrice(0, 22, 11, 5);   
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Cyvercry");
@@ -189,20 +190,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             Main.EntitySpriteDraw(CyverTexture, NPC.Center - Main.screenPosition, NPC.frame, drawColor * 1f, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
 
-            /*
-            for (int k = 0; k < NPC.oldPos.Length; k++)
-            {
-                    Vector2 drawPos = NPC.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, NPC.gfxOffY);
-                    Color color = NPC.GetAlpha(drawColor) * ((NPC.oldPos.Length - k) / (float)NPC.oldPos.Length);
-                    Main.EntitySpriteDraw(CyverTexture, drawPos, NPC.frame, color * 0.5f, NPC.rotation, drawOrigin, NPC.scale, SpriteEffects.None, 0);
-            }
-            */
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
         }
 
         int whatAttack = 0;
         int timer = 0;
         int advancer = 0;
+        float turnFloat = 0;
 
         public override void AI()
         {
@@ -227,6 +223,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     break;
                 case 1:
                     Spin(myPlayer);
+                    break;
+                case 2: 
+                    IdleDash(myPlayer);
                     break;
             }
 
@@ -276,6 +275,28 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .38f, Volume = 0.7f }; //1f
                 SoundEngine.PlaySound(stylec, NPC.Center);
 
+                Dust a = GlowDustHelper.DrawGlowDustPerfect(NPC.Center - new Vector2(70, 0).RotatedBy(NPC.rotation), ModContent.DustType<GlowCircleQuadStar>(),
+                (NPC.rotation + MathHelper.Pi).ToRotationVector2() * 12, Color.HotPink, 0.7f, 0.2f, 0f, dustShader2);
+
+                /*
+                for (int i = 0; i < 360; i += 20)
+                {
+                    Vector2 circular = new Vector2(1, 0).RotatedBy(MathHelper.ToRadians(i));
+                    Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center - new Vector2(70, 0).RotatedBy(NPC.rotation), ModContent.DustType<LineGlow>(),
+                        circular * 2, Color.DeepPink, Main.rand.NextFloat(0.2f, 0.2f), 0.2f, 0f, dustShader2);
+                    p.fadeIn = 50;
+
+                }
+                */
+
+                /*
+                int pulseIndex = Projectile.NewProjectile(null, NPC.Center - new Vector2(80, 0).RotatedBy(NPC.rotation), (NPC.rotation + MathHelper.Pi).ToRotationVector2() * 3, ModContent.ProjectileType<CyverLaserPulse>(), 0, 0, Main.myPlayer);
+                Projectile pulse = Main.projectile[pulseIndex];
+                if (pulse.ModProjectile is CyverLaserPulse pulse2)
+                {
+                    pulse2.ParentIndex = NPC.whoAmI;
+                }
+                */
                 FireLaser(ModContent.ProjectileType<CyverLaser>()); //Death Laser
             }
 
@@ -283,7 +304,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 advancer = 0;
                 timer = -1;
-                whatAttack = 1;
+                whatAttack = 2;
             }
 
             advancer = (timer > 140 ? ++advancer : advancer + 2);
@@ -294,8 +315,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         //Dash Attacks
         public void IdleDash(Player myPlayer)
         {
+            Vector2 goalPoint = new Vector2(-250, 0).RotatedBy(MathHelper.ToRadians(advancer * -0.4f));
 
-            
+            Vector2 move = (goalPoint + myPlayer.Center) - NPC.Center;
+
+            float scalespeed = 0.6f * 2f;//2
+
+            NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
+            NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
+
+            NPC.rotation = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
+
+            if (timer == 150)
+            {
+                timer = -1;
+                whatAttack = 1;
+            }
+            advancer++;
+            timer++;
         }
 
         //Special Attacks
@@ -350,30 +387,33 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             if (type == ModContent.ProjectileType<CyverLaser>())
             {
-                for (int i = 0; i < 4; i++) //4 //2,2
+
+                float addition = (whatAttack == 0 ? -1 : 0);
+                for (int i = 0; i < 4 + (addition * 2); i++) //4 //2,2
                 {
 
                     Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.7f, 0.7f)) * Main.rand.Next(5, 10) * -1f;
 
                     Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + NPC.rotation.ToRotationVector2() * -50, ModContent.DustType<GlowLine1Fast>(), vel * 3f,
                         Color.HotPink, Main.rand.NextFloat(0.1f, 0.2f), 0.6f, 0f, dustShader2);
-                    p.noLight = true;
+                    p.noLight = false;
                     //p.velocity += NPC.velocity * (0.8f + Main.rand.NextFloat(-0.1f, -0.2f));
-                    p.fadeIn = 40 + Main.rand.NextFloat(-5, 10);
+                    p.fadeIn = (whatAttack == 0 ? 30 : 40) + Main.rand.NextFloat(-5, 10);
                     p.velocity *= 0.4f;
                 }
-                for (int i = 0; i < 3; i++) //4 //2,2
+                for (int i = 0; i < 3 - addition; i++) //4 //2,2
                 {
 
                     Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.Next(5, 10) * -1f;
 
                     Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + NPC.rotation.ToRotationVector2() * -50, ModContent.DustType<GlowLine1Fast>(), vel * 3f,
                         Color.HotPink, Main.rand.NextFloat(0.1f, 0.2f), 0.6f, 0f, dustShader2);
-                    p.noLight = true;
+                    p.noLight = false;
                     //p.velocity += NPC.velocity * (0.8f + Main.rand.NextFloat(-0.1f, -0.2f));
-                    p.fadeIn = 40 + Main.rand.NextFloat(-5, 10);
+                    p.fadeIn = (whatAttack == 0 ? 30 : 40) + Main.rand.NextFloat(-5, 10);
                     p.velocity *= 0.2f;
                 }
+
 
             }
 

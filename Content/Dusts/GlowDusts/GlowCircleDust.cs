@@ -163,6 +163,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 		Vector3 colorToUse = Color.White.ToVector3();
 		public override void OnSpawn(Dust dust)
         {
+			dust.noLight = true;
 			initialColor = dust.color.ToVector3();
 			colorToUse = dust.color.ToVector3();
 			dust.fadeIn = 0;
@@ -196,46 +197,31 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
 			
-			if (dust.fadeIn < 40)
-            {
-				dust.scale *= 0.99f;
-			}
-            else
-            {
-				dust.scale *= 0.97f;
-			}
-
-			if (dust.scale < 0.03f)
+			if (dust.noLight == false)
 			{
-				dust.active = false;
-			}
-
-			dust.fadeIn++;
-			//dust.color.R = Math.Clamp((float)dust.color.R, (float)initialColor.R * 0.5f, 2f);
-			//dust.color *= 0.99f;
-
-			/*
-			if (dust.fadeIn <= 0)
-				dust.shader.UseColor(Color.Transparent);
+                if (dust.fadeIn > 60)
+                    dust.active = false;
+            }
 			else
-				dust.shader.UseColor(dust.color);
+			{
+                if (dust.fadeIn < 40)
+                {
+                    dust.scale *= 0.99f;
+                }
+                else
+                {
+                    dust.scale *= 0.97f;
+                }
+
+                if (dust.scale < 0.03f)
+                {
+                    dust.active = false;
+                }
+            }
+
 
 			dust.fadeIn++;
 
-			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
-
-			if (dust.fadeIn > 60)
-				dust.active = false;
-			*/
-			/*
-			 * 			Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.6f);
-			dust.scale *= 0.96f;
-
-			if (dust.scale < 0.03f)
-			{
-				dust.active = false;
-			}
-			 * */
 			return false;
 		}
 
