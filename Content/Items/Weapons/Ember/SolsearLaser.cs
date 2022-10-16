@@ -97,7 +97,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override bool PreDraw(ref Color lightColor) 
 		{
 
-			Projectile.scale = 2f;
+            #region oldFireLaser
+			
+            Projectile.scale = 2f;
+
+			
 			Effect myEffect = ModContent.Request<Effect>("Redux/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
 
 			//Extra_196
@@ -156,15 +160,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			var target2 = new Rectangle((int)pos2.X, (int)pos2.Y, width2, (int)(height2 * 1.2f));
 
 			Main.spriteBatch.Draw(texture, target2, null, Color.OrangeRed, LaserRotation, origin2, 0, 0);
+			
+			#endregion
 
 
-
-			//var spotTex = Mod.Assets.Request<Texture2D>("Textures/Glorb").Value;
-			//Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, spotTex.Size() / 2, 1.5f, SpriteEffects.None, 0);
-			//Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, spotTex.Size() / 2, 1.5f, SpriteEffects.None, 0);
-
+			
+			
 			return false;
-
+			
 		}
 
 		public override void PostDraw(Color lightColor)
@@ -172,6 +175,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			var spotTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+			//myEffect.Parameters["uColor"].SetValue(Color.WhiteSmoke.ToVector3() * 1f); 
+
 			myEffect.Parameters["uColor"].SetValue(new Color(255, 75, 50).ToVector3() * 2.5f); 
 			myEffect.Parameters["uTime"].SetValue(2);
 			myEffect.Parameters["uOpacity"].SetValue(0.9f); 

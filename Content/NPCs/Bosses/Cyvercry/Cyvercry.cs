@@ -315,6 +315,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     ai2 += 5;
                     if (ai2 >= 180)
                     {
+                        Main.NewText("ai2 >= 180");
                         direction = -direction;
                         ai2 = 0;
                         ai1 = -120;
@@ -341,11 +342,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 goTo = goTo.SafeNormalize(Vector2.Zero);
                 if(ai2 > 120)
                 {
+                    Main.NewText(NPC.velocity);
+                    Main.NewText("!");
                     NPC.rotation = MathHelper.ToRadians(180) + goTo.ToRotation();
                 }
                 if (speed > distance) 
                 {
-                  
                     speed = distance;
                     ai3 = 0;
                 }
@@ -447,10 +449,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                             circular = circular.RotatedBy(NPC.rotation);
                             Vector2 dustVelo = -circular * 0.1f;
 
+                            Dust b = GlowDustHelper.DrawGlowDustPerfect(from - new Vector2(5) + circular, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero, Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                            
 
-                            int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
-                            Main.dust[a].velocity *= 0.15f;
-                            Main.dust[a].velocity += dustVelo;
+                            //int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                            //Main.dust[a].velocity *= 0.15f;
+                            //Main.dust[a].velocity += dustVelo;
 
                             /*
                             Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
@@ -468,9 +472,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         circular.X *= 0.6f;
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = -circular * 0.09f;
+                        Dust b = GlowDustHelper.DrawGlowDustPerfect(from - new Vector2(5) + circular, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero, Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
 
-                        int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
-                        Main.dust[a].velocity *= 0.1f;
+
+                        //int a = GlowDustHelper.DrawGlowDust(from - new Vector2(5) + circular, 0, 0, ModContent.DustType<GlowCircleQuadStar>(), Color.DeepPink, 0.7f, 0.6f, 0f, dustShader);
+                        //Main.dust[a].velocity *= 0.1f;
 
                         //Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
                         //dust.velocity *= 0.1f;

@@ -35,17 +35,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			Projectile.ignoreWater = true;
 			Projectile.timeLeft = 1000;
 			Projectile.tileCollide = true;
-			Projectile.extraUpdates = 100; //200
+			//Projectile.extraUpdates = 100; //200
+			Projectile.extraUpdates = 1;
 		}
 
 		public override void AI()
 		{
+			Main.time = 12600 + 3598; //midnight - 2
+
+
 			if (timer == 0)
             {
 				LaserRotation = Projectile.velocity.ToRotation() + (float)Math.PI;
 				storedCenter = Projectile.Center;
-
+				Projectile.velocity = Projectile.velocity * 16;
 			}
+			if (timer == 25)
+				Projectile.velocity = Vector2.Zero;
+
+			if (timer > 25)
+				LaserRotation += MathHelper.ToRadians(0.13f);
 			Player player = Main.player[(int)Projectile.ai[0]];
 			Projectile.scale = 1f;
 
@@ -60,6 +69,90 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public override bool PreDraw(ref Color lightColor) 
 		{
+			endPoint = storedCenter;
+
+
+			float height2 = (65f); //25
+
+			if (height2 == 0)
+				Projectile.active = false;
+
+			int width2 = (int)(Projectile.Center - endPoint).Length() - 24;
+
+			var pos2 = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+			var target2 = new Rectangle((int)pos2.X, (int)pos2.Y, width2, (int)(height2 * 1.2f));
+
+			Texture2D newTex = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/LineBlack").Value;
+			Vector2 origin22 = new Vector2(0, newTex.Height / 2);
+
+			Main.spriteBatch.Draw(newTex, target2, null, Color.Black * 2, LaserRotation, origin22, 0, 0);
+
+			//Texture2D newTex = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/SolsearLaser").Value;
+
+
+			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value;
+
+			myEffect.Parameters["uColor"].SetValue(Color.Black.ToVector3() * 5);
+			//myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+			//myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+
+			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+			myEffect.Parameters["uTime"].SetValue(timer * -0.007f); //0.006
+			myEffect.Parameters["uSaturation"].SetValue(2);
+
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+
+			//Activate Shader
+			myEffect.CurrentTechnique.Passes[0].Apply();
+
+			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+
+
+			Vector2 origin2 = new Vector2(0, texture.Height / 2);
+
+			float height = (65f); //25
+
+			if (height == 0)
+				Projectile.active = false;
+
+			int width = (int)(Projectile.Center - endPoint).Length() - 24;
+
+			var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+			var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+
+			Main.spriteBatch.Draw(texture, target, null, Color.Black, LaserRotation, origin2, 0, 0);
+			//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+			//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+			//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+			/*
+			float height2 = (80f); //25
+
+			if (height2 == 0)
+				Projectile.active = false;
+
+			int width2 = (int)(Projectile.Center - endPoint).Length() - 24;
+
+			var pos2 = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+			var target2 = new Rectangle((int)pos2.X, (int)pos2.Y, width2, (int)(height2 * 1.2f));
+
+			Texture2D newTex = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/LineBlack").Value;
+			Vector2 origin22 = new Vector2(0, newTex.Height / 2);
+
+			Main.spriteBatch.Draw(newTex, target2, null, Color.White * 2, LaserRotation, origin22, 0, 0);
+			//Main.spriteBatch.Draw(texture, target2, null, Color.DarkGray * 10, LaserRotation, origin2, 0, 0);
+			*/
+
+
+			/*
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
 			myEffect.Parameters["uColor"].SetValue(Color.MediumPurple.ToVector3() * 2f); //2.5f makes it more spear like
 			myEffect.Parameters["uTime"].SetValue(2);
@@ -104,7 +197,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			var spotTex = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
 			Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f, SpriteEffects.None, 0);
 			Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f, SpriteEffects.None, 0);
-
+			*/
 			return false;
 
 		}
@@ -117,7 +210,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public override void Kill(int timeLeft)
         {
-			Main.NewText("amg");
+			//Main.NewText("amg");
         }
     }
 }

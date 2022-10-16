@@ -239,9 +239,15 @@ namespace AerovelenceMod
 				Ref<Effect> LaserShaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["LaserShader"] = new MiscShaderData(LaserShaderRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
+				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
+				//GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+
+				//Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
+				//GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
+
 			}
 
-            if (!Main.dedServ)
+			if (!Main.dedServ)
             {
                 MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
