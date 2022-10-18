@@ -269,7 +269,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         //Laser Attacks
         public void IdleLaser(Player myPlayer)
         {
-            Vector2 goalPoint = new Vector2(550, 0).RotatedBy(MathHelper.ToRadians(advancer * 0.4f + 60));
+            Vector2 goalPoint = new Vector2(550, 0).RotatedBy(MathHelper.ToRadians(advancer * 0.2f + 140)); //advancer * 0.4
 
             Vector2 move = (goalPoint + myPlayer.Center) - NPC.Center;
 
@@ -386,7 +386,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             {
                 advancer = 0;
                 timer = -1;
-                whatAttack = 1;
+                whatAttack = 0;
             }
             if (timer < 70)
                 advancer++;

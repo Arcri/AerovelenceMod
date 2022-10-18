@@ -18,6 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             DisplayName.SetDefault("Solsear");
             Tooltip.SetDefault("The sun god's flame, encapsuled into something usable");
         }
+        public override bool AltFunctionUse(Player player) => true;
+
         public override void SetDefaults()
         {
             //item.UseSound = SoundID.Item11;
@@ -63,19 +65,40 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            
-            
-            return true;
+            if (player.altFunctionUse == 2)
+            {
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<MagmaBall>(), damage, 0, Main.myPlayer);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         public override void HoldItem(Player player)
         {
-            
+            if (player.altFunctionUse == 2)
+            {
+                Item.noUseGraphic = false;
+                Item.useTime = 40; //10
+                Item.useAnimation = 40; //5
+            }
+            else
+            {
+                Item.noUseGraphic = true;
+            }
         }
 
         public override bool CanUseItem(Player player)
         {
 
             return true;
+        }
+
+        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            float refValue = 1.15f;            
+            return base.PreDrawInWorld(spriteBatch, lightColor, alphaColor, ref rotation, ref refValue, whoAmI);
         }
     }
 }

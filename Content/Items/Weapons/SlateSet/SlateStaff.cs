@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Slate Staff");
-            Tooltip.SetDefault("");
+            Tooltip.SetDefault("Hold Right-click to charge a boulder \nPress Left-click to summon four close-ranged rocks");
             Item.staff[Item.type] = true;
 
         }
