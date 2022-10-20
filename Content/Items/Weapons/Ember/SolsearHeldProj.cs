@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.Audio;
@@ -10,6 +9,7 @@ using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Graphics.Shaders;
+using AerovelenceMod.Content.Dusts;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -22,6 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         int maxTime = 50;
 
         int timer = 0;
+        int soundTimer = 0;
         private const int OFFSET = 15; //30
         public ref float Angle => ref Projectile.ai[1];
 
@@ -66,47 +67,59 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             //storedMousePos = Vector2.SmoothStep(storedMousePos, Main.MouseWorld, 0.12f);
             storedMousePos = Vector2.Lerp(storedMousePos, Main.MouseWorld, 0.42f); //0.08
-            Main.NewText(Player.direction);
 
             Vector2 exhaustLocation;
             if (Player.direction == 1)
-                exhaustLocation = new Vector2(-18, -16).RotatedBy(Projectile.rotation) + Player.Center;
+                exhaustLocation = new Vector2(-18 + Main.rand.NextFloat(-2,3), -16).RotatedBy(Projectile.rotation) + Player.Center;
             else
-                exhaustLocation = new Vector2(-18, 16).RotatedBy(Projectile.rotation) + Player.Center;
+                exhaustLocation = new Vector2(-18 + Main.rand.NextFloat(-2, 3), 16).RotatedBy(Projectile.rotation) + Player.Center;
 
             //Dust.NewDustPerfect(exhaustLocation, DustID.AmberBolt, Velocity: Vector2.Zero);
 
-            if (Main.rand.NextBool(1, 40))
+            if (timer % 5 == 0 && Main.rand.NextBool()) //40 | 30
             {
-                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-                if (Main.rand.NextBool())
+                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                /*
+                Dust smd = Dust.NewDustPerfect(exhaustLocation, ModContent.DustType<ColorSmoke>(),
+                    (new Vector2(0, -2 * Player.direction).RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f))).RotatedBy(Projectile.rotation), Scale: Main.rand.NextFloat(0.2f, 0.4f));
+                //smd.velocity *= 0.2f;
+                */
+                //Vector2 vel = (new Vector2(0, -2 * Player.direction).RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f))).RotatedBy(Projectile.rotation);
+                //int d = GlowDustHelper.DrawGlowDust(exhaustLocation, 0, 0, ModContent.DustType<GlowCircleRise>(), vel.X, vel.Y,
+                //Color.Gray * 0.7f, 0.6f + Main.rand.NextFloat(-0.1f, 0.2f), 0.8f, 0, dustShader);
+
+                if (!Main.rand.NextBool(3))
                 {
                     Dust m = GlowDustHelper.DrawGlowDustPerfect(exhaustLocation, ModContent.DustType<GlowCircleRise>(),
-                        Main.rand.NextVector2CircularEdge(2, 2), Color.Gray * 0.65f, Main.rand.NextFloat(0.5f, 0.9f), 1f, 0f, dustShader);
-                    m.velocity.Y = Math.Abs(Projectile.velocity.Y) * -1;
+                        (new Vector2(0,-2 * Player.direction).RotatedBy(Main.rand.NextFloat(-0.5f,0.5f))).RotatedBy(Projectile.rotation), Color.Gray * 0.7f, Main.rand.NextFloat(0.3f, 0.5f), 0.8f, 0f, dustShader);
+                    //m.velocity.Y = Math.Abs(m.velocity.Y) * -1;
                 }
                 else
                 {
-                    Dust p = GlowDustHelper.DrawGlowDustPerfect(exhaustLocation, ModContent.DustType<GlowCircleRise>(),
-                        Main.rand.NextVector2CircularEdge(2, 2), Color.OrangeRed, Main.rand.NextFloat(0.3f, 0.5f), 0.4f, 0f, dustShader);
-                    p.velocity.Y = Math.Abs(Projectile.velocity.Y) * -1;
+                    Dust p = GlowDustHelper.DrawGlowDustPerfect(exhaustLocation, ModContent.DustType<GlowCircleRiseFlare>(),
+                        (new Vector2(0, -2 * Player.direction).RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f))).RotatedBy(Projectile.rotation), Color.OrangeRed, Main.rand.NextFloat(0.3f, 0.5f), 0.4f, 0f, dustShader2);
+                    //p.velocity.Y = Math.Abs(p.velocity.Y) * -1;
                 }
-
+                
             }
 
-            if (timer == 0)
+            if (soundTimer % 295 == 0)
             {
-                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/movingshield_sound") { MaxInstances = 2};
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/movingshield_sound") { MaxInstances = 2 };
                 SoundEngine.PlaySound(style2, Projectile.Center);
                 SoundEngine.PlaySound(style2, Projectile.Center);
                 SoundEngine.PlaySound(style2, Projectile.Center);
                 //MORE POWER AHAHAHAHHA
- 
 
+            }
+            if (timer == 0)
+            {
                 storedMousePos = Main.MouseWorld;
                 Projectile.NewProjectile(null, Player.Center, (storedMousePos - Player.Center).SafeNormalize(Vector2.UnitX) * 2, ModContent.ProjectileType<SolsearLaser>(),
-                    80, 1, Main.myPlayer);
+                    Projectile.damage, 1, Main.myPlayer);
             }
 
             Projectile.velocity = Vector2.Zero;
@@ -164,7 +177,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 if (timer == 190)
                     timer = 0;
             }
-
+            soundTimer++;
             timer++;
         }
 

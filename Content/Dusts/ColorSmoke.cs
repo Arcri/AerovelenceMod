@@ -53,11 +53,11 @@ namespace AerovelenceMod.Content.Dusts
             Color ret;
             if (dust.alpha < 80)
             {
-                ret = Color.Lerp(new Color(179, 101, 5) * 0.3f, Color.Black, dust.alpha / 80f * 0.5f);
+                ret = Color.Lerp(Color.Yellow, Color.Orange, dust.alpha / 80f * 0.5f);
             }
             else if (dust.alpha < 140)
             {
-                ret = Color.Lerp(new Color(179, 101, 5) * 0.3f, Color.Black, (dust.alpha - 80) / 80f * 0.5f);
+                ret = Color.Lerp(Color.Orange, Color.Black, (dust.alpha - 80) / 80f * 0.5f);
             }
             else
                 ret = gray;

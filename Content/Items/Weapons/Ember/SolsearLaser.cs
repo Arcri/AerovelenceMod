@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.tileCollide = false;
 			Projectile.extraUpdates = 10; //200
 			Projectile.scale = 1f;
-
+			Projectile.DamageType = DamageClass.Ranged;
 		}
 
 		public override void AI()
@@ -65,6 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 				}
 			}
+
 			distFromPlayer = Math.Clamp(distFromPlayer + 2, 0, 300);
 			if (timer == 0)
             {
@@ -106,7 +107,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			{
 
 
-				Effect myEffect = ModContent.Request<Effect>("Redux/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
+				Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
 
 				//Extra_196
 				//spark_07
@@ -167,7 +168,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 				Main.spriteBatch.Draw(texBeam, target2, null, Color.OrangeRed, LaserRotation, origin2, 0, 0);
 
 				for (int i = 0; i < width; i += 6)
-					Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.020f); //0.030
+					Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.015f); //0.030
 
 			}
 			#endregion
@@ -223,7 +224,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			float point = 0f;
 			// Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
 			// It will look for collisions on the given line using AABB
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 12,
 				Player.Center, 22, ref point);
 
 		}
@@ -244,6 +245,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			SoundEngine.PlaySound(style, target.Center);
 
 			target.immune[Projectile.owner] = 5; //20 
+			damage = (int)damage / 4;
+		}
+
+		public Vector2 GetTipperPosition()
+        {
+			return Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
 		}
 	}
 }
