@@ -1,12 +1,16 @@
+using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using On.Terraria.GameContent.Events;
+using ReLogic.Content;
 using System;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -275,8 +279,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         int type = Mod.Find<ModProjectile>("IcySpike").Type;
                         int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
-                        float speedX = 10f;
-                        float speedY = 10f;
+                        float speedX = 3f; //10
+                        float speedY = 3f;
                         Vector2 position = NPC.Center;
 
 
@@ -284,12 +288,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         if (shootTimer >= 90)
                         {
-                            if (Main.netMode != 1)
-                                for (int i = 0; i < 8; i++)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+
+                                for (int i = -3; i < 4; i++)
+                                {
+                                    Vector2 perturbedSpeed = new Vector2(0, -10).RotatedBy(MathHelper.ToRadians(15 * i));
+                                    Projectile.NewProjectile(Projectile.InheritSource(NPC), position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
+
+                                }
+                            /*
+                            for (int i = 0; i < 8; i++)
                                 {
                                     Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45 * i));
                                     Projectile.NewProjectile(Projectile.InheritSource(NPC), position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
                                 }
+                            */
                             shootTimer = 0;
                         }
                         if (AttackTimer == 220)
@@ -968,9 +981,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
     public class IcySpike : ModProjectile
     {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Icy Spike");
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
+        }
         public override void SetDefaults()
         {
-            Projectile.width = 52;
+            Projectile.width = 30;
             Projectile.height = 30;
             Projectile.friendly = false;
             Projectile.hostile = true;
@@ -987,25 +1006,48 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 SoundEngine.PlaySound(SoundID.Item30);
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.velocity.Y = Projectile.velocity.Y + 0.15f;
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
-            dust.noGravity = true;
+            Projectile.velocity.Y = Projectile.velocity.Y + 0.25f; //0.15
+
+            if (Projectile.ai[0] % 3 == 0)
+            {
+                int penis = GlowDustHelper.DrawGlowDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GlowCircleQuadStar>(), Color.SkyBlue, 0.4f, new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic"));
+
+            }
+
+            if (Main.rand.NextBool(3))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
+                dust.noGravity = true;
+            }
+            Projectile.ai[0]++;
         }
         public override bool PreDraw(ref Color lightColor)
         {
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
             Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+                Color color = Projectile.GetAlpha(Color.SkyBlue) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos + new Vector2(-12,0), null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
             }
-            return true;
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+
+
+            return false;
         }
 
         public override void PostDraw(Color lightColor)
         {
-        Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Rimegeist.AssetDirectory + "IcySpike_Glowmask");
+        
+            /*
+            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Rimegeist.AssetDirectory + "IcySpike_Glowmask");
             Vector2 drawPos = Projectile.Center + new Vector2(0, Projectile.gfxOffY) - Main.screenPosition;
             //keep an eye on the width and height when doing this. It matters
             Main.EntitySpriteDraw
@@ -1020,6 +1062,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 SpriteEffects.None, //adjust this according to the sprite
                 0
                 );
+            */
         }
 
     }

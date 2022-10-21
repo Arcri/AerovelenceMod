@@ -39,8 +39,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Projectile.usesLocalNPCImmunity = true;
 			Projectile.localNPCHitCooldown = -1;
 
-			Projectile.WhipSettings.Segments = 17;
-            Projectile.WhipSettings.RangeMultiplier = 1.5f;
+			Projectile.WhipSettings.Segments = 15;
+            Projectile.WhipSettings.RangeMultiplier = 2f;
 		}
 
 		private float Timer
@@ -57,7 +57,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void AI()
 		{
-			//shouldDust = true;
 
 			Player owner = Main.player[Projectile.owner];
 			if (Timer > 10)
@@ -157,10 +156,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				Vector2 diff = list[i + 1] - element;
 
 				float rotation = diff.ToRotation() - MathHelper.PiOver2;
-				Color color = Lighting.GetColor(element.ToTileCoordinates(), Color.White);
+				Color color = Lighting.GetColor(element.ToTileCoordinates(), Color.Pink); //Color.White
 				Vector2 scale = new Vector2(1, (diff.Length() + 2) / frame.Height);
 
-				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, SpriteEffects.None, 0);
+				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, Color.HotPink, rotation, origin, scale, SpriteEffects.None, 0);
 
 				pos += diff;
 			}
@@ -227,6 +226,19 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				float rotation = diff.ToRotation() - MathHelper.PiOver2; // This projectile's sprite faces down, so PiOver2 is used to correct rotation.
 				Color color = Lighting.GetColor(element.ToTileCoordinates());
 
+				if (i == list.Count - 2 && Timer > 10)
+                {
+					var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
+
+					Main.spriteBatch.End();
+					Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+					Main.EntitySpriteDraw(star, pos - Main.screenPosition, star.Frame(1,1,0,0), Color.HotPink, rotation, star.Size() / 2, scale * 0.075f, flip, 0);
+
+					Main.spriteBatch.End();
+					Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+				}
+
 				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 				
 
@@ -236,4 +248,4 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			return false;
 		}
 	}
-	}
+}
