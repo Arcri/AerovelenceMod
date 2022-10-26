@@ -392,7 +392,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 accelFloat = 0f;
                 advancer = 0;
                 timer = -1;
-                whatAttack = 0;
+                whatAttack = 1;
             }
             if (timer < 69)
                 advancer++;

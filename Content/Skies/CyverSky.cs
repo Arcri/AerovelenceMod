@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Skies
                 {
                     if (--delay < 0)
                     {
-                        delay = Main.rand.Next(5 + (int)(85f * 1));
+                        delay = 600;
                         for (int i = 0; i < 50; i++) //update positions
                         {
                             xPos[i] = Main.rand.Next(Main.screenWidth);
@@ -99,8 +99,15 @@ namespace AerovelenceMod.Content.Skies
                         }
                     }
 
+                    
+
                     for (int i = 0; i < 50; i++) //static on screen
                     {
+                        xPos[i] += 2;
+
+                        if (xPos[i] > Main.screenWidth)
+                            xPos[i] = 0;
+
                         int width = Main.rand.Next(3, 100);
                         spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle(xPos[i] - width / 2, yPos[i], width, 1),
                         Color.HotPink * 0.2f);
