@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Projectile.usesLocalNPCImmunity = true;
 			Projectile.localNPCHitCooldown = -1;
 
-			Projectile.WhipSettings.Segments = 15;
+			Projectile.WhipSettings.Segments = 7;
             Projectile.WhipSettings.RangeMultiplier = 2f;
 		}
 
@@ -150,7 +150,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Vector2 origin = new Vector2(frame.Width / 2, 2);
 
 			Vector2 pos = list[0];
-			for (int i = 0; i < list.Count - 1; i++)
+			for (int i = 0; i < list.Count - 2; i++)
 			{
 				Vector2 element = list[i];
 				Vector2 diff = list[i + 1] - element;

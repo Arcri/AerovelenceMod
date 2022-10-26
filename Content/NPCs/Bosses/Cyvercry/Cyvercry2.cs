@@ -148,6 +148,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Texture2D texture3 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/CyverGlowMaskBlue");
             Main.EntitySpriteDraw(texture3, NPC.Center - Main.screenPosition + drawOffset, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
 
+            Utils.DrawLine(spriteBatch, NPC.Center, NPC.Center + (NPC.rotation).ToRotationVector2() * -400, Color.White);
         }
 
         bool ThrusterRotaion = Main.rand.NextBool();
@@ -336,17 +337,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         //Dash Attacks
 
         float storedRotaion = 0;
+        Vector2 storedVec2 = Vector2.Zero;
         public void IdleDash(Player myPlayer)
         {
-            if (timer < 110)
+            if (timer < 105)
             {
                 Vector2 goalPoint;
                 if (timer < 70)
-                    goalPoint = new Vector2(-350, 0).RotatedBy(MathHelper.ToRadians(advancer * -0.6f)); //250 || 0.4
+                    goalPoint = new Vector2(-350, 0).RotatedBy(MathHelper.ToRadians(advancer * -0.6f + 20)); //250 || 0.4
                 else
-                    goalPoint = new Vector2(-500, 0).RotatedBy(MathHelper.ToRadians(advancer * -0.6f)); //250 || 0.4
+                    goalPoint = new Vector2(-500, 0).RotatedBy(MathHelper.ToRadians(advancer * -0.6f + 20)); //250 || 0.4
 
-                Vector2 move = (goalPoint + myPlayer.Center) - NPC.Center;
+                Vector2 move = ( goalPoint + (timer < 70 ? myPlayer.Center : storedVec2) ) - NPC.Center;
 
                 float scalespeed = (timer < 70 ? 0.6f * 4f : 0.6f * 2f);//2
 
@@ -356,14 +358,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 if (timer < 70)
                     NPC.rotation = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
                 else
-                    NPC.rotation = storedRotaion;
+                    NPC.rotation = storedRotaion;//(float)(storedRotaion + MathHelper.ToRadians(3f * (float)Math.Sin(timer)) );
 
             }
-            else if (timer >= 110)
+            else if (timer >= 105)
             {
+
                 if (NPC.velocity.Length() > 20)
                     Dust.NewDust(NPC.Center, 12, 12, ModContent.DustType<DashTrailDust>(), NPC.velocity.X * 0.2f, NPC.velocity.Y * 0.2f, 0, new Color(0, 255, 255), 1f);
-                if (timer == 118) //120
+                if (timer == 113) //120
                 {
                     SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
                     SoundEngine.PlaySound(style, NPC.Center);
@@ -371,24 +374,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .59f, Pitch = 1f, MaxInstances = -1 }; 
                     SoundEngine.PlaySound(style2, NPC.Center);
                 }
-                accelFloat = MathHelper.Clamp(MathHelper.Lerp(accelFloat, 50f, 0.2f), 0, 40f);
+                accelFloat = MathHelper.SmoothStep(accelFloat, 80, 0.2f);  //MathHelper.Clamp(MathHelper.Lerp(accelFloat, 60f, 0.1f), 0, 50f);
+                Main.NewText(accelFloat);
                 NPC.rotation = storedRotaion;
-                NPC.velocity = storedRotaion.ToRotationVector2() * accelFloat * -1;
+                NPC.velocity = storedRotaion.ToRotationVector2() * accelFloat * -1; // 4--> accelFloat
             }
 
             if (timer == 69)
             {
                 NPC.velocity = Vector2.Zero;
+                storedVec2 = myPlayer.Center;
                 storedRotaion = NPC.rotation;
             }
 
-            if (timer == 135)
+            if (timer == 130)
             {
+                accelFloat = 0f;
                 advancer = 0;
                 timer = -1;
                 whatAttack = 0;
             }
-            if (timer < 70)
+            if (timer < 69)
                 advancer++;
             timer++;
         }

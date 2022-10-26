@@ -23,8 +23,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Item.shootSpeed = 2; //2
 
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.useTime = 50; //30
-			Item.useAnimation = 50; //60
+			Item.useTime = 59; 
+			Item.useAnimation = 59; 
 			Item.UseSound = SoundID.Item152;
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
