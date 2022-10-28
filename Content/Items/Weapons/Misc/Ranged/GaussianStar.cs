@@ -34,6 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		}
 		public override void AI()
 		{
+			Projectile.scale = 1f;
 			if (Projectile.direction == 1)
 			{
 				Projectile.rotation += 0.15f;
@@ -137,9 +138,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			}
 
 			Texture2D texture2 = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
-			Main.spriteBatch.Draw(texture2, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, texture2.Width, texture2.Height), Color.CornflowerBlue * 0.8f, Projectile.rotation, texture2.Size() / 2, 2f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(texture2, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, texture2.Width, texture2.Height), Color.CornflowerBlue * 0.8f, Projectile.rotation, texture2.Size() / 2, 2f * Projectile.scale, SpriteEffects.None, 0f);
 
-			Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, TextureAssets.Projectile[Projectile.type].Value.Width, TextureAssets.Projectile[Projectile.type].Value.Height), Color.White, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Value.Size() / 2, 1f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Rectangle(0, 0, TextureAssets.Projectile[Projectile.type].Value.Width, TextureAssets.Projectile[Projectile.type].Value.Height), Color.White, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Value.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
 
 
 			Main.spriteBatch.End();
@@ -163,7 +164,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Projectile.DamageType = DamageClass.Ranged;
 			Projectile.hostile = false;
 			Projectile.penetrate = -1;
+
 			Projectile.scale = 0.1f;
+
 			Projectile.timeLeft = 30;
 			Projectile.tileCollide = false; //false;
 			Projectile.width = 20;
@@ -173,7 +176,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         int timer = 0;
         public override void AI()
         {
-			Projectile.scale = MathHelper.Lerp(Projectile.scale, 0.51f, 0.2f);
+			if (timer == 0)
+            {
+				Projectile.rotation = Main.rand.NextFloat(6.28f);
+				//SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
+			}
+
+			Projectile.scale = MathHelper.Lerp(Projectile.scale, 0.51f, 0.2f); //1.51
 			timer++;
         }
 
@@ -181,6 +190,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
 			Player Player = Main.player[Projectile.owner];
 			Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/GaussExplosion").Value;
+			//Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/muzzle_05").Value;
+
+			//ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/Solsear_Glow").Value
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
 			
@@ -201,9 +213,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			int height1 = texture.Height;
 			Vector2 origin1 = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
 
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, 0, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, 0, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, 0, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
 
 
 			Main.spriteBatch.End();
