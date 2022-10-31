@@ -274,7 +274,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Projectile.hostile = false;
             Projectile.penetrate = -1;
 
-            Projectile.scale = 0.1f;
+            Projectile.scale = 0.2f;
 
             Projectile.timeLeft = 30;
             Projectile.tileCollide = false; //false;
@@ -297,21 +297,25 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool PreDraw(ref Color lightColor)
         {
+            //texture = gaussExplosion
+            //distort = noise
+            //caustics = GlowLine1 (Flare)
+            //gradient = DarnessDischarge
+
             Player Player = Main.player[Projectile.owner];
             Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/GaussExplosion").Value;
-            //Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/muzzle_05").Value;
 
             //ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/Solsear_Glow").Value
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
 
-            //myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/Solsear_Glow").Value);
+            //myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/GlowLine1").Value);
             myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GaussianStar").Value);
 
 
             myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
 
-            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/PinkStar").Value);
+            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/CyverGrad").Value);
             //myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/Solsear_Glow").Value);
             myEffect.Parameters["uTime"].SetValue(timer * 0.08f);
 

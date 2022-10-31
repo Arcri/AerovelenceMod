@@ -871,7 +871,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         {
             Projectile.width = 48;
             Projectile.height = 42;
-            Projectile.timeLeft = 120;
+            Projectile.timeLeft = 1;
             Projectile.penetrate = -1;
             Projectile.friendly = false;
             Projectile.hostile = true;
@@ -898,12 +898,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void Kill(int timeLeft)
         {
             var entitySource = Projectile.GetSource_FromAI();
-            SoundEngine.PlaySound(SoundID.Item91, Projectile.Center);
+            //SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.75f, PitchVariance = 0.2f }, Projectile.Center);
+            //SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < 360; i += 20)
+                for (int i = 0; i < 360; i += 30)
                 {
-                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(4, 0).RotatedBy(MathHelper.ToRadians(i)), ProjectileID.RayGunnerLaser, Projectile.damage, 0, Main.myPlayer);
+                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(6, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), Projectile.damage, 0, Main.myPlayer);
                 }
             }
             base.Kill(timeLeft);

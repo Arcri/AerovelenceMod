@@ -29,7 +29,7 @@ namespace AerovelenceMod.Common.Utilities
             Vector2 drawPosition = new Vector2
             (
                 item.position.X - Main.screenPosition.X + item.width * 0.5f,
-                item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f + 2f
+                item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f
             );
 
             Main.EntitySpriteDraw
