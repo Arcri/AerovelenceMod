@@ -242,6 +242,8 @@ namespace AerovelenceMod
 				Ref<Effect> ShittyBallRef = new Ref<Effect>(Assets.Request<Effect>("Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["FireBallShader"] = new MiscShaderData(ShittyBallRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
+				Ref<Effect> CyverAuraRef = new Ref<Effect>(Assets.Request<Effect>("Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["CyverAura"] = new MiscShaderData(CyverAuraRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
 
 				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);

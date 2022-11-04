@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -23,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Item.knockBack = 2;
 			Item.rare = ItemRarityID.Pink;
 
-			Item.shoot = ModContent.ProjectileType<PinkStar>();
-			Item.shootSpeed = 4; //2
+			Item.shoot = ModContent.ProjectileType<Cyver2EnergyBall>();
+			Item.shootSpeed = 10; //2
 
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.useTime = 29; 

@@ -289,6 +289,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 case 4:
                     Clones(myPlayer);
                     break;
+                case 5:
+                    ChaseDash(myPlayer);
+                    break;
             }
 
             if (timer == 20)
@@ -370,6 +373,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             advancer = (timer > 140 ? ++advancer : advancer + 2);
             timer++;
         }
+
+        float spinTimer = 0;
 
         int currentShot = 0;
         Vector2 goalLocation = Vector2.Zero;
@@ -542,6 +547,82 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             if (timer < 69)
                 advancer++;
             timer++;
+        }
+
+        //Cut
+        public void ChaseDash(Player myPlayer)
+        {
+            //Cyver spawns Target Reticle
+            if (timer == 0)
+            {
+                int retIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<CyverReticle>(), 0, 0, myPlayer.whoAmI);
+                Projectile Reticle = Main.projectile[retIndex];
+                if (Reticle.ModProjectile is CyverReticle target)
+                {
+                    target.ParentIndex = NPC.whoAmI;
+                }
+            }
+
+
+            if (timer < 40)
+            {
+                Vector2 toPlayer = Vector2.Lerp(NPC.rotation.ToRotationVector2(), (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX), 0.2f);// (NPC.rotation.ToRotationVector2() )
+
+                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 4.5f;
+                NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+                //NPC.velocity = NPC.rotation.ToRotationVector2() * -7.5f;
+                storedRotaion = NPC.velocity.ToRotation();
+            }
+
+            if (timer >= 40)
+            {
+                NPC.rotation = storedRotaion + MathHelper.Pi;
+
+                //Spawn Cyver2EnergyBall
+                if (timer == 40)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LaserExplosionBall>(), 20, 0, Main.myPlayer);
+
+                    storedVec2 = storedRotaion.ToRotationVector2() * 35;
+                    NPC.velocity = Vector2.Zero;
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = 1f, Pitch = 0.77f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    NPC.velocity = storedRotaion.ToRotationVector2() * 55;
+
+                    /*
+                    for (int i = -1; i < 2; i++)
+                    {
+                        Vector2 offset = storedRotaion.ToRotationVector2().RotatedBy(MathHelper.PiOver2 * i) * 40;
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset, storedRotaion.ToRotationVector2() * -15, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 0, Main.myPlayer);
+                    }
+                    */
+                }
+                storedVec2 *= 0.95f;
+                NPC.velocity = storedVec2;
+
+            }
+
+            if (timer > 60)
+            {
+                timer = 30;
+                advancer++;
+
+            }
+
+            if (advancer == 7)
+            {
+                whatAttack = 5;
+                timer = -1;
+                advancer = 0;
+                storedRotaion = 0;
+            }
+            timer++;
+        }
+
+        public void TrackDash(Player myPlayer)
+        {
+
         }
 
         //Special Attacks
@@ -812,7 +893,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 ballScale = 0;
                 spammingLaser = false;
                 timer = -1;
-                whatAttack = 4;
+                whatAttack = 3;
             }
             timer++;
         }
