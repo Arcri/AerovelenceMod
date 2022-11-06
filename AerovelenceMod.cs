@@ -15,6 +15,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using ReLogic.Content;
 using AerovelenceMod.Content.Skies;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod
 {
@@ -41,7 +42,6 @@ namespace AerovelenceMod
 
 
 		internal static AerovelenceMod Instance { get; set; }
-
         public AerovelenceMod()
         {
             Instance = this;
@@ -265,9 +265,36 @@ namespace AerovelenceMod
 			primitives = new PrimTrailManager();
 
 			LoadDetours();
+
+
+
+            //COMBAT TEXT BULLSHIT STARTS HERE
+			if (false)
+			{
+                On.Terraria.CombatText.NewText_Rectangle_Color_int_bool_bool += CombatText_NewText_Rectangle_Color_int_bool_bool;
+                On.Terraria.CombatText.NewText_Rectangle_Color_string_bool_bool += CombatText_NewText_Rectangle_Color_string_bool_bool;
+            }
+
+
+        }
+
+        public static bool shouldHide = false;
+		
+		#region combatTextShit
+		
+		private int CombatText_NewText_Rectangle_Color_string_bool_bool(On.Terraria.CombatText.orig_NewText_Rectangle_Color_string_bool_bool orig, Microsoft.Xna.Framework.Rectangle location, Microsoft.Xna.Framework.Color color, string text, bool dramatic, bool dot)
+		{
+			return orig(location, Color.Purple * 1f, text, dramatic, dot);
 		}
 
-		public override void Unload()
+        private int CombatText_NewText_Rectangle_Color_int_bool_bool(On.Terraria.CombatText.orig_NewText_Rectangle_Color_int_bool_bool orig, Microsoft.Xna.Framework.Rectangle location, Microsoft.Xna.Framework.Color color, int amount, bool dramatic, bool dot)
+        {
+            return CombatText.NewText(location, Color.Purple * 1f, amount.ToString(), dramatic, dot);
+        }
+
+        #endregion
+		
+        public override void Unload()
 		{
 			if (!Main.dedServ)
 			{

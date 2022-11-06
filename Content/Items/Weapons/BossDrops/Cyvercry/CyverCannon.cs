@@ -10,6 +10,7 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
@@ -201,6 +202,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                                 int a = Projectile.NewProjectile(entitySource, location.X, location.Y, vecToMouse.X, vecToMouse.Y, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                 Main.projectile[a].scale = 1.85f;
                                 Main.projectile[a].CritChance = 100;
+
+                                Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+
+
                                 if (Main.projectile[a].ModProjectile is DarkLaser bigLaser)
                                 {
                                     bigLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2).ToRotation());

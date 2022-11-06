@@ -622,7 +622,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
         public void TrackDash(Player myPlayer)
         {
-
+            //move towards player
         }
 
         //Special Attacks
