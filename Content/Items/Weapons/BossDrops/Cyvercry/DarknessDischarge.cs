@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Item.knockBack = 2;
 			Item.rare = ItemRarityID.Pink;
 
-			Item.shoot = ModContent.ProjectileType<Cyver2EnergyBall>();
+			Item.shoot = ModContent.ProjectileType<CyverExplosionBall>();
 			Item.shootSpeed = 10; //2
 
 			Item.useStyle = ItemUseStyleID.Shoot;
@@ -47,7 +47,19 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            return base.Shoot(player, source, position, velocity, type, damage, knockback);
+			for (int i = 0; i < 6; i++)
+            {
+				int crossBombIndex = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<CyverExplosionBall>(), damage / 4, 2, Main.myPlayer);
+				Projectile Bomb = Main.projectile[crossBombIndex];
+
+				if (Bomb.ModProjectile is CyverExplosionBall BombadelaCross)
+				{
+					BombadelaCross.outVector = new Vector2(0, 450).RotatedBy(MathHelper.ToRadians(60 * i));
+				}
+			}
+
+
+			return false;
         }
 
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)

@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             Projectile.width = 48;
             Projectile.height = 48;
-            Projectile.timeLeft = 540;
+            Projectile.timeLeft = 200;
             Projectile.penetrate = -1;
             Projectile.damage = 80;
             Projectile.friendly = false;
@@ -41,6 +41,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             return Color.White;
         }
+
+        public override bool? CanDamage()
+        {
+            if (timer < 25)
+                return false;
+            return true;
+        }
+
         public override void AI()
         {
             //Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0.9f / 255f, (255 - Projectile.alpha) * 0.5f / 255f, (255 - Projectile.alpha) * 0.7f / 255f);
@@ -52,7 +60,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
-            float approaching = ((540f - Projectile.timeLeft) / 540f);
+            float approaching = ((50f - Projectile.timeLeft) / 200f);
             Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
 
             Player player = Main.player[(int)Projectile.ai[0]];
@@ -73,8 +81,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 float y = Main.rand.Next(-10, 11) * 0.01f * approaching;
                 Vector2 toPlayer = Projectile.Center - player.Center;
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
-                Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);
+                Projectile.velocity += -toPlayer * (0.555f * Projectile.timeLeft / 200f) + new Vector2(x, y);
             }
+
+            if (timer < 30)
+                Projectile.velocity *= 0.2f;
+            timer++;
         }
         public override void Kill(int timeLeft)
         {
