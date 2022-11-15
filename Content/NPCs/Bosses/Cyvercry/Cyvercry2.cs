@@ -90,18 +90,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 }
                 if(NPC.frame.Y == 3 * frameHeight) //booster frame
                 {
-
-                    for (int i = 0; i < 5; i++) //4 //2,2
+                    if (!NPC.dontTakeDamage)
                     {
-                        Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.2f, 0.2f)) * Main.rand.Next(5, 10) * -1f;
+                        for (int i = 0; i < 5; i++) //4 //2,2
+                        {
+                            Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.2f, 0.2f)) * Main.rand.Next(5, 10) * -1f;
 
-                        Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + vel * -5, ModContent.DustType<GlowCircleQuadStar>(), vel * -1f,
-                            Color.DeepSkyBlue, Main.rand.NextFloat(0.6f, 1.2f), 0.4f, 0f, dustShader);
-                        p.noLight = true;
-                        p.velocity += NPC.velocity * (0.4f + Main.rand.NextFloat(-0.1f, -0.2f));
-                        //p.rotation = Main.rand.NextFloat(6.28f);
+                            Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + vel * -5, ModContent.DustType<GlowCircleQuadStar>(), vel * -1f,
+                                Color.DeepSkyBlue, Main.rand.NextFloat(0.6f, 1.2f), 0.4f, 0f, dustShader);
+                            p.noLight = true;
+                            p.velocity += NPC.velocity * (0.4f + Main.rand.NextFloat(-0.1f, -0.2f));
+                            //p.rotation = Main.rand.NextFloat(6.28f);
+                        }
                     }
-
+                    
                     /*
                     for (int i = 0; i < 360; i += 20)
                     {
@@ -216,7 +218,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             Vector2 drawOriginAI = new Vector2(TextureAssets.Npc[NPC.type].Width() * 0.5f, NPC.height * 0.5f);
             Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Cyvercry").Value;
-            if (NPC.velocity.Length() > 18f)
+            if (NPC.velocity.Length() > 18f && !NPC.dontTakeDamage)
             {
                 Color drawingCol = drawColor;
                 for (int k = 0; k < NPC.oldPos.Length; k++)
@@ -618,15 +620,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 //Spawn Cyver2EnergyBall
                 if (timer == 40)
                 {
-                    if (advancer % 2 == 0)
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 0, Main.myPlayer);
-                    else
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 0, Main.myPlayer);
+                    for (int i = 0; i < 360; i += 20)
+                    {
+                        Vector2 circular = new Vector2(32, 0).RotatedBy(MathHelper.ToRadians(i));
+                        //circular.X *= 0.6f;
+                        circular = circular.RotatedBy(NPC.rotation);
+                        Vector2 dustVelo = -circular * 0.1f;
 
+                        Dust b = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + circular, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader2);
+                    }
+
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 0, Main.myPlayer);
 
                     storedVec2 = storedRotaion.ToRotationVector2() * 35;
                     NPC.velocity = Vector2.Zero;
-                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = 1f, Pitch = 0.77f, MaxInstances = -1 };
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = 0.5f, Pitch = 0.77f, MaxInstances = -1 };
                     SoundEngine.PlaySound(style2, NPC.Center);
 
                     NPC.velocity = storedRotaion.ToRotationVector2() * 55;
@@ -646,12 +654,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             if (timer > 60)
             {
-                timer = 30;
+                timer = 38;
                 advancer++;
 
             }
 
-            if (advancer == 7)
+            if (advancer == 12)
             {
                 NPC.width = 100;
                 NPC.height = 100;

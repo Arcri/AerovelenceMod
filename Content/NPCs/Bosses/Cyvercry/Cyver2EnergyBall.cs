@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
-            float approaching = ((50f - Projectile.timeLeft) / 200f);
+            //float approaching = ((50f - Projectile.timeLeft) / 200);
             Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
 
             Player player = Main.player[(int)Projectile.ai[0]];
@@ -77,11 +77,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.dust[dust].scale *= 0.7f;
             if (player.active)
             {
-                float x = Main.rand.Next(-10, 11) * 0.01f * approaching;
-                float y = Main.rand.Next(-10, 11) * 0.01f * approaching;
+                //float x = Main.rand.Next(-10, 11) * 0.01f * approaching;
+                //float y = Main.rand.Next(-10, 11) * 0.01f * approaching;
                 Vector2 toPlayer = Projectile.Center - player.Center;
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
-                Projectile.velocity += -toPlayer * (0.555f * Projectile.timeLeft / 200f) + new Vector2(x, y);
+                Projectile.velocity += -toPlayer * (0.455f) * MathHelper.Clamp((Projectile.timeLeft / 200), 1, 20);// + new Vector2(x, y);
             }
 
             if (timer < 30)
