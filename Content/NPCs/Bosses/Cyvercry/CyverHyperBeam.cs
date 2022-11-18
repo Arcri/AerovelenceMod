@@ -39,9 +39,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Projectile.tileCollide = true;
 			//Projectile.extraUpdates = 100; //200
 			Projectile.extraUpdates = 1;
+			Projectile.hide = true;
 		}
 
-		public override void AI()
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+			behindNPCs.Add(index);
+            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
+        }
+
+        public override void AI()
 		{
 			if (timer == 0)
             {
@@ -58,10 +66,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 				LaserRotation = Projectile.velocity.ToRotation();// + (float)Math.PI;
 				storedCenter = Projectile.Center + (LaserRotation.ToRotationVector2() * 1500);
 				Projectile.velocity = Vector2.Zero;
+
+				Projectile.ai[1] = Main.rand.NextFloat(-1, 2);
+
 			}
-			//LaserRotation += 0.01f;
+			//LaserRotation += 0.005f;
 			Projectile.scale = 1f;
-			if (timer >= 15)
+			if (timer >= 35) //15
 				Projectile.ai[0] = MathHelper.Lerp(Projectile.ai[0], -45, 0.06f);
 			timer++;
 		}
@@ -149,7 +160,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 				myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 0.6f);
 				myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
 				myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
-				myEffect.Parameters["uTime"].SetValue(timer * -0.01f);
+				myEffect.Parameters["uTime"].SetValue(timer * -0.01f + Projectile.ai[1]);
 				myEffect.Parameters["uSaturation"].SetValue(2);
 
 
@@ -171,7 +182,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 				float height = Math.Clamp(Projectile.ai[0], 0, 500); //25
 
-				if (height == 0)
+				if (height <= 20)
 					Projectile.active = false;
 
 				int width = (int)(Projectile.Center - endPoint).Length() - 24;
@@ -212,8 +223,46 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 		public override void PostDraw(Color lightColor)
         {
+			var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+
+
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+			var spotTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
+			Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+			Texture2D Ball = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
+
+
+			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+			//myEffect.Parameters["uColor"].SetValue(Color.WhiteSmoke.ToVector3() * 1f); 
+
+			myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 2.5f);
+			myEffect.Parameters["uTime"].SetValue(2);
+			myEffect.Parameters["uOpacity"].SetValue(0.9f);
+			myEffect.Parameters["uSaturation"].SetValue(1.2f);
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+			Vector2 thisPos = endPoint - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (-12 * (Projectile.ai[0] / 300));
+
+			Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball.Frame(1, 1, 0, 0), Color.HotPink * 0.5f, 0, Ball.Size() / 2, 0.39f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink * 0.5f, 0, Ball.Size() / 2, 0.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+			//Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink, 0, Ball.Size() / 2, 0.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+
+			//Activate Shader
+			myEffect.CurrentTechnique.Passes[0].Apply();
+
+			//Main.spriteBatch.Draw(spotTex, storedCenter - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.2f), spotTex.Size() / 2, 0.15f, SpriteEffects.None, 0);
+			//Main.spriteBatch.Draw(spotTex, storedCenter - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.1f, SpriteEffects.None, 0);
+
+			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer), spotTex.Size() / 2, 0.45f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer), spotTex.Size() / 2, 0.30f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
 		}
 
         public override void Kill(int timeLeft)

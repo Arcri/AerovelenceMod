@@ -118,14 +118,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
     }
 
-    public class CyverLaserPulse : ModProjectile
+    public class CyverPulse : ModProjectile
     {
 
-        public int ParentIndex
-        {
-            get => (int)Projectile.ai[0] - 1;
-            set => Projectile.ai[0] = value + 1;
-        }
         int timer = 0;
         public override void SetStaticDefaults()
         {
@@ -138,12 +133,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.height = 5;
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.scale = 0.5f;
-            Projectile.timeLeft = 100;
+            Projectile.timeLeft = 1000;
             Projectile.ignoreWater = true;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.penetrate = -1;
-            Projectile.scale = 0.10f;
+            Projectile.scale = 0.5f;
 
         }
 
@@ -152,59 +146,44 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             return false;
         }
 
-        
         public override void AI()
         {
+            if (timer == 0)
+            {
+                Projectile.rotation = Main.rand.NextFloat(6.28f);
+                //SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
+            }
 
-            //NPC parentNPC = Main.npc[ParentIndex];
-
-            //if (parentNPC != null)
-            //{
-                //Projectile.Center = parentNPC.Center - new Vector2(90, 0).RotatedBy(parentNPC.rotation);
-            //}
-            //if (parentNPC.life <= 0)
-            //{
-                //Projectile.active = false;
-            //}
-
-            Projectile.scale = Math.Clamp(MathHelper.Lerp(Projectile.scale, -0.05f, 0.07f), 0, 0.10f);
-            if (Projectile.scale == 0)
-                Projectile.active = false;
+            Projectile.scale = MathHelper.Lerp(Projectile.scale, 10f, 0.2f); //1.51
             timer++;
-
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            //MAKE IT STICK TO CYVERCRY AHHHH LIKE SAW SORTA
-
-            //Draw the Circlular Glow
-            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_02").Value;
-            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_05").Value;
+            Player Player = Main.player[Projectile.owner];
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowCyvercry_Outline").Value;
 
 
-            //Set up Shader
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2f); //2.5f makes it more spear like
-            myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
-            myEffect.Parameters["uSaturation"].SetValue(1.2f);
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
+            
+            myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GaussianStar").Value);
+            myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
+            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/PinkL").Value);
+            myEffect.Parameters["uTime"].SetValue(timer * 0.08f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-
-            //Activate Shader
             myEffect.CurrentTechnique.Passes[0].Apply();
 
-            //0.2f
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, Tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, Tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            int height1 = texture.Height;
+            Vector2 origin1 = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
+
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-
 
             return false;
         }

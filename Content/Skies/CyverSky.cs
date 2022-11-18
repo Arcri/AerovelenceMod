@@ -17,10 +17,16 @@ namespace AerovelenceMod.Content.Skies
         private Texture2D _bgTexture;
         private int timer = 0;
         private float bonusIntensity;
+
+        private Vector2[] bgLines = new Vector2[50];
         private int[] xPos = new int[50];
         private int[] yPos = new int[50];
 
         private int CyverAttack = 0;
+        private float rotation = 0;
+        private float bigShotTimer = 0;
+
+        bool runOnce = true;
 
         public override void OnLoad()
         {
@@ -34,13 +40,17 @@ namespace AerovelenceMod.Content.Skies
             const float increment = 0.01f;
             if (CheckActive())
             {
-                if (CyverAttack == -1)
+                if (bigShotTimer > 0) //giga shot 
                 {
-                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.3f, 0.02f);
+                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.6f, 0.2f); //0.3
+                }
+                else if (CyverAttack == -1) //spamming laser
+                {
+                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.3f, 0.02f); //0.3
                 }
                 else
                 {
-                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.2f, 0.2f);
+                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.2f, 0.2f); //0.2
                 }
 
                 intensity += increment;
@@ -67,8 +77,13 @@ namespace AerovelenceMod.Content.Skies
             {
                 if (Main.npc[i].active && Main.npc[i].type == ModContent.NPCType<Cyvercry2>())
                 {
+                    rotation = Main.npc[i].rotation;
                     if (Main.npc[i].ModNPC is Cyvercry2 Cyver)
+                    {
                         whichAttack(Cyver.getAttack());
+                        bigShotTimer = Cyver.bigShotTimer;
+                    }
+                        
                     return true;
                 }
             }
@@ -89,28 +104,55 @@ namespace AerovelenceMod.Content.Skies
                 //Code stolen from Fargo's Mutant Sky 
                 if (CyverAttack == -1)
                 {
-                    if (--delay < 0)
+                    if (runOnce)
                     {
-                        delay = 600;
                         for (int i = 0; i < 50; i++) //update positions
                         {
-                            xPos[i] = Main.rand.Next(Main.screenWidth);
-                            yPos[i] = Main.rand.Next(Main.screenHeight);
+                            bgLines[i].X = Main.rand.Next(Main.screenWidth);
+                            bgLines[i].Y = Main.rand.Next(Main.screenHeight + 1000);
+
+                            //xPos[i] = Main.rand.Next(Main.screenWidth);
+                            //yPos[i] = Main.rand.Next(Main.screenHeight);
                         }
+                        runOnce = false;
                     }
 
                     
 
                     for (int i = 0; i < 50; i++) //static on screen
                     {
-                        xPos[i] += 2;
+                        bgLines[i] += new Vector2(2, 0);
+                        //bgLines[i] += new Vector2(-7, 0).RotatedBy(rotation);
 
-                        if (xPos[i] > Main.screenWidth)
-                            xPos[i] = 0;
+                        //xPos[i] += 2;
+
+                        //if (xPos[i] > Main.screenWidth) { }
+                        //xPos[i] = 0;
+
+                        if (bgLines[i].X > Main.screenWidth || bgLines[i].X < 0)
+                        {
+                            bgLines[i].X = Main.rand.Next(Main.screenWidth);
+                        }
+                        if (bgLines[i].Y > Main.screenHeight || bgLines[i].Y < 0)
+                        {
+                            bgLines[i].Y = Main.rand.Next(Main.screenHeight - 500);
+                        }
 
                         int width = Main.rand.Next(3, 100);
-                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle(xPos[i] - width / 2, yPos[i], width, 1),
-                        Color.HotPink * 0.2f);
+
+                        /*
+                        Main.spriteBatch.End();
+                        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+                        Texture2D bgLineTex = AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/BGLine", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                        spriteBatch.Draw(bgLineTex, bgLines[i], null, Color.White * 0.75f, rotation, bgLineTex.Size() / 2, 1f, SpriteEffects.None, 0);
+
+                        Main.spriteBatch.End();
+                        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+                        */
+                        
+                        //spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1),
+                        //Color.HotPink * 0.2f);
                     }
                 }
                 
