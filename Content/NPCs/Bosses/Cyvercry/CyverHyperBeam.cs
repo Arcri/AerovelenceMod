@@ -33,6 +33,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		{
 			Projectile.width = 16;
 			Projectile.height = 16;
+			Projectile.hostile = true;
+			Projectile.friendly = false;
 			Projectile.penetrate = -1;
 			Projectile.ignoreWater = true;
 			Projectile.timeLeft = 1000;
@@ -265,10 +267,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 		}
 
-        public override void Kill(int timeLeft)
-        {
-			//Main.NewText("amg");
-        }
-    }
+		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+		{
+            Vector2 unit = LaserRotation.ToRotationVector2();
+            float point = 0f;
+            // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
+            // It will look for collisions on the given line using AABB
+			if (timer < 20)
+			{
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 12, 
+					endPoint, 22, ref point);
+            }
+
+			return false;
+		}
+	}
 }
 

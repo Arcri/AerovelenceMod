@@ -109,7 +109,7 @@ namespace AerovelenceMod.Content.Skies
                         for (int i = 0; i < 50; i++) //update positions
                         {
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
-                            bgLines[i].Y = Main.rand.Next(Main.screenHeight + 1000);
+                            bgLines[i].Y = Main.rand.Next(Main.screenHeight);
 
                             //xPos[i] = Main.rand.Next(Main.screenWidth);
                             //yPos[i] = Main.rand.Next(Main.screenHeight);
@@ -121,7 +121,10 @@ namespace AerovelenceMod.Content.Skies
 
                     for (int i = 0; i < 50; i++) //static on screen
                     {
-                        bgLines[i] += new Vector2(2, 0);
+                        if (i % 2 == 0)
+                            bgLines[i] += new Vector2(2, 0);
+                        else
+                            bgLines[i] -= new Vector2(2, 0);
                         //bgLines[i] += new Vector2(-7, 0).RotatedBy(rotation);
 
                         //xPos[i] += 2;
@@ -133,10 +136,10 @@ namespace AerovelenceMod.Content.Skies
                         {
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
                         }
-                        if (bgLines[i].Y > Main.screenHeight || bgLines[i].Y < 0)
-                        {
-                            bgLines[i].Y = Main.rand.Next(Main.screenHeight - 500);
-                        }
+                        //if (bgLines[i].Y > Main.screenHeight || bgLines[i].Y < 0)
+                        //{
+                            //bgLines[i].Y = Main.rand.Next(Main.screenHeight - 500);
+                        //}
 
                         int width = Main.rand.Next(3, 100);
 
@@ -151,8 +154,7 @@ namespace AerovelenceMod.Content.Skies
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
                         */
                         
-                        //spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1),
-                        //Color.HotPink * 0.2f);
+                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * 0.2f);
                     }
                 }
                 

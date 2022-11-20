@@ -11,6 +11,7 @@ using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -790,8 +791,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
 
             Player player = Main.player[(int)Projectile.ai[0]];
-            int dust = Dust.NewDust(Projectile.Center + new Vector2(-4, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 1.25f);
+            int dust = Dust.NewDust(Projectile.Center + new Vector2(0, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 0.5f);
             Main.dust[dust].noGravity = true;
+            Main.dust[dust].velocity += Projectile.velocity;
             Main.dust[dust].velocity *= 0.1f;
             Main.dust[dust].scale *= 0.7f;
             if (player.active)
@@ -802,9 +804,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
                 Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);
             }
+
+            if (Projectile.timeLeft == 300)
+                Projectile.Kill();
+
+
         }
         public override void Kill(int timeLeft)
         {
+            SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.45f, PitchVariance = 0.2f }, Projectile.Center);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Main.myPlayer);
+            /*
             for (int i = 0; i < 360; i += 5)
             {
                 Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
@@ -816,6 +826,31 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 dust.noGravity = true;
             }
             base.Kill(timeLeft);
+            */
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Vector2 bonus = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
+            //Draw the Circlular Glow
+            var Tex = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.DeepPink * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.91f, SpriteEffects.None, 0f);
+
+
+            var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBall").Value;
+
+            int frameHeight = BallTexture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+
+            // Get this frame on texture
+            Rectangle sourceRectangle = new Rectangle(0, startY, BallTexture.Width, frameHeight);
+
+
+            Vector2 origin = sourceRectangle.Size() / 2f;
+
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+            return false;
+
         }
     }
     public class ShadowCyvercry : ModProjectile
@@ -871,7 +906,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         {
             Projectile.width = 48;
             Projectile.height = 42;
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 1;
             Projectile.penetrate = -1;
             Projectile.friendly = false;
             Projectile.hostile = true;
@@ -902,7 +937,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             //SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < 360; i += 90)
+                for (int i = 0; i < 360; i += 30)
                 {
                     Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(6, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), Projectile.damage, 0, Main.myPlayer);
                 }
