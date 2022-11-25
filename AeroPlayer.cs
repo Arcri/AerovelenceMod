@@ -13,8 +13,12 @@ namespace AerovelenceMod
 {
 	public class AeroPlayer : ModPlayer
 	{
+        //useStyle
+        public object useStyleData;
+        public int useStyleInt;
 
-		public float ScreenShakePower;
+
+        public float ScreenShakePower;
 
 		public override void ModifyScreenPosition()
 		{

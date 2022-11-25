@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Skies
                 }
                 else if (CyverAttack == -1) //spamming laser
                 {
-                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.3f, 0.02f); //0.3
+                    bonusIntensity = MathHelper.Lerp(bonusIntensity, 0.4f, 0.02f); //0.3
                 }
                 else
                 {
