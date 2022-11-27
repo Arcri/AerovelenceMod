@@ -43,6 +43,12 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             overPlayers.Add(index);
         }
 
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.immune[Projectile.owner] = 1; //20
+            Projectile.damage = 0;
+        }
+
         public override void AI()
         {
             if (timer == 0)
