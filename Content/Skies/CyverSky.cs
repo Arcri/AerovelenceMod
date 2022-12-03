@@ -153,8 +153,8 @@ namespace AerovelenceMod.Content.Skies
                         Main.spriteBatch.End();
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
                         */
-                        
-                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * 0.2f);
+                        //0.2f alpha is old
+                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * 0.3f);
                     }
                 }
                 

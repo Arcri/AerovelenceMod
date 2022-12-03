@@ -273,7 +273,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             float point = 0f;
             // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
             // It will look for collisions on the given line using AABB
-			if (timer < 20)
+			if (timer < 20 && timer >= 1)
 			{
                 return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 12, 
 					endPoint, 22, ref point);

@@ -266,6 +266,9 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             DisplayName.SetDefault("Cyver Pulse");
         }
 
+        public float exploScale = 0.51f;
+        public float numberOfDraws = 3f;
+
         public override void SetDefaults()
         {
             Projectile.friendly = true;
@@ -291,7 +294,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 //SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
             }
 
-            Projectile.scale = MathHelper.Lerp(Projectile.scale, 0.51f, 0.2f); //1.51
+            Projectile.scale = MathHelper.Lerp(Projectile.scale, exploScale, 0.2f); //1.51
             timer++;
         }
 
@@ -326,9 +329,14 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             int height1 = texture.Height;
             Vector2 origin1 = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            for (float y = 0; y < numberOfDraws; y++)
+            {
+                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+
+            }
+            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
 
 
             Main.spriteBatch.End();

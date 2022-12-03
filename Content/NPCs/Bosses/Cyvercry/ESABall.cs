@@ -186,6 +186,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public void Clear()
         {
             TrueChaseX = !TrueChaseX;
+            Projectile.Center = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10f + Projectile.Center;
             Projectile.velocity = Vector2.Zero;
             timer = -1;
         }

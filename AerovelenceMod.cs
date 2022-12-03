@@ -245,8 +245,8 @@ namespace AerovelenceMod
 				Ref<Effect> CyverAuraRef = new Ref<Effect>(Assets.Request<Effect>("Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["CyverAura"] = new MiscShaderData(CyverAuraRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-                Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
-                Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
+                //Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
+                //Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
 
 
                 //Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
@@ -256,7 +256,7 @@ namespace AerovelenceMod
                 //GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
 
                 //putting this here just in case
-                Filters.Scene.Load();
+                //Filters.Scene.Load();
 
             }
 

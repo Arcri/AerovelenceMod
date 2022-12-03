@@ -20,6 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Vector2 GoalPoint = new Vector2(0, 350);//Vector2.Zero;
         float storedRotation = 0;
 
+        public float dashSpeed = 20;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shadow Clone");
@@ -72,11 +73,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 if (timer == 75)
                 {
-                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .45f, Pitch = 1f, MaxInstances = 2 };
+                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/TetraSlide") with { Volume = 0.10f, Pitch = 0.2f, MaxInstances = 4 }, Projectile.Center);
+
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .15f, Pitch = 1f, MaxInstances = 4 };
                     SoundEngine.PlaySound(style2, Projectile.Center);
                 }
 
-                Projectile.velocity = Projectile.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi) * 20;
+                Projectile.velocity = Projectile.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi) * dashSpeed;
                 
                 if (timer % 3 == 0)
                 {
@@ -95,8 +99,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool PreDraw(ref Color lightColor)
         {
-
-            //Draw the Circlular Glow
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowClone").Value;
 
             Color drawingCol = Color.SkyBlue;

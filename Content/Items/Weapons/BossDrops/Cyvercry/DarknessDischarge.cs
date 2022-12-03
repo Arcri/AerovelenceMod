@@ -17,6 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
+		bool fastThenShort = true;
 		public override void SetDefaults()
 		{
 			Item.DamageType = DamageClass.Magic;
@@ -47,6 +48,40 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+			bool randomInput = Main.rand.NextBool();
+
+			/*
+			for (int i = 0; i < 4; i++)
+			{
+				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
+				NPC laser = Main.npc[index];
+				laser.damage = 0;
+				if (laser.ModNPC is CyverBot bot)
+				{
+					bot.State = (int)(fastThenShort ? CyverBot.Behavior.PrimeLaser : CyverBot.Behavior.PrimeLaserLong);
+					bot.setTurn(randomInput);
+					bot.setGoalLocation(new Vector2(-325, 0).RotatedBy(MathHelper.ToRadians(90 * i)));
+					if (i == 0)
+						bot.Leader = true;
+				}
+			}
+			*/
+
+			//Star Strike
+			for (int i = 0; i < 5; i++)
+			{
+				Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 5) * i);
+				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBotOrbiter>(), player.whoAmI);
+				NPC laser = Main.npc[index];
+				laser.damage = 0;
+				if (laser.ModNPC is CyverBotOrbiter bot)
+				{
+					bot.State = (int)(fastThenShort ? CyverBot.Behavior.PrimeLaser : CyverBot.Behavior.PrimeLaserLong);
+					bot.GoalPoint = spawnPos;
+				}
+			}
+
+			/*
 			for (int i = 0; i < 6; i++)
             {
 				int crossBombIndex = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<CyverExplosionBall>(), damage / 4, 2, Main.myPlayer);
@@ -57,8 +92,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 					BombadelaCross.outVector = new Vector2(0, 450).RotatedBy(MathHelper.ToRadians(60 * i));
 				}
 			}
-
-
+			*/
+			fastThenShort = !fastThenShort;
 			return false;
         }
 
