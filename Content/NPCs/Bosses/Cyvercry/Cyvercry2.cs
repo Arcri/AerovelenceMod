@@ -982,7 +982,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             if (timer == 0)
             {
-                vecOut = new Vector2(550, 0).RotatedBy(Main.rand.NextFloat(6.28f)); 
+                vecOut = new Vector2(500, 0).RotatedBy(Main.rand.NextFloat(6.28f)); 
             }
 
             //Cyver Moves to a random VectorOut
@@ -996,10 +996,63 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
 
                 NPC.rotation = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
+
+
+
             }
 
-
             //Cyver Dashes with 2 energyBalls
+            if (timer >= 55)
+            {
+                if (timer == 55)
+                {
+                    storedRotaion = NPC.rotation;
+                }
+
+                NPC.damage = ContactDamage;
+
+                if (NPC.velocity.Length() > 20)
+                    Dust.NewDust(NPC.Center, 12, 12, ModContent.DustType<DashTrailDust>(), NPC.velocity.X * 0.2f, NPC.velocity.Y * 0.2f, 0, new Color(0, 255, 255), 1f);
+
+                accelFloat = MathHelper.SmoothStep(accelFloat, 50, 0.1f);  //MathHelper.Clamp(MathHelper.Lerp(accelFloat, 60f, 0.1f), 0, 50f);
+                NPC.rotation = storedRotaion;
+                NPC.velocity = storedRotaion.ToRotationVector2() * accelFloat * -1;
+
+                if (timer == 58)
+                {
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
+                    SoundEngine.PlaySound(style, NPC.Center);
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .59f, Pitch = 1f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    Vector2 vel = (NPC.rotation + 2).ToRotationVector2() * 10;
+                    Vector2 vel2 = (NPC.rotation - 2).ToRotationVector2() * 10;
+
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+
+                }
+            }
+
+            //Reset
+
+            if (timer == 100)
+            {
+                timer = 1;
+                vecOut = new Vector2(500, 0).RotatedBy(Main.rand.NextFloat(6.28f));
+                NPC.Center = myPlayer.Center + (vecOut * 2.3f);
+
+                if (advancer == 600)
+                {
+                    NPC.velocity = Vector2.Zero;
+                    timer = -1;
+                    advancer = -1;
+                    startingQuadrant = 2;
+                    SetNextAttack("Barrage");
+                }
+                advancer++;
+            }
 
             timer++;
         }
@@ -1007,7 +1060,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         //Special Attacks
 
         //BOT ATTACKS
-
         public void Bots(Player myPlayer)
         {
             NPC.dontTakeDamage = true;
