@@ -631,7 +631,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer < 80)
             {
                 Vector2 move = (GoalPoint + myPlayer.Center) - NPC.Center;
-                float scalespeed = (timer < 20 ? 3f : 7); //5
+                float scalespeed = 4; //(timer < 20 ? 3f : 7); //5
 
                 NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
                 NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
@@ -650,7 +650,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                     Vector2 vel = (NPC.rotation).ToRotationVector2();
 
-                    Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + offset * 20, ModContent.DustType<GlowCircleQuadStar>(), vel.SafeNormalize(Vector2.UnitX) * 12f,
+                    Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center - offset * 20, ModContent.DustType<GlowCircleQuadStar>(), vel.SafeNormalize(Vector2.UnitX) * 12f,
                         Color.HotPink, 0.5f, 0.4f, 0f, dustShader);
                     p.noLight = false;
                     p.fadeIn = 10;

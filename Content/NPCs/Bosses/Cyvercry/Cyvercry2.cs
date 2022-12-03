@@ -36,8 +36,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
         public int ContactDamage = 0;
 
-        public bool Phase2 = true;
-        public bool Phase3 = true;
+        public bool Phase2 = false;
+        public bool Phase3 = false;
 
         public override bool CheckActive()
         {
@@ -328,6 +328,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             return false;
         }
 
+        float bonusSpinCharge = 120;
         int whatAttack = 1;
         int timer = 0;
         int advancer = 0;
@@ -399,8 +400,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void AI()
         {
             isExpert = true;
-            isMaster = true;
-            Phase2 = true;
+            isMaster = false;
             NPC.damage = 0;
 
             //Main.NewText(whatAttack);
@@ -409,7 +409,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.TargetClosest();
             }
             Player myPlayer = Main.player[NPC.target];
-            whatAttack = 9;
+            //whatAttack = 9;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -440,7 +440,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     Bots(myPlayer);
                     break;
                 case 9:
-                    BurstDash(myPlayer);
+                    WrapDash(myPlayer);
                     break;
             }
 
@@ -568,12 +568,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         int drawAzzyLaser = 0;
         public void AzzyLaser(Player myPlayer)
         {
-
+            float bonusShots = isMaster ? 3 : isExpert ? 0 : -2;
             float shotDelay = MathHelper.Clamp(currentShot,0,13) * 5;
 
             if (currentShot == 0)
             {
-                Main.NewText("Telegraph Lines maybe WIP");
+                //Main.NewText("Telegraph Lines maybe WIP");
                 goalLocation = new Vector2(600, 0).RotatedByRandom(6.28);
                 currentShot++;
             }
@@ -653,7 +653,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 currentShot++;
                 goalLocation = goalLocation.RotatedBy(Main.rand.NextBool() ? -1 : 1);
                 drawAzzyLaser = 0;
-                if (currentShot == 16)
+                if (currentShot == 14 + bonusShots)
                 {
                     currentShot = 0;
                     whatAttack = 5;
@@ -678,7 +678,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 switch (dashQuadrant)
                 {
                     case 1:
-                        startingAngBonus = 180;
+                        startingAngBonus = 160;
                         advanceNegative = true;
                         break;
                     case 2:
@@ -690,7 +690,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         advanceNegative = true;
                         break;
                     case 4:
-                        startingAngBonus = -200; //160
+                        startingAngBonus = 160; //160
                         advanceNegative = true;
                         break;
                 }
@@ -702,7 +702,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     NPC.velocity = Vector2.Zero;
 
                 #region daggers
-                if (timer == 80)
+                if (timer == 80 && Phase2)
                 {
                     for (int i = 0; i < 3 + (isExpert ? 1 : 0); i++)
                     {
@@ -771,7 +771,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LaserExplosionBall>(), 20, 0, Main.myPlayer);
                 }
 
-                if (timer == 115 || timer == 119 || timer == 123)
+                if ((timer == 115 || timer == 119 || timer == 123) && Phase2)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<EnergyBall>(), 20, 0, Main.myPlayer);
                 }
@@ -922,7 +922,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.height = 100;
                 NPC.damage = ContactDamage;
                 startingQuadrant = 4;
-                SetNextAttack("Barrage");
+                SetNextAttack("Summon");
                 //whatAttack = 4;
                 timer = -1;
                 advancer = 0;
@@ -977,20 +977,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         }
 
         Vector2 vecOut = Vector2.Zero;
-        public void BurstDash(Player myPlayer)
+        public void WrapDash(Player myPlayer)
         {
 
             if (timer == 0)
             {
-                vecOut = new Vector2(500, 0).RotatedBy(Main.rand.NextFloat(6.28f)); 
+                accelFloat = 35;
+                if (NPC.Center.X > myPlayer.Center.X)
+                    vecOut = new Vector2(500, 0);
+                else
+                    vecOut = new Vector2(500, 0);
+                //vecOut = new Vector2(470, 0).RotatedBy(Main.rand.NextFloat(6.28f));
+                //NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * -25;
+                //NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation();
             }
 
             //Cyver Moves to a random VectorOut
-            if (timer < 55)
+            if (timer < 95)
             {
                 Vector2 move = (vecOut + myPlayer.Center) - NPC.Center;
 
-                float scalespeed = 1.15f; //2
+                float scalespeed = advancer == 0 ? 1.15f : 1.15f; //2
 
                 NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
                 NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
@@ -1002,10 +1009,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             }
 
             //Cyver Dashes with 2 energyBalls
-            if (timer >= 55)
+            if (timer >= 95)
             {
-                if (timer == 55)
+                if (timer == 95)
                 {
+                    if (advancer == 0)
+                        NPC.velocity = Vector2.Zero;
                     storedRotaion = NPC.rotation;
                 }
 
@@ -1018,7 +1027,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.rotation = storedRotaion;
                 NPC.velocity = storedRotaion.ToRotationVector2() * accelFloat * -1;
 
-                if (timer == 58)
+                if (timer == 98)
                 {
                     SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
                     SoundEngine.PlaySound(style, NPC.Center);
@@ -1026,30 +1035,32 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .59f, Pitch = 1f, MaxInstances = -1 };
                     SoundEngine.PlaySound(style2, NPC.Center);
 
-                    Vector2 vel = (NPC.rotation + 2).ToRotationVector2() * 10;
-                    Vector2 vel2 = (NPC.rotation - 2).ToRotationVector2() * 10;
-
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<EnergyBall>(), 20, 1);
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+                    Vector2 vel = (NPC.rotation + 2f).ToRotationVector2() * 6;
+                    Vector2 vel2 = (NPC.rotation - 2f).ToRotationVector2() * 6;
+                    if (isExpert || isMaster)
+                    {
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+                    }
 
                 }
             }
 
             //Reset
 
-            if (timer == 100)
+            if (timer == 140)
             {
-                timer = 1;
-                vecOut = new Vector2(500, 0).RotatedBy(Main.rand.NextFloat(6.28f));
+                timer = 39;
+                vecOut = new Vector2(470, 0).RotatedBy(Main.rand.NextFloat(6.28f));
                 NPC.Center = myPlayer.Center + (vecOut * 2.3f);
 
-                if (advancer == 600)
+                if (advancer == 8)
                 {
                     NPC.velocity = Vector2.Zero;
                     timer = -1;
                     advancer = -1;
                     startingQuadrant = 2;
-                    SetNextAttack("Barrage");
+                    SetNextAttack("Summon");
                 }
                 advancer++;
             }
@@ -1063,8 +1074,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public void Bots(Player myPlayer)
         {
             NPC.dontTakeDamage = true;
-            isExpert = true;
-            isMaster = true;
+            //isExpert = true;
+            //isMaster = true;
 
             float bonusBots = isMaster ? 2 : 0;
             float delay = (isExpert || isMaster) ? 0 : 10;
@@ -1082,7 +1093,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 for (int i = 0; i < 5 + bonusBots; i++)
                 {
                     Vector2 spawnPos = randomOut.RotatedBy(MathHelper.ToRadians(360 / (5 + bonusBots)) * i);
-                    int index = NPC.NewNPC(NPC.GetSource_FromAI(), (int)myPlayer.Center.X, (int)myPlayer.Center.Y, ModContent.NPCType<CyverBotOrbiter>());
+                    int index = NPC.NewNPC(NPC.GetSource_FromAI(), (int)(myPlayer.Center.X + (spawnPos.X * 2)), (int)(myPlayer.Center.Y + (spawnPos.Y * 2)), ModContent.NPCType<CyverBotOrbiter>());
                     NPC laser = Main.npc[index];
                     laser.damage = 0;
                     if (laser.ModNPC is CyverBotOrbiter bot)
@@ -1118,8 +1129,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public void Clones(Player myPlayer)
         {
             NPC.dontTakeDamage = true;
-            Phase2 = true;
-            Phase3 = false;
+            //Phase2 = true;
+            //Phase3 = false;
 
             float delay = (isExpert || isMaster) ? 0 : 10; 
 
@@ -1347,7 +1358,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Zombie_68");
                 SoundEngine.PlaySound(style, NPC.Center);
             }
-            if (timer <= 150)
+            if (timer <= 150 + bonusSpinCharge)
             {
                 ballScale += 1;
                 if (timer >= 20)
@@ -1363,16 +1374,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     }
                 }
                 
-                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 4;
+                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (Phase2 ? (isMaster ? 6.5f: 5.5f) : 4);
             }
             else
                 NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 0.5f;
 
             NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
 
-            if (timer > 150)
+            if (timer > 150 + bonusSpinCharge)
             {
-                if (timer == 151)
+                if (timer == 151 + bonusSpinCharge)
                 {
                     ballScale = 0;
                     Vector2 from = NPC.Center + new Vector2(-102, 0).RotatedBy(NPC.rotation);
@@ -1401,6 +1412,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     */
                 }
 
+                if (Phase2 && timer % 100 == 0)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-102, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<LaserExplosionBall>(), 0, 0, Main.myPlayer);
+                }
 
                 spammingLaser = true;
                 if (timer % 5 == 0)
@@ -1412,12 +1427,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
                 }
             }
-            if (timer == 400)
+            if (timer == 400 + bonusSpinCharge)
             {
+                bonusSpinCharge = 0;
                 ballScale = 0;
                 spammingLaser = false;
                 timer = -1;
-                SetNextAttack("Dash");
+
+                if (Phase2)
+                    SetNextAttack("Dash");
+                else
+                    SetNextAttack("Summon");
                 //whatAttack = 6; //6
             }
             timer++;
@@ -1426,7 +1446,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
         float barrageCount = 2;
         bool trueSpinFalseAzzy = true;
-        bool trueCloneFalseChase = true;
+        bool trueWrapFalseChase = true;
+        bool trueCloneFalseBot = true;
+
         public void SetNextAttack(String nextAttackName)
         {
             if (nextAttackName == "Barrage")
@@ -1444,24 +1466,59 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     whatAttack = 4;
                     trueSpinFalseAzzy = !trueSpinFalseAzzy;
                 }
+
+                if (!Phase2) //omg recurrsice fi=unction
+                    whatAttack = 3;
             }
             else if (nextAttackName == "Dash")
             {
-                if (trueCloneFalseChase)
+                if (trueWrapFalseChase)
                 {
-                    whatAttack = 6;
-                    trueCloneFalseChase = !trueCloneFalseChase;
+                    whatAttack = 9;
+                    trueWrapFalseChase = !trueWrapFalseChase;
                 }
                 else
                 {
                     whatAttack = 7;
-                    trueCloneFalseChase = !trueCloneFalseChase;
+                    trueWrapFalseChase = !trueWrapFalseChase;
                 }
+
+                if (!Phase2) //omg recurrsice fi=unction
+                    SetNextAttack("Summon");
+            }
+            else if (nextAttackName == "Summon")
+            {
+                if (trueCloneFalseBot)
+                {
+                    whatAttack = 6;
+                    trueCloneFalseBot = !trueCloneFalseBot;
+                }
+                else
+                {
+                    whatAttack = 8;
+                    trueCloneFalseBot = !trueCloneFalseBot;
+                }
+
+                if (!Phase2)
+                    whatAttack = 6;
             }
             else
             {
                 Main.NewText("very bad");
             }
+
+            if (NPC.life < (NPC.lifeMax - (NPC.lifeMax / 3)) && !Phase2)
+            {
+                Phase2 = true;
+
+                trueSpinFalseAzzy = true;
+                trueWrapFalseChase = true;
+                trueCloneFalseBot = true;
+
+                whatAttack = 1;
+                barrageCount = 1;
+            }
+
         }
         // 0 - Intro
         // 1 - IdleLaser
@@ -1471,6 +1528,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         // 5 - GigaBeam
         // 6 - Clones
         // 7 - ChaseDash
+        // 8 - Bots
+        // 9 - Wrap Dash
 
   
         public void FireLaser(int type, float speed = 6f, float recoilMult = 2f, float ai1 = 0, float ai2 = 0)

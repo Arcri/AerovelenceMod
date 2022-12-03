@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(6)), type, damage, knockback, player.whoAmI);
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-6)), type, damage, knockback, player.whoAmI);
 					Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
-					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.85f }, player.Center);
+					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.45f }, player.Center);
 
 
 					//Not using a loop because I don't want to, this isn't that bad, and it is easier to control for tweaking
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), type, damage, knockback, player.whoAmI);
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), type, damage, knockback, player.whoAmI);
-					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.85f }, player.Center);
+					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.45f }, player.Center);
 
 
 					this.shotCounter++;
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 				case 2:
 					Projectile.NewProjectile(source, position, velocity, ProjectileType<GaussianStar>(), damage * 2, knockback, player.whoAmI);
-					SoundEngine.PlaySound(SoundID.Item92 with { Volume = 0.85f }, player.Center);
+					SoundEngine.PlaySound(SoundID.Item92 with { Volume = 0.45f }, player.Center);
 
 					for (int i = 0; i < 5; i++)
 					{

@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         {
 			bool randomInput = Main.rand.NextBool();
 
-			/*
+			
 			for (int i = 0; i < 4; i++)
 			{
 				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
@@ -65,9 +65,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 						bot.Leader = true;
 				}
 			}
-			*/
+			
 
 			//Star Strike
+			/*
 			for (int i = 0; i < 5; i++)
 			{
 				Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 5) * i);
@@ -80,6 +81,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 					bot.GoalPoint = spawnPos;
 				}
 			}
+			*/
 
 			/*
 			for (int i = 0; i < 6; i++)
