@@ -25,8 +25,34 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
         public bool shouldHideCT = false;
 
-        //Remember to do this shit
-        public bool spawnDustTargetCenter = false;
+        public int travelDust = 0;
+        public enum TravelDustType
+        {
+            None = 0,
+            glowProjCenter = 1,
+            glowPlayerCenter = 2,
+            pixelProjCenter = 3,
+            pixelPlayerCenter = 4
+        }
+
+        //7 is not implemented yet
+        public int critImpact = 0;
+        public enum CritImpactType
+        {
+            None = 0,
+            glowProjCenter = 1,
+            glowPlayerCenter = 2,
+            glowTargetCenter = 3,
+            pixelProjCenter = 4,
+            pixelPlayerCenter = 5,
+            pixelTargetCenter = 6,
+            pixelTargetCenterSticky = 7,
+            
+        }
+
+        public float hitSoundVolume = 1f;
+        public float impactScale = 0.75f;
+        public float impactRot = -1f;
 
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
@@ -53,36 +79,66 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
             //base.Load();
         }
 
+        int dustTimer = 0;
         public override void AI(Projectile projectile)
 		{
 			if (SkillStrike)
 			{
-
+                /*
                 shouldHideCT = true;
                 if (shouldHideCT)
                 {
                     //On.Terraria.CombatText.NewText_Rectangle_Color_int_bool_bool += CombatText_NewText_Rectangle_Color_int_bool_bool;
                     //On.Terraria.CombatText.NewText_Rectangle_Color_string_bool_bool += CombatText_NewText_Rectangle_Color_string_bool_bool;
                 }
+                */
 
                 if (firstFrame)
                 {
                     storedDamage = projectile.damage * 2;
                     firstFrame = false;
-                    projectile.CritChance = 0;
+                    //projectile.CritChance = 0;
                 }
 
                 projectile.damage = storedDamage;
 
-                if (Main.rand.NextBool(10))
+                switch (travelDust)
                 {
-                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                    case (int)TravelDustType.None:
+                        break;
 
-                    int p = GlowDustHelper.DrawGlowDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<GlowCircleQuadStar>(), 0f, 0f,
-                        Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader);
+                    case (int)TravelDustType.glowProjCenter:
+                        if (dustTimer % 20 == 0)
+                        {
+                            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                            int p = GlowDustHelper.DrawGlowDust(projectile.position, projectile.width, projectile.height, ModContent.DustType<GlowCircleQuadStar>(), 0f, 0f,
+                                Color.Gold, Main.rand.NextFloat(0.3f, 0.5f), 0.3f, 0f, dustShader);
+                        }
+                        break;
+
+                    case (int)TravelDustType.glowPlayerCenter:
+                        if (dustTimer % 20 == 0)
+                        {
+                            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                            int p = GlowDustHelper.DrawGlowDust(Main.player[projectile.owner].position, projectile.width, projectile.height, ModContent.DustType<GlowCircleQuadStar>(), 0f, 0f,
+                                Color.Gold, Main.rand.NextFloat(0.3f, 0.5f), 0.3f, 0f, dustShader);
+                        }
+                        break;
+                    case (int)TravelDustType.pixelProjCenter:
+                        //TBD
+                        break;
+                    case (int)TravelDustType.pixelPlayerCenter:
+                        //TDB
+                        break;
                 }
 
+
+
             }
+
+            dustTimer++;
 
 		}
 
@@ -90,14 +146,82 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 		{
             if (SkillStrike)
 			{
-                AerovelenceMod.shouldHide = true;
+                //AerovelenceMod.shouldHide = true;
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_1") with { Pitch = .26f, PitchVariance = .12f, MaxInstances = 1, };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_1") with { Pitch = .46f, PitchVariance = .12f, MaxInstances = -1, Volume = 0.5f * hitSoundVolume };
                 SoundEngine.PlaySound(style, target.Center);
 
+                SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_2") with { Pitch = -.26f, PitchVariance = .12f, MaxInstances = -1, Volume = 0.25f * hitSoundVolume };
+                SoundEngine.PlaySound(style2, target.Center);
 
                 ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
+                float pixelHitRotation = (impactRot == -1 ? Main.rand.NextFloat(6.28f) : impactRot);
+
+                switch (critImpact)
+                {
+                    case (int)CritImpactType.glowProjCenter:
+                        for (int j = 0; j < 6; j++)
+                        {
+                            Dust dust1 = GlowDustHelper.DrawGlowDustPerfect(projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
+                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                            dust1.velocity *= 1f;
+
+                        }
+                        break;
+
+                    case (int)CritImpactType.glowPlayerCenter:
+                        for (int j = 0; j < 6; j++)
+                        {
+                            Dust dust2 = GlowDustHelper.DrawGlowDustPerfect(Main.player[projectile.owner].Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
+                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                            dust2.velocity *= 1f;
+
+                        }
+                        break;
+
+                    case (int)CritImpactType.glowTargetCenter:
+                        for (int j = 0; j < 6; j++)
+                        {
+                            Dust dust3 = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
+                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                            dust3.velocity *= 1f;
+
+                        }
+                        break;
+
+                    case (int)CritImpactType.pixelProjCenter:
+                        int a = Projectile.NewProjectile(null, projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
+                        Main.projectile[a].rotation = pixelHitRotation;
+                        Main.projectile[a].scale = impactScale;
+                        break;
+
+                    case (int)CritImpactType.pixelPlayerCenter:
+                        int b = Projectile.NewProjectile(null, Main.player[projectile.owner].Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
+                        Main.projectile[b].rotation = pixelHitRotation;
+                        Main.projectile[b].scale = impactScale;
+                        break;
+
+                    case (int)CritImpactType.pixelTargetCenter:
+                        int c = Projectile.NewProjectile(null, target.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
+                        Main.projectile[c].rotation = pixelHitRotation;
+                        Main.projectile[c].scale = impactScale;
+                        break;
+
+                    case (int)CritImpactType.pixelTargetCenterSticky:
+                        int d = Projectile.NewProjectile(null, projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
+                        Main.projectile[d].rotation = pixelHitRotation;
+                        Main.projectile[d].scale = impactScale;
+                        if (Main.projectile[d].ModProjectile is SkillCritImpact impact)
+                        {
+                            impact.sticky = true;
+                            impact.stuckNPCIndex = target.whoAmI;
+                        }
+
+                        break;
+                }
+
+                /*
                 for (int j = 0; j < 6; j++)
                 {
                     Dust d = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
@@ -105,8 +229,11 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                     d.velocity *= 1f;
 
                 }
+                */
 
-                shouldHideCT = false;
+                //int a = Projectile.NewProjectile(null, projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
+                //Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
+                //shouldHideCT = false;
 
                 /*
                 //Combat text is done before OnHitNPC is called, so we iterate through every text in reverse to find the latest one that is true and turn it off

@@ -1,4 +1,6 @@
+using AerovelenceMod.Common.Globals.SkillStrikes;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -81,17 +83,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 				case 1:
 
-					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), type, damage, knockback, player.whoAmI);
-					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), type, damage, knockback, player.whoAmI);
+					int a = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), type, damage, knockback, player.whoAmI);
+					int b = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), type, damage, knockback, player.whoAmI);
 					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.45f }, player.Center);
+
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.55f;
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.55f;
+					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactRot = MathHelper.PiOver2 / 2;
+
+
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.55f;
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.55f;
+					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().impactRot = -1 * MathHelper.PiOver2 / 2;
 
 
 					this.shotCounter++;
 					break;
 
 				case 2:
-					Projectile.NewProjectile(source, position, velocity, ProjectileType<GaussianStar>(), damage * 2, knockback, player.whoAmI);
+					int star = Projectile.NewProjectile(source, position, velocity, ProjectileType<GaussianStar>(), damage * 2, knockback, player.whoAmI);
 					SoundEngine.PlaySound(SoundID.Item92 with { Volume = 0.45f }, player.Center);
+
+					//Main.projectile[star].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+					//Main.projectile[star].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
+					//Main.projectile[star].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
 
 					for (int i = 0; i < 5; i++)
 					{
@@ -119,6 +140,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
 			this.shotCounter = 0;
 			return base.OnPickup(player);
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+
+			int itemID = ModContent.ItemType<GaussShotgun>();
+			TooltipLine line = new(Mod, "SS", "[i:" + ItemID.FallenStar  + "] Skill Strikes on the second shot [i:" + ItemID.FallenStar + "]")
+			{
+				OverrideColor = Color.Gold,
+			};
+			tooltips.Add(line);
         }
     }
 }

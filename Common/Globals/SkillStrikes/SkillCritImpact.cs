@@ -7,63 +7,63 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Items.Weapons.HandBlades
+namespace AerovelenceMod.Common.Globals.SkillStrikes
 {
-    public class TetraBladeStrike : ModProjectile
+    public class SkillCritImpact : ModProjectile
     {
         public int timer = 0;
-        public Vector2 distFromPlayer = Vector2.Zero;
-        public Color strikeCol = Color.Green;
+        public Vector2 distFromTarget = Vector2.Zero;
+        public Color strikeCol = Color.White;
+        public bool sticky = false;
+        public int stuckNPCIndex = 0;
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tetra Strike");
-            Main.projFrames[Projectile.type] = 5;
+            DisplayName.SetDefault("Skill Strike Impact");
+            Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()
         {
-            Projectile.width = 48;
-            Projectile.height = 48;
+            Projectile.width = 140;
+            Projectile.height = 26;
             Projectile.timeLeft = 200;
             Projectile.penetrate = -1;
-            Projectile.damage = 80;
-            Projectile.friendly = true;
+            Projectile.damage = 0;
+            Projectile.friendly = false;
             Projectile.hostile = false;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             //projectile.netImportant = true;
+            Projectile.scale = 0.75f;
         }
         public override Color? GetAlpha(Color lightColor)
         {
             return Color.White;
         }
 
-        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        public override bool? CanDamage()
         {
-            overPlayers.Add(index);
-        }
-
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            target.immune[Projectile.owner] = 1; //20
-            Projectile.damage = 0;
+            return false;
         }
 
         public override void AI()
         {
-            if (timer == 0)
+            if (sticky)
             {
-                distFromPlayer = Projectile.Center - Main.player[Projectile.owner].Center;
+                if (timer == 0)
+                {
+                    distFromTarget = Projectile.Center - Main.npc[stuckNPCIndex].Center;
+                }
+
+                Projectile.Center = Main.npc[stuckNPCIndex].Center + distFromTarget;
             }
 
-            Projectile.Center = Main.player[Projectile.owner].Center + distFromPlayer;
-
             Projectile.frameCounter++;
-            if (Projectile.frameCounter >= 3)
+            if (Projectile.frameCounter >= 2)
             {
-                if (Projectile.frame == 4)
+                if (Projectile.frame == 5)
                     Projectile.active = false;
-
+                
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
@@ -71,7 +71,8 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/HandBlades/TetraBladeStrike").Value;
+
+            var Tex = Mod.Assets.Request<Texture2D>("Common/Globals/SkillStrikes/SkillCritImpact").Value;
 
             int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
@@ -87,4 +88,4 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         }
 
     }
-}
+} 

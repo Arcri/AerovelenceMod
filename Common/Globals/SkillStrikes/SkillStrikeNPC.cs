@@ -41,11 +41,19 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
             if (projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike)
             {
-                Main.combatText[recent].color = Color.Gold;
+                if (crit)
+                    Main.combatText[recent].color = Color.Purple * 0f;
+                else
+                    Main.combatText[recent].color = Color.Gold * 0f;
 
                 CombatText anchor = Main.combatText[recent];
-                Projectile.NewProjectile(null, anchor.position, anchor.velocity, ProjectileType<SkillStrikeProj>(), 0, 0, Main.myPlayer, recent, recent);
-                Main.NewText("Spawned proj with CT index: " + recent);
+                int a = Projectile.NewProjectile(null, anchor.position, anchor.velocity, ProjectileType<SkillStrikeProj>(), 0, 0, Main.myPlayer, recent, recent);
+                if (Main.projectile[a].ModProjectile is SkillStrikeProj SS)
+                {
+                    SS.damageNumber = anchor.text;
+                    SS.crit = crit;
+                }
+                //Main.NewText("Spawned proj with CT index: " + recent);
             }
 
             

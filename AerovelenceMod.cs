@@ -16,6 +16,7 @@ using Terraria.UI;
 using ReLogic.Content;
 using AerovelenceMod.Content.Skies;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using ReLogic.Graphics;
 
 namespace AerovelenceMod
 {
@@ -38,8 +39,6 @@ namespace AerovelenceMod
 
 		//Mod Support
 		public bool FargosModMutant;
-
-
 
 		internal static AerovelenceMod Instance { get; set; }
         public AerovelenceMod()
@@ -199,6 +198,7 @@ namespace AerovelenceMod
 		{
 			if (Main.netMode != NetmodeID.Server)
 			{
+
 				string shaderName = "AerovelenceMod:CavernCrystalShine";
 				string shaderPath = "Effects/CavernCrystalShine";
 

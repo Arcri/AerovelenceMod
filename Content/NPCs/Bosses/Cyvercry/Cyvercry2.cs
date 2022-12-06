@@ -76,6 +76,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             NPC.defense = 35;
         }
 
+        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        {
+            if (item.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
+                damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 6.5 : 5));
+        }
+        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (projectile.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
+                damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 6.5 : 5));
+        }
+
         public override void FindFrame(int frameHeight)
         {
             NPC.frameCounter++;
@@ -122,7 +133,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 }
             }
         }
-
 
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -400,7 +410,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void AI()
         {
             isExpert = true;
-            isMaster = false;
+            isMaster = true;
             NPC.damage = 0;
 
             //Main.NewText(whatAttack);
@@ -1507,7 +1517,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 Main.NewText("very bad");
             }
 
-            if (NPC.life < (NPC.lifeMax - (NPC.lifeMax / 3)) && !Phase2)
+            float phase2TransValue = isExpert ? (NPC.lifeMax - (NPC.lifeMax / 4)) : (NPC.lifeMax - (NPC.lifeMax / 3));
+
+            if (NPC.life < phase2TransValue && !Phase2)
             {
                 Phase2 = true;
 
