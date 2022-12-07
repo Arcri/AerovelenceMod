@@ -80,6 +80,8 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
         }
 
         int dustTimer = 0;
+
+        
         public override void AI(Projectile projectile)
 		{
 			if (SkillStrike)
@@ -127,7 +129,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                         }
                         break;
                     case (int)TravelDustType.pixelProjCenter:
-                        //TBD
+
                         break;
                     case (int)TravelDustType.pixelPlayerCenter:
                         //TDB
@@ -158,35 +160,55 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
                 float pixelHitRotation = (impactRot == -1 ? Main.rand.NextFloat(6.28f) : impactRot);
 
+                Color colToUse = crit ? Color.DeepPink * 0.75f : Color.Orange;
+
                 switch (critImpact)
                 {
                     case (int)CritImpactType.glowProjCenter:
-                        for (int j = 0; j < 6; j++)
+                        for (int j = 0; j < 8 * impactScale; j++)
                         {
                             Dust dust1 = GlowDustHelper.DrawGlowDustPerfect(projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
-                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                                colToUse, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
                             dust1.velocity *= 1f;
 
+                        }
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(projectile.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 42 + Main.rand.NextFloat(-3f, 4f);
                         }
                         break;
 
                     case (int)CritImpactType.glowPlayerCenter:
-                        for (int j = 0; j < 6; j++)
+                        for (int j = 0; j < 8 * impactScale; j++)
                         {
                             Dust dust2 = GlowDustHelper.DrawGlowDustPerfect(Main.player[projectile.owner].Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
-                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                                colToUse, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
                             dust2.velocity *= 1f;
 
+                        }
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(Main.player[projectile.owner].Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 42 + Main.rand.NextFloat(-3f, 4f);
                         }
                         break;
 
                     case (int)CritImpactType.glowTargetCenter:
-                        for (int j = 0; j < 6; j++)
+                        for (int j = 0; j < 8 * impactScale; j++)
                         {
                             Dust dust3 = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
-                                Color.Gold, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
+                                colToUse, Main.rand.NextFloat(0.4f, 0.6f), 0.6f, 0f, dustShader2);
                             dust3.velocity *= 1f;
 
+                        }
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(target.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f,1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 42 + Main.rand.NextFloat(-3f,4f);
                         }
                         break;
 
@@ -194,18 +216,37 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                         int a = Projectile.NewProjectile(null, projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
                         Main.projectile[a].rotation = pixelHitRotation;
                         Main.projectile[a].scale = impactScale;
+                        for (int i = 0; i < 5 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(projectile.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.25f, 0.2f, 0f, dustShader2);
+                            gd.fadeIn = 50 + Main.rand.NextFloat(-3f, 4f);
+
+                        }
                         break;
 
                     case (int)CritImpactType.pixelPlayerCenter:
                         int b = Projectile.NewProjectile(null, Main.player[projectile.owner].Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
                         Main.projectile[b].rotation = pixelHitRotation;
                         Main.projectile[b].scale = impactScale;
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(Main.player[projectile.owner].Center + randomStart, ModContent.DustType<GlowLine1>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 50 + Main.rand.NextFloat(-3f, 4f);
+                        }
                         break;
 
                     case (int)CritImpactType.pixelTargetCenter:
                         int c = Projectile.NewProjectile(null, target.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0, Main.myPlayer);
                         Main.projectile[c].rotation = pixelHitRotation;
                         Main.projectile[c].scale = impactScale;
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(target.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 50 + Main.rand.NextFloat(-3f, 4f);
+                        }
                         break;
 
                     case (int)CritImpactType.pixelTargetCenterSticky:
@@ -217,7 +258,12 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                             impact.sticky = true;
                             impact.stuckNPCIndex = target.whoAmI;
                         }
-
+                        for (int i = 0; i < 12 * impactScale; i++)
+                        {
+                            Vector2 randomStart = Main.rand.NextVector2CircularEdge(6.5f, 6.5f) * impactScale;
+                            Dust gd = GlowDustHelper.DrawGlowDustPerfect(projectile.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), colToUse, 0.2f, 0.4f, 0f, dustShader2);
+                            gd.fadeIn = 50 + Main.rand.NextFloat(-3f, 4f);
+                        }
                         break;
                 }
 

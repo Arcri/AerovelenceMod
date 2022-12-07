@@ -8,6 +8,7 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
 using ReLogic.Content;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
@@ -149,6 +150,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         Direction = -1;
                     strikeCount++;
                     Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
+                    Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
                 }
             }
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.75f, PitchVariance = 0.2f }, Projectile.Center);

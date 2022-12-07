@@ -23,7 +23,8 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
         int timer = 0;
 
         public float size = 0f;
-        public bool crit = false;
+        public bool skillCrit = false;
+        public bool superCrit = false;
 
         public override void SetStaticDefaults()
         {
@@ -101,19 +102,24 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
             {
                 Color innerColor;
                 Color outerColor;
-                if (crit)
+                if (superCrit)
                 {
                     innerColor = Color.BlanchedAlmond;
                     outerColor = Color.DeepPink;
-                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, innerColor, outerColor, new Vector2(0, 0), Projectile.scale * 0.5f);
+                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, innerColor, outerColor, new Vector2(0, 0), Projectile.scale * 0.55f);
 
                 }
-                else
+                else if (skillCrit)
                 {
                     innerColor = Color.BlanchedAlmond;
                     outerColor = new Color(242, 169, 0);
-                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, innerColor, outerColor, new Vector2(0, 0), Projectile.scale * 0.45f);
+                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, innerColor, outerColor, new Vector2(0, 0), Projectile.scale * 0.5f);
                     
+                } else
+                {
+                    innerColor = Color.BlanchedAlmond;
+                    outerColor = Color.Red;
+                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, innerColor, outerColor, new Vector2(0, 0), Projectile.scale * 0.5f);
                 }
             }
             //Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, Color.BlanchedAlmond, Color.Purple, new Vector2(0,0), Projectile.scale * 0.4f);

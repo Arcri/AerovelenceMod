@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 using static Humanizer.In;
 using static Terraria.ModLoader.ModContent;
 
-namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 {
 	public class WarBow : ModItem
 	{
@@ -24,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Item.rare = ItemRarityID.Yellow;
 			Item.width = 58;
 			Item.height = 20;
-			Item.useAnimation = 7;
-			Item.useTime = 7;
+			Item.useAnimation = 20;
+			Item.useTime = 20;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.shootSpeed = 15f;
 			Item.knockBack = 6f;
@@ -36,6 +36,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Item.shoot = ProjectileID.WoodenArrowFriendly;
 			//Item.UseSound = SoundID.DD2_PhantomPhoenixShot;
 			Item.useAmmo = AmmoID.Arrow;
+			Item.channel = true;
+			Item.noUseGraphic = true;
 		}
 		public override Vector2? HoldoutOffset()
 		{
@@ -61,11 +63,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
+			Projectile proj2 = Projectile.NewProjectileDirect(source, position, Vector2.Zero, ModContent.ProjectileType<WarBowHeldProj>(), damage, 0, player.whoAmI);
 
-            Projectile proj = Projectile.NewProjectileDirect(source, position, velocity * 0.3f, ModContent.ProjectileType<SlateSet.SlateArrow>(), damage, knockback, player.whoAmI);
-            proj.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-			proj.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
-			proj.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelProjCenter;
+			if (proj2.ModProjectile is WarBowHeldProj wb)
+            {
+				wb.projToShootID = type;
+            }
+
+			//Projectile proj = Projectile.NewProjectileDirect(source, position, velocity * 0.3f, ProjectileID.WoodenArrowFriendly, damage, knockback, player.whoAmI);
+            //proj.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+			//proj.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
+			//proj.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelProjCenter;
 
 			return false;
         }

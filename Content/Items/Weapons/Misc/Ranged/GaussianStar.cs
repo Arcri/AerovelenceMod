@@ -1,3 +1,4 @@
+using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Core.Prim;
 using Microsoft.Xna.Framework;
@@ -95,6 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		public void AoE() 
 		{
 			Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussExplosion>(), 0, 0, Projectile.owner);
+			
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 85f)
@@ -105,6 +107,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					else
 						Direction = -1;
 					Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
+					Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
 				}
 			}
 			SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
