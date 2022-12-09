@@ -75,7 +75,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         {
             Player Player = Main.player[Projectile.owner];
 
-
             Projectile.velocity = Vector2.Zero;
             Projectile.timeLeft = 2;
             Player.itemTime = 2; // Set Item time to 2 frames while we are used
