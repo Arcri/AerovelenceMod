@@ -1,6 +1,5 @@
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Core.Prim;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

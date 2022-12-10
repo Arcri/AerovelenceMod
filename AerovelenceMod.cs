@@ -5,7 +5,6 @@ using AerovelenceMod.Core;
 using AerovelenceMod.Backgrounds.Skies;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Common.IL;
-using AerovelenceMod.Core.Prim;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
@@ -22,6 +21,11 @@ namespace AerovelenceMod
 {
     public class AerovelenceMod : Mod
     {
+		public Asset<Effect> TrailShader;
+
+		public static IDictionary<string, Effect> ShaderDict = new Dictionary<string, Effect>();
+
+
 		public const bool DEBUG = true;
 
 		internal static string PLACEHOLDER_TEXTURE = "AerovelenceMod/Blank";
@@ -34,8 +38,6 @@ namespace AerovelenceMod
 		// UI
 		internal UserInterface MarauderUserInterface;
 		internal UserInterface RockCollectorUserInterface;
-
-		public static PrimTrailManager primitives;
 
 		//Mod Support
 		public bool FargosModMutant;
@@ -232,7 +234,7 @@ namespace AerovelenceMod
 				Ref<Effect> MiscGlow = new Ref<Effect>(Assets.Request<Effect>("Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["GlowMisc"] = new MiscShaderData(MiscGlow, "Glow");
 
-				LegElectricity = Instance.Assets.Request<Effect>("Effects/LegElectricity").Value;
+				LegElectricity = Instance.Assets.Request<Effect>("Effects/LegElectricity", AssetRequestMode.ImmediateLoad).Value;
 				RailgunShader = Instance.Assets.Request<Effect>("Effects/RailgunShader").Value;
 
 
@@ -245,30 +247,31 @@ namespace AerovelenceMod
 				Ref<Effect> CyverAuraRef = new Ref<Effect>(Assets.Request<Effect>("Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["CyverAura"] = new MiscShaderData(CyverAuraRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-                //Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
-                //Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
+				//Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
+				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
 
 
-                //Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
-                //GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
+				//GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-                //Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
-                //GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
+				//Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
+				//GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
 
-                //putting this here just in case
-                //Filters.Scene.Load();
+				//putting this here just in case
+				//Filters.Scene.Load();
 
-            }
+				//TrailShader = Assets.Request<Effect>("Effects/Trail");
 
-            if (!Main.dedServ)
+
+			}
+
+			if (!Main.dedServ)
             {
                 MarauderUserInterface = new UserInterface();
 				RockCollectorUserInterface = new UserInterface();
 				//DiscordRichPresence.Initialize();
 				//Main.OnTickForThirdPartySoftwareOnly += DiscordRichPresence.Update;
 			}
-
-			primitives = new PrimTrailManager();
 
 			LoadDetours();
 
@@ -307,6 +310,8 @@ namespace AerovelenceMod
 				//DiscordRichPresence.Deinitialize();
 				//Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
 			}
+			TrailShader = null;
+
 			UnloadDetours();
 			FargosModMutant = false;
 			Instance = null;
@@ -373,7 +378,6 @@ namespace AerovelenceMod
 
 		private void LoadDetours()
 		{
-			On.Terraria.Main.DrawProjectiles += Main_DrawProjectiles;
 			AeroPlayer aeroPlayer = new AeroPlayer();
 			//On.Terraria.Player.ItemCheck += aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw += DrawMoonlordLayer;
@@ -381,15 +385,9 @@ namespace AerovelenceMod
 
 		private void UnloadDetours()
 		{
-			On.Terraria.Main.DrawProjectiles -= Main_DrawProjectiles;
 			AeroPlayer aeroPlayer = new AeroPlayer();
 			//On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
-		}
-		private void Main_DrawProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
-		{
-			primitives.DrawTrails(Main.spriteBatch);
-			orig(self);
 		}
     }
 }

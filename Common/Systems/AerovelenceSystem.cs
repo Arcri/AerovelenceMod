@@ -8,7 +8,6 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.UI;
 using System.Collections.Generic;
-using AerovelenceMod.Core.Prim;
 
 namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 {

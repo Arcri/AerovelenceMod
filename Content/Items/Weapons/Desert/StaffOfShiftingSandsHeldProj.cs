@@ -171,7 +171,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
             if (Projectile.localAI[0] > 0)
             {
 
-                Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+                Texture2D texture = TextureAssets.Projectile[Projectile.type].Value; 
 
                 /*
                 Main.spriteBatch.End();
