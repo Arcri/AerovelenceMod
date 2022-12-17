@@ -179,11 +179,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Color ret;
             if (dust.alpha < 80)
             {
-                ret = Color.Lerp(Color.LightGray, Color.LightGray, dust.alpha / 80f * 0.5f);
+                ret = Color.Lerp(Color.Black, Color.Gray, dust.alpha / 80f * 0.5f);
             }
             else if (dust.alpha < 140)
             {
-                ret = Color.Lerp(Color.LightGray, Color.Gray * 0.5f, (dust.alpha - 80) / 80f * 0.5f);
+                ret = Color.Lerp(Color.Gray, Color.LightGray * 0.5f, (dust.alpha - 80) / 80f * 0.5f);
             }
             else
                 ret = gray;
@@ -192,7 +192,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override bool Update(Dust dust)
         {
-            dust.color = dust.GetAlpha(Color.Wheat);           
+            dust.position += dust.velocity;
+            dust.color = dust.GetAlpha(Color.Black);           
             dust.alpha += 2;
             dust.velocity.Y += -0.02f;
 

@@ -523,11 +523,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 SoundEngine.PlaySound(stylea, NPC.Center);
                 SoundEngine.PlaySound(stylea, NPC.Center);
 
-
                 SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, MaxInstances = -1 };
                 SoundEngine.PlaySound(styleb, NPC.Center);
                 SoundEngine.PlaySound(styleb, NPC.Center);
-
 
                 SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .38f, Volume = 0.7f }; //1f
                 SoundEngine.PlaySound(stylec, NPC.Center);

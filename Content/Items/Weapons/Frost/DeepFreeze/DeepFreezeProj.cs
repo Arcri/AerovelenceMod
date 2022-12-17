@@ -10,9 +10,9 @@ using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 
-namespace AerovelenceMod.Content.Projectiles.Other
+namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 {
-    public class FadeExplosion : ModProjectile
+    public class DeepFreezeProj : ModProjectile
     {
 		int timer = 0;
 		public float colorIntensity = 1f;
@@ -25,18 +25,17 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Fade Explosion");
+			DisplayName.SetDefault("Icy Wind");
 
 		}
 
         public override void SetDefaults()
 		{
-			Projectile.width = 1;
-			Projectile.height = 1;
+			Projectile.width = 20;
+			Projectile.height = 20;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
 			Projectile.penetrate = -1;
-			Projectile.scale = 1f;
 			Projectile.timeLeft = 200;
 			Projectile.tileCollide = false;
 			Projectile.scale = 0f;
@@ -50,6 +49,10 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override void AI()
         {
+			color = Color.SkyBlue;
+			//multiplier = 1.5f;
+			//size = 0.25f;
+
 			Player player = Main.player[Projectile.owner];
 			timer++;
 
@@ -60,19 +63,21 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 			colorIntensity -= 0.02f;
 
-			Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, size, 0.15f), 0f, size / 2);
+			Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, size, 0.025f), 0f, size / 2);
 			if (colorIntensity <= 0)
 				Projectile.active = false;
 
 			if (rise)
 				Projectile.velocity.Y += -0.06f;
 
+			timer++;
+
         }
 
 		public override bool PreDraw(ref Color lightColor)
 		{
 
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/FadeExplosion").Value;
+            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreezeProj").Value;
 
             int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
@@ -95,7 +100,8 @@ namespace AerovelenceMod.Content.Projectiles.Other
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 			myEffect.CurrentTechnique.Passes[0].Apply();
 
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+			if (timer > 3)
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 			//Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
@@ -105,7 +111,19 @@ namespace AerovelenceMod.Content.Projectiles.Other
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 		}
+		public Color FetchRainbow()
+		{
+			float sin1 = (float)Math.Sin(MathHelper.ToRadians(timer));
+			float sin2 = (float)Math.Sin(MathHelper.ToRadians(timer + 120));
+			float sin3 = (float)Math.Sin(MathHelper.ToRadians(timer + 240));
+			int middle = 180;
+			int length = 75;
+			float r = middle + length * sin1;
+			float g = middle + length * sin2;
+			float b = middle + length * sin3;
+			Color color = new Color((int)r, (int)g, (int)b);
+			return color;
+		}
 
-
-    }
+	}
 }

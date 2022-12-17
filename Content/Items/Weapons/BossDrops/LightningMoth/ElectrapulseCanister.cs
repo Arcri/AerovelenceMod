@@ -8,6 +8,7 @@ using Terraria.Audio;
 using AerovelenceMod.Core.Abstracts;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
+using Terraria.Graphics;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
 {
@@ -44,6 +45,13 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
         public bool e;
         public float rot = 0.5f;
         public int i;
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+        }
+
         public override void SetDefaults()
         {
             Projectile.width = 28;
@@ -81,12 +89,44 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
             {
                 int dust = Dust.NewDust(Projectile.position, Projectile.width / 2, Projectile.height / 2, 132);
             }
+
+            timer += 0.02f;
         }
         public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit) => Projectile.Kill();
 
-
+        float timer = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
+            float colorFloat = 1f;
+            Color ColorValue = Color.White;
+
+            //float a = new (float)VertexStrip.StripHalfWidthFunction();
+            /*
+            VertexStrip.StripColorFunction colo;
+            colo = colorStrip;
+
+            VertexStrip.StripHalfWidthFunction shwf;
+            shwf = widthStrip;
+
+            //Prims
+            BasicEffect effect = new BasicEffect(Main.graphics.GraphicsDevice);
+            effect.VertexColorEnabled = true;
+            effect.World = Matrix.CreateTranslation(-new Vector3(Main.screenPosition.X, Main.screenPosition.Y, 0));
+            effect.View = Main.GameViewMatrix.TransformationMatrix;
+            var viewport = Main.instance.GraphicsDevice.Viewport;
+            effect.Projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, -1, 1);
+            Main.graphics.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+
+            effect.CurrentTechnique.Passes[0].Apply();
+
+            VertexStrip vertexStrip = new VertexStrip();
+            vertexStrip.PrepareStrip(Projectile.oldPos, Projectile.oldRot, colo, widthStrip, includeBacksides: true);
+            vertexStrip.DrawTrail();
+            */
+
+            //Prims
+
+
             var texture = TextureAssets.Projectile[Type].Value;
             var offset = new Vector2(Projectile.width / 2f, Projectile.height / 2f) - Main.screenPosition;
             var drawColor = Projectile.GetAlpha(lightColor);
@@ -96,6 +136,16 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
             Main.spriteBatch.Draw(texture, Projectile.position + offset, frame, Projectile.GetAlpha(lightColor), Projectile.rotation + MathHelper.Pi, origin, Projectile.scale, SpriteEffects.None, 0f);
             //Main.spriteBatch.Draw(texture, Projectile.position + offset, new Rectangle(frame.X, frame.Y + frame.Height, frame.Width, frame.Height), Color.White, Projectile.rotation + MathHelper.Pi, origin, Projectile.scale, SpriteEffects.None, 0f);
             return false;
+        }
+
+        public Color colorStrip(float progress)
+        {
+            return Color.SeaShell;
+        }
+
+        public float widthStrip(float progress)
+        {
+            return progress * 1f;
         }
 
     }

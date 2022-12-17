@@ -286,16 +286,45 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         shootTimer++;
 
-                        if (shootTimer >= 90)
+                        if (shootTimer >= 60)
                         {
+                            bool rotDir = Main.rand.NextBool();
+                            Vector2 randomVec = new Vector2(50, 0);
                             if (Main.netMode != NetmodeID.MultiplayerClient)
-
-                                for (int i = -3; i < 4; i++)
+                            {
+                             /*
+                                for (int j = 0; j < 1; j++)
                                 {
-                                    Vector2 perturbedSpeed = new Vector2(0, -10).RotatedBy(MathHelper.ToRadians(15 * i));
-                                    Projectile.NewProjectile(Projectile.InheritSource(NPC), position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
+                                    Vector2 vecout = new Vector2(350, 0).RotatedBy(1 * j);
 
+                                    for (int i = 0; i < 7; i++)
+                                    {
+
+                                        int a = Projectile.NewProjectile(Projectile.InheritSource(NPC), NPC.Center, Vector2.Zero, ModContent.ProjectileType<IcySpikeOrbit>(), damage, 2f, Main.myPlayer);
+                                        if (Main.projectile[a].ModProjectile is IcySpikeOrbit spike)
+                                        {
+                                            spike.RotDir = rotDir;
+                                            spike.goalPos = randomVec.RotatedBy(MathHelper.ToRadians((360 / 7) * i));
+                                        }
+                                    }
                                 }
+                                */
+                                
+                                for (int i = 0; i < 18; i++)
+                                {
+
+                                    int a = Projectile.NewProjectile(Projectile.InheritSource(NPC), NPC.Center, Vector2.Zero, ModContent.ProjectileType<IcySpike2>(), damage, 2f, Main.myPlayer);
+                                    if (Main.projectile[a].ModProjectile is IcySpike2 spike)
+                                    {
+                                        spike.RotDir = rotDir;
+                                        spike.goalPos = randomVec.RotatedBy(MathHelper.ToRadians((360 / 7) * i));
+                                        spike.startingPos = NPC.Center;
+                                        spike.outValue = (i % 2 == 0 ? 25 : 5);
+                                        spike.rotation = 20 * i;
+                                    }
+                                }
+                                
+                            }
                             /*
                             for (int i = 0; i < 8; i++)
                                 {
@@ -789,6 +818,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
 
         Texture2D GlowTexture => (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "Glowmask");
+        Texture2D DarkMask => (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "RimegeistVoidMask");
 
         public float EyesFade => 1f;
         public float Alpha => MathHelper.Clamp(3f - (NPC.localAI[3]) / 20f, 0f, 1f);
@@ -830,6 +860,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             {
                 Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], NPC.Center - Main.screenPosition, NPC.frame, drawColor * Alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
                 Main.EntitySpriteDraw(GlowTexture, NPC.Center - Main.screenPosition, NPC.frame, Color.White * Alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(DarkMask, NPC.Center - Main.screenPosition, NPC.frame, Color.Black * Alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
 
             }
             if (Alpha * whiteIn > 0)
@@ -841,9 +872,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void HitEffect(int hitDirection, double damage)
         {
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_54") with { Volume = .26f, Pitch = -.32f, PitchVariance = .39f, };
+            //SoundEngine.PlaySound(style, NPC.Center);
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Zombie_53") with { Pitch = -.68f, PitchVariance = .47f, MaxInstances = 1, Volume = 0.5f };
+            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_52") with { Volume = .49f, Pitch = .89f, PitchVariance = .2f, MaxInstances = 0, };
             SoundEngine.PlaySound(style, NPC.Center);
+
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Zombie_53") with { Pitch = -.68f, PitchVariance = .47f, MaxInstances = 1, Volume = 0.5f };
+            //SoundEngine.PlaySound(style, NPC.Center);
 
             for (int i = 0; i < 3; i++)
             {
@@ -1067,6 +1103,200 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
     }
 
+    public class IcySpike2 : ModProjectile
+    {
+        public Vector2 goalPos = Vector2.Zero;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Icy Spike");
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 30;
+            Projectile.height = 30;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = 1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+        }
+        public bool orbiting = true;
+        public bool RotDir = false;
+        public Vector2 startingPos = Vector2.Zero;
+        public float outValue = 0f;
+        int advancer = 0;
+        public float lerpSpeed = 0f;
+        public float rotation = 0f;
+        public override void AI()
+        {
+            Player player = Main.player[Main.myPlayer];
+
+            if (advancer == 0)
+            {
+                startingPos += (player.Center - startingPos).SafeNormalize(Vector2.UnitX);
+                Projectile.Center = startingPos + new Vector2(outValue, 0).RotatedBy(rotation);
+                Projectile.rotation = new Vector2(outValue, 0).RotatedBy(rotation).ToRotation();
+                //rotation = rotation.ToRotationVector2().RotatedBy(Projectile.ai[0]).ToRotation();
+
+                if (Projectile.ai[0] == 30)
+                    advancer++;
+            } else
+            {
+                lerpSpeed = MathHelper.Lerp(lerpSpeed, 24, 0.02f);
+                Projectile.velocity = Projectile.rotation.ToRotationVector2() * lerpSpeed;
+            }
+
+            //Projectile.rotation = Projectile.velocity.ToRotation();
+            //Projectile.velocity.Y = Projectile.velocity.Y + 0.25f; //0.15
+
+            if (Projectile.ai[0] % 3 == 0)
+            {
+                //int dust = GlowDustHelper.DrawGlowDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GlowCircleQuadStar>(), Color.SkyBlue, 0.4f, new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic"));
+
+            }
+
+            if (Main.rand.NextBool(3))
+            {
+                //Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
+                //dust.noGravity = true;
+            }
+            Projectile.ai[0]++;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(Color.SkyBlue) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos + new Vector2(-12, 0), null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+
+
+            return false;
+        }
+    }
+
+    public class IcySpikeOrbit : ModProjectile
+    {
+        public Vector2 goalPos = Vector2.Zero;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Icy Spike");
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 30;
+            Projectile.height = 30;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = 1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+        }
+        private bool spawned;
+        public bool orbiting = true;
+        public bool RotDir = false;
+
+        public float lerpSpeed = 0f;
+        public int timer = 0;
+
+        public override bool? CanDamage()
+        {
+            if (orbiting)
+                return false;
+            return true;
+        }
+        public override void AI()
+        {
+            Player player = Main.player[Main.myPlayer];
+            if (orbiting)
+            {
+                //goalPos = goalPos.RotatedBy(MathHelper.ToRadians(timer));
+
+
+                Vector2 destination = goalPos.RotatedBy(MathHelper.ToRadians(timer * 0.5f * (RotDir ? -1 : 1))) + player.Center;
+                float velo = MathHelper.Clamp(Projectile.Distance(destination) / 12, 0, 60); //60
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(destination) * velo, 0.4f);
+
+                Projectile.rotation = (player.Center - destination).ToRotation();
+                if (timer == 0)
+                {
+                    Projectile.Center = destination;
+                    orbiting = false;
+                    timer = -1;
+                }
+
+            }
+            else
+            {
+                if (timer >= 25)
+                {
+                    lerpSpeed = MathHelper.Lerp(lerpSpeed, 24, 0.02f);
+                    Projectile.velocity = Projectile.rotation.ToRotationVector2() * lerpSpeed;
+                } else
+                {
+                    if (timer == 0)
+                    {
+                        //Vector2 dest = goalPos.RotatedBy(MathHelper.ToRadians(90 * 0.5f * (RotDir ? -1 : 1))) + player.Center;
+                        Projectile.velocity = Vector2.Zero;
+                        Projectile.rotation = (player.Center - Projectile.Center).ToRotation();
+                    }
+                    Projectile.velocity = Projectile.rotation.ToRotationVector2() * -3;
+                }
+            }
+            //Projectile.rotation = Projectile.velocity.ToRotation();
+            //Projectile.velocity.Y = Projectile.velocity.Y + 0.25f; //0.15
+
+            if (Projectile.ai[0] % 3 == 0)
+            {
+                int dust = GlowDustHelper.DrawGlowDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GlowCircleQuadStar>(), Color.SkyBlue, 0.4f, new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic"));
+                Main.dust[dust].noLight = true;
+            }
+
+            if (Main.rand.NextBool(3))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
+                dust.noGravity = true;
+                dust.noLight = true;
+            }
+            timer++;
+            Projectile.ai[0]++;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(Color.SkyBlue) * ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos + new Vector2(-12, 0), null, color, Projectile.rotation, drawOrigin, Projectile.scale - (k * 0f), SpriteEffects.None, 0);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
+
+
+            return false;
+        }
+    }
     public class IceCube : WispSouls
     {
         public override void SetDefaults()
