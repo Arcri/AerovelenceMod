@@ -22,23 +22,9 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
         public bool strikeCTRemove = true;
 
-        public override bool StrikeNPC(NPC npc, ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
-        {
-            //Main.NewText("strike");
-            return base.StrikeNPC(npc, ref damage, defense, ref knockback, hitDirection, ref crit);
-        }
-        public override void HitEffect(NPC npc, int hitDirection, double damage)
-        {
-
-        }
-        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
-        {
-            Main.NewText("on hit NPC");
-            base.OnHitNPC(npc, target, damage, knockback, crit);
-        }
-
         public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
         {
+            /*
             int recent = -1;
             for (int i = 99; i >= 0; i--)
             {
@@ -64,7 +50,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 SS.skillCrit = false;
                 SS.superCrit = false;
             }
-
+            */
             base.OnHitByItem(npc, player, item, damage, knockback, crit);
         }
         public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)

@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hyper Beam Shot");
-
+			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
 			//ProjectileID.Sets.TrailCacheLength[Projectile.type] = 80;
 			//ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}

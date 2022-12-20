@@ -172,7 +172,12 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
                     int a = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -0.5f, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
                     Main.projectile[a].rotation = player.velocity.ToRotation();
-
+                    if (Main.projectile[a].ModProjectile is HollowPulse pulse)
+                    {
+                        pulse.color = Color.White;
+                        pulse.oval = true;
+                        pulse.size = 1f;
+                    }
 
                     SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/TetraSlide") with { Volume = 0.2f, Pitch = 0.4f, PitchVariance = 0.2f }, player.Center);
 

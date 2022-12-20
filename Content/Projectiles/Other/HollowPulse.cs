@@ -16,6 +16,9 @@ namespace AerovelenceMod.Content.Projectiles.Other
     {
 		int timer = 0;
 		float opacity = 1f;
+		public Color color = Color.White;
+		public float size = 1f;
+		public bool oval = false;
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hollow Pulse");
@@ -46,9 +49,9 @@ namespace AerovelenceMod.Content.Projectiles.Other
 			Player player = Main.player[Projectile.owner];
 			timer++;
 
-			Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, 0.75f, 0.08f), 0f, 0.5f);
+			Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, 0.75f * size, 0.08f), 0f, 0.5f * size);
 
-			if (Projectile.scale == 0.5f)
+			if (Projectile.scale == 0.5f * size)
 				opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, -0.2f, 0.1f), 0, 2);
 
 			if (opacity <= 0)
@@ -58,10 +61,13 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override bool PreDraw(ref Color lightColor)
 		{
+			Texture2D Tex;
+			if (oval)
+				Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/HollowOvalPulse").Value;
+			else
+				Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/HollowPulse").Value;
 
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/HollowOvalPulse").Value;
-
-            int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
+			int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
 
             // Get this frame on texture
@@ -73,8 +79,8 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
             Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, color * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, color * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
 		}
