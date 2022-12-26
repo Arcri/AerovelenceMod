@@ -1,5 +1,6 @@
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Items.Weapons.Aurora;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using On.Terraria.GameContent.Events;
@@ -52,6 +53,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             IceBulletHell = 9,
             PhaseTwoTransition = 10,
             ShadowDash = 11,
+            Laser = 12,
+            Mist = 13,
+            Dive = 14,
+            Shotgun = 15,
         }
 
         /// <summary>
@@ -95,12 +100,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             if (PhaseTwo < 1)
                 State = RimegeistState.PhaseTwoTransition;
 
-            if (PhaseTwo > 2000)
-            {
-                State = RimegeistState.ShadowDash;
-                PhaseTwo = Main.rand.Next(5,200);
+            //if (PhaseTwo > 2000)
+            //{
+               // State = RimegeistState.ShadowDash;
+                //PhaseTwo = Main.rand.Next(5,200);
 
-            }
+           // }
 
             this.AttackTimer = attackTimer;
 
@@ -286,7 +291,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                         shootTimer++;
 
-                        if (shootTimer >= 40)
+                        if (shootTimer >= 40 && AttackTimer < 180)
                         {
                             bool rotDir = Main.rand.NextBool();
                             Vector2 randomVec = new Vector2(50, 0);
@@ -349,7 +354,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                ChangeState(Main.rand.Next(2, 10));
+                                ChangeState(14);
+                                //ChangeState(Main.rand.Next(2, 10));
                             }
                         }
                     }
@@ -600,11 +606,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     }
 
                     break;
+
                 case RimegeistState.Dash:
 
-
                     Vector2 movewhere = PhaseTwo > 0 ? move + new Vector2(Math.Sign(player.Center.X - NPC.Center.X) * -200, -200) : move;
-
                     //Main.NewText("Dash");
                     if (++AttackTimer >= 0 && AttackTimer < 480)
                     {
@@ -685,8 +690,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             ChangeState((int)RimegeistState.RadialIcicles);
                         }
                     }
-
                     break;
+
                 case RimegeistState.VoidStone:
 
                     // Main.NewText("Void Stone");
@@ -722,6 +727,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                         }
                     }
                     break;
+
                 case RimegeistState.IceBulletHell:
 
                     playerPos = player.position + new Vector2(-400, 0);
@@ -765,8 +771,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             }
                         }
                     }
-
                     break;
+
                 case RimegeistState.PhaseTwoTransition:
 
                     var entitySource = NPC.GetSource_Death();
@@ -802,11 +808,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             ChangeState((int)RimegeistState.Dash);
                         }
                     }
-
                     break;
-                case RimegeistState.ShadowDash:
 
-                    //Main.NewText("Dash");
+                case RimegeistState.ShadowDash:
 
                     if (AttackTimer == 0)
                         ScreenObstruction.Draw += DrawOverBlackout;
@@ -816,8 +820,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     NPC.localAI[2] = 20;
                     NPC.localAI[3] += (60f - NPC.localAI[3]) * 0.15f;
 
-                    if (AttackTimer<600)
-                    Terraria.GameContent.Events.ScreenObstruction.screenObstruction = MathHelper.Clamp(Terraria.GameContent.Events.ScreenObstruction.screenObstruction + 0.10f, 0f, 0.95f);
+                    if (AttackTimer < 600)
+                        Terraria.GameContent.Events.ScreenObstruction.screenObstruction = MathHelper.Clamp(Terraria.GameContent.Events.ScreenObstruction.screenObstruction + 0.10f, 0f, 0.95f);
                     
 
                     dashTimer++;
@@ -862,7 +866,59 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                             ChangeState((int)RimegeistState.VortexOfRainbows);
                         }
                     }
+                    break;
 
+                case RimegeistState.Laser:
+                    NPC.velocity = Vector2.Zero;
+                    
+                    if (AttackTimer == 20)
+                    {
+                        
+                        shouldShadow = true;
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(-1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
+                    }
+
+                    if (AttackTimer > 40 && AttackTimer % 60 == 0)
+                    {
+                        int a = Projectile.NewProjectile(Projectile.InheritSource(NPC), NPC.Center, Vector2.Zero, ModContent.ProjectileType<StarflakeTelegraph>(), 2, 2f, Main.myPlayer);
+                        if (Main.projectile[a].ModProjectile is StarflakeTelegraph telegraph)
+                        {
+                            telegraph.tetheredNPC = NPC.whoAmI;
+                            telegraph.initialRotation = Main.rand.NextFloat(6.28f);
+                            telegraph.numOfShots = 9;
+                        }
+                    }
+
+                    if (AttackTimer == 620)
+                    {
+                        shouldShadow = false;
+                        ChangeState(1);
+                    }
+                    
+                    AttackTimer++;
+                    break;
+                case RimegeistState.Dive:
+                    {
+                        NPC.hide = true;
+                        NPC.dontTakeDamage = true;
+                        NPC.Center = player.Center;
+
+                        if (AttackTimer % 100 == 0 && AttackTimer != 0)
+                        {
+                            int c = Projectile.NewProjectile(NPC.GetSource_FromAI(), player.Center + (player.direction * new Vector2(50, 0)), Vector2.Zero, ModContent.ProjectileType<BigSoul>(), 10, 0, Main.myPlayer);
+
+                            if (Main.projectile[c].ModProjectile is BigSoul soul)
+                            {
+                                soul.leftOrRight = (player.direction == 1 ? true : false);
+                            }
+                            //Low Exhale
+                            SoundStyle stylele = new SoundStyle("Terraria/Sounds/Item_104") with { Volume = .4f, Pitch = -.48f, PitchVariance = .4f, MaxInstances = 1 };
+                            SoundEngine.PlaySound(stylele, player.Center);
+                        }
+
+                        AttackTimer++;
+                    }
                     break;
                 default:
 
@@ -900,18 +956,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             }
         }
 
+        public bool shouldShadow = false;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-        Texture2D solidColor = (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "RimegeistColorOver");
-            if (ShadowTrailEffect > 0)
+            Texture2D solidColor = (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "RimegeistColorOver");
+            if (ShadowTrailEffect > 0 || shouldShadow)
             {
+                if (shouldShadow)
+                {
+                    Main.EntitySpriteDraw(solidColor, NPC.Center - Main.screenPosition, NPC.frame, Color.Black, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
+                }
+
                 for (float f = 0; f < NPC.velocity.Length(); f += 0.10f)
                 {
                     float scale = 3f;
                     Main.EntitySpriteDraw(solidColor, NPC.Center + (Vector2.Normalize(NPC.velocity) * -f*scale) - Main.screenPosition, NPC.frame, Color.Black*0.075f * ShadowTrailEffect*(1f-(f/NPC.velocity.Length())), NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
                 }
             }
-            if (Alpha > 0)
+            if (Alpha > 0 && !shouldShadow)
             {
                 Main.EntitySpriteDraw((Texture2D)TextureAssets.Npc[NPC.type], NPC.Center - Main.screenPosition, NPC.frame, drawColor * Alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
                 Main.EntitySpriteDraw(GlowTexture, NPC.Center - Main.screenPosition, NPC.frame, Color.White * Alpha, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, SpriteEffects.None, 0);
@@ -1592,7 +1654,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         {
             // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Texture2D texture2D2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/BigSoulDark").Value; ;
+
             Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
+            Vector2 origin2 = new Vector2(texture2D2.Width / 2, texture2D2.Height / 2);
+
             for (int i = 0; i < 2; i++)
             {
                 for (int k = 0; k < Projectile.oldPos.Length; k++)
@@ -1602,6 +1668,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     Color color = Projectile.GetAlpha(Color.Black) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                     Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, origin, scale, SpriteEffects.None, 0);
                 }
+
+            }
+
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                float scale = (Projectile.scale * 0.6f) * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * .45f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
+                Color color = Projectile.GetAlpha(Color.Black) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(texture2D2, drawPos, null, color, Projectile.rotation, origin2, scale, SpriteEffects.None, 0);
             }
 
             Texture2D Eyes = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/WispSoulsBlack").Value;

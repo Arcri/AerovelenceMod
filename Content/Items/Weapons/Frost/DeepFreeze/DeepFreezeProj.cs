@@ -101,7 +101,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 			myEffect.CurrentTechnique.Passes[0].Apply();
 
 			if (timer > 3)
-				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.Black * colorIntensity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 			//Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;

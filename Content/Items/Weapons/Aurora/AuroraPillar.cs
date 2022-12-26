@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using ReLogic.Content;
+using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora
 {
@@ -18,10 +20,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 		public float LaserRotation = 0;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Alpenine Shot");
-
-			//ProjectileID.Sets.TrailCacheLength[Projectile.type] = 80;
-			//ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+			DisplayName.SetDefault("Dark Beam");
+			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
 		}
 
 		Vector2 storedCenter = Vector2.Zero;
@@ -33,30 +33,48 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			Projectile.height = 16;
 			Projectile.penetrate = -1;
 			Projectile.ignoreWater = true;
-			Projectile.timeLeft = 1000;
+			Projectile.timeLeft = 600;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
 			Projectile.tileCollide = true;
-			//Projectile.extraUpdates = 100; //200
-			Projectile.extraUpdates = 1;
 		}
 
 		public override void AI()
 		{
-			Main.time = 12600 + 3598; //midnight - 2
+			//Main.time = 12600 + 3598; //midnight - 2
+
+
+			if (timer % 20 == 0 && false)
+            {
+				for (int i = 50; i < 1500; i += 150) //i = 0 ; i = 350
+				{
+
+					if (false)
+					{
+						int a =Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * i, new Vector2(0,0).RotatedBy(Main.rand.NextFloat(6.28f)), 
+							ModContent.ProjectileType<WispSouls>(), 3, 1);
+
+						Main.projectile[a].timeLeft = 300;
+						//GlowDustHelper.DrawGlowDustPerfect(storedCenter + Vector2.UnitX.RotatedBy(LaserRotation + Math.PI) * i, ModContent.DustType<GlowCircleDust>()
+							//, Main.rand.NextVector2CircularEdge(2f, 2f) + ((LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f), Color.OrangeRed, 0.2f, dustShader); //0.2f
+
+					}
+
+				}
+			}
 
 
 			if (timer == 0)
             {
-				LaserRotation = Projectile.velocity.ToRotation() + (float)Math.PI;
-				storedCenter = Projectile.Center;
-				Projectile.velocity = Projectile.velocity * 16;
-			}
-			if (timer == 25)
+				LaserRotation = Projectile.velocity.ToRotation();
+				storedCenter = Projectile.Center + (LaserRotation.ToRotationVector2() * 2600);
 				Projectile.velocity = Vector2.Zero;
+			}
 
 			if (timer > 25)
-				LaserRotation += MathHelper.ToRadians(0.13f);
+				LaserRotation += MathHelper.ToRadians(0.75f);
 			Player player = Main.player[(int)Projectile.ai[0]];
-			Projectile.scale = 1f;
+			Projectile.scale = 2f;
 
 			timer++;
 		}
@@ -67,12 +85,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			return false;
         }
 
-        public override bool PreDraw(ref Color lightColor) 
+		float teleScale = 3f;
+		float drawAlpha = 1f;
+		public override bool PreDraw(ref Color lightColor) 
 		{
+
+			for (float i = 0f; i < 6.28f; i += 6.28f)
+			{
+				Texture2D RayTex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Medusa_Gray").Value;
+				Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(LaserRotation + 3.14f), RayTex.Frame(1, 1, 0, 0), Color.Black * 1f, LaserRotation + i + 3.14f, RayTex.Size() / 2, teleScale, SpriteEffects.None, 0); ;
+			}
+
+
 			endPoint = storedCenter;
-
-
-			float height2 = (65f); //25
+			float height2 = (65f * Projectile.scale); //25
 
 			if (height2 == 0)
 				Projectile.active = false;
@@ -114,7 +140,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
 			Vector2 origin2 = new Vector2(0, texture.Height / 2);
 
-			float height = (65f); //25
+			float height = (65f * Projectile.scale); //25
 
 			if (height == 0)
 				Projectile.active = false;
@@ -211,6 +237,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         public override void Kill(int timeLeft)
         {
 			//Main.NewText("amg");
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+
+			Vector2 unit = LaserRotation.ToRotationVector2();
+			float point = 0f;
+			// Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
+			// It will look for collisions on the given line using AABB
+			if (timer >= 1)
+			{
+				return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+					Projectile.Center + (unit * 1500), 22, ref point);
+			}
+			return false;
         }
     }
 }

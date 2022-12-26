@@ -1,5 +1,7 @@
 ﻿using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,17 +51,22 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 		}
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
+		{
 
+			
+			//fb + rs for ice cube spawn
+			//Frosty Blast
+			SoundStyle stylefb = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = .54f, PitchVariance = .09f, MaxInstances = 0, };
+			SoundEngine.PlaySound(stylefb);
 
 			//Crystal Serp
-			//SoundStyle stylecs = new SoundStyle("Terraria/Sounds/Item_109") with { Pitch = .52f, PitchVariance = .11f, };
+			//SoundStyle stylecs = new SoundStyle("Terraria/Sounds/Item_109") with { Pitch = .52f, PitchVariance = .11f, Volume = 0.5f };
 			//SoundEngine.PlaySound(stylecs);
 
 
 			//Energy Spiral
-			SoundStyle stylees = new SoundStyle("Terraria/Sounds/Item_117") with { Pitch = .52f, PitchVariance = .11f, };
-			SoundEngine.PlaySound(stylees);
+			//SoundStyle stylees = new SoundStyle("Terraria/Sounds/Item_117") with { Pitch = .52f, PitchVariance = .11f, };
+			//SoundEngine.PlaySound(stylees);
 
 			//Rime Voice
 			//SoundStyle stylerv = new SoundStyle("Terraria/Sounds/NPC_Hit_52") with { Volume = .49f, Pitch = .89f, PitchVariance = .2f, MaxInstances = 1, };
@@ -75,7 +82,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			//SoundEngine.PlaySound(stylele);
 
 			//Air Slash
-			//SoundStyle styleas = new SoundStyle("Terraria/Sounds/Item_131") with { Pitch = .66f, PitchVariance = .33f, };
+			//SoundStyle styleas = new SoundStyle("Terraria/Sounds/Item_131") with { Pitch = .36f, PitchVariance = .33f, };
 			//SoundEngine.PlaySound(styleas);
 
 			//Fadey star
@@ -87,8 +94,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			//SoundEngine.PlaySound(stylev);
 
 			//RicoShot
-			//SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_60") with { Pitch = .73f, PitchVariance = .45f, };
-			//SoundEngine.PlaySound(stylea);
+			SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_60") with { Pitch = .73f, PitchVariance = .45f, Volume = 0.3f};
+			SoundEngine.PlaySound(stylea);
 
 
 			float randomAngle = Main.rand.NextFloat(6.28f);
@@ -103,14 +110,39 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
 				if (Main.projectile[a].ModProjectile is HollowPulse pulse)
 				{
-					pulse.color = Color.Gray * 0.3f;
+					pulse.color = Color.Gray * 0f;
 					pulse.oval = false;
 					pulse.size = 25f;
 				}
 			}
 
+			//int b = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<RimeIceCube>(), 0, 0, Main.myPlayer);
+			/*
+			int c = Projectile.NewProjectile(null, player.Center + (player.direction * new Vector2(50,0)), Vector2.Zero, ModContent.ProjectileType<BigSoul>(), 10, 0, Main.myPlayer);
+			if (Main.projectile[c].ModProjectile is BigSoul soul)
+            {
+				soul.leftOrRight = (player.direction == 1 ? true : false);
+            }
+			*/
 
-
+			
+			for (int i = -2; i < 3; i++) // < 
+            {
+				int a = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<DeepFreezeProj>(), 0, 0);
+				Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
+				if (Main.projectile[a].ModProjectile is DeepFreezeProj explo)
+				{
+					explo.size = 1.5f;
+					explo.multiplier = 1.25f;
+					//Color col = i >= 60 ? Color.Goldenrod : Color.OrangeRed;
+					//explo.color = col;
+					//explo.size = 0.65f;
+					//explo.colorIntensity = 0.7f; //0.5
+					//explo.rise = true;
+				}
+				Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<AuroraBlast>(), damage, 0, Main.myPlayer);
+			}
+			
 			/*
 			for (int i = 0; i < 4; i++)
 			{

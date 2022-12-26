@@ -17,8 +17,9 @@ namespace AerovelenceMod
         public object useStyleData;
         public int useStyleInt;
 
+		public int PlatformTimer = 0;
 
-        public float ScreenShakePower;
+		public float ScreenShakePower;
 
 		public override void ModifyScreenPosition()
 		{
@@ -27,6 +28,11 @@ namespace AerovelenceMod
 				Main.screenPosition += new Vector2(Main.rand.NextFloat(ScreenShakePower), Main.rand.NextFloat(ScreenShakePower));
 				ScreenShakePower *= 0.9f;
 			}
+		}
+
+		public override void PreUpdate()
+		{
+			PlatformTimer--;
 		}
 
 		/*

@@ -16,6 +16,7 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Skies;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using ReLogic.Graphics;
+using AerovelenceMod.Common;
 
 namespace AerovelenceMod
 {
@@ -198,6 +199,10 @@ namespace AerovelenceMod
 		public static Effect RailgunShader;
 		public override void Load()
 		{
+
+			ModDetours.Load();
+
+
 			if (Main.netMode != NetmodeID.Server)
 			{
 
@@ -305,6 +310,8 @@ namespace AerovelenceMod
 		
         public override void Unload()
 		{
+			ModDetours.Unload();
+
 			if (!Main.dedServ)
 			{
 				//DiscordRichPresence.Deinitialize();

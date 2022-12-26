@@ -59,6 +59,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
             if (timer == 60)
             {
+                SoundStyle stylecs = new SoundStyle("Terraria/Sounds/Item_109") with { Pitch = .52f, PitchVariance = .26f, Volume = 0.5f };
+                SoundEngine.PlaySound(stylecs, Projectile.Center);
+
+                SoundStyle stylege = new SoundStyle("Terraria/Sounds/Item_103") with { Volume = .6f, Pitch = .52f, MaxInstances = 1, PitchVariance = 0.3f };
+                SoundEngine.PlaySound(stylege, Projectile.Center);
+
+                SoundStyle styleas = new SoundStyle("Terraria/Sounds/Item_131") with { Pitch = .36f, PitchVariance = .33f, Volume = 0.75f };
+                SoundEngine.PlaySound(styleas, Projectile.Center);
+
                 for (float i = 0f; i < 6.28f; i += 6.28f / numOfShots)
                 {
                     //int pindexa = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(1, 0).RotatedBy(initialRotation + i) * 9f, ModContent.ProjectileType<IcySpike>(), Projectile.damage, 0);
