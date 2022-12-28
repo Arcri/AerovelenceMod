@@ -148,15 +148,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            Main.NewText(Projectile.velocity);
 
             Projectile.timeLeft += 40;
 
             Player myPlayer = Main.player[Projectile.owner];
 
-            myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 6;
+            //myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 0;
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1f, PitchVariance = .04f, Volume = 0.6f};
+            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1f, PitchVariance = .14f, Volume = 0.3f, MaxInstances = -1 };
             SoundEngine.PlaySound(style, Projectile.Center);
 
             hitstopTimer = 20;
@@ -174,9 +173,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             for (int i = 0; i < 2; i++) //4
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + new Vector2(10,0), ModContent.DustType<LineGlow>(),
-                    (Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-0.5f, 0.5f)) * Main.rand.Next(2, 5)),
+                    (Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-0.35f, 0.35f)) * Main.rand.Next(2, 5)),
                     Main.rand.NextBool() ? Color.Cyan : Color.Cyan, Main.rand.NextFloat(0.2f, 0.4f), 0.8f, 0f, dustShader);
                 p.alpha = 0;
+                p.velocity *= 1.5f;
+                p.fadeIn = Main.rand.NextFloat(20, 40);
                 //p.rotation = Main.rand.NextFloat(6.28f);
             
             }

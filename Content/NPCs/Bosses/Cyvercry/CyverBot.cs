@@ -555,6 +555,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public Vector2 GoalPoint = Vector2.Zero;
         public int timer = 0;
         public int State = (int)Behavior.StarStrikeP1;
+        public int storedDirection = 0;
         public enum Behavior
         {
             StarStrikeP1 = 0
@@ -621,7 +622,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             dust.velocity *= 0.1f;
             dust.scale *= 0.35f;
 
-            NPC.spriteDirection = NPC.direction;
         }
 
         float leaveSpeed = 0f;
@@ -630,6 +630,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Move to Point
             if (timer < 80)
             {
+                NPC.spriteDirection = NPC.direction;
+
                 Vector2 move = (GoalPoint + myPlayer.Center) - NPC.Center;
                 float scalespeed = 4; //(timer < 20 ? 3f : 7); //5
 
@@ -665,6 +667,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Leave
             if (timer >= 80)
             {
+                NPC.spriteDirection = NPC.direction; //?
+
                 if (timer < 100)
                     leaveSpeed = MathHelper.Lerp(leaveSpeed, 25, 0.08f);
                 else

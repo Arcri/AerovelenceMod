@@ -73,7 +73,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 if (timer == 75)
                 {
-                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/TetraSlide") with { Volume = 0.10f, Pitch = 0.2f, MaxInstances = 4 }, Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/TetraSlide") with { Volume = 0.10f, Pitch = 0.2f, MaxInstances = 3 }, Projectile.Center);
 
 
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .15f, Pitch = 1f, MaxInstances = 4 };

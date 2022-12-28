@@ -33,8 +33,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Item.rare = ItemRarityID.Cyan;
 			Item.width = 58;
 			Item.height = 20;
-			Item.useAnimation = 25;
-			Item.useTime = 25;
+			Item.useTime = 30; //10
+			Item.useAnimation = 30; //5
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.shootSpeed = 7f;
 			Item.knockBack = 6f;
@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Item.autoReuse = true;
 			Item.noMelee = true;
 			Item.value = Item.buyPrice(0, 5, 0, 0);
-			Item.shoot = ProjectileID.RocketI;
+			Item.shoot = ProjectileID.WoodenArrowFriendly;
 			//Item.UseSound = SoundID.Item145;
 			//Item.useAmmo = AmmoID.Rocket;
 		}
@@ -143,7 +143,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		{
 			if (player.altFunctionUse == 2)
 			{
-				Item.noUseGraphic = false;
 				Item.useTime = 70; //10
 				Item.useAnimation = 70; //5
 			}
@@ -151,7 +150,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			{
 				Item.useTime = 30; //10
 				Item.useAnimation = 30; //5
-				Item.noUseGraphic = false;
 			}
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

@@ -145,11 +145,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
                     Vector2 randomStart = Main.rand.NextVector2CircularEdge(3f, 3f);
 
-                    GlowDustHelper.DrawGlowDustPerfect(Player.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart, Color.Red, 0.2f, 0.4f, 0f, dustShader);
+                    //GlowDustHelper.DrawGlowDustPerfect(Player.Center + randomStart, ModContent.DustType<LineGlow>(), randomStart, Color.Red, 0.2f, 0.4f, 0f, dustShader);
                 }
 
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Volume = .56f, Pitch = .61f, };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Volume = .40f, Pitch = .61f, PitchVariance = 0.2f };
                 SoundEngine.PlaySound(style);
 
                 //SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = .79f, PitchVariance = .12f, };

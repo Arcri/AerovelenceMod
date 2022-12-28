@@ -97,7 +97,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
                 if (firstFrame)
                 {
-                    storedDamage = projectile.damage * 2;
+                    storedDamage = (int)(projectile.damage * 1.3f);
                     firstFrame = false;
                     //projectile.CritChance = 0;
                 }

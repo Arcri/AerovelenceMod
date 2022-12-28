@@ -74,8 +74,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(6)), type, damage, knockback, player.whoAmI);
 					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-6)), type, damage, knockback, player.whoAmI);
 					Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
-					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.45f }, player.Center);
-
+					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.2f }, player.Center);
+					SoundStyle stylev = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
+					SoundEngine.PlaySound(stylev);
 
 					//Not using a loop because I don't want to, this isn't that bad, and it is easier to control for tweaking
 					this.shotCounter++;
@@ -85,7 +86,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 					int a = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), type, damage, knockback, player.whoAmI);
 					int b = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), type, damage, knockback, player.whoAmI);
-					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.45f }, player.Center);
+					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.2f }, player.Center);
+					SoundStyle stylev2 = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
+					SoundEngine.PlaySound(stylev2);
+
 
 					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
 					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;

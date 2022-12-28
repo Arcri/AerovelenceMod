@@ -18,7 +18,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Solsear");
-            Tooltip.SetDefault("The sun god's flame, encapsuled into something usable");
+            Tooltip.SetDefault("The sun god's flame, encaps uled into something usable\n" +
+                "Right-click to shoot an exploding magma flare\n" +
+                "Aim the tip of the laser into the flare to increase its size\n" +
+                "The tip of the laser also deals more damage");
         }
         public override bool AltFunctionUse(Player player) => true;
 
@@ -27,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             //item.UseSound = SoundID.Item11;
             //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
             Item.crit = 4;
-            Item.damage = 50;
+            Item.damage = 60;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;

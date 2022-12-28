@@ -53,11 +53,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 
-			
 			//fb + rs for ice cube spawn
 			//Frosty Blast
-			SoundStyle stylefb = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = .54f, PitchVariance = .09f, MaxInstances = 0, };
-			SoundEngine.PlaySound(stylefb);
+			//SoundStyle stylefb = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = .54f, PitchVariance = .09f, MaxInstances = 0, };
+			//SoundEngine.PlaySound(stylefb);
 
 			//Crystal Serp
 			//SoundStyle stylecs = new SoundStyle("Terraria/Sounds/Item_109") with { Pitch = .52f, PitchVariance = .11f, Volume = 0.5f };
@@ -94,8 +93,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			//SoundEngine.PlaySound(stylev);
 
 			//RicoShot
-			SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_60") with { Pitch = .73f, PitchVariance = .45f, Volume = 0.3f};
-			SoundEngine.PlaySound(stylea);
+			//SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_60") with { Pitch = .73f, PitchVariance = .45f, Volume = 0.3f};
+			//SoundEngine.PlaySound(stylea);
 
 
 			float randomAngle = Main.rand.NextFloat(6.28f);
@@ -125,7 +124,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             }
 			*/
 
-			
+			/*
 			for (int i = -2; i < 3; i++) // < 
             {
 				int a = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<DeepFreezeProj>(), 0, 0);
@@ -142,8 +141,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				}
 				Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<AuroraBlast>(), damage, 0, Main.myPlayer);
 			}
+			*/
 			
-			/*
 			for (int i = 0; i < 4; i++)
 			{
 				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
@@ -158,7 +157,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 						bot.Leader = true;
 				}
 			}
-			*/
+			
 
 			//Star Strike
 			/*

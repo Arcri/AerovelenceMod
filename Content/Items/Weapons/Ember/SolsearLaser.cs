@@ -12,6 +12,8 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Audio;
+using AerovelenceMod.Common.Globals.SkillStrikes;
+
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -33,7 +35,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		float distFromPlayer = 0;
 
 		Vector2 storedMousePos = Vector2.Zero;
-
+		public float baseDamage = 0f;
 		public override void SetDefaults()
 		{
 			Projectile.friendly = true;
@@ -69,6 +71,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			distFromPlayer = Math.Clamp(distFromPlayer + 2, 0, 300);
 			if (timer == 0)
             {
+				baseDamage = Projectile.damage;
 				storedMousePos = Main.MouseWorld;
 				LaserRotation = Projectile.velocity.ToRotation() + (float)Math.PI;
 				storedCenter = Projectile.Center;
@@ -218,6 +221,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
+			if (timer == 1)
+				return false;
+
+			if (targetHitbox.Distance(Projectile.Center) < 40)
+            {
+				Projectile.damage = (int)(baseDamage * 1.5f);
+				//Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+            } else
+            {
+				//Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
+				Projectile.damage = (int)(baseDamage);
+
+			}
+
 
 			Player Player = Main.player[Projectile.owner];
 			Vector2 unit = LaserRotation.ToRotationVector2();
