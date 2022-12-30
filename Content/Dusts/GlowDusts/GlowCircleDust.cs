@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
         public override bool Update(Dust dust)
 		{
-
+			
 			if (dust.customData is null)
 			{
 				dust.position -= Vector2.One * 32 * dust.scale;
@@ -67,7 +67,11 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 			Vector2 currentCenter = dust.position + Vector2.One.RotatedBy(dust.rotation) * 32 * dust.scale;
 
-			dust.scale *= 0.96f;
+			if (dust.noGravity) 
+				dust.scale *= 1 - (0.04f + (.04f * dust.fadeIn));
+			else
+				dust.scale *= 0.96f;
+
 			Vector2 nextCenter = dust.position + Vector2.One.RotatedBy(dust.rotation + 0.06f) * 32 * dust.scale;
 
 			dust.rotation += 0.06f;
