@@ -73,9 +73,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            NPC.lifeMax = 55500;
+            NPC.lifeMax = 42500;
             NPC.damage = 125;
-            NPC.defense = 35;
+            NPC.defense = 30;
         }
 
         public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (item.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
             {
                 if ((NPC.Center - Main.player[NPC.target].Center).Length() < 300)
-                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 5));
+                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
 
             }
         }
@@ -93,7 +93,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 if ((NPC.Center - Main.player[NPC.target].Center).Length() < 400)
                 {
-                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 5));
+                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
                 }
             }
         }
@@ -695,7 +695,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         int drawAzzyLaser = 0;
         public void AzzyLaser(Player myPlayer)
         {
-            float bonusShots = isMaster ? 3 : isExpert ? 0 : -2;
+            float bonusShots = isMaster ? 3 : isExpert ? 0 : -1;
             float shotDelay = MathHelper.Clamp(currentShot, 0, 13) * 5;
 
             if (currentShot == 0)
@@ -784,6 +784,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     currentShot = 0;
                     whatAttack = 5;
+                    isExpert = true;
                 }
             }
 
@@ -1285,17 +1286,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             float bonusBots = isMaster ? 2 : 0;
             float delay = (isExpert || isMaster) ? -10 : 10;
-            float bonusBarrages = (isExpert || isMaster) ? 2 : 0;
+            float bonusBarrages = (isExpert || isMaster) ? 1 : 0;
 
             if (timer < 100)
             {
-                NPC.Center = new Vector2(0, -600) + myPlayer.Center;
+                NPC.Center = new Vector2(0, -900) + myPlayer.Center;
                 NPC.hide = true;
             }
 
             if (timer == 50)
             {
-                Vector2 randomOut = new Vector2(400, 0).RotatedBy(Main.rand.NextBool() ? 0 : Math.PI);
+                Vector2 randomOut = new Vector2(425, 0).RotatedBy(Main.rand.NextFloat(6.28f));
+                float rotDirection = Main.rand.NextBool() ? 1: -1;
                 for (int i = 0; i < 5 + bonusBots; i++)
                 {
                     Vector2 spawnPos = randomOut.RotatedBy(MathHelper.ToRadians(360 / (5 + bonusBots)) * i);
@@ -1304,13 +1306,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     laser.damage = 0;
                     if (laser.ModNPC is CyverBotOrbiter bot)
                     {
+                        bot.rotDir = rotDirection;
                         bot.State = (int)CyverBotOrbiter.Behavior.StarStrikeP1;
                         bot.GoalPoint = spawnPos;
                     }
                 }
             }
 
-            if (timer == 130 + delay)
+            if (timer == 120 + delay)
             {
                 timer = 49;
                 if (advancer == 5 + bonusBarrages)
@@ -1626,7 +1629,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.63f, PitchVariance = 0.25f, MaxInstances = -1, Volume = 1f };
                 SoundEngine.PlaySound(style, NPC.Center);
 
-                SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.8f, Volume = 0.87f, MaxInstances = -1, PitchVariance = 0.25f }, NPC.Center);
+                //SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.8f, Volume = 0.87f, MaxInstances = -1, PitchVariance = 0.25f }, NPC.Center);
+
+                SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode with { Pitch = 0.7f, PitchVariance = 0.2f, Volume = 0.8f }, NPC.Center);
+
 
                 SoundStyle style3 = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = -.88f, Volume = 0.3f };
                 SoundEngine.PlaySound(style3, NPC.Center);
@@ -1641,7 +1647,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     if (Main.projectile[a].ModProjectile is FadeExplosionHighRes explo)
                     {
                         explo.rise = true;
-                        explo.color = Color.HotPink;
+                        explo.color = Main.rand.NextBool() ? Color.DeepPink : Color.DeepSkyBlue;
                         explo.size = 0.8f;
                         explo.colorIntensity = 0.75f; //0.5
                     }
@@ -1653,12 +1659,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 cutsceneDeathFinished = true;
             }
 
+            if (timer <= 150)
+            {
+                Main.GameZoomTarget = MathHelper.Lerp(Main.GameZoomTarget, 1.15f, 0.03f);
+            } else
+            {
+                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.05f), 1, 2);
+            }
+
             if (cutsceneDeathFinished)
             {
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
                 NPC.StrikeNPC(NPC.lifeMax, 0f, 0, false, noEffect: true);
                 spammingLaser = false;
+                Main.GameZoomTarget = 1;
             }
             deathOrbScale += 0.008f;
             timer++;
@@ -1672,10 +1687,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 introCenter = myPlayer.Center + new Vector2(-600, -200);
                 NPC.Center = new Vector2(-600, -1900) + myPlayer.Center;
 
+                
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().ScreenGoalPos = introCenter;
             }
-
+            Main.GameZoomTarget = MathHelper.Lerp(Main.GameZoomTarget, 1.15f, 0.03f);
             NPC.dontTakeDamage = true;
 
             NPC.rotation = MathHelper.ToRadians(180) + new Vector2(0,1).ToRotation();
@@ -1736,7 +1752,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         //SoundEngine.PlaySound(SoundID.Roar with { Pitch = 1f, Volume = 0.05f }, NPC.Center);
                         //SoundEngine.PlaySound(SoundID.ScaryScream with { Pitch = 1f, Volume = 0.07f }, NPC.Center);
 
-                        for (int i = 0; i < 1; i++)
+                        int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-68, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0f);
+                        Projectile explo = Main.projectile[b];
+                        if (explo.ModProjectile is PinkExplosion pinkExplo)
+                        {
+                            pinkExplo.exploScale = 4.5f;
+                            pinkExplo.numberOfDraws = 2;
+                        }
+
+                        
+                        for (int i = 0; i < 0; i++)
                         {
                             int a = Projectile.NewProjectile(null, NPC.Center + new Vector2(-78, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
                             if (Main.projectile[a].ModProjectile is HollowPulse pulse)
@@ -1746,18 +1771,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                                 pulse.size = 2f + (i * 0.05f);
                             }
                         }
-
-
                         for (int i = 0; i < 1; i++)
                         {
                             int a = Projectile.NewProjectile(null, NPC.Center + new Vector2(-78, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
                             if (Main.projectile[a].ModProjectile is HollowPulse pulse)
                             {
-                                pulse.color = Color.SkyBlue * 0.9f;
+                                pulse.color = Color.DeepSkyBlue * 1f;
                                 pulse.oval = false;
-                                pulse.size = 1f + (i * 0.05f);
+                                pulse.size = 15;
                             }
                         }
+                        
 
                         ArmorShaderData dustShadera = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                         ArmorShaderData dustShaderb = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
@@ -1786,6 +1810,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
+            }
+
+            if (timer >= 300)
+            {
+                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.05f), 1, 2);
             }
 
             if (timer == 350)

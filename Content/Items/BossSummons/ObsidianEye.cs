@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
 		public override bool? UseItem(Player player)
 		{
 			NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<Cyvercry2>());
-			SoundEngine.PlaySound(SoundID.Roar, player.position);
+			//SoundEngine.PlaySound(SoundID.Roar, player.position);
 
 			return true;
 		}

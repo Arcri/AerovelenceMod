@@ -625,6 +625,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         float leaveSpeed = 0f;
+        public float rotDir = 1;
         public void StarStrike(Player myPlayer)
         {
             //Move to Point
@@ -632,7 +633,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 NPC.spriteDirection = NPC.direction;
 
-                Vector2 move = (GoalPoint + myPlayer.Center) - NPC.Center;
+                Vector2 move = (GoalPoint.RotatedBy(timer * (0.005f * rotDir)) + myPlayer.Center) - NPC.Center;
                 float scalespeed = 4; //(timer < 20 ? 3f : 7); //5
 
                 NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
@@ -643,10 +644,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //Shoot
                 if (timer == 55)
                 {
-                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.15f, MaxInstances = -1 }; //1f
+                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .74f, Volume = 0.15f, MaxInstances = 5 }; //1f
                     SoundEngine.PlaySound(stylec, NPC.Center);
                     Vector2 offset = (NPC.rotation + MathHelper.Pi).ToRotationVector2();
-                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + GoalPoint, (myPlayer.Center - (GoalPoint + myPlayer.Center)).SafeNormalize(Vector2.UnitX) * 6, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + GoalPoint.RotatedBy(timer * (0.005f * rotDir)), (myPlayer.Center - (GoalPoint.RotatedBy(timer * (0.005f * rotDir)) + myPlayer.Center)).SafeNormalize(Vector2.UnitX) * 6, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
                     Main.projectile[a].scale = 1f;
 
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
@@ -662,19 +663,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     NPC.rotation = NPC.rotation + MathHelper.Pi;
                 }
+                
             }
 
             //Leave
             if (timer >= 80)
             {
-                NPC.spriteDirection = NPC.direction; //?
+                if (timer == 80)
+                    storedDirection = NPC.direction;
+
+                NPC.spriteDirection = storedDirection; //?
 
                 if (timer < 100)
                     leaveSpeed = MathHelper.Lerp(leaveSpeed, 25, 0.08f);
                 else
                     leaveSpeed = MathHelper.Lerp(leaveSpeed, 35, 0.08f);
 
-                NPC.velocity = NPC.rotation.ToRotationVector2() * -leaveSpeed * NPC.direction;
+                NPC.velocity = NPC.rotation.ToRotationVector2() * -leaveSpeed * storedDirection;
             }
 
             if (timer == 260)
