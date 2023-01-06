@@ -53,6 +53,18 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
             if (player.ownedProjectileCounts[ModContent.ProjectileType<ErinCircle>()] < 1)
                 Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<ErinCircle>(), 0, 0, player.whoAmI);
 
+            /*
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<AmmoUI>()] < 1)
+            {
+                int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<AmmoUI>(), 0, 0, player.whoAmI);
+                if (Main.projectile[a].ModProjectile is AmmoUI ui)
+                {
+                    ui.whatWeapon = AmmoUI.whatWeaponEnum.ErinGun;
+                }
+            }
+            */
+            //Main.NewText(player.GetModPlayer<AmmoPlayer>().ErinAmmoCount);
+
             if (player.altFunctionUse == 2)
             {
                 Item.noUseGraphic = true;
@@ -67,11 +79,13 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
         {
             if (player.altFunctionUse == 2)
             {
+                player.GetModPlayer<AmmoPlayer>().ErinAmmoCount = player.GetModPlayer<AmmoPlayer>().ERIN_GUN_MAX_AMMO;
                 damage = damage * 2;
                 int altFire = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<ErinAltFireHeldProjectile>(), damage, knockback, Main.myPlayer);
                 return false;
             }
 
+            player.GetModPlayer<AmmoPlayer>().ErinAmmoCount = player.GetModPlayer<AmmoPlayer>().ErinAmmoCount - 1;
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_defense_tower_spawn") with { Pitch = .66f, MaxInstances = 1, PitchVariance = 0.3f, Volume = 0.5f };
             SoundEngine.PlaySound(style, position);
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_ballista_tower_shot_0") with { Pitch = .85f, PitchVariance = .25f, };
@@ -623,6 +637,33 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
         }
     }
 
+    public class ErinGunMuzzleFlash : MuzzleFlashBase
+    {
+        public override bool PreDraw(ref Color lightColor)
+        {
+            //Main.NewText(Main.player[Main.myPlayer].GetModPlayer<ErinGunPlayer>().AmmoCount);
+
+            //Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 0.1f);
+
+            Texture2D flash = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/AreaPistols/ErinGun/ErinGunMuzzleFlash");
+            Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/AreaPistols/ErinGun/ErinGunMuzzleFlashGlow");
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, glow.Frame(1, 1, 0, 0), Color.Gold * fade, Projectile.rotation, glow.Size() / 2, Projectile.scale * fade, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(flash, Projectile.Center - Main.screenPosition, flash.Frame(1, 1, 0, 0), Color.Gold * fade, Projectile.rotation, flash.Size() / 2, Projectile.scale * fade, SpriteEffects.None, 0f);
+
+            //Projectile.localAI[0] -= 0.01f;
+
+            return false;
+        }
+    }
+
     public class ErinGunPlayer : ModPlayer
     {
         //Want to keep ammo in a player so it is synced between instances of a weapon
@@ -630,6 +671,12 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 
         public int MAX_AMMO = 12; //not const cuz testing currently
         public int AmmoCount = 12;
+        public String ammoString = "";
+
+        //public String totalAmmoString = "";
+        public String preAmmoString = "";
+        public String postAmmoString = "";
+
 
         public float reloadProgress = 0f;
 
@@ -648,39 +695,159 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 
         public override void PostUpdateMiscEffects()
         {
+            MAX_AMMO = 40;
             Update();
         }
 
         private void Update()
         {
+            //preAmmoString = "" + AmmoCount + "";
+            //postAmmoString = "18";
             //if the player is not holding the weapon, inc
+            ammoString = AmmoCount + "/" + MAX_AMMO;
         }
     }
 
-    public class ErinGunMuzzleFlash : MuzzleFlashBase
+    public class ErinGunAmmoDrawLayer : PlayerDrawLayer
     {
-        public override bool PreDraw(ref Color lightColor)
+        public override Position GetDefaultPosition()
         {
+            return new AfterParent(PlayerDrawLayers.HeldItem);
+        }
 
-            //Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 0.1f);
+        protected override void Draw(ref PlayerDrawSet drawInfo)
+        {
+            Player Player = drawInfo.drawPlayer;
 
-            Texture2D flash = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/AreaPistols/ErinGun/ErinGunMuzzleFlash");
-            Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/AreaPistols/ErinGun/ErinGunMuzzleFlashGlow");
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, glow.Frame(1,1,0,0), Color.Gold * fade, Projectile.rotation, glow.Size() / 2, Projectile.scale * fade, SpriteEffects.None, 0f);
+            if (Player.HeldItem.type != ModContent.ItemType<AntiquePistol>())
+                return;
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            float currentAmmo = Player.GetModPlayer<AmmoPlayer>().ErinAmmoCount;
+            float halfCurrentBullets = currentAmmo / 2f;
 
-            Main.spriteBatch.Draw(flash, Projectile.Center - Main.screenPosition, flash.Frame(1, 1, 0, 0), Color.Gold * fade, Projectile.rotation, flash.Size() / 2, Projectile.scale * fade, SpriteEffects.None, 0f);
 
-            //Projectile.localAI[0] -= 0.01f;
+            //Ensures that this isn't drawn multiple times if the player has an afterimage
+            if (drawInfo.shadow == 0f)
+            {
+                Vector2 drawPos = Player.MountedCenter - Main.screenPosition;// - new Vector2(0, 10 - Player.gfxOffY);
 
-            return false;
+                Texture2D backdropTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIBackdrop").Value;
+
+                Texture2D TextTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIText").Value;
+
+                /*
+                Because we can't use DrawString in a draw layer, we have to get creative
+                TextTex contains a spritesheet containing letters
+                frames 1-9 are 1-9, frame 10 is 0, and frame 11 is /
+                */
+                //int maxAmmo = Player.GetModPlayer<ErinGunPlayer>().MAX_AMMO;
+                //int currentAmmo = Player.GetModPlayer<ErinGunPlayer>().AmmoCount;
+
+                DrawData backdrop = new DrawData(backdropTex, new Vector2((int)drawPos.X, (int)drawPos.Y - 40), null,
+                            Color.Black * 0.3f, 0f, backdropTex.Size() / 2, new Vector2(0.02f * currentAmmo, 0.15f), SpriteEffects.None, 0);
+                drawInfo.DrawDataCache.Add(backdrop);
+
+                Texture2D BulletTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIBullet").Value;
+                //+ new Vector2(15f * i, -40)
+                //Main.NewText(Player.GetModPlayer<ErinGunPlayer>().AmmoCount);
+
+                for (float j = (-1 * halfCurrentBullets) + 0.5f; j < halfCurrentBullets; j++)
+                {
+                    DrawData preLetter = new DrawData(BulletTex, new Vector2((int)drawPos.X, (int)drawPos.Y) + new Vector2(8f * j, -40),
+                        BulletTex.Frame(1,1,0,0), Color.White, 0f, BulletTex.Size() / 2, 0.76f, SpriteEffects.None, 0);
+                    drawInfo.DrawDataCache.Add(preLetter);
+                }
+
+                /*
+                String preAmmo = Player.GetModPlayer<ErinGunPlayer>().preAmmoString;
+                String postAmmo = Player.GetModPlayer<ErinGunPlayer>().postAmmoString;
+                //Left ammoCount
+                for (int i = 0; i < preAmmo.Length; i++)
+                {
+                    String character = preAmmo.Substring(i, preAmmo.Length - 1);
+                    int frameToUse = StringToFrame(character);
+
+                    DrawData preLetter = new DrawData(TextTex, new Vector2((int)drawPos.X + (20 * i) - 50, (int)drawPos.Y), 
+                        new Rectangle(0, TextTex.Height / 11 * frameToUse, TextTex.Width, TextTex.Height / 11),
+                        Color.White, 0f, TextTex.Size() / 2, 1f, SpriteEffects.None, 0);
+                    drawInfo.DrawDataCache.Add(preLetter);
+                }
+
+                //Right ammoCount
+                for (int i = 0; i < postAmmo.Length; i++)
+                {
+                    String character = postAmmo.Substring(i, postAmmo.Length - 1);
+                    int frameToUse = StringToFrame(character);
+
+                    DrawData postLetter = new DrawData(TextTex, new Vector2((int)drawPos.X + (20 * i) + 30, (int)drawPos.Y),
+                        new Rectangle(0, TextTex.Height / 11 * frameToUse, TextTex.Width, TextTex.Height / 11),
+                        Color.White, 0f, TextTex.Size() / 2, 1f, SpriteEffects.None, 0);
+                    drawInfo.DrawDataCache.Add(postLetter);
+                }
+                */
+
+                /*
+                DrawData slash = new DrawData(TextTex, new Vector2((int)drawPos.X, (int)drawPos.Y),
+                        new Rectangle(0, TextTex.Height / 11 * 11, TextTex.Width, TextTex.Height / 11),
+                        Color.White, 0f, TextTex.Size() / 2, 1f, SpriteEffects.None, 0);
+                drawInfo.DrawDataCache.Add(slash);
+                */
+            }
+
+            /*
+            DrawData backdrop = new DrawData();
+
+            var value = new DrawData(
+                        barTex,
+                        new Vector2((int)drawPos.X, (int)drawPos.Y),
+                        null,
+                        Lighting.GetColor((int)(drawPos.X + Main.screenPosition.X) / 16, (int)(drawPos.Y + Main.screenPosition.Y) / 16),
+                        0f,
+                        barTex.Size() / 2,
+                        1,
+                        SpriteEffects.None,
+                        0
+                    );
+            drawInfo.DrawDataCache.Add(value);
+
+            var value2 = new DrawData(
+                        glowTex,
+                        new Vector2((int)drawPos.X, (int)drawPos.Y) - new Vector2(0, 1),
+                        new Rectangle(0, 0, (int)(glowTex.Width * (Player.GetModPlayer<JetwelderPlayer>().scrap / 20f)), glowTex.Height),
+                        Color.White,
+                        0f,
+                        glowTex.Size() / 2,
+                        1,
+                        SpriteEffects.None,
+                        0
+                    );
+            drawInfo.DrawDataCache.Add(value2);
+            */
+        }
+
+        public int StringToFrame(String input)
+        {
+            if (input.Equals(""))
+                return 11;
+
+            if (input.Equals("/"))
+                return 11;
+
+            int inputInt = int.Parse(input);
+
+
+            if (inputInt >= 1 && inputInt <= 9)
+                return inputInt - 1;
+            else if (inputInt == 0)
+                return 10;
+
+            Main.NewText("StringToFrame bad input");
+            return -1;
+
+
         }
     }
-
 }
+

@@ -344,7 +344,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         }
 
         public void Update()
-          {
+        {
             float size = 0.35f; //.45 for Rime
             scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
             Center += Velocity;
