@@ -85,7 +85,12 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                 return false;
             }
 
+            Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<ReloadProj>(), damage, knockback, Main.myPlayer);
+
             player.GetModPlayer<AmmoPlayer>().ErinAmmoCount = player.GetModPlayer<AmmoPlayer>().ErinAmmoCount - 1;
+            player.GetModPlayer<ErinGunPlayer>().justShotTime = 5;
+
+
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_defense_tower_spawn") with { Pitch = .66f, MaxInstances = 1, PitchVariance = 0.3f, Volume = 0.5f };
             SoundEngine.PlaySound(style, position);
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_ballista_tower_shot_0") with { Pitch = .85f, PitchVariance = .25f, };
@@ -93,7 +98,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 
             //SoundEngine.PlaySound(SoundID.DD2_BallistaTowerShot with { Volume = 0.7f, Pitch = 0.4f, PitchVariance = 0.15f });
 
-            Gore.NewGore(source, position + velocity, new Vector2(velocity.X * -0.2f, -2), Mod.Find<ModGore>("BulletShell").Type);
+            Gore.NewGore(source, position + velocity, new Vector2(velocity.X * -0.2f, -2), ModContent.GoreType<BulletCasing>());
 
             //int nm = Projectile.NewProjectile(source, position + new Vector2(-75, 0), Vector2.Zero, ModContent.ProjectileType<BigErinImpact>(), 0, 0, Main.myPlayer);
             //Main.projectile[nm].scale = 1.5f;
@@ -341,10 +346,10 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                     ShotLogic(Player);
 
                     //lmao
-                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), Mod.Find<ModGore>("BulletShell").Type);
-                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), Mod.Find<ModGore>("BulletShell").Type);
-                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), Mod.Find<ModGore>("BulletShell").Type);
-                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), Mod.Find<ModGore>("BulletShell").Type);
+                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), ModContent.GoreType<BulletCasing>());
+                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), ModContent.GoreType<BulletCasing>());
+                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), ModContent.GoreType<BulletCasing>());
+                    Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + direction * 2, new Vector2(direction.X * -3f, -2), ModContent.GoreType<BulletCasing>());
 
 
                     Vector2 muzzlePosition = Player.Center + new Vector2(56, Player.direction == 1 ? -10 : 10).RotatedBy(direction.ToRotation());
@@ -677,6 +682,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
         public String preAmmoString = "";
         public String postAmmoString = "";
 
+        public float justShotTime = 0f;
 
         public float reloadProgress = 0f;
 
@@ -695,12 +701,13 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 
         public override void PostUpdateMiscEffects()
         {
-            MAX_AMMO = 40;
             Update();
         }
 
         private void Update()
         {
+            justShotTime = MathHelper.Clamp(justShotTime - 1, 0, 100);
+
             //preAmmoString = "" + AmmoCount + "";
             //postAmmoString = "18";
             //if the player is not holding the weapon, inc
@@ -714,19 +721,22 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
         {
             return new AfterParent(PlayerDrawLayers.HeldItem);
         }
-
+        public float timeJustHeld = 0f;
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
             Player Player = drawInfo.drawPlayer;
 
 
-
             if (Player.HeldItem.type != ModContent.ItemType<AntiquePistol>())
+            {
+                timeJustHeld = 15f;
                 return;
+            }
 
             float currentAmmo = Player.GetModPlayer<AmmoPlayer>().ErinAmmoCount;
             float halfCurrentBullets = currentAmmo / 2f;
 
+            timeJustHeld = Math.Clamp(timeJustHeld - 1, 0, 100);
 
             //Ensures that this isn't drawn multiple times if the player has an afterimage
             if (drawInfo.shadow == 0f)
@@ -734,7 +744,6 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                 Vector2 drawPos = Player.MountedCenter - Main.screenPosition;// - new Vector2(0, 10 - Player.gfxOffY);
 
                 Texture2D backdropTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIBackdrop").Value;
-
                 Texture2D TextTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIText").Value;
 
                 /*
@@ -746,17 +755,16 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                 //int currentAmmo = Player.GetModPlayer<ErinGunPlayer>().AmmoCount;
 
                 DrawData backdrop = new DrawData(backdropTex, new Vector2((int)drawPos.X, (int)drawPos.Y - 40), null,
-                            Color.Black * 0.3f, 0f, backdropTex.Size() / 2, new Vector2(0.02f * currentAmmo, 0.15f), SpriteEffects.None, 0);
+                            Color.Black * 0.3f, 0f, backdropTex.Size() / 2, new Vector2(0.022f * currentAmmo, 0.15f), SpriteEffects.None, 0);
                 drawInfo.DrawDataCache.Add(backdrop);
 
                 Texture2D BulletTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/AreaPistols/AmmoUIBullet").Value;
-                //+ new Vector2(15f * i, -40)
-                //Main.NewText(Player.GetModPlayer<ErinGunPlayer>().AmmoCount);
+                float shotReactTime = Player.GetModPlayer<ErinGunPlayer>().justShotTime;
 
                 for (float j = (-1 * halfCurrentBullets) + 0.5f; j < halfCurrentBullets; j++)
                 {
                     DrawData preLetter = new DrawData(BulletTex, new Vector2((int)drawPos.X, (int)drawPos.Y) + new Vector2(8f * j, -40),
-                        BulletTex.Frame(1,1,0,0), Color.White, 0f, BulletTex.Size() / 2, 0.76f, SpriteEffects.None, 0);
+                        BulletTex.Frame(1,1,0,0), Color.Lerp(Color.Yellow, Color.Black, shotReactTime / 20), 0f, BulletTex.Size() / 2, new Vector2(0.76f - (timeJustHeld * 0.03f), 0.76f - (shotReactTime * 0.03f)), SpriteEffects.None, 0);
                     drawInfo.DrawDataCache.Add(preLetter);
                 }
 
@@ -847,6 +855,138 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
             return -1;
 
 
+        }
+    }
+
+    public class BulletCasing : ModGore
+    {
+        public override string Texture => "AerovelenceMod/Content/Gores/BulletShell";
+        public override bool Update(Gore gore)
+        {
+            gore.alpha += 8;
+
+            if (gore.alpha >= 250)
+                gore.active = false;
+            return base.Update(gore);
+        }
+    }
+
+    public class ReloadProj : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("ErinReloadProj");
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 1;
+
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.timeLeft = 200;
+            Projectile.penetrate = -1;
+            Projectile.damage = 0;
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.scale = 0f;
+        }
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+        int timer = 0;
+
+        float lerp1progress = 0f;
+        float lerp2progress = 0f;
+
+        public override void AI()
+        {
+
+            Projectile.Center = Main.player[Projectile.owner].Center;
+
+            if (timer < 75)
+                Projectile.scale = Math.Clamp(MathHelper.Lerp(0, 1.1f, lerp1progress), 0f, 1f);
+            else
+                Projectile.scale = Math.Clamp(MathHelper.Lerp(1, -0.5f, lerp2progress), 0, 1f);
+
+            lerp1progress = Math.Clamp(lerp1progress + 0.06f, 0, 1);
+
+            if (timer >= 75)
+                lerp2progress = Math.Clamp(lerp2progress + 0.06f, 0, 1);
+            /*
+            if (timer < 75)
+            {
+                Projectile.scale = Math.Clamp(MathHelper.Lerp(0, 1.1f, lerp1progress), 0f, 1f);
+
+                if (timer < 65)
+                    Projectile.Center = Vector2.Lerp(Projectile.Center, Main.player[Projectile.owner].Center + new Vector2(0,-45), lerp1progress);
+                else
+                    Projectile.Center = Vector2.Lerp(Projectile.Center, Main.player[Projectile.owner].Center + new Vector2(0, -70), lerp1progress * 0.25f);
+
+                if (timer < 20)
+                    lerp1progress = Math.Clamp(lerp1progress + 0.06f, 0, 1);
+                else
+                    lerp1progress = Math.Clamp(lerp1progress + 0.08f, 0, 1);
+
+
+                //lerp1progress = Math.Clamp(lerp1progress + 0.08f, 0, 1);
+            } 
+            else if (timer >= 75)
+            {
+                Projectile.scale = Math.Clamp(MathHelper.Lerp(1, -0.5f, lerp2progress), 0, 1f);
+                Projectile.Center = Vector2.Lerp(Projectile.Center, Main.player[Projectile.owner].Center, lerp2progress);
+
+                lerp2progress = Math.Clamp(lerp2progress + 0.08f, 0, 1);
+
+            }
+
+            if (lerp2progress == 1)
+            {
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = 1f, Volume = 0.4f }; 
+                SoundEngine.PlaySound(style);
+
+                for (int i = 0; i < 1; i++)
+                {
+                    int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
+                    if (Main.projectile[a].ModProjectile is HollowPulse pulse)
+                    {
+                        pulse.color = Color.White * 0.85f;
+                        pulse.oval = false;
+                        pulse.size = 2;
+                    }
+                }
+
+                Projectile.active = false;
+            }
+
+            */
+            Projectile.rotation += 0.026f;
+            timer++;
+        }
+
+        //start 0,0 scale
+        //move to 
+
+
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_02").Value;
+
+            Vector2 scale = new Vector2(Projectile.scale, Projectile.scale);
+
+            float OldPosDifference = (Projectile.Center - Projectile.oldPos[0]).Length();
+
+            //if (timer < 30 || timer >= 90)
+            //scale = new Vector2(Projectile.scale, Projectile.scale * 0.5f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Draw(Tex, new Vector2((int)Projectile.Center.X, (int)Projectile.Center.Y) - Main.screenPosition, Tex.Frame(1,1,0,0), Color.White * 0.5f, Projectile.rotation, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
         }
     }
 }
