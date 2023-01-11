@@ -90,7 +90,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					SoundStyle stylev2 = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
 					SoundEngine.PlaySound(stylev2);
 
-
+					//Oh my goodness gracious
 					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
 					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;
 					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;

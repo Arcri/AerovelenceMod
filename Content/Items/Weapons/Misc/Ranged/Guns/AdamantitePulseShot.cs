@@ -11,6 +11,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.GameContent;
 using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles.Other;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {   
@@ -178,9 +179,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetDefaults()
         {
-            Projectile.extraUpdates = 2;
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.extraUpdates = 4;
+            Projectile.width = 20;
+            Projectile.height = 20;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.scale = 1f;
@@ -196,7 +197,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             Projectile.spriteDirection = Projectile.direction;
 
-            Projectile.velocity *= 1.02f;
+            //Projectile.velocity *= 1.02f;
 
             timer++;
 
@@ -251,7 +252,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             if (target.GetGlobalNPC<AdamShotNPC>().AdamShotHitCounter >= 4)
             {
-
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0f;
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0f;
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<H3Impact>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].rotation = Projectile.rotation;
@@ -304,8 +309,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             float point = 0f;
             // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
             // It will look for collisions on the given line using AABB
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + unit * -40,
-                Projectile.Center + unit * 40, 20, ref point);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + unit * -20,
+                Projectile.Center + unit * 20, 2, ref point);
         }
     }
 

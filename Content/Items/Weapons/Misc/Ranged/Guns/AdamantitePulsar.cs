@@ -13,6 +13,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {
@@ -21,12 +22,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Adamantite Pulsar");
-            Tooltip.SetDefault("'Instructions Not Included'");
+            Tooltip.SetDefault("Right-click to switch between 2 modes");
         }
         public override void SetDefaults()
         {
             //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
-            Item.damage = 50;
+            Item.damage = 95;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;
@@ -134,7 +135,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 {
                     position += muzzleOffset;
                 }
-                Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1.2f), knockback, Main.myPlayer);
+                Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1.3f), knockback, Main.myPlayer);
 
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = .2f, Volume = 0.4f }; SoundEngine.PlaySound(style);
                 SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.6f };
@@ -166,6 +167,42 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             if (delayTimer > 0)
                 return false;
             return true;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            int itemID = ModContent.ItemType<AdamantitePulsar>();
+
+            if (mode == 0)
+            {
+
+                TooltipLine modeDesc = new(Mod, "mode", "Charge - Hold to charge a piercing shot, accuracy increasing the longer you charge")
+                {
+                    
+                    OverrideColor = Color.Red,
+                };
+                tooltips.Add(modeDesc);
+
+                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Skill Strike by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
+                {
+                    OverrideColor = Color.Gold,
+                };
+                tooltips.Add(SSline);
+            }
+            else if (mode == 1)
+            {
+                TooltipLine modeDesc = new(Mod, "mode", "Burst - Fires a burst of three bullets")
+                {
+                    OverrideColor = Color.Red,
+                };
+                tooltips.Add(modeDesc);
+
+                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Thrid shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
+                {
+                    OverrideColor = Color.Gold,
+                };
+                tooltips.Add(SSline);
+            }
         }
     }
 
@@ -244,7 +281,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     if (skillCritWindow > 0 && reticleProgress == 1)
                     {
 
-                        SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.9f };
+                        SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.6f };
                         SoundEngine.PlaySound(style23, Projectile.Center);
 
                         SoundStyle styl23e = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .65f, PitchVariance = .15f, Volume = 0.3f }; SoundEngine.PlaySound(styl23e);

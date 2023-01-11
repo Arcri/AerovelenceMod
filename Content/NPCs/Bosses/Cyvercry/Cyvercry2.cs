@@ -18,6 +18,8 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Projectiles.Other;
+using Terraria.DataStructures;
+using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry 
 {
@@ -39,10 +41,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     BuffID.Confused,
                     BuffID.Poisoned,
                     BuffID.Venom,
-                    ModContent.BuffType<InfestedDebuff>(),
-                    ModContent.BuffType<NecroticGougeDebuff>(),
-                    ModContent.BuffType<ViralityDebuff>(),
-                    ModContent.BuffType<DirtyWoundDebuff>()
+                    BuffID.Bleeding,
+                    ModContent.BuffType<AuroraFire>(),
+                    BuffID.OnFire,
+                    BuffID.OnFire3,
+                    BuffID.CursedInferno,
+                    BuffID.Ichor,
+                    BuffID.Frostburn,
+                    BuffID.Frostburn2,
                 }
             };
         }
@@ -86,7 +92,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            NPC.lifeMax = 47500;
+            NPC.lifeMax = 55555;
             NPC.damage = 125;
             NPC.defense = 25;
         }
@@ -405,6 +411,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void AI()
         {
+            if (!Phase2 || Phase3)
+                NPC.defense = 20;
+            else
+                NPC.defense = 30;
+
             if (firstFrame)
             {
                 firstFrame = false;
