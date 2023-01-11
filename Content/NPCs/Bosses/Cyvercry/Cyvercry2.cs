@@ -32,6 +32,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPCID.Sets.TrailingMode[NPC.type] = 0;
             dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+            NPCDebuffImmunityData debuffData = new()
+            {
+                SpecificallyImmuneTo = new int[] {
+                    BuffID.Confused,
+                    BuffID.Poisoned,
+                    BuffID.Venom,
+                    ModContent.BuffType<InfestedDebuff>(),
+                    ModContent.BuffType<NecroticGougeDebuff>(),
+                    ModContent.BuffType<ViralityDebuff>(),
+                    ModContent.BuffType<DirtyWoundDebuff>()
+                }
+            };
         }
         ArmorShaderData dustShader = null;
         ArmorShaderData dustShader2 = null;
@@ -73,9 +86,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            NPC.lifeMax = 42500;
+            NPC.lifeMax = 47500;
             NPC.damage = 125;
-            NPC.defense = 30;
+            NPC.defense = 25;
         }
 
         public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
@@ -1284,9 +1297,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //isExpert = true;
             //isMaster = true;
 
-            float bonusBots = isMaster ? 2 : 0;
+            float bonusBots = isMaster ? 2 : 1;
             float delay = (isExpert || isMaster) ? -10 : 10;
-            float bonusBarrages = (isExpert || isMaster) ? 1 : 0;
+            float bonusBarrages = (isExpert || isMaster) ? 0 : 0;
 
             if (timer < 100)
             {

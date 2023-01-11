@@ -633,7 +633,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 NPC.spriteDirection = NPC.direction;
 
-                Vector2 move = (GoalPoint.RotatedBy(timer * (0.005f * rotDir)) + myPlayer.Center) - NPC.Center;
+                Vector2 move = (GoalPoint.RotatedBy(timer * (0.007f * rotDir)) + myPlayer.Center) - NPC.Center;
                 float scalespeed = 4; //(timer < 20 ? 3f : 7); //5
 
                 NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
@@ -647,7 +647,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .74f, Volume = 0.15f, MaxInstances = 5 }; //1f
                     SoundEngine.PlaySound(stylec, NPC.Center);
                     Vector2 offset = (NPC.rotation + MathHelper.Pi).ToRotationVector2();
-                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + GoalPoint.RotatedBy(timer * (0.005f * rotDir)), (myPlayer.Center - (GoalPoint.RotatedBy(timer * (0.005f * rotDir)) + myPlayer.Center)).SafeNormalize(Vector2.UnitX) * 6, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + GoalPoint.RotatedBy(timer * (0.007f * rotDir)), (myPlayer.Center - (GoalPoint.RotatedBy(timer * (0.007f * rotDir)) + myPlayer.Center)).SafeNormalize(Vector2.UnitX) * 6, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
                     Main.projectile[a].scale = 1f;
 
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
@@ -687,6 +687,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
             timer++;
+        }
+
+        public void LaserWall(Player myPlayer)
+        {
+            //move to point, fire leave
         }
 
         #endregion
