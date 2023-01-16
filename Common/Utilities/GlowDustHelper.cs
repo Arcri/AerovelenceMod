@@ -6,17 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Graphics.Shaders;
-using System;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.Audio;
-using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
-using Terraria.Graphics.Shaders;
 
 namespace AerovelenceMod.Common.Utilities
 {

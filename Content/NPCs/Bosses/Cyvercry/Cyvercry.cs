@@ -393,7 +393,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 }
             } //idle attack
 
-            if(nextAttack == 0)
+            if (nextAttack == 0)
             {
                 ai1++;
                 NPC.rotation = (NPC.Center - player.Center).ToRotation();
@@ -760,6 +760,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 9;
         }
+
+        int fakeTimeLeft = 540;
         public override void SetDefaults()
         {
             Projectile.width = 62;
@@ -805,14 +807,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);
             }
 
-            if (Projectile.timeLeft == 300)
+            if (Projectile.timeLeft == 380)
                 Projectile.Kill();
 
-
+            fakeTimeLeft--;
         }
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.45f, PitchVariance = 0.2f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Main.myPlayer);
             /*
             for (int i = 0; i < 360; i += 5)

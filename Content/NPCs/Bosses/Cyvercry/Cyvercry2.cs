@@ -92,9 +92,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            NPC.lifeMax = 55555;
+            NPC.lifeMax = 43110;
             NPC.damage = 125;
-            NPC.defense = 25;
+            NPC.defense = 10;
         }
 
         public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
@@ -115,6 +115,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
                 }
             }
+
+
+            //Shhhh 
+            if (projectile.type == ProjectileID.ChlorophyteBullet)
+                damage = (int)(damage * 0.75f);
+            if (projectile.type == ProjectileID.ChlorophyteArrow)
+                damage = (int)(damage * 0.8f);
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -230,7 +237,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             #region DrawTelegraphLines
             //AZZY LASER DRAWING
-            if (drawAzzyLaser == 1) //5 shot
+            if (drawAzzyLaser == 1 && whatAttack != -1) //5 shot
             {
                 Player target = Main.player[NPC.target];
                 for (int i = -1; i < 2; i++)
@@ -242,7 +249,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 }
 
-            } else if (drawAzzyLaser == 2) //4 shot
+            } else if (drawAzzyLaser == 2 && whatAttack != -1) //4 shot
             {
                 Player target = Main.player[NPC.target];
 
@@ -296,7 +303,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             //Draw Blue Afterimage
             if (fadeDashing)
-            {
+            { 
                 Texture2D CyverPink = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/CyverGlowMaskBlue");
                 Vector2 drawOrigin2 = new Vector2(CyverPink.Width * 0.5f, NPC.height * 0.5f);
                 Color color = Color.White;
@@ -411,10 +418,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void AI()
         {
-            if (!Phase2 || Phase3)
-                NPC.defense = 20;
-            else
-                NPC.defense = 30;
+            
 
             if (firstFrame)
             {
@@ -783,15 +787,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     ShotDust();
 
-                    SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, MaxInstances = -1 };
+                    SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, MaxInstances = -1, Volume = 0.75f };
                     SoundEngine.PlaySound(stylea, NPC.Center);
                     SoundEngine.PlaySound(stylea, NPC.Center);
 
-                    SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, MaxInstances = -1 };
+                    SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .22f, Pitch = .73f, PitchVariance = .27f, MaxInstances = -1 };
                     SoundEngine.PlaySound(styleb, NPC.Center);
                     SoundEngine.PlaySound(styleb, NPC.Center);
 
-                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .38f, Volume = 0.7f }; //1f
+                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .38f, Volume = 0.5f }; //1f
                     SoundEngine.PlaySound(stylec, NPC.Center);
 
                 }

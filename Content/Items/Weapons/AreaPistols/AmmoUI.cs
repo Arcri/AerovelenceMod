@@ -295,6 +295,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols
 			return false;
 
 
+			/*
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * 0.5f, TextureAssets.Projectile[Projectile.type].Value.Height * 0.5f);
@@ -307,7 +308,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			return false;
-
+			*/
 		}
 	}
 

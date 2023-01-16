@@ -52,6 +52,9 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
+			int b = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<ScreenShaderTest>(), 0, 0, Main.myPlayer);
+			return false;
+
 
 			//fb + rs for ice cube spawn
 			//Frosty Blast

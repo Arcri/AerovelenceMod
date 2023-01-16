@@ -4,32 +4,19 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.Shaders;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Terraria;
 using Terraria.Chat;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
-
 using static Terraria.ModLoader.ModContent;
-
-
-using System.Collections.Generic;
-
 using Terraria.ModLoader.IO;
-using ReLogic.Content;
 using AerovelenceMod.Effects.Dyes;
 
 namespace AerovelenceMod.Content.Dusts.GlowDusts

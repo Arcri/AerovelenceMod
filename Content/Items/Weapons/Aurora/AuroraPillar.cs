@@ -49,6 +49,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 				for (int i = 50; i < 1500; i += 150) //i = 0 ; i = 350
 				{
 
+					/*
 					if (false)
 					{
 						int a =Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * i, new Vector2(0,0).RotatedBy(Main.rand.NextFloat(6.28f)), 
@@ -59,6 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 							//, Main.rand.NextVector2CircularEdge(2f, 2f) + ((LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f), Color.OrangeRed, 0.2f, dustShader); //0.2f
 
 					}
+					*/
 
 				}
 			}

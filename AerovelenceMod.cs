@@ -17,6 +17,9 @@ using AerovelenceMod.Content.Skies;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using ReLogic.Graphics;
 using AerovelenceMod.Common;
+using Terraria.GameContent;
+using AerovelenceMod.Content.Projectiles.Other;
+using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 
 namespace AerovelenceMod
 {
@@ -197,6 +200,14 @@ namespace AerovelenceMod
 
 		public static Effect LegElectricity;
 		public static Effect RailgunShader;
+
+		public static Effect DistortShader;
+		public static Effect CrystalShine;
+
+		public static Effect Shockwave;
+
+		public static Effect Test2;
+
 		public override void Load()
 		{
 
@@ -206,13 +217,33 @@ namespace AerovelenceMod
 			if (Main.netMode != NetmodeID.Server)
 			{
 
-				string shaderName = "AerovelenceMod:CavernCrystalShine";
-				string shaderPath = "Effects/CavernCrystalShine";
+				string shaderName = "AerovelenceMod:DistortScreen";
+				string shaderPath = "Effects/DistortScreen";
 
-				var shaderRef = new Ref<Effect>(Instance.Assets.Request<Effect>(shaderPath).Value);
-				(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, shaderName + "Pass"), EffectPriority.High)).Load();
+				var shaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value);
+				Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low);
+				Filters.Scene[shaderName].Load();
+				//(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low)).Load(); //EF.High?
 
-			} 
+
+				//Filters.Scene[shaderName] = new Filter(new ScreenShaderData())
+
+
+				DistortShader = ModContent.Request<Effect>("AerovelenceMod/Effects/DistortScreen", (AssetRequestMode)1).Value;
+				CrystalShine = ModContent.Request<Effect>("AerovelenceMod/Effects/CrystalShine", (AssetRequestMode)1).Value;
+				Test2 = ModContent.Request<Effect>("AerovelenceMod/Effects/Test2", (AssetRequestMode)1).Value;
+
+				//Shockwave = ModContent.Request<Effect>("AerovelenceMod/Effects/Shockwave", (AssetRequestMode)1).Value;
+
+
+				Filters.Scene["DistortScreen"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("AerovelenceMod/Effects/DistortScreen", AssetRequestMode.ImmediateLoad).Value), "DistortPass"), EffectPriority.VeryHigh);
+				Filters.Scene["DistortScreen"].Load();
+
+
+				Filters.Scene["Shockwave"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("AerovelenceMod/Effects/Shockwave", AssetRequestMode.ImmediateLoad).Value), "Shockwave"), EffectPriority.VeryHigh);
+				Filters.Scene["Shockwave"].Load();
+
+			}
 			GemGrapplingRange.Load();
 
             
@@ -244,13 +275,16 @@ namespace AerovelenceMod
 
 
 				Ref<Effect> LaserShaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value);
-				GameShaders.Misc["LaserShader"] = new MiscShaderData(LaserShaderRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+				GameShaders.Misc["LaserShader"] = new MiscShaderData(LaserShaderRef, "Aura");
 
 				Ref<Effect> ShittyBallRef = new Ref<Effect>(Assets.Request<Effect>("Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value);
-				GameShaders.Misc["FireBallShader"] = new MiscShaderData(ShittyBallRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+				GameShaders.Misc["FireBallShader"] = new MiscShaderData(ShittyBallRef, "Aura");
 
 				Ref<Effect> CyverAuraRef = new Ref<Effect>(Assets.Request<Effect>("Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value);
-				GameShaders.Misc["CyverAura"] = new MiscShaderData(CyverAuraRef, "Aura");//.UseImage0("Images/Misc/Perlin");
+				GameShaders.Misc["CyverAura"] = new MiscShaderData(CyverAuraRef, "Aura");
+
+				Ref<Effect> DistortMiscRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DistortMisc", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["DistortMisc"] = new MiscShaderData(DistortMiscRef, "DistortPass");
 
 				//Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
 				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
@@ -267,6 +301,8 @@ namespace AerovelenceMod
 
 				//TrailShader = Assets.Request<Effect>("Effects/Trail");
 
+				On.Terraria.Graphics.Effects.FilterManager.EndCapture += FilterManager_EndCapture;
+				CreateRender();
 
 			}
 
@@ -282,34 +318,16 @@ namespace AerovelenceMod
 
 
 
-            //COMBAT TEXT BULLSHIT STARTS HERE
-			if (false)
-			{
-                On.Terraria.CombatText.NewText_Rectangle_Color_int_bool_bool += CombatText_NewText_Rectangle_Color_int_bool_bool;
-                On.Terraria.CombatText.NewText_Rectangle_Color_string_bool_bool += CombatText_NewText_Rectangle_Color_string_bool_bool;
-            }
-
-
         }
 
         public static bool shouldHide = false;
 		
-		#region combatTextShit
-		
-		private int CombatText_NewText_Rectangle_Color_string_bool_bool(On.Terraria.CombatText.orig_NewText_Rectangle_Color_string_bool_bool orig, Microsoft.Xna.Framework.Rectangle location, Microsoft.Xna.Framework.Color color, string text, bool dramatic, bool dot)
-		{
-			return orig(location, Color.Purple * 1f, text, dramatic, dot);
-		}
-
-        private int CombatText_NewText_Rectangle_Color_int_bool_bool(On.Terraria.CombatText.orig_NewText_Rectangle_Color_int_bool_bool orig, Microsoft.Xna.Framework.Rectangle location, Microsoft.Xna.Framework.Color color, int amount, bool dramatic, bool dot)
-        {
-            return CombatText.NewText(location, Color.Purple * 1f, amount.ToString(), dramatic, dot);
-        }
-
-        #endregion
 		
         public override void Unload()
 		{
+			On.Terraria.Graphics.Effects.FilterManager.EndCapture -= FilterManager_EndCapture;
+
+
 			ModDetours.Unload();
 
 			if (!Main.dedServ)
@@ -328,7 +346,6 @@ namespace AerovelenceMod
 
 		public override void Close()
 		{
-
 			base.Close();
 		}
 
@@ -381,8 +398,6 @@ namespace AerovelenceMod
             }
         }
 
-		
-
 		private void LoadDetours()
 		{
 			AeroPlayer aeroPlayer = new AeroPlayer();
@@ -396,5 +411,78 @@ namespace AerovelenceMod
 			//On.Terraria.Player.ItemCheck -= aeroPlayer.DetouredItemCheck;
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
-    }
+
+		//Ripped from Regressus
+		public RenderTarget2D render3;
+		private void FilterManager_EndCapture(On.Terraria.Graphics.Effects.FilterManager.orig_EndCapture orig, Terraria.Graphics.Effects.FilterManager self, 
+			RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
+        {
+			GraphicsDevice gd = Main.instance.GraphicsDevice;
+			SpriteBatch sb = Main.spriteBatch;
+
+			#region ozoneShredder
+			gd.SetRenderTarget(render3);
+			gd.Clear(Color.Transparent);
+			sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			sb.Draw(Main.screenTarget, Vector2.Zero, Color.White);
+			sb.End();
+			gd.SetRenderTarget(Main.screenTargetSwap);
+			gd.Clear(Color.Transparent);
+			sb.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+			foreach (Projectile projectile in Main.projectile)
+			{
+				//Want to do this first and separate because it will weed out more projectiles first, despite checking again later
+				if (projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>() || projectile.type == ModContent.ProjectileType<OzoneShredderImpact>())
+                {
+					
+					if (projectile.active && projectile.ai[1] == 1 && projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>())
+                    {
+						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
+						//Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.FlipVertically, 0f);
+
+						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
+						float extraRotation = projectile.ai[0] != 1 ? MathHelper.PiOver4 + 0.3f : MathHelper.PiOver2 - 1f;
+						Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation + extraRotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+
+
+						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/spiky_16-export");
+						//float extraRotation = projectile.ai[0] != 1 ? MathHelper.PiOver4 - 0.1f : MathHelper.PiOver2 * -1 - MathHelper.PiOver4 + 0.1f;
+						//Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation + extraRotation, a.Size() / 2, new Vector2(2.25f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+					}
+                    else if (projectile.active && projectile.type == ModContent.ProjectileType<OzoneShredderImpact>())
+                    {
+						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
+						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/OzoneShredderImpact");
+						Main.spriteBatch.Draw(a, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, a.Size() / 2, projectile.scale * 0.5f, SpriteEffects.None, 0f);
+					}
+				}
+			}
+			sb.End();
+			gd.SetRenderTarget(Main.screenTarget);
+			gd.Clear(Color.Transparent);
+			sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+			Test2.CurrentTechnique.Passes[0].Apply();
+			Test2.Parameters["tex0"].SetValue(Main.screenTargetSwap);
+			Test2.Parameters["i"].SetValue(0.02f);
+			sb.Draw(render3, Vector2.Zero, Color.White);
+			sb.End();
+			#endregion
+
+
+			orig(self, finalTexture, screenTarget1, screenTarget2, clearColor);
+
+		}
+
+		public void CreateRender()
+		{
+			Main.QueueMainThreadAction(() =>
+			{
+				render3 = new RenderTarget2D(Main.graphics.GraphicsDevice, Main.screenWidth, Main.screenHeight);
+			});
+		}
+		private void Main_OnResolutionChanged(Vector2 obj)
+		{
+			CreateRender();
+		}
+	}
 }
