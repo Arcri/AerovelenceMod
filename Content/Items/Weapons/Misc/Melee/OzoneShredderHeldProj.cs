@@ -269,8 +269,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             }
 
             //Need to move position by player zoom cause it will be wrong if not (still breaks while zooming during its existence but w/e
-            Vector2 awayFromNPC = (target.Center - player.Center) * -2f * (1 - Main.GameZoomTarget);
-            int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center + awayFromNPC, Vector2.Zero, ModContent.ProjectileType<OzoneShredderImpact>(), 0, 0);
+            Vector2 awayFromNPC = (target.Center - player.Center);// * -2f * (1 - Main.GameZoomTarget);
+            int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), target.Center, Vector2.Zero, ModContent.ProjectileType<OzoneShredderImpact>(), 0, 0);
             Main.projectile[a].rotation = awayFromNPC.ToRotation() - MathHelper.PiOver2;
         }
 

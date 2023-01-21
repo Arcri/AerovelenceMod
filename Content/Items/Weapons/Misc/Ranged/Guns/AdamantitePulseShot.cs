@@ -166,7 +166,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
             // It will look for collisions on the given line using AABB
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                Projectile.Center + Projectile.velocity * 60, 10, ref point);
+                Projectile.Center + Projectile.velocity * 30, 10, ref point);
         }
     }
 
