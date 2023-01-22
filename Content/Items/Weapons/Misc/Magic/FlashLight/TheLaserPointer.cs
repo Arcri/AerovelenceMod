@@ -10,18 +10,20 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using ReLogic.Content;
 using Terraria.DataStructures;
-namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
+
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class CrystalSpray : ModItem
+    public class TheLaserPointer : ModItem
     {
+        
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Hoses down enemies with homing water streams.");
+            Tooltip.SetDefault("Increases in power the longer it is latched onto a target");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
         {
-            Item.mana = 6;
+            //Item.mana = 6;
             Item.autoReuse = true;
             Item.useStyle = 5;
             Item.knockBack = 5f;
@@ -35,21 +37,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Item.rare = 8;
             Item.value = 5400 * 5;
             Item.DamageType = DamageClass.Magic;
-            Item.shoot = ModContent.ProjectileType<Projectiles.Weapons.Magic.CrystalSpray_Proj>();
+            Item.shoot = ModContent.ProjectileType<TheLaserPointerProj>();
+            Item.channel = true;
+            Item.noUseGraphic = true;
         }
         public override void AddRecipes()
         {
             CreateRecipe().
                 AddIngredient(ItemID.AquaScepter).
-                AddIngredient(ItemID.HallowedBar, 8).
+                AddIngredient(ItemID.SoulofMight, 5).
                 AddTile(TileID.MythrilAnvil).
                 Register();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_21") with { Pitch = .69f, PitchVariance = .27f, };
-            SoundEngine.PlaySound(style, player.Center);
+
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }
     }

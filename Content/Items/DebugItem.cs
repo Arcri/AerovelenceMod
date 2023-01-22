@@ -14,6 +14,7 @@ using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
+using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -28,12 +29,12 @@ namespace AerovelenceMod.Content.Items
         {
             //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
             Item.crit = 4;
-            Item.damage = 50;
+            Item.damage = 22;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;
-            Item.useTime = 15;
-            Item.useAnimation = 15;
+            Item.useTime = 7;
+            Item.useAnimation = 7;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 0;
@@ -47,8 +48,13 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.25f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
+            //int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
 
+            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<PinkStar>(), 10, 0, player.whoAmI);
+
+
+            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
+            SoundEngine.PlaySound(style, player.Center);
 
             if (Main.rand.NextBool(3))
             {

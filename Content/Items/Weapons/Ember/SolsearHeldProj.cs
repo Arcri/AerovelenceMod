@@ -152,7 +152,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.002f), 0, 0.4f);
 
-
             direction = Angle.ToRotationVector2().RotatedBy(lerpToStuff * Player.direction * -1f);
             Projectile.Center = Player.Center + (direction * OFFSET);
             Projectile.velocity = Vector2.Zero;

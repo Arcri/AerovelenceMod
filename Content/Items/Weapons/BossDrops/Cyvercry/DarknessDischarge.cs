@@ -52,7 +52,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			int b = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<ScreenShaderTest>(), 0, 0, Main.myPlayer);
+			int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<PinkStar>(), 0, 0, Main.myPlayer);
 			return false;
 
 
@@ -107,9 +107,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 			bool randomInput = Main.rand.NextBool();
 
+			/*
 			for (int i = 0; i < 1; i++)
             {
-				int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
+				//int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
 				if (Main.projectile[a].ModProjectile is HollowPulse pulse)
 				{
 					pulse.color = Color.Gray * 0f;
@@ -117,6 +118,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 					pulse.size = 25f;
 				}
 			}
+			*/
 
 			//int b = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<RimeIceCube>(), 0, 0, Main.myPlayer);
 			/*

@@ -49,7 +49,11 @@ namespace AerovelenceMod.Content.Items
 			Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
 			Projectile.velocity.X *= 0.99f;
-			Projectile.velocity.Y += 0.2f;
+
+			if (timer < 20)
+				Projectile.velocity.Y += 0.2f;
+			else
+				Projectile.velocity.Y += 0.4f;
 
 			if (Main.rand.NextBool(20) && Main.rand.NextBool())
 			{
@@ -77,12 +81,11 @@ namespace AerovelenceMod.Content.Items
             {
 				if (p.type == Projectile.type)
                 {
-					if (p.Distance(Projectile.Center) <= 22 && p.active && p.whoAmI != Projectile.whoAmI)
+					if (p.Distance(Projectile.Center) <= 15 && p.active && p.whoAmI != Projectile.whoAmI)
                     {
 						//Main.NewText(40 / p.Distance(Projectile.Center));
 						//float distanceIntensity = 1 - (40 / p.Distance(Projectile.Center));
-						if (timer < 60)
-							Utils.DrawLine(Main.spriteBatch, Projectile.Center, p.Center, color * 0, color * 1f, 1.5f);
+						Utils.DrawLine(Main.spriteBatch, Projectile.Center, p.Center, color * 0.2f, color * 1f, 1.5f);
                     }
                 }
             }
@@ -101,5 +104,10 @@ namespace AerovelenceMod.Content.Items
 			return false;
 		}
 
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+
+            return base.OnTileCollide(oldVelocity);
+        }
     }
 }
