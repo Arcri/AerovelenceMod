@@ -1,5 +1,6 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
+using AerovelenceMod.Content.NPCs;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.Projectiles.Other;
@@ -52,7 +53,9 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<PinkStar>(), 0, 0, Main.myPlayer);
+			
+			NPC.NewNPC(source, (int)player.position.X, (int)player.position.X, ModContent.NPCType<MovingPlatform>());
+			//int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<PinkStar>(), 0, 0, Main.myPlayer);
 			return false;
 
 

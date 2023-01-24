@@ -15,6 +15,7 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -50,12 +51,19 @@ namespace AerovelenceMod.Content.Items
         {
             //int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
 
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<PinkStar>(), 10, 0, player.whoAmI);
+            for (int i = 0; i < 3; i++)
+            {
+                int a = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int b = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int c = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+
+            }
 
 
-            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
-            SoundEngine.PlaySound(style, player.Center);
+            //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
+            //SoundEngine.PlaySound(style, player.Center);
 
+            /*
             if (Main.rand.NextBool(3))
             {
                 int b = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.1f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
@@ -77,6 +85,7 @@ namespace AerovelenceMod.Content.Items
                 i.xScale = Main.rand.NextFloat(0.8f, 1.3f);
                 i.yScale = Main.rand.NextFloat(0.9f, 1.2f);
             }
+            */
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_100") with { Volume = .5f, Pitch = .73f, PitchVariance = .22f, };
             //SoundEngine.PlaySound(style);

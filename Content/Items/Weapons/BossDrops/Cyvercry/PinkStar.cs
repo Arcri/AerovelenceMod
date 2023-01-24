@@ -93,8 +93,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			return false;
-
-			return false;
 		}
 	}
 }

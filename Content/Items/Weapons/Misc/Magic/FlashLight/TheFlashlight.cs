@@ -13,12 +13,12 @@ using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class TheLaserPointer : ModItem
+    public class TheFlashlight : ModItem
     {
         
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases in power the longer it is latched onto a target");
+            Tooltip.SetDefault("Locks onto targets clost to the cursor");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -37,16 +37,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.rare = 8;
             Item.value = 5400 * 5;
             Item.DamageType = DamageClass.Magic;
-            Item.shoot = ModContent.ProjectileType<TheLaserPointerProj>();
+            Item.shoot = ModContent.ProjectileType<TheFlashlightProj>();
             Item.channel = true;
             Item.noUseGraphic = true;
         }
         public override void AddRecipes()
         {
             CreateRecipe().
-                AddIngredient(ModContent.ItemType<TheFlashlight>()).
-                AddIngredient(ItemID.HallowedBar, 5).
-                AddIngredient(ItemID.SoulofLight, 10).
+                AddIngredient(ItemID.AquaScepter).
+                AddIngredient(ItemID.SoulofMight, 5).
                 AddTile(TileID.MythrilAnvil).
                 Register();
         }

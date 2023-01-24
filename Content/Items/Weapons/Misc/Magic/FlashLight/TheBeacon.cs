@@ -13,12 +13,12 @@ using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class TheLaserPointer : ModItem
+    public class TheBeacon : ModItem
     {
         
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases in power the longer it is latched onto a target");
+            Tooltip.SetDefault("Locks onto targets clost to the cursor and well as shooting projeciles towards it");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -31,22 +31,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.height = 10;
             Item.useAnimation = 16;
             Item.useTime = 8;
-            Item.damage = 38;
+            Item.damage = 80;
             Item.shootSpeed = 12.5f;
             Item.noMelee = true;
             Item.rare = 8;
             Item.value = 5400 * 5;
             Item.DamageType = DamageClass.Magic;
-            Item.shoot = ModContent.ProjectileType<TheLaserPointerProj>();
+            Item.shoot = ModContent.ProjectileType<TheBeaconProj>();
             Item.channel = true;
             Item.noUseGraphic = true;
         }
         public override void AddRecipes()
         {
             CreateRecipe().
-                AddIngredient(ModContent.ItemType<TheFlashlight>()).
-                AddIngredient(ItemID.HallowedBar, 5).
-                AddIngredient(ItemID.SoulofLight, 10).
+                AddIngredient(ModContent.ItemType<TheLaserPointer>()).
+                AddIngredient(ItemID.Ectoplasm, 3).
+                AddIngredient(ItemID.LunarTabletFragment).
                 AddTile(TileID.MythrilAnvil).
                 Register();
         }
