@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items
 			Projectile.height = 20;
 			Projectile.friendly = true;
 			Projectile.tileCollide = false;
-			Projectile.timeLeft = 400;
+			Projectile.timeLeft = 4000;
 			Projectile.penetrate = -1;
 		}
 
@@ -76,6 +76,7 @@ namespace AerovelenceMod.Content.Items
             Initialize();
 
             Projectile.rotation = Projectile.velocity.ToRotation();
+            //Projectile.Center = Main.MouseWorld;
 
             Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 7;
 
@@ -212,5 +213,11 @@ namespace AerovelenceMod.Content.Items
             return Color.DeepPink;
         }
     }
+    /*
+    public class WaterTrail : ModProjectile
+    {
+
+    }
+    */
 }
 

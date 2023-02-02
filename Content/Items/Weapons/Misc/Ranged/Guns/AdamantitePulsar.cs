@@ -209,7 +209,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     public class AdamantitePulsarHeldProj : ModProjectile
     {
         int timer = 0;
-        public int OFFSET = 10; //30
+        public int OFFSET = 10; 
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
         public float lerpToStuff = 0;

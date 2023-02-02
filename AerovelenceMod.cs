@@ -207,6 +207,8 @@ namespace AerovelenceMod
 		public static Effect Shockwave;
 
 		public static Effect Test2;
+		public static Effect BasicTrailShader;
+
 
 		public override void Load()
 		{
@@ -286,8 +288,15 @@ namespace AerovelenceMod
 				Ref<Effect> DistortMiscRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DistortMisc", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["DistortMisc"] = new MiscShaderData(DistortMiscRef, "DistortPass");
 
+				Ref<Effect> BasicTrailRef = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/IchorMissileExhaust", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["IchorMissileExhaust"] = new MiscShaderData(BasicTrailRef, "ShaderPass");
+
+				Ref<Effect> BasicTrailRef2 = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value);
+				GameShaders.Misc["BasicTrailShader"] = new MiscShaderData(BasicTrailRef2, "MainPS");
 				//Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
 				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
+
+				BasicTrailShader = Instance.Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value;
 
 
 				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
@@ -336,6 +345,7 @@ namespace AerovelenceMod
 				//Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
 			}
 			TrailShader = null;
+			BasicTrailShader = null;
 
 			UnloadDetours();
 			FargosModMutant = false;

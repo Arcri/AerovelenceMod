@@ -16,6 +16,7 @@ using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
+using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -24,7 +25,8 @@ namespace AerovelenceMod.Content.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("DebugItem");
-            Tooltip.SetDefault("You shouldn't have this...");
+            Tooltip.SetDefault("You shouldn't have this...\n" +
+                "[i:" + ModContent.ItemType<Emoji>() + "]");
         }
         public override void SetDefaults()
         {
@@ -49,13 +51,13 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
+            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 1f, ModContent.ProjectileType<FrostWave>(), 10, 0, player.whoAmI);
 
             for (int i = 0; i < 3; i++)
             {
-                int a = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                int b = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                int c = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                //int a = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                //int b = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                //int c = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
 
             }
 
