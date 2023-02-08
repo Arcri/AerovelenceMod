@@ -14,6 +14,7 @@ using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Graphics.Shaders;
+using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 {
@@ -141,7 +142,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             if (timer % 18 == 0 && timer != 0)
             {
                 Vector2 vel = new Vector2(12.5f, 0).RotatedBy(direction.ToRotation());
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel * 1.2f, vel.RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)), ModContent.ProjectileType<WaterTrailTest>(), 
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel * 1.2f, vel.RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)), ModContent.ProjectileType<ExampleTrailProj>(), 
                     Projectile.damage, 0, Main.myPlayer);
 
                 //dust burst
