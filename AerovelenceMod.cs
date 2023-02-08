@@ -291,8 +291,9 @@ namespace AerovelenceMod
 				Ref<Effect> BasicTrailRef = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/IchorMissileExhaust", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["IchorMissileExhaust"] = new MiscShaderData(BasicTrailRef, "ShaderPass");
 
-				Ref<Effect> BasicTrailRef2 = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value);
-				GameShaders.Misc["BasicTrailShader"] = new MiscShaderData(BasicTrailRef2, "MainPS");
+				//Ref<Effect> BasicTrailRef2 = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value);
+				//GameShaders.Misc["BasicTrailShader"] = new MiscShaderData(BasicTrailRef2, "DefaultPass");
+				
 				//Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
 				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
 

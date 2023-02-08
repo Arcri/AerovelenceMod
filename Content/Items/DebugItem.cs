@@ -51,21 +51,21 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 1f, ModContent.ProjectileType<FrostWave>(), 10, 0, player.whoAmI);
-
-            for (int i = 0; i < 3; i++)
+            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<WaterOrb>(), 10, 0, player.whoAmI);
+            return false;
+            for (int i2 = 0; i2 < 0; i2++)
             {
-                //int a = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                //int b = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                //int c = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int a2 = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int b2 = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int c2 = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
 
             }
 
 
-            //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
-            //SoundEngine.PlaySound(style, player.Center);
+            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
+            SoundEngine.PlaySound(style, player.Center);
 
-            /*
+            
             if (Main.rand.NextBool(3))
             {
                 int b = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.1f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
@@ -87,7 +87,7 @@ namespace AerovelenceMod.Content.Items
                 i.xScale = Main.rand.NextFloat(0.8f, 1.3f);
                 i.yScale = Main.rand.NextFloat(0.9f, 1.2f);
             }
-            */
+            
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_100") with { Volume = .5f, Pitch = .73f, PitchVariance = .22f, };
             //SoundEngine.PlaySound(style);

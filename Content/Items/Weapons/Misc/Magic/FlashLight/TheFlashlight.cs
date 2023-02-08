@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Locks onto targets clost to the cursor");
+            Tooltip.SetDefault("Locks onto targets closest to the cursor");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.height = 10;
             Item.useAnimation = 16;
             Item.useTime = 8;
-            Item.damage = 38;
+            Item.damage = 16;
             Item.shootSpeed = 12.5f;
             Item.noMelee = true;
             Item.rare = 8;
@@ -43,11 +43,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         }
         public override void AddRecipes()
         {
+            /*
             CreateRecipe().
                 AddIngredient(ItemID.AquaScepter).
                 AddIngredient(ItemID.SoulofMight, 5).
                 AddTile(TileID.MythrilAnvil).
                 Register();
+            */
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

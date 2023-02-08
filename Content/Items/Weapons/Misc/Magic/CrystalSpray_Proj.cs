@@ -317,7 +317,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             //0, Color.DodgerBlue, Main.rand.NextFloat(.3f, .5f), 0.55f, 0, dustShader);
             //Main.dust[a].noLight = true;
             //Projectile.scale = 0.24f;
-            Projectile.rotation += 0.07f;
+            Projectile.rotation += 0.09f;
             Projectile.ai[1]++;
         }
 
@@ -513,10 +513,11 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, customEffect, Main.GameViewMatrix.TransformationMatrix);
 
-            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Matrix.CreateTranslation(Main.graphics.GraphicsDevice.Viewport.Width / 2, Main.graphics.GraphicsDevice.Viewport.Height / -2, 0) * Matrix.CreateRotationZ(MathHelper.Pi) * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1f);
-            Matrix projection = Matrix.CreateOrthographic(Main.graphics.GraphicsDevice.Viewport.Width, Main.graphics.GraphicsDevice.Viewport.Height, 0, 1000);
 
+            //Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) * Matrix.CreateTranslation(Main.graphics.GraphicsDevice.Viewport.Width / 2, Main.graphics.GraphicsDevice.Viewport.Height / -2, 0) * Matrix.CreateRotationZ(MathHelper.Pi) * Matrix.CreateScale(Main.GameViewMatrix.Zoom.X, Main.GameViewMatrix.Zoom.Y, 1f);
+            //Matrix projection = Matrix.CreateOrthographic(Main.graphics.GraphicsDevice.Viewport.Width, Main.graphics.GraphicsDevice.Viewport.Height, 0, 1000);
 
+            /*
             customEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/IchorMissileExhaust", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             customEffect.Parameters["noiseTexture"].SetValue(Mod.Assets.Request<Texture2D>("Assets/Noise/noise").Value);
             customEffect.Parameters["fadeOut"].SetValue(0.5f);
@@ -524,8 +525,12 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             customEffect.Parameters["shaderColor"].SetValue(Color.DodgerBlue.ToVector4());
             customEffect.Parameters["WorldViewProjection"].SetValue(view * projection);
             customEffect.CurrentTechnique.Passes[0].Apply();
+            */
 
-            /*
+            customEffect = AerovelenceMod.BasicTrailShader;
+            customEffect.Parameters["TrailTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value);
+            customEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector4());
+
             int width = Main.graphics.GraphicsDevice.Viewport.Width;
             int height = Main.graphics.GraphicsDevice.Viewport.Height;
 
@@ -535,19 +540,19 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
                           Matrix.CreateScale(zoom.X, zoom.Y, 1f);
 
             Matrix projection = Matrix.CreateOrthographic(width, height, 0, 1000);
-
-            customEffect = AerovelenceMod.BasicTrailShader;
             customEffect.Parameters["WorldViewProjection"].SetValue(view * projection);
             customEffect.Parameters["progress"].SetValue(Projectile.ai[1]);
-            customEffect.Parameters["ColorOne"].SetValue(Color.DodgerBlue.ToVector3());
-            //customEffect.Parameters["WorldViewProjection"].SetValue(view * projection);
-            customEffect.Parameters["TrailTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+            customEffect.CurrentTechnique.Passes["DefaultPass"].Apply();
             customEffect.CurrentTechnique.Passes["MainPS"].Apply();
-            //customEffect.CurrentTechnique.Passes["DefaultPass"].Apply();
-            */
+
             VertexStrip vertexStrip = new VertexStrip();
-            vertexStrip.PrepareStrip(trailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
-            vertexStrip.DrawTrail();
+            if (trailPositions != null)
+            {
+                vertexStrip.PrepareStrip(trailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
+                vertexStrip.DrawTrail();
+                //vertexStrip.DrawTrail();
+
+            }
 
 
             Main.spriteBatch.End();
@@ -561,7 +566,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.8f; // 0.3f
+            return MathHelper.Lerp(0f, 30f, num) * 0.3f; // 0.3f
         }
 
         public virtual Color ColorFunction(float progress)

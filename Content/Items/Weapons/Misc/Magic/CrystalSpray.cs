@@ -141,7 +141,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             if (timer % 18 == 0 && timer != 0)
             {
                 Vector2 vel = new Vector2(12.5f, 0).RotatedBy(direction.ToRotation());
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel * 1.2f, vel.RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)), ModContent.ProjectileType<CrystalSpray_Proj>(), 
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel * 1.2f, vel.RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)), ModContent.ProjectileType<WaterTrailTest>(), 
                     Projectile.damage, 0, Main.myPlayer);
 
                 //dust burst
@@ -186,7 +186,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             float bonusRot = Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.PiOver4 * -1; 
             Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y) + newOffset, null, lightColor, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
             Main.spriteBatch.Draw(glowMask, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.White, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
-            Main.spriteBatch.Draw(glowMaskWhite, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.LightSkyBlue * glowVal, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(glowMaskWhite, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.DeepSkyBlue * glowVal, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
 
             return false;
         }

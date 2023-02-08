@@ -13,7 +13,6 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using System;
 using Terraria.Graphics.Effects;
-using System.Net;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Common.Globals.Players;
@@ -34,7 +33,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPCID.Sets.TrailingMode[NPC.type] = 0;
             dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
+            
+            //Immune to fire debuffs because they make him ugly :(
             NPCDebuffImmunityData debuffData = new()
             {
                 SpecificallyImmuneTo = new int[] {

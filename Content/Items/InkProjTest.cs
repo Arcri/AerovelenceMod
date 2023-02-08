@@ -77,11 +77,12 @@ namespace AerovelenceMod.Content.Items
 		//public List<Projectile> InkProj = new List<Projectile>();
 		public override bool PreDraw(ref Color lightColor)
 		{
+			/*
 			foreach (Projectile p in Main.projectile)
             {
 				if (p.type == Projectile.type)
                 {
-					if (p.Distance(Projectile.Center) <= 15 && p.active && p.whoAmI != Projectile.whoAmI)
+					if (p.Distance(Projectile.Center) <= 20 && p.active && p.whoAmI != Projectile.whoAmI)
                     {
 						//Main.NewText(40 / p.Distance(Projectile.Center));
 						//float distanceIntensity = 1 - (40 / p.Distance(Projectile.Center));
@@ -89,6 +90,7 @@ namespace AerovelenceMod.Content.Items
                     }
                 }
             }
+			*/
 
 			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/Items/InkProjTest").Value;
 			Vector2 scale = new Vector2(xScale * overallSize , yScale * overallSize + (Projectile.velocity.Length() * 0.01f)) * 0.25f;

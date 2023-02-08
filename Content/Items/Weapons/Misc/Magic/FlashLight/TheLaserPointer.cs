@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases in power the longer it is latched onto a target");
+            Tooltip.SetDefault("Locks onto targets closest to the cursor\nIncreases in power the longer it is latched onto a target");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
