@@ -32,6 +32,8 @@ namespace AerovelenceMod.Content.Projectiles
         //Same but with Center
         public Vector2 trailPos = Vector2.Zero;
 
+        public int timesToDraw = 1;
+
         public Color trailColor = Color.White;
 
         public float trailTime = 0f;
@@ -105,13 +107,13 @@ namespace AerovelenceMod.Content.Projectiles
         public void TrailLogic()
         {
             Initialize();
-            trailPositions.Add(Projectile.Center);
-            trailRotations.Add(Projectile.velocity.ToRotation());
+            trailPositions.Add(trailPos);
+            trailRotations.Add(trailRot);
 
             //Smoothing
             if (trailPositions.Count > 3)
             {
-                for (int i = 3; i < trailPositions.Count - 2; i++)
+                for (int i = 3; i < trailPositions.Count - 1; i++)
                 {
                     trailPositions[i - 2] = (trailPositions[i - 3] + trailPositions[i - 1]) / 2f;
                     trailRotations[i - 2] = Vector2.Lerp(trailRotations[i - 3].ToRotationVector2(), trailRotations[i - 1].ToRotationVector2(), 0.5f).ToRotation();
@@ -156,7 +158,11 @@ namespace AerovelenceMod.Content.Projectiles
             if (trailPositions != null)
             {
                 vertexStrip.PrepareStrip(trailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
-                vertexStrip.DrawTrail();
+                
+                for (int i = 0; i < timesToDraw; i++)
+                {
+                    vertexStrip.DrawTrail();
+                }
             }
 
             Main.spriteBatch.End();

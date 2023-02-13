@@ -17,6 +17,7 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
+using AerovelenceMod.Content.Items.Weapons.Ember;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -51,8 +52,13 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 10f, ModContent.ProjectileType<WaterOrb>(), 10, 0, player.whoAmI);
+
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f, };
+            SoundEngine.PlaySound(style);
+            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 2f, ModContent.ProjectileType<BurningJealousyPulse>(), 10, 0, player.whoAmI);
             return false;
+            
+            
             for (int i2 = 0; i2 < 0; i2++)
             {
                 int a2 = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
@@ -62,8 +68,8 @@ namespace AerovelenceMod.Content.Items
             }
 
 
-            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
-            SoundEngine.PlaySound(style, player.Center);
+            //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
+            //SoundEngine.PlaySound(style, player.Center);
 
             
             if (Main.rand.NextBool(3))

@@ -187,7 +187,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), texture.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-           // return false;
+            //return false;
 
             SpriteEffects spriteEffects = Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
             Rectangle rect = new(0, 0, texture.Width, texture.Height);

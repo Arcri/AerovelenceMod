@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Projectiles
             
 
             //MUST call TrailLogic AFTER assigning trailRot and trailPos
-            trailRot = Projectile.rotation;
+            trailRot = Projectile.velocity.ToRotation();
             trailPos = Projectile.Center;
             TrailLogic();
         }
