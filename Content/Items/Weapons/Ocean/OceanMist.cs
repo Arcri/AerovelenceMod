@@ -13,6 +13,7 @@ using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using Terraria.Audio;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
@@ -40,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Item.channel = true;
             Item.shoot = ModContent.ProjectileType<OceanMistHeldProj>();
             Item.shootSpeed = 8f;
-            //Item.noUseGraphic = true;
+            Item.noUseGraphic = true;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -59,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         public override string Texture => "Terraria/Images/Projectile_0";
 
         int timer = 0;
-        public int OFFSET = 15; //30
+        public int OFFSET = 10; //30
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
         public float lerpToStuff = 0;
@@ -91,8 +92,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         {
             Player Player = Main.player[Projectile.owner];
 
-            Player.itemTime = 2; 
-            Player.itemAnimation = 2; 
+            Projectile.velocity = Vector2.Zero;
+            Player.itemTime = 2; // Set Item time to 2 frames while we are used
+            Player.itemAnimation = 2; // Set Item animation time to 2 frames while we are used
 
             if (Projectile.owner == Main.myPlayer)
             {
@@ -102,9 +104,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             direction = Angle.ToRotationVector2();
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
 
-            //lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.06f), 0, 0.4f);
+            //lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.01f), 0, 0.4f);
 
-            direction = Angle.ToRotationVector2().RotatedBy(Player.direction * -1f);
+            direction = Angle.ToRotationVector2();
             Projectile.Center = Player.Center + (direction * OFFSET);
             Projectile.velocity = Vector2.Zero;
             Player.itemRotation = direction.ToRotation();
@@ -115,12 +117,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Player.itemRotation = MathHelper.WrapAngle(Player.itemRotation);
 
             Player.heldProj = Projectile.whoAmI;
+            Projectile.rotation = direction.ToRotation() + (MathHelper.PiOver4 * Player.direction);
 
-            Projectile.rotation = direction.ToRotation();
+            //Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
 
-            if (timer == 60)
+            if (timer == 45)
             {
-                Projectile.active = false;
+                if (Player.channel)
+                    Projectile.active = false;
+                else
+                    Projectile.timeLeft = 10;
+            }
+            if (timer == 20)
+            {
+                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                Vector2 vel = new Vector2(12.5f, 0).RotatedBy(direction.ToRotation());
+                for (int i = 0; i < 4; i++)
+                {
+                    if (i < 4)
+                    {
+                        Dust gd = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + vel, ModContent.DustType<GlowCircleDust>(), Main.rand.NextVector2Circular(5, 5), new Color(30, 105, 255), 0.6f, 0.7f, 0f, dustShader2);
+                        gd.fadeIn = 2;
+                        gd.scale *= Main.rand.NextFloat(0.9f, 1.3f);
+                    }
+
+                    int a = Dust.NewDust(Projectile.Center + vel * 2, 1, 1, DustID.BlueTorch, Scale: 2f);
+                    Main.dust[a].noGravity = true;
+                }
+
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/CommonWaterFallLight00") with { Volume = .23f, Pitch = .54f, PitchVariance = .4f, MaxInstances = 1, };
+                SoundEngine.PlaySound(style2, Projectile.Center);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
+            }
+            if (timer % 7 == 0 && timer <= 20)
+            {
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_7") with { Pitch = .44f, PitchVariance = 0.2f }; SoundEngine.PlaySound(style, Projectile.Center);
             }
 
             timer++;
@@ -131,9 +162,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Player Player = Main.player[Projectile.owner];
             Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMist");
             Texture2D Twirl = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/PixelSwirl");
-
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
+
+            float rot = timer <= 20 ? timer * 0.45f : Projectile.rotation;
+
+            if (timer <= 20)
+            {
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.Draw(Twirl, Projectile.Center - Main.screenPosition, null, Color.White * 0.5f, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            }
+
+
+            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
 
             return false;
         }
@@ -163,8 +207,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.velocity.Y += 0.09f;
             Projectile.ai[1] += 0.05f;
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrail").Value;
-            trailColor = Color.DarkBlue;
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value;
+            trailColor = Color.DodgerBlue;
             trailTime = Projectile.ai[1];
 
             trailPointLimit = 120;
@@ -189,7 +233,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 {
                     int a = GlowDustHelper.DrawGlowDust(pos, 0, 0, ModContent.DustType<GlowCircleFlare>(), Color.DodgerBlue, 0.4f, 0.4f, 0f, dustShader2);
                     Main.dust[a].fadeIn = 1;
-                    Main.dust[a].velocity *= (i * 0.03f);
+                    Main.dust[a].velocity *= ((i * 0.03f));
                 }
             }
 
