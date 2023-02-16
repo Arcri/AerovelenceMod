@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             int dust = Dust.NewDust(Projectile.Center + new Vector2(0, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 0.5f);
             Main.dust[dust].noGravity = true;
-            Main.dust[dust].velocity += Projectile.velocity;
+            Main.dust[dust].velocity += Projectile.velocity * 1.25f;
             Main.dust[dust].velocity *= 0.1f;
             Main.dust[dust].scale *= 0.7f;
             if (player.active)
@@ -81,7 +81,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //float y = Main.rand.Next(-10, 11) * 0.01f * approaching;
                 Vector2 toPlayer = Projectile.Center - player.Center;
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
-                Projectile.velocity += -toPlayer * (0.455f) * MathHelper.Clamp((Projectile.timeLeft / 200), 1, 20);// + new Vector2(x, y);
+                Projectile.velocity += -toPlayer * (0.455f) * (0.6f * MathHelper.Clamp((Projectile.timeLeft / 200), 1, 20));// + new Vector2(x, y);
             }
 
             if (timer < 30)

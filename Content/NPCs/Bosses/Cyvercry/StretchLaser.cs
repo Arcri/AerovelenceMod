@@ -107,4 +107,128 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.Center + Projectile.velocity * 30, 10, ref point);
         }
     }
+
+    public class FocusedLaser : ModProjectile
+    {
+       
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("FocusLaser");
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 42;
+            Projectile.height = 42;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 6050;
+        }
+        public float LaserRotation = 0;
+        public float laserWidth = 70;
+        int timer = 0;
+        public float direction = 0;
+        public Vector2 endPoint;
+        public int parentIndex = 0;
+
+        public override void AI()
+        {
+            NPC parent = Main.npc[parentIndex];
+
+            if (!parent.active)
+            {
+                Projectile.active = false;
+            }
+
+            direction = parent.rotation;
+            Projectile.Center = parent.Center + (parent.rotation.ToRotationVector2() * -96);
+            endPoint = Projectile.Center + (parent.rotation.ToRotationVector2() * -1000);
+            LaserRotation = direction + MathHelper.Pi;
+
+            //Dust.NewDustPerfect(Projectile.Center, DustID.AmberBolt);
+            //Dust.NewDustPerfect(endPoint, DustID.AmberBolt);
+
+            timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/FlashLightBeam").Value;
+
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value;
+
+            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 0.4f);
+            myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
+            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+            myEffect.Parameters["uTime"].SetValue(timer * -0.01f); //0.006
+            myEffect.Parameters["uSaturation"].SetValue(2);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            //Activate Shader
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            Vector2 origin2 = new Vector2(0, LaserTexture.Height / 2);
+
+            float height = (laserWidth * 1.8f); //25
+
+            int width = (int)(Projectile.Center - endPoint).Length();
+
+            var pos = Projectile.Center - Main.screenPosition;
+            var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.7f));
+
+            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+
+            //Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.8f));
+            var target3 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+
+            Main.spriteBatch.Draw(LaserTexture, target2, null, Color.DeepPink * 0.5f, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(LaserTexture, target3, null, Color.DeepPink * 0.25f, LaserRotation, origin2, 0, 0);
+
+            //Flares
+
+            Effect myEffect2 = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+            myEffect2.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 1.5f);
+            myEffect2.Parameters["uTime"].SetValue(2);
+            myEffect2.Parameters["uOpacity"].SetValue(0.7f);
+            myEffect2.Parameters["uSaturation"].SetValue(0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect2, Main.GameViewMatrix.TransformationMatrix);
+
+            myEffect2.CurrentTechnique.Passes[0].Apply();
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
+
+            Main.spriteBatch.Draw(flare12, Projectile.Center - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.HotPink, timer * 0.05f, flare12.Size() / 2, 0.2f * laserWidth * 0.02f, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.HotPink, timer * 0.07f, flare1.Size() / 2, 0.01f * laserWidth, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            Vector2 unit = LaserRotation.ToRotationVector2();
+            float point = 0f;
+
+            if (laserWidth > 5)
+            {
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+                    endPoint, 30, ref point);
+            }
+
+            return false;
+        }
+    }
 } 

@@ -418,8 +418,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void AI()
         {
-            
-
             if (firstFrame)
             {
                 firstFrame = false;
@@ -428,6 +426,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             isExpert = true;
             isMaster = false;
+            Phase3 = false;
             Main.dayTime = false;
             Main.time = 12600 + 3598; //midnight - 2 
 
@@ -447,7 +446,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            //whatAttack = 9;
+            whatAttack = 12;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -486,6 +485,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case 10:
                     ClonesP3(myPlayer);
+                    break;
+                case 11:
+                    ExplodeBallSpam(myPlayer);
+                    break;
+                case 12:
+                    FocusLaser(myPlayer);
                     break;
             }
 
@@ -584,7 +589,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     pulse2.ParentIndex = NPC.whoAmI;
                 }
                 */
-                FireLaser(ModContent.ProjectileType<CyverLaser>(), speed: shotSpeed); //Death Laser
+                FireLaser(ModContent.ProjectileType<StretchLaser>(), 1.5f, 5f);
+
+                //FireLaser(ModContent.ProjectileType<CyverLaser>(), speed: shotSpeed); //Death Laser
             }
 
             if (timer == 220)
@@ -697,7 +704,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundEngine.PlaySound(stylea, NPC.Center);
                     SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, };
                     SoundEngine.PlaySound(styleb, NPC.Center);
-                    FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
+                    //FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
+                    FireLaser(ModContent.ProjectileType<StretchLaser>(), 2f, 5f);
+
                 }
             }
             if (timer == 400 + bonusSpinCharge)
@@ -715,7 +724,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             timer++;
         }
-
 
         int currentShot = 0;
         Vector2 goalLocation = Vector2.Zero;
@@ -878,6 +886,116 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
 
             bigShotTimer--;
+            timer++;
+        }
+
+        public void ExplodeBallSpam(Player myPlayer)
+        {
+            //NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 4f;
+
+            if (timer % 20 == 0 && timer != 0 && timer < 100)
+            {
+                ShotDust();
+                ShotDust();
+
+                Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
+                int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), from, NPC.rotation.ToRotationVector2() * -40, ModContent.ProjectileType<LaserExplosionBall>(), 
+                    ContactDamage / 10, 2, Main.myPlayer);
+                Projectile p = Main.projectile[a];
+                p.timeLeft = 50;
+
+                if (p.ModProjectile is LaserExplosionBall ball)
+                {
+                    ball.numberOfLasers = 8;
+                    //ball.projType = ModContent.ProjectileType<StretchLaser>();
+                    ball.vel = 1f;
+                }
+                //justShotEBall = 10;
+                NPC.Center -= NPC.rotation.ToRotationVector2() * -10;
+            } else if (timer >= 100)
+            {
+                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 4f;
+                NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+            }
+            else
+            {
+                NPC.rotation = timer * 0.025f;
+
+            }
+            //justShotEBall = Math.Clamp(justShotEBall *= 0.9f, -10, 100);
+            if (timer == 200)
+                timer = -1;
+            timer++;
+        }
+
+        public void FocusLaser(Player myPlayer)
+        {
+            //Move towards Player and charge dust
+            //Try to rotate
+            //Spawn laser
+
+            if (timer < 60)
+            {
+                float scale = MathHelper.Clamp(ballScale / 2, 0, 100);
+                Vector2 ballSpawnVec = NPC.Center + new Vector2(-98, 0).RotatedBy(NPC.rotation);
+                Vector2 spawnVecOutSet = Main.rand.NextVector2CircularEdge(scale / 2, scale / 2);
+                GlowDustHelper.DrawGlowDustPerfect(ballSpawnVec + spawnVecOutSet, ModContent.DustType<GlowCircleQuadStar>(), spawnVecOutSet.SafeNormalize(Vector2.UnitX) * -2, Color.HotPink, Main.rand.NextFloat(.2f, .3f), dustShader2);
+                ballScale += 6;
+
+                float goalRot = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
+                NPC.rotation = Utils.AngleLerp(NPC.rotation, goalRot, 0.0f);
+                //NPC.rotation = Utils.AngleLerp(NPC.rotation, goalRot, 0.9f);
+
+
+            }
+            else if (timer >= 60)
+            {
+                if (timer == 60)
+                {
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -96, Vector2.Zero, ModContent.ProjectileType<FocusedLaser>(), 15, 2);
+                    if (Main.projectile[a].ModProjectile is FocusedLaser laser)
+                    {
+                        laser.parentIndex = NPC.whoAmI;
+                    }
+                }
+
+                if (timer % 60 == 0 && timer != 60)
+                {
+                    SoundStyle stylees = new SoundStyle("Terraria/Sounds/Item_117") with { Pitch = .72f, PitchVariance = .41f, Volume = 0.5f };
+                    SoundEngine.PlaySound(stylees, NPC.Center);
+
+                    float shotRot = Utils.AngleLerp(NPC.rotation, MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation(), 0.2f);
+                    Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), from, shotRot.ToRotationVector2() * -40, ModContent.ProjectileType<LaserExplosionBall>(),
+                        ContactDamage / 10, 2);
+                    Projectile p = Main.projectile[a];
+                    p.timeLeft = 45;
+
+                    if (p.ModProjectile is LaserExplosionBall ball)
+                    {
+                        ball.numberOfLasers = 8;
+                        ball.projType = ModContent.ProjectileType<StretchLaser>();
+                        ball.vel = 1f;
+                    }
+                }
+
+                if (timer % 15 == 0)
+                {
+                    //SoundStyle stylees = new SoundStyle("Terraria/Sounds/Item_117") with { Pitch = .32f, PitchVariance = .71f, Volume = 0.4f };
+                    //SoundEngine.PlaySound(stylees, NPC.Center);
+                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/movingshield_sound") { MaxInstances = 1, Pitch = 0.2f, Volume = 1f };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+                    //SoundEngine.PlaySound(style2, NPC.Center);
+                    //SoundEngine.PlaySound(style2, NPC.Center);
+                }
+
+                float goalRot = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
+                //NPC.rotation = Utils.AngleLerp(NPC.rotation, goalRot, 0.02f + Math.Abs((float)Math.Sin(timer / 60) * 0.01f));
+                NPC.rotation = Utils.AngleLerp(NPC.rotation, goalRot, 0.03f);
+
+                NPC.velocity = NPC.rotation.ToRotationVector2() * -7.5f;
+            }
+
             timer++;
         }
 
@@ -1108,6 +1226,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     }
                     int type = Phase3 ? ModContent.ProjectileType<CyverLaserBomb>() : ModContent.ProjectileType<Cyver2EnergyBall>();
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, type, 20, 0, Main.myPlayer);
+
+                    if (Main.projectile[a].ModProjectile is LaserExplosionBall ball)
+                    {
+                        ball.numberOfLasers = 6;
+                        Main.projectile[a].timeLeft = 50;
+                    }
+
                     Main.projectile[a].rotation = storedRotaion;
 
                     storedVec2 = storedRotaion.ToRotationVector2() * (Phase3 ? 28 : 35);

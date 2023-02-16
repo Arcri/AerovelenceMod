@@ -190,9 +190,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 else
                     currentAng = startingAng + MathHelper.ToRadians((320 * getProgress(easingProgress)));
 
-                float advanceSpeed = bigSwing ? 0.0024f : 0.0019f;
+                float advanceSpeed = bigSwing ? 0.0024f : 0.0019f; //0.0024 | 0.0019
 
-                easingProgress = Math.Clamp(easingProgress + advanceSpeed, 0.05f, 0.95f * amountsToSwing);
+                easingProgress = Math.Clamp(easingProgress + advanceSpeed * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.05f, 0.95f * amountsToSwing);
             }
 
             float centerOffset = bigSwing ? 70 : 60;
@@ -598,11 +598,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Player player = Main.player[Main.myPlayer];
 
                 int swingDir = Main.MouseWorld.X > player.Center.X ? 0 : 1;
+
                 Projectile a = Projectile.NewProjectileDirect(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<BurningJealousyHeldProj>(), 120, 0, Main.myPlayer, swingDir);
                 if (a.ModProjectile is BurningJealousyHeldProj sword)
                 {
                     sword.bigSwing = true;
                 }
+                player.ChangeDir(Main.MouseWorld.X > player.Center.X ? 1 : -1);
                 justHit = true;
                 gaurding = false;
             }
@@ -651,7 +653,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Projectile.scale = 0.1f;
 
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 60; //30
             Projectile.tileCollide = false; //false;
             Projectile.width = 20;
             Projectile.height = 20;
@@ -675,7 +677,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Player Player = Main.player[Projectile.owner];
             Texture2D texture = Mod.Assets.Request<Texture2D>("Assets/EnergyBalls/energyball_4").Value;
 
-            Vector2 tTex = new Vector2(Projectile.scale * 0.25f, Projectile.scale);
+            Vector2 tTex = new Vector2(Projectile.scale, Projectile.scale);
             //Use bigCircle (Cyvercry/Textures) for caustics and energyBall_9 for eye effect (3draws)
             //GlowConnectorGhost for double circle (3draws)
 
@@ -685,7 +687,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/tstar").Value);
             myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
             myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyBalls/energyball_9").Value);
-            myEffect.Parameters["uTime"].SetValue(timer * 0.04f);
+            myEffect.Parameters["uTime"].SetValue(timer * 0.08f); //0.04
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);

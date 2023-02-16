@@ -47,7 +47,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool PreDraw(ref Color lightColor)
         {
-
+            if (timer == 0)
+                return false;
             //Draw the Circlular Glow
             var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverLaser").Value;
@@ -166,7 +167,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             
             myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GaussianStar").Value);
             myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
-            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/PinkL").Value);
+            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyBalls/energyball_9").Value);
             myEffect.Parameters["uTime"].SetValue(timer * 0.08f);
 
             Main.spriteBatch.End();

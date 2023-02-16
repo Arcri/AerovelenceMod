@@ -76,6 +76,11 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
             if (projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike)
             {
+                if (recent == -1)
+                {
+                    Main.NewText("Skill Crit -1 (You shouldn't see this)");
+                    return;
+;               }
                 if (crit)
                     Main.combatText[recent].color = Color.Purple * 0f;
                 else

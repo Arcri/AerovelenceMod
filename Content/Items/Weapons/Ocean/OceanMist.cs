@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         }
         public override void SetDefaults()
         {
-            Item.damage = 25;
+            Item.damage = 5;
             Item.DamageType = DamageClass.Magic;
             Item.width = 18;
             Item.height = 18;
@@ -60,7 +60,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         public override string Texture => "Terraria/Images/Projectile_0";
 
         int timer = 0;
-        public int OFFSET = 10; //30
+        public float OFFSET = -15; //30
+        public float alphaPercent = 0;
+
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
         public float lerpToStuff = 0;
@@ -121,12 +123,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             //Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
 
-            if (timer == 45)
+            if (timer >= 42)
             {
-                if (Player.channel)
-                    Projectile.active = false;
+                if (timer == 42)
+                {
+                    Projectile.timeLeft = 15;
+                    /*
+                    if (Player.channel)
+                        Projectile.active = false;
+                    else
+                        Projectile.timeLeft = 20;
+                    */
+                }
                 else
-                    Projectile.timeLeft = 10;
+                {
+                    OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, -15f, 0.05f), -20, 10);
+                    alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, -0.2f, 0.15f), 0, 1);
+                }
+
+            }
+            else
+            {
+                OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 11, 0.2f), -100, 10);
+                alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, 1, 0.08f), 0, 1);
             }
             if (timer == 20)
             {
@@ -170,17 +189,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             {
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-                Main.spriteBatch.Draw(Twirl, Projectile.Center - Main.screenPosition, null, Color.White * 0.5f, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Twirl, Projectile.Center - Main.screenPosition, null, Color.White * 0.5f * alphaPercent, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             }
 
 
-            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
+            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor * alphaPercent, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
 
             return false;
         }
+
     }
 
     public class OceanMistShot : TrailProjBase
@@ -201,7 +221,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.timeLeft = 100;
             Projectile.penetrate = -1;
         }
-
+        int maximumPierce = 6;
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (maximumPierce <= 0)
+                return false;
+            foreach (Vector2 vec in trailPositions)
+            {
+                if (targetHitbox.Distance(vec) < 10)
+                    return true;
+            }
+            return false;
+        }
         public override void AI()
         {
             Projectile.velocity.Y += 0.09f;
@@ -247,10 +278,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             return false;
         }
 
-        //Controls the width of the function based on progress
-        //Progress ranges from 0-1 based on how far along the trail we are
-        //Dick around with it to see what i mean
-        //Dont override at all if you want to use the default width fuction in super
         public override float WidthFunction(float progress)
         {
             if (progress < 0.5f)
@@ -268,6 +295,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 return MathHelper.Lerp(0f, 30f, num) * 0.4f;
             }
             return 0;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            maximumPierce--;
         }
     }
 

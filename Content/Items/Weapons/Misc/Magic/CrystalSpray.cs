@@ -69,7 +69,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
     public class CrystalSprayHeldProj : ModProjectile
     {
         int timer = 0;
-        public int OFFSET = 20; //30
+        public float OFFSET = 0; //20
+        public float alphaPercent = 0;
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
         float lerpToStuff = 0;
@@ -138,6 +139,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Projectile.rotation = direction.ToRotation();
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
+            OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 22f, 0.2f), 0, 20);
+            alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, 1.2f, 0.02f), 0, 1);
 
             if (timer % 18 == 0 && timer != 0)
             {
@@ -185,8 +188,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             SpriteEffects myEffect = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
             float bonusRot = Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.PiOver4 * -1; 
-            Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y) + newOffset, null, lightColor, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
-            Main.spriteBatch.Draw(glowMask, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.White, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y) + newOffset, null, lightColor * alphaPercent, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(glowMask, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.White * alphaPercent, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
             Main.spriteBatch.Draw(glowMaskWhite, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.DeepSkyBlue * glowVal, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
 
             return false;

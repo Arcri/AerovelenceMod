@@ -187,7 +187,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 else
                     currentAng = startingAng + MathHelper.ToRadians((320 * getProgress(easingProgress)));
 
-                easingProgress = Math.Clamp(easingProgress + 0.002f, 0.05f, 0.95f);
+                easingProgress = Math.Clamp(easingProgress + 0.002f * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.05f, 0.95f);
             }
 
 

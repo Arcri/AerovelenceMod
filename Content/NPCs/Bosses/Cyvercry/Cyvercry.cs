@@ -899,13 +899,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     }
     public class LaserExplosionBall : ModProjectile
     {
+        public int numberOfLasers = 12;
+        public int projType = ModContent.ProjectileType<CyverLaser>();
+        public float vel = 5;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
-        {
+          {
             Projectile.width = 48;
             Projectile.height = 42;
             Projectile.timeLeft = 1;
@@ -913,7 +916,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.damage = 54;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             //projectile.netImportant = true;
         }
@@ -931,20 +934,38 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
+            Projectile.velocity *= 0.9f;
         }
         public override void Kill(int timeLeft)
         {
             var entitySource = Projectile.GetSource_FromAI();
-            //SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.75f, PitchVariance = 0.2f }, Projectile.Center);
-            //SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = .16f, Volume = 0.8f, Pitch = 0.7f };
+            SoundEngine.PlaySound(style, Projectile.Center);
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < 360; i += 30)
+                for (int i = 0; i < 360; i += 360 / numberOfLasers)
                 {
-                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(6, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), Projectile.damage, 0, Main.myPlayer);
+                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i)), projType, Projectile.damage, 0, Main.myPlayer);
                 }
             }
             base.Kill(timeLeft);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.7f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.3f, 0, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return true;
         }
     }
     public class DarkDagger : ModProjectile

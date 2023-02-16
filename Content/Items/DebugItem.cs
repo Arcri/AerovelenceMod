@@ -53,9 +53,10 @@ namespace AerovelenceMod.Content.Items
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f, };
-            SoundEngine.PlaySound(style);
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * 2f, ModContent.ProjectileType<BurningJealousyPulse>(), 10, 0, player.whoAmI);
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f, };
+            //SoundEngine.PlaySound(style);
+            int a = Projectile.NewProjectile(null, position, velocity/*.RotatedByRandom(0.5f) * 2f*/ * 30, ModContent.ProjectileType<LaserExplosionBall>(), 10, 0, player.whoAmI);
+            Main.projectile[a].timeLeft = 50;
             return false;
             
             
