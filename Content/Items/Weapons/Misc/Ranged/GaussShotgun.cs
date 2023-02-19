@@ -71,9 +71,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			switch (shotCounter)
 			{
 				case 0:
-					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(6)), type, damage, knockback, player.whoAmI);
-					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-6)), type, damage, knockback, player.whoAmI);
-					Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
+					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(6)), ModContent.ProjectileType<BulletTest>(), damage, knockback, player.whoAmI);
+					Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-6)), ModContent.ProjectileType<BulletTest>(), damage, knockback, player.whoAmI);
+					Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<BulletTest>(), damage, knockback, player.whoAmI);
 					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.2f }, player.Center);
 					SoundStyle stylev = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
 					SoundEngine.PlaySound(stylev);
@@ -84,8 +84,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 				case 1:
 
-					int a = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), type, damage, knockback, player.whoAmI);
-					int b = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), type, damage, knockback, player.whoAmI);
+					int a = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(3)), ModContent.ProjectileType<BulletTest>(), damage, knockback, player.whoAmI);
+					int b = Projectile.NewProjectile(source, position, velocity.RotatedBy(MathHelper.ToRadians(-3)), ModContent.ProjectileType<BulletTest>(), damage, knockback, player.whoAmI);
 					SoundEngine.PlaySound(SoundID.Item38 with { Volume = 0.2f }, player.Center);
 					SoundStyle stylev2 = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
 					SoundEngine.PlaySound(stylev2);

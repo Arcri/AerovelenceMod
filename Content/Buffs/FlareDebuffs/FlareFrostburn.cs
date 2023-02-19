@@ -61,8 +61,8 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
                 timeBetweenHits = 30;
                 tickDamage = 3;
                 sound = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.3f, Volume = 0.5f, MaxInstances = -1 };
-                colorA = Color.DeepSkyBlue;
-                colorB = Color.SkyBlue;
+                colorA = Color.DodgerBlue;
+                colorB = Color.Teal;
                 DebuffIndex = ModContent.BuffType<FlareFrostburn>();
                 baseUpdateLifeRegen(npc, ref damage);
             }
