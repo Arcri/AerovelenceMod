@@ -18,6 +18,7 @@ using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Ember;
+using AerovelenceMod.Content.Items.Weapons.Flares;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -55,8 +56,8 @@ namespace AerovelenceMod.Content.Items
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f, };
             //SoundEngine.PlaySound(style);
-            int a = Projectile.NewProjectile(null, position, velocity/*.RotatedByRandom(0.5f) * 2f*/ * 30, ModContent.ProjectileType<LaserExplosionBall>(), 10, 0, player.whoAmI);
-            Main.projectile[a].timeLeft = 50;
+            int a = Projectile.NewProjectile(null, position, velocity/*.RotatedByRandom(0.5f) * 2f*/ * 3, ModContent.ProjectileType<FrostFlareIcicle>(), 10, 0, player.whoAmI);
+            //Main.projectile[a].timeLeft = 50;
             return false;
             
             

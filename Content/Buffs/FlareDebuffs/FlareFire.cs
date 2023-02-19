@@ -28,20 +28,6 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
-            if (timer % 3 == 0)
-            {
-                //int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleRise>(), new Color(255, 75, 50), 0.4f, 0.6f, 0f, dustShader);
-                //Main.dust[p].velocity *= 0.5f;
-            
-            }
-            else if (timer % 7 == 0) //else if is intentional
-            {
-                //int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleRise>(), Color.Gray, 0.7f, 1f, 0f, dustShader);;
-                //Main.dust[p].velocity.X *= 0.2f;
-                //Main.dust[p].velocity.Y = Math.Abs(Main.dust[p].velocity.Y) * -1f;
-            }
             npc.GetGlobalNPC<FlareFireModNPC>().FlareFireDebuff = true;
             timer++;
         }

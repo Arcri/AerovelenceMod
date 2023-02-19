@@ -40,7 +40,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.noUseGraphic = true;
             Item.shoot = ModContent.ProjectileType<FlareGunHeldProjectile>();
             //Item.useAmmo = AmmoID.Bullet;
-            Item.shootSpeed = 13f * 1.5f;
+            Item.shootSpeed = 17f;
             Item.channel = true;
         }
         public override Vector2? HoldoutOffset()
@@ -51,18 +51,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FireFlare>(), damage, knockback, Main.myPlayer);
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FrostFlare>(), damage, knockback, Main.myPlayer);
             
             float aim = velocity.ToRotation() + MathHelper.Pi;
 
-            for (int m = 0; m < 10; m++) // m < 9
+            for (int m = 0; m < 8; m++) // m < 9
             {
                 float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.4f, 0.4f);
 
 
-                Dust d = GlowDustHelper.DrawGlowDustPerfect(player.Center - aim.ToRotationVector2() * 35, ModContent.DustType<GlowCircleDust>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(3) + 1),
-                    new Color(255, 75, 50), 0.40f + Main.rand.NextFloat(0,0.2f), 0.7f, 0f, dustShader); // 0.6
+                Dust d = GlowDustHelper.DrawGlowDustPerfect(player.Center - aim.ToRotationVector2() * 35, ModContent.DustType<GlowCircleDust>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 1),
+                    new Color(255, 75, 50), 0.60f + Main.rand.NextFloat(0,0.2f), 0.7f, 0f, dustShader); // 0.6
                 d.velocity *= 0.75f;
+                d.fadeIn = 1;
             }
             
             return true;

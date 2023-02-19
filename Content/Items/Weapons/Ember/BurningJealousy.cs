@@ -516,6 +516,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Projectile.scale = 0f;
         }
 
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            //overPlayers.Add(index);
+            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
+        }
+
         public override bool? CanDamage()
         {
             return false;

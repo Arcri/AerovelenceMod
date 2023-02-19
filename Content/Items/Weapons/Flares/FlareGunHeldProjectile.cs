@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         }
         int maxTime = 50;
 
-        private const int OFFSET = 15; //30
+        private float OFFSET = 15; //30
         public ref float Angle => ref Projectile.ai[1];
 
         public Vector2 direction = Vector2.Zero;
@@ -59,6 +59,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             return false;
         }
 
+        float muzzlewidth = 1f;
         public override void AI() 
         {
             Player Player = Main.player[Projectile.owner];
@@ -127,6 +128,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
             Projectile.rotation = direction.ToRotation();
 
+            if (maxTime == 87) OFFSET = 10f; 
+            OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 17f, 0.07f), 0, 15);
+
+            muzzlewidth = MathHelper.Lerp(muzzlewidth, 0, 0.04f);
+
             maxTime--;
         }
 
@@ -173,7 +179,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
 
                 Main.spriteBatch.Draw(texture2, new Vector2(0,5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + position + direction * 38, texture2.Frame(1, 1, 0, 0), Color.Red, direction.ToRotation() + MathHelper.Pi / 2, 
-                    texture2.Size() / 2, 0.1f, flipMuzzle ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                    texture2.Size() / 2, new Vector2(0.1f * muzzlewidth, 0.1f), flipMuzzle ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);

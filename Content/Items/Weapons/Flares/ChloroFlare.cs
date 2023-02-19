@@ -15,6 +15,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 {   
     public class ChloroFlare : ModProjectile
     {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
         public int timer = 0;
         public float vortexRot = 0;
         public float vortexRotsmall;
