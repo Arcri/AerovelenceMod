@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ozone Shredder");
+            DisplayName.SetDefault("Entourage Crusher");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -263,7 +263,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
                 int a = GlowDustHelper.DrawGlowDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GlowCircleDust>(),
-                    Color.Purple, 0.55f, 0.3f, 0f, dustShader2);
+                    Color.Purple, 0.55f, 0.4f, 0f, dustShader2);
                 //int a = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.PurpleCrystalShard);
                 Main.dust[a].noGravity = true;
                 Main.dust[a].color = Color.Purple;

@@ -11,6 +11,7 @@ using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -59,19 +60,44 @@ namespace AerovelenceMod.Content.Items
 
             TrailLogic();
 
+            Lighting.AddLight(Projectile.position, Color.Orange.ToVector3() * 0.45f);
 			timer++;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_54") with { Pitch = .28f, PitchVariance = .28f, };
-            SoundEngine.PlaySound(style, Projectile.Center);
+            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
             return true;
+            // If the projectile hits the left or right side of the tile, reverse the X velocity
+            if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
+            {
+                Projectile.velocity.X = -oldVelocity.X;
+            }
+
+            // If the projectile hits the top or bottom side of the tile, reverse the Y velocity
+            if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
+            {
+                Projectile.velocity.Y = -oldVelocity.Y;
+            }
+
+
+            return false;
         }
 
         public override void Kill(int timeLeft)
         {
-            Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_40") with { Pitch = -.71f, PitchVariance = .28f, MaxInstances = 1, Volume = 0.5f };
+            SoundEngine.PlaySound(style, Projectile.Center);
+
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            for (int i = 0; i < 3; i++)
+            {
+                Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleDust>(),
+                    Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-1, 1)) * Main.rand.Next(1, 3),
+                    new Color(255, 111, 20), Main.rand.NextFloat(0.2f, 0.4f), 0.6f, 0f, dustShader);
+                p.alpha = 0;
+                //p.rotation = Main.rand.NextFloat(6.28f);
+            }
         }
 
         public float widthIntensity = 0;
@@ -127,7 +153,7 @@ namespace AerovelenceMod.Content.Items
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.4f;
+            return MathHelper.Lerp(0f, 30f, num) * 0.5f;
             
             return 0;
         }

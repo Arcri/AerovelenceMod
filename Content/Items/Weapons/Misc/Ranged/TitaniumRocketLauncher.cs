@@ -393,9 +393,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 			for (int i = 0; i < 5; i++)
 			{
-				int a = Projectile.NewProjectile(null, Projectile.Center, new Vector2(0.5f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.7f, 2f), ModContent.ProjectileType<FadeExplosion>(), 0, 0);
+				int a = Projectile.NewProjectile(null, Projectile.Center, new Vector2(0.5f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.7f, 2f), ModContent.ProjectileType<FadeExplosionHighRes>(), 0, 0);
 				Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
-				if (Main.projectile[a].ModProjectile is FadeExplosion explo)
+				if (Main.projectile[a].ModProjectile is FadeExplosionHighRes explo)
                 {
 					explo.color = Color.OrangeRed;
 					explo.size = 0.4f;

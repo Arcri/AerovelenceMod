@@ -27,6 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Projectile.width = 46;
 			Projectile.height = 46;
 			Projectile.friendly = true;
+			Projectile.hostile = false;
 			Projectile.DamageType = DamageClass.Ranged;
 			Projectile.light = 1f;
 			Projectile.ignoreWater = true;

@@ -70,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Antique Pistol");
+            DisplayName.SetDefault("Ocean Mist");
         }
         public override void SetDefaults()
         {
@@ -100,7 +100,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             if (Projectile.owner == Main.myPlayer)
             {
-                Angle = (Main.MouseWorld - (Player.Center)).ToRotation();
+                Angle = (Main.MouseWorld - Player.Center).ToRotation();
             }
 
             direction = Angle.ToRotationVector2();
