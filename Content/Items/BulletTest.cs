@@ -12,6 +12,7 @@ using AerovelenceMod.Common.Utilities;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -156,6 +157,20 @@ namespace AerovelenceMod.Content.Items
             return MathHelper.Lerp(0f, 30f, num) * 0.5f;
             
             return 0;
+        }
+    }
+
+    public class BulletReplacer : GlobalItem
+    {
+        public override bool AppliesToEntity(Item item, bool lateInstatiation)
+        {
+            return item.type == ItemID.MusketBall;
+        }
+
+        public override void SetDefaults(Item item)
+        {
+            item.StatsModifiedBy.Add(Mod);
+            item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
         }
     }
 }

@@ -54,9 +54,9 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			
-			NPC.NewNPC(source, (int)player.position.X, (int)player.position.X, ModContent.NPCType<MovingPlatform>());
+			//NPC.NewNPC(source, (int)player.position.X, (int)player.position.X, ModContent.NPCType<MovingPlatform>());
 			//int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<PinkStar>(), 0, 0, Main.myPlayer);
-			return false;
+			//return false;
 
 
 			//fb + rs for ice cube spawn
@@ -151,6 +151,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			}
 			*/
 			
+			/*
 			for (int i = 0; i < 4; i++)
 			{
 				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
@@ -165,7 +166,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 						bot.Leader = true;
 				}
 			}
-			
+			*/
 
 			//Star Strike
 			/*
@@ -183,7 +184,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			}
 			*/
 
-			/*
+			
 			for (int i = 0; i < 6; i++)
             {
 				int crossBombIndex = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<CyverExplosionBall>(), damage / 4, 2, Main.myPlayer);
@@ -194,7 +195,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 					BombadelaCross.outVector = new Vector2(0, 450).RotatedBy(MathHelper.ToRadians(60 * i));
 				}
 			}
-			*/
+			
 			fastThenShort = !fastThenShort;
 			return false;
         }

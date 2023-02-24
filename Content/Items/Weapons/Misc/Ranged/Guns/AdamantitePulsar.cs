@@ -60,8 +60,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             }
             else
             {
-                Item.useTime = 9;
-                Item.useAnimation = 9 * 3;
+                Item.useTime = 10;
+                Item.useAnimation = 10 * 3;
                 Item.noUseGraphic = false;
             }
             /*
