@@ -1,12 +1,9 @@
-﻿using AerovelenceMod.Common.Utilities;
-using AerovelenceMod.Content.Dusts.GlowDusts;
+﻿using AerovelenceMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using Terraria;
-using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -14,10 +11,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
-	public class PinkStar : ModProjectile
+	public class PinkStar : TrailProjBase
 	{
 
-		int timer = 0;
+		int mainTimer = 0;
+		private int orbitTimer;
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Godstar");
@@ -32,15 +31,15 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Projectile.ignoreWater = true;
 			Projectile.hostile = false;
 			Projectile.friendly = true;
-			Projectile.penetrate = -1;
-			Projectile.tileCollide = true;
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = false;
 			Projectile.usesLocalNPCImmunity = true;
 			Projectile.localNPCHitCooldown = 5;
 			Projectile.scale = 0.5f;
-			Projectile.timeLeft = 1000;
+			Projectile.timeLeft = 400;
 		}
 
-        public override void AI()
+		public override void AI()
 		{
 			ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 			Player owner = Main.player[Projectile.owner];
@@ -54,14 +53,33 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				Projectile.rotation -= 0.1f;
 			}
 
-			Projectile.velocity = Vector2.Zero;
 
-			timer++;
+            mainTimer++;
+			if (mainTimer <= 130 - Projectile.ai[1])
+			{
+                Projectile.penetrate = -1;
+                orbitTimer += 4;
+                /*Vector2 orbitPos = Main.MouseWorld + new Vector2(50, 0).RotatedBy(MathHelper.ToRadians
+					(orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));*/
+                Vector2 orbitPos = owner.Center + new Vector2(70, 0).RotatedBy(MathHelper.ToRadians
+    (orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));
+                Projectile.velocity = (10 * Projectile.velocity + orbitPos - Projectile.Center) / 20f;
+			}
+			if (mainTimer >= 130 - Projectile.ai[1])
+			{
+                Projectile.penetrate = 1;
+                if (Projectile.localAI[0] == 0f)
+				{
+					Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.Zero) * 7f;
+                    Projectile.localAI[0] = 1f;
+				}
+				Projectile.velocity *= 1.035f;
+			}
+
 		}
-
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
-			
+
 		}
 
 		Color colToUse = Main.rand.NextBool() ? Color.HotPink : Color.SkyBlue;
