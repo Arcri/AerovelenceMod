@@ -146,7 +146,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             direction = parent.rotation;
             Projectile.Center = parent.Center + (parent.rotation.ToRotationVector2() * -96);
-            endPoint = Projectile.Center + (parent.rotation.ToRotationVector2() * -1000);
+            endPoint = Projectile.Center + (parent.rotation.ToRotationVector2() * -1200);
             LaserRotation = direction + MathHelper.Pi;
 
             //Dust.NewDustPerfect(Projectile.Center, DustID.AmberBolt);

@@ -491,7 +491,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 13;
+            whatAttack = 69;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -1148,15 +1148,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     }
                 }
 
-                if (timer == 70)
+                if (timer == 50)
                 {
+                    int telegraph = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<SweepLaserTell>(), 0, 0);
+                    if (Main.projectile[telegraph].ModProjectile is SweepLaserTell tell)
+                    {
+                        tell.NPCTetheredTo = NPC;
+                        tell.sweepDir = sweepLaserDir;
+                    }
+
                     //int telegraphLine = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0,1).RotatedBy(NPC.rotation + MathHelper.PiOver2), ModContent.ProjectileType<TelegraphLineCyver>(), 0, 0);
                     //Main.projectile[telegraphLine].timeLeft = 20;
                     //if (Main.projectile[telegraphLine].ModProjectile is TelegraphLineCyver line)
                     //{
-                        //line.NPCTetheredTo = NPC;
-                        //line.sweepDir = sweepLaserDir;
-                        //line.sweepTell = true;
+                    //line.NPCTetheredTo = NPC;
+                    //line.sweepDir = sweepLaserDir;
+                    //line.sweepTell = true;
                     //}
                 }
 
@@ -1182,6 +1189,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundEngine.PlaySound(style2, NPC.Center);
 
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -96, Vector2.Zero, ModContent.ProjectileType<FocusedLaser>(), 15, 2);
+                    Main.projectile[a].timeLeft = 70;
                     if (Main.projectile[a].ModProjectile is FocusedLaser laser)
                     {
                         laser.parentIndex = NPC.whoAmI;
@@ -1193,7 +1201,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             else if (advancer == 2)
             {
-                NPC.rotation += (0.002f * timer + 0.015f) * (sweepLaserDir ? 1 : -1);
+                NPC.rotation += (0.0025f * timer + 0.007f) * (sweepLaserDir ? 1 : -1);
 
                 //Main.NewText((0.0017f * timer + 0.015f));
 
@@ -1211,7 +1219,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //turn desiredDirection
                 //Shootlasers
 
-                if (timer == 71)
+                if (timer == 70)
                 {
                     timer = -1;
                     advancer = -0;
