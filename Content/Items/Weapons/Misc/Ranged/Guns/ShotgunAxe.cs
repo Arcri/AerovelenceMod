@@ -723,7 +723,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                 if (DebuffTime % 1 == 0)
                 {
-                    Dust.NewDust(npc.position, 30, 30, DustID.Blood, 0f, 0f, 0, new Color(255, 255, 255), 1f);
+                    Dust.NewDust(npc.position, npc.width, npc.height, DustID.Blood, 0f, 0f, 0, new Color(255, 255, 255), 1f);
                 }
                 if (DebuffTime % 7 == 0) //else if is intentional
                 {
@@ -751,7 +751,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                     for (int i = 0; i < 7; i++)
                     {
-                        int p = Dust.NewDust(npc.position, 30, 30, DustID.Blood, 0f, 0f, 0, new Color(255, 255, 255), 1.15f);
+                        int p = Dust.NewDust(npc.position, npc.width, npc.height, DustID.Blood, 0f, 0f, 0, new Color(255, 255, 255), 1.15f);
                         Main.dust[p].velocity *= 1.5f;
                     }
 

@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.Items
 
             trailPointLimit = 120;
             trailWidth = 20;
-            trailMaxLength = 200;
+            trailMaxLength = 100; //200
 
             trailRot = Projectile.velocity.ToRotation();
             trailPos = Projectile.Center;
@@ -170,7 +170,8 @@ namespace AerovelenceMod.Content.Items
         public override void SetDefaults(Item item)
         {
             item.StatsModifiedBy.Add(Mod);
-            item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
+            //item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
+            item.shoot = ModContent.ProjectileType<BulletTest>();
         }
     }
 }

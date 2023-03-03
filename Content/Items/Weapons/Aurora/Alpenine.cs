@@ -37,7 +37,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Item.value = Item.sellPrice(0, 9, 0, 0);
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<FlashLightBeam>();
+            Item.shoot = ModContent.ProjectileType<LightningBorder>();
             //Item.useAmmo = AmmoID.Bullet;
             Item.channel = true;
             Item.shootSpeed = 2f;

@@ -82,9 +82,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			*/
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
-			myEffect.Parameters["uColor"].SetValue(Color.SkyBlue.ToVector3() * 0.3f);
-			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/lightning3").Value);
-			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196").Value);
+			myEffect.Parameters["uColor"].SetValue(Color.White.ToVector3() * 0.45f);
+			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
 			myEffect.Parameters["uTime"].SetValue(timer * -0.01f);
 			myEffect.Parameters["uSaturation"].SetValue(2);
 

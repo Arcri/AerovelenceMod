@@ -126,7 +126,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 6050;
+            Projectile.timeLeft = 78;
         }
         public float LaserRotation = 0;
         public float laserWidth = 70;

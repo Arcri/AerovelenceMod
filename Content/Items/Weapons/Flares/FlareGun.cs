@@ -75,10 +75,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 if (lockOutTimer < 5)
                 {
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Menu_Close") with { Pitch = -1f, MaxInstances = 0, Volume = 1f };
-                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Menu_Close") with { Pitch = -1f, MaxInstances = 0, Volume = 1f };
 
-                    SoundEngine.PlaySound(style);
-                    SoundEngine.PlaySound(style2);
+                    SoundEngine.PlaySound(style, player.Center);
+                    SoundEngine.PlaySound(style, player.Center);
 
                     //CombatText.NewText(new Rectangle((int)Projectile.Center.X, (int)Projectile.Center.Y, 2, 2), Color.BlanchedAlmond, Line2, dramatic: true);
                     CombatText.NewText(new Rectangle((int)player.Center.X, (int)player.Center.Y, 2, 2), Color.Red, "Too Early", false, true);

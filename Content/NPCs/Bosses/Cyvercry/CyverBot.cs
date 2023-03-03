@@ -119,7 +119,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
             {
                 NPC.TargetClosest();
-            } 
+            }
+
 
             Player myPlayer = Main.player[NPC.target];
 
@@ -127,7 +128,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 Dust dust = Dust.NewDustPerfect(NPC.Center + new Vector2(10 * (NPC.direction == 1 ? -1 : 1), 0).RotatedBy(NPC.rotation), DustID.Electric, Vector2.Zero);
                 dust.noGravity = true;
-                dust.velocity += NPC.velocity;
+                dust.velocity += NPC.velocity;  
                 dust.velocity *= 0.1f;
                 dust.scale *= 0.35f;
             }
@@ -139,6 +140,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     auraPosition = myPlayer.Center;
                     Vector2 goalPoint = GoalPos;
+
+                    NPC.Center = Vector2.Lerp(NPC.Center, (goalPoint + myPlayer.Center), timer / 30f);
+
+                    /*
                     Vector2 move = (goalPoint + myPlayer.Center) - NPC.Center;
                     float scalespeed = 4f;
 
@@ -149,7 +154,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Vector2 destination = GoalPos + myPlayer.Center;
                     float velo = MathHelper.Clamp(NPC.Distance(destination) / 12, 15, 60); //60
                     NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionTo(destination) * velo, 0.4f);
-
+                    */
                     NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.ToRadians(180);
 
                     if (timer == 30)
@@ -179,7 +184,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 else if (advancer >= 2)
                 {
                     auraPosition = storedCenter;
-                    GoalPos = GoalPos.RotatedBy(MathHelper.ToRadians(advancer * (UpTrueDownFalse ? 0.02f : -0.02f))); //0.02
+                    GoalPos = GoalPos.RotatedBy(MathHelper.ToRadians(advancer * (UpTrueDownFalse ? 0.03f : -0.03f))); //0.02
                     NPC.rotation = (GoalPos).ToRotation();
                     NPC.Center = storedCenter + GoalPos;
                     NPC.velocity = Vector2.Zero;
@@ -207,7 +212,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (timer % 7 == 0 && timer > 40 && timer < 250) //300
                 {
 
-
                     SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.15f, MaxInstances = -1 }; //1f
                     SoundEngine.PlaySound(stylec, NPC.Center);
 
@@ -223,7 +227,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + offset * 20, ModContent.DustType<GlowCircleQuadStar>(), vel.SafeNormalize(Vector2.UnitX) * 12f,
                         Color.HotPink, 0.5f, 0.4f, 0f, dustShader);
                     p.noLight = false;
-                    p.fadeIn = 10;
                     p.velocity *= 0.4f;
 
                 }
@@ -233,7 +236,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     NPC.rotation = NPC.rotation + MathHelper.Pi;
                 }
 
-                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 450 : 180; //400
+                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 450 : 150; //400
 
                 if (Leader)
                 {
@@ -278,8 +281,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 }
 
-                if (timer == 300) //180
+                if (timer == timeBeforeDeath) //180
                 {
+                    if (State == (int)Behavior.PrimeLaser)
+                        NPC.active = false;
+
                     if (Leader)
                     {
                         State = (int)CyverBot.Behavior.ESABall;
@@ -496,7 +502,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 for (int i = 0; i < 4; i++)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, new Vector2(5, 0).RotatedBy(MathHelper.ToRadians(i * 90 + 45)), ModContent.ProjectileType<CyverLaser>(), 14, 0);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, new Vector2(2, 0).RotatedBy(MathHelper.ToRadians(i * 90 + 45)), ModContent.ProjectileType<StretchLaser>(), 14, 0);
                 }
             }
             /*
@@ -524,6 +530,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             ESABallTimer = -1;
         }
         #endregion
+
+        public void KillFX()
+        {
+
+        }
     }
     public class CyverBotOrbiter : ModNPC {
         public override void SetStaticDefaults()

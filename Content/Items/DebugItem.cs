@@ -19,6 +19,7 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Ember;
 using AerovelenceMod.Content.Items.Weapons.Flares;
+using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -53,7 +54,11 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            int jade = Projectile.NewProjectile(null, position, velocity, ProjectileID.ScutlixLaserFriendly, 10, 0, player.whoAmI);
 
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.3f, Volume = 0.5f};
+            //SoundEngine.PlaySound(style, player.Center);
+            return false;
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f };
             //SoundEngine.PlaySound(style);
 
