@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,8 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				//.AddTile(TileID.WorkBenches)
 				//.Register();
 		}
-
-		public override bool MeleePrefix()
+        public override bool MeleePrefix()
 		{
 			return true;
 		}

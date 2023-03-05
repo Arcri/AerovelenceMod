@@ -1,7 +1,10 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Mono.Cecil;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -40,7 +43,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Projectile.localNPCHitCooldown = -1;
 
 			Projectile.WhipSettings.Segments = 7;
-            Projectile.WhipSettings.RangeMultiplier = 2f;
+			Projectile.WhipSettings.RangeMultiplier = 2f;
+
 		}
 
 		private float Timer
@@ -49,18 +53,18 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			set => Projectile.ai[0] = value;
 		}
 
-        public override bool PreAI()
-        {
+		public override bool PreAI()
+		{
 			//Main.NewText(WhipEndPos);
 			return true;
-        }
+		}
 
-        public override void AI()
+		public override void AI()
 		{
 
 			Player owner = Main.player[Projectile.owner];
 			if (Timer > 10)
-            {
+			{
 
 				List<Vector2> points = Projectile.WhipPointsForCollision;
 				Projectile.FillWhipControlPoints(Projectile, points);
@@ -80,18 +84,18 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 					*/
 					ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-					
+
 					int d = GlowDustHelper.DrawGlowDust(points[points.Count - 1], Projectile.width / 2, Projectile.height / 2, ModContent.DustType<GlowCircleQuadStar>(),
 						Color.DeepPink, 0.65f, 0.4f, 0, dustShader);
 					Main.dust[d].velocity = (points[points.Count - 1] - Projectile.Center).SafeNormalize(Vector2.UnitX) * 2;
 					Main.dust[d].noGravity = true;
-					
+
 
 					//int dust = Dust.NewDust(points[points.Count - 1], Projectile.width / 2, Projectile.height / 2, DustID.Firework_Blue);
 					//Main.dust[dust].velocity = (points[points.Count - 1] - Projectile.Center).SafeNormalize(Vector2.UnitX) * 2;
 					//Main.dust[dust].noGravity = true;
 				}
-				
+
 			}
 
 			// VANILLA DEFAULT BEHAVIOR
@@ -100,7 +104,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			Projectile.Center = Main.GetPlayerArmPosition(Projectile) + Projectile.velocity * Timer;
 			Projectile.spriteDirection = Projectile.velocity.X >= 0f ? 1 : -1;
 
-            Timer++;
+			Timer++;
 
 			float swingTime = owner.itemAnimationMax * Projectile.MaxUpdates;
 			if (Timer >= swingTime || owner.itemAnimation <= 0)
@@ -120,17 +124,23 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 			//EXTRA BEHAVIOR
 			//Projectile.NewProjectile(Projectile.GetSource_FromThis(), WhipEndPos, new Vector2((Projectile.position.X - owner.position.X) * .05f, (Projectile.position.Y - owner.position.Y) * .05f), ModContent.ProjectileType<ElectricityBolt>(), 32, 4);
-			
+
 		}
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 			//target.AddBuff(ModContent.BuffType<Content.Buffs.Electrified>(), 240);
 			Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
 
+
+
 			Projectile.damage = (int)(damage * 0.85f); // Multihit penalty. Decrease the damage the more enemies the whip hits.
 
-			ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+			Player owner = Main.player[Projectile.owner];
+
+			owner.AddBuff(ModContent.BuffType<CyverBotBuff>(), 240);
+
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
 			for (int j = 0; j < 3; j++)
 			{
@@ -227,25 +237,309 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				Color color = Lighting.GetColor(element.ToTileCoordinates());
 
 				if (i == list.Count - 2 && Timer > 10)
-                {
+				{
 					var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
 
 					Main.spriteBatch.End();
 					Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-					Main.EntitySpriteDraw(star, pos - Main.screenPosition, star.Frame(1,1,0,0), Color.HotPink, rotation, star.Size() / 2, scale * 0.075f, flip, 0);
+					Main.EntitySpriteDraw(star, pos - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.HotPink, rotation, star.Size() / 2, scale * 0.075f, flip, 0);
 
 					Main.spriteBatch.End();
 					Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 				}
 
 				Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
-				
+
 
 
 				pos += diff;
 			}
 			return false;
+		}
+	}
+	public class CyverBotProj : ModProjectile
+	{
+		// a whole lot of variables
+		Vector2 movePos;
+		Vector2 targetPos;
+
+		NPC closestNPC;
+		Player p;
+
+        int triangleLaserTimer;
+		int laserSpamTimer1;
+        int laserSpamTimer2;
+        int orbitTimer;
+        int triLaserOrbit;
+
+        public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Cyver Bot");
+			Main.projFrames[Projectile.type] = 4;
+
+			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
+
+			Main.projPet[Projectile.type] = true;
+
+			ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
+
+			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+		}
+
+		public override void SetDefaults()
+		{
+			Projectile.width = 66;
+			Projectile.height = 36;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 300;
+			Projectile.penetrate = -1;
+			Projectile.DamageType = DamageClass.Summon;
+		}
+        public ref float AI_State => ref Projectile.ai[0];
+        public ref float AI_Timer => ref Projectile.ai[1];
+        private enum Action
+		{
+			TriangleLaser,
+			LaserSpam,
+			PlayerOrbit,
+			Glitching
+		}
+		public override void AI()
+		{
+			switch (AI_State)
+			{
+				case (float) Action.TriangleLaser:
+					TriangleLaser();
+					break;
+				case (float) Action.LaserSpam:
+					LaserSpam();
+					break;
+                case (float) Action.PlayerOrbit:
+                    PlayerOrbit();
+                    break;
+                case (float) Action.Glitching:
+                    Glitching();
+                    break;
+            }
+
+            float maxDetectRadius = 1000f;
+
+            p = Main.player[Projectile.owner];
+            closestNPC = FindClosestNPC(maxDetectRadius);
+
+			CheckActive(p);
+
+			if (closestNPC == null)
+			{
+                targetPos = p.Center;
+
+                AI_State = (float)Action.PlayerOrbit;
+				AI_Timer = 0;
+			}
+
+			if (closestNPC != null)
+			{
+                targetPos = closestNPC.Center;
+
+                AI_Timer++;
+
+				if (AI_Timer <= 360)
+				{
+					AI_State = (float)Action.TriangleLaser;
+				}
+				else if (AI_Timer >= 360 & AI_Timer <= 660)
+				{
+					AI_State = (float)Action.LaserSpam;
+				}
+				else if (AI_Timer > 660)
+				{
+					AI_Timer = 0;
+				}
+            }
+
+            /*Vector2 targetVel = Vector2.Normalize(movePos - Projectile.Center);
+			targetVel *= 4f;
+
+			float accX = 0.2f;
+
+			float accY = 0.1f;
+			Projectile.velocity.X += (Projectile.velocity.X < targetVel.X ? 1 : -1) * accX;
+			Projectile.velocity.Y += (Projectile.velocity.Y < targetVel.Y ? 1 : -1) * accY;*/
+
+            if (++Projectile.frameCounter >= 5)
+			{
+				Projectile.frameCounter = 0;
+
+				if (++Projectile.frame >= Main.projFrames[Projectile.type])
+					Projectile.frame = 0;
+			}
+		}
+
+		private void TriangleLaser()
+		{
+			//orbitTimer++;
+            triangleLaserTimer++;
+            if (triangleLaserTimer >= 60)
+            {
+                int projType1 = ModContent.ProjectileType<PinkExplosion>();
+                int projType2 = ModContent.ProjectileType<CyverLaser>();
+                var source = Projectile.InheritSource(Projectile);
+                var vel = (targetPos - Projectile.Center).SafeNormalize(Vector2.Zero) * 7f;
+                var pos = Projectile.Center;
+
+                orbitTimer += 120;
+
+                Projectile.NewProjectile(source, pos, Vector2.Zero, projType1, 0, 0, p.whoAmI);
+                int spawn = Projectile.NewProjectile(source, pos, vel, projType2, Projectile.damage * 2, Projectile.knockBack, p.whoAmI);
+                Projectile laser = Main.projectile[spawn];
+                laser.friendly = true;
+                laser.hostile = false;
+                laser.tileCollide = false;
+
+                triangleLaserTimer = 0;
+            }
+
+            movePos = targetPos + new Vector2(200, 0).RotatedBy(MathHelper.ToRadians(orbitTimer));
+            Projectile.rotation = (Projectile.Center - targetPos).ToRotation();
+
+            Projectile.velocity = (10 * Projectile.velocity + movePos - Projectile.Center) / 20f;
+
+            laserSpamTimer1 = 0; // just in case it's not zero
+            //Main.NewText("Tri laser");
+
+        }
+
+        private void LaserSpam()
+		{
+			laserSpamTimer1++;
+            Projectile.rotation = (Projectile.Center - targetPos).ToRotation();
+
+            if (laserSpamTimer1 <= 120)
+			{
+                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                Projectile.velocity = (10 * Projectile.velocity + (p.Center + new Vector2(0, -150)) - Projectile.Center) / 20f;
+				Vector2 dustPos = Projectile.Center + Main.rand.NextVector2CircularEdge(100, 100);
+
+                float rotation = (float)Math.Atan2(dustPos.Y - Projectile.Center.Y, dustPos.X - Projectile.Center.X);
+                float speedX = (float)((Math.Cos(rotation) * 7f) * -1);
+                float speedY = (float)((Math.Sin(rotation) * 7f) * -1);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    GlowDustHelper.DrawGlowDustPerfect(dustPos, ModContent.DustType<GlowCircleQuadStar>(), new Vector2(speedX, speedY),
+                    Color.DeepPink, 0.5f, 0.4f, 0f,
+                    dustShader);
+                }
+            }
+            else if (laserSpamTimer1 >= 120 & laserSpamTimer1 <= 300)
+			{
+				laserSpamTimer2++;
+
+                if (laserSpamTimer2 >= 5)
+				{
+                    int projType1 = ModContent.ProjectileType<PinkExplosion>();
+                    int projType2 = ModContent.ProjectileType<CyverLaser>();
+                    var source = Projectile.InheritSource(Projectile);
+                    var vel = (targetPos - Projectile.Center).SafeNormalize(Vector2.Zero) * 7f;
+                    var pos = Projectile.Center;
+
+                    Projectile.NewProjectile(source, pos, Vector2.Zero, projType1, 0, 0, p.whoAmI);
+                    int spawn = Projectile.NewProjectile(source, pos, vel, projType2, Projectile.damage / 4, Projectile.knockBack, p.whoAmI);
+                    Projectile laser = Main.projectile[spawn];
+                    laser.friendly = true;
+                    laser.hostile = false;
+                    laser.tileCollide = false;
+
+                    laserSpamTimer2 = 0;
+				}
+			}
+			else if (laserSpamTimer1 >= 300)
+			{
+				laserSpamTimer1 = 0;
+			}
+            //Main.NewText("Laser spam");
+        }
+		
+		private void PlayerOrbit()
+		{
+            orbitTimer++;
+
+            movePos = targetPos + new Vector2(300, 0).RotatedBy(MathHelper.ToRadians(orbitTimer));
+            Projectile.rotation = (Projectile.Center - targetPos).ToRotation();
+
+            Projectile.velocity = (10 * Projectile.velocity + movePos - Projectile.Center) / 20f;
+
+            //Main.NewText("Player orbit");
+
+        }
+        private void Glitching()
+		{
+			//wip
+		}
+
+		private bool CheckActive(Player owner)
+        {
+            if (owner.dead || !owner.active)
+            {
+                owner.ClearBuff(ModContent.BuffType<CyverBotBuff>());
+                return false;
+            }
+
+            if (owner.HasBuff(ModContent.BuffType<CyverBotBuff>()))
+            {
+                Projectile.timeLeft = 2;
+            }
+
+            if (owner.ownedProjectileCounts[ModContent.ProjectileType<CyverBotProj>()] > 1)
+			{
+				Projectile.Kill();
+            }
+            return true;
+        }
+
+		public override void Kill(int timeLeft)
+		{
+            int projType1 = ModContent.ProjectileType<PinkExplosion>();
+            var source = Projectile.InheritSource(Projectile);
+            var pos = Projectile.Center;
+
+            Projectile.NewProjectile(source, pos, Vector2.Zero, projType1, 0, 0, p.whoAmI);
+        }
+		public NPC FindClosestNPC(float maxDetectDistance)
+		{
+			NPC closestNPC = null;
+			float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
+
+			for (int k = 0; k < Main.maxNPCs; k++)
+			{
+				NPC target = Main.npc[k];
+
+				if (target.CanBeChasedBy())
+				{
+
+					float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
+
+
+					if (sqrDistanceToTarget < sqrMaxDetectDistance)
+					{
+						sqrMaxDetectDistance = sqrDistanceToTarget;
+						closestNPC = target;
+					}
+
+				}
+
+			}
+			return closestNPC;
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+            return true;
 		}
 	}
 }
