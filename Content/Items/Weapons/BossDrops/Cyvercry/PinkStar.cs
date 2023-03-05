@@ -16,8 +16,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 		int mainTimer = 0;
 		private int orbitTimer;
-
-		public override void SetStaticDefaults()
+        Color colToUse = Main.rand.NextBool() ? Color.HotPink : Color.SkyBlue;
+        public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Godstar");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
@@ -75,26 +75,48 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				}
 				Projectile.velocity *= 1.035f;
 			}
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value;
+            trailColor = colToUse;
+            trailTime = Projectile.ai[1];
 
-		}
+            // other things you can adjust
+            trailPointLimit = 100;
+            trailWidth = 40;
+            trailMaxLength = 70;
+
+
+            //MUST call TrailLogic AFTER assigning trailRot and trailPos
+            trailRot = Projectile.velocity.ToRotation();
+            trailPos = Projectile.Center;
+            TrailLogic();
+
+        }
 		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
 		{
 
 		}
 
-		Color colToUse = Main.rand.NextBool() ? Color.HotPink : Color.SkyBlue;
-		public override bool PreDraw(ref Color lightColor)
+
+        public override float WidthFunction(float progress)
+        {
+            float num = 1f;
+            float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
+            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
+            return MathHelper.Lerp(0f, 30f, num) * 0.5f; // 0.3f
+        }
+        public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/GreyScaleStar").Value;
 
-			//Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			//myEffect.Parameters["uColor"].SetValue(colToUse.ToVector3() * 2f);
-			//myEffect.Parameters["uTime"].SetValue(2);
-			//myEffect.Parameters["uOpacity"].SetValue(0.9f);
-			//myEffect.Parameters["uSaturation"].SetValue(0f);
+            //Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            //myEffect.Parameters["uColor"].SetValue(colToUse.ToVector3() * 2f);
+            //myEffect.Parameters["uTime"].SetValue(2);
+            //myEffect.Parameters["uOpacity"].SetValue(0.9f);
+            //myEffect.Parameters["uSaturation"].SetValue(0f);
+            TrailDrawing();
 
 
-			Main.spriteBatch.End();
+            Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			//myEffect.CurrentTechnique.Passes[0].Apply();
 
