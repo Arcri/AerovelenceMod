@@ -326,7 +326,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override float WidthFunction(float progress)
         {
-
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
