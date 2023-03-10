@@ -2,6 +2,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -17,6 +18,8 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 {
+    //TODO:
+    //Give it the same treatment as WarBow where the string moves as you draw back
 	public class TheSahara : ModItem
 	{
 		public override void SetStaticDefaults()
@@ -133,7 +136,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
             if (Player.channel)
             {
-                //Main.NewText(Player.direction);
                 if (Projectile.owner == Main.myPlayer)
                 {
                     Angle = (Main.MouseWorld - (Player.MountedCenter)).ToRotation();
@@ -164,25 +166,52 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
                 if (timeBeforeKill == 0)
                 {
-                    float vel = MathHelper.Clamp(20 * percentDrawnBack, 6, 20);
+                    float vel = MathHelper.Clamp(15 * percentDrawnBack, 6, 15);
+
+
+                    if (timer > 55)
+                    {
+                        projToShootID = ModContent.ProjectileType<SaharaFireVortex>();
+                        vel = 20;
+                    }
+
                     Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, direction.SafeNormalize(Vector2.UnitX) * vel, projToShootID, Projectile.damage / 2 + (int)(Projectile.damage * percentDrawnBack), 0, Player.whoAmI);
 
 
 
-                    for (int j = 0; j < 20; j++)
+                    for (int j = 0; j < 7; j++)
                     {
-                        Dust dust2 = Dust.NewDustPerfect(Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * vel, ModContent.DustType<StillDust>(),
-                            Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(0.5f, 1.2f), newColor: Color.OrangeRed);
-
+                        Dust dust2 = Dust.NewDustPerfect(Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * 10, ModContent.DustType<StillDust>(),
+                            direction.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.8f, 0.8f)) * Main.rand.NextFloat(1.5f, 3.2f), newColor: Color.Orange);
+                        dust2.scale = 2f;
+                        dust2.rotation = Main.rand.NextFloat(6.28f);
                         //Dust dust1 = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * vel, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 3),
                         //Color.Orange, Main.rand.NextFloat(0.3f, 0.5f), 0.6f, 0f, dustShader2);
                         //dust1.velocity *= 1f;
 
                     }
-                    for (int i = 0; i < 20; i++)
+
+                    int Mura = Projectile.NewProjectile(null, Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * 10, Vector2.Zero, ModContent.ProjectileType<MuraLineHandler>(), 5, 0, Projectile.owner);
+
+                    if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
+                    {
+                        for (int m = 0; m < 5; m++)
+                        {
+                            float xScaleMinus = Main.rand.NextFloat(0f, 1.1f);
+                            MuraLine newWind = new MuraLine(Main.projectile[Mura].Center, direction.RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f)) * Main.rand.NextFloat(2f, 4.2f), 2 - xScaleMinus);
+                            mlh.lines.Add(newWind);
+                            mlh.color = Color.OrangeRed;
+                        }
+                    }
+
+                    for (int i = 0; i < 8; i++)
                     {
                         Vector2 randomStart = Main.rand.NextVector2CircularEdge(2f, 2f) * 0.75f;
-                        Dust dust1 = Dust.NewDustPerfect(Projectile.Center + randomStart + direction.SafeNormalize(Vector2.UnitX) * vel, DustID.Torch, randomStart * Main.rand.NextFloat(0.65f, 1.35f));
+                        Dust dust1 = Dust.NewDustPerfect(Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * 10, DustID.Torch, randomStart);
+                        dust1.rotation = Main.rand.NextFloat(6.28f);
+                        dust1.alpha = 65;
+                        dust1.scale = 1.3f;
+                        dust1.noGravity = true;
                     }
 
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_5") with { Pitch = -.53f, };
@@ -219,12 +248,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
             Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, (Player.Center - Projectile.Center).ToRotation() + MathHelper.PiOver2);
 
+
+            if (timer == 53 && Player.channel)
+            {
+                SoundEngine.PlaySound(SoundID.DD2_PhantomPhoenixShot with { Volume = 0.5f, Pitch = 0.3f }, Projectile.Center);
+
+                for (int i = 0; i < 15; i++)
+                {
+                    Vector2 randomStart = Main.rand.NextVector2CircularEdge(2f, 2f) * 0.75f;
+                    Dust dust1 = Dust.NewDustPerfect(Projectile.Center + direction.SafeNormalize(Vector2.UnitX) * 14, ModContent.DustType<StillDust>(), randomStart);
+                    dust1.rotation = Main.rand.NextFloat(6.28f);
+                    dust1.scale = 1.3f;
+                    dust1.color = Color.Orange;
+                }
+            }
+
+            if (timer > 53)
+                starScale = Math.Clamp(MathHelper.Lerp(starScale, 1.5f, 0.06f), 0, 1);
+
             timer++;
+            starRotation += 0.04f * Player.direction;
+            
         }
 
-        float starScaleMultiplier = 0;
-        float outerStarScale = 0;
-        float innerStarScale = 0;
+        float starRotation = 0;
+        float starScale = 0;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
@@ -237,12 +285,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             {
                 SpriteEffects effects1 = SpriteEffects.None;
                 Main.spriteBatch.Draw(texture, position, null, lightColor, direction.ToRotation(), origin, Projectile.scale, effects1, 0.0f);
+                //Main.spriteBatch.Draw(texture, position, null, Color.Orange * 0.5f * percentDrawnBack, direction.ToRotation(), origin, Projectile.scale, effects1, 0.0f);
+
 
             }
             else
             {
                 SpriteEffects effects1 = SpriteEffects.FlipHorizontally;
                 Main.spriteBatch.Draw(texture, position, null, lightColor, direction.ToRotation() - 3.14f, origin, Projectile.scale, effects1, 0.0f);
+
+            }
+
+            if (Player.channel)
+            {
+                float extraRot = Player.direction == 1 ? 0 : -3.14f;
+                SpriteEffects ef = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+                Main.spriteBatch.Draw(texture, position, null, Color.OrangeRed * 0.5f * percentDrawnBack, direction.ToRotation() + extraRot, origin, Projectile.scale, ef, 0.0f);
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
             }
 
 
@@ -269,11 +335,192 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             }
 
 
+
+
             if (Player.channel)
                 Main.spriteBatch.Draw(arrowTexture, position2 + chargeOffset, null, lightColor, direction.ToRotation() - MathHelper.PiOver2, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
+
+
+            if (Player.channel && timer > 55)
+            {
+                Texture2D shineTexture = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+
+                //Main.spriteBatch.Draw(shineTexture, position + direction * 9, null, new Color(0, 0, 0) * 0.4f, starRotation, shineTexture.Size() / 2, Projectile.scale, SpriteEffects.None, 0.0f);
+                Main.spriteBatch.Draw(shineTexture, position + direction * 9, null, new Color(200, 100, 20, 0) * 1f, starRotation + MathHelper.PiOver2, shineTexture.Size() / 2, Projectile.scale * 0.6f * starScale, SpriteEffects.None, 0.0f);
+                Main.spriteBatch.Draw(shineTexture, position + direction * 9, null, new Color(200, 100, 20, 0) * 1f, starRotation, shineTexture.Size() / 2, Projectile.scale * 0.6f * starScale, SpriteEffects.None, 0.0f);
+
+            }
+
 
             return false;
         }
 
+    }
+
+    public class SaharaFireVortex : ModProjectile
+    {
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("FireWhirl");
+            Main.projFrames[Projectile.type] = 6;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 42;
+            Projectile.height = 42;
+            Projectile.timeLeft = 150;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            //projectile.netImportant = true;
+        }
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White;
+        }
+        int timer = 0;
+        public override void AI()
+        {
+            Projectile.rotation = 0;
+
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
+            }
+            Projectile.velocity *= timer > 50 ? 0.9f : 0.95f;
+
+            if (timer == 65 || timer == 77 || timer == 89)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SaharaFirePulse>(), Projectile.damage, 0, Main.myPlayer);
+
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.23f, PitchVariance = 0.35f, MaxInstances = -1 };
+                SoundEngine.PlaySound(style, Projectile.Center);
+            }
+
+            timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
+            Texture2D Tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/Bows/SaharaFireVortex");
+
+            int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+
+            // Get this frame on texture
+            Rectangle sourceRectangle = new Rectangle(0, startY, Tex.Width, frameHeight);
+
+
+            Vector2 origin = sourceRectangle.Size() / 2f;
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.OrangeRed * 0.7f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.3f, 0, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, 0, 0f);
+
+
+            return false;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_book_staff_cast_2") with { Pitch = -0.2f, PitchVariance = 0.35f, Volume = 0.6f };
+            SoundEngine.PlaySound(style, Projectile.Center);
+            for (int i = 0; i < 10; i++)
+            {
+                Vector2 randomStart = Main.rand.NextVector2CircularEdge(2f, 2f) * 2f;
+                Dust dust1 = Dust.NewDustPerfect(Projectile.Center, DustID.Torch, randomStart * Main.rand.NextFloat(0.9f, 1.5f));
+                dust1.rotation = Main.rand.NextFloat(6.28f);
+                dust1.scale = 1.5f;
+                dust1.color = Color.Orange;
+                dust1.noGravity = true;
+            }
+        }
+    }
+
+    public class SaharaFirePulse : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        int timer = 0;
+        float opacity = 1f;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Hollow Pulse");
+
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 10;
+            Projectile.height = 10;
+            Projectile.DamageType = DamageClass.Ranged;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 200;
+            Projectile.tileCollide = false;
+            Projectile.scale = 0.1f;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+        }
+
+        Vector2 startingCenter;
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+
+            if (timer == 0)
+                startingCenter = Projectile.Center;
+
+            timer++;
+
+            Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, 1.25f, 0.08f), 0f, 1f);
+
+            if (Projectile.scale >= 0.8f)
+                opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, -0.2f, 0.1f), 0, 2);
+
+            if (opacity <= 0)
+                Projectile.active = false;
+
+            Projectile.width = (int)(190 * Projectile.scale);
+            Projectile.height = (int)(190 * Projectile.scale);
+            Projectile.Center = startingCenter;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Royal_Resonance").Value;
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1,1,0,0), new Color(255,130,0) * opacity * 1.2f, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 1.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity * 1.2f, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 1.5f + 0.15f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 0) * opacity * 1.2f, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 1.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity * 1.2f, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 1.5f + 0.15f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(BuffID.OnFire, 100);
+        }
     }
 }

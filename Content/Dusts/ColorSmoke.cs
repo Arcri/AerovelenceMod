@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Dusts
 {
     public class ColorSmoke : ModDust
     {
-        public override string Texture => "AerovelenceMod/Content/Dusts/ColorSmoke2";
+        public override string Texture => "AerovelenceMod/Content/Dusts/ColorSmoke";
 
         public override void OnSpawn(Dust dust)
         {
@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.Dusts
             }
             else if (dust.alpha < 140)
             {
-                ret = Color.Lerp(Color.Orange, Color.Black, (dust.alpha - 80) / 80f * 0.5f);
+                ret = Color.Lerp(Color.Orange, Color.Black, (dust.alpha - 140) / 80f * 0.5f);
             }
             else
                 ret = gray;
@@ -63,9 +63,9 @@ namespace AerovelenceMod.Content.Dusts
             dust.velocity.Y -= 0.05f;
 
             if (dust.velocity.Length() > 3)
-                dust.velocity *= 0.85f;
+                dust.velocity *= 0.95f;
             else
-                dust.velocity *= 0.92f;
+                dust.velocity *= 0.98f;
 
             if (dust.alpha > 100)
             {

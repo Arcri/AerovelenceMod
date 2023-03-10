@@ -18,11 +18,13 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using XPT.Core.Audio.MP3Sharp.Decoding.Decoders.LayerIII;
 using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Projectiles.Other;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 {
     public class Aliban : ModItem
     {
+        int count = 0;
         bool tick = false;
         public override void SetStaticDefaults()
         {
@@ -30,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Tooltip.SetDefault("");
         }
         public override void SetDefaults()
-        {
+            {
             Item.knockBack = 2f;
             Item.crit = 2;
             Item.damage = 18;
@@ -49,9 +51,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-           tick = !tick;
-           Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, (tick ? 1 : 0));
-           return false;
+            tick = !tick;
+            int p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, (tick ? 1 : 0));
+
+
+            return false;
         }
 
         public override void AddRecipes()
@@ -78,7 +82,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         {
             Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = Projectile.height = 30;
+            Projectile.width = Projectile.height = 60;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = -1;
@@ -96,6 +100,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             bool shouldDamage = (getProgress(easingProgress) >= 0.3f && getProgress(easingProgress) <= 0.75f);
             return shouldDamage;
         }
+
+        public bool shouldShoot = false;
+        bool hasShot = false;
 
         bool firstFrame = true;
         float startingAng = 0;
@@ -235,12 +242,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 timerAfterEnd--;
                 
             }
-            if (timer % 3 == 0 && timer < 50)
+
+            if (timer % 10 == 0 && timer != 0 && timer < 50)
             {
-                Dust dust2 = Dust.NewDustPerfect(Projectile.Center + currentAng.ToRotationVector2() * 10, ModContent.DustType<StillDust>(),
-                Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(0.5f, 1.2f), newColor: Color.SkyBlue);
-                dust2.rotation = Main.rand.NextFloat(6.28f);
-                dust2.scale = 1.1f;
+                //int roA = Projectile.NewProjectile(null, Projectile.Center, currentAng.ToRotationVector2() * 2, ModContent.ProjectileType<RoAHit>(), 5, 0, player.whoAmI);
+
+                //if (Main.projectile[roA].ModProjectile is RoAHit hit)
+                //{
+                    //hit.color = Color.LightBlue;
+                //}
+            }
+
+            if (timer % 2 == 0 && timer < 30)
+            {
+                //Dust dust2 = Dust.NewDustPerfect(Projectile.Center + currentAng.ToRotationVector2() * 20, ModContent.DustType<StillDust>(),
+                //currentAng.ToRotationVector2() * 2, newColor: Color.SkyBlue);
+                //dust2.rotation = Main.rand.NextFloat(6.28f);
+                //dust2.scale = 1.1f;
+                //dust2.alpha = 50;
+            }
+
+
+            if (getProgress(easingProgress) >= 0.5f && !hasShot && shouldShoot)
+            {
+                hasShot = true;
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, origAng.ToRotationVector2() * 5f, ModContent.ProjectileType<AlibanProj>(), 
+                    Projectile.damage, 0, Projectile.owner);
             }
 
             if (swipeTimer % 10 == 0 && swipeTimer != 0)
@@ -264,13 +291,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Rectangle sFrame = new Rectangle(0, Trail3.Height / 4 * trailFrame, Trail3.Width, (Trail3.Height / 4));
 
             float scaleVal = ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.2f);
-            Vector2 scale2 = new Vector2(0.75f + scaleVal, 1.15f + scaleVal - (swipeTimer * 0.015f));
+            Vector2 scale2 = new Vector2(0.75f + scaleVal, 0.9f + scaleVal - (swipeTimer * 0.015f));
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Trail3, Main.player[Projectile.owner].MountedCenter - Main.screenPosition + new Vector2(10f + swipeTimer, 0).RotatedBy(origAng), sFrame, Color.Green * swipeIntensity * 0.5f, origAng, Trail2.Size() / 2, scale2 * 0.7f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Trail3, Main.player[Projectile.owner].MountedCenter - Main.screenPosition + new Vector2(10f + swipeTimer, 0).RotatedBy(origAng), sFrame, Color.Green * swipeIntensity * 0.7f, origAng, Trail2.Size() / 2, scale2 * 1.1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Trail3, Main.player[Projectile.owner].MountedCenter - Main.screenPosition + new Vector2(10f + swipeTimer, 0).RotatedBy(origAng), sFrame, Color.LightGreen * swipeIntensity * 0.7f, origAng, Trail2.Size() / 2, scale2 * 1.1f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Trail3, Main.player[Projectile.owner].MountedCenter - Main.screenPosition + new Vector2(10f + swipeTimer, 0).RotatedBy(origAng), sFrame, Color.LightBlue * swipeIntensity, origAng, Trail2.Size() / 2, scale2, SpriteEffects.None, 0f);
 
             Player p = Main.player[Projectile.owner];
@@ -280,8 +307,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 for (int k = 0; k < Projectile.oldPos.Length; k++)
                 {
                     k++;
-                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + new Vector2(15f, 15f);
-                    Color trailCol = Color.LightBlue * 0.45f;
+                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + new Vector2(30f, 30f);
+                    Color trailCol = Color.LightCyan * 0.45f;
                     Main.EntitySpriteDraw(Sword, drawPos, null, trailCol, Projectile.oldRot[k] + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Sword.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.1f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0);
                     k++;
                 }
@@ -356,6 +383,117 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
 
+            for (int i = 0; i < 2 + (Main.rand.NextBool() ? 1 : 0); i++)
+            {
+                Vector2 vel = (target.Center - Main.player[Projectile.owner].Center).RotatedBy(Main.rand.NextFloat(-0.7f, 0.7f));
+                int roA = Projectile.NewProjectile(null, target.Center, vel.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1.5f,3.1f), ModContent.ProjectileType<RoAHit>(), 0, 0);
+
+                if (Main.projectile[roA].ModProjectile is RoAHit hit)
+                {
+                    hit.color = Color.DeepSkyBlue;
+                    hit.Projectile.frameCounter = Main.rand.Next(1, 3);
+                }
+            }
+
         }
     }
+
+    public class AlibanProj : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            DisplayName.SetDefault("Aliban");
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.timeLeft = 70;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.width = Projectile.height = 30;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 17;
+            Projectile.scale = 1f;
+            Projectile.ownerHitCheck = true;
+        }
+
+
+        int timer = 0;
+        float alpha = 0;
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+
+            if (timer < 10)
+            {
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.2f, 0.08f), 0, 1);
+                Projectile.velocity *= 1.03f;
+
+            }
+            else
+            {
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.13f), 0, 1);
+                Projectile.velocity *= 0.7f;
+
+            }
+            Projectile.rotation += 0.25f * Projectile.direction;
+
+            timer++;
+
+            
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Sword = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/AlibanProj");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/AlibanProj_Glow");
+            Main.spriteBatch.Draw(Sword, Projectile.Center - Main.screenPosition, null, Color.White * alpha, Projectile.rotation, Sword.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            if (timer > 5)
+            {
+                for (int k = 0; k < Projectile.oldPos.Length; k++)
+                {
+                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + new Vector2(15f, 15f);
+                    Color trailCol = Color.LightCyan;
+                    Main.EntitySpriteDraw(Glow, drawPos, null, trailCol, Projectile.oldRot[k], Sword.Size() / 2, Projectile.scale,SpriteEffects.None, 0);
+                }
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+
+            for (int i = 0; i < 2 + (Main.rand.NextBool() ? 1 : 0); i++)
+            {
+                Vector2 vel = (target.Center - Main.player[Projectile.owner].Center).RotatedBy(Main.rand.NextFloat(-0.7f, 0.7f));
+                int roA = Projectile.NewProjectile(null, target.Center, vel.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1.5f, 3.1f), ModContent.ProjectileType<RoAHit>(), 0, 0);
+
+                if (Main.projectile[roA].ModProjectile is RoAHit hit)
+                {
+                    hit.color = Color.DeepSkyBlue;
+                    hit.Projectile.frameCounter = Main.rand.Next(1, 3);
+                }
+            }
+
+        }
+    }
+
 }

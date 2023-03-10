@@ -20,6 +20,11 @@ using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using AerovelenceMod.Content.Items.Weapons.Ember;
 using AerovelenceMod.Content.Items.Weapons.Flares;
 using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.Projectiles.Other;
+using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
+using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -54,8 +59,32 @@ namespace AerovelenceMod.Content.Items
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int jade = Projectile.NewProjectile(null, position, velocity, ProjectileID.ScutlixLaserFriendly, 10, 0, player.whoAmI);
 
+            
+            int Mura = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<GraniteCore>(), 5, 0, player.whoAmI);
+
+            /*
+            if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
+            {
+                for (int m = 0; m < 5; m++)
+                {
+                    MuraLine newWind = new MuraLine(Main.projectile[Mura].Center, velocity.RotatedBy(Main.rand.NextFloat(-0.15f, 0.15f)) * 1, 2f);
+                    mlh.lines.Add(newWind);
+                    mlh.color = Color.OrangeRed;
+                }
+            }
+            */
+
+            ///int roA = Projectile.NewProjectile(null, position, velocity * 0.2f, ModContent.ProjectileType<AlibanProj>(), 5, 0, player.whoAmI);
+
+            /*
+            int roA = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<RoAHit>(), 5, 0, player.whoAmI);
+
+            if (Main.projectile[roA].ModProjectile is RoAHit hit)
+            {
+                hit.color = Color.Blue;
+            }
+            */
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.3f, Volume = 0.5f};
             //SoundEngine.PlaySound(style, player.Center);
             return false;

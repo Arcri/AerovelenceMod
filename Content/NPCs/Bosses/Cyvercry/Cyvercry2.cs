@@ -1654,14 +1654,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             timer++;
         }
 
-        float numberOfDashes = 10;
-        bool side = false;
-        public void OrbDashP3(Player myPlayer)
+        Vector2 areaCenter = new Vector2(0, 0);
+        public void CCPhantomDash(Player myPlayer)
         {
-            //move to top 
-
-
-            timer++;
+            //Spawn Area
+            //Go to edge
+            //Identify Angle
+            // - Get angle through area center
+            // - Rotate said angle by amount
+            // - Get point to go to 
+            //Move to new Angle
+            //Repeat x times
+            //Fire All Lasers pew pew
         }
         #endregion
 
