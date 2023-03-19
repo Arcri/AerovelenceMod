@@ -301,8 +301,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         }
 
+        /*
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
+            
             //return base.Colliding(projHitbox, targetHitbox);
             Player Player = Main.player[Projectile.owner];
             Vector2 unit = Projectile.rotation.ToRotationVector2();
@@ -311,7 +313,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             // It will look for collisions on the given line using AABB
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + unit * -20,
                 Projectile.Center + unit * 20, 2, ref point);
-        }
+            
+            return true;
+        } */
+
     }
 
     public class AdamShotNPC : GlobalNPC

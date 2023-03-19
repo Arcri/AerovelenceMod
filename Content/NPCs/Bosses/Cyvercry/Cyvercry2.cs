@@ -20,6 +20,8 @@ using AerovelenceMod.Content.Projectiles.Other;
 using Terraria.DataStructures;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Content.Projectiles;
+using rail;
+using IL.Terraria.GameContent.Drawing;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry 
 {
@@ -450,7 +452,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         #endregion
 
         float bonusSpinCharge = 120;
-        int whatAttack = -2;
+        int whatAttack = 71;
         int timer = 0;
         int advancer = 0;
         float accelFloat = 0;
@@ -491,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 69;
+            whatAttack = 100;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -542,6 +544,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case 69:
                     SweepLaser(myPlayer);
+                    break;
+                case 70:
+                    thinkOfANameLater(myPlayer);
+                    break;
+                case 71:
+                    SpinPhase3(myPlayer);
+                    break;
+                case 100:
+                    SplitLaserShots(myPlayer);
                     break;
 
             }
@@ -1201,7 +1212,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             else if (advancer == 2)
             {
-                NPC.rotation += (0.0025f * timer + 0.007f) * (sweepLaserDir ? 1 : -1);
+                NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.007f), 0, 0.4f) * (sweepLaserDir ? 1 : -1);
 
                 //Main.NewText((0.0017f * timer + 0.015f));
 
@@ -1229,6 +1240,244 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Turn and move towards player
             //Stop and swoop lasers
             //eyeFlareSize = Math.Clamp(MathHelper.Lerp(eyeFlareSize, -0.1f, 0.02f), 0, 1);
+            timer++;
+        }
+
+
+        float splitLaserRot = 0;
+        Projectile telegraphLineProj = null;
+        Vector2 splitLaserVectoGoal = new Vector2(570, 0f);
+        bool trueXfalseY = true;
+        int splitLaserCount = 0;
+        public void thinkOfANameLater(Player myPlayer)
+        {
+            //Move to player side
+            if (advancer == 0)
+            {
+                //Vector2 vecToGoal = new Vector2(570 * (1 - (timer * 0.001f)), 0f);
+                NPC.Center = Vector2.Lerp(NPC.Center, myPlayer.Center + splitLaserVectoGoal, Math.Clamp(timer * 0.005f, 0, 0.3f));
+                NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+
+                if (timer == 40)
+                {
+                    int telegraphLine = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<TelegraphLineCyver>(), 0, 0);
+
+                    telegraphLineProj = Main.projectile[telegraphLine]; 
+                    if (Main.projectile[telegraphLine].ModProjectile is TelegraphLineCyver line)
+                    {
+                        line.NPCTetheredTo = NPC;
+                    }
+                }
+
+                if (timer == 50)
+                {
+                    splitLaserRot = Main.rand.NextFloat(-0.2f, 0.21f) + (Main.rand.NextBool() ? 0.5f : -0.5f);
+                    timer = -1;
+                    advancer++;
+                }
+            }
+
+            //Re-adjust
+            else if (advancer == 1)
+            {
+
+                if (timer <= 20)
+                {
+                    Vector2 vecToGoal = (splitLaserVectoGoal * 1.2f).RotatedBy(splitLaserRot);
+                    NPC.Center = Vector2.Lerp(NPC.Center, myPlayer.Center + vecToGoal, Math.Clamp(timer * 0.02f, 0, 0.4f));
+                    NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+
+                    if (timer == 20)
+                    {
+                        if (telegraphLineProj != null)
+                        {
+                            telegraphLineProj.active = false;
+                        }
+                    }
+                }
+                else
+                {
+                    NPC.velocity = Vector2.Zero;
+                }
+
+
+
+                if (timer == 30)
+                {
+                    Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + vel * 100, vel * 4, ModContent.ProjectileType<SplittingLaser>(), ContactDamage / 5, 0);
+
+                    ShotDust();
+                    ShotDust();
+
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .10f, PitchVariance = .4f, Volume = 1f };
+                    SoundEngine.PlaySound(style, NPC.Center);
+                    SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .20f, PitchVariance = 0.4f, Volume = 0.8f };
+                    SoundEngine.PlaySound(style23, NPC.Center);
+                }
+
+                if (timer == 45)
+                {
+
+                    if (trueXfalseY)
+                    {
+                        trueXfalseY = false;
+
+                        if (NPC.Center.Y > myPlayer.Center.Y)
+                            splitLaserVectoGoal = new Vector2(0, 570);
+                        else
+                            splitLaserVectoGoal = new Vector2(0, -570);
+                    }
+                    else
+                    {
+                        trueXfalseY = true;
+
+                        if (NPC.Center.X > myPlayer.Center.X)
+                            splitLaserVectoGoal = new Vector2(570, 0);
+                        else
+                            splitLaserVectoGoal = new Vector2(-570, 0);
+                    }
+
+                    splitLaserCount++;
+
+                    if (splitLaserCount == 5)
+                        whatAttack = 71;
+
+                    advancer = 0;
+                    timer = -1;
+                }
+
+            }
+
+
+            //Fire Projectile
+
+            timer++;
+        }
+
+        public bool spinningClockwise = false;
+        public void SpinPhase3(Player myPlayer)
+        {
+            //Do the normal startup
+            if (timer <= 150)
+            {
+                ballScale += 2;
+                if (timer >= 20)
+                {
+                    Vector2 from = NPC.Center + new Vector2(-102, 0).RotatedBy(NPC.rotation);
+                    for (int j = 0; j < 3; j++)
+                    {
+                        Vector2 circular = new Vector2(32, 0).RotatedBy(MathHelper.ToRadians(j * 120 + timer * 4));
+                        //circular.X *= 0.6f;
+                        circular = circular.RotatedBy(NPC.rotation);
+                        Vector2 dustVelo = -circular * 0.09f;
+                        Dust b = GlowDustHelper.DrawGlowDustPerfect(from + circular, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader2);
+                    }
+                } 
+
+                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 6f;
+                NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+
+            }
+
+            //Turn towards player 
+            else if (timer > 150)
+            {
+                ballScale = 0;
+                spammingLaser = true;
+
+                NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 1f;
+
+
+
+                float newRotation = 0;
+                if (timer > 300 && timer < 315)
+                    newRotation = Utils.AngleTowards(NPC.rotation, (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi + (spinningClockwise ? 1.2f : -1.2f), 0.2f);
+                else
+                    newRotation = Utils.AngleTowards(NPC.rotation, (myPlayer.Center - NPC.Center).ToRotation() +  + MathHelper.Pi, 0.03f);
+
+
+                if (timer == 300)
+                {
+                    //SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Pitch = .65f, PitchVariance = .2f, Volume = 1f };
+                    //SoundEngine.PlaySound(style, NPC.Center);
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .54f };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    if (newRotation > NPC.rotation)
+                        spinningClockwise = true;
+                    else
+                        spinningClockwise = false;
+                }
+
+                /*
+                if (timer % 400 == 0)
+                {
+                    if (newRotation > NPC.rotation)
+                        NPC.rotation += 2.3f;
+                    else
+                        NPC.rotation += -2.3f;
+                }
+                else
+                    NPC.rotation = newRotation;
+                */
+
+                NPC.rotation = newRotation;
+                //NPC.rotation = Utils.rotateTowards(NPC.Center, NPC.velocity, myPlayer.Center, 0.01f).ToRotation() + MathHelper.Pi;
+
+                if (timer % 5 == 0 && !(timer > 300 && timer < 315))
+                {
+
+                    SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, };
+                    SoundEngine.PlaySound(stylea, NPC.Center);
+                    SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .33f, Pitch = .73f, PitchVariance = .27f, };
+                    SoundEngine.PlaySound(styleb, NPC.Center);
+
+
+                    Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + vel * 90, vel * 2, ModContent.ProjectileType<StretchLaser>(), 
+                        2, 2);
+
+                    NPC.velocity *= vel * -1;
+                    ShotDust();
+                    //ShotDust();
+
+                    //FireLaser(ModContent.ProjectileType<CyverLaser>(), 13f, 0.7f);
+                    //FireLaser(ModContent.ProjectileType<StretchLaser>(), 2f, 5f);
+
+                }
+
+                if (timer == 400)
+                {
+                    timer = 255;
+                    advancer++;
+
+                    if (advancer == 2)
+                    {
+                        whatAttack = 70;
+                        timer = -1;
+                        advancer = 0;
+                    }
+                }
+            }
+            timer++;
+        }
+
+        public void SplitLaserShots(Player myPlayer)
+        {
+            //Aim towards Player
+            //shoot lasers 5 times
+
+
+            //NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (NPC.Center.Distance(myPlayer.Center) > 500 ? 6f : 3.5f);
+            NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+
+            if (timer % 80 == 0 && timer != 0)
+            {
+                Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + vel * 100, vel * 4, ModContent.ProjectileType<SplittingLaser>(), ContactDamage / 5, 0);
+            }
             timer++;
         }
 
@@ -1460,7 +1709,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                         Dust b = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + circular, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader2);
                     }
-                    int type = Phase3 ? ModContent.ProjectileType<CyverLaserBomb>() : ModContent.ProjectileType<Cyver2EnergyBall>();
+                    int type = Phase3 ? ModContent.ProjectileType<CyverLaserBomb>() : ModContent.ProjectileType<ShadowBlade>(); //Cyver2EnergyBall
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, type, 20, 0, Main.myPlayer);
 
                     if (Main.projectile[a].ModProjectile is LaserExplosionBall ball)

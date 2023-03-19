@@ -74,7 +74,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Aliban");
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12; //9
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
@@ -92,7 +92,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
-            Projectile.extraUpdates = 2;
+            Projectile.extraUpdates = 4; //2
         }
 
         public override bool? CanDamage()
@@ -192,7 +192,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 else
                     currentAng = startingAng + MathHelper.ToRadians((270 * getProgress(easingProgress)));
 
-                easingProgress = Math.Clamp(easingProgress + 0.008f * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.00f, 0.95f);
+                easingProgress = Math.Clamp(easingProgress + 0.004f * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.00f, 0.95f); // 0.008
             }
 
             offset = 40;

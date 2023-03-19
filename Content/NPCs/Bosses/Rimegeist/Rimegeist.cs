@@ -1066,23 +1066,34 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
         public override bool PreDraw(ref Color lightColor)
         {
-                // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
-                Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-                Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
-                for (int k = 0; k < Projectile.oldPos.Length; k++)
+            // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
+            //Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Projectile_540").Value;
+
+            Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * 1.0f;
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
+                Color color = FetchRainbow() * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                for (int i = 0; i < 1; i++)
                 {
-                    float scale = Projectile.scale * (Projectile.oldPos.Length - k) / Projectile.oldPos.Length * 1.0f;
-                    Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + TextureAssets.Projectile[Projectile.type].Size() / 3f;
-                    Color color = Projectile.GetAlpha(FetchRainbow()) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                    for (int i = 0; i < 6; i++)
-                    {
-                        if (i == 0)
-                            Main.EntitySpriteDraw(texture2D, drawPos, null, color, Projectile.rotation, origin, scale, SpriteEffects.None, 0);
-                        Main.EntitySpriteDraw(texture2D, drawPos + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)), null, Color.White.MultiplyRGBA(color * 0.5f), Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0);
-                    }
+                    Main.EntitySpriteDraw(texture2D, drawPos, null, color * 0.8f, Projectile.rotation, origin, scale, SpriteEffects.None, 0);
+                    Main.EntitySpriteDraw(texture2D, drawPos, null, Color.White.MultiplyRGBA(color * 0.5f), Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0);
+
+                    //Main.EntitySpriteDraw(texture2D, drawPos, null, Color.White.MultiplyRGBA(color * 0.75f), Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0);
                 }
-                return false;
             }
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return false;
+        }
         public override void SetDefaults()
         {
             Projectile.width = 68;
@@ -1128,16 +1139,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             Projectile.velocity += toPlayer.SafeNormalize(Vector2.Zero) * (counter * 0.0004f) + circular * 0.05f;
             Projectile.ai[1] += 2f;
             Color rainbow = FetchRainbow();
-            Lighting.AddLight(new Vector2(Projectile.Center.X, Projectile.Center.Y), rainbow.R / 255f, rainbow.G / 255f, rainbow.B / 255f);
+            Lighting.AddLight(new Vector2(Projectile.position.X, Projectile.position.Y), rainbow.R / 255f, rainbow.G / 255f, rainbow.B / 255f);
             if (Main.rand.NextBool(10))
             {
                 int num2 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 267);
                 Dust dust = Main.dust[num2];
-                Color color2 = new Color(110, 110, 110, 0).MultiplyRGBA(rainbow);
+                Color color2 = new Color(255, 255, 255, 0).MultiplyRGBA(rainbow);
+                dust.noLight = true;
                 dust.color = color2;
                 dust.noGravity = true;
                 dust.fadeIn = 0.1f;
-                dust.scale *= 2f;
+                dust.scale *= 1.2f;
                 dust.alpha = 255 - (int)(255 * (Projectile.timeLeft / 720f));
                 dust.velocity *= 0.5f;
                 dust.velocity += Projectile.velocity * 0.4f;

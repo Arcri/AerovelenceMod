@@ -195,12 +195,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
                     if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
                     {
+                        //mlh.fadeMult = 2f;
+
                         for (int m = 0; m < 5; m++)
                         {
                             float xScaleMinus = Main.rand.NextFloat(0f, 1.1f);
                             MuraLine newWind = new MuraLine(Main.projectile[Mura].Center, direction.RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f)) * Main.rand.NextFloat(2f, 4.2f), 2 - xScaleMinus);
+                            newWind.color = Color.OrangeRed;
                             mlh.lines.Add(newWind);
-                            mlh.color = Color.OrangeRed;
                         }
                     }
 
@@ -277,7 +279,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         {
             Player Player = Main.player[Projectile.owner];
 
-            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Bows/TheSahara").Value;
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Bows/TheSaharaNoString").Value;
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
             Vector2 position = (Projectile.position - (0.5f * (direction * OFFSET * -1)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
@@ -286,8 +288,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 SpriteEffects effects1 = SpriteEffects.None;
                 Main.spriteBatch.Draw(texture, position, null, lightColor, direction.ToRotation(), origin, Projectile.scale, effects1, 0.0f);
                 //Main.spriteBatch.Draw(texture, position, null, Color.Orange * 0.5f * percentDrawnBack, direction.ToRotation(), origin, Projectile.scale, effects1, 0.0f);
-
-
             }
             else
             {
@@ -304,7 +304,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-                Main.spriteBatch.Draw(texture, position, null, Color.OrangeRed * 0.5f * percentDrawnBack, direction.ToRotation() + extraRot, origin, Projectile.scale, ef, 0.0f);
+                //0.5f
+                Main.spriteBatch.Draw(texture, position, null, Color.OrangeRed * 0.75f * percentDrawnBack, direction.ToRotation() + extraRot, origin, Projectile.scale, ef, 0.0f);
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -318,18 +319,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             Vector2 position2 = (Projectile.position - (0.5f * (direction * OFFSET * -1.5f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
             Vector2 chargeOffset = new Vector2(-5 * percentDrawnBack, 0).RotatedBy(direction.ToRotation());
 
-            Vector2 lineOffsetRot1 = new Vector2(0f, -15f).RotatedBy(Projectile.rotation);
-            Vector2 lineOffsetRot2 = new Vector2(0f, 15f).RotatedBy(Projectile.rotation);
+            Vector2 lineOffsetRot1 = new Vector2(-3f, -15f).RotatedBy(Projectile.rotation);
+            Vector2 lineOffsetRot2 = new Vector2(-3f, 15f).RotatedBy(Projectile.rotation);
 
             Vector2 arrowButtPos = position2 + chargeOffset + new Vector2(0, -13).RotatedBy(direction.ToRotation() - MathHelper.PiOver2);
+
+            Color lineColor = Blend(Color.SaddleBrown, lightColor, 0.9f);
             if (Player.channel)
             {
-                //Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, arrowButtPos + Main.screenPosition, lightColor, lightColor, 1.5f);
-                //Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot2, arrowButtPos + Main.screenPosition, lightColor, lightColor, 1.5f);
+                Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, arrowButtPos + Main.screenPosition, lineColor, lineColor, 1.8f);
+                Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot2, arrowButtPos + Main.screenPosition, lineColor, lineColor, 1.8f);
             }
             else
             {
-                //Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, Projectile.Center + lineOffsetRot2, lightColor, lightColor, 1.5f);
+                Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, Projectile.Center + lineOffsetRot2, lineColor, lineColor, 1.3f);
 
                 ////Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot2, Projectile.Center + lineOffsetRot1, lightColor, lightColor, 1.5f);
             }
@@ -355,6 +358,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             return false;
         }
 
+        /// <summary>Blends the specified colors together.</summary>
+        /// <param name="color">Color to blend onto the background color.</param>
+        /// <param name="backColor">Color to blend the other color onto.</param>
+        /// <param name="amount">How much of <paramref name="color"/> to keep,
+        /// “on top of” <paramref name="backColor"/>.</param>
+        /// <returns>The blended colors.</returns>
+        public Color Blend(Color myColor, Color backColor, double amount)
+        {
+            byte r = (byte)(myColor.R * amount + backColor.R * (1 - amount));
+            byte g = (byte)(myColor.G * amount + backColor.G * (1 - amount));
+            byte b = (byte)(myColor.B * amount + backColor.B * (1 - amount));
+            return new Color(r, g, b);
+        }
+
     }
 
     public class SaharaFireVortex : ModProjectile
@@ -369,7 +386,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         {
             Projectile.width = 42;
             Projectile.height = 42;
-            Projectile.timeLeft = 150;
+            Projectile.timeLeft = 135; //150
             Projectile.penetrate = -1;
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -398,7 +415,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SaharaFirePulse>(), Projectile.damage, 0, Main.myPlayer);
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.23f, PitchVariance = 0.35f, MaxInstances = -1 };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_0") with { Pitch = -.33f, MaxInstances = -1, Volume = 0.8f };
                 SoundEngine.PlaySound(style, Projectile.Center);
             }
 

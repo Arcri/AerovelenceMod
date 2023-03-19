@@ -38,20 +38,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             return false;
         }
 
+        public float overallScale = 0f;
         public override void AI()
         {
+            overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 1.5f, 0.2f), 0f, 1f);
             if (timer > 32)
             {
                 teleScale = MathHelper.Clamp(MathHelper.Lerp(teleScale, 1.9f, 0.09f), 0f, 1.75f);
 
             }
 
-            if (timer == 50)
+            if (timer == 50) //50
             {
-                SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 0, Volume = 0.3f };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 1, Volume = 0.25f };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
-                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .08f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
                 SoundEngine.PlaySound(style2, Projectile.Center);
 
                 Vector2 offset = new Vector2(25, 0).RotatedBy(Projectile.rotation);
@@ -123,8 +125,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, 1f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
 
 
 
@@ -243,7 +245,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (timer > 15) return false;
+            if (timer > 7) return false;
 
             Vector2 unit = LaserRotation.ToRotationVector2();
             float point = 0f;

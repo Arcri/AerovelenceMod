@@ -25,6 +25,9 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
+using AerovelenceMod.Content.Items;
+using static Terraria.ModLoader.PlayerDrawLayer;
+using AerovelenceMod.Content.Items.Weapons.Aurora;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -57,11 +60,12 @@ namespace AerovelenceMod.Content.Items
             Item.shootSpeed = 10f;
         }
 
+        
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
             
-            int Mura = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<GraniteCore>(), 5, 0, player.whoAmI);
+            int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<ElementalShiftBall>(), 10, 0, player.whoAmI, 0f, 0f);
 
             /*
             if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
@@ -94,7 +98,7 @@ namespace AerovelenceMod.Content.Items
             //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/back_scatter") with { Volume = .14f, Pitch = .6f, PitchVariance = 0.25f };
             //SoundEngine.PlaySound(style);
             SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/rescue_ranger_fire") with { Volume = .1f, Pitch = .4f, };
-            SoundEngine.PlaySound(style2);
+            SoundEngine.PlaySound(style2); 
             //SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Impact_Sword_L_a") with { Volume = .27f, Pitch = .6f, PitchVariance = 0.25f };
             //SoundEngine.PlaySound(style3);
 
@@ -108,21 +112,19 @@ namespace AerovelenceMod.Content.Items
 
             //Main.projectile[a].timeLeft = 50;
             return false;
-            
-            
+
             for (int i2 = 0; i2 < 0; i2++)
             {
-                int a2 = Projectile.NewProjectile(null, position + new Vector2(0,-15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
+                int a2 = Projectile.NewProjectile(null, position + new Vector2(0, -15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
                 int b2 = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
                 int c2 = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-
             }
 
 
             //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
             //SoundEngine.PlaySound(style, player.Center);
 
-            
+
             if (Main.rand.NextBool(3))
             {
                 int b = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.1f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
@@ -136,7 +138,6 @@ namespace AerovelenceMod.Content.Items
                 }
             }
 
-
             if (Main.projectile[a].ModProjectile is InkProjTest i)
             {
                 i.color = Color.Orange;
@@ -144,7 +145,7 @@ namespace AerovelenceMod.Content.Items
                 i.xScale = Main.rand.NextFloat(0.8f, 1.3f);
                 i.yScale = Main.rand.NextFloat(0.9f, 1.2f);
             }
-            
+
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_100") with { Volume = .5f, Pitch = .73f, PitchVariance = .22f, };
             //SoundEngine.PlaySound(style);
@@ -155,5 +156,6 @@ namespace AerovelenceMod.Content.Items
             //Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<StretchLaser>(), 0, 0, player.whoAmI);
             return false;
         }
+        
     }
 }

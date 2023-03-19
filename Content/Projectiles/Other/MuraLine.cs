@@ -18,7 +18,6 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public override string Texture => "Terraria/Images/Projectile_0";
 
 		int timer = 0;
-		public Color color = Color.White;
 		public float size = 1f;
 		public float fadeMult = 1f;
 		public override void SetStaticDefaults()
@@ -129,10 +128,11 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public void DrawIce(SpriteBatch sb, Texture2D tex, float alpha)
 		{
-			sb.Draw(tex, Center - Main.screenPosition, null, Color.OrangeRed * alpha, rotation, tex.Size() / 2, new Vector2(xScale, 2.2f) * scale, SpriteEffects.None, 0f);
-			sb.Draw(tex, Center - Main.screenPosition, null, Color.OrangeRed * alpha, rotation, tex.Size() / 2, new Vector2(xScale, 2.2f) * scale, SpriteEffects.None, 0f);
+			sb.Draw(tex, Center - Main.screenPosition, null, color * alpha, rotation, tex.Size() / 2, new Vector2(xScale, 2.2f) * scale, SpriteEffects.None, 0f);
+			sb.Draw(tex, Center - Main.screenPosition, null, color * alpha, rotation, tex.Size() / 2, new Vector2(xScale, 2.2f) * scale, SpriteEffects.None, 0f);
 			//sb.Draw(tex, Center - Main.screenPosition, null, Color.OrangeRed * alpha, rotation, tex.Size() / 2, scale * 3, SpriteEffects.None, 0f);
 
 		}
+
 	}
 }

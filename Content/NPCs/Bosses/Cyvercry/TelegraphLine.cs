@@ -90,13 +90,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             timer++;
         }
 
-        float uColorIntensity = 1.2f;
+        float uColorIntensity = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * uColorIntensity);
+            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 1.2f);
             myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.7f); //0.8
+            myEffect.Parameters["uOpacity"].SetValue(0.8f); //0.8
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
 
@@ -111,6 +111,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
 
                 float height = 50f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
+                float height2 = 25f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
+
 
                 if (height == 0)
                     Projectile.active = false;
@@ -118,13 +120,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 int width = (int)(Projectile.Center - endPoint).Length() - 24;
 
                 var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(Rotation) * 24;
-                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1f));
+                var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height2 * 1f));
 
-                Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, Rotation, origin2, 0, 0);
 
                 if (!sweepTell)
-                    Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
-
+                    Main.spriteBatch.Draw(texBeam, target2, null, Color.HotPink, Rotation, origin2, 0, 0);
             }
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);

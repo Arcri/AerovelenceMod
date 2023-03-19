@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using ReLogic.Content;
 using rail;
 using Terraria.Audio;
+using System.Net;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 {
@@ -297,5 +298,201 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			return false;
 		}
 	}
+
+    public class PhantomLaser : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public float LaserRotation = 0;
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Dark Beam");
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+        }
+
+		Vector2 startingPos = Vector2.Zero;
+		public bool tethered = false;
+		public bool pulse = false;
+        public NPC NPCTetheredTo = null;
+
+
+        Vector2 storedCenter = Vector2.Zero;
+        int timer = 0;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.penetrate = -1;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 300;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+        }
+
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                Projectile.scale = 2;
+				startingPos = Projectile.Center;
+
+
+                //LaserRotation = Projectile.velocity.ToRotation();
+                //storedCenter = Projectile.Center + (LaserRotation.ToRotationVector2() * 2600);
+                //Projectile.velocity = Vector2.Zero;
+            }
+
+			if (timer == 100)
+				Release();
+
+			if (pulse)
+			{
+
+				if (timer < 170)
+					pulseScale = Math.Clamp(MathHelper.Lerp(pulseScale, 1.3f, 0.2f), 0, 1);
+				else
+                    pulseScale = Math.Clamp(MathHelper.Lerp(pulseScale, -0.2f, 0.1f), 0, 1);
+
+            }
+
+            LaserRotation = (startingPos - Projectile.Center).ToRotation();
+			Projectile.rotation += 0.1f;
+            timer++;
+        }
+
+		float pulseScale = 0f;
+		public void Release()
+		{
+			Projectile.velocity = Vector2.Zero;
+			pulse = true;
+		}
+
+		//Shitty af but w/e
+        public override bool PreDraw(ref Color lightColor)
+        {
+			if (pulse)
+			{
+                Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
+                myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 1f);
+                myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+                myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+                myEffect.Parameters["uTime"].SetValue(timer * -0.01f);
+                myEffect.Parameters["uSaturation"].SetValue(2);
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+
+                //Activate Shader
+                myEffect.CurrentTechnique.Passes[0].Apply();
+
+                Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+
+
+                Vector2 origin2 = new Vector2(0, texture.Height / 2);
+
+                float height = (50 * pulseScale); //25
+
+                //if (height == 0)
+                    //Projectile.active = false;
+
+                int width = -10;
+
+                var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.4f));
+
+                Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+
+                //Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+                var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.8f));
+
+                //Main.spriteBatch.Draw(texture, target2, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texture, target2, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+
+
+                Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1").Value;
+                Vector2 starPos = startingPos - Main.screenPosition + (LaserRotation.ToRotationVector2() * 20);
+                Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, pulseScale * 0.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, pulseScale * 0.5f, SpriteEffects.None, 0f);
+                //Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+                //Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+
+            }
+			else
+			{
+                Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+                myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 1.5f);
+                myEffect.Parameters["uTime"].SetValue(2);
+                myEffect.Parameters["uOpacity"].SetValue(0.7f); //0.8
+                myEffect.Parameters["uSaturation"].SetValue(1.2f);
+
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+                if (timer > 0)
+                {
+                    var texBeam = Mod.Assets.Request<Texture2D>("Assets/ThinLineGlowClear").Value;
+
+                    Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
+
+                    float height = 50f * Projectile.scale; //15
+
+                    if (height == 0)
+                        Projectile.active = false;
+
+                    int width = (int)(Projectile.Center - startingPos).Length() - 24;
+
+                    var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+                    var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+
+                    Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+
+                }
+                
+            }
+
+            return false;
+
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            //Main.NewText("amg");
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+
+            Vector2 unit = LaserRotation.ToRotationVector2();
+            float point = 0f;
+            // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
+            // It will look for collisions on the given line using AABB
+            if (timer >= 1)
+            {
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+                    Projectile.Center + (unit * 1500), 22, ref point);
+            }
+            return false;
+        }
+    }
+
+
+	//PhantomLaserLineTelegraph
+
+
+	//ActualPhantomLaser
 }
 

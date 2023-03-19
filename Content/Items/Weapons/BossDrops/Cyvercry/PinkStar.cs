@@ -61,8 +61,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 orbitTimer += 4;
                 /*Vector2 orbitPos = Main.MouseWorld + new Vector2(50, 0).RotatedBy(MathHelper.ToRadians
 					(orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));*/
-                Vector2 orbitPos = owner.Center + new Vector2(70, 0).RotatedBy(MathHelper.ToRadians
-    (orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));
+                Vector2 orbitPos = owner.Center + new Vector2(70, 0).RotatedBy(MathHelper.ToRadians(orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));
                 Projectile.velocity = (10 * Projectile.velocity + orbitPos - Projectile.Center) / 20f;
 			}
 			if (mainTimer >= 130 - Projectile.ai[1])

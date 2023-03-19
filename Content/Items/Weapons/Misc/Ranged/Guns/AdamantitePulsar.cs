@@ -137,9 +137,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 }
                 Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1.3f), knockback, Main.myPlayer);
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = .2f, Volume = 0.4f }; SoundEngine.PlaySound(style);
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = .2f, Volume = 0.4f }; 
+                SoundEngine.PlaySound(style, player.Center);
                 SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.6f };
-                SoundEngine.PlaySound(style23);
+                SoundEngine.PlaySound(style23, player.Center);
 
 
                 currentShot++;

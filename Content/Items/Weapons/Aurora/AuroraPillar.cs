@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 	public class AuroraPillar : ModProjectile
 	{
 
-		public Vector2 endPoint;
+        public Vector2 endPoint;
 		public float LaserRotation = 0;
 		public override void SetStaticDefaults()
 		{
@@ -82,8 +82,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			*/
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
-			myEffect.Parameters["uColor"].SetValue(Color.White.ToVector3() * 0.45f);
-			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+			myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 0.35f);
+			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
 			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
 			myEffect.Parameters["uTime"].SetValue(timer * -0.01f);
 			myEffect.Parameters["uSaturation"].SetValue(2);
@@ -108,7 +108,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			int width = (int)(Projectile.Center - endPoint).Length() - 24;
 
 			var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-			var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+			var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.4f));
 
 			Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
 			Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
@@ -119,11 +119,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.8f));
 
-			Main.spriteBatch.Draw(texture, target2, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+			//Main.spriteBatch.Draw(texture, target2, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
 			Main.spriteBatch.Draw(texture, target2, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
 
 
-			return false;
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1").Value;
+			Vector2 starPos = Projectile.Center - Main.screenPosition + (LaserRotation.ToRotationVector2() * 20);
+            Main.spriteBatch.Draw(star, starPos, star.Frame(1,1,0,0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), Color.HotPink, Projectile.rotation, star.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+
+            return false;
 
 		}
 

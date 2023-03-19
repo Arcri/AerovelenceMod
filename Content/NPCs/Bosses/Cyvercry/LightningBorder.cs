@@ -23,6 +23,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override void SetStaticDefaults()
         {
         }
+
         public int enemiesHit = 0;
         public override void SetDefaults()
         {
@@ -31,7 +32,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 2000;
+            Projectile.timeLeft = 500;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
@@ -59,8 +60,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(barrierTex, Projectile.Center - Main.screenPosition, null, Color.HotPink * ((float)Math.Sin(timer  * 0.05f) * 0.65f), rot1, barrierTex.Size() / 2, 3.33f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(barrierTex, Projectile.Center - Main.screenPosition, null, Color.HotPink * 0.35f, rot1, barrierTex.Size() / 2, 3.33f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(barrierTex, Projectile.Center - Main.screenPosition, null, Color.HotPink * (float)(1f - (float)(Math.Sin(timer * 0.05f) * 0.25f)), rot1, barrierTex.Size() / 2, 3.33f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(barrierTex, Projectile.Center - Main.screenPosition, null, Color.HotPink * 0.8f, rot1, barrierTex.Size() / 2, 3.33f, SpriteEffects.None, 0f);
            // Main.spriteBatch.Draw(barrierTex, Projectile.Center - Main.screenPosition, null, Color.HotPink * 0.8f, rot1, barrierTex.Size() / 2, 3.5f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(barrierTex2, Projectile.Center - Main.screenPosition, null, Color.HotPink * 1.25f, rot1, barrierTex2.Size() / 2, 1f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(barrierTex2, Projectile.Center - Main.screenPosition, null, Color.HotPink, rot1 * 2, barrierTex2.Size() / 2, 1.01f, SpriteEffects.None, 0f);
@@ -79,14 +80,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            //return base.Colliding(projHitbox, targetHitbox);
-            Player Player = Main.player[Projectile.owner];
-            Vector2 unit = Projectile.rotation.ToRotationVector2();
-            float point = 0f;
-            // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
-            // It will look for collisions on the given line using AABB
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                Projectile.Center + Projectile.velocity * 30, 10, ref point);
+            return false;
         }
     }
 } 
