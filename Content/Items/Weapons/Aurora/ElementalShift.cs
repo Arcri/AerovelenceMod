@@ -21,6 +21,7 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using static System.Formats.Asn1.AsnWriter;
+using System.Linq;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora
 {
@@ -69,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         }
     }
 
-    public class ElementalShiftProj : TrailProjBase
+    public class ElementalShiftProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
@@ -102,9 +103,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             return shouldDamage;
         }
 
-        public bool shouldShoot = false;
-        bool hasShot = false;
-
         bool firstFrame = true;
         float startingAng = 0;
         float currentAng = 0;
@@ -113,6 +111,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         float Angle = 0;
 
         bool playedSound = false;
+        bool hasDoneBallHitDetection = false;
 
         float storedDirection = 1;
 
@@ -120,6 +119,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         float offset = 0;
         int timerAfterEnd = 4; //10
         float alpha = 0;
+
         public override void AI()
         { 
             Player player = Main.player[Projectile.owner];
@@ -240,12 +240,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
                 int soundNumber = Main.rand.Next(4,7);
 
-                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_0" + soundNumber) with { Pitch = -.2f, Volume = 0.3f }; //-.15
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_0" + soundNumber) with { Pitch = -.2f, Volume = 0.2f }; //-.15
                 SoundEngine.PlaySound(style2, Projectile.Center);
-
+                 
                 int suffix = Main.rand.NextBool() ? 2 : 3;
 
-                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Sharp_M_a") with { Pitch = -.52f, PitchVariance = .16f, Volume = 0.25f };
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Sharp_M_a") with { Pitch = -.52f, PitchVariance = .16f, Volume = 0.15f };
                 SoundEngine.PlaySound(style, Projectile.Center);
                 
 
@@ -270,37 +270,66 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                 
             }
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrail").Value;
-            trailColor = Color.SkyBlue * 0.5f;
-            trailPointLimit = 800;
-            trailMaxLength = 200;
-            trailTime = timer * 0.007f;
-            //timesToDraw = 2;
-
-            if (timer < 35)
+            if (!hasDoneBallHitDetection && getProgress(easingProgress) >= 0.45f)
             {
-                trailRot = Projectile.rotation + MathHelper.PiOver4;
-                trailPos = startingPos + Projectile.rotation.ToRotationVector2().RotatedBy(-0.75f) * 90; //70
-                TrailLogic();
-            }
+                //shoot ball
+                if (player.ownedProjectileCounts[ModContent.ProjectileType<ElementalShiftBall>()] < 1)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), player.Center + origAng.ToRotationVector2() * 40, origAng.ToRotationVector2() * 20, ModContent.ProjectileType<ElementalShiftBall>(), Projectile.damage, 0, player.whoAmI);
+                }
+
+                //hit ball
+                else
+                {
+                    Rectangle biggerHitbox = new Rectangle(Projectile.Hitbox.X - Projectile.width / 2, Projectile.Hitbox.Y - Projectile.height / 2, Projectile.Hitbox.Width * 2, Projectile.Hitbox.Height * 2);
+                    //Got this tech from Everjade (gong and ringer)
+                    Projectile ball = Main.projectile.Where(n => n.active && n.type == ModContent.ProjectileType<ElementalShiftBall>() && n.Hitbox.Intersects(biggerHitbox)).FirstOrDefault();
+
+                    if (ball != default)
+                    {
+                        ball.velocity = origAng.ToRotationVector2() * 15;
+
+                        if (ball.ModProjectile is ElementalShiftBall esb) esb.justHitCounter = 10;
+
+                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .85f, PitchVariance = .18f, Volume = 0.4f };
+                        SoundEngine.PlaySound(style, ball.Center);
+                        //hitDelay = 10;
+
+                        //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .17f, Pitch = .44f, };
+                        //SoundEngine.PlaySound(style2, ball.Center);
+
+                        //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                        //int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), ball.Center, origAng.ToRotationVector2() * 2f, ModContent.ProjectileType<ElementalShiftPulse>(), 0, 0);
+                        //Main.projectile[a].rotation = origAng;
+                        //Main.projectile[a].scale = 2f;
+
+                        /*
+                        Dust bigOne = GlowDustHelper.DrawGlowDustPerfect(ball.Center, ModContent.DustType<GlowCircleQuadStar>(),
+                                    Vector2.Zero, FetchRainbow(), 2.5f, 0.3f, 0f, dustShader);
+                        bigOne.fadeIn = 2;
+                        bigOne.noLight = true;
+                        */
+
+                    }
 
 
+                }
 
-            if (timer > 20)
-            {
-                trailWidth = Math.Clamp(trailWidth - 0.02f, 0, 1);
+                hasDoneBallHitDetection = true;
             }
 
             hitDelay--;
         }
 
         Vector2 startingPos = Vector2.Zero;
-        float trailWidth = 1;
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/halfSwingGlow");
             //Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/GlowStar");
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/ElementalShiftGlow");
+            Texture2D Glowmask = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/ElementalShiftGlowmask");
+
             //Texture2D Edge = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/HalfSwingEdge");
 
 
@@ -343,7 +372,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/ElementalShift");
 
             Main.spriteBatch.Draw(Blade, Projectile.Center - Main.screenPosition, null, lightColor * alpha, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Blade.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-            
+            Main.spriteBatch.Draw(Glowmask, Projectile.Center - Main.screenPosition, null, Color.White * alpha, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Glowmask.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+
 
             return false;
         }
@@ -454,15 +484,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             */
         }
 
-        public override float WidthFunction(float progress)
-        {
-            float num = 1f;
-            float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
-            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.4f * trailWidth; // 0.3f 
-        }
-
-
         public Color FetchRainbow(int offset = 0)
         {
             float sin1 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + offset));
@@ -478,8 +499,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         }
 
     }
-
-
     public class ElementalShiftBall : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -500,10 +519,135 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Projectile.scale = 0.8f;
             Projectile.timeLeft = 720;
             Projectile.extraUpdates = 1;
-            Projectile.tileCollide = false;
+            Projectile.tileCollide = true;
             Projectile.DamageType = DamageClass.Melee;
 
         }
+
+        int timer = 0;
+        public int justHitCounter = 10;
+
+        public override bool? CanDamage()
+        {
+            return Projectile.velocity.Length() > 2;
+        }
+
+        public override void AI()
+        {
+
+            if (justHitCounter <= 0)
+            {
+                Projectile.velocity *= 0.9f;
+            }
+            else
+            {
+                Projectile.timeLeft = 600;
+
+                Projectile.velocity *= 1.02f;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+            justHitCounter--;
+            timer++;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+
+            if (true)
+            {
+
+                if (Projectile.velocity.Length() > 5)
+                {
+                    int a = Projectile.NewProjectile(null, Projectile.Center + Projectile.velocity.SafeNormalize(Vector2.UnitX) * 15f, Vector2.Zero, ModContent.ProjectileType<ElementalShiftImpact>(), 0, 0f);
+                    Main.projectile[a].scale = 1.25f;
+                    Main.projectile[a].rotation = Projectile.velocity.ToRotation(); 
+
+                    Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * -15;
+                    justHitCounter = 5;
+
+                    //int fx = Projectile.NewProjectile(null, target.Center, Vector2.Zero, ModContent.ProjectileType<ElementalShiftImpact>(), 0, 0f);
+                    //Main.projectile[fx].scale = 2.2f;
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_66") with { Pitch = .52f, PitchVariance = 0.23f, Volume = 0.5f }; SoundEngine.PlaySound(style2, Projectile.Center);
+
+                    int Mura = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<MuraLineHandler>(), 0, 0, Projectile.owner);
+
+                    if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
+                    {
+                        mlh.fadeMult = 2f;
+
+                        for (int m = 0; m < 10; m++)
+                        {
+                            float range = m > 3 ? 0.3f : 1f;
+
+                            float xScaleMinus = Main.rand.NextFloat(0.3f, 1.6f);
+                            MuraLine newWind = new MuraLine(Main.projectile[Mura].Center + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -7f, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1 * range, range)) * -1 * Main.rand.NextFloat(1f, 8f), 2 - xScaleMinus);
+                            newWind.color = FetchRainbow();
+                            mlh.lines.Add(newWind);
+                        }
+                    }
+
+                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        float velVal = Main.rand.NextFloat(4f, 8f) * -1f;
+                        Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleFlare>(),
+                                Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.4f, 0.41f)) * velVal, FetchRainbow(), 1f, 0.3f, 0f, dustShader);
+                        d.fadeIn = 1;
+                        d.noLight = true;
+                    }
+                }
+                
+            }  
+
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            /*
+            if (Projectile.velocity.X != oldVelocity.X)
+            {
+                Projectile.velocity.X = -oldVelocity.X;
+            }
+            if (Projectile.velocity.Y != oldVelocity.Y)
+            {
+                Projectile.velocity.Y = -oldVelocity.Y;
+            }
+            */
+
+
+            if (oldVelocity.LengthSquared() > 5)
+            {
+                Projectile.velocity = oldVelocity.SafeNormalize(Vector2.UnitX) * -10;
+
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .1f, PitchVariance = .18f, Volume = 0.3f };
+                SoundEngine.PlaySound(style, Projectile.Center);
+            }
+
+
+            return false;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+            for (int i = 0; i < 8; i++)
+            {
+                Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleFlare>(),
+                        Projectile.rotation.ToRotationVector2().RotatedBy(i * MathHelper.PiOver4) * Main.rand.NextFloat(1.5f, 2.5f), FetchRainbow(), 0.8f, 0.3f, 0f, dustShader);
+                p.fadeIn = 1;
+                p.noLight = true;
+
+                //p.rotation = Main.rand.NextFloat(6.28f);
+            }
+
+            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_66") with { Pitch = .12f, PitchVariance = 0.23f, Volume = 0.2f }; SoundEngine.PlaySound(style2, Projectile.Center);
+
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Projectile_540").Value;
@@ -544,9 +688,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public Color FetchRainbow()
         {
-            float sin1 = (float)Math.Sin(MathHelper.ToRadians(timer));
-            float sin2 = (float)Math.Sin(MathHelper.ToRadians(timer + 120));
-            float sin3 = (float)Math.Sin(MathHelper.ToRadians(timer + 240));
+            float sin1 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + 100));
+            float sin2 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + 220));
+            float sin3 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + 340));
             int middle = 180;
             int length = 75;
             float r = middle + length * sin1;
@@ -556,49 +700,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             return color;
         }
 
-        int timer = 0;
-        int justHitCounter = 10;
-        public override void AI()
-        {
-
-            if (justHitCounter <= 0)
-                Projectile.velocity *= 0.9f;
-            else
-                Projectile.velocity *= 1.02f;
-            Projectile.rotation = Projectile.velocity.ToRotation();
-
-            justHitCounter--;
-            timer++;
-        }
-
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            Projectile.velocity *= -1;
-            justHitCounter = 5;
-
-            //int fx = Projectile.NewProjectile(null, target.Center, Vector2.Zero, ModContent.ProjectileType<ElementalShiftImpact>(), 0, 0f);
-            //Main.projectile[fx].scale = 2.2f;
-
-            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_66") with { Pitch = .52f, }; SoundEngine.PlaySound(style2, Projectile.Center);
-
-            int Mura = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<MuraLineHandler>(), 0, 0, Projectile.owner);
-
-            if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
-            {
-                mlh.fadeMult = 2f;
-
-                for (int m = 0; m < 10; m++)
-                {
-                    float xScaleMinus = Main.rand.NextFloat(0.2f, 1.6f);
-                    MuraLine newWind = new MuraLine(Main.projectile[Mura].Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1f, 1f)) * -1 * Main.rand.NextFloat(4f, 8f), 2 - xScaleMinus);
-                    newWind.color = FetchRainbow();
-                    mlh.lines.Add(newWind);
-                }
-            }
-
-        }
     }
-
     public class ElementalShiftPulse : ModProjectile
     {
         //Either scale to size, rotate and wait for a bit, then go back to zero
@@ -622,27 +724,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         }
 
 
-        float alpha = 1;
+        float alpha = 0f;
         float scale = 0f;
         bool rotDir = Main.rand.NextBool();
+        float otherRandomRot = 0f;//Main.rand.NextFloat(6.28f);
         public override void AI()
         {
-            if (timer == 0)
-                Projectile.rotation = Main.rand.NextFloat(6.28f);
+            //if (timer == 0)
+                //Projectile.rotation = 0f;//Main.rand.NextFloat(6.28f);
             
-            Projectile.rotation += rotDir ? 0.02f : -0.02f;
+            //Projectile.rotation += rotDir ? 0.02f : -0.02f;
 
 
-            if (timer > 15)
+            if (timer > 10)
             {
-                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.12f), 0, 1);
-                scale = Math.Clamp(MathHelper.Lerp(scale, -0.1f, 0.02f), 0, 1f);
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.02f), 0, 1);
+                scale = Math.Clamp(MathHelper.Lerp(scale, -0.1f, 0.08f), 0, 1f);
 
             }
             else
-                scale = Math.Clamp(MathHelper.Lerp(scale, 0.6f, 0.12f), 0, 0.5f);
+            {
+                scale = Math.Clamp(MathHelper.Lerp(scale, 0.6f, 0.2f), 0, 0.5f);
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.2f, 0.1f), 0, 1f);
 
-            if (alpha <= 0f)
+            }
+
+            if (alpha < 0f || scale < 0f)
                 Projectile.active = false;
 
             timer++;
@@ -654,16 +761,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_10").Value;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(FetchRainbow().ToVector3() * 2f * alpha);
+            myEffect.Parameters["uColor"].SetValue(FetchRainbow().ToVector3() * 3f * alpha);
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(0.4f); //0.6
             myEffect.Parameters["uSaturation"].SetValue(0);
 
+            Vector2 vec2Scale = new Vector2(scale * 0.5f, scale);
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Flare.Size() / 2, scale * 0.7f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), Color.White, Projectile.rotation + MathHelper.Pi, Flare.Size() / 2, scale * 0.4f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Flare.Size() / 2, vec2Scale * 0.7f * Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Flare.Size() / 2, vec2Scale * 0.4f * Projectile.scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -687,7 +796,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         }
 
     }
-
     public class ElementalShiftImpact : ModProjectile
     {
         
@@ -713,7 +821,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         
         public override void AI()
         {
-            if (timer == 0)
+            if (timer == 0 && Projectile.rotation == 0)
                 Projectile.rotation = Main.rand.NextFloat(6.28f);
 
             if (timer > 15)
@@ -737,7 +845,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                     if (i != 4 && i != 0)
                     {
                         Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleFlare>(),
-                            Projectile.rotation.ToRotationVector2().RotatedBy(i * MathHelper.PiOver4) * 2, FetchRainbow(), 0.8f, 0.3f, 0f, dustShader);
+                            Projectile.rotation.ToRotationVector2().RotatedBy(i * MathHelper.PiOver4) * 2, FetchRainbow(100), 0.8f, 0.3f, 0f, dustShader);
                         p.fadeIn = 2;
                         p.noLight = true;
 
@@ -772,13 +880,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow() * alpha * (alpha == 1 ? 2f : 1), Projectile.rotation, Flare.Size() / 2, vec2scale * 0.6f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow() * alpha, Projectile.rotation, Flare.Size() / 2, vec2scale * 0.7f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha * (alpha == 1 ? 2f : 1), Projectile.rotation, Flare.Size() / 2, vec2scale * 0.6f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation, Flare.Size() / 2, vec2scale * 0.7f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow() * alpha, Projectile.rotation + MathHelper.PiOver4, Flare.Size() / 2, scale * 0.3f + alpha * 0.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation + MathHelper.PiOver4, Flare.Size() / 2, scale * 0.3f + alpha * 0.3f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), FetchRainbow() * alpha, Projectile.rotation + MathHelper.PiOver4, Glow.Size() / 2, scale * 0.3f + alpha * 0.3f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, OuterGlow.Frame(1, 1, 0, 0), FetchRainbow() * alpha, Projectile.rotation + MathHelper.PiOver4, OuterGlow.Size() / 2, scale * 0.6f + alpha * 0.6f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation + MathHelper.PiOver4, Glow.Size() / 2, scale * 0.3f + alpha * 0.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, OuterGlow.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation + MathHelper.PiOver4, OuterGlow.Size() / 2, scale * 0.6f + alpha * 0.6f, SpriteEffects.None, 0f);
 
             //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow() * 1.5f, Projectile.rotation + MathHelper.PiOver2, Flare.Size() / 2, scale * 0.7f, SpriteEffects.None, 0f);
 
@@ -791,9 +899,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         //Something something make a helper method for this later
         public Color FetchRainbow(int offset = 0)
         {
-            float sin1 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects * 3 + offset));
-            float sin2 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects * 3 + 120 + offset));
-            float sin3 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects * 3 + 240 + offset));
+            float sin1 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + offset));
+            float sin2 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + 120 + offset));
+            float sin3 = (float)Math.Sin(MathHelper.ToRadians((float)Main.timeForVisualEffects + 240 + offset));
             int middle = 180;
             int length = 75;
             float r = middle + length * sin1;

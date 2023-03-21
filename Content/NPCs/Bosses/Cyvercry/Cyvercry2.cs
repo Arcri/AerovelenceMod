@@ -493,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 100;
+            whatAttack = 71;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {

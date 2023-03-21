@@ -253,7 +253,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
             if (timer == 53 && Player.channel)
             {
-                SoundEngine.PlaySound(SoundID.DD2_PhantomPhoenixShot with { Volume = 0.5f, Pitch = 0.3f }, Projectile.Center);
+                SoundEngine.PlaySound(SoundID.DD2_PhantomPhoenixShot with { Volume = 0.65f, Pitch = 0.3f }, Projectile.Center);
 
                 for (int i = 0; i < 15; i++)
                 {
@@ -324,7 +324,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
             Vector2 arrowButtPos = position2 + chargeOffset + new Vector2(0, -13).RotatedBy(direction.ToRotation() - MathHelper.PiOver2);
 
-            Color lineColor = Blend(Color.SaddleBrown, lightColor, 0.9f);
+            Color lineColor = Blend(lightColor, Color.SaddleBrown, 0.7f);
             if (Player.channel)
             {
                 Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, arrowButtPos + Main.screenPosition, lineColor, lineColor, 1.8f);

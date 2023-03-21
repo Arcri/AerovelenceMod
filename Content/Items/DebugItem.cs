@@ -66,6 +66,8 @@ namespace AerovelenceMod.Content.Items
 
             
             int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<ElementalShiftBall>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Mura2 = Projectile.NewProjectile(null, position, velocity * 0, ModContent.ProjectileType<ElementalShiftPulse>(), 0, 0, player.whoAmI, 0f, 0f);
+            Main.projectile[Mura2].scale = 2f;
 
             /*
             if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
