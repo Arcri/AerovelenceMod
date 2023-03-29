@@ -463,7 +463,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         bool firstFrame = true;
 
-        public override void AI()
+        public override void AI()   
         {
             if (firstFrame)
             {
@@ -493,7 +493,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 71;
+            whatAttack = 13;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -553,6 +553,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case 100:
                     SplitLaserShots(myPlayer);
+                    break;
+                case 21:
+                    WrapDashParaffin(myPlayer);
                     break;
 
             }
@@ -1483,7 +1486,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         #endregion
 
-        #region Dash Attacks
+        #region Dash Attacks 
         //Dash Attacks
 
         float storedRotaion = 0;
@@ -1900,6 +1903,135 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 advancer++;
             }
 
+            timer++;
+        }
+
+        float wrapRotAmount = 0;
+        bool wrapDir = false;
+        int wrap2side = 1;
+        public void WrapDashParaffin(Player myPlayer)
+        {
+            if (timer == 0)
+            {
+                accelFloat = 35;
+                vecOut = new Vector2(-470, 0);
+            }
+
+            if (timer < 35)
+            {
+
+                //vecOut = vecOut.RotatedBy(wrapRotAmount);
+
+                Vector2 move = (vecOut + myPlayer.Center) - NPC.Center;
+
+                float scalespeed = 1.3f; 
+
+                NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
+                NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
+
+                NPC.rotation = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
+                //NPC.rotation = MathHelper.Pi;
+
+
+                //wrapRotAmount = wrapDir ? 0.02f : -0.02f;
+
+            }
+
+            if (timer >= 40)
+            {
+                if (timer == 40)
+                {
+                    storedRotaion = NPC.rotation;
+                }
+
+                NPC.damage = ContactDamage;
+
+                if (NPC.velocity.Length() > 20)
+                    Dust.NewDust(NPC.Center, 12, 12, ModContent.DustType<DashTrailDust>(), NPC.velocity.X * 0.2f, NPC.velocity.Y * 0.2f, 0, new Color(0, 255, 255), 1f);
+
+                accelFloat = Math.Clamp(MathHelper.Lerp(accelFloat, 60, 0.1f), 0, 50);  //50 0.1
+                NPC.rotation = storedRotaion;
+                NPC.velocity = storedRotaion.ToRotationVector2() * accelFloat * -1;
+
+                if (timer == 43)
+                {
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
+                    SoundEngine.PlaySound(style, NPC.Center);
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .29f, Pitch = 1f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .16f, Pitch = .42f };
+                    SoundEngine.PlaySound(style3, NPC.Center);
+
+
+                    for (int i = -3; i < 4; i++)
+                    {
+                        int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.rotation.ToRotationVector2().RotatedBy(0.3f * i) * -0.4f, ModContent.ProjectileType<StretchLaser>(),
+                        ContactDamage / 7, 2);
+                        if (Main.projectile[a].ModProjectile is StretchLaser laser)
+                        {
+                            laser.accelerateTime = 200;
+                            laser.accelerateStrength = 1.025f;
+                        }
+                    }
+
+                    /*
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LaserExplosionBall>(),
+                        ContactDamage / 7, 2, Main.myPlayer);
+                    Projectile p = Main.projectile[a];
+                    p.timeLeft = 1;
+
+                    if (p.ModProjectile is LaserExplosionBall ball)
+                    {
+                        ball.numberOfLasers = 12;
+                        //ball.projType = ModContent.ProjectileType<StretchLaser>();
+                        ball.vel = 7f;
+                        
+                    }
+                    */
+                }
+
+                if (timer > 38 && timer % 6 == 0 && timer < 60)
+                {
+                    //int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<EnergyBall>(), ContactDamage / 7, 2, Main.myPlayer);
+                }
+
+                /*
+                if (timer == 44 || timer == 50 || timer == 55)
+                {
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LaserExplosionBall>(),
+                        ContactDamage / 7, 2, Main.myPlayer);
+                    Projectile p = Main.projectile[a];
+                    p.timeLeft = 50;
+
+                    if (p.ModProjectile is LaserExplosionBall ball)
+                    {
+                        ball.numberOfLasers = 4;
+                        ball.projType = ModContent.ProjectileType<StretchLaser>();
+                        ball.vel = 2f;
+                    }
+                }
+                */
+            }
+
+
+            if (timer == 90)
+            {
+                timer = 1;
+
+                vecOut = new Vector2(-350, 0).RotatedBy(MathHelper.PiOver4 + ((wrap2side - 1) * MathHelper.PiOver2));
+                wrapDir = !wrapDir;
+                NPC.Center = myPlayer.Center + (vecOut * 3f);
+                accelFloat = 20;
+
+
+                wrap2side++;
+                if (wrap2side == 5)
+                    wrap2side = 1;
+
+                advancer++;
+            }
             timer++;
         }
 

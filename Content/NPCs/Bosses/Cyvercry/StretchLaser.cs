@@ -37,13 +37,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.penetrate = -1;
 
         }
+        public int accelerateTime = 60;
+        public float accelerateStrength = 1.038f;
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             Projectile.spriteDirection = Projectile.direction;
 
-            if (timer < 60)
-                Projectile.velocity *= 1.038f;
+            if (timer < accelerateTime)
+                Projectile.velocity *= accelerateStrength;
 
             timer++;
 

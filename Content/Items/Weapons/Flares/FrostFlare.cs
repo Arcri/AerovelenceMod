@@ -206,7 +206,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override void Kill(int timeLeft)
         {
             noSound = true;
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.2f };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.2f };
             SoundEngine.PlaySound(style, Projectile.Center);
             KillDust();
             /*

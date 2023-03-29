@@ -40,8 +40,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void AI()
         {
-            rot1 += 0.015f;
-            rot2 -= 0.015f;
+            rot1 += 0.018f;
+            rot2 -= 0.018f;
             rot3 += 0.04f;
             rot4 -= 0.04f;
 
@@ -55,7 +55,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D barrierTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_02");
-            Texture2D barrierTex2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/bigCircle");
+            Texture2D barrierTex2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/bigCircle3");
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);

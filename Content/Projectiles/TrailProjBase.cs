@@ -18,7 +18,6 @@ namespace AerovelenceMod.Content.Projectiles
         // - Add presets for WidthFunction
         // - Add more options for shaders
         // - Add more stuff to basic trail shader
-        //    - Ability to set how many times you want to draw it (better than calling DrawTrail() multiple times
         //    - Glow effect from GlowMisc
         // - Just make it better in general
         // - Actually understand what im doing instead of just using other people's code
@@ -39,6 +38,20 @@ namespace AerovelenceMod.Content.Projectiles
         public float trailTime = 0f;
 
         public Texture2D trailTexture = null;
+
+        public bool pixelate = false;
+
+        public float pixelationAmount = 0.03f;
+
+        public float resolution = 0.5f;
+
+        public bool gradient = false;
+
+        public Texture2D gradientTexture = null;
+
+        public float gradientTime = 0f;
+
+        public bool shouldScrollColor = true;
 
         //------------------
         public int trailPointLimit = 60;
@@ -136,7 +149,13 @@ namespace AerovelenceMod.Content.Projectiles
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, customEffect, Main.GameViewMatrix.TransformationMatrix);
 
-            customEffect = AerovelenceMod.BasicTrailShader;
+            if (pixelate)
+                customEffect = AerovelenceMod.TrailShaderPixelate;
+            else if (pixelate)
+                customEffect = AerovelenceMod.BasicTrailShader;
+            else if (gradient)
+                customEffect = AerovelenceMod.TrailShaderGradient;
+
             customEffect.Parameters["TrailTexture"].SetValue(trailTexture);
             customEffect.Parameters["ColorOne"].SetValue(trailColor.ToVector4());
 
@@ -151,6 +170,21 @@ namespace AerovelenceMod.Content.Projectiles
             Matrix projection = Matrix.CreateOrthographic(width, height, 0, 1000);
             customEffect.Parameters["WorldViewProjection"].SetValue(view * projection);
             customEffect.Parameters["progress"].SetValue(trailTime);
+
+            if (pixelate)
+            {
+                customEffect.Parameters["pixelation"].SetValue(pixelationAmount);
+                //customEffect.Parameters["resolution"].SetValue(resolution);
+
+            } 
+            else if (gradient)
+            {
+                customEffect.Parameters["gradientTex"].SetValue(gradientTexture);
+                customEffect.Parameters["gradProgress"].SetValue(gradientTime);
+                customEffect.Parameters["scrollColor"].SetValue(shouldScrollColor);
+
+            }
+
             customEffect.CurrentTechnique.Passes["DefaultPass"].Apply();
             customEffect.CurrentTechnique.Passes["MainPS"].Apply();
 

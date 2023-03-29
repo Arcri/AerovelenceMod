@@ -64,10 +64,15 @@ namespace AerovelenceMod.Content.Items
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
-            
-            int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<ElementalShiftBall>(), 10, 0, player.whoAmI, 0f, 0f);
-            int Mura2 = Projectile.NewProjectile(null, position, velocity * 0, ModContent.ProjectileType<ElementalShiftPulse>(), 0, 0, player.whoAmI, 0f, 0f);
-            Main.projectile[Mura2].scale = 2f;
+            //int Mura2 = Projectile.NewProjectile(null, position + new Vector2(0, 500), velocity, ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
+
+            //int Mura = Projectile.NewProjectile(null, position + new Vector2(0,500), velocity , ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Mura2 = Projectile.NewProjectile(null, position + new Vector2(0, 80), velocity, ModContent.ProjectileType<GraniteCore>(), 10, 0, player.whoAmI, 0f, 0f);
+
+            //int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<LightningBorder>(), 10, 0, player.whoAmI, 0f, 0f);
+
+            //int Mura2 = Projectile.NewProjectile(null, position, velocity * 0, ModContent.ProjectileType<ElementalShiftPulse>(), 0, 0, player.whoAmI, 0f, 0f);
+            //Main.projectile[Mura2].scale = 2f;
 
             /*
             if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)

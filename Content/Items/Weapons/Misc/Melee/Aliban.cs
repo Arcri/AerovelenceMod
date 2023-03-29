@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Tooltip.SetDefault("");
         }
         public override void SetDefaults()
-            {
+        {
             Item.knockBack = 2f;
             Item.crit = 2;
             Item.damage = 18;

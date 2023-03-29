@@ -208,6 +208,8 @@ namespace AerovelenceMod
 
 		public static Effect Test2;
 		public static Effect BasicTrailShader;
+		public static Effect TrailShaderPixelate;
+		public static Effect TrailShaderGradient;
 
 
 		public override void Load()
@@ -298,6 +300,8 @@ namespace AerovelenceMod
 				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
 
 				BasicTrailShader = Instance.Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value;
+				TrailShaderPixelate = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderPixelate", AssetRequestMode.ImmediateLoad).Value;
+				TrailShaderGradient = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderGradient", AssetRequestMode.ImmediateLoad).Value;
 
 
 				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
@@ -347,6 +351,8 @@ namespace AerovelenceMod
 			}
 			TrailShader = null;
 			BasicTrailShader = null;
+			TrailShaderPixelate = null;
+			TrailShaderGradient = null;
 
 			UnloadDetours();
 			FargosModMutant = false;
@@ -423,7 +429,7 @@ namespace AerovelenceMod
 			// IL.Terraria.Main.DoDraw -= DrawMoonlordLayer;
 		}
 
-		//Ripped from Regressus
+		//Ripped from Regressus which was ripped from a chinese example mod i think
 		public RenderTarget2D render3;
 		private void FilterManager_EndCapture(On.Terraria.Graphics.Effects.FilterManager.orig_EndCapture orig, Terraria.Graphics.Effects.FilterManager self, 
 			RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)

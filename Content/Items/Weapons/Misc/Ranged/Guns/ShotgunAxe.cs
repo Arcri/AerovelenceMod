@@ -696,6 +696,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
        
     }
+
     public class ShotgunAxeDebuffGlobalNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;

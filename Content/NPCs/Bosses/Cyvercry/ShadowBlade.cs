@@ -59,7 +59,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 					Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Projectile.velocity * -0.5f,
 						Color.DeepPink, 1.5f, 0.6f, 0f, dustShader);
-
+					d.noLight = true;
 				}
 			}
 			if (Projectile.timeLeft > 420)
@@ -79,6 +79,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
 					Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero,	
 						Color.DeepPink, 0.5f, 0.6f, 0f, dustShader);
+					d.noLight = true;
 				}
 
 

@@ -198,7 +198,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 };
                 tooltips.Add(modeDesc);
 
-                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Thrid shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
+                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Third shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
                 {
                     OverrideColor = Color.Gold,
                 };
