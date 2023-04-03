@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Solsear");
-            Tooltip.SetDefault("The sun god's flame, encaps uled into something usable\n" +
+            Tooltip.SetDefault("'With great firepower comes great irresponsibility'\n" +
                 "Right-click to shoot an exploding magma flare\n" +
                 "Aim the tip of the laser into the flare to increase its size\n" +
                 "The tip of the laser also deals more damage");

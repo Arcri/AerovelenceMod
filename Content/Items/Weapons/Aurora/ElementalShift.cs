@@ -3,24 +3,15 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.ObjectModel;
 using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles;
 using ReLogic.Content;
-using Terraria.Graphics;
 using AerovelenceMod.Common.Utilities;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Dusts.GlowDusts;
-using AerovelenceMod.Common.Globals.SkillStrikes;
-using XPT.Core.Audio.MP3Sharp.Decoding.Decoders.LayerIII;
-using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
-using static System.Formats.Asn1.AsnWriter;
 using System.Linq;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora
@@ -211,13 +202,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             player.itemAnimation = 10;
 
             timer++;
-
+            /*
             if (getProgress(easingProgress) >= 0.35f && getProgress(easingProgress) <= 0.78f)
             {
                 Projectile.ai[1] = 1;
             }
             else
                 Projectile.ai[1] = 0;
+            */
 
             if (getProgress(easingProgress) >= 0.3f && !playedSound)
             {

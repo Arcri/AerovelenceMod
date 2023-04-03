@@ -28,6 +28,8 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
 using AerovelenceMod.Content.Items;
 using static Terraria.ModLoader.PlayerDrawLayer;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
+using IL.Terraria.GameContent.Drawing;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -47,8 +49,8 @@ namespace AerovelenceMod.Content.Items
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
             Item.height = 28;
-            Item.useTime = 7;
-            Item.useAnimation = 7;
+            Item.useTime = 7; //7
+            Item.useAnimation = 7; //7
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 0;
@@ -63,11 +65,44 @@ namespace AerovelenceMod.Content.Items
         
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            int Mura = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<PhantomLaserTelegraph>(), 10, 0, player.whoAmI, 0f, 0f);
+            return false;
+
+            //int Mura2yeah = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(2.0f, 3.1f), ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);
+            //return false;
+            //ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            /*
+            for (int fg = 0; fg < 10; fg++)
+            {
+                Vector2 randomStart = Main.rand.NextVector2CircularEdge(5, 5);
+                Dust gd = Dust.NewDustPerfect(player.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f) * 1.5f, newColor: Color.White, Scale: 1f);
+
+            }
+            */
+            //new Color(255,85,255)
+            for (int h = 0; h < 30; h++)
+            {
+                int dust = Dust.NewDust(Main.MouseWorld, 30, 30, ModContent.DustType<GlowPixelAlts>(), Scale: 1f, newColor: Color.OrangeRed);
+                //Main.dust[dust].velocity *= 3f;
+                //Main.dust[dust].position += Main.dust[dust].velocity * 3;
+
+            }
+
+            /*
+            int afg = Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<DistortProj>(), 0, 0);
+            Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
+
+            if (Main.projectile[afg].ModProjectile is DistortProj distort)
+            {
+                distort.tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/FlareVortex");
+            }
+            */
+            return false;
 
             //int Mura2 = Projectile.NewProjectile(null, position + new Vector2(0, 500), velocity, ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
 
             //int Mura = Projectile.NewProjectile(null, position + new Vector2(0,500), velocity , ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
-            int Mura2 = Projectile.NewProjectile(null, position + new Vector2(0, 80), velocity, ModContent.ProjectileType<GraniteCore>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Mura2 = Projectile.NewProjectile(null, position, velocity * 3, ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);
 
             //int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<LightningBorder>(), 10, 0, player.whoAmI, 0f, 0f);
 

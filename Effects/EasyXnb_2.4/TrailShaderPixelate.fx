@@ -46,14 +46,17 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 White(VertexShaderOutput input) : COLOR0
 {
-    float2 grid_uv = round(input.TextureCoordinates * pixelation) / pixelation;
+    //float2 grid_uv = round(input.TextureCoordinates * pixelation) / pixelation;
     
-    float x = (grid_uv.x + progress) % 1;
-    float2 noisecoords = float2(x, grid_uv.y);
+    float2 scaledRes = resolution / pixelation;
+    float2 modUV = (round(input.TextureCoordinates * scaledRes) / scaledRes);
+    
+    float x = (modUV.x + progress) % 1;
+    float2 noisecoords = float2(x, modUV.y);
     float brightness = tex2D(tent, noisecoords).r;
     float4 color = ColorOne;
     color *= sqrt(brightness);
-    color *= sqrt(grid_uv.x);
+    color *= sqrt(modUV.x);
     
     return color;
     

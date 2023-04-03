@@ -41,9 +41,9 @@ namespace AerovelenceMod.Content.Projectiles
 
         public bool pixelate = false;
 
-        public float pixelationAmount = 0.03f;
+        public float pixelationAmount = 0.1f;
 
-        public float resolution = 0.5f;
+        public float resolution = 1f;
 
         public bool gradient = false;
 
@@ -151,10 +151,10 @@ namespace AerovelenceMod.Content.Projectiles
 
             if (pixelate)
                 customEffect = AerovelenceMod.TrailShaderPixelate;
-            else if (pixelate)
-                customEffect = AerovelenceMod.BasicTrailShader;
             else if (gradient)
                 customEffect = AerovelenceMod.TrailShaderGradient;
+            else
+                customEffect = AerovelenceMod.BasicTrailShader;
 
             customEffect.Parameters["TrailTexture"].SetValue(trailTexture);
             customEffect.Parameters["ColorOne"].SetValue(trailColor.ToVector4());
@@ -174,7 +174,7 @@ namespace AerovelenceMod.Content.Projectiles
             if (pixelate)
             {
                 customEffect.Parameters["pixelation"].SetValue(pixelationAmount);
-                //customEffect.Parameters["resolution"].SetValue(resolution);
+                customEffect.Parameters["resolution"].SetValue(resolution);
 
             } 
             else if (gradient)

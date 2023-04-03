@@ -332,7 +332,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.height = 16;
             Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 1000;
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.tileCollide = true;
@@ -349,10 +349,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer == 50)
                 Projectile.velocity = Vector2.Zero;
-
-            if (timer == 100)
-                Release();
-
+            
+            //if (timer == 100)
+                //Release();
+            
             LaserRotation = (startingPos - Projectile.Center).ToRotation();
             Projectile.rotation += 0.1f;
             timer++;
@@ -395,9 +395,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (height == 0)
                     Projectile.active = false;
 
-                int width = (int)(Projectile.Center - startingPos).Length() - 24;
+                int width = (int)(Projectile.Center - startingPos).Length();// + 24;
 
-                var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+                var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation);
                 var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1f));
 
                 Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
@@ -464,6 +464,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             else
                 pulseScale = Math.Clamp(MathHelper.Lerp(pulseScale, -0.2f, 0.1f), 0, 1);
 
+            if (pulseScale == 0)
+                Projectile.active = false;
+
             LaserRotation = (startingPos - Projectile.Center).ToRotation();
             Projectile.rotation += 0.1f;
             timer++;
@@ -507,9 +510,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //if (height == 0)
             //Projectile.active = false;
 
-            int width = (int)(Projectile.Center - startingPos).Length();
+            int width = (int)(Projectile.Center - startingPos).Length() + 24;
 
-            var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+            var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation);// * 24;
             var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.4f));
 
             Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);

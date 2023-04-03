@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             else
                 Projectile.velocity.Y += 0.4f;
 
-            Projectile.velocity = Projectile.velocity.RotatedBy(0.04f);
+            //Projectile.velocity = Projectile.velocity.RotatedBy(0.04f);
 
             timer++;
 

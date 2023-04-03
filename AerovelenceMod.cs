@@ -449,7 +449,9 @@ namespace AerovelenceMod
 			foreach (Projectile projectile in Main.projectile)
 			{
 				//Want to do this first and separate because it will weed out more projectiles first, despite checking again later
-				if (projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>() || projectile.type == ModContent.ProjectileType<OzoneShredderImpact>())
+				if (projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>() || 
+					projectile.type == ModContent.ProjectileType<OzoneShredderImpact>() || 
+					projectile.type == ModContent.ProjectileType<DistortProj>())
                 {
 					
 					if (projectile.active && projectile.ai[1] == 1 && projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>())
@@ -468,9 +470,27 @@ namespace AerovelenceMod
 					}
                     else if (projectile.active && projectile.type == ModContent.ProjectileType<OzoneShredderImpact>())
                     {
+						//Main.GameZoomTarget (from 1 to 2)
+						
+						Vector2 toProj = (projectile.Center - Main.player[Main.myPlayer].Center);
+
 						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
 						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/OzoneShredderImpact");
-						Main.spriteBatch.Draw(a, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, a.Size() / 2, projectile.scale * 0.5f, SpriteEffects.None, 0f);
+						Main.spriteBatch.Draw(a, projectile.Center - Main.screenPosition + (toProj * (1 - Main.GameZoomTarget) * -1), null, Color.White, projectile.rotation, a.Size() / 2, projectile.scale * 0.5f * Main.GameZoomTarget, SpriteEffects.None, 0f);
+					}
+					else if (projectile.active && projectile.type == ModContent.ProjectileType<DistortProj>())
+                    {
+						Texture2D tex = null;
+						float overallScale = 1;
+
+						if (projectile.ModProjectile is DistortProj distort)
+                        {
+							tex = distort.tex;
+							overallScale = distort.scale;
+                        }
+
+						Vector2 toProj = (projectile.Center - Main.player[Main.myPlayer].Center);
+						Main.spriteBatch.Draw(tex, projectile.Center - Main.screenPosition + (toProj * (1 - Main.GameZoomTarget) * -1), null, Color.White, projectile.rotation, tex.Size() / 2, overallScale * projectile.scale * 0.5f * Main.GameZoomTarget, SpriteEffects.None, 0f);
 					}
 				}
 			}

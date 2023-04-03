@@ -46,6 +46,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     BuffID.Venom,
                     BuffID.Bleeding,
                     ModContent.BuffType<AuroraFire>(),
+                    ModContent.BuffType<EmberFire>(),
                     BuffID.OnFire,
                     BuffID.OnFire3,
                     BuffID.CursedInferno,
@@ -120,7 +121,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
 
 
-            //Shhhh 
+            //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
                 damage = (int)(damage * 0.75f);
             if (projectile.type == ProjectileID.ChlorophyteArrow)
@@ -493,7 +494,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 13;
+            whatAttack = 23;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -556,6 +557,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case 21:
                     WrapDashParaffin(myPlayer);
+                    break;
+                case 23: 
+                    CCPhantomDash(myPlayer);
                     break;
 
             }
@@ -1203,7 +1207,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundEngine.PlaySound(style2, NPC.Center);
 
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -96, Vector2.Zero, ModContent.ProjectileType<FocusedLaser>(), 15, 2);
-                    Main.projectile[a].timeLeft = 70;
+                    Main.projectile[a].timeLeft = 85;
                     if (Main.projectile[a].ModProjectile is FocusedLaser laser)
                     {
                         laser.parentIndex = NPC.whoAmI;
@@ -1215,7 +1219,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             else if (advancer == 2)
             {
-                NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.007f), 0, 0.4f) * (sweepLaserDir ? 1 : -1);
+                //NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.007f), 0, 0.4f) * (sweepLaserDir ? 1 : -1);
+
+                //Main.NewText((0.0025f * timer + 0.007f));
+                NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.004f), 0, 0.09f) * (sweepLaserDir ? 1 : -1);
 
                 //Main.NewText((0.0017f * timer + 0.015f));
 
@@ -1233,7 +1240,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //turn desiredDirection
                 //Shootlasers
 
-                if (timer == 70)
+                if (timer == 86) //70
                 {
                     timer = -1;
                     advancer = -0;
@@ -1965,14 +1972,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundEngine.PlaySound(style3, NPC.Center);
 
 
-                    for (int i = -3; i < 4; i++)
+                    for (int i = -4; i < 5; i++)
                     {
                         int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.rotation.ToRotationVector2().RotatedBy(0.3f * i) * -0.4f, ModContent.ProjectileType<StretchLaser>(),
                         ContactDamage / 7, 2);
+                        Main.projectile[a].timeLeft = 400;
                         if (Main.projectile[a].ModProjectile is StretchLaser laser)
                         {
                             laser.accelerateTime = 200;
-                            laser.accelerateStrength = 1.025f;
+                            laser.accelerateStrength = 1.02f; //1.025
                         }
                     }
 
@@ -2036,9 +2044,109 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         Vector2 areaCenter = new Vector2(0, 0);
+        Projectile stuckLaser = null;
+        int penisCounter = 0;
         public void CCPhantomDash(Player myPlayer)
-        {
+            {
             //Spawn Area
+
+
+            fadeDashing = true;
+            if (timer == 0)
+            {
+                //Spawn Border
+                Projectile.NewProjectile(null, myPlayer.Center, Vector2.Zero, ModContent.ProjectileType<LightningBorder>(), 0, 0);
+
+                int a = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<PhantomLaserTelegraph>(), 2, 0);
+
+                if (Main.projectile[a].type == ModContent.ProjectileType<PhantomLaserTelegraph>())
+                    stuckLaser = Main.projectile[a];
+
+                areaCenter = myPlayer.Center;
+                goalLocation = Main.rand.NextVector2CircularEdge(480, 480);
+            }
+
+            if (advancer == 0)
+            {
+                NPC.Center = Vector2.Lerp(NPC.Center, goalLocation + areaCenter, Math.Clamp(timer * 0.02f, 0, 1f)); //0.01
+
+                Vector2 truGoal = goalLocation + areaCenter;
+                NPC.rotation = (truGoal - NPC.Center).ToRotation() + MathHelper.Pi;
+                //NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+                
+                if (stuckLaser.type == ModContent.ProjectileType<PhantomLaserTelegraph>())
+                    stuckLaser.Center = NPC.Center;
+
+
+                if (penisCounter == 6)
+                {
+                    /*
+                    foreach (Projectile p in Main.projectile)
+                    {
+                        if (p.active == true)
+                        {
+                            if (p.ModProjectile is PhantomLaserTelegraph tele)
+                            {
+                                tele.Release();
+                            }
+                        }
+
+                    }
+                    */
+                    penisCounter = 0;
+                    advancer = 1;
+                }
+
+                if (timer == 21) //40
+                {
+                    timer = 1;
+                    penisCounter++;
+                    //I cant just undo the previous rot
+                    goalLocation = goalLocation.RotatedBy(2.51f /*Main.rand.NextBool() ? 2f : -2*/); //2.5
+
+                    int a = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<PhantomLaserTelegraph>(), 2, 0);
+                    stuckLaser = Main.projectile[a];
+                }
+
+
+            }
+            else if (advancer == 1)
+            {
+
+                if (timer == 20)
+                {
+                    foreach (Projectile p in Main.projectile)
+                    {
+                        if (p.active == true)
+                        {
+                            if (p.ModProjectile is PhantomLaserTelegraph tele)
+                            {
+                                tele.Release();
+                            }
+                        }
+
+                    }
+
+                    //int afg = Projectile.NewProjectile(null, areaCenter, Vector2.Zero, ModContent.ProjectileType<DistortProj>(), 0, 0);
+                    //Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
+
+                    /*
+                    if (Main.projectile[afg].ModProjectile is DistortProj distort)
+                    {
+                        distort.tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/MagmaBall");
+                        distort.implode = true;
+                        distort.scale = 2;
+                        //distort.
+                    }
+                    */
+                }
+
+                if (timer == 100)
+                {
+                    advancer = 0;
+                    timer = 1;
+                }
+            }
             //Go to edge
             //Identify Angle
             // - Get angle through area center
@@ -2047,6 +2155,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Move to new Angle
             //Repeat x times
             //Fire All Lasers pew pew
+
+            timer++;
         }
         #endregion
 

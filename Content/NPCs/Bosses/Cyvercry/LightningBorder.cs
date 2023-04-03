@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.scale = 1f;
-            Projectile.timeLeft = 500;
+            Projectile.timeLeft = 5000;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
