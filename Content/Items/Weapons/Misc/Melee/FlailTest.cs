@@ -29,8 +29,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flail Test");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Flail Test");
+            // Tooltip.SetDefault("");
         }
 
         public override void SetDefaults()
@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flail");
+            // DisplayName.SetDefault("Flail");
         }
 
         public override void SetDefaults()

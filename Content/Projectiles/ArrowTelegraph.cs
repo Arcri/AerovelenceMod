@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Arrow");
+			// DisplayName.SetDefault("Arrow");
 		}
 
 		public override void SetDefaults()

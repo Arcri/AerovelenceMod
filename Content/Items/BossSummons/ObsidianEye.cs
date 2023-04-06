@@ -10,8 +10,8 @@ namespace AerovelenceMod.Content.Items.BossSummons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Obsidian Eye");
-			Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'\nNot consumable");
+			// DisplayName.SetDefault("Obsidian Eye");
+			// Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'\nNot consumable");
 		}
 
 		public override void SetDefaults()

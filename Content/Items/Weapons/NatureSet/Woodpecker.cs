@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.NatureSet
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Woodpecker");
-            Tooltip.SetDefault("TODO");
+            // DisplayName.SetDefault("Woodpecker");
+            // Tooltip.SetDefault("TODO");
         }
         public override void SetDefaults()
         {

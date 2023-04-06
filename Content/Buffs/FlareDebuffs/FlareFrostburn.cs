@@ -19,8 +19,8 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frost Fire"); // Buff display name
-            Description.SetDefault("So cold it burns!"); // Buff description
+            // DisplayName.SetDefault("Frost Fire"); // Buff display name
+            // Description.SetDefault("So cold it burns!"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
             BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
                 baseUpdateLifeRegen(npc, ref damage);
             }
         }
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (DebuffActive)
             {
@@ -79,7 +79,7 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
                 colorB = Color.SkyBlue;
                 tagDamage = 3;
                 tagCrit = 4;
-                baseModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
+                //baseModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
             }
 
         }

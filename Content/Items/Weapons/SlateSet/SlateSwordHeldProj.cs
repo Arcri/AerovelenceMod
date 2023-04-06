@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         public override bool ShouldUpdatePosition() => Projectile.ai[1] == 4;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Sword");
+            // DisplayName.SetDefault("Slate Sword");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2; //WORKJS //WORKS !  1! ! !
         }
@@ -141,7 +141,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
             maxTime++;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             /*for (int i = 0; i < 20; i++)
             {

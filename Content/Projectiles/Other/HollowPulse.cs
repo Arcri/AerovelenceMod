@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public bool oval = false;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Hollow Pulse");
+			// DisplayName.SetDefault("Hollow Pulse");
 
 		}
 

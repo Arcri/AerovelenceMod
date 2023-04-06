@@ -16,8 +16,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Electrapulse Canister");
-            Tooltip.SetDefault("Hitting a tile or enemy releases a large electric explosion that releases lightning");
+            // DisplayName.SetDefault("Electrapulse Canister");
+            // Tooltip.SetDefault("Hitting a tile or enemy releases a large electric explosion that releases lightning");
         }
         public override void SetDefaults()
         {
@@ -92,7 +92,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
 
             timer += 0.02f;
         }
-        public override void OnHitNPC(NPC target, int damage, float knockBack, bool crit) => Projectile.Kill();
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) => Projectile.Kill();
 
         float timer = 0f;
         public override bool PreDraw(ref Color lightColor)
@@ -154,7 +154,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Canister Lightning");
+            // DisplayName.SetDefault("Canister Lightning");
         }
 
         public override void SetDefaults()

@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Biomes
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crystal Caverns Surface");
+			// DisplayName.SetDefault("Crystal Caverns Surface");
 		}
 
 		public override bool IsBiomeActive(Player player)

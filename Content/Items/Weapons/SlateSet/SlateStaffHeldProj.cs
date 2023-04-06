@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Slate Staff");
+			// DisplayName.SetDefault("Slate Staff");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
 

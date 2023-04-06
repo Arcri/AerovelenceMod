@@ -22,7 +22,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
         public bool strikeCTRemove = true;
 
-        public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
+        public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
             /*
             int recent = -1;
@@ -51,9 +51,9 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 SS.superCrit = false;
             }
             */
-            base.OnHitByItem(npc, player, item, damage, knockback, crit);
+            base.OnHitByItem(npc, player, item, hit, damageDone);
         }
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             //Main.NewText("OnHitByProjectile");
 
@@ -81,7 +81,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                     Main.NewText("Skill Crit -1 (You shouldn't see this)");
                     return;
 ;               }
-                if (crit)
+                if (hit.Crit)
                     Main.combatText[recent].color = Color.Purple * 0f;
                 else
                     Main.combatText[recent].color = Color.Gold * 0f;
@@ -92,7 +92,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 {
                     SS.damageNumber = anchor.text;
                     SS.skillCrit = true;
-                    SS.superCrit = crit;
+                    SS.superCrit = hit.Crit;
                 }
                 //Main.NewText("Spawned proj with CT index: " + recent);
             } else

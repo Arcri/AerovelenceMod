@@ -17,11 +17,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Solsear");
-            Tooltip.SetDefault("'With great firepower comes great irresponsibility'\n" +
+            // DisplayName.SetDefault("Solsear");
+            /* Tooltip.SetDefault("'With great firepower comes great irresponsibility'\n" +
                 "Right-click to shoot an exploding magma flare\n" +
                 "Aim the tip of the laser into the flare to increase its size\n" +
-                "The tip of the laser also deals more damage");
+                "The tip of the laser also deals more damage"); */
         }
         public override bool AltFunctionUse(Player player) => true;
 
@@ -215,7 +215,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         Player owner => Main.player[Projectile.owner];
 
-        public override void SetStaticDefaults() => DisplayName.SetDefault("Solsear");
+        //public override void SetStaticDefaults() => DisplayName.SetDefault("Solsear");
 
         public override void SetDefaults()
         {

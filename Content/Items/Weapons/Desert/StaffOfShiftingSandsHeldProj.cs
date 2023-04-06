@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
         public override bool ShouldUpdatePosition() => Projectile.ai[1] == 4;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Staff of Shifting Sands");
+            // DisplayName.SetDefault("Staff of Shifting Sands");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2; //WORKJS //WORKS !  1! ! !
         }
@@ -143,7 +143,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
             glowIntensity--;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             //SoundEngine.PlaySound(SoundID.DD2_BetsyWindAttack with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.1f }, Projectile.Center);
             //SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { Volume = .3f, PitchVariance = 0.3f, Pitch = -0.3f }, Projectile.Center);

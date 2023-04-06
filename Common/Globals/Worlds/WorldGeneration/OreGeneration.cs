@@ -11,7 +11,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
 {
     public class OreGeneration : ModSystem
     {
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             /*
             int shiniesIndex = tasks.FindIndex(i => i.Name.Equals("Shinies"));
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Common.Globals.Worlds.WorldGeneration
             for (int i = 0; i < oreAmount; i++)
             {
                 int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                int y = WorldGen.genRand.Next((int)WorldGen.rockLayerLow, Main.maxTilesY);
+                int y = WorldGen.genRand.Next((int)GenVars.rockLayerLow, Main.maxTilesY);
 
                 //WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 15), WorldGen.genRand.Next(2, 15),
                     //(ushort)ModContent.TileType<SlateOreBlock>());

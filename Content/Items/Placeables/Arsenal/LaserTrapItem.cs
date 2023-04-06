@@ -5,7 +5,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
 {
     public class LaserTrapItem : AerovelenceItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Laser Trap");
+		//public override void SetStaticDefaults() => DisplayName.SetDefault("Laser Trap");
 
 
         public override void SetDefaults()

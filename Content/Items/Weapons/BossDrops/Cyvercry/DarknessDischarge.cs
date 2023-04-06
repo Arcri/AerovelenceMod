@@ -197,7 +197,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 		int projCount;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Star Spawner"); // Name of the projectile. It can be appear in chat
+			// DisplayName.SetDefault("Star Spawner"); // Name of the projectile. It can be appear in chat
 		}
 
 

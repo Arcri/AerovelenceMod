@@ -267,11 +267,10 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             return Color.Gray;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             hasHit = true;
             Projectile.timeLeft = 20;
-            base.OnHitNPC(target, damage, knockback, crit);
         }
     }
 
@@ -408,7 +407,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Water Trail");
+            // DisplayName.SetDefault("Water Trail");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 

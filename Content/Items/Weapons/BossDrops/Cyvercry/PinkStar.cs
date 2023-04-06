@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         Color colToUse = Main.rand.NextBool() ? Color.HotPink : Color.SkyBlue;
         public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Godstar");
+			// DisplayName.SetDefault("Godstar");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
 		}
@@ -90,7 +90,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             TrailLogic();
 
         }
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 
 		}

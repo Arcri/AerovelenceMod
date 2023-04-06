@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
@@ -131,7 +131,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * 1, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
@@ -237,7 +237,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lazinator");
+            // DisplayName.SetDefault("Lazinator");
         }
         public override void SetDefaults()
         {

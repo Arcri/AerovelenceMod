@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public float fadeMult = 1f;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Mura");
+			// DisplayName.SetDefault("Mura");
 		}
 
         public override void SetDefaults()

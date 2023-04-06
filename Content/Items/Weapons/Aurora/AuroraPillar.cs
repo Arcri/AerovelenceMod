@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 		public float LaserRotation = 0;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dark Beam");
+			// DisplayName.SetDefault("Dark Beam");
 			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
 		}
 

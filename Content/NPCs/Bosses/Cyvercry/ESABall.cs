@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         String mode = "";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ESA Ball");
+            // DisplayName.SetDefault("ESA Ball");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()

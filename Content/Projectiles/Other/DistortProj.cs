@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
         int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Distort");
+            // DisplayName.SetDefault("Distort");
         }
         public override void SetDefaults()
         {

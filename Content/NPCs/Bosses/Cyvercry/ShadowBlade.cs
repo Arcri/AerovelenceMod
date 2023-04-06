@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("ShadowBlade");
+			// DisplayName.SetDefault("ShadowBlade");
 		}
 
 		public override void SetDefaults()

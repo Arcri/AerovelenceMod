@@ -12,8 +12,8 @@ namespace AerovelenceMod.Content.Items.Patreon
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Evil Lightbulb");
-            Tooltip.SetDefault("Left-click to shoot a small laser\nRight-click to conjure a protective aura");
+            // DisplayName.SetDefault("Evil Lightbulb");
+            // Tooltip.SetDefault("Left-click to shoot a small laser\nRight-click to conjure a protective aura");
         }
         public override void SetDefaults()
         {
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.Items.Patreon
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Evil Aura");
+            // DisplayName.SetDefault("Evil Aura");
         }
 
         public override void SetDefaults()
@@ -163,7 +163,7 @@ namespace AerovelenceMod.Content.Items.Patreon
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Evil Ray");
+            // DisplayName.SetDefault("Evil Ray");
         }
         public override void SetDefaults()
         {

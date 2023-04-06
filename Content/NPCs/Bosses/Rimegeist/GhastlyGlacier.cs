@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             //keep an eye on the width and height when doing this. It matters
             Main.EntitySpriteDraw(texture, drawPos, NPC.frame, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             NPC.lifeMax = 10000;  //boss life scale in expertmode
             NPC.damage = 40;  //boss damage increase in expermode

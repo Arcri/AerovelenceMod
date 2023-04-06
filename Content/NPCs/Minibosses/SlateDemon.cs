@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.NPCs.Minibosses
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Demon");
+            // DisplayName.SetDefault("Slate Demon");
             Main.npcFrameCount[NPC.type] = 5;
         }
         public override void SetDefaults()
@@ -108,15 +108,15 @@ namespace AerovelenceMod.Content.NPCs.Minibosses
             return !Main.dayTime ? .2f : 0f;
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.life <= 0 || NPC.life >= 0)
             {
                 int d = 193;
                 for (int k = 0; k < 12; k++)
                 {
-                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
-                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hitDirection, -2.5f, 0, Color.Gray, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hit.HitDirection, -2.5f, 0, Color.Gray, 0.7f);
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, d, 2.5f * hit.HitDirection, -2.5f, 0, Color.Gray, 0.7f);
                 }
             }
         }

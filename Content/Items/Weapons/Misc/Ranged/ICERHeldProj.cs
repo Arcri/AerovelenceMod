@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ICER");
+            // DisplayName.SetDefault("ICER");
         }
         int maxTime = 50;
 

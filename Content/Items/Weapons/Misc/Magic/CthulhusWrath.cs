@@ -16,8 +16,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
-            DisplayName.SetDefault("Kindling Wrath");
-            Tooltip.SetDefault("Charges up during use, increasing firepower significantly\n'Burning anger is trapped inside it'");
+            // DisplayName.SetDefault("Kindling Wrath");
+            // Tooltip.SetDefault("Charges up during use, increasing firepower significantly\n'Burning anger is trapped inside it'");
         }
         public override void SetDefaults()
         {

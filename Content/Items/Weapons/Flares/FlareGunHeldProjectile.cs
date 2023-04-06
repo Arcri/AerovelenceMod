@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Gun");
+            // DisplayName.SetDefault("Flare Gun");
         }
         int maxTime = 50;
 

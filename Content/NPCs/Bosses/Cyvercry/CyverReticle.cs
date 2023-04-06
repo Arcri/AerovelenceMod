@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Target");
+            // DisplayName.SetDefault("Target");
 
         }
         public override void SetDefaults()
@@ -178,7 +178,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Target");
+            // DisplayName.SetDefault("Target");
 
         }
         public override void SetDefaults()

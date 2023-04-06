@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Staff of Shifting Sands");
+            // DisplayName.SetDefault("Staff of Shifting Sands");
             //Tooltip.SetDefault("Fires a rock on swing ");
         }
         public override void SetDefaults()

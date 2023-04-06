@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Projectiles
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Example Trail");
+            // DisplayName.SetDefault("Example Trail");
         }
         public override void SetDefaults()
         {
@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Projectiles
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Test Trail");
+            // DisplayName.SetDefault("Test Trail");
         }
         public override void SetDefaults()
         {

@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Adamantite Pulsar");
-            Tooltip.SetDefault("Right-click to switch between 2 modes");
+            // DisplayName.SetDefault("Adamantite Pulsar");
+            // Tooltip.SetDefault("Right-click to switch between 2 modes");
         }
         public override void SetDefaults()
         {
@@ -219,7 +219,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Adamantite Pulsar");
+            // DisplayName.SetDefault("Adamantite Pulsar");
         }
         public override void SetDefaults()
         {

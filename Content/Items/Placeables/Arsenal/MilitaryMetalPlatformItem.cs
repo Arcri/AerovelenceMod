@@ -8,7 +8,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Military Metal Platform");
+            // DisplayName.SetDefault("Military Metal Platform");
         }
         public override void SetDefaults()
         {

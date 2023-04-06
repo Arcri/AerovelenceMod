@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Wave");
+            // DisplayName.SetDefault("Fire Wave");
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()
@@ -121,7 +121,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             return true;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -132,7 +132,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 Main.dust[a].scale = 0.75f;
                 Main.dust[a].noGravity = true;
             }
-            base.OnHitNPC(target, damage, knockback, crit);
         }
 
     }

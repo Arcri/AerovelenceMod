@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public float LaserRotation = 0;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Hyper Beam Shot");
+			// DisplayName.SetDefault("Hyper Beam Shot");
 
 			//ALWAYS DRAW CODE
 			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
@@ -315,7 +315,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float LaserRotation = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dark Beam");
+            // DisplayName.SetDefault("Dark Beam");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 
@@ -427,7 +427,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float LaserRotation = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dark Beam");
+            // DisplayName.SetDefault("Dark Beam");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 
@@ -570,7 +570,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float LaserRotation = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Finale Sky Beam");
+            // DisplayName.SetDefault("Finale Sky Beam");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 

@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Pyre");
-            Tooltip.SetDefault("'Send your enemies to a Firey Grave!'");
+            // DisplayName.SetDefault("Fire Pyre");
+            // Tooltip.SetDefault("'Send your enemies to a Firey Grave!'");
         }
         public override void SetDefaults()
         {

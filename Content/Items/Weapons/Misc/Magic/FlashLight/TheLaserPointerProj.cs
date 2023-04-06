@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public float laserWidth = 20;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Laser Pointer");
+            // DisplayName.SetDefault("Laser Pointer");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
         public override void SetDefaults()
@@ -299,11 +299,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             SoundStyle stylees = new SoundStyle("Terraria/Sounds/Item_117") with { Pitch = .72f, PitchVariance = .11f, Volume = 0.01f * (laserWidth) };
             SoundEngine.PlaySound(stylees, target.Center);
-            base.OnHitNPC(target, damage, knockback, crit);
         }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {

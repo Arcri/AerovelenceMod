@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols
         #region unimportant
         public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("AmmoUI");
+			// DisplayName.SetDefault("AmmoUI");
 		}
 
 		public override void SetDefaults()

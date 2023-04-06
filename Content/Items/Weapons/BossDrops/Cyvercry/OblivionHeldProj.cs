@@ -9,6 +9,7 @@ using Terraria.Audio;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
 using ReLogic.Content;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
@@ -17,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override bool ShouldUpdatePosition() => Projectile.ai[1] == 4;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Oblivion");
+            // DisplayName.SetDefault("Oblivion");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2; //WORKJS //WORKS !  1! ! !
         }
@@ -132,7 +133,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             maxTime++;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
             Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Projectile.owner);
@@ -149,8 +150,15 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                     else
                         Direction = -1;
                     strikeCount++;
-                    Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
-                    Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = Projectile.damage;
+                    myHit.Knockback = Projectile.knockBack;
+                    myHit.HitDirection = Direction;
+                    Main.npc[i].StrikeNPC(myHit);
+
+                    //Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
+                    //Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
                 }
             }
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.75f, PitchVariance = 0.2f }, Projectile.Center);
@@ -265,7 +273,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Pulse");
+            // DisplayName.SetDefault("Cyver Pulse");
         }
 
         public float exploScale = 0.51f;

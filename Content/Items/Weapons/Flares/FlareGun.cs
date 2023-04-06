@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public int lockOutTimer;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Gun");
-            Tooltip.SetDefault("4% summon tag crit chance \n ");
+            // DisplayName.SetDefault("Flare Gun");
+            // Tooltip.SetDefault("4% summon tag crit chance \n ");
         }
         public override void SetDefaults()
         {

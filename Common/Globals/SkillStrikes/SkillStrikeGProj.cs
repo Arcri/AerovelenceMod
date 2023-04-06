@@ -144,7 +144,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
 		}
 
-		public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
 		{
             if (SkillStrike)
 			{
@@ -160,7 +160,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
                 float pixelHitRotation = (impactRot == -1 ? Main.rand.NextFloat(6.28f) : impactRot);
 
-                Color colToUse = crit ? Color.DeepPink * 0.75f : Color.Orange;
+                Color colToUse = hit.Crit ? Color.DeepPink * 0.75f : Color.Orange;
 
                 switch (critImpact)
                 {

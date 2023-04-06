@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Laser");
+            // DisplayName.SetDefault("Cyver Laser");
 
         }
         public override void SetDefaults()
@@ -123,7 +123,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("CyverPulse");
+            // DisplayName.SetDefault("CyverPulse");
 
         }
         public override void SetDefaults()

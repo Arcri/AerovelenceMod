@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -21,8 +22,8 @@ namespace AerovelenceMod.Core
             Main.tileMergeDirt[tile.Type] = mergeDirt;
             Main.tileStone[tile.Type] = stone;
 
-            ModTranslation name = tile.CreateMapEntryName();
-            name.SetDefault(mapName);
+            LocalizedText name = tile.CreateMapEntryName();
+            // name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
 
             if (tilesToMergeWith != null)
@@ -70,8 +71,8 @@ namespace AerovelenceMod.Core
 
             TileObjectData.addTile(tile.Type);
 
-            ModTranslation name = tile.CreateMapEntryName();
-            name.SetDefault(mapName);
+            LocalizedText name = tile.CreateMapEntryName();
+            // name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
 
             tile.HitSound = hitSound;

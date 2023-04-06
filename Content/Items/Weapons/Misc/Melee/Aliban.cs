@@ -28,8 +28,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Aliban");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Aliban");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
@@ -73,7 +73,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Aliban");
+            // DisplayName.SetDefault("Aliban");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12; //9
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -380,7 +380,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         }
 
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
             for (int i = 0; i < 2 + (Main.rand.NextBool() ? 1 : 0); i++)
@@ -388,10 +388,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 Vector2 vel = (target.Center - Main.player[Projectile.owner].Center).RotatedBy(Main.rand.NextFloat(-0.7f, 0.7f));
                 int roA = Projectile.NewProjectile(null, target.Center, vel.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1.5f,3.1f), ModContent.ProjectileType<RoAHit>(), 0, 0);
 
-                if (Main.projectile[roA].ModProjectile is RoAHit hit)
+                if (Main.projectile[roA].ModProjectile is RoAHit hits)
                 {
-                    hit.color = Color.DeepSkyBlue;
-                    hit.Projectile.frameCounter = Main.rand.Next(1, 3);
+                    hits.color = Color.DeepSkyBlue;
+                    hits.Projectile.frameCounter = Main.rand.Next(1, 3);
                 }
             }
 
@@ -405,7 +405,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-            DisplayName.SetDefault("Aliban");
+            // DisplayName.SetDefault("Aliban");
         }
 
         public override void SetDefaults()
@@ -478,7 +478,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
             for (int i = 0; i < 2 + (Main.rand.NextBool() ? 1 : 0); i++)
@@ -486,10 +486,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 Vector2 vel = (target.Center - Main.player[Projectile.owner].Center).RotatedBy(Main.rand.NextFloat(-0.7f, 0.7f));
                 int roA = Projectile.NewProjectile(null, target.Center, vel.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1.5f, 3.1f), ModContent.ProjectileType<RoAHit>(), 0, 0);
 
-                if (Main.projectile[roA].ModProjectile is RoAHit hit)
+                if (Main.projectile[roA].ModProjectile is RoAHit hits)
                 {
-                    hit.color = Color.DeepSkyBlue;
-                    hit.Projectile.frameCounter = Main.rand.Next(1, 3);
+                    hits.color = Color.DeepSkyBlue;
+                    hits.Projectile.frameCounter = Main.rand.Next(1, 3);
                 }
             }
 

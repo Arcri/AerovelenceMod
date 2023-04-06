@@ -127,14 +127,14 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 		}
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			//target.AddBuff(ModContent.BuffType<Content.Buffs.Electrified>(), 240);
 			Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
 
 
 
-			Projectile.damage = (int)(damage * 0.85f); // Multihit penalty. Decrease the damage the more enemies the whip hits.
+			Projectile.damage = (int)(damageDone * 0.85f); // Multihit penalty. Decrease the damage the more enemies the whip hits.
 
 			Player owner = Main.player[Projectile.owner];
 
@@ -275,7 +275,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Cyver Bot");
+			// DisplayName.SetDefault("Cyver Bot");
 			Main.projFrames[Projectile.type] = 4;
 
 			ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;

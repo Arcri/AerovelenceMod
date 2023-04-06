@@ -133,7 +133,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             enemiesHit++;
         }
@@ -244,7 +244,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
 
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[Projectile.owner];
 
@@ -326,7 +326,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public int AdamShotHitCounter = 0;
         public int AdamShotTimer = 0;
 
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             if (projectile.type == ModContent.ProjectileType<AdamSmallShot>())
             {
@@ -334,7 +334,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 AdamShotTimer = 0;
             }
 
-            base.OnHitByProjectile(npc, projectile, damage, knockback, crit);
+            //base.OnHitByProjectile(npc, projectile, damage, knockback, crit);
         }
 
         public override void PostAI(NPC npc)

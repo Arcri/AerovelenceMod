@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float dashSpeed = 20;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shadow Clone");
+            // DisplayName.SetDefault("Shadow Clone");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 

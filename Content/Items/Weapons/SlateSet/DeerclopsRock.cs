@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Slate Boulder");
+			// DisplayName.SetDefault("Slate Boulder");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
 		}
@@ -135,7 +135,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 			Kill(5);
 			

@@ -9,8 +9,8 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Chestplate");
-            Tooltip.SetDefault("3% increased critical strike chance");
+            // DisplayName.SetDefault("Slate Chestplate");
+            // Tooltip.SetDefault("3% increased critical strike chance");
         }
         public override void SetDefaults()
         {

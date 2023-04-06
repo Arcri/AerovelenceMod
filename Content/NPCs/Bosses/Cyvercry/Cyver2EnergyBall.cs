@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Energy Ball");
+            // DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 9;
         }
         public override void SetDefaults()

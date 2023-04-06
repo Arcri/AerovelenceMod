@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver-Cannon");
-            Tooltip.SetDefault("Crits at the end of every burst");
+            // DisplayName.SetDefault("Cyver-Cannon");
+            // Tooltip.SetDefault("Crits at the end of every burst");
         }
 
         public override void SetDefaults()
@@ -444,7 +444,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             extraAngle = input;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 

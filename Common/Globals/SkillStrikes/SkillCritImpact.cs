@@ -19,7 +19,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Skill Strike Impact");
+            // DisplayName.SetDefault("Skill Strike Impact");
             Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()

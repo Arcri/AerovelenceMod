@@ -26,8 +26,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Wand of Blasting");
-            Tooltip.SetDefault("TODO");
+            // DisplayName.SetDefault("Wand of Blasting");
+            // Tooltip.SetDefault("TODO");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Crystal Spray");
+            // DisplayName.SetDefault("Crystal Spray");
         }
 
         public override void SetDefaults()
@@ -236,7 +236,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Exploding Bolt");
+            // DisplayName.SetDefault("Exploding Bolt");
             Main.projFrames[Projectile.type] = 4;
         }
         public override void SetDefaults()
@@ -414,7 +414,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             return trailWidth;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             //target.immune[Projectile.owner] = 100;
         }
@@ -428,7 +428,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Explosion");
+            // DisplayName.SetDefault("Explosion");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
@@ -453,7 +453,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             return timer < 4;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(ModContent.BuffType<ManaLeech>(), 300);
         }

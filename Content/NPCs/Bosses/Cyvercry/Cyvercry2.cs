@@ -2,6 +2,7 @@ using AerovelenceMod.Common.Globals.Worlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
@@ -21,7 +22,6 @@ using Terraria.DataStructures;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Content.Projectiles;
 using rail;
-using IL.Terraria.GameContent.Drawing;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry 
 {
@@ -30,7 +30,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyvercry");
+            // DisplayName.SetDefault("Cyvercry");
             Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
@@ -94,38 +94,39 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
         }
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             NPC.lifeMax = 43110;
             NPC.damage = 125;
             NPC.defense = 10;
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
         {
+            
             if (item.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
             {
                 if ((NPC.Center - Main.player[NPC.target].Center).Length() < 300)
-                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
+                    item.damage = (int)(item.damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
 
             }
         }
-        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (projectile.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
             {
                 if ((NPC.Center - Main.player[NPC.target].Center).Length() < 400)
                 {
-                    damage = (int)(damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
+                    projectile.damage = (int)(projectile.damage * (whatAttack == 3 && !spammingLaser ? 2 : 3.5f));
                 }
             }
 
 
             //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
-                damage = (int)(damage * 0.75f);
+                projectile.damage = (int)(projectile.damage * 0.75f);
             if (projectile.type == ProjectileID.ChlorophyteArrow)
-                damage = (int)(damage * 0.8f);
+                projectile.damage = (int)(projectile.damage * 0.8f);
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -453,7 +454,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         #endregion
 
         float bonusSpinCharge = 120;
-        int whatAttack = 71;
+        int whatAttack = -2;
         int timer = 0;
         int advancer = 0;
         float accelFloat = 0;
@@ -494,7 +495,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 21;
+            //whatAttack = 21;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -2477,7 +2478,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float deathOrbScale = 0f;
 
         bool dead = false;
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (!dead && NPC.life < 1)
             {
@@ -2601,7 +2602,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
-                NPC.StrikeNPC(NPC.lifeMax, 0f, 0, false, noEffect: true);
+
+                NPC.StrikeInstantKill();
+
+                //NPC.StrikeNPC(NPC.lifeMax, 0f, 0, false, noEffect: true);
                 spammingLaser = false;
                 Main.GameZoomTarget = 1;
             }

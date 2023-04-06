@@ -23,8 +23,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Titanium Rocket Launcher");
-			Tooltip.SetDefault("Right click to shoot a larger rocket that tries to follow the mouse\nDoes not require ammo");
+			// DisplayName.SetDefault("Titanium Rocket Launcher");
+			// Tooltip.SetDefault("Right click to shoot a larger rocket that tries to follow the mouse\nDoes not require ammo");
 		}
 
 		public override void SetDefaults()

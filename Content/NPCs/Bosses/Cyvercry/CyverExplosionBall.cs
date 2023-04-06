@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Cross Bomb");
+			// DisplayName.SetDefault("Cross Bomb");
 			Main.projFrames[Projectile.type] = 7;
 		}
 

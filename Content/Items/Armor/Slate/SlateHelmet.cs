@@ -9,8 +9,8 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Helmet");
-            Tooltip.SetDefault("2% increased damage");
+            // DisplayName.SetDefault("Slate Helmet");
+            // Tooltip.SetDefault("2% increased damage");
         }
 		public override bool IsArmorSet(Item head, Item body, Item legs)
 		{

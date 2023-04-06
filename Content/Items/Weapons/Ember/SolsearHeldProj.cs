@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Solsear");
+            // DisplayName.SetDefault("Solsear");
         }
         int maxTime = 50;
 

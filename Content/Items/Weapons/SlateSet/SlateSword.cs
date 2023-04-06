@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Sword");
-            Tooltip.SetDefault("Fires a rock on swing ");
+            // DisplayName.SetDefault("Slate Sword");
+            // Tooltip.SetDefault("Fires a rock on swing ");
         }
         public override void SetDefaults()
         {

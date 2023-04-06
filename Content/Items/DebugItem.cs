@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Drawing;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,7 +29,6 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
 using AerovelenceMod.Content.Items;
 using static Terraria.ModLoader.PlayerDrawLayer;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
-using IL.Terraria.GameContent.Drawing;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
 
 namespace AerovelenceMod.Content.Items
@@ -37,9 +37,9 @@ namespace AerovelenceMod.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("DebugItem");
-            Tooltip.SetDefault("You shouldn't have this...\n" +
-                "[i:" + ModContent.ItemType<Emoji>() + "]");
+            // DisplayName.SetDefault("DebugItem");
+            /* Tooltip.SetDefault("You shouldn't have this...\n" +
+                "[i:" + ModContent.ItemType<Emoji>() + "]"); */
         }
         public override void SetDefaults()
         {

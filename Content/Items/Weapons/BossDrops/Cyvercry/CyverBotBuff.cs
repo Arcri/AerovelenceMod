@@ -14,8 +14,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Bot");
-            Description.SetDefault("Cyver bots will fight for you");
+            // DisplayName.SetDefault("Cyver Bot");
+            // Description.SetDefault("Cyver bots will fight for you");
 
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;

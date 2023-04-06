@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frost Wave");
+            // DisplayName.SetDefault("Frost Wave");
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()

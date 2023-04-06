@@ -22,8 +22,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Granite Cannon");
-            Tooltip.SetDefault("TODO");
+            // DisplayName.SetDefault("Granite Cannon");
+            // Tooltip.SetDefault("TODO");
         }
         public override void SetDefaults()
         {
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Granite Cannon");
+            // DisplayName.SetDefault("Granite Cannon");
         }
         public override void SetDefaults()
         {
@@ -173,7 +173,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
-            DisplayName.SetDefault("Granite Chunk");
+            // DisplayName.SetDefault("Granite Chunk");
         }
         public override void SetDefaults()
         {
@@ -317,7 +317,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
-            DisplayName.SetDefault("Granite Score");
+            // DisplayName.SetDefault("Granite Score");
         }
         public override void SetDefaults()
         {

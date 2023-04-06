@@ -24,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.Spears
         //bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Asunder");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Asunder");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
@@ -70,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.Spears
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Asunder");
+            // DisplayName.SetDefault("Asunder");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -280,7 +280,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.Spears
 
 
         bool hasHit = false;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
         }

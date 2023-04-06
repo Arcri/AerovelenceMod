@@ -17,9 +17,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ozone Shredder");
-            Tooltip.SetDefault("Hit enemies while dashing to bash off of them" +
-                "\n'Sever the Skyline!'");
+            // DisplayName.SetDefault("Ozone Shredder");
+            /* Tooltip.SetDefault("Hit enemies while dashing to bash off of them" +
+                "\n'Sever the Skyline!'"); */
         }
         public override void SetDefaults()
         {

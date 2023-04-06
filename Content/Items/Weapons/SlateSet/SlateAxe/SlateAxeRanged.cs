@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet.SlateAxe
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Axe");
-            Tooltip.SetDefault("You shouldn't see this... ");
+            // DisplayName.SetDefault("Slate Axe");
+            // Tooltip.SetDefault("You shouldn't see this... ");
         }
         public override void SetDefaults()
         {

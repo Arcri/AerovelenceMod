@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Beacon Shot");
+            // DisplayName.SetDefault("Beacon Shot");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 14;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
         }

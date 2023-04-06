@@ -3,13 +3,13 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using On.Terraria.GameContent.Events;
 using ReLogic.Content;
 using System;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameContent.Events;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -159,7 +159,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             return NPC.localAI[2] > -30f && State != RimegeistState.ShadowDash ? false : base.CanHitPlayer(target, ref cooldownSlot);
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             NPC.lifeMax = 10000;  //boss life scale in expertmode
             NPC.damage = 40;  //boss damage increase in expermode
@@ -813,7 +813,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 case RimegeistState.ShadowDash:
 
                     if (AttackTimer == 0)
-                        ScreenObstruction.Draw += DrawOverBlackout;
+                        On_ScreenObstruction.Draw += DrawOverBlackout;
 
                     AttackTimer += 1;
 
@@ -937,7 +937,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public Color EyesColor => Color.Lerp(Color.Black,Color.White,EyesFade) * EyesFade;
 
 
-        public void DrawOverBlackout(On.Terraria.GameContent.Events.ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
+        public void DrawOverBlackout(Terraria.GameContent.Events.On_ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
         {
             orig(spriteBatch);
 
@@ -987,7 +987,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         }
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             //SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_54") with { Volume = .26f, Pitch = -.32f, PitchVariance = .39f, };
             //SoundEngine.PlaySound(style, NPC.Center);
@@ -1060,7 +1060,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Aurora Blast");
+            // DisplayName.SetDefault("Aurora Blast");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 40;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
@@ -1161,7 +1161,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icy Spike");
+            // DisplayName.SetDefault("Icy Spike");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
         }
@@ -1257,7 +1257,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public Vector2 goalPos = Vector2.Zero;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icy Spike");
+            // DisplayName.SetDefault("Icy Spike");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
         }
@@ -1341,7 +1341,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public Vector2 goalPos = Vector2.Zero;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icy Spike");
+            // DisplayName.SetDefault("Icy Spike");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
         }
@@ -1594,7 +1594,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             return false;
         }
 
-        public void DrawOverBlackout(On.Terraria.GameContent.Events.ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
+        public void DrawOverBlackout(Terraria.GameContent.Events.On_ScreenObstruction.orig_Draw orig, SpriteBatch spriteBatch)
         {
             orig(spriteBatch);
 
@@ -1611,7 +1611,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             Projectile.aiStyle = -1;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 180;
-            ScreenObstruction.Draw += DrawOverBlackout;
+            On_ScreenObstruction.Draw += DrawOverBlackout;
         }
         int radians = 16;
         int Timer = 0;
@@ -1651,7 +1651,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             if (Projectile.timeLeft < 2)
             {
                 Projectile.damage = 0;
-                ScreenObstruction.Draw -= DrawOverBlackout;
+                On_ScreenObstruction.Draw -= DrawOverBlackout;
             }
         }
     }

@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Icy Wind");
+			// DisplayName.SetDefault("Icy Wind");
 
 		}
 

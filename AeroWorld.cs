@@ -17,7 +17,7 @@ namespace AerovelenceMod
 		public IList<Vector2> Values;
 		public bool Bingus;
 
-		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
 		{
 			int idx = tasks.FindIndex(t => t.Name == "Underworld"); //Terrain
 			if (idx == -1)

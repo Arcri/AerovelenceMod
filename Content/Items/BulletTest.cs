@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Bullet Test");
+			// DisplayName.SetDefault("Bullet Test");
 		}
 
         public override void SetDefaults()

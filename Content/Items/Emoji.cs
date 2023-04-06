@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("You should not see this");
+			// DisplayName.SetDefault("You should not see this");
 		}
 
         

@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire");
+            // DisplayName.SetDefault("Fire");
         }
         public override void SetDefaults()
         {

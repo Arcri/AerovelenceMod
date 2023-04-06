@@ -24,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Entourage Crusher");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Entourage Crusher");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Entourage Crusher");
+            // DisplayName.SetDefault("Entourage Crusher");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -398,7 +398,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
 
         bool hasHit = false;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!hasHit)
             {

@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Oblivion");
+            // DisplayName.SetDefault("Oblivion");
             //Tooltip.SetDefault("Fires a rock on swing ");
         }
         public override void SetDefaults()

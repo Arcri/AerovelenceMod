@@ -14,8 +14,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("War Bow");
-			Tooltip.SetDefault("Hold to charge the bow, increasing damage and velocity\nSkill Strike by releasing with perfect timing");
+			// DisplayName.SetDefault("War Bow");
+			// Tooltip.SetDefault("Hold to charge the bow, increasing damage and velocity\nSkill Strike by releasing with perfect timing");
 		}
 
 		public override void SetDefaults()

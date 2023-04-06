@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Example Swing Sword");
-            Tooltip.SetDefault("Debug/Example Item");
+            // DisplayName.SetDefault("Example Swing Sword");
+            // Tooltip.SetDefault("Debug/Example Item");
         }
         public override void SetDefaults()
         {

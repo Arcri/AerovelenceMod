@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mana Leech"); // Buff display name
-            Description.SetDefault("uh i hope people cant see this"); // Buff description
+            // DisplayName.SetDefault("Mana Leech"); // Buff display name
+            // Description.SetDefault("uh i hope people cant see this"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
             //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world

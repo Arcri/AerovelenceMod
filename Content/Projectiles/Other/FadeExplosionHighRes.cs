@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Fade Explosion");
+			// DisplayName.SetDefault("Fade Explosion");
 
 		}
 

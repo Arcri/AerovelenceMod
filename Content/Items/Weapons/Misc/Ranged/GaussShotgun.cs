@@ -15,8 +15,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		private int shotCounter = 0;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Gauss Shotgun");
-			Tooltip.SetDefault("Fires three bullets, then two, then a homing Gaussian Star");
+			// DisplayName.SetDefault("Gauss Shotgun");
+			// Tooltip.SetDefault("Fires three bullets, then two, then a homing Gaussian Star");
 		}
 
 		public override void SetDefaults()

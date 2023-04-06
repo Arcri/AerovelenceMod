@@ -18,8 +18,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Alpenine");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Alpenine");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {

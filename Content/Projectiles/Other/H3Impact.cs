@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("H3 Impact");
+			// DisplayName.SetDefault("H3 Impact");
 
 		}
 

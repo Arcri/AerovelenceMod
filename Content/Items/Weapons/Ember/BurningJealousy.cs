@@ -18,6 +18,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Content.Projectiles.Other;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -26,8 +27,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning Jealousy");
-            Tooltip.SetDefault("Hold Right-Click to guard, gaining a large defense boost\nRetailiate with an explosive burst when hit while guarding");
+            // DisplayName.SetDefault("Burning Jealousy");
+            // Tooltip.SetDefault("Hold Right-Click to guard, gaining a large defense boost\nRetailiate with an explosive burst when hit while guarding");
         }
         public override void SetDefaults()
         {
@@ -73,7 +74,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning Jealousy");
+            // DisplayName.SetDefault("Burning Jealousy");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -362,7 +363,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning Jealousy");
+            // DisplayName.SetDefault("Burning Jealousy");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -504,7 +505,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Block");
+            // DisplayName.SetDefault("Block");
         }
 
         public override void SetDefaults()
@@ -579,7 +580,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public bool gaurding = false;
         public bool justHit = false;
         public bool notTile = false;
-        public override void OnHitByNPC(NPC npc, int damage, bool crit)
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
             if (gaurding)
             {
@@ -598,7 +599,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             }
         }
 
-        public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
             if (gaurding)
             {
@@ -619,7 +620,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
             if (gaurding)
             {
@@ -637,7 +638,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 */
             }
 
-            return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
+            //return base.ModifyHurt(ref modifiers);
         }
     }
 
@@ -648,7 +649,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning Explosion");
+            // DisplayName.SetDefault("Burning Explosion");
         }
 
         public override void SetDefaults()
@@ -725,7 +726,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Burning Explosion");
+            // DisplayName.SetDefault("Burning Explosion");
         }
 
         public override void SetDefaults()
@@ -764,7 +765,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                             Direction = 1;
                         else
                             Direction = -1;
-                        Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
+
+                        HitInfo myHit = new HitInfo();
+                        myHit.Damage = Projectile.damage;
+                        myHit.Knockback = Projectile.knockBack;
+                        myHit.HitDirection = Direction;
+
+                        Main.npc[i].StrikeNPC(myHit);
+
                         Main.npc[i].AddBuff(ModContent.BuffType<EmberFire>(), 300);
 
                     }

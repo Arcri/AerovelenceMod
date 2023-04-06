@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tetra Strike");
+            // DisplayName.SetDefault("Tetra Strike");
             Main.projFrames[Projectile.type] = 5;
         }
         public override void SetDefaults()
@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             overPlayers.Add(index);
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Projectile.owner] = 1; //20
             Projectile.damage = 0;

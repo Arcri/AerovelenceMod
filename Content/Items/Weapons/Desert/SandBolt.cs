@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
         public override bool ShouldUpdatePosition() => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sand Bolt");
+            // DisplayName.SetDefault("Sand Bolt");
         }
         int timer = 0;
         public override void SetDefaults()
@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Desert
 
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_100") with { Volume = .29f, Pitch = 0.95f, PitchVariance = .08f, MaxInstances = 1 };
             SoundEngine.PlaySound(style, Projectile.Center);

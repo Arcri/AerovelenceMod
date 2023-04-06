@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyvercry"); //DONT Change me
+            // DisplayName.SetDefault("Cyvercry"); //DONT Change me
             Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
@@ -52,7 +52,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             }
             dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             NPC.lifeMax = 41500;
             NPC.damage = 125;
@@ -757,7 +757,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Energy Ball");
+            // DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 9;
         }
 
@@ -859,7 +859,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shadow Cyvercry");
+            // DisplayName.SetDefault("Shadow Cyvercry");
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()
@@ -904,7 +904,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public float vel = 5;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Energy Ball");
+            // DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
@@ -972,7 +972,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Secret Shadow Blade"); // ;) Vortex was here
+            // DisplayName.SetDefault("Secret Shadow Blade"); // ;) Vortex was here
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()

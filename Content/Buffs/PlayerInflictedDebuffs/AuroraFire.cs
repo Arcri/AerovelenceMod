@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Aurora Fire"); // Buff display name
-            Description.SetDefault("Toasty!"); // Buff description
+            // DisplayName.SetDefault("Aurora Fire"); // Buff display name
+            // Description.SetDefault("Toasty!"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
             //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world

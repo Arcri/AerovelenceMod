@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starflake");
+            // DisplayName.SetDefault("Starflake");
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()
@@ -123,7 +123,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icy Spike");
+            // DisplayName.SetDefault("Icy Spike");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
         }

@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("TrailTest");
+			// DisplayName.SetDefault("TrailTest");
 			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
 		}
 		public override void SetDefaults()

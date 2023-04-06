@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("War Bow");
+            // DisplayName.SetDefault("War Bow");
         }
 
         public int OFFSET = 10; //15

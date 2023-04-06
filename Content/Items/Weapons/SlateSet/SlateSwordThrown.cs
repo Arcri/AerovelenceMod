@@ -155,13 +155,12 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			}
 		}
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 			storedRotation = Projectile.rotation;
 			offset = (target.Center - Projectile.Center);
 			stickIndex = target.whoAmI;
 			stuckInEnemy = true;
-			base.OnHitNPC(target, damage, knockback, crit);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)

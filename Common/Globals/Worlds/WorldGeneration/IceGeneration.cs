@@ -11,7 +11,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
 {
     public class IceWorldgen : ModSystem
     {
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             int genIndex;
 

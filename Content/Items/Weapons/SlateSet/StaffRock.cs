@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Slate Chunk");
+			// DisplayName.SetDefault("Slate Chunk");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
 

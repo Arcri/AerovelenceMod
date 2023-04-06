@@ -15,6 +15,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.Players;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 {
@@ -22,8 +23,8 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Antique Pistol");
-            Tooltip.SetDefault("'Property of Erin'");
+            // DisplayName.SetDefault("Antique Pistol");
+            // Tooltip.SetDefault("'Property of Erin'");
         }
         public override void SetDefaults()
         {
@@ -176,7 +177,13 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                     
                     if (TopLeftCol || TopRightCol || BottomLeftCol || BottomRightCol)
                     {
-                        Main.npc[i].StrikeNPC(damage, knockback, Direction);
+
+                        HitInfo hit = new HitInfo();
+                        hit.Damage = damage;
+                        hit.HitDirection = Direction;
+                        Main.npc[i].StrikeNPC(hit);
+
+
                         damage = (int)(damage * 0.8f);
                         int a = Projectile.NewProjectile(null, Main.npc[i].Center, Vector2.Zero, ModContent.ProjectileType<ErinImpact>(), 0, 0);
                         Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
@@ -286,7 +293,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Antique Pistol");
+            // DisplayName.SetDefault("Antique Pistol");
         }
         public override void SetDefaults()
         {
@@ -487,7 +494,11 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
                             }
                         }
 
-                        Main.npc[i].StrikeNPC(Projectile.damage, 2, Direction);
+                        HitInfo hit = new HitInfo();
+                        hit.Damage = Projectile.damage;
+                        hit.HitDirection = Direction;
+                        Main.npc[i].StrikeNPC(hit);
+
                         int a = Projectile.NewProjectile(null, Main.npc[i].Center, Vector2.Zero, ModContent.ProjectileType<ErinImpact>(), 0, 0);
                         Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
                         Main.projectile[a].scale = 1.25f;
@@ -518,7 +529,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Erin Impact");
+            // DisplayName.SetDefault("Erin Impact");
             Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()
@@ -587,7 +598,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Erin Impact");
+            // DisplayName.SetDefault("Erin Impact");
             Main.projFrames[Projectile.type] = 32;
         }
         public override void SetDefaults()
@@ -911,7 +922,7 @@ namespace AerovelenceMod.Content.Items.Weapons.AreaPistols.ErinGun
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ErinReloadProj");
+            // DisplayName.SetDefault("ErinReloadProj");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 1;
 
         }

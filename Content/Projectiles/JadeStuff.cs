@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Jade Pulse");
+            // DisplayName.SetDefault("Jade Pulse");
         }
 
         public override void SetDefaults()
@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Jade Magma Pulse");
+            // DisplayName.SetDefault("Jade Magma Pulse");
         }
 
         public override void SetDefaults()

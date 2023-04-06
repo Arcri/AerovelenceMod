@@ -9,6 +9,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -16,7 +17,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Gaussian Star");
+			// DisplayName.SetDefault("Gaussian Star");
 			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
@@ -84,7 +85,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				vector *= 10f / magnitude; 
 			}
 		}
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			AoE();
 		}
@@ -106,8 +107,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 						Direction = 1;
 					else
 						Direction = -1;
-					Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
-					Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
+
+					HitInfo myHit = new HitInfo();
+					myHit.Damage = Projectile.damage;
+					myHit.Knockback = Projectile.knockBack;
+					myHit.HitDirection = Direction;
+
+					Main.npc[i].StrikeNPC(myHit);
+
+					//Main.npc[i].StrikeNPC(Projectile.damage, Projectile.knockBack, Direction);
+					//Main.npc[i].GetGlobalNPC<SkillStrikeNPC>().strikeCTRemove = true;
 				}
 			}
 			SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
@@ -157,7 +166,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Gauss Explosion");
+			// DisplayName.SetDefault("Gauss Explosion");
 		}
 
 		public override void SetDefaults()

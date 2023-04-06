@@ -115,7 +115,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Laser");
+            // DisplayName.SetDefault("Cyver Laser");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
         public override void SetDefaults()
@@ -238,7 +238,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Laser");
+            // DisplayName.SetDefault("Cyver Laser");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
         public override void SetDefaults()

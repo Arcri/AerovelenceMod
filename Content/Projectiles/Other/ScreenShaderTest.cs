@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("DistortTest");
+			// DisplayName.SetDefault("DistortTest");
 
 		}
         public override void SetDefaults()

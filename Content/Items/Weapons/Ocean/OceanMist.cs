@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ocean Mist");
-            Tooltip.SetDefault("TODO");
+            // DisplayName.SetDefault("Ocean Mist");
+            // Tooltip.SetDefault("TODO");
         }
         public override void SetDefaults()
         {
@@ -70,7 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ocean Mist");
+            // DisplayName.SetDefault("Ocean Mist");
         }
         public override void SetDefaults()
         {
@@ -209,7 +209,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
  
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ocean Mist");
+            // DisplayName.SetDefault("Ocean Mist");
         }
         public override void SetDefaults()
         {
@@ -297,7 +297,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             return 0;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             maximumPierce--;
         }

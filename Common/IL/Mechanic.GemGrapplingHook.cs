@@ -9,7 +9,7 @@ namespace AerovelenceMod.Common.IL
 	{
 		public static void Load()
 		{
-			global::IL.Terraria.Projectile.VanillaAI += VanillaAI_GrapplingHookRange;
+			global::Terraria.IL_Projectile.VanillaAI += VanillaAI_GrapplingHookRange;
 		}
         private static void VanillaAI_GrapplingHookRange(ILContext il)
         {

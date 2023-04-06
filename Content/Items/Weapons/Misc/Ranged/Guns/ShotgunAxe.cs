@@ -22,8 +22,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shotgun Axe");
-            Tooltip.SetDefault("TODO");
+            // DisplayName.SetDefault("Shotgun Axe");
+            // Tooltip.SetDefault("TODO");
         }
         public override void SetDefaults()
         {
@@ -132,7 +132,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shotgun Axe");
+            // DisplayName.SetDefault("Shotgun Axe");
         }
         public override void SetDefaults()
         {
@@ -247,7 +247,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shotgun");
+            // DisplayName.SetDefault("Shotgun");
         }
 
         public override void SetDefaults()
@@ -355,7 +355,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shotgun Axe");
+            // DisplayName.SetDefault("Shotgun Axe");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -571,7 +571,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
 
         int justHitTime = 0;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             for (int i = 0; i < 1; i++)
             {
@@ -605,7 +605,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Blood Impact");
+            // DisplayName.SetDefault("Blood Impact");
             Main.projFrames[Projectile.type] = 10;
         }
         public override void SetDefaults()
@@ -680,8 +680,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Gouged");
-            Description.SetDefault("Losing this much blood can't be good, right?");
+            // DisplayName.SetDefault("Gouged");
+            // Description.SetDefault("Losing this much blood can't be good, right?");
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
             BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
@@ -734,7 +734,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             }
         }
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (BloodDebuff)
             {

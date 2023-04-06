@@ -315,7 +315,7 @@ namespace AerovelenceMod
 
 				//TrailShader = Assets.Request<Effect>("Effects/Trail");
 
-				On.Terraria.Graphics.Effects.FilterManager.EndCapture += FilterManager_EndCapture;
+				Terraria.Graphics.Effects.On_FilterManager.EndCapture += FilterManager_EndCapture;
 				CreateRender();
 
 			}
@@ -339,7 +339,7 @@ namespace AerovelenceMod
 		
         public override void Unload()
 		{
-			On.Terraria.Graphics.Effects.FilterManager.EndCapture -= FilterManager_EndCapture;
+			Terraria.Graphics.Effects.On_FilterManager.EndCapture -= FilterManager_EndCapture;
 
 
 			ModDetours.Unload();
@@ -366,7 +366,7 @@ namespace AerovelenceMod
 			base.Close();
 		}
 
-        public override void AddRecipeGroups()
+        public override void AddRecipeGroups()/* tModPorter Note: Removed. Use ModSystem.AddRecipeGroups */
         {
             {
                 RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
@@ -431,7 +431,7 @@ namespace AerovelenceMod
 
 		//Ripped from Regressus which was ripped from a chinese example mod i think
 		public RenderTarget2D render3;
-		private void FilterManager_EndCapture(On.Terraria.Graphics.Effects.FilterManager.orig_EndCapture orig, Terraria.Graphics.Effects.FilterManager self, 
+		private void FilterManager_EndCapture(Terraria.Graphics.Effects.On_FilterManager.orig_EndCapture orig, Terraria.Graphics.Effects.FilterManager self, 
 			RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
         {
 			GraphicsDevice gd = Main.instance.GraphicsDevice;

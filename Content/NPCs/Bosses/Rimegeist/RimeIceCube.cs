@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public int index = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ice Cube");
+            // DisplayName.SetDefault("Ice Cube");
             Main.projFrames[Projectile.type] = 1;
         }
         public override void SetDefaults()

@@ -12,6 +12,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using AerovelenceMod.Content.Buffs.FlareDebuffs;
 using Steamworks;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {   
@@ -325,9 +326,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             baseUpdateLifeRegen(npc, ref damage);
         }
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            baseModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
+            //baseModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
         }
 
         public void baseResetEffects(NPC npc)
@@ -376,7 +377,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
                     SoundStyle? storedHitsound = npc.HitSound;
                     npc.HitSound = sound;
-                    npc.StrikeNPC(tickDamage, 0, 0, noEffect: true);
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = tickDamage;
+                    //myHit. = Direction;
+
+                    npc.StrikeNPC(myHit);
+
+
                     npc.HitSound = storedHitsound;
 
 

@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         bool tick = false;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elemental Shift");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Elemental Shift");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
             {
@@ -66,7 +66,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elemental Shift");
+            // DisplayName.SetDefault("Elemental Shift");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -423,7 +423,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
 
         int hitDelay = 0;
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             //hitDelay = 5;
 
@@ -497,7 +497,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Aurora Blast");
+            // DisplayName.SetDefault("Aurora Blast");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 40;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
         }
@@ -543,7 +543,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             timer++;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
             if (true)

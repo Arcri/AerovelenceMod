@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Locks onto targets closest to the cursor and additionally shoot projeciles");
+            // Tooltip.SetDefault("Locks onto targets closest to the cursor and additionally shoot projeciles");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()

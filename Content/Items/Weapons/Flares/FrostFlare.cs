@@ -224,7 +224,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             */
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             noSound = true;
             HitDust();
@@ -284,7 +284,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frost Spike");
+            // DisplayName.SetDefault("Frost Spike");
             Main.projFrames[Projectile.type] = 3;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;

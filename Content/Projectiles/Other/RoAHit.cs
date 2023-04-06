@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public override void SetStaticDefaults()
 		{
 			Main.projFrames[Projectile.type] = 4;
-			DisplayName.SetDefault("RoAHit");
+			// DisplayName.SetDefault("RoAHit");
 		}
 
         public override void SetDefaults()

@@ -23,9 +23,9 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         Color sigilColor = Color.LightGreen;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Bow");
-            Tooltip.SetDefault("Deals high damage, but fires slowly \n" +
-                "Fires faster if you are standing still");
+            // DisplayName.SetDefault("Slate Bow");
+            /* Tooltip.SetDefault("Deals high damage, but fires slowly \n" +
+                "Fires faster if you are standing still"); */
         }
         public override void SetDefaults()
         {

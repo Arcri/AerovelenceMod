@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet.SlateAxe
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Slate Axe");
+            // DisplayName.SetDefault("Slate Axe");
         }
         int maxTime = 50;
 

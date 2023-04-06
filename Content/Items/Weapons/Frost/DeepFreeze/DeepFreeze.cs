@@ -21,8 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Deep Freeze");
-            Tooltip.SetDefault("'Is it cold in here, or is it just me?'");
+            // DisplayName.SetDefault("Deep Freeze");
+            // Tooltip.SetDefault("'Is it cold in here, or is it just me?'");
         }
         public override void SetDefaults()
         {
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Deep Freeze");
+            // DisplayName.SetDefault("Deep Freeze");
         }
         int maxTime = 50;
 
@@ -362,7 +362,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Icy Wind");
+            // DisplayName.SetDefault("Icy Wind");
 
         }
 
@@ -456,7 +456,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             return color;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!target.HasBuff<AuroraFire>())
             {

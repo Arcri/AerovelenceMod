@@ -29,8 +29,8 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tetra Blades");
-            Tooltip.SetDefault("");
+            // DisplayName.SetDefault("Tetra Blades");
+            // Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {

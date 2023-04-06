@@ -5,7 +5,7 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
 {
     public class MilitaryMetalItem : AerovelenceItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Military Metal");
+		//public override void SetStaticDefaults() => DisplayName.SetDefault("Military Metal");
 
         public override void SetDefaults()
         {

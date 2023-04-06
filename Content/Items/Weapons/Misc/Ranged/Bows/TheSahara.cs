@@ -24,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sahara");
-			Tooltip.SetDefault("TODO");
+			// DisplayName.SetDefault("Sahara");
+			// Tooltip.SetDefault("TODO");
 		}
 
 		public override void SetDefaults()
@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sahara");
+            // DisplayName.SetDefault("Sahara");
         }
 
         public int OFFSET = 10; //15
@@ -379,7 +379,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("FireWhirl");
+            // DisplayName.SetDefault("FireWhirl");
             Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()
@@ -473,7 +473,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         float opacity = 1f;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hollow Pulse");
+            // DisplayName.SetDefault("Hollow Pulse");
 
         }
 
@@ -535,7 +535,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             return false;
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(BuffID.OnFire, 100);
         }

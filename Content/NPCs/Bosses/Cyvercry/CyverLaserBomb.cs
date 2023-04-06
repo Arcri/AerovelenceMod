@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Laser Bomb");
+            // DisplayName.SetDefault("Laser Bomb");
         }
         public override void SetDefaults()
         {
@@ -154,7 +154,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Beam");
+            // DisplayName.SetDefault("Cyver Beam");
         }
         public override void SetDefaults()
         {

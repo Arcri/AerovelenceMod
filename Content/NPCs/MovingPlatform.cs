@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.NPCs
 {
     public class MovingPlatform : CollideableNPC
     {
-        public override void SetStaticDefaults() => DisplayName.SetDefault("PLATFORM TEST");
+        //public override void SetStaticDefaults() => DisplayName.SetDefault("PLATFORM TEST");
         public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
         public override bool? CanBeHitByProjectile(Projectile projectile) => false;
         public override bool? CanBeHitByItem(Player player, Item item) => false;

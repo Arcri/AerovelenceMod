@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         public override bool ShouldUpdatePosition() => true;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ozone Shredder");
+            // DisplayName.SetDefault("Ozone Shredder");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 9;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2; 
         }
@@ -233,7 +233,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         bool hasBonked = false;
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
 
             Player player = Main.player[Projectile.owner];
@@ -331,7 +331,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("OzoneDistort");
+            // DisplayName.SetDefault("OzoneDistort");
         }
         public override void SetDefaults()
         {

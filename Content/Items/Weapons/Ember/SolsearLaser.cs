@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		Vector2 mousePos = Vector2.Zero;
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Solsear");
+			// DisplayName.SetDefault("Solsear");
 
 		}
 
@@ -246,7 +246,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 		}
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
@@ -262,7 +262,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			SoundEngine.PlaySound(style, target.Center);
 
 			target.immune[Projectile.owner] = 5; //20 
-			damage = (int)damage / 4;
+			hit.Damage = (int)hit.Damage / 4;
 		}
 
 		public Vector2 GetTipperPosition()

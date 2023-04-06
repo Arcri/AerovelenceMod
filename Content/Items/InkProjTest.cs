@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Ink Test");
+			// DisplayName.SetDefault("Ink Test");
 		}
 
         public override void SetDefaults()

@@ -17,8 +17,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("ICER");
-            Tooltip.SetDefault("VERY UNFINISHED");
+            // DisplayName.SetDefault("ICER");
+            // Tooltip.SetDefault("VERY UNFINISHED");
         }
         public override void SetDefaults()
         {

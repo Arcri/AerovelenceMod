@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Terraria.Audio;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -22,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Burning Blaze Ball");
+			// DisplayName.SetDefault("Burning Blaze Ball");
 		}
 
 		public override void SetDefaults()
@@ -170,7 +171,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 						Direction = 1;
 					else
 						Direction = -1;
-					Main.npc[i].StrikeNPC(Projectile.damage * 3, Projectile.knockBack, Direction);
+
+					HitInfo myHit = new HitInfo();
+					myHit.Damage = Projectile.damage * 3;
+					myHit.Knockback = Projectile.knockBack;
+					myHit.HitDirection = Direction;
+
+					Main.npc[i].StrikeNPC(myHit);
 
 					ArmorShaderData thisDustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 					for (int j = 0; j < 4; j++)
@@ -250,10 +257,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 		}
 
-        public override void ModifyDamageScaling(ref float damageScale)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
 			float damage = Projectile.damage * globalScale;
-            base.ModifyDamageScaling(ref damage);
+            //base.ModifyHitNPC(ref damage);
         }
     }
 }

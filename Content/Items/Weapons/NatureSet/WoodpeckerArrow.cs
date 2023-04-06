@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.NatureSet
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Arrow");
+			// DisplayName.SetDefault("Arrow");
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
 
@@ -111,7 +111,7 @@ namespace AerovelenceMod.Content.Items.Weapons.NatureSet
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Wood Impact");
+			// DisplayName.SetDefault("Wood Impact");
 			Main.projFrames[Projectile.type] = 8;
 		}
 		public override void SetDefaults()

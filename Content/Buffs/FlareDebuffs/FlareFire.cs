@@ -9,6 +9,7 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using AerovelenceMod.Content.Dusts;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 {
@@ -17,8 +18,8 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Fire"); // Buff display name
-            Description.SetDefault("Toasty!"); // Buff description
+            // DisplayName.SetDefault("Flare Fire"); // Buff display name
+            // Description.SetDefault("Toasty!"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
             //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
@@ -125,7 +126,12 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 
                     npc.HitSound = style;
 
-                    npc.StrikeNPC(10, 0, 0, noEffect: true);
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = 10;
+                    myHit.HideCombatText = true;
+
+
+                    //npc.StrikeNPC(10, 0, 0, noEffect: true);
 
                     npc.HitSound = storedHitsound;
 
@@ -135,11 +141,11 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
                 FlareFireTime++;
             }
         }
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (FlareFireDebuff && !projectile.npcProj && !projectile.trap && (projectile.minion || ProjectileID.Sets.MinionShot[projectile.type]))
             {
-                damage += 5;
+                projectile.damage += 5;
             }
         }
     }

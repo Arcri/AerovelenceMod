@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Bot");
+            // DisplayName.SetDefault("Cyver Bot");
             Main.npcFrameCount[NPC.type] = 4;
             NPCID.Sets.TrailCacheLength[NPC.type] = 10;
             NPCID.Sets.TrailingMode[NPC.type] = 1;
@@ -539,7 +539,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
     public class CyverBotOrbiter : ModNPC {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Cyver Bot");
+            // DisplayName.SetDefault("Cyver Bot");
             Main.npcFrameCount[NPC.type] = 4;
             NPCID.Sets.TrailCacheLength[NPC.type] = 10;
             NPCID.Sets.TrailingMode[NPC.type] = 1;

@@ -9,8 +9,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flareshark");
-            Tooltip.SetDefault("33% chance to not consume ammo\nShoots flares alongside bullets");
+            // DisplayName.SetDefault("Flareshark");
+            // Tooltip.SetDefault("33% chance to not consume ammo\nShoots flares alongside bullets");
         }
         public override void SetDefaults()
         {

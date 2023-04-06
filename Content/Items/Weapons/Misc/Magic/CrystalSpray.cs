@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Hoses down enemies with homing water streams.");
+            // Tooltip.SetDefault("Hoses down enemies with homing water streams.");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -77,7 +77,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Crystal Spray");
+            // DisplayName.SetDefault("Crystal Spray");
         }
 
         public override void SetDefaults()
