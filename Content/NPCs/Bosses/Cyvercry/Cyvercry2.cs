@@ -494,7 +494,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            whatAttack = 23;
+            whatAttack = 21;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -1207,7 +1207,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundEngine.PlaySound(style2, NPC.Center);
 
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -96, Vector2.Zero, ModContent.ProjectileType<FocusedLaser>(), 15, 2);
-                    Main.projectile[a].timeLeft = 85;
+                    Main.projectile[a].timeLeft = 119;
                     if (Main.projectile[a].ModProjectile is FocusedLaser laser)
                     {
                         laser.parentIndex = NPC.whoAmI;
@@ -1221,10 +1221,50 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 //NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.007f), 0, 0.4f) * (sweepLaserDir ? 1 : -1);
 
-                //Main.NewText((0.0025f * timer + 0.007f));
-                NPC.rotation += MathHelper.Clamp((0.0025f * timer + 0.004f), 0, 0.09f) * (sweepLaserDir ? 1 : -1);
+                //Main.NewText((0.0025f * timer + 0.007f)); //0.004
+                NPC.rotation += MathHelper.Clamp((0.0013f * timer), 0, 0.07f) * (sweepLaserDir ? 1 : -1);
 
                 //Main.NewText((0.0017f * timer + 0.015f));
+
+                if (timer % 50 == 0 && timer != 0)
+                {
+                    Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), from, NPC.rotation.ToRotationVector2() * -10, ModContent.ProjectileType<LaserExplosionBall>(),
+                        ContactDamage / 10, 2, Main.myPlayer);
+                    Projectile p = Main.projectile[a];
+                    p.timeLeft = 1;
+
+                    if (p.ModProjectile is LaserExplosionBall ball)
+                    {
+                        ball.projType = ModContent.ProjectileType<EnergyBall>();
+
+
+                        ball.numberOfLasers = 3;
+                        //ball.projType = ModContent.ProjectileType<StretchLaser>();
+                        //ball.vel = 1f;
+                    }
+
+                    /* LOVEEE this laser pulse and should use it with the balls, but just feels wrong here
+                    SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f, Volume = 0.6f }, NPC.Center);
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = .16f, Volume = 0.8f, Pitch = 0.7f };
+                    SoundEngine.PlaySound(style, NPC.Center);
+
+
+                    Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
+
+                    for (int i = -4; i < 5; i++)
+                    {
+                        int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), from, NPC.rotation.ToRotationVector2().RotatedBy(MathHelper.PiOver4 * i) * -0.4f, ModContent.ProjectileType<StretchLaser>(),
+                        ContactDamage / 7, 2);
+                        Main.projectile[a].timeLeft = 400;
+                        if (Main.projectile[a].ModProjectile is StretchLaser laser)
+                        {
+                            laser.accelerateTime = 200;
+                            laser.accelerateStrength = 1.025f; //1.025
+                        }
+                    }
+                    */
+                }
 
                 if (timer % 5 == 0)
                 {
@@ -1240,7 +1280,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //turn desiredDirection
                 //Shootlasers
 
-                if (timer == 86) //70
+                if (timer == 120) //86
                 {
                     timer = -1;
                     advancer = -0;
@@ -1409,10 +1449,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 if (timer == 300)
                 {
-                    //SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Pitch = .65f, PitchVariance = .2f, Volume = 1f };
-                    //SoundEngine.PlaySound(style, NPC.Center);
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Pitch = .65f, PitchVariance = .2f, Volume = 0.5f };
+                    SoundEngine.PlaySound(style, NPC.Center);
 
-                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .54f };
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .54f, Volume = 0.8f };
                     SoundEngine.PlaySound(style2, NPC.Center);
 
                     if (newRotation > NPC.rotation)
@@ -2424,6 +2464,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             timer++;
         }
 
+        public void PinkCloneP3(Player myPlayer)
+        {
+
+        }
         #endregion
 
         #endregion

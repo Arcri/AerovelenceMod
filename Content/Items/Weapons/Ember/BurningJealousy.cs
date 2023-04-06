@@ -17,6 +17,7 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
+using AerovelenceMod.Content.Projectiles.Other;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -460,6 +461,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             if (player.GetModPlayer<BurningJealousyPlayer>().justHit)
             {
+
                 player.GetModPlayer<BurningJealousyPlayer>().justHit = false;
                 player.GetModPlayer<BurningJealousyPlayer>().gaurding = false;
 

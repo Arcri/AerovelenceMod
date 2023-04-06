@@ -16,6 +16,7 @@ namespace AerovelenceMod.Content.Projectiles
 	{
         //TODO:
         // - Add presets for WidthFunction
+        // - Make a pixelated trail shader actually work
         // - Add more options for shaders
         // - Add more stuff to basic trail shader
         //    - Glow effect from GlowMisc
