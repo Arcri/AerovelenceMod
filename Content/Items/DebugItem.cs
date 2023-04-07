@@ -30,6 +30,7 @@ using AerovelenceMod.Content.Items;
 using static Terraria.ModLoader.PlayerDrawLayer;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
+using AerovelenceMod.Content.Projectiles.BulletRework;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -65,7 +66,7 @@ namespace AerovelenceMod.Content.Items
         
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int Mura = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<PhantomLaserTelegraph>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Mura = Projectile.NewProjectile(null, position, velocity * 0.2f, ModContent.ProjectileType<NanoBullet>(), 10, 0, player.whoAmI, 0f, 0f);
             return false;
 
             //int Mura2yeah = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(2.0f, 3.1f), ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);

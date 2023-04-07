@@ -14,11 +14,13 @@ using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
-namespace AerovelenceMod.Content.Items
+namespace AerovelenceMod.Content.Projectiles.BulletRework
 {
-    public class BulletTest : TrailProjBase
+    public class MusketBall : TrailProjBase
     {
-		float timer = 0;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        float timer = 0;
 		public Color color = Color.White;
 		public float overallSize = 1f;
 		public int lineWidth = 3;
@@ -160,7 +162,7 @@ namespace AerovelenceMod.Content.Items
         }
     }
 
-    /*public class BulletReplacer : GlobalItem
+    public class BulletReplacer : GlobalItem
     {
         public override bool AppliesToEntity(Item item, bool lateInstatiation)
         {
@@ -171,8 +173,7 @@ namespace AerovelenceMod.Content.Items
         {
             item.StatsModifiedBy.Add(Mod);
             //item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
-            item.shoot = ModContent.ProjectileType<BulletTest>();
+            item.shoot = ModContent.ProjectileType<MusketBall>();
         }
     }
-    */
 }

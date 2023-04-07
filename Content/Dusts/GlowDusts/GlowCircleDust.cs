@@ -78,6 +78,9 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 				dust.active = false;
 			}
 
+			if (dust.alpha != 0)
+				dust.color *= 0.95f;
+
 			return false; 
 
 		}

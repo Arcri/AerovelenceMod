@@ -14,11 +14,13 @@ using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
-namespace AerovelenceMod.Content.Items
+namespace AerovelenceMod.Content.Projectiles.BulletRework
 {
-    public class BulletTest : TrailProjBase
+    public class NanoBullet : TrailProjBase
     {
-		float timer = 0;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        float timer = 0;
 		public Color color = Color.White;
 		public float overallSize = 1f;
 		public int lineWidth = 3;
@@ -48,8 +50,8 @@ namespace AerovelenceMod.Content.Items
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
-            trailColor = new Color(255, 111, 20);
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value;
+            trailColor = Color.DodgerBlue; //191 255 255
             trailTime = timer * 0.02f;
 
             trailPointLimit = 120;
@@ -61,7 +63,7 @@ namespace AerovelenceMod.Content.Items
 
             TrailLogic();
 
-            Lighting.AddLight(Projectile.position, Color.Orange.ToVector3() * 0.45f);
+            Lighting.AddLight(Projectile.Center, Color.SkyBlue.ToVector3() * 0.3f);
 			timer++;
         }
 
@@ -69,6 +71,7 @@ namespace AerovelenceMod.Content.Items
         {
             Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
             return true;
+
             // If the projectile hits the left or right side of the tile, reverse the X velocity
             if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
             {
@@ -90,6 +93,20 @@ namespace AerovelenceMod.Content.Items
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_40") with { Pitch = -.71f, PitchVariance = .28f, MaxInstances = 1, Volume = 0.5f };
             SoundEngine.PlaySound(style, Projectile.Center);
 
+            for (int h = 0; h < 3; h++)
+            {
+                //Obv ineficietentntet
+                Dust d = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixel>(),
+                    Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-2, 2)) * Main.rand.Next(1, 3), 
+                    newColor: Color.DodgerBlue, Alpha: 69);
+
+                //int dust = Dust.NewDust(Projectile.Center, 30, 30, ModContent.DustType<GlowPixel>(), Scale: 1f, newColor: Color.DodgerBlue);
+                //Main.dust[dust].velocity *= 3f;
+                //Main.dust[dust].position += Main.dust[dust].velocity * 3;
+
+            }
+
+            /*
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             for (int i = 0; i < 3; i++)
             {
@@ -99,6 +116,7 @@ namespace AerovelenceMod.Content.Items
                 p.alpha = 0;
                 //p.rotation = Main.rand.NextFloat(6.28f);
             }
+            */
         }
 
         public float widthIntensity = 0;
@@ -108,21 +126,11 @@ namespace AerovelenceMod.Content.Items
 			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
 			Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
-            //Contenders:
-            //TrailImages/Starlight/EnergyTex/tri * -10
-            //TrailImages/Starlight/196_Black/tri
-            //TrailImages/Starlight/EnergyTex
-
             Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            //(Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20)
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1 ,1, 0, 0), Color.OrangeRed * 2, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.OrangeRed * 2, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1 ,1, 0, 0), Color.DeepSkyBlue, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
-
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), Tex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, Tex.Size() / 2, scale * 0.06f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), Tex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, Tex.Size() / 2, scale * 0.06f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -133,46 +141,24 @@ namespace AerovelenceMod.Content.Items
 
         public override float WidthFunction(float progress)
         {
-            
-            /*
-            if (progress < 0.5f)
-            {
-                float num = 1f;
-                float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
-                num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-                return MathHelper.Lerp(0f, 30f, num) * 0.4f;
-            }
-            else if (progress >= 0.5)
-            {
-                float num = 1f;
-                float lerpValue = Utils.GetLerpValue(0f, 0.6f, 1 - progress, clamped: true);
-                num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-                return MathHelper.Lerp(0f, 30f, num) * 0.4f;
-            }
-            */
-            
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
             return MathHelper.Lerp(0f, 30f, num) * 0.5f;
-            
-            return 0;
         }
     }
 
-    /*public class BulletReplacer : GlobalItem
+    public class NanoBulletReplacer : GlobalItem
     {
         public override bool AppliesToEntity(Item item, bool lateInstatiation)
         {
-            return item.type == ItemID.MusketBall;
+            return item.type == ItemID.NanoBullet;
         }
 
         public override void SetDefaults(Item item)
         {
             item.StatsModifiedBy.Add(Mod);
-            //item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
-            item.shoot = ModContent.ProjectileType<BulletTest>();
+            item.shoot = ModContent.ProjectileType<NanoBullet>();
         }
     }
-    */
 }

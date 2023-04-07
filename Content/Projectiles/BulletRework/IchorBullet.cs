@@ -14,11 +14,13 @@ using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
-namespace AerovelenceMod.Content.Items
+namespace AerovelenceMod.Content.Projectiles.BulletRework
 {
-    public class BulletTest : TrailProjBase
+    public class IchorBullet : TrailProjBase
     {
-		float timer = 0;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        float timer = 0;
 		public Color color = Color.White;
 		public float overallSize = 1f;
 		public int lineWidth = 3;
@@ -49,12 +51,12 @@ namespace AerovelenceMod.Content.Items
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
-            trailColor = new Color(255, 111, 20);
+            trailColor = Color.Gold;
             trailTime = timer * 0.02f;
 
             trailPointLimit = 120;
-            trailWidth = 20;
-            trailMaxLength = 100; //200
+            trailWidth = 15;
+            trailMaxLength = 150; //200
 
             trailRot = Projectile.velocity.ToRotation();
             trailPos = Projectile.Center;
@@ -69,6 +71,8 @@ namespace AerovelenceMod.Content.Items
         {
             Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
             return true;
+
+
             // If the projectile hits the left or right side of the tile, reverse the X velocity
             if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
             {
@@ -95,34 +99,22 @@ namespace AerovelenceMod.Content.Items
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleDust>(),
                     Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-1, 1)) * Main.rand.Next(1, 3),
-                    new Color(255, 111, 20), Main.rand.NextFloat(0.2f, 0.4f), 0.6f, 0f, dustShader);
+                    Color.Gold, Main.rand.NextFloat(0.2f, 0.4f), 0.6f, 0f, dustShader);
                 p.alpha = 0;
-                //p.rotation = Main.rand.NextFloat(6.28f);
             }
         }
 
         public float widthIntensity = 0;
-		//public List<Projectile> InkProj = new List<Projectile>();
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
 			Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
-            //Contenders:
-            //TrailImages/Starlight/EnergyTex/tri * -10
-            //TrailImages/Starlight/196_Black/tri
-            //TrailImages/Starlight/EnergyTex
-
             Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            //(Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20)
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1 ,1, 0, 0), Color.OrangeRed * 2, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.OrangeRed * 2, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1 ,1, 0, 0), Color.Goldenrod, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
-
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), Tex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, Tex.Size() / 2, scale * 0.06f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), Tex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, Tex.Size() / 2, scale * 0.06f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -134,45 +126,25 @@ namespace AerovelenceMod.Content.Items
         public override float WidthFunction(float progress)
         {
             
-            /*
-            if (progress < 0.5f)
-            {
-                float num = 1f;
-                float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
-                num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-                return MathHelper.Lerp(0f, 30f, num) * 0.4f;
-            }
-            else if (progress >= 0.5)
-            {
-                float num = 1f;
-                float lerpValue = Utils.GetLerpValue(0f, 0.6f, 1 - progress, clamped: true);
-                num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-                return MathHelper.Lerp(0f, 30f, num) * 0.4f;
-            }
-            */
-            
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.5f;
+            return MathHelper.Lerp(0f, trailWidth, num) * 0.5f;
             
-            return 0;
         }
     }
 
-    /*public class BulletReplacer : GlobalItem
+    public class IchorBulletReplacer : GlobalItem
     {
         public override bool AppliesToEntity(Item item, bool lateInstatiation)
         {
-            return item.type == ItemID.MusketBall;
+            return item.type == ItemID.IchorBullet;
         }
 
         public override void SetDefaults(Item item)
         {
             item.StatsModifiedBy.Add(Mod);
-            //item.shoot = ModContent.ProjectileType<ShotgunAxeBullet>();
-            item.shoot = ModContent.ProjectileType<BulletTest>();
+            item.shoot = ModContent.ProjectileType<IchorBullet>();
         }
     }
-    */
 }
