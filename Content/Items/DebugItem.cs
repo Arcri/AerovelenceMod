@@ -66,7 +66,22 @@ namespace AerovelenceMod.Content.Items
         
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int Mura = Projectile.NewProjectile(null, position, velocity * 0.2f, ModContent.ProjectileType<NanoBullet>(), 10, 0, player.whoAmI, 0f, 0f);
+            for (int a2 = 0; a2 < 4; a2++)
+            {
+                Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 4) * a2);
+                int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
+                NPC laser = Main.npc[index];
+                laser.damage = 0;
+                if (laser.ModNPC is CyverBot bot)
+                {
+                    bot.State = (int)(CyverBot.Behavior.PrimeLaser);
+                    bot.setGoalLocation(spawnPos);
+                    if (a2 == 0)
+                        bot.Leader = true;
+                }
+            }
+
+            //int Mura = Projectile.NewProjectile(null, position, velocity * 0f, ModContent.ProjectileType<NanoReticle>(), 10, 0, player.whoAmI, 0f, 0f);
             return false;
 
             //int Mura2yeah = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(2.0f, 3.1f), ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);

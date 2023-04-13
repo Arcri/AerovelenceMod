@@ -129,6 +129,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
+
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1 ,1, 0, 0), Color.DeepSkyBlue, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
 
@@ -159,6 +160,92 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
         {
             item.StatsModifiedBy.Add(Mod);
             item.shoot = ModContent.ProjectileType<NanoBullet>();
+        }
+    }
+
+    public class NanoReticle : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 20;
+            Projectile.height = 20;
+            Projectile.timeLeft = 200;
+            Projectile.penetrate = -1;
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.scale = 1f;
+        }
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
+        int timer = 0;
+        public override void AI()
+        {
+            Projectile.scale = 0.8f;
+            
+            Projectile.rotation += 0.01f;
+
+            distanceScale = (float)Math.Abs((float)Math.Sin(timer / 20f)) * 3f;
+
+            timer++;
+        }
+
+        float distanceScale = 0;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Core = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoCore").Value;
+            Texture2D Outer = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorder").Value;
+            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Twinkle").Value;
+
+
+
+            Color col1 = Color.White;
+            Color col2 = Color.DeepSkyBlue;
+            col2.A = 0;
+            Color col3 = Color.White;
+            col3.A = 0;
+
+
+            //Could make this better by just rotation one vector, but i want to guarentee this works
+            float baseOffset = 15 * Projectile.scale;
+
+            //Top Left
+            Vector2 drawPosTL = new Vector2(-baseOffset + (distanceScale * -1), -baseOffset + (distanceScale * -1)).RotatedBy(Projectile.rotation);
+            //Main.spriteBatch.Draw(OuterWhite, drawPosTL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+
+            //Top Right
+            Vector2 drawPosTR = new Vector2(baseOffset + (distanceScale * 1), -baseOffset + (distanceScale * -1)).RotatedBy(Projectile.rotation);
+            //Main.spriteBatch.Draw(OuterWhite, drawPosTR - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+
+            //Bottom Left
+            Vector2 drawPosBL = new Vector2(-baseOffset + (distanceScale * -1), baseOffset + (distanceScale * 1)).RotatedBy(Projectile.rotation);
+            //Main.spriteBatch.Draw(OuterWhite, drawPosBL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation - MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+
+            //Bottom Right
+            Vector2 drawPosBRL = new Vector2(baseOffset + (distanceScale * 1), baseOffset + (distanceScale * 1)).RotatedBy(Projectile.rotation);
+            //Main.spriteBatch.Draw(OuterWhite, drawPosBRL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.Pi, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            Main.spriteBatch.Draw(Outer, drawPosTL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Outer, drawPosTR - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Outer, drawPosBL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation - MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Outer, drawPosBRL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.Pi, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2 * 0.5f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col3 * 0.8f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+
+
+
+            return false;
         }
     }
 }

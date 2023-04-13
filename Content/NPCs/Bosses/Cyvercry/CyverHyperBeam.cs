@@ -334,8 +334,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 1000;
             Projectile.friendly = false;
-            Projectile.hostile = true;
-            Projectile.tileCollide = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
         }
 
         public override void AI()

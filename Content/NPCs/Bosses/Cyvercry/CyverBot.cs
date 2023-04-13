@@ -236,7 +236,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     NPC.rotation = NPC.rotation + MathHelper.Pi;
                 }
 
-                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 450 : 150; //400
+                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 300 : 150; //400
 
                 if (Leader)
                 {
@@ -332,7 +332,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (mode.Equals("LeftToRight"))
                 {
                     if (newProjPause <= 10)
-                        NPC.velocity.X += 1f;
+                        NPC.velocity.X += 1.15f;
                     auraRotation += MathHelper.ToRadians(3);
 
                     if (NPC.Center.X > myPlayer.Center.X)
@@ -341,7 +341,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 else if (mode.Equals("RightToLeft"))
                 {
                     if (newProjPause <= 10)
-                        NPC.velocity.X -= 1f;
+                        NPC.velocity.X -= 1.15f;
                     auraRotation += MathHelper.ToRadians(-3);
 
                     if (NPC.Center.X < myPlayer.Center.X)
@@ -350,7 +350,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 else if (mode.Equals("UpToDown"))
                 {
                     if (newProjPause <= 10)
-                        NPC.velocity.Y += 0.5f;
+                        NPC.velocity.Y += 0.7f;
                     auraRotation += MathHelper.ToRadians(3);
 
                     if (NPC.Center.Y > myPlayer.Center.Y)
@@ -359,7 +359,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 else if (mode.Equals("DownToUp"))
                 {
                     if (newProjPause <= 10)
-                        NPC.velocity.Y -= 0.5f;
+                        NPC.velocity.Y -= 0.7f;
                     auraRotation += MathHelper.ToRadians(-3);
 
                     if (NPC.Center.Y < myPlayer.Center.Y)
@@ -500,9 +500,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
                 newProjPause = 20;
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 8; i++)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, new Vector2(2, 0).RotatedBy(MathHelper.ToRadians(i * 90 + 45)), ModContent.ProjectileType<StretchLaser>(), 14, 0);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, new Vector2(1.2f, 0).RotatedBy(MathHelper.ToRadians(i * 45)), ModContent.ProjectileType<StretchLaser>(), 14, 0);
+                    Main.projectile[a].timeLeft = 400;
+                    if (Main.projectile[a].ModProjectile is StretchLaser laser)
+                    {
+                        laser.accelerateTime = 150;
+                        laser.accelerateStrength = 1.02f; //1.025
+                    }
                 }
             }
             /*

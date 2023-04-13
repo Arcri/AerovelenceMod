@@ -495,7 +495,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.active = false;
             }
 
-            //whatAttack = 21;
+            whatAttack = 23;
             //ClonesP3(myPlayer);
             switch (whatAttack)
             {
@@ -561,6 +561,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case 23: 
                     CCPhantomDash(myPlayer);
+                    break;
+                case 24:
                     break;
 
             }
@@ -2466,6 +2468,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         public void PinkCloneP3(Player myPlayer)
+        {
+            //Spawn 5 Clones
+            //Set one of them to be pink
+        }
+
+        int newBotsReps = 0;
+        public void NewBots(Player myPlayer)
         {
 
         }
