@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Projectile.penetrate = -1;
 
 			Projectile.scale = 1f;
-			Projectile.timeLeft = 700;
+			Projectile.timeLeft = 120;
 
 			Projectile.ignoreWater = true;
 			Projectile.tileCollide = false;
@@ -53,13 +53,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		bool spawnedStars = false;
 		public override void AI()
 		{
-			/*
-			
+
 			if (!spawnedStars)
 			{
-				for (int i = 0; i < 5; i++)
+				for (int i = 0; i < 10; i++)
 				{
-					StarParticle newStar = new StarParticle(Projectile.Center, Projectile.velocity.RotatedBy(Main.rand.NextFloat(-0.05f, 0.05f)) * Main.rand.NextFloat(0.85f, 1.15f));
+					StarParticle newStar = new StarParticle(Projectile.Center, Main.rand.NextVector2CircularEdge(5f, 5f) * Main.rand.NextFloat(0.7f, 1.3f));
 					stars.Add(newStar);
 				}
 				spawnedStars = true;
@@ -70,22 +69,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			{
 				star.Update();
 			}
-
-			if (timer > 15)
-			{
-				starAlpha = Math.Clamp(MathHelper.Lerp(alpha, -0.5f, 0.05f * fadeMult), 0, 1);
-
-				if (starAlpha == 0)
-					Projectile.active = false;
-			}
-			*/
+			
 
 			alpha = MathHelper.Clamp(alpha - 0.01f, 0, 1);
 
-			scale = getProgress(timer * 0.02f);
+			scale = Math.Clamp(getProgress(timer * 0.02f), 0f, 1f);
 
-			if (getProgress(timer * 0.02f) >= 0.9f)
-				Projectile.active = false;
+			//if (getProgress(timer * 0.02f) >= 0.9f)
+				//Projectile.active = false;
 
 			timer++;
 
@@ -98,14 +89,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-			var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyvercryGlowy").Value;
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+			foreach (StarParticle star in stars)
+            {
+				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value);
+            }
 
+			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyvercryGlowy").Value;
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 0.8f * (1f - scale), SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 0.8f * (1f - scale), SpriteEffects.None, 0f);
 			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3,3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.2f * (1f - scale), SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 			return false;
         }
 
@@ -132,9 +127,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public float alpha;
 
 		public int timer;
+
 		public StarParticle(Vector2 pos, Vector2 vel)
 		{
 			Center = pos;
+			alpha = 1f;
 			Velocity = vel;
 			scale = 1f;
 			rotation = vel.ToRotation();
@@ -143,19 +140,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public void Update()
 		{
 			float size = 1f;
-			scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
+
+			if (timer > 20)
+				alpha = MathHelper.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.03f), 0f, 1f);
+			//scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
 			Center += Velocity;
 			Velocity *= 0.95f;
 			rotation += Velocity.X * 0.03f;
+
+			scale *= 0.99f;
 			timer++;
 		}
 
 
 		public void DrawStar(SpriteBatch sb, Texture2D tex)
 		{
-			sb.Draw(tex, Center - Main.screenPosition, null, color * alpha, rotation, tex.Size() / 2, scale, SpriteEffects.None, 0f);
-			sb.Draw(tex, Center - Main.screenPosition, null, color * alpha, rotation, tex.Size() / 2, scale, SpriteEffects.None, 0f);
-
+			sb.Draw(tex, Center - Main.screenPosition, null, Color.HotPink * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
+			sb.Draw(tex, Center - Main.screenPosition, null, Color.HotPink * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
 		}
 
 	}

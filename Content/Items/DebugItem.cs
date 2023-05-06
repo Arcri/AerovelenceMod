@@ -78,8 +78,8 @@ namespace AerovelenceMod.Content.Items
                 }); ;
             }
             */
-            //int Mura = Projectile.NewProjectile(null, position, velocity * 1f, ModContent.ProjectileType<OblivionPulse>(), 10, 0, player.whoAmI, 0f, 0f);
-
+            int Mura = Projectile.NewProjectile(null, position, velocity * 0.1f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, player.whoAmI, 0f, 0f);
+            return false;
             for (int a2 = 0; a2 < 6; a2++)
             {
                 Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 6) * a2);
