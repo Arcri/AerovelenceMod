@@ -177,7 +177,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             Projectile.hostile = false;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.scale = 1f;
+            Projectile.scale = 0.5f;
         }
         public override bool? CanDamage()
         {
@@ -186,8 +186,8 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
 
         int timer = 0;
         public override void AI()
-        {
-            Projectile.scale = 0.8f;
+          {
+            Projectile.scale = 0.5f;
             
             Projectile.rotation += 0.01f;
 
@@ -200,48 +200,63 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Core = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoCore").Value;
-            Texture2D Outer = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorder").Value;
-            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Twinkle").Value;
+            Texture2D CoreGlow = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoCoreGlow").Value;
+            Texture2D Border = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorder").Value;
+            Texture2D BorderGlow = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorderGlow").Value;
+
+            //Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Twinkle").Value;
 
 
 
-            Color col1 = Color.White;
-            Color col2 = Color.DeepSkyBlue;
-            col2.A = 0;
-            Color col3 = Color.White;
-            col3.A = 0;
+            Color GlowColor = Color.White * 0.5f;
+            Color GlowColor2 = Color.White;
+
+            //Color col2 = Color.DeepSkyBlue;
+            //col2.A = 0;
+            //Color col3 = Color.White;
+            //col3.A = 0;
 
 
             //Could make this better by just rotation one vector, but i want to guarentee this works
-            float baseOffset = 15 * Projectile.scale;
+            float baseOffset = 20 * Projectile.scale; //15
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             //Top Left
             Vector2 drawPosTL = new Vector2(-baseOffset + (distanceScale * -1), -baseOffset + (distanceScale * -1)).RotatedBy(Projectile.rotation);
-            //Main.spriteBatch.Draw(OuterWhite, drawPosTL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BorderGlow, drawPosTL - Main.screenPosition + Projectile.Center, null, GlowColor, Projectile.rotation, BorderGlow.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
             //Top Right
             Vector2 drawPosTR = new Vector2(baseOffset + (distanceScale * 1), -baseOffset + (distanceScale * -1)).RotatedBy(Projectile.rotation);
-            //Main.spriteBatch.Draw(OuterWhite, drawPosTR - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BorderGlow, drawPosTR - Main.screenPosition + Projectile.Center, null, GlowColor, Projectile.rotation + MathHelper.PiOver2, BorderGlow.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
             //Bottom Left
             Vector2 drawPosBL = new Vector2(-baseOffset + (distanceScale * -1), baseOffset + (distanceScale * 1)).RotatedBy(Projectile.rotation);
-            //Main.spriteBatch.Draw(OuterWhite, drawPosBL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation - MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BorderGlow, drawPosBL - Main.screenPosition + Projectile.Center, null, GlowColor, Projectile.rotation - MathHelper.PiOver2, BorderGlow.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
             //Bottom Right
             Vector2 drawPosBRL = new Vector2(baseOffset + (distanceScale * 1), baseOffset + (distanceScale * 1)).RotatedBy(Projectile.rotation);
-            //Main.spriteBatch.Draw(OuterWhite, drawPosBRL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.Pi, Outer.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BorderGlow, drawPosBRL - Main.screenPosition + Projectile.Center, null, GlowColor, Projectile.rotation + MathHelper.Pi, BorderGlow.Size() / 2, Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Draw(CoreGlow, Projectile.Center - Main.screenPosition, null, GlowColor, Projectile.rotation, CoreGlow.Size() / 2, Projectile.scale * 1f, SpriteEffects.None, 0f);
 
 
-            Main.spriteBatch.Draw(Outer, drawPosTL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Outer, drawPosTR - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Outer, drawPosBL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation - MathHelper.PiOver2, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Outer, drawPosBRL - Main.screenPosition + Projectile.Center, null, col1, Projectile.rotation + MathHelper.Pi, Outer.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 1f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2 * 0.5f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col3 * 0.8f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+
+            Main.spriteBatch.Draw(Border, drawPosTL - Main.screenPosition + Projectile.Center, null, GlowColor2, Projectile.rotation, Border.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Border, drawPosTR - Main.screenPosition + Projectile.Center, null, GlowColor2, Projectile.rotation + MathHelper.PiOver2, Border.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Border, drawPosBL - Main.screenPosition + Projectile.Center, null, GlowColor2, Projectile.rotation - MathHelper.PiOver2, Border.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Border, drawPosBRL - Main.screenPosition + Projectile.Center, null, GlowColor2, Projectile.rotation + MathHelper.Pi, Border.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Core, Projectile.Center - Main.screenPosition, null, GlowColor2, Projectile.rotation, CoreGlow.Size() / 2, Projectile.scale * 1f, SpriteEffects.None, 0f);
+
+            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 1f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col2 * 0.5f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col3 * 0.8f, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
 
 
 

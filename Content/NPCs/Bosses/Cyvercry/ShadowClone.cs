@@ -119,4 +119,74 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             GoalPoint = input;
         }
     }
+    public class ShadowClonePink : ModProjectile
+    {
+        public int timer = 0;
+        Vector2 GoalPoint = new Vector2(0, 350);//Vector2.Zero;
+
+        public float dashSpeed = 20;
+        public override void SetStaticDefaults()
+        {
+            // DisplayName.SetDefault("Shadow Clone");
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 60;
+            Projectile.height = 60;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.scale = 0.75f;
+            Projectile.timeLeft = 200;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = 1;
+
+        }
+        public override void AI()
+        {
+            Lighting.AddLight(Projectile.Center, Color.HotPink.ToVector3() * 0.2f);
+            Player player = Main.player[(int)Projectile.ai[0]];
+
+            float scalespeed = (Math.Abs(Projectile.Distance(GoalPoint + player.Center)) < 275 ? 0.6f * 10f : 0.25f * 10); //wtf past me
+
+            Vector2 move = player.Center - Projectile.Center;
+
+            Projectile.velocity.X = (((Projectile.velocity.X + move.X + GoalPoint.X) / 20f)) * scalespeed;
+            Projectile.velocity.Y = (((Projectile.velocity.Y + move.Y + GoalPoint.Y) / 20f)) * scalespeed;
+
+            //Projectile.rotation = Projectile.AngleTo(player.Center) + MathHelper.Pi;
+            //Projectile.spriteDirection = Projectile.direction;
+
+
+            Projectile.rotation = player.Center.AngleTo(player.Center + GoalPoint);
+            Projectile.spriteDirection = Projectile.direction;
+            timer++;
+
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowClonePink").Value;
+
+            Color drawingCol = Color.HotPink;
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition;
+                drawingCol = Color.HotPink * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+            }
+
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+            return false;
+        }
+
+        public void SetGoalPoint(Vector2 input)
+        {
+            GoalPoint = input;
+        }
+    }
 } 

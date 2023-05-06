@@ -113,6 +113,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         bool shouldHide = false;
         int newProjPause = 0;
 
+        float rotIntensity = 0.02f;
+
         public override void AI()
         {
             NPC.spriteDirection = NPC.direction;
@@ -184,7 +186,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 else if (advancer >= 2)
                 {
                     auraPosition = storedCenter;
-                    GoalPos = GoalPos.RotatedBy(MathHelper.ToRadians(advancer * (UpTrueDownFalse ? 0.03f : -0.03f))); //0.02
+                    GoalPos = GoalPos.RotatedBy(MathHelper.ToRadians(advancer * (UpTrueDownFalse ? rotIntensity : -rotIntensity))); //0.02
                     NPC.rotation = (GoalPos).ToRotation();
                     NPC.Center = storedCenter + GoalPos;
                     NPC.velocity = Vector2.Zero;
@@ -220,6 +222,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset * 20, (NPC.rotation + MathHelper.Pi).ToRotationVector2() * speedMultiplier, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
                     Main.projectile[a].scale = 0.8f;
 
+                    if (Main.projectile[a].ModProjectile is CyverLaser laser)
+                        laser.damageDelay = 40;
 
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                     Vector2 vel = (NPC.rotation + MathHelper.Pi).ToRotationVector2();
@@ -425,7 +429,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    spriteBatch.Draw(spiralTex, auraPosition - Main.screenPosition, null, Color.HotPink * (auraIntensity) * 0.7f, auraRotation + MathHelper.PiOver2 * i, spiralTex.Size() / 2, 1.25f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(spiralTex, auraPosition - Main.screenPosition, null, Color.HotPink * (auraIntensity) * 0.7f, auraRotation + MathHelper.PiOver2 + (i * MathHelper.PiOver4), spiralTex.Size() / 2, 1.25f, SpriteEffects.None, 0f);
                     spriteBatch.Draw(glorbTex, auraPosition - Main.screenPosition, null, Color.HotPink * (auraIntensity) * 0.7f, auraRotation + MathHelper.PiOver2 * i, spiralTex.Size() / 2, 0.5f, SpriteEffects.None, 0f);
                 }
             }

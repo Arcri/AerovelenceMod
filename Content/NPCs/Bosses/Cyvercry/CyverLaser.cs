@@ -16,6 +16,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
     public class CyverLaser : ModProjectile
     {
         public int timer = 0;
+        public int damageDelay = 0;
+        public int tileCollideDelay = 45;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Cyver Laser");
@@ -41,9 +43,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
 
+            if (timer <= tileCollideDelay)
+                Projectile.tileCollide = false;
+            else
+                Projectile.tileCollide = true;
+
+            damageDelay--;
             timer++;
 
         }
+
+        
 
         public override bool PreDraw(ref Color lightColor)
         {
@@ -54,14 +64,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverLaser").Value;
 
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition , softGlow.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, softGlow.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition , softGlow.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, softGlow.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
+            float intensity = (damageDelay >= 0 ? 1f : 2f);
 
             //Set up Shader
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2f); //2.5f makes it more spear like
+            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * intensity); //2.5f makes it more spear like
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
@@ -103,6 +115,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
+            if (timer < 1) return false;
+
             if (Projectile.timeLeft > 0 && Projectile.scale >= 1)
             {
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Item_10") with { Pitch = .92f, PitchVariance = .28f, MaxInstances = -1, Volume = 0.5f };
@@ -113,6 +127,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool? CanDamage()
         {
+            if (damageDelay > 0) return false;
             return true;
         }
     }

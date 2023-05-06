@@ -62,8 +62,11 @@ namespace AerovelenceMod.Content.Projectiles.Other
             {
                 Projectile.scale = MathHelper.Lerp(Projectile.scale, 1, 0.2f);
 
-                if (Projectile.scale > 0.99f)
+                if (Projectile.scale > 0.95f)
+                {
                     Projectile.active = false;
+                    Main.NewText(timer);
+                }
             }
 
             timer++;

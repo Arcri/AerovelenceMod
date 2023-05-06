@@ -32,11 +32,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Item.noUseGraphic = true;
             Item.autoReuse = true;
             Item.DamageType = DamageClass.Melee;
-            Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0.7f};
+            Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0.5f, Pitch = 0.8f };
             Item.useStyle = ItemUseStyleID.Swing;
             
             Item.shootSpeed = 1f;
-            Item.shoot = ModContent.ProjectileType<OblivionHeldProj>();
+            Item.shoot = ModContent.ProjectileType<Oblivion2ElectricBoogaloo>();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

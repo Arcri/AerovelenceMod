@@ -31,6 +31,7 @@ using static Terraria.ModLoader.PlayerDrawLayer;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
 using AerovelenceMod.Content.Projectiles.BulletRework;
+using AerovelenceMod.Content.Items.Accessories.Boss;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -66,43 +67,35 @@ namespace AerovelenceMod.Content.Items
         
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            for (int a2 = 0; a2 < 4; a2++)
+            
+            /*
+            for (int ada = 0; ada < 1; ada++)
             {
-                Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 4) * a2);
+                ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.PaladinsHammer, new ParticleOrchestraSettings
+                {
+                    PositionInWorld = player.Center + new Vector2(0,-100),
+                    MovementVector = velocity * 0.8f
+                }); ;
+            }
+            */
+            //int Mura = Projectile.NewProjectile(null, position, velocity * 1f, ModContent.ProjectileType<OblivionPulse>(), 10, 0, player.whoAmI, 0f, 0f);
+
+            for (int a2 = 0; a2 < 6; a2++)
+            {
+                Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 6) * a2);
                 int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
                 NPC laser = Main.npc[index];
                 laser.damage = 0;
                 if (laser.ModNPC is CyverBot bot)
                 {
-                    bot.State = (int)(CyverBot.Behavior.PrimeLaser);
+                    bot.State = (int)(CyverBot.Behavior.PrimeLaserLong);
                     bot.setGoalLocation(spawnPos);
                     if (a2 == 0)
                         bot.Leader = true;
                 }
             }
 
-            //int Mura = Projectile.NewProjectile(null, position, velocity * 0f, ModContent.ProjectileType<NanoReticle>(), 10, 0, player.whoAmI, 0f, 0f);
             return false;
-
-            //int Mura2yeah = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(2.0f, 3.1f), ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);
-            //return false;
-            //ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            /*
-            for (int fg = 0; fg < 10; fg++)
-            {
-                Vector2 randomStart = Main.rand.NextVector2CircularEdge(5, 5);
-                Dust gd = Dust.NewDustPerfect(player.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f) * 1.5f, newColor: Color.White, Scale: 1f);
-
-            }
-            */
-            //new Color(255,85,255)
-            for (int h = 0; h < 30; h++)
-            {
-                int dust = Dust.NewDust(Main.MouseWorld, 30, 30, ModContent.DustType<GlowPixelAlts>(), Scale: 1f, newColor: Color.OrangeRed);
-                //Main.dust[dust].velocity *= 3f;
-                //Main.dust[dust].position += Main.dust[dust].velocity * 3;
-
-            }
 
             /*
             int afg = Projectile.NewProjectile(source, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<DistortProj>(), 0, 0);
@@ -114,16 +107,6 @@ namespace AerovelenceMod.Content.Items
             }
             */
             return false;
-
-            //int Mura2 = Projectile.NewProjectile(null, position + new Vector2(0, 500), velocity, ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
-
-            //int Mura = Projectile.NewProjectile(null, position + new Vector2(0,500), velocity , ModContent.ProjectileType<FinaleBeam>(), 10, 0, player.whoAmI, 0f, 0f);
-            int Mura2 = Projectile.NewProjectile(null, position, velocity * 3, ModContent.ProjectileType<WandOfExplodingProj>(), 10, 0, player.whoAmI, 0f, 0f);
-
-            //int Mura = Projectile.NewProjectile(null, position, velocity * 2, ModContent.ProjectileType<LightningBorder>(), 10, 0, player.whoAmI, 0f, 0f);
-
-            //int Mura2 = Projectile.NewProjectile(null, position, velocity * 0, ModContent.ProjectileType<ElementalShiftPulse>(), 0, 0, player.whoAmI, 0f, 0f);
-            //Main.projectile[Mura2].scale = 2f;
 
             /*
             if (Main.projectile[Mura].ModProjectile is MuraLineHandler mlh)
@@ -137,16 +120,8 @@ namespace AerovelenceMod.Content.Items
             }
             */
 
-            ///int roA = Projectile.NewProjectile(null, position, velocity * 0.2f, ModContent.ProjectileType<AlibanProj>(), 5, 0, player.whoAmI);
 
-            /*
-            int roA = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<RoAHit>(), 5, 0, player.whoAmI);
 
-            if (Main.projectile[roA].ModProjectile is RoAHit hit)
-            {
-                hit.color = Color.Blue;
-            }
-            */
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.3f, Volume = 0.5f};
             //SoundEngine.PlaySound(style, player.Center);
             return false;

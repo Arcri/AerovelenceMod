@@ -211,8 +211,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
             #region old version need to try something with a new tex
             /*
             SpriteEffects spriteEffects = Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;

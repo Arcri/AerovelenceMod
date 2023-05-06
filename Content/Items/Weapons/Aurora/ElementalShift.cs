@@ -235,7 +235,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                 SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_0" + soundNumber) with { Pitch = -.2f, Volume = 0.2f }; //-.15
                 SoundEngine.PlaySound(style2, Projectile.Center);
                  
-                int suffix = Main.rand.NextBool() ? 2 : 3;
+                //int suffix = Main.rand.NextBool() ? 2 : 3;
 
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Sharp_M_a") with { Pitch = -.52f, PitchVariance = .16f, Volume = 0.15f };
                 SoundEngine.PlaySound(style, Projectile.Center);
@@ -332,7 +332,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
             //Main.spriteBatch.Draw(Trail, Projectile.Center - Main.screenPosition + new Vector2(10f, 0).RotatedBy(currentAng), Trail.Frame(1, 1, 0, 0), Color.Black * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.75f), currentAng + MathHelper.Pi, Trail.Size() / 2, 1f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), SpriteEffects.None, 0f);
 
-
+            
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
@@ -356,9 +356,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition + Main.rand.NextVector2CircularEdge(1,1), null, FetchRainbow(100), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Glow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
             Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, null, FetchRainbow(100), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Glow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
-
+            
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/ElementalShift");

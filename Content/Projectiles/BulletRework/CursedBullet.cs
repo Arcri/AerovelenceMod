@@ -47,11 +47,15 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
         public float xScale = 1f;
         public float yScale = 1f;
 
+        public float storedRot = 0f;
+
+        bool shouldFade = false;
+        float fadeAmount = 1f;
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
-            trailColor = new Color(162, 230, 47);// Color.GreenYellow;
+            trailColor = new Color(162, 230, 47) * fadeAmount;// Color.GreenYellow;
             trailTime = timer * 0.02f;
 
             trailPointLimit = 120;
@@ -63,33 +67,49 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
 
             TrailLogic();
 
-            Lighting.AddLight(Projectile.position, Color.Orange.ToVector3() * 0.45f);
+            Lighting.AddLight(Projectile.position, Color.GreenYellow.ToVector3() * 0.45f);
+
+            if (shouldFade)
+            {
+                fadeAmount = MathHelper.Lerp(fadeAmount, 0f, 0.04f);
+            }
+            else
+                storedRot = Projectile.rotation;
+
             timer++;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Projectile.tileCollide = false;
+            storedRot = Projectile.velocity.ToRotation();
+            Projectile.velocity = Vector2.Zero;
+            Projectile.damage = 0;
+            Projectile.timeLeft = 200;
+            HitDust();
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
-            return true;
+            HitDust();
 
+            Projectile.tileCollide = false;
+            storedRot = Projectile.velocity.ToRotation();
+            Projectile.velocity = Vector2.Zero;
+            Projectile.damage = 0;
+            Projectile.timeLeft = 200;
 
-            // If the projectile hits the left or right side of the tile, reverse the X velocity
-            if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
-            {
-                Projectile.velocity.X = -oldVelocity.X;
-            }
-
-            // If the projectile hits the top or bottom side of the tile, reverse the Y velocity
-            if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
-            {
-                Projectile.velocity.Y = -oldVelocity.Y;
-            }
-
-
+            shouldFade = true;
             return false;
         }
 
         public override void Kill(int timeLeft)
+        {
+            //HitDust();
+        }
+
+        public void HitDust()
         {
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_40") with { Pitch = -.71f, PitchVariance = .28f, MaxInstances = 1, Volume = 0.5f };
             SoundEngine.PlaySound(style, Projectile.Center);
@@ -98,7 +118,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             for (int i = 0; i < 3; i++)
             {
 
-                
+
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleRise>(),
                     Vector2.One.RotatedByRandom(6.28f) * Main.rand.Next(1, 2),
                     Color.LawnGreen, 0.25f, 0.7f, 0f, dustShader);
@@ -116,8 +136,8 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.GreenYellow, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.GreenYellow * fadeAmount, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -10), Tex.Frame(1, 1, 0, 0), Color.White * fadeAmount, Projectile.rotation + MathHelper.PiOver2, Tex.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);

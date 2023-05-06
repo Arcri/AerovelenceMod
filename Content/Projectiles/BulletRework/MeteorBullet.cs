@@ -71,6 +71,8 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
         {
             Collision.HitTiles(Projectile.position + Projectile.velocity, Projectile.velocity, Projectile.width, Projectile.height);
 
+            trailPositions.Clear();
+
             /*
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             for (int i = 0; i < 3; i++)

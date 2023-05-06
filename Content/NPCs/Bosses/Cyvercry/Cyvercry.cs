@@ -899,6 +899,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     }
     public class LaserExplosionBall : ModProjectile
     {
+        //Used in PinkClone
+        public float rotationOffset = 0f;
+        public int stretchLaserAccelTime = 200;
+        public float stretchLaserAccelStrength = 1.01f;
+        public int stretchLaserTimeLeft = 400;
+
         public int numberOfLasers = 12;
         public int projType = ModContent.ProjectileType<CyverLaser>();
         public float vel = 5;
@@ -939,15 +945,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void Kill(int timeLeft)
         {
             var entitySource = Projectile.GetSource_FromAI();
+
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
             SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = .16f, Volume = 0.8f, Pitch = 0.7f };
             SoundEngine.PlaySound(style, Projectile.Center);
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
+
                 for (int i = 0; i < 360; i += 360 / numberOfLasers)
                 {
-                    Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i)), projType, Projectile.damage, 0, Main.myPlayer);
+
+                    int proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i) + rotationOffset), projType, Projectile.damage, 0, Main.myPlayer);
+                    if (Main.projectile[proj].ModProjectile is StretchLaser laser)
+                    {
+                        Main.projectile[proj].timeLeft = stretchLaserTimeLeft;
+                        laser.accelerateTime = stretchLaserAccelTime;
+                        laser.accelerateStrength = stretchLaserAccelStrength;                    }
                 }
             }
             base.Kill(timeLeft);
