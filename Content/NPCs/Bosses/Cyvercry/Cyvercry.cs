@@ -760,7 +760,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             // DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 9;
         }
-
+        public float strength = 1f;
         int fakeTimeLeft = 540;
         public override void SetDefaults()
         {
@@ -789,7 +789,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
-            float approaching = ((540f - Projectile.timeLeft) / 540f);
+            float approaching = ((540f - Projectile.timeLeft) / 540f) * strength;
             Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
 
             Player player = Main.player[(int)Projectile.ai[0]];
@@ -800,8 +800,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Main.dust[dust].scale *= 0.7f;
             if (player.active)
             {
-                float x = Main.rand.Next(-10, 11) * 0.001f * approaching;
-                float y = Main.rand.Next(-10, 11) * 0.001f * approaching;
+                float x = Main.rand.Next(-10, 11) * 0.005f * approaching;
+                float y = Main.rand.Next(-10, 11) * 0.005f * approaching;
                 Vector2 toPlayer = Projectile.Center - player.Center;
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
                 Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);

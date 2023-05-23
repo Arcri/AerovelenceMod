@@ -78,7 +78,14 @@ namespace AerovelenceMod.Content.Items
                 }); ;
             }
             */
-            int Mura = Projectile.NewProjectile(null, position, velocity * 0.1f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Mura = Projectile.NewProjectile(null, position + new Vector2(0,-100), velocity * 0.4f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, player.whoAmI, 0f, 0f);
+
+            if (Main.projectile[Mura].ModProjectile is GlowyPixelPulse pulse)
+            {
+                pulse.size = 0.4f;
+                pulse.color = Color.Gray * 0.5f;
+            }
+
             return false;
             for (int a2 = 0; a2 < 6; a2++)
             {

@@ -113,7 +113,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Projectile.scale = 1f;
         }
 
-
         public override bool? CanDamage()
         {
             return false;
@@ -226,11 +225,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
                 {
                     explo.size = 1f;
                     explo.multiplier = 1.5f;
-                    //Color col = i >= 60 ? Color.Goldenrod : Color.OrangeRed;
-                    //explo.color = col;
-                    //explo.size = 0.65f;
-                    //explo.colorIntensity = 0.7f; //0.5
-                    //explo.rise = true;
+                    explo.sticky = true;
                 }
                 Projectile.NewProjectile(null, spawnPos, Projectile.rotation.ToRotationVector2() * 4.5f, ModContent.ProjectileType<AuroraBlast>(), Projectile.damage, 0, Main.myPlayer);
             }
@@ -248,10 +243,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         {
             Player Player = Main.player[Projectile.owner];
 
-
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreeze_Glow").Value;
-            Texture2D orb = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
+            Texture2D orb = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/spiky_10").Value;
+            Texture2D orb2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/flare_26").Value;
+
+
+            Texture2D eyeOrb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_3").Value;
+
 
             Texture2D eye = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/eyeGlow").Value;
             Texture2D band1 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/band1").Value;
@@ -262,24 +261,97 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
             Vector2 position = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -1f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
-            //Vector2 orBosition = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -9f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
+            Vector2 orbPosition = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -9.5f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
 
+            SpriteEffects effects = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            float extraRot = Player.direction == 1 ? 0 : MathF.PI;
+
+            Main.EntitySpriteDraw(texture, new Vector2((int)position.X, (int)position.Y), null, lightColor, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.EntitySpriteDraw(eye, position, null, eyeCol, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+
+            Vector2 eyeStarScale = new Vector2(0.15f, 1f);
+            Vector2 eyePos = new Vector2(23f * Player.direction, -9f).RotatedBy(rotDirection + extraRot) + position;
+
+            float sinScale = (float)Math.Sin((float)timer * 0.06f) * 0.02f;
+
+            //MouthOrb
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.3f, rotDirection - (timer * 0.1f), orb.Size() / 2, 0.2f + sinScale, effects, 0.0f);
+            //Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.2f, effects, 0.0f);
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.7f, rotDirection + (timer * 0.05f), orb.Size() / 2, 0.13f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb2, orbPosition, null, Color.White, rotDirection + (timer * 0.01f), orb2.Size() / 2, 0.1f + sinScale, effects, 0.0f);
+
+
+            //EyeOrb
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f) + extraRot, eyeOrb.Size() / 2, 0.4f * eyeStarScale, effects, 0.0f);
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection - (timer * 0.05f) + extraRot, eyeOrb.Size() / 2, 0.3f * eyeStarScale, effects, 0.0f);
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection - (timer * 0.01f) + extraRot, eyeOrb.Size() / 2, 0.2f * eyeStarScale, effects, 0.0f);
+
+            //ExtraEye
+            for (int i = 0; i < 3; i++)
+            {
+                Main.EntitySpriteDraw(eye, position + Main.rand.NextVector2Circular(4, 4), null, bandColors[i] * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+
+                Main.EntitySpriteDraw(band1, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+                Main.EntitySpriteDraw(band2, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+                Main.EntitySpriteDraw(band3, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
+
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            //I have no fucking idea why I have to do this twice but if I don't the player's arm will draw with additive blending somehow someway somewhy help
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            /*
 
             if (Player.direction == 1)
             {
                 SpriteEffects effects1 = SpriteEffects.None;
-                Main.spriteBatch.Draw(texture, position, null, lightColor, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), null, lightColor, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                //Main.spriteBatch.Draw(texture, position, null, eyeCol * 0.5f, rotDirection, origin, Projectile.scale * 1.1f, effects1, 0.0f);
+
+                
+
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
                 Main.spriteBatch.Draw(eye, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band1, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band2, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band3, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                //Main.spriteBatch.Draw(band1, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                //Main.spriteBatch.Draw(band2, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                //Main.spriteBatch.Draw(band3, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
 
-                //Main.spriteBatch.Draw(orb, orBosition, null, eyeCol, rotDirection + timer, orb.Size() / 2, 0.5f, effects1, 0.0f);
+                //MouthOrb
+                ///Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection + (timer * 0.1f), orb.Size() / 2, 0.15f, effects1, 0.0f);
+                ///Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.1f, effects1, 0.0f);
+                //Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.1f, effects1, 0.0f);
+                ///Main.spriteBatch.Draw(orb, orbPosition, null, Color.White, rotDirection - (timer * 0.01f), orb.Size() / 2, 0.07f, effects1, 0.0f);
 
+                Vector2 eyeScale = new Vector2(0.15f, 1f);
+                Vector2 eyePos = new Vector2(23f, -9f).RotatedBy(rotDirection) + position;
+
+                //EyeOrb
+                Main.spriteBatch.Draw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f), eyeOrb.Size() / 2, 0.4f * eyeScale, effects1, 0.0f);
+                Main.spriteBatch.Draw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection - (timer * 0.05f), eyeOrb.Size() / 2, 0.3f * eyeScale, effects1, 0.0f);
+                Main.spriteBatch.Draw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection - (timer * 0.01f), eyeOrb.Size() / 2, 0.2f * eyeScale, effects1, 0.0f);
+
+                //ExtraEye
+                for (int i = 0; i < 3; i++)
+                {
+                    Main.spriteBatch.Draw(eye, position + Main.rand.NextVector2Circular(4,4), null, bandColors[i] * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+
+                    Main.spriteBatch.Draw(band1, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                    Main.spriteBatch.Draw(band2, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+                    Main.spriteBatch.Draw(band3, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
+
+                }
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -302,6 +374,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             }
+
+            */
 
             return false;
         }
@@ -335,19 +409,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         public float scale;
 
         public int timer;
-        public IcyWind(Vector2 pos, Vector2 vel)
+
+        public Vector2 distanceFromPlayer = Vector2.Zero;
+        public int playerIndex = 0;
+
+        public IcyWind(Vector2 pos, Vector2 vel, Vector2 distanceFromPlayer, int playerIndex)
         {
             Center = pos;
             Velocity = vel;
             scale = 0f;
             rotation = (float)Main.rand.NextDouble() * 6.28f;
+            this.distanceFromPlayer = distanceFromPlayer;
+            this.playerIndex = playerIndex;
         }
 
         public void Update()
         {
             float size = 0.35f; //.45 for Rime
             scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
-            Center += Velocity;
+
+            distanceFromPlayer += Velocity;
+            Center = distanceFromPlayer + Main.player[playerIndex].Center;
+            
+            //Center += Velocity;
             timer++;
         }
 
@@ -371,6 +455,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         public bool spawnedWind = false;
         float colorIntensity = 1.75f;
         float colorTimeOffset = Main.rand.NextFloat(0, 1000);
+
         public override void SetDefaults()
         {
             Projectile.width = 20;
@@ -382,6 +467,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Projectile.tileCollide = false;
             Projectile.scale = 3f;
 
+            Projectile.hide = false;
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
         }
 
         bool enemyHit = false;
@@ -392,16 +483,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             return true;
         }
 
+        Vector2 startingVel = Vector2.Zero;
+        Vector2 distFromPlayer = Vector2.Zero;
+
         public override void AI()
         {
             if (!spawnedWind)
             {
+                if (timer == 0)
+                    distFromPlayer = Projectile.Center - Main.player[Projectile.owner].Center;
+
                 for (int i = 0; i < 5; i++)
                 {
-                    IcyWind newWind = new IcyWind(Projectile.Center, Projectile.velocity.RotatedBy(Main.rand.NextFloat(-0.05f,0.05f)) * Main.rand.NextFloat(0.85f, 1.15f));
+                    IcyWind newWind = new IcyWind(Projectile.Center, 
+                        Projectile.velocity.RotatedBy(Main.rand.NextFloat(-0.05f,0.05f)) * Main.rand.NextFloat(0.85f, 1.15f), 
+                        distFromPlayer, Projectile.owner);
+
                     Wind.Add(newWind);
                 }
                 spawnedWind = true;
+
+                startingVel = Projectile.velocity;
+                Projectile.velocity = Vector2.Zero;
+
+
+
             }
 
             foreach (IcyWind wind in Wind)
@@ -416,6 +522,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
             if (colorIntensity <= 0)
                 Projectile.active = false;
+
+            distFromPlayer += startingVel;
+            Projectile.Center = Main.player[Projectile.owner].Center + distFromPlayer;
+
             timer++;
         }
 
@@ -431,7 +541,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
             myEffect.CurrentTechnique.Passes[0].Apply();
             foreach (IcyWind wind in Wind)
             {
@@ -439,7 +550,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             }
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             return false;
         }
         public Color FetchRainbow()

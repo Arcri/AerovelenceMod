@@ -23,6 +23,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 		public bool rotDir = Main.rand.NextBool();
 
+		public bool sticky = false;
+
+		Vector2 startingVel = Vector2.Zero;
+		Vector2 distFromPlayer = Vector2.Zero;
+
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Icy Wind");
@@ -70,6 +75,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 			if (rise)
 				Projectile.velocity.Y += -0.06f;
 
+			if (sticky)
+			{
+				//startingVel = Projectile.velocity;
+				//Projectile.velocity = Vector2.Zero;
+
+				if (timer == 1)
+					distFromPlayer = Projectile.Center - player.Center;
+
+				distFromPlayer += Projectile.velocity;
+
+				Projectile.Center = player.Center + distFromPlayer;
+			}
+
 			timer++;
 
         }
@@ -96,8 +114,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 			myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
 			myEffect.CurrentTechnique.Passes[0].Apply();
 
 			if (timer > 3)
@@ -109,9 +128,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 		public override void PostDraw(Color lightColor)
 		{
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-		}
-		public Color FetchRainbow()
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+        public Color FetchRainbow()
 		{
 			float sin1 = (float)Math.Sin(MathHelper.ToRadians(timer));
 			float sin2 = (float)Math.Sin(MathHelper.ToRadians(timer + 120));

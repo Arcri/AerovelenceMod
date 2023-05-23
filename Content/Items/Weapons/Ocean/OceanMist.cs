@@ -14,6 +14,8 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Audio;
+using System.Reflection.PortableExecutable;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
@@ -49,8 +51,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            
-            return true;
+            Projectile.NewProjectile(null, position, Vector2.Zero, ModContent.ProjectileType<OceanMistHeldProj>(), damage, knockback, player.whoAmI);
+
+            return false;
         }
 
     }
@@ -83,9 +86,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.scale = 1;
+
         }
 
         public override bool? CanDamage()
+        {
+            return false;
+        }
+        public override bool? CanCutTiles()
         {
             return false;
         }
@@ -93,6 +101,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
+
+            #region held proj stuff
 
             Projectile.velocity = Vector2.Zero;
             Player.itemTime = 2; // Set Item time to 2 frames while we are used
@@ -106,10 +116,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             direction = Angle.ToRotationVector2();
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
 
-            //lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.01f), 0, 0.4f);
 
             direction = Angle.ToRotationVector2();
-            Projectile.Center = Player.Center + (direction * OFFSET);
+            Projectile.Center = Player.MountedCenter + (direction * OFFSET);
             Projectile.velocity = Vector2.Zero;
             Player.itemRotation = direction.ToRotation();
 
@@ -120,20 +129,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             Player.heldProj = Projectile.whoAmI;
             Projectile.rotation = direction.ToRotation() + (MathHelper.PiOver4 * Player.direction);
+            #endregion
 
-            //Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
 
             if (timer >= 42)
             {
                 if (timer == 42)
                 {
                     Projectile.timeLeft = 15;
-                    /*
-                    if (Player.channel)
-                        Projectile.active = false;
-                    else
-                        Projectile.timeLeft = 20;
-                    */
                 }
                 else
                 {
@@ -149,8 +152,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             }
             if (timer == 20)
             {
+                //FX
+                glowAlpha = 1f;
+                glowScale = 1.2f; //1f
+
+                //Dust
                 ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                
                 Vector2 vel = new Vector2(12.5f, 0).RotatedBy(direction.ToRotation());
+                
                 for (int i = 0; i < 4; i++)
                 {
                     if (i < 4)
@@ -164,43 +174,80 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                     Main.dust[a].noGravity = true;
                 }
 
+                //Sounds
                 SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/CommonWaterFallLight00") with { Volume = .23f, Pitch = .54f, PitchVariance = .4f, MaxInstances = 1, };
                 SoundEngine.PlaySound(style2, Projectile.Center);
+
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/ENV_water_splash_01") with { Pitch = 0.1f, PitchVariance = 0.1f, Volume = 0.75f }; 
+                SoundEngine.PlaySound(style, Projectile.Center);
+
+                //Spawn Proj
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
             }
+
+            //Looping Sound 
             if (timer % 7 == 0 && timer <= 20)
             {
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Item_7") with { Pitch = .44f, PitchVariance = 0.2f }; SoundEngine.PlaySound(style, Projectile.Center);
             }
 
+            //for fx
+            glowAlpha = Math.Clamp(glowAlpha - 0.05f, 0, 1);
+
+            glowScale = Math.Clamp(glowScale - 0.03f, 1f, 2f);
+
             timer++;
         }
 
+        float glowAlpha = 0f;
+        float glowScale = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
             Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMist");
             Texture2D Twirl = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/PixelSwirl");
-            SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMistGlowy");
 
+
+            SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
             float rot = timer <= 20 ? timer * 0.45f : Projectile.rotation;
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.TransformationMatrix);
 
             if (timer <= 20)
             {
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
                 Main.spriteBatch.Draw(Twirl, Projectile.Center - Main.screenPosition, null, Color.White * 0.5f * alphaPercent, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
             }
 
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, null, Color.SkyBlue * glowAlpha, rot, Glow.Size() / 2, Projectile.scale * glowScale, mySE, 0f);
 
-            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor * alphaPercent, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            //I have no fucking idea why I have to do this twice but if I don't the player's arm will draw with additive blending somehow someway somewhy help
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            //Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor * alphaPercent, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
 
             return false;
         }
 
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMist");
+
+
+            SpriteEffects mySE = Main.player[Projectile.owner].direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+            float rot = timer <= 20 ? timer * 0.45f : Projectile.rotation;
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor * alphaPercent, rot, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
+
+
+        }
     }
 
     public class OceanMistShot : TrailProjBase
@@ -219,9 +266,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 100;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 13;
+            Projectile.hostile = false;
         }
-        int maximumPierce = 6;
+        int maximumPierce = 13;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             if (maximumPierce <= 0)
@@ -239,7 +287,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.ai[1] += 0.05f;
 
             trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value;
-            trailColor = Color.DodgerBlue;
+            trailColor = Color.DodgerBlue * 0.75f;
+            timesToDraw = 2;
+
             trailTime = Projectile.ai[1];
 
             trailPointLimit = 120;
@@ -268,6 +318,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 }
             }
 
+            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/ENV_water_splash_01") with { Pitch = .51f, Volume = 0.5f }; SoundEngine.PlaySound(style, Projectile.Center);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -299,6 +350,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            //Projectile.damage = (int)(Projectile.damage * 0.95f);
+
             maximumPierce--;
         }
     }

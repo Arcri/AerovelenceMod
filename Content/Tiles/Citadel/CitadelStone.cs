@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Tiles.Citadel
             AddMapEntry(new Color(046, 045, 072));
             DustType = 59;
             HitSound = SoundID.Tink;
-            ItemDrop = ModContent.ItemType<RuinedCitadelBrickItem>();
+            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<RuinedCitadelBrickItem>();
 
         }
         public static Vector2 TileOffset => Lighting.LegacyEngine.Mode > 1 ? Vector2.Zero : Vector2.One * 12;

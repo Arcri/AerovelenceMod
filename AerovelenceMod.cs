@@ -222,7 +222,7 @@ namespace AerovelenceMod
 			{
 
 				string shaderName = "AerovelenceMod:DistortScreen";
-				string shaderPath = "Effects/DistortScreen";
+				//string shaderPath = "Effects/DistortScreen";
 
 				var shaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value);
 				Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low);

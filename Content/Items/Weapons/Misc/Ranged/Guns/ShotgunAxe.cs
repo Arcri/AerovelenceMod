@@ -141,7 +141,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Magic;
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.scale = 1;

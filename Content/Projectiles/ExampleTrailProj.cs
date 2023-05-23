@@ -26,29 +26,38 @@ namespace AerovelenceMod.Content.Projectiles
             Projectile.height = 20;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 200;
+            Projectile.timeLeft = 600;
             Projectile.penetrate = -1;
         }
  
         public override void AI()
         {
-            Projectile.velocity.Y += 0.09f;
-            Projectile.ai[1] += 0.05f;
+            //Projectile.velocity.Y += 0.09f;
+            Projectile.ai[1] += 1f;
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value;
-            trailColor = Color.DodgerBlue;
-            trailTime = Projectile.ai[1];
+            if (Projectile.ai[1] % 50 == 0)
+            {
+                CombatText.NewText(new Rectangle((int)Projectile.Center.X, (int)Projectile.Center.Y, 0, 0), Main.rand.NextBool() ? Color.HotPink : Color.SkyBlue, "It is I, Cyvercry, from the famous 'Aerovelence Mod'!", true);
+            }
+
+            Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 5;
+
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Cyvercry - Copy").Value;
+            trailColor = Color.DeepPink;
+            //trailTime = Projectile.ai[1];
 
             // other things you can adjust
-            trailPointLimit = 120;
+            trailPointLimit = 400;
             trailWidth = 20;
-            trailMaxLength = 300;
+            trailMaxLength = 600;
             
 
             //MUST call TrailLogic AFTER assigning trailRot and trailPos
             trailRot = Projectile.velocity.ToRotation();
             trailPos = Projectile.Center;
             TrailLogic();
+
+            
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -56,6 +65,9 @@ namespace AerovelenceMod.Content.Projectiles
             //trailTime = Projectile.ai[1];
             //Draw whatever you want under trail//
             TrailDrawing();
+            TrailDrawing();
+            TrailDrawing();
+
             //Draw whatever you want over trail//
 
             return false;
@@ -70,7 +82,7 @@ namespace AerovelenceMod.Content.Projectiles
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.5f; // 0.3f
+            return MathHelper.Lerp(0f, 30f, num) * 2f; // 0.3f
         }
 
     }

@@ -34,7 +34,7 @@ namespace AerovelenceMod.Core
                 }
             }
 
-            tile.ItemDrop = drop;
+            //tile.ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = drop;
             tile.HitSound = hitSound;
             tile.DustType = DustType;
             tile.MinPick = MinPick;
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Core
         {
             Main.wallHouse[wall.Type] = house;
 
-            wall.ItemDrop = drop;
+            //wall.ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = drop;
             wall.HitSound = hitSound;
             wall.DustType = DustType;
 

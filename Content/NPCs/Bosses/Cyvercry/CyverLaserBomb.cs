@@ -16,6 +16,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 {   
     public class CyverLaserBomb : ModProjectile
     {
+        float whiteIntensity = 0f;
         int timer = 0;
         public override void SetStaticDefaults()
         {
@@ -41,10 +42,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float overallScale = 0f;
         public override void AI()
         {
-            overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 1.5f, 0.2f), 0f, 1f);
             if (timer > 32)
             {
-                teleScale = MathHelper.Clamp(MathHelper.Lerp(teleScale, 1.9f, 0.09f), 0f, 1.75f);
+                teleScale = MathHelper.Clamp(MathHelper.Lerp(teleScale, 1.9f, 0.05f), 0f, 1.75f);
 
             }
 
@@ -65,6 +65,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Projectile.rotation.ToRotationVector2() * 0.1f, ModContent.ProjectileType<CyverBeam>(),
                     Projectile.damage, Projectile.knockBack);
 
+                whiteIntensity = 1;
+
                 /*
                 int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
                 if (Main.projectile[a].ModProjectile is HollowPulse pulse)
@@ -80,9 +82,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer >= 60)
             {
                 drawAlpha = MathHelper.Clamp(MathHelper.Lerp(drawAlpha, -0.2f, 0.1f), 0f, 1f);
+                overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 5f, 0.2f), 0f, 1f);
+
                 if (drawAlpha == 0)
                     Projectile.active = false;
             }
+            else
+            {
+                overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 1.5f, 0.2f), 0f, 1f);
+            }
+
+            whiteIntensity = Math.Clamp(MathHelper.Lerp(whiteIntensity, -0.25f, 0.04f), 0, 1);
             timer++;
         }
 
@@ -92,6 +102,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/PinkL").Value;
+            Texture2D White = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/WhiteL").Value;
 
             float L1rot = Projectile.rotation - MathHelper.ToRadians(45);
             float L2rot = Projectile.rotation - MathHelper.ToRadians(225);
@@ -113,9 +124,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             myEffect.CurrentTechnique.Passes[0].Apply();
             if (timer < 50)
             {
+                Vector2 vec2Scale = new Vector2(teleScale, teleScale * 0.75f);
+
                 Texture2D RayTex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Medusa_Gray").Value;
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(-50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation + MathHelper.Pi, RayTex.Size() / 2, teleScale, SpriteEffects.None, 0);
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation, RayTex.Size() / 2, teleScale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(-50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation + MathHelper.Pi, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
 
             }
             //Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
@@ -128,6 +141,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
 
+            Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L1rot, White.Size() / 2, overallScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L2rot, White.Size() / 2, overallScale, SpriteEffects.None, 0f);
 
 
 
@@ -187,8 +202,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //int sin = (int)(Math.Sin(secondTimer * 0.05) * 40f);
             //var color = new Color(255, 160 + sin, 40 + sin / 2);
 
+            Color col = timer < 2 ? Color.White * 0.5f : Color.DeepPink;
+
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 3);
+            myEffect.Parameters["uColor"].SetValue(col.ToVector3() * 3f);
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(luminos); //0.8
             myEffect.Parameters["uSaturation"].SetValue(1.2f);

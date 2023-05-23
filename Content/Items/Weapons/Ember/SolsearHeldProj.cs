@@ -161,7 +161,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Player.itemRotation -= 3.14f;
 
             Player.itemRotation = MathHelper.WrapAngle(Player.itemRotation);
-
             Player.heldProj = Projectile.whoAmI;
 
             Projectile.rotation = direction.ToRotation();

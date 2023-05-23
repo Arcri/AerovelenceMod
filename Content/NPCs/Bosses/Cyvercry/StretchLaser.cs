@@ -27,8 +27,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.extraUpdates = 2;
             Projectile.width = 40;
             Projectile.height = 40;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
             Projectile.scale = 1f;
             Projectile.timeLeft = 200;
             Projectile.DamageType = DamageClass.Ranged;
