@@ -246,7 +246,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreeze_Glow").Value;
             Texture2D orb = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/spiky_10").Value;
-            Texture2D orb2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/flare_26").Value;
+            Texture2D orb2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
 
 
             Texture2D eyeOrb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_3").Value;
@@ -261,7 +261,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
             Vector2 position = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -1f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
-            Vector2 orbPosition = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -9.5f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
+            Vector2 orbPosition = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -10f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
 
             SpriteEffects effects = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             float extraRot = Player.direction == 1 ? 0 : MathF.PI;
@@ -280,16 +280,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             float sinScale = (float)Math.Sin((float)timer * 0.06f) * 0.02f;
 
             //MouthOrb
-            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.3f, rotDirection - (timer * 0.1f), orb.Size() / 2, 0.2f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.3f, rotDirection - (timer * 0.1f * Player.direction), orb.Size() / 2, 0.17f + sinScale, effects, 0.0f);
             //Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.2f, effects, 0.0f);
-            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.7f, rotDirection + (timer * 0.05f), orb.Size() / 2, 0.13f + sinScale, effects, 0.0f);
-            Main.spriteBatch.Draw(orb2, orbPosition, null, Color.White, rotDirection + (timer * 0.01f), orb2.Size() / 2, 0.1f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction), orb.Size() / 2, 0.15f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb2, orbPosition, null, Color.White, rotDirection + (timer * 0.01f * Player.direction), orb2.Size() / 2, 0.15f + sinScale, effects, 0.0f);
 
 
             //EyeOrb
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f) + extraRot, eyeOrb.Size() / 2, 0.4f * eyeStarScale, effects, 0.0f);
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection - (timer * 0.05f) + extraRot, eyeOrb.Size() / 2, 0.3f * eyeStarScale, effects, 0.0f);
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection - (timer * 0.01f) + extraRot, eyeOrb.Size() / 2, 0.2f * eyeStarScale, effects, 0.0f);
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.4f * eyeStarScale, effects, 0.0f);
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.3f * eyeStarScale, effects, 0.0f);
+            Main.EntitySpriteDraw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection + (timer * 0.01f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.2f * eyeStarScale, effects, 0.0f);
 
             //ExtraEye
             for (int i = 0; i < 3; i++)
@@ -426,7 +426,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         public void Update()
         {
             float size = 0.35f; //.45 for Rime
-            scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
+            scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.04f), 0f, size / 2);
 
             distanceFromPlayer += Velocity;
             Center = distanceFromPlayer + Main.player[playerIndex].Center;
@@ -572,12 +572,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         {
             if (!target.HasBuff<AuroraFire>())
             {
+                target.AddBuff(ModContent.BuffType<AuroraFire>(), 120);
 
-                SoundStyle stylea = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_flame_breath") with { Volume = .4f, Pitch = .64f, PitchVariance = .22f, };
-                SoundEngine.PlaySound(stylea, target.Center);
+                //This check is to make sure that enemies immune to the debuff (like Cultist) dont repeatedly play the inflict debuff sound when hit being hit by the weapon
+                if (target.HasBuff<AuroraFire>())
+                {
+                    SoundStyle stylea = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_flame_breath") with { Volume = .4f, Pitch = .64f, PitchVariance = .22f, };
+                    SoundEngine.PlaySound(stylea, target.Center);
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = .42f, PitchVariance = .42f, Volume = 0.4f, MaxInstances = 2 };
-                SoundEngine.PlaySound(style, target.Center);
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = .42f, PitchVariance = .42f, Volume = 0.4f, MaxInstances = 2 };
+                    SoundEngine.PlaySound(style, target.Center);
+                }
+
 
                 for (int i = 0; i < 9; i++)
                 {
@@ -604,7 +610,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             
             target.AddBuff(ModContent.BuffType<AuroraFire>(), 120);
             target.immune[Projectile.owner] = 10; //20 
-            //enemyHit = true;
         }
     }
 }

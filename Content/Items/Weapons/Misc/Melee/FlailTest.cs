@@ -131,9 +131,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             trailTime = timer * 0.005f;
             timesToDraw = 2;
 
-            pixelate = true;
-            pixelationAmount = 1f;
-
             trailPointLimit = 120;
             trailWidth = 30;
             trailMaxLength = 800;

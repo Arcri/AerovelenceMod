@@ -103,11 +103,12 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
 
                 (byte)Main.rand.Next(0, 255));
 
-                if (AuroraFireTime % 4 == 0)
+                if (AuroraFireTime % 5 == 0)
                 {
-                    int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleDust>(), c, 0.5f, 0.8f, 0f, dustShader);
+                    int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleFlare>(), c, 0.5f, 0.5f, 0f, dustShader);
                     Main.dust[p].velocity *= 0.5f;
                     Main.dust[p].noLight = true;
+                    Main.dust[p].alpha = 2;
 
                 }
                 else if (AuroraFireTime % 7 == 0) //else if is intentional

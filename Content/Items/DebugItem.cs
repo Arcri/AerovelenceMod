@@ -32,6 +32,9 @@ using AerovelenceMod.Content.Items.Weapons.Aurora;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
 using AerovelenceMod.Content.Projectiles.BulletRework;
 using AerovelenceMod.Content.Items.Accessories.Boss;
+using AerovelenceMod.Content.Items.Weapons.Starglass;
+using AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -64,10 +67,16 @@ namespace AerovelenceMod.Content.Items
             Item.shootSpeed = 10f;
         }
 
-        
+        bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            
+            ///int afg = Projectile.NewProjectile(source, position + new Vector2(0,-1000), velocity * 3f, ModContent.ProjectileType<ThunderStrikeTest>(), 0, 0);
+
+            int afg = Projectile.NewProjectile(source, position + new Vector2(0, 0), velocity * 0.75f, ModContent.ProjectileType<SkylightVFX>(), 0, 0);
+
+            //Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
+
+            return false;
             /*
             for (int ada = 0; ada < 1; ada++)
             {
@@ -78,13 +87,18 @@ namespace AerovelenceMod.Content.Items
                 }); ;
             }
             */
-            int Mura = Projectile.NewProjectile(null, position + new Vector2(0,-100), velocity * 0.4f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, player.whoAmI, 0f, 0f);
 
-            if (Main.projectile[Mura].ModProjectile is GlowyPixelPulse pulse)
+            //Dust d = Dust.NewDustPerfect(player.Center + new Vector2(0,50), ModContent.DustType<GlowStrong>(), velocity * 0.6f, newColor: Color.Red);
+            //return false;
+
+            int Mura = Projectile.NewProjectile(null, position + new Vector2(0,0), velocity * 1.2f, ModContent.ProjectileType<otherHollowPulseTestDearFutureMePleaseRewriteAndMoveThisInsteadOfUsingItInTheFutureDearGod>(), 10, 0, player.whoAmI, 0f, 0f);
+            if (Main.projectile[Mura].ModProjectile is otherHollowPulseTestDearFutureMePleaseRewriteAndMoveThisInsteadOfUsingItInTheFutureDearGod vfx)
             {
-                pulse.size = 0.4f;
-                pulse.color = Color.Gray * 0.5f;
+                vfx.size = 0.5f;
+                vfx.color = Color.White;
             }
+
+            tick = !tick;
 
             return false;
             for (int a2 = 0; a2 < 6; a2++)

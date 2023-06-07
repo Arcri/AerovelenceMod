@@ -82,6 +82,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
             target.immune[Projectile.owner] = 1; //20
             Projectile.damage = 0;
+            Projectile.friendly = false;
         }
 
         public override void AI()
@@ -136,7 +137,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, strikeCol * 0.5f, Projectile.rotation, origin, scale * 1.25f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

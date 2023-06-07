@@ -2307,30 +2307,227 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         bool rotDir = false;
 
+        Vector2 phantomDashOldPos = Vector2.Zero;
+        int phantomDash1Counter = 0;
+        bool hasDoneVertical = false;
+        bool hasDoneHorizontal = false;
+        bool hasDoneDiagonalTopBottom = false;
+        bool hasDoneDiagonalBottomTop = false;
+
+        Projectile border = null;
+
         public void PhantomDash1(Player myPlayer)
         {
+            //Give player infinite wing time to be nice (shhh)
+            myPlayer.wingTime = myPlayer.wingTimeMax;
 
-            //spawn area
-            //Choose Point and fade
-            //Telegraph
-            //Teleport and dash
-
-            //spawn area 
-            if (timer == 0)
+            if (advancer == 0)
             {
-                //Spawn Border
-                Projectile.NewProjectile(null, myPlayer.Center, Vector2.Zero, ModContent.ProjectileType<LightningBorder>(), 0, 0);
-
-                //int a = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<PhantomLaserTelegraph>(), 2, 0);
-                //if (Main.projectile[a].type == ModContent.ProjectileType<PhantomLaserTelegraph>()) 
-                //stuckLaser = Main.projectile[a];
-
-                areaCenter = myPlayer.Center;
-                goalLocation = Main.rand.NextVector2CircularEdge(550, 550);
-
                 NPC.velocity = Vector2.Zero;
+
+                if (timer == 5)
+                {
+                    NPC.hide = true;
+                    NPC.dontTakeDamage = true;
+
+                    //SOUND EFFECT
+
+                    bool a = Main.rand.NextBool(); // straight or diagonal
+                    bool b = Main.rand.NextBool(); // default or rotated
+                    bool c = Main.rand.NextBool(); //Other side
+
+                    goalLocation = new Vector2(610, 0).RotatedBy((c ? 0 : MathHelper.Pi) + (b ? 0 : MathHelper.PiOver2) + (a ? 0 : MathHelper.PiOver4));
+
+
+                    int FX = Projectile.NewProjectile(null, NPC.Center, NPC.velocity, ModContent.ProjectileType<TeleportFXCyver>(), 0, 0, Main.myPlayer);
+                    Main.projectile[FX].rotation = NPC.rotation;
+
+                    NPC.rotation = goalLocation.ToRotation();
+
+
+                }
+
+                if (timer == 20)
+                {
+                    //Spawn Border
+                    int a = Projectile.NewProjectile(null, myPlayer.Center, Vector2.Zero, ModContent.ProjectileType<LightningBorder>(), 0, 0);
+                    border = Main.projectile[a];
+
+
+                    areaCenter = myPlayer.Center;
+
+                }
+
+                if (timer == 40)
+                {
+                    advancer++;
+                    timer = 0;
+                }
             }
 
+            if (advancer == 1)
+            {
+                
+                //telegraph
+                if (timer == 30)
+                {
+                    int tele = Projectile.NewProjectile(null, areaCenter, Vector2.Zero, ModContent.ProjectileType<DookieTelegraph>(), 0, 0);
+                    Main.projectile[tele].rotation = goalLocation.ToRotation();
+                }
+
+                //Put Fadein FX early
+                if (timer == 60)
+                {
+
+                    int FX = Projectile.NewProjectile(null, (goalLocation * 1.10f) + areaCenter, goalLocation.SafeNormalize(Vector2.UnitX) * -10f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, Main.myPlayer);
+                    Main.projectile[FX].rotation = goalLocation.ToRotation();
+
+                    if (Main.projectile[FX].ModProjectile is TeleportFXCyver tp) tp.reverse = true;
+
+
+                }
+
+                //Dash
+                if (timer >= 75)
+                {
+                    NPC.damage = ContactDamage;
+
+                    //Teleport back in
+                    if (timer == 75)
+                    {
+                        NPC.dontTakeDamage = false;
+                        NPC.hide = false;
+
+                        NPC.Center = goalLocation + areaCenter;
+
+                        NPC.damage = ContactDamage;
+
+                        //int a = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<PhantomLaserTelegraph>(), 2, 0);
+                        //if (Main.projectile[a].type == ModContent.ProjectileType<PhantomLaserTelegraph>()) 
+                        //stuckLaser = Main.projectile[a];
+
+                    }
+
+                    if (timer == 78)
+                    {
+                        //SOUND EFFECT
+                        SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
+                        SoundEngine.PlaySound(style, NPC.Center);
+
+                        SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .29f, Pitch = 1f, MaxInstances = -1 };
+                        SoundEngine.PlaySound(style2, NPC.Center);
+
+                        SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .16f, Pitch = .42f };
+                        SoundEngine.PlaySound(style3, NPC.Center);
+                    }
+
+                    Vector2 start = goalLocation + areaCenter;
+                    Vector2 end = (goalLocation.RotatedBy(MathHelper.Pi) * 1f) + areaCenter;
+
+                    float rawProgress = 0f;
+                    if (timer > 75f)
+                        rawProgress = (timer - 75f) / 75f;
+
+                    float easingProgress = 1f - (float)Math.Pow(1f - rawProgress, 6f); //4f
+
+                    NPC.Center = Vector2.SmoothStep(start, end, easingProgress);
+
+                    NPC.rotation = goalLocation.ToRotation();
+
+                    thrusterValue = 0;
+
+                    if (timer == 85)
+                    {
+                        //int ball = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + (Main.rand.NextBool() ? 0 : MathF.PI)).ToRotationVector2() * 12f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+
+                        int ball1 = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + 0).ToRotationVector2() * 22f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+                        int ball2 = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + MathF.PI).ToRotationVector2() * 22f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+
+                    }
+
+                }
+
+                //Reset
+                if (timer == 110)
+                {
+                    bool a = Main.rand.NextBool(); // straight or diagonal
+                    bool b = Main.rand.NextBool(); // default or rotated
+                    bool c = Main.rand.NextBool(); //Other side
+
+                    goalLocation = new Vector2(610, 0).RotatedBy((c ? 0 : MathHelper.Pi) + (b ? 0 : MathHelper.PiOver2) + (a ? 0 : MathHelper.PiOver4));
+
+
+                    NPC.velocity = Vector2.Zero;
+
+                    int FX = Projectile.NewProjectile(null, NPC.Center, NPC.velocity, ModContent.ProjectileType<TeleportFXCyver>(), 0, 0, Main.myPlayer);
+                    Main.projectile[FX].rotation = NPC.rotation;
+
+                    NPC.rotation = goalLocation.ToRotation();
+
+                    timer = -15;
+
+                    phantomDash1Counter++;
+
+                    if (phantomDash1Counter == 6)
+                        advancer++;
+
+                    NPC.dontTakeDamage = true;
+                    NPC.hide = true;
+
+                }
+            }
+
+            if (advancer == 2)
+            {
+
+                if (timer == 100)
+                {
+                    if (border != null)
+                    {
+                        if (border.ModProjectile is LightningBorder barrier)
+                            barrier.fade = true;
+                    }
+                }
+
+                if (timer == 140)
+                {
+                    advancer = 0;
+                    timer = -1;
+                    phantomDash1Counter = 0;
+                }
+
+            }
+            
+
+            timer++;
+
+            #region old
+            /*
+            /*
+                if (timer == 0)
+                {
+                    //Spawn Border
+                    ///Projectile.NewProjectile(null, myPlayer.Center, Vector2.Zero, ModContent.ProjectileType<LightningBorder>(), 0, 0);
+
+                    //int a = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<PhantomLaserTelegraph>(), 2, 0);
+                    //if (Main.projectile[a].type == ModContent.ProjectileType<PhantomLaserTelegraph>()) 
+                    //stuckLaser = Main.projectile[a];
+
+                    ///areaCenter = myPlayer.Center;
+                    //goalLocation = Main.rand.NextVector2CircularEdge(610, 610);
+
+                    bool a = Main.rand.NextBool(); // straight or diagonal
+                    bool b = Main.rand.NextBool(); // default or rotated
+                    bool c = Main.rand.NextBool(); //Other side
+
+                    goalLocation = new Vector2(610, 0).RotatedBy((c ? 0 : MathHelper.Pi) + (b ? 0 : MathHelper.PiOver2) + (a ? 0 : MathHelper.PiOver4));
+
+
+                    NPC.velocity = Vector2.Zero;
+                }
+                
+
+            /*
             //fade
             if (timer == 5)
             {
@@ -2339,13 +2536,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 //SOUND EFFECT
 
+                int FX = Projectile.NewProjectile(null, NPC.Center, NPC.velocity, ModContent.ProjectileType<TeleportFXCyver>(), 0, 0, Main.myPlayer);
+                Main.projectile[FX].rotation = NPC.rotation;
+
                 NPC.rotation = goalLocation.ToRotation();
 
-                int FX = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, Main.myPlayer);
-                NPC.rotation.ToRotationVector2();
-
             }
-
+            
             //telegraph
             if (timer == 40)
             {
@@ -2353,47 +2550,87 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Main.projectile[tele].rotation = goalLocation.ToRotation();
             }
 
-            //Dash
+            //Put Fadein FX early
+            if (timer == 60)
+            {
 
-            if (timer >= 70)
+                int FX = Projectile.NewProjectile(null, (goalLocation * 1.10f) + areaCenter, goalLocation.SafeNormalize(Vector2.UnitX) * -10f, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, Main.myPlayer);
+                Main.projectile[FX].rotation = goalLocation.ToRotation();
+
+                if (Main.projectile[FX].ModProjectile is TeleportFXCyver tp) tp.reverse = true;
+            }
+
+            //Dash
+            if (timer >= 75)
             {
                 //Teleport back in
-                if (timer == 70)
+                if (timer == 75)
                 {
                     NPC.dontTakeDamage = false;
                     NPC.hide = false;
 
-                    //SOUND EFFECT
+
 
                     NPC.Center = goalLocation + areaCenter;
 
-                    int FX = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, Main.myPlayer);
-                    Main.projectile[FX].rotation = goalLocation.ToRotation();
+                    //int FX = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<TeleportFXCyver>(), 10, 0, Main.myPlayer);
+                    //Main.projectile[FX].rotation = goalLocation.ToRotation();
 
-                    if (Main.projectile[FX].ModProjectile is TeleportFXCyver tp) tp.reverse = true;
+                    //if (Main.projectile[FX].ModProjectile is TeleportFXCyver tp) tp.reverse = true;
 
                 }
 
+                if (timer == 78)
+                {
+                    //SOUND EFFECT
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, };
+                    SoundEngine.PlaySound(style, NPC.Center);
+
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .29f, Pitch = 1f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .16f, Pitch = .42f };
+                    SoundEngine.PlaySound(style3, NPC.Center);
+                }
+
                 Vector2 start = goalLocation + areaCenter;
-                Vector2 end = (goalLocation.RotatedBy(MathHelper.Pi) * 1.3f) + areaCenter;
+                Vector2 end = (goalLocation.RotatedBy(MathHelper.Pi) * 1f) + areaCenter;
 
                 float rawProgress = 0f;
-                if (timer > 80)
-                    rawProgress = (timer - 70f) / 50f;
+                if (timer > 75f)
+                    rawProgress = (timer - 75f) / 75f;
 
-                float easingProgress = 1f - (float)Math.Pow(1f - rawProgress, 4f);
+                float easingProgress = 1f - (float)Math.Pow(1f - rawProgress, 6f); //4f
 
                 NPC.Center = Vector2.SmoothStep(start, end, easingProgress);
 
                 NPC.rotation = goalLocation.ToRotation();
 
                 thrusterValue = 0;
+
+                if (timer == 85)
+                {
+                    //int ball = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + (Main.rand.NextBool() ? 0 : MathF.PI)).ToRotationVector2() * 12f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+
+                    int ball1 = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + 0).ToRotationVector2() * 22f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+                    int ball2 = Projectile.NewProjectile(null, areaCenter, (NPC.rotation + MathHelper.PiOver2 + MathF.PI).ToRotationVector2() * 22f, ModContent.ProjectileType<DifferentExplodeBall>(), ContactDamage / 4, 0, Main.myPlayer);
+
+                }
+
             }
 
             //Reset
             if (timer == 110)
             {
-                goalLocation = Main.rand.NextVector2CircularEdge(550, 550);
+                //goalLocation = Main.rand.NextVector2CircularEdge(610, 610);
+
+                bool a = Main.rand.NextBool(); // straight or diagonal
+                bool b = Main.rand.NextBool(); // default or rotated
+                bool c = Main.rand.NextBool(); //Other side
+
+                goalLocation = new Vector2(610, 0).RotatedBy((c ? 0 : MathHelper.Pi) + (b ? 0 : MathHelper.PiOver2) + (a ? 0 : MathHelper.PiOver4));
+
+
                 NPC.velocity = Vector2.Zero;
 
                 //will rerun timer == 5 stuff next frame
@@ -2402,9 +2639,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             }
 
-            timer++;
+            */
 
-            #region old
             /*
             //spawn area
             if (timer == 0)
@@ -2684,8 +2920,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                             if (p.ModProjectile is PhantomLaserTelegraph tele)
                             {
                                 tele.Release();
-                                SoundStyle style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_line") with { Volume = .31f, Pitch = -.22f, MaxInstances = -1 };
+                                SoundStyle style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_line") with { Volume = .2f, Pitch = -.22f, MaxInstances = -1 };
                                 SoundEngine.PlaySound(style32, p.Center);
+
+                                //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Pitch = 1f, MaxInstances = -1, Volume = 0.15f }; 
+                                //SoundEngine.PlaySound(style, p.Center);
                             }
                         }
 

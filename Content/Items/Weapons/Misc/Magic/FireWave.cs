@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Projectile.penetrate = 1;
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
 
@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3());
+            Lighting.AddLight(Projectile.Center, Color.Orange.ToVector3() * 0.3f);
 
             if (timer % 2 == 0 && timer < 70)
             {
@@ -51,6 +51,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             }
 
+            if (timer > 40)
+            {
+                Projectile.tileCollide = true;
+            }
 
 
             if (timer < 45)
@@ -58,7 +62,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 float yScale = Math.Clamp(timer * 0.01f, 0, 0.7f);
                 scale = new Vector2(yScale, (Projectile.velocity.Length() * 0.075f)) * 0.15f;
                 Projectile.velocity *= 1.083f;
-
             } 
             else if (timer < 65)
             {
@@ -80,31 +83,34 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Wave = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FireWave").Value;
+            Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
 
-            //Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            //myEffect.Parameters["uColor"].SetValue(Color.SkyBlue.ToVector3() * 2f);
-            //myEffect.Parameters["uTime"].SetValue(2);
-            //myEffect.Parameters["uOpacity"].SetValue(0.4f); //0.8
-            //myEffect.Parameters["uSaturation"].SetValue(1.2f);
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), Color.Black * 0.8f, Projectile.rotation, Glow.Size() / 2, scale * 6, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            //myEffect.CurrentTechnique.Passes[0].Apply();
 
-            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Wave.Size() / 2, scale * 4, SpriteEffects.None, 0); ;
-            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation, Wave.Size() / 2, scale * 4, SpriteEffects.None, 0); ;
-            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition - (Projectile.velocity * 0.55f), Wave.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Wave.Size() / 2, scale * 3.5f, SpriteEffects.None, 0); ;
-            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition - (Projectile.velocity * 0.55f), Wave.Frame(1, 1, 0, 0), Color.Red, Projectile.rotation, Wave.Size() / 2, scale * 3.5f, SpriteEffects.None, 0); ;
+            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Wave.Size() / 2, scale * 4, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), new Color(255, 100, 0), Projectile.rotation, Wave.Size() / 2, scale * 4, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition - (Projectile.velocity * 0.55f), Wave.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Wave.Size() / 2, scale * 3.5f, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition - (Projectile.velocity * 0.55f), Wave.Frame(1, 1, 0, 0), Color.Red, Projectile.rotation, Wave.Size() / 2, scale * 3.5f, SpriteEffects.None, 0);
 
-            //Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.SkyBlue, Projectile.rotation + 0.2f, Wave.Size() / 2, new Vector2(1, (Projectile.velocity.Length() * 0.2f)), SpriteEffects.None, 0); ;
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Glow.Size() / 2, scale * 8, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), new Color(255, 100, 0), Projectile.rotation, Glow.Size() / 2, scale * 6f, SpriteEffects.None, 0);
 
-            //Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.SkyBlue, Projectile.rotation + 0.15f, Wave.Size() / 2, new Vector2(1.2f, 1), SpriteEffects.None, 0); ;
-            //Main.spriteBatch.Draw(Wave, Projectile.Center - Main.screenPosition, Wave.Frame(1, 1, 0, 0), Color.SkyBlue, Projectile.rotation - 0.15f, Wave.Size() / 2, new Vector2(1.2f, 1), SpriteEffects.None, 0); ;
+
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), Color.OrangeRed * 0.5f, Projectile.rotation, Glow.Size() / 2, scale * 8, SpriteEffects.None, 0);
 
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
+        }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            //ignore 10 defense
+            modifiers.ArmorPenetration += 10;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)

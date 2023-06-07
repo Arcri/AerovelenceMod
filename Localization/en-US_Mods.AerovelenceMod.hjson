@@ -1,0 +1,625 @@
+"Keybinds.Armor Set Bonus.DisplayName": Armor  Set  Bonus
+
+Biomes: {
+	ZonePlayer: {
+		DisplayName: Zone Player
+		TownNPCDialogueName: the Zone Player
+	}
+
+	CrystalCavernsBiome: {
+		DisplayName: Crystal Caverns Biome
+		TownNPCDialogueName: the Crystal Caverns Biome
+	}
+}
+
+Buffs: {
+	FlareFire: {
+		DisplayName: Flare Fire
+		Description: Mods.AerovelenceMod.Buffs.FlareFire.Description
+	}
+
+	FlareFrostburn: {
+		DisplayName: Flare Frostburn
+		Description: Mods.AerovelenceMod.Buffs.FlareFrostburn.Description
+	}
+
+	AuroraFire: {
+		DisplayName: Aurora Fire
+		Description: Mods.AerovelenceMod.Buffs.AuroraFire.Description
+	}
+
+	EmberFire: {
+		DisplayName: Ember Fire
+		Description: Mods.AerovelenceMod.Buffs.EmberFire.Description
+	}
+
+	ManaLeech: {
+		DisplayName: Mana Leech
+		Description: Mods.AerovelenceMod.Buffs.ManaLeech.Description
+	}
+
+	CyverBotBuff: {
+		DisplayName: Cyver Bot Buff
+		Description: Mods.AerovelenceMod.Buffs.CyverBotBuff.Description
+	}
+
+	ShotgunAxeDebuff: {
+		DisplayName: Shotgun Axe Debuff
+		Description: Mods.AerovelenceMod.Buffs.ShotgunAxeDebuff.Description
+	}
+}
+
+Items: {
+	EnergyShield: {
+		DisplayName: Energy Shield
+		Tooltip: ""
+	}
+
+	SlateChestplate: {
+		DisplayName: Slate Chestplate
+		Tooltip: ""
+	}
+
+	SlateHelmet: {
+		DisplayName: Slate Helmet
+		Tooltip: ""
+	}
+
+	SlateLeggings: {
+		DisplayName: Slate Leggings
+		Tooltip: ""
+	}
+
+	ObsidianEye: {
+		DisplayName: Obsidian Eye
+		Tooltip: ""
+	}
+
+	DebugItem: {
+		DisplayName: Debug Item
+		Tooltip: ""
+	}
+
+	Emoji: {
+		DisplayName: Emoji
+		Tooltip: ""
+	}
+
+	ExampleSwingSwordItem: {
+		DisplayName: Example Swing Sword Item
+		Tooltip: ""
+	}
+
+	EvilLightbulb: {
+		DisplayName: Evil Lightbulb
+		Tooltip: ""
+	}
+
+	LaserTrapItem: {
+		DisplayName: Laser Trap Item
+		Tooltip: ""
+	}
+
+	MilitaryMetalItem: {
+		DisplayName: Military Metal Item
+		Tooltip: ""
+	}
+
+	MilitaryMetalPlatformItem: {
+		DisplayName: Military Metal Platform Item
+		Tooltip: ""
+	}
+
+	AntiquePistol: {
+		DisplayName: Antique Pistol
+		Tooltip: ""
+	}
+
+	Alpenine: {
+		DisplayName: Alpenine
+		Tooltip: ""
+	}
+
+	ElementalShift: {
+		DisplayName: Elemental Shift
+		Tooltip: ""
+	}
+
+	CyverCannon: {
+		DisplayName: Cyver Cannon
+		Tooltip: ""
+	}
+
+	CyverWhip: {
+		DisplayName: Cyver Whip
+		Tooltip: ""
+	}
+
+	DarknessDischarge: {
+		DisplayName: Darkness Discharge
+		Tooltip: ""
+	}
+
+	Oblivion: {
+		DisplayName: Oblivion
+		Tooltip: ""
+	}
+
+	ElectrapulseCanister: {
+		DisplayName: Electrapulse Canister
+		Tooltip: ""
+	}
+
+	StaffOfShiftingSands: {
+		DisplayName: Staff Of Shifting Sands
+		Tooltip: ""
+	}
+
+	BurningJealousy: {
+		DisplayName: Burning Jealousy
+		Tooltip: ""
+	}
+
+	PagesOfDawn: {
+		DisplayName: Pages Of Dawn
+		Tooltip: ""
+	}
+
+	Solsear: {
+		DisplayName: Solsear
+		Tooltip: ""
+	}
+
+	FlareGun: {
+		DisplayName: Flare Gun
+		Tooltip: ""
+	}
+
+	FlareShark: {
+		DisplayName: Flare Shark
+		Tooltip: ""
+	}
+
+	DeepFreeze: {
+		DisplayName: Deep Freeze
+		Tooltip: ""
+	}
+
+	TetraBlades: {
+		DisplayName: Tetra Blades
+		Tooltip: ""
+	}
+
+	ClockworkLazinator: {
+		DisplayName: Clockwork Lazinator
+		Tooltip: ""
+	}
+
+	CrystalSpray: {
+		DisplayName: Crystal Spray
+		Tooltip: ""
+	}
+
+	CthulhusWrath: {
+		DisplayName: Cthulhus Wrath
+		Tooltip: ""
+	}
+
+	TheBeacon: {
+		DisplayName: The Beacon
+		Tooltip: ""
+	}
+
+	TheFlashlight: {
+		DisplayName: The Flashlight
+		Tooltip: ""
+	}
+
+	TheLaserPointer: {
+		DisplayName: The Laser Pointer
+		Tooltip: ""
+	}
+
+	Iridian: {
+		DisplayName: Iridian
+		Tooltip: ""
+	}
+
+	WandOfExploding: {
+		DisplayName: Wand Of Exploding
+		Tooltip: ""
+	}
+
+	Aliban: {
+		DisplayName: Aliban
+		Tooltip: ""
+	}
+
+	EntourageCrusher: {
+		DisplayName: Entourage Crusher
+		Tooltip: ""
+	}
+
+	FlailTest: {
+		DisplayName: Flail Test
+		Tooltip: ""
+	}
+
+	OzoneShredder: {
+		DisplayName: Ozone Shredder
+		Tooltip: ""
+	}
+
+	Asunder: {
+		DisplayName: Asunder
+		Tooltip: ""
+	}
+
+	TheSahara: {
+		DisplayName: The Sahara
+		Tooltip: ""
+	}
+
+	WarBow: {
+		DisplayName: War Bow
+		Tooltip: ""
+	}
+
+	FirePyre: {
+		DisplayName: Fire Pyre
+		Tooltip: ""
+	}
+
+	GaussShotgun: {
+		DisplayName: Gauss Shotgun
+		Tooltip: ""
+	}
+
+	GraniteCannon: {
+		DisplayName: Granite Cannon
+		Tooltip: ""
+	}
+
+	AdamantitePulsar: {
+		DisplayName: Adamantite Pulsar
+		Tooltip: ""
+	}
+
+	ShotgunAxe: {
+		DisplayName: Shotgun Axe
+		Tooltip: ""
+	}
+
+	ICER: {
+		DisplayName: I C E R
+		Tooltip: ""
+	}
+
+	TitaniumRocketLauncher: {
+		DisplayName: Titanium Rocket Launcher
+		Tooltip: ""
+	}
+
+	Woodpecker: {
+		DisplayName: Woodpecker
+		Tooltip: ""
+	}
+
+	OceanMist: {
+		DisplayName: Ocean Mist
+		Tooltip: ""
+	}
+
+	SlateAxeRanged: {
+		DisplayName: Slate Axe Ranged
+		Tooltip: ""
+	}
+
+	SlateBow: {
+		DisplayName: Slate Bow
+		Tooltip: ""
+	}
+
+	SlateStaff: {
+		DisplayName: Slate Staff
+		Tooltip: ""
+	}
+
+	SlateSword: {
+		DisplayName: Slate Sword
+		Tooltip: ""
+	}
+
+	CitadelBrickItem: {
+		DisplayName: Citadel Brick Item
+		Tooltip: ""
+	}
+
+	CitadelStoneItem: {
+		DisplayName: Citadel Stone Item
+		Tooltip: ""
+	}
+
+	RuinedCitadelBrickItem: {
+		DisplayName: Ruined Citadel Brick Item
+		Tooltip: ""
+	}
+
+	AncientChunkItem: {
+		DisplayName: Ancient Chunk Item
+		Tooltip: ""
+	}
+
+	CavernSandItem: {
+		DisplayName: Cavern Sand Item
+		Tooltip: ""
+	}
+
+	CavernStoneItem: {
+		DisplayName: Cavern Stone Item
+		Tooltip: ""
+	}
+
+	ChargedStoneItem: {
+		DisplayName: Charged Stone Item
+		Tooltip: ""
+	}
+
+	SmoothCavernStoneItem: {
+		DisplayName: Smooth Cavern Stone Item
+		Tooltip: ""
+	}
+
+	VoidArenaItem: {
+		DisplayName: Void Arena Item
+		Tooltip: ""
+	}
+
+	GlowDustDye: {
+		DisplayName: Glow Dust Dye
+		Tooltip: ""
+	}
+
+	ThunderLance: {
+		DisplayName: Thunder Lance
+		Tooltip: ""
+	}
+
+	LightOfTheAncients: {
+		DisplayName: Light Of The Ancients
+		Tooltip: ""
+	}
+
+	Skylight: {
+		DisplayName: Skylight
+		Tooltip: ""
+	}
+}
+
+NPCs: {
+	CyverBot.DisplayName: Cyver Bot
+	CyverBotOrbiter.DisplayName: Cyver Bot Orbiter
+	Cyvercry.DisplayName: Cyvercry
+	Cyvercry2.DisplayName: Cyvercry2
+	GhastlyGlacier.DisplayName: Ghastly Glacier
+	Rimegeist.DisplayName: Rimegeist
+	SlateDemon.DisplayName: Slate Demon
+	MovingPlatform.DisplayName: Moving Platform
+}
+
+Projectiles: {
+	SkillCritImpact.DisplayName: Skill Crit Impact
+	SkillStrikeProj.DisplayName: Skill Strike Proj
+	EnergyShieldDash.DisplayName: Energy Shield Dash
+	BulletTest.DisplayName: Bullet Test
+	ExampleSwingSwordProj.DisplayName: Example Swing Sword Proj
+	InkProjTest.DisplayName: Ink Proj Test
+	EvilAura.DisplayName: Evil Aura
+	EvilRay.DisplayName: Evil Ray
+	TrailTest.DisplayName: Trail Test
+	AmmoUI.DisplayName: Ammo U I
+	ErinAltFireHeldProjectile.DisplayName: Erin Alt Fire Held Projectile
+	ErinCircle.DisplayName: Erin Circle
+	ErinGunFireSuck.DisplayName: Erin Gun Fire Suck
+	ErinGunMuzzleFlash.DisplayName: Erin Gun Muzzle Flash
+	ErinImpact.DisplayName: Erin Impact
+	ReloadProj.DisplayName: Reload Proj
+	AuroraPillar.DisplayName: Aurora Pillar
+	ElementalShiftBall.DisplayName: Elemental Shift Ball
+	ElementalShiftImpact.DisplayName: Elemental Shift Impact
+	ElementalShiftProj.DisplayName: Elemental Shift Proj
+	ElementalShiftPulse.DisplayName: Elemental Shift Pulse
+	FlashLightBeam.DisplayName: Flash Light Beam
+	CannonSplit.DisplayName: Cannon Split
+	CyverBotProj.DisplayName: Cyver Bot Proj
+	CyverCannonProj.DisplayName: Cyver Cannon Proj
+	CyverWhipProj.DisplayName: Cyver Whip Proj
+	DarkLaser.DisplayName: Dark Laser
+	DarkLaserOld.DisplayName: Dark Laser Old
+	DrawingTest.DisplayName: Drawing Test
+	Oblivion2ElectricBoogaloo.DisplayName: Oblivion2 Electric Boogaloo
+	OblivionHeldProj.DisplayName: Oblivion Held Proj
+	OblivionPulse.DisplayName: Oblivion Pulse
+	PinkExplosion.DisplayName: Pink Explosion
+	PinkStar.DisplayName: Pink Star
+	StarSpawnerProj.DisplayName: Star Spawner Proj
+	ElectrapulseCanisterProj.DisplayName: Electrapulse Canister Proj
+	ElectrapulseCanisterProj2.DisplayName: Electrapulse Canister Proj2
+	SandBolt.DisplayName: Sand Bolt
+	StaffOfShiftingSandsHeldProj.DisplayName: Staff Of Shifting Sands Held Proj
+	BlockFX.DisplayName: Block F X
+	BurningJealousyExplode.DisplayName: Burning Jealousy Explode
+	BurningJealousyGuard.DisplayName: Burning Jealousy Guard
+	BurningJealousyHeldProj.DisplayName: Burning Jealousy Held Proj
+	BurningJealousyPulse.DisplayName: Burning Jealousy Pulse
+	MagmaBall.DisplayName: Magma Ball
+	PagesOfDawnProj.DisplayName: Pages Of Dawn Proj
+	SolsearHeld2.DisplayName: Solsear Held2
+	SolsearHeldProj.DisplayName: Solsear Held Proj
+	SolsearLaser.DisplayName: Solsear Laser
+	ChloroFlare.DisplayName: Chloro Flare
+	FireFlare.DisplayName: Fire Flare
+	FireFlareExplosion.DisplayName: Fire Flare Explosion
+	FlareGunHeldProjectile.DisplayName: Flare Gun Held Projectile
+	FrostFlare.DisplayName: Frost Flare
+	FrostFlareExplosion.DisplayName: Frost Flare Explosion
+	FrostFlareIcicle.DisplayName: Frost Flare Icicle
+	VenomFlare.DisplayName: Venom Flare
+	AuroraBlast.DisplayName: Aurora Blast
+	DeepFreezeHeldProjectile.DisplayName: Deep Freeze Held Projectile
+	DeepFreezeProj.DisplayName: Deep Freeze Proj
+	TetraBladeRefreshFX.DisplayName: Tetra Blade Refresh F X
+	TetraBladeStrike.DisplayName: Tetra Blade Strike
+	CrystalSprayHeldProj.DisplayName: Crystal Spray Held Proj
+	FireWave.DisplayName: Fire Wave
+	BeaconShot.DisplayName: Beacon Shot
+	TheBeaconProj.DisplayName: The Beacon Proj
+	TheFlashlightProj.DisplayName: The Flashlight Proj
+	TheLaserPointerProj.DisplayName: The Laser Pointer Proj
+	IridianShot1.DisplayName: Iridian Shot1
+	LazinatorHeldProj.DisplayName: Lazinator Held Proj
+	LazinatorShot.DisplayName: Lazinator Shot
+	LazinatorWindUp.DisplayName: Lazinator Wind Up
+	WandOfExplodingExplosion.DisplayName: Wand Of Exploding Explosion
+	WandOfExplodingHeldProj.DisplayName: Wand Of Exploding Held Proj
+	WandOfExplodingProj.DisplayName: Wand Of Exploding Proj
+	AlibanProj.DisplayName: Aliban Proj
+	AlibanSwing.DisplayName: Aliban Swing
+	EntourageCrusherHeldProj.DisplayName: Entourage Crusher Held Proj
+	FlailTestProj.DisplayName: Flail Test Proj
+	OzoneShredderHeldProj.DisplayName: Ozone Shredder Held Proj
+	OzoneShredderImpact.DisplayName: Ozone Shredder Impact
+	AsunderHeldProj.DisplayName: Asunder Held Proj
+	SaharaFirePulse.DisplayName: Sahara Fire Pulse
+	SaharaFireVortex.DisplayName: Sahara Fire Vortex
+	TheSaharaHeldProj.DisplayName: The Sahara Held Proj
+	WarBowHeldProj.DisplayName: War Bow Held Proj
+	FirePyreProj.DisplayName: Fire Pyre Proj
+	GaussExplosion.DisplayName: Gauss Explosion
+	GaussianStar.DisplayName: Gaussian Star
+	GraniteCannonHeldProj.DisplayName: Granite Cannon Held Proj
+	GraniteChunk.DisplayName: Granite Chunk
+	GraniteCore.DisplayName: Granite Core
+	AdamantitePulsarHeldProj.DisplayName: Adamantite Pulsar Held Proj
+	AdamantitePulseShot.DisplayName: Adamantite Pulse Shot
+	AdamSmallShot.DisplayName: Adam Small Shot
+	ShotgunAxeBlood.DisplayName: Shotgun Axe Blood
+	ShotgunAxeBullet.DisplayName: Shotgun Axe Bullet
+	ShotgunAxeHeldProj.DisplayName: Shotgun Axe Held Proj
+	ShotgunAxeMeleeProj.DisplayName: Shotgun Axe Melee Proj
+	ICERHeldProj.DisplayName: I C E R Held Proj
+	ICERProj.DisplayName: I C E R Proj
+	TitaniumMiniRocket.DisplayName: Titanium Mini Rocket
+	TitaniumRocket.DisplayName: Titanium Rocket
+	WoodImpact.DisplayName: Wood Impact
+	WoodpeckerArrow.DisplayName: Woodpecker Arrow
+	OceanMistHeldProj.DisplayName: Ocean Mist Held Proj
+	OceanMistShot.DisplayName: Ocean Mist Shot
+	DeerclopsRock.DisplayName: Deerclops Rock
+	SlateArrow.DisplayName: Slate Arrow
+	SlateAxeRangedHeldProj.DisplayName: Slate Axe Ranged Held Proj
+	SlateChunk.DisplayName: Slate Chunk
+	SlateStaffHeldProj.DisplayName: Slate Staff Held Proj
+	SlateSwordHeldProj.DisplayName: Slate Sword Held Proj
+	SlateSwordThrown.DisplayName: Slate Sword Thrown
+	StaffRock.DisplayName: Staff Rock
+	StarglassTestVFX.DisplayName: Starglass Test V F X
+	BigExplosionCyver.DisplayName: Big Explosion Cyver
+	Cyver2EnergyBall.DisplayName: Cyver2 Energy Ball
+	CyverBeam.DisplayName: Cyver Beam
+	CyverDangerSign.DisplayName: Cyver Danger Sign
+	CyverExplosionBall.DisplayName: Cyver Explosion Ball
+	CyverHyperBeam.DisplayName: Cyver Hyper Beam
+	CyverLaser.DisplayName: Cyver Laser
+	CyverLaserBomb.DisplayName: Cyver Laser Bomb
+	CyverPulse.DisplayName: Cyver Pulse
+	CyverReticle.DisplayName: Cyver Reticle
+	DarkDagger.DisplayName: Dark Dagger
+	DifferentExplodeBall.DisplayName: Different Explode Ball
+	DookieTelegraph.DisplayName: Dookie Telegraph
+	EnergyBall.DisplayName: Energy Ball
+	ESABall.DisplayName: E S A Ball
+	FinaleBeam.DisplayName: Finale Beam
+	FocusedLaser.DisplayName: Focused Laser
+	LaserExplosionBall.DisplayName: Laser Explosion Ball
+	LightningBorder.DisplayName: Lightning Border
+	PhantomLaser.DisplayName: Phantom Laser
+	PhantomLaserTelegraph.DisplayName: Phantom Laser Telegraph
+	ShadowBlade.DisplayName: Shadow Blade
+	ShadowClone.DisplayName: Shadow Clone
+	ShadowClonePink.DisplayName: Shadow Clone Pink
+	ShadowCyvercry.DisplayName: Shadow Cyvercry
+	SplittingLaser.DisplayName: Splitting Laser
+	StretchLaser.DisplayName: Stretch Laser
+	SweepLaserTell.DisplayName: Sweep Laser Tell
+	TelegraphLineCyver.DisplayName: Telegraph Line Cyver
+	TeleportFXCyver.DisplayName: Teleport F X Cyver
+	BigSoul.DisplayName: Big Soul
+	FrostWave.DisplayName: Frost Wave
+	HomingIceBolt.DisplayName: Homing Ice Bolt
+	HomingWispSouls.DisplayName: Homing Wisp Souls
+	IceBlast.DisplayName: Ice Blast
+	IceBolt.DisplayName: Ice Bolt
+	IceCube.DisplayName: Ice Cube
+	IceShot.DisplayName: Ice Shot
+	IcyLaserProj.DisplayName: Icy Laser Proj
+	IcySpike.DisplayName: Icy Spike
+	IcySpike2.DisplayName: Icy Spike2
+	IcySpikeOrbit.DisplayName: Icy Spike Orbit
+	RainbowBlast.DisplayName: Rainbow Blast
+	RimeIceCube.DisplayName: Rime Ice Cube
+	StarflakeTelegraph.DisplayName: Starflake Telegraph
+	VoidStone.DisplayName: Void Stone
+	WispSouls.DisplayName: Wisp Souls
+	ArrowTelegraph.DisplayName: Arrow Telegraph
+	CrystalBullet.DisplayName: Crystal Bullet
+	CursedBullet.DisplayName: Cursed Bullet
+	ExplosiveBullet.DisplayName: Explosive Bullet
+	IchorBullet.DisplayName: Ichor Bullet
+	MeteorBullet.DisplayName: Meteor Bullet
+	MusketBall.DisplayName: Musket Ball
+	NanoBullet.DisplayName: Nano Bullet
+	NanoReticle.DisplayName: Nano Reticle
+	DoubleTrailTest.DisplayName: Double Trail Test
+	ExampleTrailProj.DisplayName: Example Trail Proj
+	JadeFirePulse.DisplayName: Jade Fire Pulse
+	JadeMagmaPulse.DisplayName: Jade Magma Pulse
+	ManaLeechStar.DisplayName: Mana Leech Star
+	DistortProj.DisplayName: Distort Proj
+	FadeExplosion.DisplayName: Fade Explosion
+	FadeExplosionHighRes.DisplayName: Fade Explosion High Res
+	GlowyPixelPulse.DisplayName: Glowy Pixel Pulse
+	H3Impact.DisplayName: H3 Impact
+	HollowPulse.DisplayName: Hollow Pulse
+	MuraLineHandler.DisplayName: Mura Line Handler
+	otherHollowPulseTestDearFutureMePleaseRewriteAndMoveThisInsteadOfUsingItInTheFutureDearGod.DisplayName: other Hollow Pulse Test Dear Future Me Please Rewrite And Move This Instead Of Using It In The Future Dear God
+	RoAHit.DisplayName: Ro A Hit
+	ScreenShaderTest.DisplayName: Screen Shader Test
+	TrailGradientTest.DisplayName: Trail Gradient Test
+	CrystalSpray_Proj.DisplayName: Crystal Spray_ Proj
+	WaterOrb.DisplayName: Water Orb
+	WaterTrailTest.DisplayName: Water Trail Test
+	LightningTrailTest.DisplayName: Lightning Trail Test
+	ThunderBall.DisplayName: Thunder Ball
+	CyverMasterAccessoryVFX.DisplayName: Cyver Master Accessory V F X
+	ThunderPop.DisplayName: Thunder Pop
+	LanceViusalTest.DisplayName: Lance Viusal Test
+	ThunderLanceProj.DisplayName: Thunder Lance Proj
+	LightningHitFX.DisplayName: Lightning Hit F X
+	ThunderStrikeTest.DisplayName: Thunder Strike Test
+	SkylightElectricShot.DisplayName: Skylight Electric Shot
+	SkylightHeldProjectile.DisplayName: Skylight Held Projectile
+	SkylightThunderStrike.DisplayName: Skylight Thunder Strike
+	SkylightVFX.DisplayName: Skylight V F X
+}
+
+Configs: {
+	AeroClientConfig: {
+		DisplayName: Aero Client Config
+
+		DiscordRPCEnabled: {
+			Label: Discord Rich Presence
+			Tooltip: ""
+		}
+	}
+}

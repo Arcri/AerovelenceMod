@@ -43,9 +43,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Projectile.width = 1;
 			Projectile.height = 1;
 
+			Projectile.hide = true;
 		}
 
-        public override bool? CanDamage()
+		public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+		{
+			overPlayers.Add(index);
+			base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
+		}
+
+		public override bool? CanDamage()
         {
 			return false;
         }
@@ -82,7 +89,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     spawnedStars = true;
                 }
 
-                bool anyStarsActive = false;
+				if (!reverse)
+				{
+                    bool anyStarsActive = false;
+                    foreach (StarParticle star in stars)
+                    {
+                        star.Update();
+                    }
+                }
+
+            }
+
+			if (reverse)
+			{
                 foreach (StarParticle star in stars)
                 {
                     star.Update();
@@ -92,12 +111,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 			if (reverse)
 			{
-				if (timer > 5)
-					alpha = MathHelper.Clamp(alpha - 0.05f, 0, 1);
+				if (timer > 10)
+				{
+                    alpha = MathHelper.Clamp(alpha - 0.05f, 0, 1);
+                    scale = 1 - Math.Clamp(1- scale + 0.03f, 0f, 1.2f);
 
-                scale = 1 - Math.Clamp(getProgress(timer * 0.1f), 0f, 1f);
-            } 
-			else
+                }
+				else
+                    scale = 1 - Math.Clamp(getProgress(timer * 0.3f), 0f, 1f);
+            }
+            else
 			{
 
                 alpha = MathHelper.Clamp(alpha - 0.01f, 0, 1);
@@ -105,6 +128,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 scale = Math.Clamp(getProgress(timer * 0.06f), 0f, 1f);
             }
 
+			Projectile.velocity *= 0.85f;
 
 			timer++;
 
@@ -123,9 +147,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
 
 			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyvercryGlowy").Value;
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 0.8f * (1f - scale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 0.8f * (1f - scale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3,3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.2f * (1f - scale), SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3,3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.4f * (1f - scale), SpriteEffects.None, 0f);
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -171,7 +195,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 			if (timer > 20)
 				alpha = MathHelper.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.03f), 0f, 1f);
-			//scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.025f), 0f, size / 2);
+
 			Center += Velocity;
 			Velocity *= 0.95f;
 			rotation += Velocity.X * 0.03f;

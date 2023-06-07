@@ -12,6 +12,8 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.GameContent;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using static Terraria.GameContent.Animations.On_Actions.Sprites;
+using AerovelenceMod.Content.Projectiles.Other;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 {
@@ -212,9 +214,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void SetDefaults()
         {
-            Projectile.width = 48;
-            Projectile.height = 42;
-            Projectile.timeLeft = 100;
+            Projectile.width = 76;
+            Projectile.height = 68;
+            Projectile.timeLeft = 40;
             Projectile.penetrate = -1;
             Projectile.friendly = false;
             Projectile.hostile = true;
@@ -234,6 +236,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int numberOfLasers = 9;
         float lineScale = 1;
 
+        public float starScale = 1f;
+        float starRot = Main.rand.NextFloat(6.28f);
+        bool starRotDir = Main.rand.NextBool();
+
         public override void AI()
         {
             Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0.9f / 255f, (255 - Projectile.alpha) * 0.5f / 255f, (255 - Projectile.alpha) * 0.7f / 255f);
@@ -248,10 +254,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (Projectile.ai[0] == 1)
             {
-                rotOffset = Main.rand.NextFloat(6.28f);
+                //rotOffset = Main.rand.NextFloat(6.28f);
+
+                Projectile.ai[1] = Main.rand.NextBool() ? -1f : 1f;
             }
 
-            Main.NewText(Projectile.ai[0]);
+            starScale = Math.Clamp(MathHelper.Lerp(starScale, -0.5f, 0.08f), 0, 1);
+            starRot += 0.2f * (starRotDir ? 1 : -1);
+            //if (Projectile.timeLeft > 15)
+                //rotOffset += 0.02f * Projectile.ai[1];
 
             Projectile.ai[0]++;
         }
@@ -267,18 +278,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 //int numberOfLasers = 9;
-                for (int i = 0; i < 360; i += 360 / numberOfLasers)
+                for (int i = 0; i < 360; i += 360 / 8)
                 {
-
-                    int proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(0.4f, 0).RotatedBy(MathHelper.ToRadians(i) + rotOffset), ModContent.ProjectileType<StretchLaser>(), Projectile.damage, 0, Main.myPlayer);
+                    //0.4 vel | 200 accel time | 1.025 accel strength
+                    int proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(0.05f, 0).RotatedBy(MathHelper.ToRadians(i) + rotOffset), ModContent.ProjectileType<StretchLaser>(), Projectile.damage, 0, Main.myPlayer);
                     Main.projectile[proj].timeLeft = 400;
                     if (Main.projectile[proj].ModProjectile is StretchLaser laser)
                     {
-                        laser.accelerateTime = 200;
-                        laser.accelerateStrength = 1.025f; //1.025
+                        laser.accelerateTime = 300; //200 0.05
+                        laser.accelerateStrength = 1.021f; //1.03
                     }
                 }
             }
+
+            int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
+            if (Main.projectile[a].ModProjectile is HollowPulse pulse)
+            {
+                pulse.color = Color.HotPink * 0.25f;
+                pulse.oval = false;
+                pulse.size = 3;
+            }
+
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -286,28 +306,71 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
             Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/Medusa_Gray");
 
+            Texture2D star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1");
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.7f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, Color.DeepPink, starRot, star.Size() / 2, Projectile.scale * 1.8f * starScale, 0, 0f);
+            Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, Color.White, starRot, star.Size() / 2, Projectile.scale * 1.4f * starScale, 0, 0f);
 
-            int numberOfLasers = 9;
+
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.HotPink * 0.55f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.4f, 0, 0f);
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.White * 0.6f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.15f, 0, 0f);
+
+            int numberOfLasers = 8;
             for (int i = 0; i < 360; i += 360 / numberOfLasers)
             {
-                Vector2 vec2Scale = new Vector2(lineScale, lineScale * 0.5f);
+                Vector2 vec2Scale = new Vector2(lineScale * 0.4f * 3.5f, lineScale * 0.35f) * 1.2f * (1 - starScale);
 
-                Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition, null, Color.HotPink, MathHelper.ToRadians(i) + rotOffset, new Vector2(0, Line.Height / 2), vec2Scale, SpriteEffects.None, 0f);
+                
+
+                Vector2 offsetAdd = (MathHelper.ToRadians(i) + rotOffset).ToRotationVector2() * 10;
+
+                Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + offsetAdd + Main.rand.NextVector2Circular(2f, 2f), null, Color.DeepPink, MathHelper.ToRadians(i) + rotOffset, new Vector2(0, Line.Height / 2), vec2Scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink * 0.85f, MathHelper.ToRadians(i) + rotOffset, new Vector2(0, Line.Height / 2), vec2Scale * 0.9f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + offsetAdd + Main.rand.NextVector2Circular(2f,2f), null, Color.White, MathHelper.ToRadians(i) + rotOffset, new Vector2(0, Line.Height / 2), vec2Scale * 0.8f, SpriteEffects.None, 0f);
 
 
             }
 
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            return true;
+            Texture2D Tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/DifferentExplodeBallBase");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/DifferentExplodeBallPMA");
+
+            int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+
+            // Get this frame on texture
+            Rectangle sourceRectangle = new Rectangle(0, startY, Tex.Width, frameHeight);
+            Vector2 origin = sourceRectangle.Size() / 2f;
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.Black * 0.5f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.2f, 0, 0f);
+
+
+            //Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White with { A = 0 }, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White with { A = 0 }, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+
+            float glowyVal = Projectile.timeLeft < 15 ? 0.45f : 0.15f;
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White with { A = 0 } * glowyVal, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+
+
+            return false;
         }
+
+        public override void PostDraw(Color lightColor)
+        {
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+
     }
 
     public class DookieTelegraph : ModProjectile

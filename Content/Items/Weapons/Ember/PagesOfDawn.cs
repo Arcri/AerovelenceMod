@@ -15,6 +15,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.Items.Weapons.Starglass;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -117,7 +118,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             //float lerpValue = Utils.GetLerpValue(0f, 0.4f, 1 - progress, clamped: true);
             //num *= 1f - (1f - lerpValue) * (1f - lerpValue);
             //return MathHelper.Lerp(0f, trailWidth, num) * 0.4f; // 0.3f
-            
+
             if (progress > 0.5)
             {
 
@@ -138,4 +139,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         }
 
     }
+
 }

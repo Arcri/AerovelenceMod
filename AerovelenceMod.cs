@@ -20,6 +20,7 @@ using AerovelenceMod.Common;
 using Terraria.GameContent;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
+using AerovelenceMod.Content.Items.Weapons.Starglass;
 
 namespace AerovelenceMod
 {
@@ -214,7 +215,7 @@ namespace AerovelenceMod
 
 		public override void Load()
 		{
-
+			//StarglassParticleDetour.Load();
 			ModDetours.Load();
 
 
@@ -340,7 +341,7 @@ namespace AerovelenceMod
         public override void Unload()
 		{
 			Terraria.Graphics.Effects.On_FilterManager.EndCapture -= FilterManager_EndCapture;
-
+			//StarglassParticleDetour.Unload();
 
 			ModDetours.Unload();
 
