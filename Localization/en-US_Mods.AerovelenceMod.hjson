@@ -394,6 +394,11 @@ Items: {
 		DisplayName: Skylight
 		Tooltip: ""
 	}
+
+	StormRazor: {
+		DisplayName: Storm Razor
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -611,6 +616,9 @@ Projectiles: {
 	SkylightHeldProjectile.DisplayName: Skylight Held Projectile
 	SkylightThunderStrike.DisplayName: Skylight Thunder Strike
 	SkylightVFX.DisplayName: Skylight V F X
+	SkylightHitFlare.DisplayName: Skylight Hit Flare
+	StormRazorProj.DisplayName: Storm Razor Proj
+	SkylightAltHeldProjectile.DisplayName: Skylight Alt Held Projectile
 }
 
 Configs: {

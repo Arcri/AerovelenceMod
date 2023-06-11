@@ -51,8 +51,8 @@ namespace AerovelenceMod.Content.Dusts
 			dust.scale *= 0.98f;
 			//float light = 0.35f * dust.scale;
 
-
-			Lighting.AddLight(dust.position, dust.color.ToVector3() * (0.5f * dust.scale));
+			if (!dust.noLight)
+				Lighting.AddLight(dust.position, dust.color.ToVector3() * (0.15f * dust.scale));
 
 			if (dust.scale < 0.5f) //Shrinks dust and deletes it when it is very tiny
 			{

@@ -88,4 +88,74 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 		}
 	}
 
+	public class HitFlare : ModDust 
+	{
+        public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/flare_1tiny";
+
+        public override void OnSpawn(Dust dust)
+        {
+            dust.customData = false;
+            dust.noGravity = true;
+            dust.frame = new Rectangle(0, 0, 128, 128);
+        }
+
+        public override Color? GetAlpha(Dust dust, Color lightColor)
+        {
+            return dust.color;
+        }
+
+        public override bool Update(Dust dust)
+        {
+
+            if (dust.customData is false)
+            {
+                dust.position = dust.position + (new Vector2(-64, -64) * dust.scale * 0.5f);
+                dust.customData = true;
+            }
+
+
+            dust.color.A = 0;
+
+
+            dust.scale = Math.Clamp(MathHelper.Lerp(dust.scale, -0.5f, 0.08f), 0, 10);
+
+            //dust.rotation += 0.2f;
+
+            dust.position += dust.velocity;
+
+            //Makes shit more accurate to velocity, idfk why the value is pi
+            dust.position += new Vector2(MathHelper.Pi) * dust.scale;
+            dust.velocity *= 0.95f;
+
+            if (!dust.noLight && dust.scale > 0.2f)
+                Lighting.AddLight(dust.position, dust.color.R * dust.scale * 0.002f, dust.color.G * dust.scale * 0.002f, dust.color.B * dust.scale * 0.002f);
+
+
+
+            if (dust.scale < 0.05f)
+            {
+                dust.active = false;
+            }
+
+            //dust.rotation += dust.velocity.X * 0.01f;
+
+            return false;
+        }
+
+
+        public override bool PreDraw(Dust dust)
+        {
+            Vector2 offset = new Vector2(64, 64) * dust.scale * 0.5f;
+
+            Vector2 newOffset = new Vector2(16, 16) * (1 - dust.scale);
+
+            Main.spriteBatch.Draw(Texture2D.Value, dust.position - Main.screenPosition + offset + newOffset, dust.frame, Color.Black * 0.2f, dust.rotation, new Vector2(64f, 64f), dust.scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Texture2D.Value, dust.position - Main.screenPosition + offset + newOffset, dust.frame, dust.color with { A = 0 }, dust.rotation * -1, new Vector2(64f, 64f), dust.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Texture2D.Value, dust.position - Main.screenPosition + offset * 0.5f + newOffset, dust.frame, Color.White with { A = 0 } * 1f, dust.rotation, new Vector2(64f, 64f) * 0.5f, dust.scale * 0.5f, SpriteEffects.None, 0f);
+
+            // - (new Vector2(-60, -60) * dust.scale)
+            return false;
+        }
+    }
 }

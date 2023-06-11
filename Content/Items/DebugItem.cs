@@ -4,36 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Drawing;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Content.Dusts.GlowDusts;
-using System;
 using Terraria.Audio;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
-using AerovelenceMod.Content.NPCs.Bosses.Rimegeist;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
-using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
-using AerovelenceMod.Content.Projectiles.Weapons.Magic;
-using AerovelenceMod.Content.Items.Weapons.Ember;
-using AerovelenceMod.Content.Items.Weapons.Flares;
-using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
-using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
-using AerovelenceMod.Content.Items;
-using static Terraria.ModLoader.PlayerDrawLayer;
-using AerovelenceMod.Content.Items.Weapons.Aurora;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
-using AerovelenceMod.Content.Projectiles.BulletRework;
-using AerovelenceMod.Content.Items.Accessories.Boss;
-using AerovelenceMod.Content.Items.Weapons.Starglass;
-using AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
 
 namespace AerovelenceMod.Content.Items
@@ -70,9 +46,9 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            ///int afg = Projectile.NewProjectile(source, position + new Vector2(0,-1000), velocity * 3f, ModContent.ProjectileType<ThunderStrikeTest>(), 0, 0);
+            int afg = Projectile.NewProjectile(source, position + new Vector2(0,-1000), velocity * 3f, ModContent.ProjectileType<SkylightThunderStrike>(), 2, 0);
 
-            int afg = Projectile.NewProjectile(source, position + new Vector2(0, 0), velocity * 0.75f, ModContent.ProjectileType<SkylightVFX>(), 0, 0);
+            //int afg = Projectile.NewProjectile(source, position + new Vector2(400, 0), velocity * 0.0f, ModContent.ProjectileType<SkylightVFX>(), 0, 0);
 
             //Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
 

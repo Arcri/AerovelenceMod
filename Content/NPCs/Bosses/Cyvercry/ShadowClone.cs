@@ -43,7 +43,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, Color.SkyBlue.ToVector3() * 0.2f);
+            //Lighting.AddLight(Projectile.Center, Color.SkyBlue.ToVector3() * 0.5f);
             Player player = Main.player[(int)Projectile.ai[0]];
 
             if (timer < 65)
@@ -71,25 +71,44 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer >= 65)
             {
+
+                if (timer == 65)
+                {
+                    glowVal = 1;
+                    for (int m = 0; m < 5 + Main.rand.Next(0, 2); m++)
+                    {
+                        Color col = Color.SkyBlue * 1f;
+                        Dust d = Dust.NewDustPerfect(Projectile.Center + Projectile.rotation.ToRotationVector2() * -20, ModContent.DustType<MuraLineDust>(),
+                            Projectile.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)) * Main.rand.NextFloat(0.75f, 3.5f) * 4.3f, newColor: col, Scale: Main.rand.NextFloat(1.3f, 1.65f));
+                        d.fadeIn = 0.65f;
+                        d.alpha = 20;
+                    }
+                }
                 if (timer == 75)
                 {
-                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/TetraSlide") with { Volume = 0.10f, Pitch = 0.2f, MaxInstances = 2 }, Projectile.Center);
-
+                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/GloogaSlide") with { Volume = 0.15f, Pitch = 0.5f, MaxInstances = 2 }, Projectile.Center);
 
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = .20f, Pitch = 1f, MaxInstances = 2 };
                     SoundEngine.PlaySound(style2, Projectile.Center);
+
+                    SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/ElectricExplode") with { Volume = .1f, Pitch = 1f, }; 
+                    SoundEngine.PlaySound(style3, Projectile.Center);
+
+
                 }
 
                 Projectile.velocity = Projectile.rotation.ToRotationVector2().RotatedBy(MathHelper.Pi) * dashSpeed;
                 
                 if (timer % 3 == 0)
                 {
-                    Dust.NewDust(Projectile.Center, 12, Projectile.height, ModContent.DustType<DashTrailDust>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 0, new Color(0, 255, 255), 1f);
-
+                    int a = Dust.NewDust(Projectile.Center, 12, Projectile.height, ModContent.DustType<DashTrailDust>(), Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 0, new Color(0, 255, 255), 1f);
+                    Main.dust[a].noLight = true;
                 }
 
 
             }
+
+            glowVal = Math.Clamp(MathHelper.Lerp(glowVal, -0.1f, 0.08f), 0, 1);
 
             Projectile.rotation = player.Center.AngleTo(player.Center + GoalPoint);
             Projectile.spriteDirection = Projectile.direction;
@@ -97,26 +116,45 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         }
 
+        float glowVal = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowClone").Value;
+            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowCloneBorder").Value;
 
             Color drawingCol = Color.SkyBlue;
+            Color drawingCol2 = Color.White;
+
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition;
                 drawingCol = Color.SkyBlue * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22,22), Tex.Frame(1,1,0,0), drawingCol * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+                drawingCol2 = Color.White * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+
+                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1,1,0,0), drawingCol * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(Tex2, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol2 * glowVal, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0);
+
             }
 
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), lightColor, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * 0.5f, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * glowVal * 1f, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+
             return false;
         }
 
         public void SetGoalPoint(Vector2 input)
         {
             GoalPoint = input;
+        }
+
+        //!
+        public override void Kill(int timeLeft)
+        {
+            for (int b = 0; b < 20; b++)
+                Dust.NewDust(Projectile.Center, 12, Projectile.height, ModContent.DustType<DashTrailDust>(), Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 0, new Color(0, 255, 255), 1f);
         }
     }
     public class ShadowClonePink : ModProjectile
