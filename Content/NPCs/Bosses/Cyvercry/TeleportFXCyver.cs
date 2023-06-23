@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		private int timer;
 
 		public bool reverse = false;
-
+		public bool blue = false;
 		public override string Texture => "Terraria/Images/Projectile_0";
 
 		public override void SetStaticDefaults()
@@ -126,7 +126,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 alpha = MathHelper.Clamp(alpha - 0.01f, 0, 1);
 
                 scale = Math.Clamp(getProgress(timer * 0.06f), 0f, 1f);
-            }
+
+				if (blue)
+					scale = Math.Clamp(getProgress(timer * 0.10f), 0f, 1f);
+			}
 
 			Projectile.velocity *= 0.85f;
 
@@ -143,13 +146,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 			foreach (StarParticle star in stars)
             {
-				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value);
+				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value, blue ? Color.SkyBlue : Color.HotPink);
             }
 
-			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyvercryGlowy").Value;
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3,3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.4f * (1f - scale), SpriteEffects.None, 0f);
+			if (blue)
+            {
+				Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyverBlueFuzzy").Value;
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 0.98f * (1f - scale), SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3, 3), Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.1f * (1f - scale), SpriteEffects.None, 0f);
+
+			}
+			else
+            {
+				Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/CyvercryGlowy").Value;
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * alpha, Projectile.rotation, Tex.Size() / 2, 1f * (1f - scale), SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3, 3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.4f * (1f - scale), SpriteEffects.None, 0f);
+			}
 
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -205,10 +219,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		}
 
 
-		public void DrawStar(SpriteBatch sb, Texture2D tex)
+		public void DrawStar(SpriteBatch sb, Texture2D tex, Color col)
 		{
-			sb.Draw(tex, Center - Main.screenPosition, null, Color.HotPink * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
-			sb.Draw(tex, Center - Main.screenPosition, null, Color.HotPink * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
+			sb.Draw(tex, Center - Main.screenPosition, null, col * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
+			sb.Draw(tex, Center - Main.screenPosition, null, col * alpha, rotation, tex.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
         }
 
     }

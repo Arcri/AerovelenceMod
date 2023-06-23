@@ -460,7 +460,10 @@ namespace AerovelenceMod
 						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
 						//Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.FlipVertically, 0f);
 
-						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
+						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
+						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/twirl_01");
+
+
 						float extraRotation = projectile.ai[0] != 1 ? MathHelper.PiOver4 + 0.3f : MathHelper.PiOver2 - 1f;
 						Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation + extraRotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 

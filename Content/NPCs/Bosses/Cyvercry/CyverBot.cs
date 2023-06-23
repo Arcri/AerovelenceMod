@@ -106,14 +106,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public int ESABallTimer = 0;
         bool TrueChaseX = true;
-        bool startSmaller = false;
         String mode = "";
         float quadrant = 0;
 
         bool shouldHide = false;
         int newProjPause = 0;
+        int ballPauseTime = 0;
 
-        float rotIntensity = 0.02f;
+        public bool isExpert = false;
+        public bool isMaster = false;
+        public bool isMasterPhase3 = false;
+
+        public float rotIntensity = 0.02f;
 
         public override void AI()
         {
@@ -144,22 +148,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Vector2 goalPoint = GoalPos;
 
                     NPC.Center = Vector2.Lerp(NPC.Center, (goalPoint + myPlayer.Center), timer / 30f);
-
-                    /*
-                    Vector2 move = (goalPoint + myPlayer.Center) - NPC.Center;
-                    float scalespeed = 4f;
-
-                    NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
-                    NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
-
-
-                    Vector2 destination = GoalPos + myPlayer.Center;
-                    float velo = MathHelper.Clamp(NPC.Distance(destination) / 12, 15, 60); //60
-                    NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionTo(destination) * velo, 0.4f);
-                    */
                     NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.ToRadians(180);
 
-                    if (timer == 30)
+                    if (timer == 20)
                     {
 
                         advancer++;
@@ -177,8 +168,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     {
 
                         advancer++;
-                        //int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, (NPC.rotation + MathHelper.Pi).ToRotationVector2() * 8, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
-                        //Main.projectile[a].scale = 0.5f;
                         storedCenter = myPlayer.Center;
                     }
 
@@ -214,13 +203,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (timer % 7 == 0 && timer > 40 && timer < 250) //300
                 {
 
-                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.15f, MaxInstances = -1 }; //1f
+                    SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.1f, MaxInstances = -1 }; //1f
                     SoundEngine.PlaySound(stylec, NPC.Center);
 
                     Vector2 offset = (NPC.rotation + MathHelper.Pi).ToRotationVector2();    //NPC.direction == 1 ? (NPC.rotation + MathHelper.Pi).ToRotationVector2() : NPC.rotation.ToRotationVector2(); 
                     float speedMultiplier = (isFarFromCenter ? 6.5f : 6.5f); //13 : 8
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset * 20, (NPC.rotation + MathHelper.Pi).ToRotationVector2() * speedMultiplier, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
                     Main.projectile[a].scale = 0.8f;
+                    Main.projectile[a].timeLeft = 350;
+
 
                     if (Main.projectile[a].ModProjectile is CyverLaser laser)
                         laser.damageDelay = 40;
@@ -288,14 +279,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (timer == timeBeforeDeath) //180
                 {
                     if (State == (int)Behavior.PrimeLaser)
+                    {
+                        KillFX();
                         NPC.active = false;
+                    }
 
                     if (Leader)
                     {
                         State = (int)CyverBot.Behavior.ESABall;
                         NPC.Center = auraPosition;
-                    } else
+                    } else if (State == (int)Behavior.PrimeLaserLong)
                     {
+                        KillFX();
                         NPC.active = false;
                     }
                     
@@ -372,10 +367,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 auraPosition = NPC.Center;
                 NPC.Center = auraPosition;
 
+                if (ballPauseTime > 0)
+                    NPC.velocity = Vector2.Zero;
+
                 ESABallTimer++;
 
                 newProjPause--;
-
+                ballPauseTime--;
                 auraIntensity = 1f;
             }
 
@@ -413,6 +411,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             //Texture2D flareTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/flare_01");
 
+
+            Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray");
+            Vector2 lineScale = new Vector2(3f, 0.3f) * 1f;
+
+            float add = NPC.spriteDirection == 1 ? 0f : MathHelper.Pi;
+
+            if (!shouldHide)
+            {
+                float lineOpacity = timer < 40 ? 1f : 1f - Math.Clamp(((float)timer - 40f) / 40f, 0, 1);
+
+                Main.spriteBatch.Draw(Line, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, Color.DeepPink with { A = 0 } * 0.1f * lineOpacity, NPC.rotation + add, new Vector2(0, Line.Height / 2), lineScale * 1.5f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Line, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, Color.HotPink with { A = 0 } * 0.2f * lineOpacity, NPC.rotation + add, new Vector2(0, Line.Height / 2), lineScale * 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Line, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, Color.White with { A = 0 } * 0.3f * lineOpacity, NPC.rotation + add, new Vector2(0, Line.Height / 2), lineScale * 0.5f, SpriteEffects.None, 0f);
+            }
+
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
@@ -424,6 +437,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             //myEffect.CurrentTechnique.Passes[0].Apply();
+
 
             if (Leader)
             {
@@ -503,6 +517,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     pinkExplo.numberOfDraws = 2;
                 }
                 newProjPause = 20;
+                ballPauseTime = 10;
 
                 for (int i = 0; i < 8; i++)
                 {
@@ -543,7 +558,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public void KillFX()
         {
+            //SpawnGores
+            int g1 = Gore.NewGore(null, NPC.Center, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<CyverBotGore1>(), Scale: 1f);
+            int g2 = Gore.NewGore(null, NPC.Center, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<CyverBotGore2>(), Scale: 1f);
+            int g3 = Gore.NewGore(null, NPC.Center, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<CyverBotGore3>(), Scale: 1f);
 
+
+            for (double m = 0; m < 6.28; m += 1)
+            {
+                Dust dust = Dust.NewDustPerfect(NPC.Center, DustID.FireworkFountain_Pink, new Vector2((float)Math.Sin(m) * 1.3f, (float)Math.Cos(m)) * 2.4f);
+                dust.velocity *= Main.rand.NextFloat(0.4f, 1.3f);
+                dust.noGravity = false;
+                dust.scale = 0.4f;
+            }
+
+            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_44") with { Pitch = 0f, PitchVariance = 0.1f, MaxInstances = -1, Volume = 0.15f }; 
+            SoundEngine.PlaySound(style, NPC.Center);
         }
     }
     public class CyverBotOrbiter : ModNPC {
@@ -726,4 +756,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Main.projectile[a].scale = 0.8f;
         */
     }
+
+    public class CyverBotGore1 : ModGore
+    {
+        public override string Texture => "AerovelenceMod/Content/Gores/CyverBotGore1";
+
+        public override bool Update(Gore gore)
+        {
+            if (gore.frameCounter > 15)
+                gore.alpha += 10;
+
+            if (gore.alpha >= 250)
+                gore.active = false;
+            gore.frameCounter++;
+
+            return base.Update(gore);
+        }
+    }
+    public class CyverBotGore2 : CyverBotGore1 { public override string Texture => "AerovelenceMod/Content/Gores/CyverBotGore2"; }
+    public class CyverBotGore3 : CyverBotGore1 { public override string Texture => "AerovelenceMod/Content/Gores/CyverBotGore3"; }
 }

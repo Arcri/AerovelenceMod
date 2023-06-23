@@ -12,6 +12,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using Terraria.Graphics.Shaders;
+using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 {
@@ -152,6 +153,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Projectile.Center = (currentAng.ToRotationVector2() * 65) + player.RotatedRelativePoint(player.MountedCenter);
             player.itemTime = 10;
             player.itemAnimation = 10;
+            player.heldProj = Projectile.whoAmI;
 
             maxTime++;
 
@@ -187,10 +189,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), texture.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-            //return false;
 
             SpriteEffects spriteEffects = Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Rectangle rect = new(0, 0, texture.Width, texture.Height);
             Vector2 origin = new(texture.Width / 2f, texture.Height / 2f);
 
             Texture2D glowTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/OzoneShredderHeldProjGlow");
@@ -203,7 +203,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
                 Color color = Color.SkyBlue * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 Main.EntitySpriteDraw(glowTex, drawPos + new Vector2(10,8), null, color * (0.5f -(k * 0.05f)), Projectile.oldRot[k] + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), spriteEffects, 0);
             }
-
 
             //Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
             //float extraRotation = Projectile.ai[0] != 1 ? MathHelper.PiOver4 + 0.3f : MathHelper.PiOver2 - 1f;
@@ -242,10 +241,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             {
                 //if the player is using SoC dash (which they very likely are at this stage) we don't want to bonk an ememy
                 //and then bonk with the sword because we'll end up going forward again
-                if (player.dashType != 2 && player.immuneNoBlink)
-                {
-                    return;
-                }
+                //if (player.dashType != 2 && player.immuneNoBlink)
+                //{
+                    //return;
+                //}
 
                 player.velocity.X = -player.velocity.X / 2;
                 player.velocity.Y = -player.velocity.X / 2;
@@ -370,4 +369,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             return false;
         }
     }
+
 }

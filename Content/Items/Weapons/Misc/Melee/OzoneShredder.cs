@@ -33,7 +33,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Item.autoReuse = true;
             Item.rare = ItemRarityID.Purple;
             Item.DamageType = DamageClass.Melee;
-            Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = - 0.2f };
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.channel = true;
             

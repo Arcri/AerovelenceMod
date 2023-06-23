@@ -235,6 +235,12 @@ namespace AerovelenceMod.Content.Projectiles
 
         public float pinchAmount = 0.2f;
 
+        public bool relativeToPlayer = false;
+
+        public Player myPlayer = null;
+
+        public bool shouldSmooth = true;
+
         //------------------
         public int trailPointLimit = 60;
 
@@ -331,11 +337,15 @@ namespace AerovelenceMod.Content.Projectiles
             //Smoothing
             if (trailPositions.Count > 3)
             {
-                for (int i = 3; i < trailPositions.Count - 1; i++)
+                if (!relativeToPlayer && shouldSmooth)
                 {
-                    trailPositions[i - 2] = (trailPositions[i - 3] + trailPositions[i - 1]) / 2f;
-                    trailRotations[i - 2] = Vector2.Lerp(trailRotations[i - 3].ToRotationVector2(), trailRotations[i - 1].ToRotationVector2(), 0.5f).ToRotation();
+                    for (int i = 3; i < trailPositions.Count - 1; i++)
+                    {
+                        trailPositions[i - 2] = (trailPositions[i - 3] + trailPositions[i - 1]) / 2f;
+                        trailRotations[i - 2] = Vector2.Lerp(trailRotations[i - 3].ToRotationVector2(), trailRotations[i - 1].ToRotationVector2(), 0.5f).ToRotation();
+                    }
                 }
+
             }
 
             trailCurrentLength = CalculateLength();
@@ -379,7 +389,6 @@ namespace AerovelenceMod.Content.Projectiles
                 customEffect.Parameters["gradientTex"].SetValue(gradientTexture);
                 customEffect.Parameters["gradProgress"].SetValue(gradientTime);
                 customEffect.Parameters["scrollColor"].SetValue(shouldScrollColor);
-
             }
 
             customEffect.CurrentTechnique.Passes["DefaultPass"].Apply();
@@ -388,7 +397,19 @@ namespace AerovelenceMod.Content.Projectiles
             VertexStrip vertexStrip = new VertexStrip();
             if (trailPositions != null)
             {
-                vertexStrip.PrepareStrip(trailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
+                if (relativeToPlayer)
+                {
+                    List<Vector2> tempTrailPositions = new List<Vector2>(); ;
+
+                    for (int a = 0; a < trailPositions.Count; a++)
+                    {
+                        tempTrailPositions.Add(myPlayer.Center + trailPositions[a]);
+                    }
+                    vertexStrip.PrepareStrip(tempTrailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
+
+                }
+                else
+                    vertexStrip.PrepareStrip(trailPositions.ToArray(), trailRotations.ToArray(), ColorFunction, WidthFunction, -Main.screenPosition, includeBacksides: true);
 
                 for (int i = 0; i < timesToDraw; i++)
                 {

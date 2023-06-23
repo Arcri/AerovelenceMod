@@ -271,8 +271,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Main.spriteBatch.Draw(spotTex, storedCenter - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.1f, SpriteEffects.None, 0);
 
 
-            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer), spotTex.Size() / 2, 0.45f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer), spotTex.Size() / 2, 0.30f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer), spotTex.Size() / 2, 0.68f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer), spotTex.Size() / 2, 0.45f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.HotPink, LaserRotation, glowTex.Size() / 2, 3f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 
@@ -589,7 +589,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float LaserRotation = 0;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Finale Sky Beam");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 
@@ -620,6 +619,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             timer++;
         }
+
+        float widthMultiplier = 0f;
+        float alpha = 1f;
 
         public override bool PreDraw(ref Color lightColor)
         {

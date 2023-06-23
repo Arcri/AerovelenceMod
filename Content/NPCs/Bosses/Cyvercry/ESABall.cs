@@ -233,7 +233,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         public float rotOffset = 0f;
-        public int numberOfLasers = 9;
+        public int numberOfLasers = 8;
         float lineScale = 1;
 
         public float starScale = 1f;

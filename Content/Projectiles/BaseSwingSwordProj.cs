@@ -163,14 +163,6 @@ namespace AerovelenceMod.Content.Projectiles
                 easingProgress = Math.Clamp(easingProgress + easingAdditionAmount * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.01f, 1f);
             }
 
-            //if direction is right
-
-            //if direction is left
-            //if sword is left
-
-            //if sword is right
-
-            //currentAngle = -MathHelper.PiOver2 + MathHelper.PiOver4;
             Projectile.rotation = currentAngle + MathHelper.PiOver4;
 
             Projectile.Center = (currentAngle.ToRotationVector2() * offset) + player.RotatedRelativePoint(player.MountedCenter);// + new Vector2(-5 * player.direction,-2.5f);

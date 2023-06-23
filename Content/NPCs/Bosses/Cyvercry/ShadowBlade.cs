@@ -51,8 +51,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 				Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 11;
 
-				SoundStyle style = new SoundStyle("Terraria/Sounds/Item_10") with { Pitch = .92f, PitchVariance = .28f, MaxInstances = -1, Volume = 0.4f };
+				SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/hero_fury_charm_burst") with { Pitch = .78f, PitchVariance = 0.2f, Volume = 0.5f };
 				SoundEngine.PlaySound(style, Projectile.Center);
+
+
 				for (int i = 0; i < 360; i += 360)
 				{
 					Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
@@ -61,6 +63,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 						Color.DeepPink, 1.5f, 0.6f, 0f, dustShader);
 					d.noLight = true;
 				}
+
+				whiteIntensity = 1f;
 			}
 			if (Projectile.timeLeft > 420)
 			{
@@ -91,9 +95,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			//Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 1.8f / 255f, (255 - Projectile.alpha) * 0.0f / 255f, (255 - Projectile.alpha) * 0.0f / 255f);
 			if (Projectile.timeLeft <= 25)
 				Projectile.alpha += 10;
+
+			whiteIntensity = Math.Clamp(MathHelper.Lerp(whiteIntensity, -0.01f, 0.04f), 0f, 1f);
+
 			timer++;
 		}
 
+		float whiteIntensity = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
 			Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBladeOuter").Value;
@@ -102,10 +110,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Rectangle rectangle = new Rectangle(0, y3, texture.Width, num156);
 			Vector2 origin2 = rectangle.Size() / 2f;
 
+			Vector2 scaleV2 = new Vector2(1f - (whiteIntensity * 0.5f), 1f);
+			Color col1 = Color.Lerp(Color.DeepPink, Color.White, whiteIntensity);
+			Color col2 = Color.Lerp(Color.HotPink, Color.White, whiteIntensity);
+
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value;
 
-			myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 0.5f);
+			myEffect.Parameters["uColor"].SetValue(col1.ToVector3() * 0.5f);
 			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/CoolNoise").Value);
 			myEffect.Parameters["uTime"].SetValue(timer);
 
@@ -113,18 +125,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 			myEffect.CurrentTechnique.Passes[0].Apply();
 
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + new Vector2(0f, 0f), new Microsoft.Xna.Framework.Rectangle?(rectangle), Projectile.GetAlpha(lightColor), Projectile.rotation, origin2, 1.20f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + new Vector2(0f, 0f), new Microsoft.Xna.Framework.Rectangle?(rectangle), Projectile.GetAlpha(lightColor), Projectile.rotation, origin2, scaleV2 * 1.2f, SpriteEffects.None, 0f);
 			
 			
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
 			var TexOut = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBladeOuter").Value;
-			Main.spriteBatch.Draw(TexOut, Projectile.Center - Main.screenPosition, TexOut.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, TexOut.Size() / 2, 1f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(TexOut, Projectile.Center - Main.screenPosition, TexOut.Frame(1, 1, 0, 0), col2, Projectile.rotation, TexOut.Size() / 2, scaleV2, SpriteEffects.None, 0f);
 
 
 			var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBlade").Value;
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, 1f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, scaleV2, SpriteEffects.None, 0f);
 
 			return false;
         }

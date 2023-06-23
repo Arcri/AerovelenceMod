@@ -18,6 +18,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int timer = 0;
         public int damageDelay = 0;
         public int tileCollideDelay = 45;
+
+        public bool teleAhead = false;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Cyver Laser");
@@ -26,8 +28,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override void SetDefaults()
         {
             Projectile.extraUpdates = 2;
-            Projectile.width = 5;
-            Projectile.height = 5;
+            Projectile.width = 7;
+            Projectile.height = 7;
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.scale = 1f;
@@ -59,10 +61,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             if (timer == 0)
                 return false;
-            //Draw the Circlular Glow
-            var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverLaser").Value;
 
+            var Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverLaserPMA").Value;
+
+            float colorIntensity = (damageDelay >= 0 ? 0.25f : 1f);
+
+            Color pinkToUse = Color.Lerp(Color.HotPink, Color.DeepPink, 0.1f);
+
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), pinkToUse with { A = 0 } * colorIntensity * 0.5f, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), pinkToUse with { A = 0 } * colorIntensity, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.15f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), Color.White with { A = 0 } * colorIntensity * 0.7f, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.1f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * colorIntensity * 0.7f, Projectile.rotation, Tex.Size() / 2, new Vector2(2f, 0.25f) * Projectile.scale, SpriteEffects.None, 0f);
+
+            return false;
 
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -119,7 +134,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (Projectile.timeLeft > 0 && Projectile.scale >= 1)
             {
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_10") with { Pitch = .92f, PitchVariance = .28f, MaxInstances = -1, Volume = 0.5f };
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_10") with { Pitch = .92f, PitchVariance = .28f, MaxInstances = -1, Volume = 0.2f };
                 SoundEngine.PlaySound(style, Projectile.Center);
             }
             return true;

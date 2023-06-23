@@ -399,6 +399,16 @@ Items: {
 		DisplayName: Storm Razor
 		Tooltip: ""
 	}
+
+	Eos: {
+		DisplayName: Eos
+		Tooltip: ""
+	}
+
+	Gaia: {
+		DisplayName: Gaia
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -619,6 +629,14 @@ Projectiles: {
 	SkylightHitFlare.DisplayName: Skylight Hit Flare
 	StormRazorProj.DisplayName: Storm Razor Proj
 	SkylightAltHeldProjectile.DisplayName: Skylight Alt Held Projectile
+	EosSwing.DisplayName: Eos Swing
+	EosBuster.DisplayName: Eos Buster
+	EosDart.DisplayName: Eos Dart
+	EosSlash.DisplayName: Eos Slash
+	GaiaSwing.DisplayName: Gaia Swing
+	EosIDK.DisplayName: Eos I D K
+	EosDash.DisplayName: Eos Dash
+	EosHitFlare.DisplayName: Eos Hit Flare
 }
 
 Configs: {

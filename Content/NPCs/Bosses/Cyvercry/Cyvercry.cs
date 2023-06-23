@@ -836,7 +836,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Vector2 bonus = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
             //Draw the Circlular Glow
             var Tex = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.DeepPink * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.91f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.7f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * 0.2f, Projectile.rotation, Tex.Size() / 2, 0.9f, SpriteEffects.None, 0f);
 
 
             var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBall").Value;
@@ -850,7 +851,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             Vector2 origin = sourceRectangle.Size() / 2f;
 
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.HotPink with { A = 0 } * 0.25f, Projectile.rotation, origin, 1.15f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+
             return false;
 
         }
@@ -908,6 +911,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public int numberOfLasers = 12;
         public int projType = ModContent.ProjectileType<CyverLaser>();
         public float vel = 5;
+
+        public int projTimeLeft = -1;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Energy Ball");
@@ -920,7 +925,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Projectile.timeLeft = 1;
             Projectile.penetrate = -1;
             Projectile.friendly = false;
-            Projectile.hostile = true;
+            Projectile.hostile = false;
             Projectile.damage = 54;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -962,7 +967,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     {
                         Main.projectile[proj].timeLeft = stretchLaserTimeLeft;
                         laser.accelerateTime = stretchLaserAccelTime;
-                        laser.accelerateStrength = stretchLaserAccelStrength;                    }
+                        laser.accelerateStrength = stretchLaserAccelStrength;                    
+                    }
+
+                    if (projTimeLeft > 0)
+                        Main.projectile[proj].timeLeft = projTimeLeft;
                 }
             }
             base.Kill(timeLeft);

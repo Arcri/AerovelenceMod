@@ -11,6 +11,7 @@ using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
+using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -38,7 +39,7 @@ namespace AerovelenceMod.Content.Items
             Item.value = Item.sellPrice(0, 9, 0, 0);
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<CyverHyperBeam>();
+            Item.shoot = ModContent.ProjectileType<EosSlash>();
             //Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 10f;
         }
@@ -46,11 +47,31 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int afg = Projectile.NewProjectile(source, position + new Vector2(0,-1000), velocity * 3f, ModContent.ProjectileType<SkylightThunderStrike>(), 2, 0);
+            int aa = Projectile.NewProjectile(null, position, velocity.SafeNormalize(Vector2.UnitX) * 1f, ModContent.ProjectileType<FinaleBeam>(), 20, 0, player.whoAmI);
+            //int ab = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
+            //int ac = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 2)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
+            //int ad = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 3)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
+            //int ae = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 4)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
+            //int af = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 5)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
 
-            //int afg = Projectile.NewProjectile(source, position + new Vector2(400, 0), velocity * 0.0f, ModContent.ProjectileType<SkylightVFX>(), 0, 0);
 
-            //Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
+
+            return false;
+
+            for (int a2 = 0; a2 < 6; a2++)
+            {
+                Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 6) * a2);
+                int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
+                NPC laser = Main.npc[index];
+                laser.damage = 0;
+                if (laser.ModNPC is CyverBot bot)
+                {
+                    bot.State = (int)(CyverBot.Behavior.PrimeLaserLong);
+                    bot.setGoalLocation(spawnPos);
+                    if (a2 == 0)
+                        bot.Leader = true;
+                }
+            }
 
             return false;
             /*

@@ -133,7 +133,7 @@ namespace AerovelenceMod.Content.Items
             SpriteEffects effects;
 
             //Shit does not work for non-mirrored swords or at least ones that aren't close (design not dimensions)
-            if (true)
+            if (Projectile.spriteDirection > 0)
             {
                 origin = new Vector2(0, Projectile.height);
                 rotationOffset = (Projectile.ai[0] != 1 ? 0 : MathHelper.ToRadians(45f));

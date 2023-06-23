@@ -386,7 +386,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
-            Projectile.extraUpdates = 2; //0
+            Projectile.extraUpdates = 3; //0
         }
 
         public override bool? CanDamage()
@@ -406,7 +406,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             //test high starting amount and long frame to start swing
 
             SwingHalfAngle = 160;
-            easingAdditionAmount = 0.01f; //03
+            easingAdditionAmount = 0.01f; //01
             offset = 55;
             frameToStartSwing = 2 * 3;
             timeAfterEnd = 5 * 3;
@@ -458,53 +458,71 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override bool PreDraw(ref Color lightColor)
         {
+            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/Oblivion");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/OblivionHeldProj_Glow");
 
-            if (getProgress(easingProgress) >= 0.1f && getProgress(easingProgress) <= 0.9f) {
-                //Main.NewText((float)getProgress(easingProgress));
+            Vector2 origin;
+            float rotationOffset;
+            SpriteEffects effects;
 
+            if (Projectile.spriteDirection > 0)
+            {
+                if (Projectile.ai[0] != 1)
+                {
+                    origin = new Vector2(0, Blade.Height);
+                    rotationOffset = 0;
+                    effects = SpriteEffects.None;
+                }
+                else
+                {
+                    origin = new Vector2(Blade.Width, Blade.Height);
+                    rotationOffset = MathHelper.ToRadians(90f);
+                    effects = SpriteEffects.FlipHorizontally;
+                }
+            }
+            else
+            {
+
+                if (Projectile.ai[0] != 1)
+                {
+                    origin = new Vector2(0, Blade.Height);
+                    rotationOffset = 0;
+                    effects = SpriteEffects.None;
+                }
+                else
+                {
+                    origin = new Vector2(Blade.Width, Blade.Height);
+                    rotationOffset = MathHelper.ToRadians(90f);
+                    effects = SpriteEffects.FlipHorizontally;
+                }
+
+            }
+
+            Vector2 armPosition = Main.player[Projectile.owner].GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, currentAngle); // get position of hand
+
+            //Sprite is 60x68 so -8y to "make it square", dont know about the x tbh
+            Vector2 offset = new Vector2(Projectile.spriteDirection > 0 ? 0 : 0, -8).RotatedBy(currentAngle);
+
+
+            if (getProgress(easingProgress) >= 0.1f && getProgress(easingProgress) <= 0.9f ) {
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-
-                /*
-                Texture2D Spike = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/SpikeWhite");
-                for (int k = 0; k < 11; k++)
-                {
-                    Vector2 drawPos = Main.player[Projectile.owner].MountedCenter - Main.screenPosition + Projectile.oldRot[k].ToRotationVector2() * offset;// + new Vector2(Projectile.width / 2, Projectile.height / 2);
-                    Color trailCol = Color.HotPink * 0.2f;
-                    Main.EntitySpriteDraw(Spike, drawPos, null, trailCol, Projectile.oldRot[k] + MathHelper.PiOver2, Spike.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.1f), SpriteEffects.None, 0);
-                    k++;
-                }
-                */
                 Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlashTiny");
                 Vector2 pos = Main.player[Projectile.owner].Center - Main.screenPosition + new Vector2(5f + 10f * (float)Math.Sin(MathHelper.Pi * getProgress(easingProgress)), 0).RotatedBy(originalAngle);
 
                 Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.DeepPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f), SpriteEffects.None, 0f);
                 Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.White * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.5f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f), SpriteEffects.None, 0f);
 
+                Vector2 otherOffset = new Vector2(-8, -8).RotatedBy(currentAngle) * (Projectile.ai[0] > 0 ? 0 : 1);
 
                 Texture2D OuterGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/OblivionOuterGlow");
-                Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), OuterGlow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-                Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), OuterGlow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.4f) + 0.1f, Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, effects, 0f);
+                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.4f) + 0.1f, effects, 0f);
                 //Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), OuterGlow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
-                
-                /* Looks neat, but too cluttered for this weapon
-                if (getProgress(easingProgress) >= 0.3f && getProgress(easingProgress) <= 0.9f)
-                {
-                    for (int afterI = 0; afterI < previousRotations.Count; afterI++)
-                    {
-                        float angle = previousRotations[afterI];
-                        Main.spriteBatch.Draw(OuterGlow, Main.player[Projectile.owner].Center - Main.screenPosition + (angle.ToRotationVector2() * (offset * 1)), //(afterI / (float)previousRotations.Count)
-                            OuterGlow.Frame(1, 1, 0, 0), Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f) * 0.6f, previousRotations[afterI] + MathHelper.PiOver4 + +(Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3),
-                            OuterGlow.Size() / 2, Math.Clamp((0.15f * afterI) + 0.7f, 0, 1.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-
-                    }
-                }
-                */
-
-
+               
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -515,11 +533,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             }
 
 
-            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/Oblivion");
-            Main.spriteBatch.Draw(Blade, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Blade.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+            
 
-            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/OblivionHeldProj_Glow");
-            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Glow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
+
+            Main.spriteBatch.Draw(Blade, armPosition - Main.screenPosition + offset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), effects, 0f);
+            Main.spriteBatch.Draw(Glow, armPosition - Main.screenPosition + offset, null, Color.White, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), effects, 0f);
 
             /* This would work well for another weapon, but not this one
             if (getProgress(easingProgress) >= 0.3f && getProgress(easingProgress) <= 0.7f)
