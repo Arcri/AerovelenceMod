@@ -140,4 +140,85 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
     }
 
+    public class PagesOfDawnFireball : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void SetDefaults()
+        {
+            Projectile.damage = 10;
+            Projectile.width = 20;
+            Projectile.height = 20;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 200;
+            Projectile.penetrate = -1;
+        }
+        int timer = 0;
+        float scale = 1f;
+        float alpha = 1f;
+        public override void AI()
+        {
+            Projectile.rotation += 0.05f;
+
+            scale = 0.35f;
+
+            timer++;
+        }
+
+        Effect myEffect = null;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Orb = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/bigCircle2");
+            Texture2D spin = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/feather_circle");
+            Texture2D edge = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/impact_2newbetterfade");
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Vector2 scale2 = new Vector2(0.95f, 1f) * scale;
+
+            Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, null, Color.Black * 0.8f, Projectile.rotation, Orb.Size() / 2, scale * 3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, null, Color.Black * 0.35f, Projectile.rotation -1, Orb.Size() / 2, scale * 2.85f, SpriteEffects.None, 0f);
+
+
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
+
+            myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
+            myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/orangeGrad").Value);
+            myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Swirl").Value);
+
+            myEffect.Parameters["flowSpeed"].SetValue(0.3f);
+            myEffect.Parameters["vignetteSize"].SetValue(0.4f);
+            myEffect.Parameters["vignetteBlend"].SetValue(1f);
+            myEffect.Parameters["distortStrength"].SetValue(0.06f);
+            myEffect.Parameters["xOffset"].SetValue(0f);
+            myEffect.Parameters["uTime"].SetValue(timer * 0.01f);
+            myEffect.Parameters["colorIntensity"].SetValue(1f);
+            myEffect.Parameters["squashValue"].SetValue(0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+
+            Main.spriteBatch.Draw(spin, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, spin.Size() / 2, scale2 * 1.2f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(spin, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * -1.2f, spin.Size() / 2, scale2 * 1.2f, SpriteEffects.FlipHorizontally, 0f);
+
+            Main.spriteBatch.Draw(spin, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * -0.8f, spin.Size() / 2, scale2 * 0.6f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(spin, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * 1.5f, spin.Size() / 2, scale2 * 0.6f, SpriteEffects.FlipHorizontally, 0f);
+
+            //Main.spriteBatch.Draw(edge, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * -1f, edge.Size() / 2, scale * 1.3f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(edge, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * 1f, edge.Size() / 2, scale * 1.3f, SpriteEffects.FlipHorizontally, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
+        }
+        
+
+    }
+
 }

@@ -84,7 +84,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         {
             Texture2D Wave = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FireWave").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
+            Texture2D Spike = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
 
+            Vector2 spikeScale = new Vector2(1f, scale.Y + 0.15f) * (Projectile.velocity.Length() * 0.075f);
+
+            Main.spriteBatch.Draw(Spike, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), Color.OrangeRed with { A = 0 }, Projectile.rotation + MathHelper.PiOver2, Spike.Size() / 2, spikeScale, SpriteEffects.None, 0);
             Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), Color.Black * 0.8f, Projectile.rotation, Glow.Size() / 2, scale * 6, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();

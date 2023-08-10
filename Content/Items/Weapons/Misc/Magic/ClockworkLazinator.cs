@@ -94,7 +94,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
 
-        public Vector2 endPoint;
+        public Vector2 endPoint = new Vector2(0,0);
         public float Rotation = 0;
 
         int timer = 0;
@@ -122,20 +122,42 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * -6, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
-            d.fadeIn = 3;
+            //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            //Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * -6, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
+            //d.fadeIn = 3;
 
             collided = true;
+
+            for (int ia = 0; ia < 1 + (Main.rand.NextBool() ? 1 : 0); ia++)
+            {
+                Vector2 speed = new Vector2(5, 0).RotatedBy(Rotation);
+                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
+                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                extraInfo.gravityIntensity = 0.1f;
+                Main.dust[a].fadeIn = 0.5f;
+                Main.dust[a].alpha = 53;
+                Main.dust[a].customData = extraInfo;
+            }
 
             return false;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * 1, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
-            d.fadeIn = 3;
+            //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            //Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * 1, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
+            //d.fadeIn = 3;
+
+            for (int ia = 0; ia < 2; ia++)
+            {
+                Vector2 speed = new Vector2(-7, 0).RotatedBy(Rotation);
+                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
+                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                extraInfo.gravityIntensity = 0.05f;
+                Main.dust[a].fadeIn = 0.3f;
+                Main.dust[a].alpha = 50;
+                Main.dust[a].customData = extraInfo;
+            }
 
             collided = true;
             Projectile.velocity = Vector2.Zero;
@@ -151,7 +173,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             if (timer == 0)
             {
                 Rotation = Projectile.velocity.ToRotation() + MathHelper.Pi;
+
                 endPoint = Projectile.Center;
+                //if (endPoint == new Vector2(0,0))
+                    //endPoint = Projectile.Center;
             }
 
             if (collided)
@@ -177,6 +202,60 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         float lineWidth = 1;
         public override bool PreDraw(ref Color lightColor)
         {
+
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * uColorIntensity);
+            myEffect.Parameters["uTime"].SetValue(2);
+            myEffect.Parameters["uOpacity"].SetValue(0.7f); //0.8
+            myEffect.Parameters["uSaturation"].SetValue(1.2f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            if (timer > 0)
+            {
+                var texBeam = Mod.Assets.Request<Texture2D>("Assets/ThinLineGlowClear").Value;
+
+                Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
+
+                float height = 0.15f * Projectile.scale * lineWidth;
+
+                if (height == 0)
+                    Projectile.active = false;
+
+                //int width = (int)(Projectile.Center - endPoint).Length() - 24;
+
+                //var pos = Projectile.Center - Main.screenPosition;
+                //var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+                
+                //Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
+                //Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
+
+                float distance = (Projectile.Center - endPoint).Length() / 256f;
+
+                Vector2 v2Scale = new Vector2(distance, height);
+                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Rotation, origin2, v2Scale, 0, 0);
+                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Rotation, origin2, v2Scale, 0, 0);
+
+
+                Texture2D circle = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
+
+                Vector2 offset = new Vector2(0, (0.5f * Projectile.height) * -Main.player[Projectile.owner].direction).RotatedBy(Rotation - MathHelper.Pi) * Projectile.scale;
+
+                Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+
+                //Main.spriteBatch.Draw(circle, endPoint - Main.screenPosition + offset, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+                //Main.spriteBatch.Draw(circle, endPoint - Main.screenPosition + offset, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+
+            }
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
+            // old
+            /*
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * uColorIntensity);
             myEffect.Parameters["uTime"].SetValue(2);
@@ -217,7 +296,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             }
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
+            */
             return false;
         }
     }
@@ -265,7 +344,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 firstFrame = false;
             }
 
-            HeldProjCode();
+            HeldProjCode(false);
             
             if (ShouldFire)
             {
@@ -274,12 +353,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     Vector2 vel = new Vector2(10, 0).RotatedBy(Angle);
                     Vector2 pos = Projectile.Center;
 
-                    Vector2 muzzleOffset = Vector2.Normalize(vel) * 10f;
+                    Vector2 muzzleOffset = Vector2.Normalize(vel) * 35f;
                     if (Collision.CanHit(Projectile.Center, 0, 0, Projectile.Center + muzzleOffset, 0, 0))
                     {
                         pos += muzzleOffset;
                     }
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), 10, 0, Main.player[Projectile.owner].whoAmI);
+                    int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), 10, 0, Main.player[Projectile.owner].whoAmI);
+
+                    if (Main.projectile[a].ModProjectile is LazinatorShot shot)
+                        shot.endPoint = pos;
 
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = .65f, PitchVariance = .2f, Volume = 0.3f };
                     SoundEngine.PlaySound(style, Main.player[Projectile.owner].Center);
@@ -287,23 +369,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     SoundEngine.PlaySound(style2, Main.player[Projectile.owner].Center);
 
 
-                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                    //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-                    Dust d = GlowDustHelper.DrawGlowDustPerfect(pos + Vector2.Normalize(vel) * 25f, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
-                    d.fadeIn = 3;
+                    //Dust d = GlowDustHelper.DrawGlowDustPerfect(pos, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
+                    //d.fadeIn = 3;
 
-
+                    glowIntensity = 1f;
                     drawXScale = 0.85f;
                 }
             }
-            
+
+            glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.75f, 0.08f), 0, 1);
+
             if (Projectile.timeLeft == 2)
             {
                 Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = 0;
             }
         }
 
-        public void HeldProjCode()
+        public void HeldProjCode(bool windup)
         {
             Player Player = Main.player[Projectile.owner];
 
@@ -330,7 +414,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             }
             OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 25f, 0.07f), 0, 20);
             drawXScale = Math.Clamp(MathHelper.Lerp(drawXScale, 1.2f, 0.2f), 0, 1);
-            alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.2f, 0.2f), 0, 1);
+
+            if (Projectile.timeLeft < 10 && !windup)
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.25f), 0, 1);
+            else
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.2f, 0.2f), 0, 1);
 
             direction = Angle.ToRotationVector2().RotatedBy(lerpToStuff * Player.direction * -1f);
             Projectile.Center = Player.MountedCenter + (direction * OFFSET);
@@ -350,6 +438,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         float drawXScale = 1f;
         float alpha = 0f;
+        public float glowIntensity = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
@@ -362,13 +451,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Vector2 drawScale = new Vector2(drawXScale, 1f);
             Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor * alpha, Projectile.rotation, Weapon.Size() / 2, drawScale, mySE, 0f);
             Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, null, Color.White * alpha, Projectile.rotation, Weapon.Size() / 2, drawScale, mySE, 0f);
-            //Main.spriteBatch.Draw(White, Projectile.Center - Main.screenPosition, null, Color.White * colorPercent, Projectile.rotation, Weapon.Size() / 2, drawScale, mySE, 0f);
+            Main.spriteBatch.Draw(White, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * alpha * glowIntensity, Projectile.rotation, White.Size() / 2, drawScale, mySE, 0f);
 
             return false;
         }
     }
 
-    //Could 100% build this into LazinatorHeldProj but I feel like that would lead to bad code
     public class LazinatorWindUp : LazinatorHeldProj
     {
         public int windUpTimer = 0;
@@ -379,7 +467,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void AI()
         {
-            HeldProjCode();
+            HeldProjCode(true);
 
             Projectile.timeLeft = 2;
 
@@ -402,7 +490,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                         SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_72") with { Volume = .7f, Pitch = .33f, }; SoundEngine.PlaySound(style2, Projectile.Center);
 
 
-
+                        glowIntensity = 1;
                         Projectile.active = false;
                     }
 
@@ -410,6 +498,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     {
                         SoundStyle style = new SoundStyle("Terraria/Sounds/Item_149") with { Pitch = .43f, Volume = 0.75f };
                         SoundEngine.PlaySound(style, Projectile.Center);
+
+                        
                     }
 
                     //SoundStyle styl2e = new SoundStyle("Terraria/Sounds/Item_82") with { Volume = .4f, Pitch = .33f }; SoundEngine.PlaySound(styl2e, Projectile.Center);

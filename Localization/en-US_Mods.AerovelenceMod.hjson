@@ -409,6 +409,11 @@ Items: {
 		DisplayName: Gaia
 		Tooltip: ""
 	}
+
+	CrystalGlade: {
+		DisplayName: Crystal Glade
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -637,6 +642,25 @@ Projectiles: {
 	EosIDK.DisplayName: Eos I D K
 	EosDash.DisplayName: Eos Dash
 	EosHitFlare.DisplayName: Eos Hit Flare
+	PagesOfDawnFireball.DisplayName: Pages Of Dawn Fireball
+	StarParticleHandler.DisplayName: Star Particle Handler
+	BunnyShot.DisplayName: Bunny Shot
+	VFXTest.DisplayName: V F X Test
+	VFXTest2.DisplayName: V F X Test2
+	CrystalGladeHeld.DisplayName: Crystal Glade Held
+	CrystalGladeShot.DisplayName: Crystal Glade Shot
+	CrystalGladeFirst.DisplayName: Crystal Glade First
+	CrystalGladePulse.DisplayName: Crystal Glade Pulse
+	FireShot.DisplayName: Fire Shot
+	ThunderStar.DisplayName: Thunder Star
+	SlashTest.DisplayName: Slash Test
+	LaserPointerSpark.DisplayName: Laser Pointer Spark
+	PhanticDiamond.DisplayName: Phantic Diamond
+	FireBlast.DisplayName: Fire Blast
+	FadeExplosionHandler.DisplayName: Fade Explosion Handler
+	CirclePulse.DisplayName: Circle Pulse
+	DreadDart.DisplayName: Dread Dart
+	AdamantitePulsarHeldBurst.DisplayName: Adamantite Pulsar Held Burst
 }
 
 Configs: {

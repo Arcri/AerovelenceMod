@@ -12,6 +12,14 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Content.Items.Weapons.Ember;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
+using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.Items.Weapons.Starglass;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade;
+using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Content.Projectiles.TempVFX;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -47,14 +55,50 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int aa = Projectile.NewProjectile(null, position, velocity.SafeNormalize(Vector2.UnitX) * 1f, ModContent.ProjectileType<FinaleBeam>(), 20, 0, player.whoAmI);
-            //int ab = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
-            //int ac = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 2)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
-            //int ad = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 3)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
-            //int ae = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 4)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
-            //int af = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(60 * 5)) * 0.5f, ModContent.ProjectileType<EosSlash>(), 10, 0, player.whoAmI);
+            int Muraa = Projectile.NewProjectile(null, position + new Vector2(0, 0), velocity * 0.2f, ModContent.ProjectileType<AdamantitePulseShot>(), 10, 0, player.whoAmI, 0f, 0f);
+            
+            if (Main.projectile[Muraa].ModProjectile is otherHollowPulseTestDearFutureMePleaseRewriteAndMoveThisInsteadOfUsingItInTheFutureDearGod vfx2)
+            {
+                vfx2.size = 0.35f;
+                vfx2.color = Color.DeepSkyBlue;
+            }
+
+            //Common.Systems.FlashSystem.SetFlashEffect(Main.MouseWorld, 4f, 30);
+
+            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
+
+            if (Main.projectile[explosion].ModProjectile is FadeExplosionHandler feh)
+            {
+                feh.color = Color.SkyBlue;
+                feh.colorIntensity = 0.75f;
+                feh.fadeSpeed = 0.04f;
+                for (int m = 0; m < 0; m++)
+                {
+                    FadeExplosionClass newSmoke = new FadeExplosionClass(Main.projectile[explosion].Center, new Vector2(2f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.5f, 2f));
+
+                    newSmoke.size = 0.4f + Main.rand.NextFloat(-0.15f, 0.15f);
+                    feh.Smokes.Add(newSmoke);
+                    
+                }
+            }
+
+            //int Explo = Projectile.NewProjectile(null, position, Vector2.Zero, ModContent.ProjectileType<FireBlast>(), 0, 0, Main.myPlayer);
 
 
+            //int abaa = Projectile.NewProjectile(null, position, velocity.SafeNormalize(Vector2.UnitX) * 0f, ModContent.ProjectileType<FireBlast>(), 0, 0, player.whoAmI);
+
+            for (int ia = 0; ia < 0; ia++)
+            {
+                int aa = Projectile.NewProjectile(null, position + velocity * 4f, new Vector2(0.5f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.7f, 2f), ModContent.ProjectileType<FadeExplosionHighRes>(), 0, 0);
+                Main.projectile[aa].rotation = Main.rand.NextFloat(6.28f);
+                if (Main.projectile[aa].ModProjectile is FadeExplosionHighRes explo)
+                {
+                    explo.rise = false;
+                    explo.color = ia > 2 ? Color.DeepSkyBlue : Color.DeepPink;
+                    explo.size = 0.35f;
+                    explo.colorIntensity = 0.75f; //0.5
+                }
+            }
 
             return false;
 

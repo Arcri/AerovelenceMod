@@ -72,7 +72,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), pinkToUse with { A = 0 } * colorIntensity * 0.5f, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), pinkToUse with { A = 0 } * colorIntensity, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.15f, SpriteEffects.None, 0f);
-
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex2.Frame(1, 1, 0, 0), Color.White with { A = 0 } * colorIntensity * 0.7f, Projectile.rotation, Tex2.Size() / 2, Projectile.scale * 0.1f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX) * -30), Tex.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * colorIntensity * 0.7f, Projectile.rotation, Tex.Size() / 2, new Vector2(2f, 0.25f) * Projectile.scale, SpriteEffects.None, 0f);

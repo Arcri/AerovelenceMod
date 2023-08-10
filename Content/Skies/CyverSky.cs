@@ -36,7 +36,6 @@ namespace AerovelenceMod.Content.Skies
 
         public override void Update(GameTime gameTime)
         {
-
             const float increment = 0.01f;
             if (CheckActive())
             {
@@ -62,12 +61,15 @@ namespace AerovelenceMod.Content.Skies
             else
             {
                 intensity -= increment;
-                if (intensity < 0f)
+                if (intensity <= 0f)
                 {
                     intensity = 0f;
                     Deactivate();
                 }
             }
+
+            intensity = Math.Clamp(intensity, 0, 1);
+
             timer++;
         }
 
@@ -83,7 +85,6 @@ namespace AerovelenceMod.Content.Skies
                         whichAttack(Cyver.getAttack());
                         bigShotTimer = Cyver.bigShotTimer;
                     }
-                        
                     return true;
                 }
             }
@@ -154,7 +155,7 @@ namespace AerovelenceMod.Content.Skies
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
                         */
                         //0.2f alpha is old
-                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * 0.3f);
+                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * bonusIntensity * intensity);
                     }
                 }
                 
@@ -183,7 +184,7 @@ namespace AerovelenceMod.Content.Skies
 
         public override bool IsActive()
         {
-            return isActive || intensity > 0f;
+            return isActive;// || intensity > 0f;
         }
 
         public void whichAttack(int input)

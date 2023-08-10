@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.Projectiles.BulletRework
 {
@@ -176,4 +177,35 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             item.shoot = ModContent.ProjectileType<MusketBall>();
         }
     }
+
+    //Weapons like the Uzi that replaces regular bullets dont work the the new bullets so we need to do something about that 
+
+    /*
+    public class ShootFix : GlobalItem
+    {
+        public override bool AppliesToEntity(Item item, bool lateInstatiation)
+        {
+            return item.useAmmo == AmmoID.Bullet;
+        }
+
+        public override void ModifyShootStats(Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+
+
+
+            base.ModifyShootStats(item, player, ref position, ref velocity, ref type, ref damage, ref knockback);
+        }
+
+        public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            Main.NewText(type);
+
+            if (type == ProjectileID.Bullet)
+                type = ModContent.ProjectileType<MusketBall>();
+            Shoot(item, player, source, position, Vector2.Zero, ModContent.ProjectileType<MusketBall>(), damage, knockback);
+
+            return false;
+        }
+    }
+    */
 }

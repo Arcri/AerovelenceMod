@@ -16,6 +16,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
     public class CyverCannon : ModItem
     {
+        //This weapon is an unholy abomination. You should not be here. Leave this place.
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Cyver-Cannon");
@@ -49,11 +50,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         bool upOrDown = false;
 
-        float dustCycle = 0;
-
         Vector2 storedPlayerCenter = Vector2.Zero;
         Vector2 storedCenter = Vector2.Zero;
         Vector2 storedMouse = Vector2.Zero;
+
+        float glowValue = 0f;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 6;
@@ -82,41 +83,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             Player player = Main.player[Projectile.owner];
 
-            /*
-            if (Timer == 0)
-            {
-                float aim = (player.Center - Main.MouseWorld).ToRotation();
-
-                for (int j = 0; j < 9; j++)
-                {
-                    float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
-
-                    Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center - aim.ToRotationVector2() * 20 + new Vector2(0,16), ModContent.DustType<GlowLine1>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2), 
-                        Color.DeepPink, 0.25f, 0.6f, 0f,
-                        dustShader);
-                    d.velocity *= 0.75f;
-                }
-            }
-            */
-
             //Fires at 23, kills at 47
             var entitySource = Projectile.GetSource_FromAI();
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter);
             {
                 Projectile.ai[0] += 1f;
                 int num2 = 0;
-                //if (Projectile.ai[0] >= 40f)
-                //{
-                  //  num2++;
-                //}
-                //if (Projectile.ai[0] % 2 == 0f)
-                //{
-                    //num2++;
-                //}
-                //if (Projectile.ai[0] >= 120f)
-                //{
-                    //num2++;
-                //}
                 int num3 = 24;
                 int num4 = 6;
                 Projectile.ai[1] += 1f;
@@ -139,13 +111,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 if (Projectile.soundDelay <= 0)
                 {
                     Projectile.soundDelay = num3 - num4 * num2;
-                    if (Projectile.ai[0] != 1f)
-                    {
-                        //SoundStyle style = new SoundStyle("Terraria/Sounds/Research_2") with { Volume = .4f, Pitch = -.48f, PitchVariance = .34f, MaxInstances = 0, };
-                        //SoundEngine.PlaySound(style);
-                        //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1};
-                        //SoundEngine.PlaySound(style);
-                    }
                 }
                 if (Projectile.ai[1] == 1f && Projectile.ai[0] != 1f)
                 {
@@ -186,23 +151,15 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         int num8 = 7;
                         for (int j = 0; j < 1; j++)
                         {
-                            //value2 = Projectile.Center + new Vector2(Main.rand.Next(-num8, num8 + 1), Main.rand.Next(-num8, num8 + 1));
-                            //Vector2 spinningpoint2 = Vector2.Normalize(base.Projectile.velocity) * scaleFactor;
-                            //spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914);
-                            //if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
-                            //{
-                            //  spinningpoint2 = -Vector2.UnitY;
-                            //}
                             if (Timer != 23)
                             {
                                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .8f, MaxInstances = 1 };
                                 SoundEngine.PlaySound(style);
+
                                 Vector2 vecToMouse = (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX);
                                 Vector2 location = Projectile.Center + vecToMouse.SafeNormalize(Vector2.UnitX) * 18;
                                 int a = Projectile.NewProjectile(entitySource, location.X, location.Y, vecToMouse.X, vecToMouse.Y, ModContent.ProjectileType<DarkLaser>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
                                 Main.projectile[a].scale = 1.85f;
-                                Main.projectile[a].CritChance = 100;
-
                                 Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
 
 
@@ -222,6 +179,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                                         dustShader);
                                     d.velocity *= 0.75f;
                                 }
+
+                                glowValue = 1f;
                             }
 
                         }
@@ -234,6 +193,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
                 if (Timer == 27 - 5 || Timer == 31 - 5 || Timer == 35 - 5)
                 {
+                    glowValue = 0.25f;
+
                     if (Timer == 27 - 5)
                     {
                         storedCenter = Projectile.Center;
@@ -269,18 +230,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         if (check == 0) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2).ToRotation());
                         if (check == 1) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2 + MathHelper.ToRadians(15)).ToRotation());
                         if (check == 2) myLaser.setExtraAngle(vecToMouse.RotatedBy(MathHelper.PiOver2 + MathHelper.ToRadians(-15)).ToRotation());
-
                     }
-
-                    //float aim = (player.Center - Main.MouseWorld).ToRotation();
 
                     float aim = (storedCenter -  Main.projectile[pindex].Center).ToRotation();
 
-                    for (int j = 0; j < 2; j++) //j < 2
+                    for (int j = 0; j < 2; j++)
                     {
-                        //float dustRot = 0;
-                        //if (Main.rand.NextBool()) dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(-70 * Main.rand.NextFloat(-0.2f, 0.2f));
-                        //else dustRot = aim + 1.57f * 1.5f + MathHelper.ToRadians(70 * Main.rand.NextFloat(-0.2f, 0.2f));
                         float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.6f, 0.6f);
 
                         Dust d = GlowDustHelper.DrawGlowDustPerfect(storedCenter - aim.ToRotationVector2() * 20, ModContent.DustType<GlowLine1Fast>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 2),
@@ -289,8 +244,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                         d.velocity *= 0.6f;
                     }
 
-                    //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
-                    //SoundEngine.PlaySound(style);
                     SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 0, Volume = 0.3f };
                     SoundEngine.PlaySound(style);
 
@@ -304,25 +257,32 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 }
                 Timer++;
             }
+            glowValue = Math.Clamp(MathHelper.Lerp(glowValue, -0.5f, 0.05f), 0, 1);
         }
         public override void PostDraw(Color lightColor)
         {
+
+            if (Timer == 23)
+                return;
+            
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/CyverCannonProj_Glow");
-            Main.EntitySpriteDraw(
-                texture,
-                new Vector2
-                (
-                    Projectile.Center.Y - Main.screenPosition.X,
-                    Projectile.Center.X - Main.screenPosition.Y
-                ),
-                new Rectangle(0, 0, texture.Width, texture.Height),
-                Color.White,
-                Projectile.rotation,
-                texture.Size(),
-                Projectile.scale,
-                SpriteEffects.None,
-                0
-            );
+            Texture2D whiteGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/CyverCannonWhiteGlow");
+
+            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+            Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
+            Vector2 origin = new Vector2(0, texture.Height / 2);
+
+            Vector2 offset = new Vector2(-182, -19).RotatedBy(Projectile.rotation - MathHelper.PiOver2);
+
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + offset - gfxOffset, sourceRectangle,
+                Color.White, Projectile.rotation, origin, Projectile.scale, Projectile.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+
+            Main.EntitySpriteDraw(whiteGlow, Projectile.Center - Main.screenPosition + offset - gfxOffset, sourceRectangle, 
+                Color.HotPink with { A = 0 } * glowValue * 5f, Projectile.rotation, origin, Projectile.scale, Projectile.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+
         }
     }
 

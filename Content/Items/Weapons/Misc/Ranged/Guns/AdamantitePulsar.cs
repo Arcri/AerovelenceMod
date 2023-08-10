@@ -26,7 +26,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
         public override void SetDefaults()
         {
-            //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
             Item.damage = 95;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 46;
@@ -40,7 +39,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Item.rare = ItemRarityID.Orange;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<AdamantitePulseShot>();
-            //Item.useAmmo = AmmoID.Bullet;
             Item.channel = true;
             Item.shootSpeed = 2f;
             Item.noUseGraphic = true;
@@ -62,30 +60,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             {
                 Item.useTime = 10;
                 Item.useAnimation = 10 * 3;
-                Item.noUseGraphic = false;
+                Item.noUseGraphic = true;
             }
-            /*
-            if (player.altFunctionUse == 2)
-            {
-                mode = mode == 0 ? 1: 0;
-                Item.useTime = 1;
-                Item.useAnimation = 1;
-            } 
-            else
-            {
-                if (mode == 0)
-                    Item.noUseGraphic = true;
-                else
-                    Item.noUseGraphic = false;
-
-                if (currentShot == 3)
-                    player.itemTime = 100;
-                else
-                    player.itemTime = 10;
-
-                Item.useAnimation = 30;
-            }
-            */
         }
 
         //mode 0 = Single Shot
@@ -107,6 +83,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 else
                     CombatText.NewText(new Rectangle((int)player.Center.X, (int)player.Center.Y, 2, 2), Color.Red, "Burst", false, true);
 
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_149") with { Pitch = .35f, Volume = 0.45f, MaxInstances = 1 }; 
+                SoundEngine.PlaySound(style, player.Center);
+
+                SoundStyle style3 = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = .15f, Volume = 0.45f, MaxInstances = 1 }; 
+                SoundEngine.PlaySound(style3, player.Center);
+
 
                 return false;
             }
@@ -117,18 +99,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             }
             else if (mode == 1)
             {
-                //player.itemAnimationMax = Item.useTime * 3;
-                //player.itemTime = Item.useTime * 3;
-                //player.itemAnimation = Item.useTime * 3;
 
-                int a = Projectile.NewProjectile(null, position + velocity * (20), velocity * 2.5f, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
-                Main.projectile[a].rotation = velocity.ToRotation();
-                if (Main.projectile[a].ModProjectile is HollowPulse pulse)
+                int b = Projectile.NewProjectile(null, position + velocity * (20), velocity * 2.25f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                Main.projectile[b].rotation = velocity.ToRotation();
+                if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
                 {
-                    pulse.color = Color.Crimson;
-                    pulse.oval = true;
-                    pulse.size = 0.65f;
+                    pulseb.color = new Color(255, 10, 10);
+                    pulseb.size = 0.3f;
                 }
+
+
+                for (int i = 0; i < 5; i++)
+                {
+                    ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                    Vector2 vel = velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.75f, 1.25f) * 8f;
+
+                    Dust d = Dust.NewDustPerfect(position + velocity * 10, ModContent.DustType<ColorSpark>(), vel, 57 + Main.rand.Next(-5, 5), Color.Crimson, 0.2f + Main.rand.NextFloat(0.1f));
+                    extraInfo.gravityIntensity = 0f;
+                    d.fadeIn = Main.rand.NextFloat(0.5f, 1f);
+                    d.customData = extraInfo;
+                }
+
+                Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<AdamantitePulsarHeldBurst>(), 0, 0, Main.myPlayer);
 
                 Vector2 muzzleOffset = Vector2.Normalize(velocity) * 16;
                 if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
@@ -137,18 +129,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 }
                 Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1.3f), knockback, Main.myPlayer);
 
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = .2f, Volume = 0.4f }; 
+                //lol
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = 0.2f, Volume = 0.2f }; 
                 SoundEngine.PlaySound(style, player.Center);
-                SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.6f };
+                SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .2f, PitchVariance = 0.1f, Volume = 0.4f };
                 SoundEngine.PlaySound(style23, player.Center);
-
+                SoundStyle style3 = new SoundStyle("Terraria/Sounds/Research_2") with { Volume = .40f, Pitch = .8f, PitchVariance = 0.2f };
+                SoundEngine.PlaySound(style3, player.Center);
+                SoundStyle style4 = new SoundStyle("Terraria/Sounds/Research_3") with { Volume = .3f, Pitch = .55f, PitchVariance = 0.1f };
+                SoundEngine.PlaySound(style4, player.Center);
+                SoundStyle style5 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .05f, Pitch = 1f, PitchVariance = 0.25f }; 
+                SoundEngine.PlaySound(style5, player.Center);
 
                 currentShot++;
                 if (currentShot == 3)
                 {
-                    delayTimer = 60;
+                    delayTimer = 45;
                     currentShot = 0;
-
                 }
             }
 
@@ -156,8 +153,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
         public override void HoldItem(Player player)
         {
+            //yeah reuseDelay exists but doing it this way is so item speed does not equal more shots 
             delayTimer--;
-
         }
 
         int delayTimer;
@@ -207,19 +204,100 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
     }
 
+    public class AdamantitePulsarHeldBurst : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        private bool firstFrame = false;
+
+        private Vector2 currentDirection => Projectile.rotation.ToRotationVector2();
+
+        Player owner => Main.player[Projectile.owner];
+
+        public override void SetDefaults()
+        {
+            Projectile.DamageType = DamageClass.Magic;
+
+
+            Projectile.hostile = false;
+            Projectile.width = 2;
+            Projectile.height = 2;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 999999;
+            Projectile.ignoreWater = true;
+        }
+        public override bool? CanDamage() { return false; }
+        public override void AI()
+        {
+            owner.heldProj = Projectile.whoAmI;
+
+            if (owner.itemTime <= 1)
+                Projectile.active = false;
+
+            Projectile.Center = owner.Center;
+
+            if (!firstFrame)
+            {
+                firstFrame = true;
+                Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
+            }
+
+            if (Projectile.ai[0] < 5)
+                offset = Math.Clamp(MathHelper.Lerp(offset, -5, 0.05f), 0, 10);
+            else
+                offset = Math.Clamp(MathHelper.Lerp(offset, 10, 0.2f), 0, 10);
+
+            glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.5f, 0.1f), 0, 1);
+
+            Projectile.ai[0]++;
+        }
+
+        private float offset = 10;
+        private float glowIntensity = 1f;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar").Value;
+            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsarWhiteGlow").Value;
+
+
+            Vector2 position = (owner.MountedCenter + (currentDirection * offset)) - Main.screenPosition;
+            position.Y += owner.gfxOffY;
+            position += new Vector2(8, 4 * owner.direction).RotatedBy(Projectile.rotation); //Extra Offset
+
+            float rotation = currentDirection.ToRotation() + (owner.direction == 1 ? 0 : -MathF.PI);
+            SpriteEffects SE = (owner.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
+
+            Vector2 origin = (Texture.Size() / 2) + new Vector2(-2 * owner.direction, 0); //Origin more at the trigger
+
+            Color col = Color.Lerp(Color.White, Color.Red, 1 - glowIntensity);
+
+            Main.spriteBatch.Draw(Texture, position, null, lightColor, rotation, origin, 1f, SE, 0.0f);
+            Main.spriteBatch.Draw(Glow, position, null, col with { A = 0 } * glowIntensity * 1f, rotation, origin, 1f, SE, 0.0f);
+            Main.spriteBatch.Draw(Glow, position, null, col with { A = 0 } * glowIntensity * 1f, rotation, origin, 1f, SE, 0.0f);
+
+            return false;
+        }
+    }
+
+
     public class AdamantitePulsarHeldProj : ModProjectile
     {
         int timer = 0;
-        public int OFFSET = 10; 
+        public float offset = 10; 
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
         public float lerpToStuff = 0;
         public bool hasReachedDestination = false;
         public float skillCritWindow = 10;
 
+        Vector2 reticleLocation = Vector2.Zero;
+
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Adamantite Pulsar");
+            //DisplayName.SetDefault("Adamantite Pulsar");
         }
         public override void SetDefaults()
         {
@@ -239,84 +317,135 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             return false;
         }
 
+        bool hasLetGo = false;
+
         float reticleProgress = 0f;
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
 
-
             Projectile.velocity = Vector2.Zero;
-            Player.itemTime = 2; // Set Item time to 2 frames while we are used
-            Player.itemAnimation = 2; // Set Item animation time to 2 frames while we are used
+            Player.itemTime = 2; 
+            Player.itemAnimation = 2;
+
+            if (Projectile.owner == Main.myPlayer)
+                reticleLocation = Main.MouseWorld + Player.velocity;
 
             if (Player.channel)
             {
                 if (Projectile.owner == Main.myPlayer)
                 {
-                    Angle = (Main.MouseWorld - (Player.Center)).ToRotation();
+                    Angle = (Main.MouseWorld - (Player.Center + Player.velocity)).ToRotation();
+                    reticleLocation = (Main.MouseWorld);
                 }
                 direction = Angle.ToRotationVector2();
 
             } else
             {
                 
-                if (timer > 0 && Projectile.timeLeft > 100)
+                if (Projectile.timeLeft > 100)
                 {
+                    hasLetGo = true;
                     Projectile.timeLeft = 20;
 
+                    if (reticleProgress == 1)
+                        Projectile.timeLeft = 30;
 
                     //Shoot Proj
-                    float velRot = Angle + (Main.rand.NextFloat(1 - reticleProgress, (1 - reticleProgress) * -1) * 0.5f);
-                    Vector2 vel = new Vector2(2, 0).RotatedBy(velRot);
-                    int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel * 10, vel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), Projectile.damage * 3, Projectile.knockBack, Main.myPlayer);
+                    float spread = 15f * (1 - reticleProgress);
+                    Vector2 adjustedVel = new Vector2(2, 0).RotatedBy(Angle).RotatedByRandom(MathHelper.ToRadians(spread));
 
-                    int a = Projectile.NewProjectile(null, Projectile.Center + vel * 20, vel, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
-                    Main.projectile[a].rotation = velRot;
-                    if (Main.projectile[a].ModProjectile is HollowPulse pulse)
+                    Angle = adjustedVel.ToRotation();
+
+                    //float velRot = Angle + (Main.rand.NextFloat(1 - reticleProgress, (1 - reticleProgress) * -1) * 0.5f);
+                    //Vector2 vel = new Vector2(2, 0).RotatedBy(velRot);
+                    int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + adjustedVel * 10, adjustedVel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), Projectile.damage * 2, Projectile.knockBack, Main.myPlayer);
+
+                    if (Main.projectile[shot].ModProjectile is AdamantitePulseShot aps)
+                        aps.big = reticleProgress == 1;
+
+                    #region pulses
+                    float vel1 = reticleProgress == 1 ? 2.3f : 2.25f;
+                    float vel2 = reticleProgress == 1 ? 2.8f : 2.75f;
+
+                    int pulse1 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel1, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    Main.projectile[pulse1].rotation = adjustedVel.ToRotation();
+                    if (Main.projectile[pulse1].ModProjectile is CirclePulse funnyapple)
                     {
-                        pulse.color = (skillCritWindow > 0 && reticleProgress == 1) ? Color.Gold : Color.Crimson;
-                        pulse.oval = true;
-                        pulse.size = 1.4f;
+                        funnyapple.color = new Color(255, 10, 10);
+                        funnyapple.size = (reticleProgress == 1 ? 0.65f : 0.55f);
+                    }
+
+                    int pulse2 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel2, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    Main.projectile[pulse2].rotation = adjustedVel.ToRotation();
+                    if (Main.projectile[pulse2].ModProjectile is CirclePulse funnyapple2)
+                    {
+                        funnyapple2.color = new Color(255, 10, 10);
+                        funnyapple2.size = (reticleProgress == 1 ? 0.35f : 0.25f);
+                    }
+                    #endregion
+
+                    for (int i = 0; i < 12 + (reticleProgress == 1 ? 4 : 0); i++)
+                    {
+                        float dustScale = 0.25f + Main.rand.NextFloat(0.15f) + (reticleProgress == 1 ? 0.1f : 0f);
+
+                        ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                        Vector2 vel = adjustedVel.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.75f, 1.25f) * 8f;
+
+                        Dust d = Dust.NewDustPerfect(Projectile.Center + adjustedVel * 10, ModContent.DustType<ColorSpark>(), vel, 51 + Main.rand.Next(-5, 6), Color.Red, dustScale);
+                        extraInfo.gravityIntensity = 0f;
+                        d.fadeIn = Main.rand.NextFloat(0.5f, 1f);
+                        d.customData = extraInfo;
                     }
 
                     if (skillCritWindow > 0 && reticleProgress == 1)
                     {
-
-                        SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .47f, PitchVariance = 0.1f, Volume = 0.6f };
-                        SoundEngine.PlaySound(style23, Projectile.Center);
-
-                        SoundStyle styl23e = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .65f, PitchVariance = .15f, Volume = 0.3f }; SoundEngine.PlaySound(styl23e);
-
-
-                        //Main.NewText("skillcrit");
                         Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
                         Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
                         Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.glowTargetCenter;
                         Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.4f;
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.1f;
-
-                    } else
-                    {
-                        SoundStyle styl23e = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = .65f, PitchVariance = .15f, Volume = 0.2f }; SoundEngine.PlaySound(styl23e);
+                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.8f;
 
                     }
 
-                    SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .68f, PitchVariance = .15f, Volume = 0.8f }; SoundEngine.PlaySound(style);
+                    SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .10f, PitchVariance = 0.4f, Volume = 0.4f };
+                    SoundEngine.PlaySound(style23, Projectile.Center);
 
 
+                    SoundStyle style32;
+                    if (reticleProgress == 1)
+                        style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_fire") with { Volume = 0.2f, Pitch = -0.33f, MaxInstances = -1, PitchVariance = 0.15f };
+                    else
+                        style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_fire") with { Volume = 0.2f, Pitch = 0f, MaxInstances = -1, PitchVariance = 0.1f };
+                    SoundEngine.PlaySound(style32, Projectile.Center);
 
-                    //Projectile.active = false;
+                    SoundStyle style3 = new SoundStyle("Terraria/Sounds/Research_3") with { Volume = .28f, Pitch = .6f, PitchVariance = 0.2f };
+                    SoundEngine.PlaySound(style3, Projectile.Center);
+
+                    offset = 2;
+
+                    if (reticleProgress == 1)
+                    {
+                        SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .13f, Pitch = .15f, PitchVariance = 0.1f }; 
+                        SoundEngine.PlaySound(style, Projectile.Center);
+
+                        Player.GetModPlayer<AeroPlayer>().ScreenShakePower = 18;
+                        Player.velocity += Angle.ToRotationVector2() * -5.5f;
+
+                        offset = -7;
+                    }
+
+                    glowAmount = 1f;
                 }
 
             }
 
+            offset = Math.Clamp(MathHelper.Lerp(offset, 15f, 0.1f), -10, 10);
 
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
 
-            lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.06f), 0, 0.4f);
-
-            direction = Angle.ToRotationVector2().RotatedBy(lerpToStuff * Player.direction * -1f);
-            Projectile.Center = Player.Center + (direction * OFFSET);
+            direction = Angle.ToRotationVector2();
+            Projectile.Center = Player.Center + (direction * offset);
             Projectile.velocity = Vector2.Zero;
             Player.itemRotation = direction.ToRotation();
 
@@ -331,62 +460,91 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.ThreeQuarters, Projectile.rotation - MathHelper.PiOver2);
 
-
-
-            reticleFrameCounter++;
-            if (reticleFrameCounter >= 2 && reticleFrame != 26)
-            {
-                reticleFrameCounter = 0;
-                reticleFrame = (reticleFrame + 1) % 27;
-            }
-
             if (Player.channel)
                 reticleProgress = Math.Clamp(reticleProgress + 0.02f, 0f, 1f);
+            else if (hasLetGo && reticleProgress != 1)
+                reticleAlpha = Math.Clamp(MathHelper.Lerp(reticleAlpha, -1, 0.05f), 0, 1f);
 
             if (reticleProgress == 1)
                 skillCritWindow--;
 
+            if (skillCritWindow > 0 && reticleProgress == 1)
+                goldPulseAmount = 1;
+
+
+            if (hasLetGo && Projectile.timeLeft < (reticleProgress == 1 ? 12 : 8))
+            {
+                gunOpacity = Math.Clamp(MathHelper.Lerp(gunOpacity, -0.65f, 0.06f), 0, 1);
+                reticleAlpha = Math.Clamp(MathHelper.Lerp(reticleAlpha, -1f, 0.12f), 0, 1); 
+            }
+
+            goldPulseAmount = Math.Clamp(MathHelper.Lerp(goldPulseAmount, -0.5f, 0.04f), 0, 1);
+            glowAmount = Math.Clamp(MathHelper.Lerp(glowAmount, -0.5f, 0.06f), 0, 1);
+
             timer++;
         }
 
-
-        int reticleFrame = 0;
-        int reticleFrameCounter = 0;
+        float glowAmount = 0f;
+        float goldPulseAmount = 0f;
+        float reticleAlpha = 1f;
+        float gunOpacity = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
+
+            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsarWhiteGlow").Value;
+
+            #region Arc
+            /*
+            Texture2D Arc = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Medusa_Gray").Value;
+            float opacity = Math.Clamp(reticleProgress * 1f, 0, 1) * 0.5f;
+            Vector2 scale = new Vector2(2f, 4f - (3.2f * reticleProgress));
+            Vector2 arcPos = Projectile.Center + Angle.ToRotationVector2() * 20f - Main.screenPosition;
+            Vector2 arcOrigin = new Vector2(0f, Arc.Height / 2);
+
+            Main.spriteBatch.Draw(Arc, arcPos, null, Color.Red with { A = 0 } * opacity, 
+                direction.ToRotation(), arcOrigin, scale, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(Arc, arcPos, null, Color.Red with { A = 0 } * opacity * 0.75f, 
+                direction.ToRotation(), arcOrigin, scale * 0.85f, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(Arc, arcPos, null, Color.White with { A = 0 } * opacity * 0.5f, 
+                direction.ToRotation(), arcOrigin, scale * 0.7f, SpriteEffects.None, 0.0f);
+            */
+            #endregion
+
 
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
             Vector2 position = (Projectile.position - (0.5f * (direction * -17)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
 
-            Vector2 newOffset = new Vector2(0,2 * Player.direction).RotatedBy(Angle);
+            Vector2 newOffset = new Vector2(0, 3 * Player.direction).RotatedBy(Angle);
 
             SpriteEffects myEffect = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y) + newOffset, null, lightColor, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(texture, position + newOffset, null, lightColor * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Color col1 = Color.Lerp(Color.White, Color.Gold, goldPulseAmount);
+
+            Main.spriteBatch.Draw(Glow, position + newOffset, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(Glow, position + newOffset, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
+
+            Texture2D OuterL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/RedOuterL").Value;
+            Texture2D InnerL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/WhiteInnerL").Value;
+
+            float progress = Easings.easeInOutQuad(reticleProgress);
+            float extraAngle = MathHelper.Lerp(MathF.PI * -0.25f, 2f * MathF.PI, progress);
+            float opactity = MathHelper.Lerp(0f, 1f, Easings.easeInQuad(reticleProgress * 1.15f)) * reticleAlpha;
+            float scale = reticleProgress * 0.9f;
+
+            Color col = Color.Lerp(Color.Red, Color.Gold, goldPulseAmount);
+
+            Main.spriteBatch.Draw(OuterL, reticleLocation - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle + extraAngle), null, Color.White with { A = 0 } * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
+            Main.spriteBatch.Draw(OuterL, reticleLocation - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle + extraAngle), null, Color.White with { A = 0 } * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
+
+            Main.spriteBatch.Draw(InnerL, reticleLocation - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle + extraAngle), null, col * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
+            Main.spriteBatch.Draw(InnerL, reticleLocation - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle + extraAngle), null, col * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
             
-            Texture2D ReticleTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/RedL").Value;
-            Texture2D ReticleTexRed = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/RedLRed").Value;
-
-            Color col = (skillCritWindow > 0 && reticleProgress == 1) ? Color.Gold : Color.White;
-
-            Main.spriteBatch.Draw(ReticleTex, Main.MouseWorld - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle), null, col * (reticleProgress * 0.9f), Angle - MathHelper.PiOver4, ReticleTex.Size() / 2, reticleProgress, SpriteEffects.None, 0.0f); ;
-            Main.spriteBatch.Draw(ReticleTex, Main.MouseWorld - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle), null, col * (reticleProgress * 0.9f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, ReticleTex.Size() / 2, reticleProgress, SpriteEffects.None, 0.0f); ;
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Looks beter but removed for consistency
-            //Texture2D Glowmask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar_Glow").Value;
-            //Main.spriteBatch.Draw(Glowmask, new Vector2((int)position.X, (int)position.Y) + newOffset, null, Color.White, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
-
-            Main.spriteBatch.Draw(ReticleTexRed, Main.MouseWorld - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle), null, Color.White * (reticleProgress * 0.9f), Angle - MathHelper.PiOver4, ReticleTex.Size() / 2, reticleProgress, SpriteEffects.None, 0.0f); ;
-            Main.spriteBatch.Draw(ReticleTexRed, Main.MouseWorld - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle), null, Color.White * (reticleProgress * 0.9f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, ReticleTex.Size() / 2, reticleProgress, SpriteEffects.None, 0.0f); ;
-
 
             return false;
         }

@@ -617,10 +617,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.velocity = Vector2.Zero;
 
             }
+
+            widthMultiplier = Math.Clamp(MathHelper.Lerp(widthMultiplier, -0.5f, 0.05f), 0, 1);
+
             timer++;
         }
 
-        float widthMultiplier = 0f;
+        float widthMultiplier = 1f;
         float alpha = 1f;
 
         public override bool PreDraw(ref Color lightColor)
@@ -629,7 +632,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GradientLaser", AssetRequestMode.ImmediateLoad).Value;
 
 			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/CoolNoise").Value);
-			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value);
             myEffect.Parameters["sampleTexture3"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
             myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/PinkPurpleGrad").Value);
 
@@ -646,7 +649,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Vector2 origin2 = new Vector2(0, texture.Height / 2);
 
-            float height = (300); //25
+            float height = (300 * widthMultiplier); //25
 
             //if (height == 0)
             //Projectile.active = false;

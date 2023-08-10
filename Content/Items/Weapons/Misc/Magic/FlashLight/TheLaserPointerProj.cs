@@ -13,12 +13,14 @@ using Terraria.DataStructures;
 using AerovelenceMod.Common.Utilities;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
     public class TheLaserPointerProj : ModProjectile
     {
-        public int OFFSET = 15; 
+        public int OFFSET = 15;
         public ref float Angle => ref Projectile.ai[1];
 
         public Vector2 direction = Vector2.Zero;
@@ -30,7 +32,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public float laserWidth = 20;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Laser Pointer");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
         public override void SetDefaults()
@@ -42,7 +43,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-
         }
 
         public override bool? CanDamage()
@@ -50,15 +50,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             return true;
         }
 
+        public override bool? CanCutTiles()
+        {
+            return false;
+        }
 
-        int laserDamage = 0;
         int timer = 0;
         int laserTimer = 0;
         NPC prevLockOn = Main.npc[0];
         public bool lockedOn = false;
 
-
-        bool hasDamageBeenStored = false;
+        int timeUntilSkillStrike = 180;
+        int timeLockedOn = 0;
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -80,7 +83,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 direction = Angle.ToRotationVector2();
                 player.ChangeDir(direction.X > 0 ? 1 : -1);
 
-            } else
+            }
+            else
             {
                 Projectile.active = false;
             }
@@ -107,7 +111,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             #region Laser
 
-            if (FindNearestNPCMouse(300f, true, false, true, out int index))
+            if (FindNearestNPCMouse(400f, true, false, true, out int index))
             {
                 NPC npc = Main.npc[index];
                 if (npc != prevLockOn && timer != 0)
@@ -116,58 +120,99 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     laserTimer = 0;
                     timer = -1;
                     lockedOn = false;
-                } else
+                }
+                else
                 {
                     if (!lockedOn)
                     {
                         SoundStyle style = new SoundStyle("Terraria/Sounds/Item_108") with { Pitch = .78f, PitchVariance = 0.1f, Volume = 0.3f };
                         SoundEngine.PlaySound(style, Projectile.Center);
 
-                        
-
-
+                        endPoint = npc.Center;
+                        timeLockedOn = 0;
                     }
                     lockedOn = true;
-                    endPoint = npc.Center;
-                    LaserRotation = (npc.Center - (Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25))).ToRotation();
 
-                    laserWidth = MathHelper.Clamp(0 + (laserTimer * 0.25f), 0, 30);
+                    Vector2 npcPos = npc.Center;
+
+                    //Manually offset position for Cyvercry so it looks a bit better
+                    if (npc.type == ModContent.NPCType<Cyvercry2>())
+                        npcPos = npc.Center + new Vector2(-25, 0).RotatedBy(npc.rotation);
+
+                    endPoint = npcPos;
+
+                    LaserRotation = (npcPos - (Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25))).ToRotation();
+
+                    laserWidth = MathHelper.Clamp(0 + (laserTimer * 0.25f), 0, 20);
                     prevLockOn = npc;
 
                     if (timer % 2 == 0)
                     {
                         ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                        
+
                         if (Main.rand.NextBool())
                         {
                             for (int i = 0; i < 2; i++)
                             {
                                 Vector2 randomStart = Main.rand.NextVector2CircularEdge(laserWidth * 0.15f, laserWidth * 0.15f);
-                                Dust gd = GlowDustHelper.DrawGlowDustPerfect(npc.Center, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), Color.Red, 0.15f, 0.2f, 0f, dustShader2);
+                                Dust gd = GlowDustHelper.DrawGlowDustPerfect(npcPos, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), Color.Red, 0.15f, 0.2f, 0f, dustShader2);
                                 gd.fadeIn = 52 + Main.rand.NextFloat(-3f, 4f);
                                 gd.scale *= Main.rand.NextFloat(0.9f, 1.1f);
                             }
-                        } 
+                        }
                         else
                         {
                             for (int i = 0; i < 2; i++)
                             {
                                 Vector2 randomStart = Main.rand.NextVector2CircularEdge(laserWidth * 0.25f, laserWidth * 0.25f);
-                                Dust gd = GlowDustHelper.DrawGlowDustPerfect(npc.Center, ModContent.DustType<GlowCircleDust>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), Color.Red, 0.3f, 0.1f, 0f, dustShader2);
+                                Dust gd = GlowDustHelper.DrawGlowDustPerfect(npcPos, ModContent.DustType<GlowCircleDust>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), Color.Red, 0.3f, 0.1f, 0f, dustShader2);
                                 gd.fadeIn = 2;
                             }
                         }
                     }
 
+
+                    if (laserWidth > 15 && timer % 20 == 0)
+                    {
+                        Vector2 random = Main.rand.NextVector2CircularEdge(5, 5);
+
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), npcPos, random, ModContent.ProjectileType<LaserPointerSpark>(), Projectile.damage / 2, Projectile.knockBack, Main.myPlayer, 0, Main.rand.NextBool() ? 1 : -1);
+
+                        SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/hero_fury_charm_burst") with { Pitch = 1f, PitchVariance = 0.2f, Volume = 0.6f }; 
+                        SoundEngine.PlaySound(style, npcPos);
+
+                        SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_91") with { Pitch = 0.9f, PitchVariance = .2f, Volume = 0.5f }; 
+                        SoundEngine.PlaySound(style2, npcPos);
+
+                        for (int i = 0; i < 7; i++)
+                        {
+                            Dust.NewDustPerfect(npcPos, ModContent.DustType<MuraLineBasic>(), random.RotatedByRandom(0.1f) * Main.rand.NextFloat(0.45f, 1.3f),
+                                10, Color.Red, Main.rand.NextFloat(0.25f, 0.45f));
+                        }
+                    }
+
+                    timeLockedOn++;
                 }
 
-            } else
+            }
+            else
             {
                 lockedOn = false;
                 laserWidth = 0;
                 laserTimer = 0;
             }
+
+            if (timeLockedOn > timeUntilSkillStrike)
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+            else
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
+
+            if (timeLockedOn == timeUntilSkillStrike)
+                SSGlowAmount = 2;
+
+            SSGlowAmount = Math.Clamp(MathHelper.Lerp(SSGlowAmount, -0.5f, 0.05f), 0, 1);
             #endregion
+
 
             laserTimer++;
             timer++;
@@ -177,7 +222,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             npcIndex = -1;
             bool foundNPC = false;
             double dist = range * range;
-            for(int i = 0; i < Main.maxNPCs; i++)
+            for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 //Make sure NPC is valid anyway
@@ -215,6 +260,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             return foundNPC;
         }
 
+        float glowAmount = 0f;
+        public float SSGlowAmount = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
@@ -222,6 +269,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             #region Flashlight
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/TLPPGlow").Value;
+            Texture2D white = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/TLPPGlowWhiteFaded").Value;
 
             SpriteEffects spriteEffects = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             int height1 = texture.Height;
@@ -229,8 +277,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Vector2 position = (Projectile.position - (0.5f * (direction * OFFSET * -1f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
             Vector2 actualPos = new Vector2((int)Projectile.Center.X, (int)Projectile.Center.Y) - new Vector2((int)Main.screenPosition.X, (int)Main.screenPosition.Y);
             Main.spriteBatch.Draw(texture, actualPos, null, lightColor, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(glowMask, actualPos, null, (Color.White * 0.1f) * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
+            //Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(glowMask, actualPos, null, (Color.White * 0.3f) * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
+
+            Color glowCol = Color.Lerp(Color.Red, Color.Gold, SSGlowAmount);
+            Main.spriteBatch.Draw(glowMask, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * 0.5f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(white, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * 0.4f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(white, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * SSGlowAmount, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.15f, spriteEffects, 0.0f);
 
             #endregion
 
@@ -289,8 +342,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
             Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
 
-            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1,1,0,0), Color.Red, timer * 0.03f, flare12.Size() / 2, 0.2f * laserWidth * 0.02f, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Red, timer * 0.07f, flare1.Size() / 2, 0.01f * laserWidth, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Red, timer * 0.03f, flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Red, timer * 0.07f, flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -317,6 +370,152 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             }
 
             return false;
+        }
+    }
+
+    public class LaserPointerSpark : ModProjectile
+    {
+        public int i;
+        public int timer = 0;
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 16;
+            Projectile.height = 14;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.extraUpdates = 2;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 600;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.ignoreWater = true;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 15;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+        }
+
+        public override bool? CanDamage() { return timer > 60; }
+
+        public override bool? CanCutTiles() { return false; }
+
+        float fadeTime = 70f;
+        float alpha = 0f;
+        public override void AI()
+        {
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+            if (Projectile.alpha > 30)
+            {
+                Projectile.alpha -= 15;
+                if (Projectile.alpha < 30)
+                {
+                    Projectile.alpha = 30;
+                }
+            }
+
+            if (Projectile.localAI[0] == 0f)
+            {
+                AdjustMagnitude(ref Projectile.velocity);
+                Projectile.localAI[0] = 1f;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+
+            Vector2 move = Vector2.Zero;
+            float distance = 700f;
+            bool target = false;
+            for (int k = 0; k < 200; k++)
+            {
+                if (Main.npc[k].active && !Main.npc[k].dontTakeDamage && !Main.npc[k].friendly && Main.npc[k].lifeMax > 5 && Main.npc[k].type != NPCID.TargetDummy)
+                {
+                    Vector2 newMove = Main.npc[k].Center - Projectile.Center;
+                    float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
+                    if (distanceTo < distance)
+                    {
+                        move = newMove;
+                        distance = distanceTo;
+                        target = true;
+                    }
+                }
+            }
+            if (target && timer >= 60)
+            {
+                Projectile.velocity = Projectile.velocity.MoveTowards(move.SafeNormalize(Vector2.UnitX) * 8, 0.06f);
+            }
+            else if (!target && timer >= 80)
+            {
+                fadeTime--;
+
+                if (fadeTime == 0)
+                {
+                    Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowStrong>(), Projectile.velocity * 0.75f, 0, Color.Red, 0.4f);
+                    Projectile.active = false;
+                }
+            }
+
+            if (timer < 60)
+                Projectile.velocity = Projectile.velocity.RotatedBy(0.04f * Projectile.ai[1]);
+
+            if (Projectile.alpha <= 30 && timer % 4 == 0)
+            {
+                Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.Zero,
+                    Color.Red, 0.4f, 0.6f, 0f,
+                    dustShader);
+            }
+            timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+            Texture2D line = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
+            Texture2D orb = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+
+            Vector2 vec2Scale = new Vector2(1f, 1f - Projectile.velocity.Length() * 0.1f) * Projectile.scale;
+            Vector2 vec2ScaleLine = new Vector2(1f - Projectile.velocity.Length() * 0.1f, 1f) * Projectile.scale;
+            Vector2 vec2ScaleOrb = new Vector2(1f, 0.5f - Projectile.velocity.Length() * 0.05f) * Projectile.scale;
+
+            Main.spriteBatch.Draw(line, Projectile.Center - Main.screenPosition, null, Color.Black with { A = 0 } * 0.4f, Projectile.rotation - MathHelper.PiOver2, line.Size() / 2, vec2ScaleLine * 1.2f, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(line, Projectile.Center - Main.screenPosition, null, Color.Red with { A = 0 } * 0.75f, Projectile.rotation - MathHelper.PiOver2, line.Size() / 2, vec2ScaleLine * 1.2f, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(line, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 1f, Projectile.rotation - MathHelper.PiOver2, line.Size() / 2, vec2ScaleLine * 0.6f, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.rotation, texture.Size() / 2, vec2Scale, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(orb, Projectile.Center - Main.screenPosition, null, Color.Red with { A = 0 } * 0.75f, Projectile.rotation, orb.Size() / 2, vec2ScaleOrb, SpriteEffects.None, 0.0f);
+
+
+            return false;
+        }
+
+        private void AdjustMagnitude(ref Vector2 vector)
+        {
+            float magnitude = (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+            if (magnitude > 3f)
+            {
+                vector *= 3f / magnitude;
+            }
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowStrong>(), Projectile.velocity * 0.75f, 0, Color.Red, 0.4f);
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowStrong>(), Projectile.velocity * 0.75f, 0, Color.Red, 0.4f);
+            return true;
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            //GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Projectile.velocity * 0.75f, Color.Red, 1f, 0.7f, 0, dustShader);
+
+            //Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowStrong>(), Projectile.velocity * 0.75f, 0, Color.Red, 0.4f);
         }
     }
 }

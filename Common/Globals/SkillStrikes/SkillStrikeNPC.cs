@@ -21,7 +21,6 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
         public override bool InstancePerEntity => true;
 
         public bool strikeCTRemove = true;
-
         public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
             /*

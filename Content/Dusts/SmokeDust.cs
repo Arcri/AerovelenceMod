@@ -81,6 +81,52 @@ namespace AerovelenceMod.Content.Dusts
         }
     }
     
+    public class SmokeDustAdditive : ModDust
+    {
+        public override string Texture => "AerovelenceMod/Content/Dusts/WhiteSmoke";
+        public override void OnSpawn(Dust dust)
+        {
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Dusts/WhiteSmoke").Value;
+            dust.frame = new Rectangle(0, texture.Height / 5 * Main.rand.Next(5), texture.Width, texture.Height / 5);
+        }
+
+        public override bool Update(Dust dust)
+        {
+
+            dust.color = Color.Lerp(dust.color, Color.Black, 0.02f);
+            Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), dust.color.R * 0.002f, dust.color.G * 0.002f, dust.color.B * 0.002f);
+
+            dust.noGravity = true;
+
+            dust.position += dust.velocity;
+            dust.velocity *= 0.96f;
+            dust.scale *= 0.98f;
+            dust.alpha += 8; //12
+
+
+            if (dust.scale < 0.1f)
+            {
+                dust.active = false;
+            }
+            if (dust.alpha >= 250)
+                dust.active = false;
+
+            dust.rotation += dust.velocity.X * 0.01f;
+
+            return false;
+
+        }
+
+        public override bool PreDraw(Dust dust)
+        {
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Dusts/WhiteSmoke").Value;
+            float opacity = 1f - (dust.alpha / 255f);
+            Main.spriteBatch.Draw(texture, dust.position - Main.screenPosition, dust.frame, dust.color with { A = 0 }, dust.rotation, texture.Size() / 2, dust.scale, 0, 0f);
+
+            return false;
+        }
+    }
+
     public class LineSmokeDust : ModDust
     {
         public override string Texture => "AerovelenceMod/Content/Dusts/Lines2";

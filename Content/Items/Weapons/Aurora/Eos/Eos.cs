@@ -192,6 +192,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override void AI()
         {
+
+            //Lighting
+            if (getProgress(easingProgress) > 0.05f && getProgress(easingProgress) < 0.95f)
+            {
+                float colorScale = 0;
+                float prog = getProgress(easingProgress);
+
+                if (prog <= 0.5f) //0 - 0.5 --> 0 - 1
+                    colorScale = prog * 2f;
+                else //0.5 - 1 --> 1 -> 0 
+                    colorScale = (1f - prog) * 2f;
+
+                Lighting.AddLight(Projectile.Center, (getEosColor(prog) * colorScale).ToVector3());
+
+            }
+
+
             if (timer == 0)
             {
                 Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
@@ -279,7 +296,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
             if (getProgress(easingProgress) >= 0.5f && !shotProj && !spin && shouldShootProj)
             {
-                float speed = fast ? 15 : 17;
+                float speed = fast ? 17 : 17; //15 : 17 old
 
                 float dirToMouse = (Main.MouseWorld - Main.player[Projectile.owner].Center).ToRotation();
                 float newDir = currentAngle.AngleTowards(dirToMouse, 0.5f);
@@ -303,6 +320,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public void Trail()
         {
+            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+
             float width = 0f;
             if (getProgress(easingProgress) <= 0.2f)
                 width = getProgress(easingProgress) / 0.2f;
@@ -335,7 +354,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             float distance = spin ? 30 : 24;
 
             Vector2 relativePosition = (Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-0.93f) * distance) - Main.player[Projectile.owner].Center;
-            trail1.trailPos = relativePosition;
+            trail1.trailPos = relativePosition - gfxOffset;
             trail1.TrailLogic();
 
             //Trail2
@@ -353,7 +372,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             trail2.trailTime = (float)Main.timeForVisualEffects;
             trail2.trailRot = Projectile.rotation + MathHelper.PiOver4;
 
-            trail2.trailPos = relativePosition;
+            trail2.trailPos = relativePosition - gfxOffset;
             trail2.TrailLogic();
         }
 
@@ -692,6 +711,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
                     Projectile.active = false;
             }
 
+            Lighting.AddLight(Projectile.Center, (Color.Wheat * 0.5f * Math.Clamp(scale, 0, 1)).ToVector3());
+
             timer++;
         }
 
@@ -785,6 +806,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
         {
             if (timer == 0)
                 srot = Projectile.velocity.ToRotation();
+
+            if (timer > 2)
+            {
+                int counter = 0;
+                foreach (Vector2 v in trail1.trailPositions)
+                {
+                    if (counter % 2 == 0)
+                    {
+                        if (counter % 4 == 0)
+                            Lighting.AddLight(v, (Color.LightBlue * 0.65f * Math.Clamp(scale, 0, 1)).ToVector3());
+                        else
+                            Lighting.AddLight(v, (Color.MediumPurple * 0.65f * Math.Clamp(scale, 0, 1)).ToVector3());
+                    }
+                    counter++;
+                }
+
+            }
 
             //Trail1 Info Dump
             trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value;

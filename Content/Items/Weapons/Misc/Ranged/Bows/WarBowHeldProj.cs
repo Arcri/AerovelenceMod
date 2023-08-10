@@ -115,7 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 if (timeBeforeKill == 0)
                 {
                     float vel = MathHelper.Clamp(20 * percentDrawnBack, 6, 20);
-                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, direction.SafeNormalize(Vector2.UnitX) * vel, projToShootID, Projectile.damage / 2 + (int)(Projectile.damage * percentDrawnBack), 0, Player.whoAmI);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, direction.SafeNormalize(Vector2.UnitX) * vel, projToShootID, (Projectile.damage / 2 + (int)(Projectile.damage * percentDrawnBack)), 0, Player.whoAmI);
                     
                     if (skillCritWindow >= 0)
                     {
