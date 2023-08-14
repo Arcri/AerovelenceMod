@@ -661,6 +661,8 @@ Projectiles: {
 	CirclePulse.DisplayName: Circle Pulse
 	DreadDart.DisplayName: Dread Dart
 	AdamantitePulsarHeldBurst.DisplayName: Adamantite Pulsar Held Burst
+	TitaniumLauncherHeldLarge.DisplayName: Titanium Launcher Held Large
+	TitaniumLauncherHeldSmall.DisplayName: Titanium Launcher Held Small
 }
 
 Configs: {

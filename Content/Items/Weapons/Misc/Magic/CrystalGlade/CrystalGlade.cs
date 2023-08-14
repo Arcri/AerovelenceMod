@@ -267,6 +267,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
 
 
+
+
         public override void Kill(int timeLeft)
         {
 

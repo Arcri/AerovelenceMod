@@ -55,7 +55,7 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int Muraa = Projectile.NewProjectile(null, position + new Vector2(0, 0), velocity * 0.2f, ModContent.ProjectileType<AdamantitePulseShot>(), 10, 0, player.whoAmI, 0f, 0f);
+            int Muraa = Projectile.NewProjectile(null, position + new Vector2(0, 0), velocity * 1f, ModContent.ProjectileType<FireShot>(), 10, 0, player.whoAmI, 0f, 0f);
             
             if (Main.projectile[Muraa].ModProjectile is otherHollowPulseTestDearFutureMePleaseRewriteAndMoveThisInsteadOfUsingItInTheFutureDearGod vfx2)
             {
