@@ -156,7 +156,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			}
 
 			dust.color.A = 0;
-			dust.scale *= 0.97f;
+			dust.scale *= 0.95f;
 			dust.position += dust.velocity; 
 
 			//Makes shit more accurate to velocity, idfk why the value is pi/2
@@ -166,10 +166,10 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			if (!dust.noLight && dust.scale > 0.2f)
 				Lighting.AddLight(dust.position, dust.color.R * dust.scale * 0.002f, dust.color.G * dust.scale * 0.002f, dust.color.B * dust.scale * 0.002f);
 
-			/*
+			
 			if (dust.alpha != 0)
-				dust.color *= 0.99f;
-			*/
+				dust.color *= 0.88f;
+			
 
 			if (dust.fadeIn >= 60)
 				dust.active = false;
@@ -278,4 +278,69 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			return false;
         }
     }
+
+
+	public class GlowPixelInnerCore : ModDust
+	{
+		public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/PixelCrossMain";
+		private Texture2D core;
+
+
+		public override void Load() => core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/PixelCrossInner");
+
+		public override void Unload() => core = null;
+
+        public override void OnSpawn(Dust dust)
+		{
+			dust.customData = false;
+			dust.noGravity = true;
+			dust.frame = new Rectangle(0, 0, 68, 68);
+			//dust.rotation = Main.rand.NextFloat(6.28f);
+			//dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+		}
+
+		public override Color? GetAlpha(Dust dust, Color lightColor)
+		{
+			return dust.color;
+		}
+
+		public override bool Update(Dust dust)
+		{
+			if (dust.scale > 10f)
+			{
+				dust.active = false;
+			}
+			dust.position += dust.velocity;
+			dust.rotation += dust.velocity.X * 0.15f;
+
+
+			dust.velocity *= dust.fadeIn < 3 ? 0.99f : 0.92f;
+			if (dust.velocity.Length() < 1f)
+			{
+				dust.scale *= 0.9f;
+			}
+
+			
+			if (dust.scale < 0.1f)
+			{
+				dust.active = false;
+			}
+
+			dust.fadeIn++;
+			return false;
+		}
+
+
+		public override bool PreDraw(Dust dust)
+		{
+			Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/PixelCrossInner");
+			Main.spriteBatch.Draw(Texture2D.Value, dust.position - Main.screenPosition, null, dust.color with { A = 0 }, dust.rotation, new Vector2(34f, 34f), dust.scale, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Core, dust.position - Main.screenPosition, null, Color.White with { A = 0 }, dust.rotation, new Vector2(34, 34f), dust.scale * 0.5f, SpriteEffects.None, 0f);
+
+
+			return false;
+		}
+
+	}
+
 }

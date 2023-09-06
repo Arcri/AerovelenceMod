@@ -611,4 +611,342 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             return myCol;
         }
     }
+
+    public class FireDart : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        int mainTimer = 0;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 16;
+            Projectile.ignoreWater = true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 400;
+        }
+
+        BaseTrailInfo trail1 = new BaseTrailInfo();
+        BaseTrailInfo trail2 = new BaseTrailInfo();
+
+        public override void AI()
+        {
+            Player owner = Main.player[Projectile.owner];
+
+            if (mainTimer == 0)
+                Projectile.ai[0] = Main.rand.NextBool() ? -1 : 1;
+
+            if (mainTimer == 7)
+                Projectile.ai[0] *= -1;
+
+            #region trailInfo
+            //Trail1 
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/LineGraduation2").Value;
+            trail1.trailColor = Color.OrangeRed;
+            trail1.trailPointLimit = 300;
+            trail1.trailWidth = 15;
+            trail1.trailMaxLength = 300;
+            trail1.timesToDraw = 2;
+            trail1.pinch = true;
+            trail1.pinchAmount = 0.2f;
+
+            //trail1.trailTime = mainTimer * 0.03f;
+            trail1.trailRot = Projectile.velocity.ToRotation();
+
+            trail1.trailPos = Projectile.Center + Projectile.velocity;
+            trail1.TrailLogic();
+
+            //Trail2
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail4").Value;
+            trail2.trailColor = Color.OrangeRed;
+            trail2.trailPointLimit = 300;
+            trail2.trailWidth = 30;
+            trail2.trailMaxLength = 300;
+            trail2.timesToDraw = 2;
+            //trail1.pinch = true;
+            //trail1.pinchAmount = 0.5f;
+
+            //trail2.trailTime = mainTimer * -0.06f;
+            trail2.trailRot = Projectile.velocity.ToRotation();
+
+            trail2.trailPos = Projectile.Center + Projectile.velocity;
+            trail2.TrailLogic();
+
+            #endregion
+
+            if (Projectile.direction == 1)
+            {
+                Projectile.rotation += 0.1f;
+            }
+            else
+            {
+                Projectile.rotation -= 0.1f;
+            }
+
+            if (mainTimer < 20)
+                Projectile.velocity = Projectile.velocity.RotatedBy(0.08f * Projectile.ai[0]);
+
+            if (mainTimer > 25)
+                Projectile.velocity *= 0.9f;
+
+            if (Projectile.timeLeft < 320)
+                Projectile.active = false;
+
+            mainTimer++;
+
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            trail1.TrailDrawing(Main.spriteBatch);
+            trail2.TrailDrawing(Main.spriteBatch);
+
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/GreyScaleStar").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+
+            return false;
+        }
+    }
+
+    public class GreenStarThing : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        int mainTimer = 0;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 16;
+            Projectile.ignoreWater = true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 400;
+        }
+
+        BaseTrailInfo trail1 = new BaseTrailInfo();
+        BaseTrailInfo trail2 = new BaseTrailInfo();
+
+        public override void AI()
+        {
+            Player owner = Main.player[Projectile.owner];
+
+            if (mainTimer == 0)
+                Projectile.ai[0] = Main.rand.NextBool() ? -1 : 1;
+
+            if (mainTimer == 7)
+                Projectile.ai[0] *= -1;
+
+            #region trailInfo
+            //Trail1 
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+            trail1.trailColor = Color.LightGreen;
+            trail1.trailPointLimit = 300;
+            trail1.trailWidth = 15;
+            trail1.trailMaxLength = 300;
+            trail1.timesToDraw = 2;
+            trail1.pinch = true;
+            trail1.pinchAmount = 0.4f;
+
+            //trail1.trailTime = mainTimer * 0.03f;
+            trail1.trailRot = Projectile.velocity.ToRotation();
+
+            trail1.trailPos = Projectile.Center + Projectile.velocity;
+            trail1.TrailLogic();
+
+            //Trail2
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail4").Value;
+            trail2.trailColor = Color.DarkGreen;
+            trail2.trailPointLimit = 300;
+            trail2.trailWidth = 10;
+            trail2.trailMaxLength = 300;
+            trail2.timesToDraw = 1;
+            //trail1.pinch = true;
+            //trail1.pinchAmount = 0.5f;
+
+            //trail2.trailTime = mainTimer * 0.06f;
+            trail2.trailRot = Projectile.velocity.ToRotation();
+
+            trail2.trailPos = Projectile.Center + Projectile.velocity;
+            trail2.TrailLogic();
+
+            #endregion
+
+            if (Projectile.direction == 1)
+            {
+                Projectile.rotation += 0.1f;
+            }
+            else
+            {
+                Projectile.rotation -= 0.1f;
+            }
+
+            if (mainTimer < 20)
+                Projectile.velocity = Projectile.velocity.RotatedBy(0.04f * Projectile.ai[0]);
+
+            if (mainTimer > 25)
+                Projectile.velocity *= 0.9f;
+
+            if (Projectile.timeLeft < 320)
+                Projectile.active = false;
+
+            mainTimer++;
+
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            trail1.TrailDrawing(Main.spriteBatch);
+            trail2.TrailDrawing(Main.spriteBatch);
+
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            float rot = (float)Main.timeForVisualEffects * 0.1f;
+
+
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.ForestGreen with { A = 0 }, Projectile.velocity.ToRotation() + rot, glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.ForestGreen with { A = 0 }, Projectile.velocity.ToRotation() + rot + MathHelper.PiOver2, glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.velocity.ToRotation(), glow.Size() / 2, 0.1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.velocity.ToRotation() + MathHelper.PiOver2, glow.Size() / 2, 0.1f, SpriteEffects.None, 0f);
+
+            return false;
+        }
+    }
+
+    public class ArcriTrail : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        int mainTimer = 0;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 16;
+            Projectile.ignoreWater = true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 370;
+        }
+
+        BaseTrailInfo trail1 = new BaseTrailInfo();
+        BaseTrailInfo trail2 = new BaseTrailInfo();
+
+        public override void AI()
+        {
+            Player owner = Main.player[Projectile.owner];
+
+            if (mainTimer == 0)
+                Projectile.ai[0] = Main.rand.NextBool() ? -1 : 1;
+
+            if (mainTimer == 7)
+                Projectile.ai[0] *= -1;
+
+            #region trailInfo
+            //Trail1 
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+            //trail1.trailColor = Color.DodgerBlue;
+            trail1.trailPointLimit = 300;
+            trail1.trailWidth = 30;
+            trail1.trailMaxLength = 700;
+            trail1.timesToDraw = 10;
+            trail1.pinch = true;
+            trail1.pinchAmount = 0.4f;
+
+            //trail1.trailTime = mainTimer * 0.03f;
+            trail1.trailRot = Projectile.velocity.ToRotation();
+
+            trail1.trailPos = Projectile.Center + Projectile.velocity;
+            trail1.TrailLogic();
+
+            trail1.gradient = true;
+            trail1.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
+            trail1.shouldScrollColor = true;
+            trail1.gradientTime = (float)Main.timeForVisualEffects * 0.03f;
+
+            //Trail2
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
+            trail2.trailColor = Color.White;
+            trail2.trailPointLimit = 300;
+            trail2.trailWidth = 40;
+            trail2.trailMaxLength = 300;
+            trail2.timesToDraw = 2;
+            trail2.pinch = true;
+            trail2.pinchAmount = 0.4f;
+
+            trail2.trailTime = mainTimer * 0.06f;
+            trail2.trailRot = Projectile.velocity.ToRotation();
+
+            trail2.trailPos = Projectile.Center + Projectile.velocity;
+            trail2.TrailLogic();
+
+            #endregion
+
+            if (Projectile.direction == 1)
+            {
+                Projectile.rotation += 0.1f;
+            }
+            else
+            {
+                Projectile.rotation -= 0.1f;
+            }
+
+            if (mainTimer < 35)
+                Projectile.velocity = Projectile.velocity.RotatedBy(0.1f * Projectile.ai[0]);
+            else if (mainTimer < 50)
+                Projectile.velocity = Projectile.velocity.RotatedBy(-0.03f * Projectile.ai[0]);
+
+            if (mainTimer > 25)
+            {
+                Projectile.velocity *= 0.99f;
+
+            }
+
+            if (Projectile.timeLeft < 320)
+                Projectile.active = false;
+
+            mainTimer++;
+
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+
+            float rot = (float)Main.timeForVisualEffects * 0.1f;
+
+            Vector2 vecScale = new Vector2(1f, 1f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(glow2, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), null, Color.DeepSkyBlue * 0.5f, Projectile.velocity.ToRotation(), glow2.Size() / 2, 0.8f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow2, Projectile.Center - Main.screenPosition - (Projectile.velocity.SafeNormalize(Vector2.UnitX) * 20), null, Color.SkyBlue * 0.5f, Projectile.velocity.ToRotation(), glow2.Size() / 2, 0.4f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            //Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.ForestGreen with { A = 0 }, Projectile.velocity.ToRotation() + rot, glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.ForestGreen with { A = 0 }, Projectile.velocity.ToRotation() + rot + MathHelper.PiOver2, glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
+
+
+            //Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.velocity.ToRotation(), glow.Size() / 2, 0.1f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.velocity.ToRotation() + MathHelper.PiOver2, glow.Size() / 2, 0.1f, SpriteEffects.None, 0f);
+
+            trail1.TrailDrawing(Main.spriteBatch);
+            trail2.TrailDrawing(Main.spriteBatch);
+
+            return false;
+        }
+    }
+
 }

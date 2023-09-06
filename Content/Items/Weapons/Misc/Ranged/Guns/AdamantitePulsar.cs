@@ -335,7 +335,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             {
                 if (Projectile.owner == Main.myPlayer)
                 {
-                    Angle = (Main.MouseWorld - (Player.Center + Player.velocity)).ToRotation();
+                    Angle = (Main.MouseWorld - (Player.MountedCenter + Player.velocity)).ToRotation();
                     reticleLocation = (Main.MouseWorld);
                 }
                 direction = Angle.ToRotationVector2();
@@ -445,7 +445,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
 
             direction = Angle.ToRotationVector2();
-            Projectile.Center = Player.Center + (direction * offset);
+            Projectile.Center = Player.MountedCenter + (direction * offset);
             Projectile.velocity = Vector2.Zero;
             Player.itemRotation = direction.ToRotation();
 

@@ -36,10 +36,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-        Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/Glowmask").Value;
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/GhastlyGlacier").Value;
             Vector2 drawPos = NPC.Center + new Vector2(0, NPC.gfxOffY) - Main.screenPosition;
-            //keep an eye on the width and height when doing this. It matters
-            Main.EntitySpriteDraw(texture, drawPos, NPC.frame, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture, drawPos, null, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {

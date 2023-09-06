@@ -51,8 +51,6 @@ namespace AerovelenceMod
         public AerovelenceMod()
         {
             Instance = this;
-
-
         }
 		public override void PostSetupContent()
 		{

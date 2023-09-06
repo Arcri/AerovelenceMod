@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, Color.Red.ToVector3() * 0.5f);
+            //Lighting.AddLight(Projectile.Center, Color.Red.ToVector3() * 0.5f);
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
 
@@ -112,18 +112,31 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void Kill(int timeLeft)
         {
-
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
-            for (int i = 0; i < 5; i++)
+            if (Projectile.tileCollide == true)
             {
-                Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleDust>(),
-                    (Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-1, 1)) * Main.rand.Next(1, 3)),
-                    Color.DeepPink, Main.rand.NextFloat(0.2f, 0.4f), 0.5f, 0f, dustShader);
-                p.alpha = 0;
-                //p.rotation = Main.rand.NextFloat(6.28f);
-            }
+                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
+                for (int i = 0; i < 5; i++)
+                {
+                    Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleDust>(),
+                        (Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.Pi + Main.rand.NextFloat(-1, 1)) * Main.rand.Next(1, 3)),
+                        Color.DeepPink, Main.rand.NextFloat(0.2f, 0.4f), 0.5f, 0f, dustShader);
+                    p.alpha = 0;
+                    //p.rotation = Main.rand.NextFloat(6.28f);
+                }
+            }
+            else
+            {
+
+                for (int i = 0; i < Main.rand.Next(2, 4); i++)
+                {
+                    Dust p2 = Dust.NewDustPerfect(Projectile.Center, DustID.FireworkFountain_Pink,
+                        Projectile.velocity.RotatedByRandom(1f) * Main.rand.NextFloat(0.5f, 1.5f), 0,
+                        Color.DeepPink, Main.rand.NextFloat(0.4f, 0.8f));
+                    p2.noLight = true;
+                    //p.rotation = Main.rand.NextFloat(6.28f);
+                }
+            }
         }
 
 

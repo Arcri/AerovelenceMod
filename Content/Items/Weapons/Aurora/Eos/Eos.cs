@@ -385,8 +385,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
 
             Texture2D OuterGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/Eos/EosOuterGlow");
-
-
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/Eos/Eos");
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/Eos/EosGlow");
 
@@ -430,6 +428,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
                     alphaToUse = 1 - ((getProgress(easingProgress) - 0.8f) / 0.2f);
                 else
                     alphaToUse = 1f;
+
                 for (int afterI = 0; afterI < previousRotations.Count; afterI++)
                 {
                     float progress = (float)afterI / previousRotations.Count;

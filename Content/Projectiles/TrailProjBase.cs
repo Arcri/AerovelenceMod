@@ -133,7 +133,7 @@ namespace AerovelenceMod.Content.Projectiles
                     trailRotations[i - 2] = Vector2.Lerp(trailRotations[i - 3].ToRotationVector2(), trailRotations[i - 1].ToRotationVector2(), 0.5f).ToRotation();
                 }
             }
-
+            
             trailCurrentLength = CalculateLength();
 
 

@@ -663,6 +663,13 @@ Projectiles: {
 	AdamantitePulsarHeldBurst.DisplayName: Adamantite Pulsar Held Burst
 	TitaniumLauncherHeldLarge.DisplayName: Titanium Launcher Held Large
 	TitaniumLauncherHeldSmall.DisplayName: Titanium Launcher Held Small
+	NewDarknessDischargeStar.DisplayName: New Darkness Discharge Star
+	AnotherTrailTest.DisplayName: Another Trail Test
+	AnotherTrailTestTheSqueakquel.DisplayName: Another Trail Test The Squeakquel
+	AnothaOne.DisplayName: Anotha One
+	ArcriTrail.DisplayName: Arcri Trail
+	FireDart.DisplayName: Fire Dart
+	GreenStarThing.DisplayName: Green Star Thing
 }
 
 Configs: {

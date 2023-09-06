@@ -28,6 +28,7 @@ namespace AerovelenceMod.Common.Utilities
             return toReturn;
         }
 
+
         public static float easeInQuad(float progress)
         {
             float toReturn = 0f;
@@ -51,12 +52,33 @@ namespace AerovelenceMod.Common.Utilities
         }
 
 
-
+        public static float easeInQuint(float progress)
+        {
+            float toReturn = 0f;
+            toReturn = MathF.Pow(progress, 5f);
+            return toReturn;
+        }
 
         public static float easeOutQuint(float progress)
         {
             float toReturn = 0f;
             toReturn = 1f - MathF.Pow(1f - progress, 5f);
+            return toReturn;
+        }
+
+        public static float easeInOutQuint(float progress)
+        {
+            float toReturn = 0f;
+            toReturn = progress < 0.5 ? 16 * MathF.Pow(progress, 5f) : 
+                1f - MathF.Pow(-2f * progress + 2, 5) / 2;
+            return toReturn;
+        }
+
+
+        public static float easeInCirc(float progress)
+        {
+            float toReturn = 0f;
+            toReturn = 1f - MathF.Sqrt(1f - MathF.Pow(progress , 2f));
             return toReturn;
         }
 

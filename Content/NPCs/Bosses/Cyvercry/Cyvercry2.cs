@@ -573,7 +573,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         bool firstFrame = true;
 
         public override void AI()
-          {
+        {
+            //whatAttack = 23;
+            
             if (whatAttack != 24)
                 hideRegreGlow = false;
 
@@ -3773,11 +3775,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public void NewBots(Player myPlayer)
         {
             //Values
-            int numberOfBots = Phase3 ? 5 : 4;
+
+            //Classic -> 2 bots, longer time, 1 less rep
+            //Expert -> 2 bots, longer time
+            //Master -> 2 bots, -5 frame time between waves, MathHelper.PiOver2 + 1.75f
+
+            //Phase 3 --> 4 bots
+
+            int numberOfBots = Phase3 ? 4 : 2;
             float rotationSpeed = isMaster ? 0.035f : 0.03f;
 
             int totalReps = Phase3 ? 5 : 4; 
-            int timeBetweenWaves = 180;
+            int timeBetweenWaves = isMaster ? 140 : 145; //180
             int startTime = 30;
 
             //Have Cyver disappear 
@@ -3785,7 +3794,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPC.dontTakeDamage = true;
             if (timer == 0 && newBotsReps == 0)
             {
-                CombatText.NewText(new Rectangle((int)myPlayer.Center.X, (int)myPlayer.Center.Y, 1, 1), Color.White, "THIS ATTACK IS ALSO PENDING PSEUDO-REWORK", dramatic: true);
+                //CombatText.NewText(new Rectangle((int)myPlayer.Center.X, (int)myPlayer.Center.Y, 1, 1), Color.White, "THIS ATTACK IS ALSO PENDING PSEUDO-REWORK", dramatic: true);
 
                 //FadeFX
                 int FX = Projectile.NewProjectile(null, NPC.Center, Vector2.Zero, ModContent.ProjectileType<TeleportFXCyver>(), 0, 0, Main.myPlayer);
@@ -3795,9 +3804,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Spawn Bots
             if (timer == startTime)
             {
+                bool randomDir = Main.rand.NextBool();
 
-
-                float rotationOffset = numberOfBots > 4 ? Main.rand.NextFloat(6.28f) : 0;
+                float rotationOffset = numberOfBots > 0 ? Main.rand.NextFloat(6.28f) : 0;
                 for (int i = 0; i < numberOfBots; i++)
                 {
                     //Assign where bots will start at
@@ -3807,6 +3816,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     int index = NPC.NewNPC(NPC.GetSource_FromAI(), (int)trueSpawnPos.X, (int)trueSpawnPos.Y, ModContent.NPCType<CyverBot>(), myPlayer.whoAmI);
                     NPC thisBot = Main.npc[index];
+                    thisBot.ai[1] = randomDir ? 1f : -1f;
                     thisBot.damage = 0;
                     if (thisBot.ModNPC is CyverBot bot)
                     {
@@ -3815,7 +3825,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         bot.State = version;
                         bot.rotIntensity = rotationSpeed;
                         bot.setGoalLocation(spawnPos);
-
 
                         if (i == 0 && (newBotsReps == totalReps)) //Makes the ball occur so only do so on the last wave
                             bot.Leader = true;
