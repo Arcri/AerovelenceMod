@@ -48,14 +48,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer < 65)
             {
-                float scalespeed = (Math.Abs(Projectile.Distance(GoalPoint + player.Center)) < 275 ? 0.6f * 10f : 0.25f * 10);
+                float scalespeed = (Math.Abs(Projectile.Distance(GoalPoint + player.Center)) < 275 ? 0.6f * 6f : 0.25f * 6f);
 
                 Vector2 move = player.Center - Projectile.Center;
 
                 Vector2 destination = (GoalPoint + player.Center);
                 //
-                Projectile.velocity.X = (((Projectile.velocity.X + move.X + GoalPoint.X) / 20f)) * scalespeed;
-                Projectile.velocity.Y = (((Projectile.velocity.Y + move.Y + GoalPoint.Y) / 20f)) * scalespeed;
+                Projectile.velocity.X = (Projectile.velocity.X + move.X + GoalPoint.X) / 20f * scalespeed;
+                Projectile.velocity.Y = (Projectile.velocity.Y + move.Y + GoalPoint.Y) / 20f * scalespeed;
 
                 Projectile.rotation = Projectile.AngleTo(player.Center) + MathHelper.Pi;
                 Projectile.spriteDirection = Projectile.direction;
@@ -105,10 +105,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Main.dust[a].noLight = true;
                 }
 
+                if (timer > 85 && timer < 185)
+                    dashSpeed *= 1.01f;
 
             }
 
             glowVal = Math.Clamp(MathHelper.Lerp(glowVal, -0.1f, 0.08f), 0, 1);
+
+            if (Projectile.timeLeft > 30)
+                alpha = MathHelper.Lerp(0f, 1f, Easings.easeInCirc(Math.Clamp(timer, 0, 12f) / 12f));
+            else
+                alpha -= 0.08f;
+
+            //alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.2f, 0.15f), 0, 1);
 
             Projectile.rotation = player.Center.AngleTo(player.Center + GoalPoint);
             Projectile.spriteDirection = Projectile.direction;
@@ -117,6 +126,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         float glowVal = 0f;
+        float alpha = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowClone").Value;
@@ -125,22 +135,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Color drawingCol = Color.SkyBlue;
             Color drawingCol2 = Color.White;
 
+            Vector2 vec2Scale = new Vector2(1f, 1f - (glowVal * 0.5f)) * 0.75f;
+
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition;
                 drawingCol = Color.SkyBlue * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 drawingCol2 = Color.White * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
 
-                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1,1,0,0), drawingCol * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
-                Main.EntitySpriteDraw(Tex2, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol2 * glowVal, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1,1,0,0), drawingCol * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(Tex2, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol2 * glowVal * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0);
 
             }
 
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), lightColor, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * 0.5f, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), lightColor * alpha, Projectile.rotation, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * 0.5f * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * glowVal * 1f, Projectile.rotation, Tex2.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * glowVal * 1f * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
 
             return false;
         }
@@ -161,7 +173,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
     {
         public int timer = 0;
         Vector2 GoalPoint = new Vector2(0, 350);//Vector2.Zero;
-
+        float alpha = 0f;
         public float dashSpeed = 20;
         public override void SetStaticDefaults()
         {
@@ -188,7 +200,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Lighting.AddLight(Projectile.Center, Color.HotPink.ToVector3() * 0.2f);
             Player player = Main.player[(int)Projectile.ai[0]];
 
-            float scalespeed = (Math.Abs(Projectile.Distance(GoalPoint + player.Center)) < 275 ? 0.6f * 10f : 0.25f * 10); //wtf past me
+            float scalespeed = (Math.Abs(Projectile.Distance(GoalPoint + player.Center)) < 275 ? 0.6f * 6f : 0.25f * 6); //wtf past me
 
             Vector2 move = player.Center - Projectile.Center;
 
@@ -214,7 +226,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition;
                 drawingCol = Color.HotPink * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol with { A = 0 } * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
             }
 
 

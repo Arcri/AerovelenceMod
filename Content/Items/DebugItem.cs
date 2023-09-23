@@ -20,6 +20,8 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Projectiles.TempVFX;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using System;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -55,61 +57,56 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            for (int fg = 0; fg < 20; fg++)
-            {
-                Vector2 randomStart = Main.rand.NextVector2Circular(1f,1f) * 3f;
-                Dust gd = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<Dusts.GlowDusts.GlowPixelInnerCore>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.4f) * 0.45f);
-
-            }
+            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<ComboVertexTest>(), 0, 0, Main.myPlayer);
             return false;
-            float rotationSpeed = 0.03f;
 
-            for (int lm = 0; lm < 4; lm++)
+            /*
+            for (double m = 0; m < 6.28; m += 1)
             {
-                //Assign where bots will start at
-                Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 4) * lm);
-
-                Vector2 trueSpawnPos = (spawnPos * 2.5f) + player.Center;
-
-                int index = NPC.NewNPC(null, (int)trueSpawnPos.X, (int)trueSpawnPos.Y, ModContent.NPCType<CyverBot>(), player.whoAmI);
-                NPC thisBot = Main.npc[index];
-                thisBot.damage = 0;
-                if (thisBot.ModNPC is CyverBot bot)
-                {
-                    int version = false ? (int)(CyverBot.Behavior.PrimeLaserLong) : (int)(CyverBot.Behavior.PrimeLaser);
-
-                    bot.State = version;
-                    bot.rotIntensity = rotationSpeed;
-                    bot.setGoalLocation(spawnPos);
+                Dust dust = Dust.NewDustPerfect(player.Center + new Vector2(200f, 0f), ModContent.DustType<GlowPixelCross>(), new Vector2((float)Math.Sin(m) * 1.3f, (float)Math.Cos(m)) * 2.4f);
+                dust.color = Color.DeepSkyBlue;
+                dust.velocity *= Main.rand.NextFloat(0.4f, 1.3f);
+                dust.scale = 0.8f;
 
 
-                    //if (i == 0 && (newBotsReps == totalReps)) //Makes the ball occur so only do so on the last wave
-                        //bot.Leader = true;
-                }
+                dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                    rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 8, postSlowPower: 0.92f, velToBeginShrink: 2f, fadePower: 0.87f, shouldFadeColor: false);
+
+            }
+            */
+            for (int i11 = 0; i11 < 10; i11++) //4 //2,2
+            {
+                Dust p = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowPixelCross>(),
+                    velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.4f, 0.4f)) * Main.rand.Next(2, 10), 
+                    newColor: Color.DeepSkyBlue, Scale: Main.rand.NextFloat(0.3f, 0.5f) * 1.25f);
+                p.velocity += velocity * (0.75f + Main.rand.NextFloat(-0.1f, -0.2f));
+
+                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+    rotPower: 0.13f, timeBeforeSlow: 10, preSlowPower: 0.94f, postSlowPower: 0.91f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
             }
 
+            for (int i22 = 0; i22 < 8; i22++) //4 //2,2
+            {
+                Dust p = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowPixelCross>(), 
+                    velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.Next(2, 10),
+                    newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(0.3f, 0.5f)  * 1.25f);
+                p.velocity += velocity * (0.45f + Main.rand.NextFloat(-0.1f, -0.2f));
+
+                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+    rotPower: 0.3f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+
+            }
+
+            return false;
+            for (int fg = 0; fg < 11; fg++)
+            {
+                Vector2 randomStart = Main.rand.NextVector2Circular(1f,1f) * 6f;
+                Dust gd = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowPixelCross>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.4f) * 0.5f);
+                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.3f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+            }
 
             //int Muraa = Projectile.NewProjectile(null, position + new Vector2(0, 0), velocity * 2.3f, ModContent.ProjectileType<Weapons.BossDrops.Cyvercry.NewDarknessDischargeStar>(), 10, 0, player.whoAmI, 0f, 0f);
             return false;
-            
-            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
-
-            if (Main.projectile[explosion].ModProjectile is FadeExplosionHandler feh)
-            {
-                feh.color = Color.OrangeRed;
-                feh.colorIntensity = 0.75f;
-                feh.fadeSpeed = 0.035f;
-                for (int m = 0; m < 10; m++)
-                {
-                    FadeExplosionClass newSmoke = new FadeExplosionClass(Main.projectile[explosion].Center, new Vector2(3f, 0).RotatedByRandom(1.3f) * Main.rand.NextFloat(0.5f, 2f));
-
-                    newSmoke.size = 0.4f + Main.rand.NextFloat(-0.15f, 0.15f);
-                    feh.Smokes.Add(newSmoke);
-
-                }
-            }
-            return false;
-
 
 
             //Common.Systems.FlashSystem.SetFlashEffect(Main.MouseWorld, 4f, 30);

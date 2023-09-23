@@ -156,41 +156,62 @@ namespace AerovelenceMod.Content.Items.Accessories.Boss
 
 		//Spawn Projectile when player presses dash inputs
 		//Attactch 
-
+		public override void SetDefaults()
+		{
+			Projectile.width = 1;
+			Projectile.height = 1;
+			Projectile.penetrate = -1;
+			Projectile.ignoreWater = true;
+			Projectile.timeLeft = 300;
+			Projectile.friendly = false;
+			Projectile.hostile = false;
+			Projectile.tileCollide = false;
+		}
 		public override string Texture => "Terraria/Images/Projectile_0";
 
 		public float dashDistance = 225f;
-		public float dashDirection = 0f;
+		public float dashDirection = Main.rand.NextBool() ? 3.14f : 0f;
+		public float dashMult;
+
 
 		public Vector2 startingPoint = Vector2.Zero;
 		public Vector2 endPoint = Vector2.Zero;
-
+		public Vector2 startingVel = Vector2.Zero;
+		public Vector2 endVel = Vector2.Zero;
 		int timer = 0;
         public override void AI()
         {
 			if (timer == 0)
             {
 				startingPoint = Projectile.Center;
+				Projectile.velocity.Y = Main.player[Projectile.owner].velocity.Y * 0.25f;
 				endPoint = new Vector2(dashDistance, 0f).RotatedBy(dashDirection);
-            }
 
-			Projectile.Center = startingPoint + endPoint * easingFunction(easingProgress);
-			easingProgress = Math.Clamp(easingProgress + 0.015f, 0f, 1f);
+				startingVel = new Vector2(25, 0f).RotatedBy(dashDirection);
 
-			if (easingFunction(easingProgress) <= 0.9f)
-				Main.player[Projectile.owner].Center = Projectile.Center;
+			}
 
+			Projectile.velocity.X = Vector2.Lerp(startingVel, startingVel.SafeNormalize(Vector2.UnitX), Easings.easeOutQuad(easingProgress)).X;
+			easingProgress = Math.Clamp(easingProgress + 0.04f, 0f, 1f);
+
+			if (Easings.easeOutQuad(easingProgress) <= 0.8f)
+            {
+				Player player = Main.player[Projectile.owner];
+				player.armorEffectDrawShadow = true;
+				player.armorEffectDrawShadowEOCShield = true;
+
+				Main.player[Projectile.owner].velocity.X = Projectile.velocity.X;
+				Projectile.velocity += new Vector2(0, Main.player[Projectile.owner].gravity * 0.25f);
+				//Main.player[Projectile.owner].Center = Projectile.Center;
+			}
 			timer++;
         }
 
 		public float easingProgress = 0f;
         public float easingFunction(float progress)
         {
-			float toReturn = 0;
-
-			toReturn = 1f - (float)Math.Pow(1f - progress, 5f);
-
-			return toReturn;
+			
+			return Easings.easeOutCirc(progress);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -199,6 +220,11 @@ namespace AerovelenceMod.Content.Items.Accessories.Boss
 			Main.spriteBatch.Draw(Blade, Projectile.Center - Main.screenPosition, null, lightColor, 0f, Blade.Size() / 2, 1f, SpriteEffects.None, 0f);
 
 			return false;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return base.OnTileCollide(oldVelocity);
         }
     }
 }

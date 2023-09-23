@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Projectile.rotation.ToRotationVector2() * 0.1f, ModContent.ProjectileType<CyverBeam>(),
                     Projectile.damage, Projectile.knockBack);
 
-                whiteIntensity = 1;
+                //whiteIntensity = 1;
 
                 /*
                 int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
@@ -81,17 +81,31 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 */
             }
 
-            if (timer >= 60)
+            if (timer >= 65)
             {
-                drawAlpha = MathHelper.Clamp(MathHelper.Lerp(drawAlpha, -0.2f, 0.1f), 0f, 1f);
-                overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 5f, 0.2f), 0f, 1f);
+                drawAlpha -= 0.08f;
+                Projectile.ai[0] += 0.03f;
+                ///drawAlpha = MathHelper.Clamp(MathHelper.Lerp(drawAlpha, -0.2f, 0.1f), 0f, 1f);
+                //overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 5f, 0.2f), 0f, 1f);
+
+                if (drawAlpha == 0)
+                    Projectile.active = false;
+            }
+            else if (timer > 50)
+            {
+                drawAlpha -= 0.075f;
+                Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(0f, 1f, Easings.easeOutCirc((timer - 50f) / 20f)), 0f, 1f);
+                overallScale -= 0.02f;
+
 
                 if (drawAlpha == 0)
                     Projectile.active = false;
             }
             else
             {
-                overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 1.5f, 0.2f), 0f, 1f);
+                overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 1.15f, 0.175f), 0f, 1f);
+                Projectile.ai[1] = Math.Clamp(MathHelper.Lerp(Projectile.ai[1], 1.15f, 0.2f), 0f, 1f);
+                drawAlpha = Math.Clamp(MathHelper.Lerp(drawAlpha, 1.15f, 0.175f), 0f, 1f);
             }
 
             whiteIntensity = Math.Clamp(MathHelper.Lerp(whiteIntensity, -0.25f, 0.04f), 0, 1);
@@ -99,7 +113,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         float teleScale = 0f;
-        float drawAlpha = 1f;
+        float drawAlpha = 0f;
         float colorIntensity = 2f;
         public override bool PreDraw(ref Color lightColor)
         {
@@ -107,11 +121,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Texture2D White = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/WhiteL").Value;
             Texture2D RayTex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Medusa_Gray").Value;
 
-            float L1rot = Projectile.rotation - MathHelper.ToRadians(45);
-            float L2rot = Projectile.rotation - MathHelper.ToRadians(225);
+            float extraAngle = MathHelper.Lerp(MathF.PI * 0.25f, 2f * MathF.PI, Projectile.ai[1]);
 
-            Vector2 L1pos = new Vector2(0, 10).RotatedBy(Projectile.rotation) + Projectile.Center;
-            Vector2 L2pos = new Vector2(0, -10).RotatedBy(Projectile.rotation) + Projectile.Center;
+            float L1rot = (Projectile.rotation + extraAngle) - MathHelper.ToRadians(45);
+            float L2rot = (Projectile.rotation + extraAngle) - MathHelper.ToRadians(225);
+
+            Vector2 extraLPos1 = new Vector2((50f * Projectile.ai[0]), 20 * (1 - overallScale) + (1f * Projectile.ai[0]));
+            Vector2 extraLPos2 = new Vector2((-50f * Projectile.ai[0]), -20 * (1 - overallScale) - (1f * Projectile.ai[0]));
+            Vector2 L1pos = new Vector2(extraLPos1.X, 10 + extraLPos1.Y).RotatedBy(Projectile.rotation + extraAngle) + Projectile.Center;
+            Vector2 L2pos = new Vector2(extraLPos2.X, -10 + extraLPos2.Y).RotatedBy(Projectile.rotation + extraAngle) + Projectile.Center;
 
             //Vector2 L1pos = (L1rot.ToRotationVector2() * 30) + Projectile.Center;
             //Vector2 L2pos = (L2rot.ToRotationVector2() * 30) + Projectile.Center;
@@ -165,21 +183,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             }
 
+            //Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L1rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L2rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, overallScale, SpriteEffects.None, 0f);
-
-            Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L1rot, White.Size() / 2, overallScale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L2rot, White.Size() / 2, overallScale, SpriteEffects.None, 0f);
-
-
-
-
-            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
-            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White with { A = 0 } * 0.75f * drawAlpha, L1rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White with { A = 0 } * 0.75f * drawAlpha, L2rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            
+            Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.75f * drawAlpha, L1rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.75f * drawAlpha, L2rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
+
+
+
+
+            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
+            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
+
 
 
             return false;
@@ -232,16 +256,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Color col = timer < 2 ? Color.White * 0.5f : Color.DeepPink;
 
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(col.ToVector3() * 3f);
-            myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(luminos); //0.8
-            myEffect.Parameters["uSaturation"].SetValue(1.2f);
-
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-            myEffect.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             if (timer > 0)
             {
@@ -263,9 +280,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
                 var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
 
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-                Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-
 
                 //for (int i = 0; i < width; i += 6)
                     //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
@@ -274,9 +291,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
                 float progress = additional / (50f * Projectile.scale);
-                Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
-                Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f - progress, SpriteEffects.None, 0);
-                Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, spotTex.Size() / 2, 1f - progress, SpriteEffects.None, 0);
 
 
                 //Main.spriteBatch.End();

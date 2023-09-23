@@ -436,6 +436,119 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         }
     }
 
+    public class FireBlastAlt : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public bool PinkTrueBlueFalse = false;
+        public override void SetDefaults()
+        {
+            Projectile.damage = 0;
+            Projectile.friendly = false;
+            Projectile.width = 10;
+            Projectile.height = 10;
+            Projectile.tileCollide = false;
+
+            Projectile.ignoreWater = true;
+            Projectile.aiStyle = -1;
+            Projectile.penetrate = -1;
+            Projectile.hostile = false;
+            Projectile.timeLeft = 800;
+            Projectile.scale = 1f;
+
+        }
+
+        public override bool? CanDamage()
+        {
+            return false;
+        }
+
+        int timer = 0;
+        public float scale = 0.1f;
+        float alpha = 1;
+
+        public override void AI()
+        {
+            //if (timer < 10)
+            //{
+            //scale = MathHelper.Lerp(scale, 1.25f, 0.3f);
+            //}
+
+            scale = MathHelper.Clamp(MathHelper.Lerp(scale, 1.25f, 0.1f), 0f, 1f);
+
+            if (Projectile.scale >= 0.8f)
+                alpha = MathHelper.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.1f), 0, 2);
+
+            if (alpha <= 0)
+                Projectile.active = false;
+
+            /*
+            if (timer >= 0)
+            {
+                if (timer < 6)
+                    scale = scale + 0.09f;
+                else
+                    scale = scale + 0.055f;
+
+                if (timer >= 6)
+                    alpha -= 0.1f;
+                else
+                    alpha -= 0.015f;
+            }
+            */
+            Projectile.timeLeft = 2;
+
+            if (alpha <= 0)
+                Projectile.active = false;
+
+            timer++;
+        }
+
+        Effect myEffect = null;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/whiteFireEyeArc45").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+            Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+
+            float rot1 = (float)Main.timeForVisualEffects * 0.0f;
+            float rot2 = (float)Main.timeForVisualEffects * 0.0f;
+
+            Vector2 scale2 = new Vector2(scale, scale * 1f) * 1.25f;
+
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
+
+            myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
+            myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/orangeGrad").Value); //also works well with GreenGrad and softer blue grad
+            myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Swirl").Value);
+
+            myEffect.Parameters["flowSpeed"].SetValue(0.3f);
+            myEffect.Parameters["vignetteSize"].SetValue(1f);
+            myEffect.Parameters["vignetteBlend"].SetValue(0.8f);
+            myEffect.Parameters["distortStrength"].SetValue(0.06f);
+            myEffect.Parameters["xOffset"].SetValue(0.0f);
+            myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
+            myEffect.Parameters["colorIntensity"].SetValue(alpha * 3f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.DeepPink, rot1, Flare.Size() / 2, scale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.HotPink, rot2, Flare.Size() / 2, scale2, SpriteEffects.None, 0f);
+
+            //Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Star.Size() / 2, scale * 2f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Star2, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Star2.Size() / 2, scale * 1f, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
+        }
+    }
+
     public class DreadDart : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -535,6 +648,9 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
 
+            if (previousRotations == null)
+                return false;
+            
             //Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/SwordSwipeA").Value;
             Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/TrailImages/BusterGlow").Value;
 
@@ -833,6 +949,8 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             Projectile.tileCollide = false;
             Projectile.timeLeft = 370;
+
+            Projectile.extraUpdates = 2;
         }
 
         BaseTrailInfo trail1 = new BaseTrailInfo();
@@ -871,17 +989,22 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             trail1.gradientTime = (float)Main.timeForVisualEffects * 0.03f;
 
             //Trail2
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value;
             trail2.trailColor = Color.White;
             trail2.trailPointLimit = 300;
-            trail2.trailWidth = 40;
-            trail2.trailMaxLength = 300;
+            trail2.trailWidth = 100;
+            trail2.trailMaxLength = 500;
             trail2.timesToDraw = 2;
             trail2.pinch = true;
             trail2.pinchAmount = 0.4f;
 
-            trail2.trailTime = mainTimer * 0.06f;
+            trail2.trailTime = mainTimer * 0.02f;
             trail2.trailRot = Projectile.velocity.ToRotation();
+
+            trail2.gradient = true;
+            trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
+            trail2.shouldScrollColor = true;
+            trail2.gradientTime = ((float)Main.timeForVisualEffects * 0.02f) + 0.3f;
 
             trail2.trailPos = Projectile.Center + Projectile.velocity;
             trail2.TrailLogic();
@@ -897,10 +1020,10 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
                 Projectile.rotation -= 0.1f;
             }
 
-            if (mainTimer < 35)
-                Projectile.velocity = Projectile.velocity.RotatedBy(0.1f * Projectile.ai[0]);
-            else if (mainTimer < 50)
-                Projectile.velocity = Projectile.velocity.RotatedBy(-0.03f * Projectile.ai[0]);
+            if (mainTimer < 105)
+                Projectile.velocity = Projectile.velocity.RotatedBy(0.03f * Projectile.ai[0]);
+            else if (mainTimer < 125)
+                Projectile.velocity = Projectile.velocity.RotatedBy(-0.01f * Projectile.ai[0]);
 
             if (mainTimer > 25)
             {
@@ -908,7 +1031,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             }
 
-            if (Projectile.timeLeft < 320)
+            if (Projectile.timeLeft < 210)
                 Projectile.active = false;
 
             mainTimer++;
@@ -949,4 +1072,176 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         }
     }
 
+    public class BisexualIceCreamCone : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetStaticDefaults()
+        {
+            // DisplayName.SetDefault("Energy Ball");
+            Main.projFrames[Projectile.type] = 9;
+
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 3;
+        }
+        public float strength = 1f;
+        int fakeTimeLeft = 540;
+        public override void SetDefaults()
+        {
+            Projectile.width = 62;
+            Projectile.height = 48;
+            Projectile.timeLeft = 540;
+            Projectile.penetrate = -1;
+            Projectile.damage = 120;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            //projectile.netImportant = true;
+        }
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return Color.White;
+        }
+
+        BaseTrailInfo relativeTrail = new BaseTrailInfo();
+        public override void AI()
+        {
+            Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0.9f / 255f, (255 - Projectile.alpha) * 0.5f / 255f, (255 - Projectile.alpha) * 0.7f / 255f);
+            Projectile.rotation = MathHelper.ToRadians(180) + Projectile.velocity.ToRotation();
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
+            }
+            float approaching = ((540f - Projectile.timeLeft) / 540f) * strength;
+            Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
+
+            Player player = Main.player[(int)Projectile.ai[0]];
+            int dust = Dust.NewDust(Projectile.Center + new Vector2(0, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 0.5f);
+            Main.dust[dust].noGravity = true;
+            Main.dust[dust].velocity += Projectile.velocity;
+            Main.dust[dust].velocity *= 0.1f;
+            Main.dust[dust].scale *= 0.7f;
+            if (player.active)
+            {
+                float x = Main.rand.Next(-10, 11) * 0.005f * approaching;
+                float y = Main.rand.Next(-10, 11) * 0.005f * approaching;
+                Vector2 toPlayer = Projectile.Center - player.Center;
+                toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
+                Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);
+            }
+
+            if (Projectile.timeLeft == 380)
+                Projectile.Kill();
+
+            //trail
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/gooeyLightningDim").Value;
+            relativeTrail.trailColor = new Color(78, 225, 245) * 0.75f;
+            relativeTrail.trailPointLimit = 800;
+            relativeTrail.trailWidth = 18;
+            relativeTrail.trailMaxLength = 100;
+            relativeTrail.timesToDraw = 1;
+            relativeTrail.trailTime = (float)Main.timeForVisualEffects * 0.05f;
+            relativeTrail.trailRot = Projectile.rotation;
+
+            relativeTrail.trailPos = Projectile.Center + Projectile.velocity;
+            relativeTrail.TrailLogic();
+
+            fakeTimeLeft--;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            relativeTrail.TrailDrawing(Main.spriteBatch);
+            relativeTrail.trailColor = Color.White;
+            relativeTrail.trailWidth = 7;
+
+            relativeTrail.TrailDrawing(Main.spriteBatch);
+            relativeTrail.trailColor = new Color(78, 225, 245);
+            relativeTrail.trailWidth = 21;
+
+            var newTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle128PMA").Value;
+            //var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBall").Value;
+            var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBallWhite").Value;
+
+            int frameHeight = BallTexture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+            Rectangle sourceRectangle = new Rectangle(0, startY, BallTexture.Width, frameHeight);
+            Vector2 origin = sourceRectangle.Size() / 2f;
+
+            Vector2 bonus = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
+            Vector2 vec2Scale = new Vector2(1f, 1f) * Projectile.scale;
+
+            //Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.Black * 1f, Projectile.rotation, origin, 1.3f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, Color.Black * 0.3f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 0.4f, SpriteEffects.None, 0f);
+
+
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                float progress = k / (float)Projectile.oldPos.Length;
+                Vector2 scale = new Vector2(1f, 1f - (progress * 0.5f)) * (Projectile.scale + (progress * 0.25f));
+
+                float alpha = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + origin + new Vector2(0f, Projectile.gfxOffY) - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10;
+                Color color = Color.Lerp(Color.DeepPink, Color.DeepSkyBlue, progress) with { A = 0 } * alpha;
+                Main.spriteBatch.Draw(BallTexture, drawPos, sourceRectangle, color * 0.8f, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
+            }
+
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, Color.HotPink with { A = 0 } * 0.17f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 1.35f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, Color.DeepPink with { A = 0 } * 0.4f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 0.65f, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White with { A = 0 }, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+
+            return false;
+
+            #region OptionA
+            /*
+            Vector2 vec2Scale = new Vector2(1f, 1f) * Projectile.scale;
+
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, Color.HotPink with { A = 0 } * 0.17f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 1.35f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, Color.DeepPink with { A = 0 } * 0.45f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 0.5f, SpriteEffects.None, 0f);
+
+
+
+            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.7f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * 0.2f, Projectile.rotation, Tex.Size() / 2, 0.9f, SpriteEffects.None, 0f);
+
+            var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBall").Value;
+
+            int frameHeight = BallTexture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+
+            // Get this frame on texture
+            Rectangle sourceRectangle = new Rectangle(0, startY, BallTexture.Width, frameHeight);
+
+
+            Vector2 origin = sourceRectangle.Size() / 2f;
+
+            for (int i = 0; i < 0; i++)
+            {
+                Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10 + Main.rand.NextVector2Circular(2f, 2f),
+                    sourceRectangle, Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, origin, 1.15f, SpriteEffects.None, 0f);
+
+            }
+
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                float progress = k / (float)Projectile.oldPos.Length;
+                Vector2 scale = new Vector2(1f, 1f - (progress * 0.5f)) * Projectile.scale;
+
+                float alpha = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + origin + new Vector2(0f, Projectile.gfxOffY) - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10;
+                Color color = Color.HotPink with { A = 0 } * alpha;
+                Main.spriteBatch.Draw(BallTexture, drawPos, sourceRectangle, color * 0.8f, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
+            }
+
+            //Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.HotPink with { A = 0 } * 0.25f, Projectile.rotation, origin, 1.15f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White with { A = 0 }, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+            */
+            #endregion
+        }
+    }
 }

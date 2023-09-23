@@ -39,7 +39,9 @@ namespace AerovelenceMod.Common.Globals.Players
         {
             if (cutscene || lerpBackToPlayer)
             {
-                Vector2 TrueGoalPos = ScreenGoalPos - new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f;
+                float shakeVal = Player.GetModPlayer<AeroPlayer>().ScreenShakePower;
+                Vector2 rand = new Vector2(Main.rand.NextFloat(shakeVal), Main.rand.NextFloat(shakeVal));
+                Vector2 TrueGoalPos = (ScreenGoalPos - new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f) + rand;
                 Main.screenPosition = Vector2.SmoothStep(Main.screenPosition, TrueGoalPos, interpolant);
 
             }

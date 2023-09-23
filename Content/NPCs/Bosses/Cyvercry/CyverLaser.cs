@@ -19,6 +19,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int damageDelay = 0;
         public int tileCollideDelay = 45;
 
+        public bool accelerate = false;
+        public float accelerateAmount = 1.03f;
+        public float accelerateTime = 65f;
+
         public bool teleAhead = false;
         public override void SetStaticDefaults()
         {

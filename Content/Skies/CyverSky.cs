@@ -25,6 +25,7 @@ namespace AerovelenceMod.Content.Skies
         private int CyverAttack = 0;
         private float rotation = 0;
         private float bigShotTimer = 0;
+        private float bgLineBoost = 0;
 
         bool runOnce = true;
 
@@ -84,6 +85,7 @@ namespace AerovelenceMod.Content.Skies
                     {
                         whichAttack(Cyver.getAttack());
                         bigShotTimer = Cyver.bigShotTimer;
+                        bgLineBoost = Cyver.extraBoost;
                     }
                     return true;
                 }
@@ -102,15 +104,16 @@ namespace AerovelenceMod.Content.Skies
                 //Texture2D tex = AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/pisschar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 //spriteBatch.Draw(tex, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), null, Color.White * intensity * 0.10f, MathHelper.ToRadians(timer), tex.Size() / 2 + new Vector2(100,100), SpriteEffects.None, 0);
 
-                //Code stolen from Fargo's Mutant Sky 
+                //Code based off Fargos Mutant Sky 
                 if (CyverAttack == -1)
                 {
                     if (runOnce)
                     {
-                        for (int i = 0; i < 50; i++) //update positions
+                        for (int i = 0; i < 50; i++) 
                         {
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
-                            bgLines[i].Y = Main.rand.Next(Main.screenHeight);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
+
 
                             //xPos[i] = Main.rand.Next(Main.screenWidth);
                             //yPos[i] = Main.rand.Next(Main.screenHeight);
@@ -120,29 +123,34 @@ namespace AerovelenceMod.Content.Skies
 
                     
 
-                    for (int i = 0; i < 50; i++) //static on screen
+                    for (int i = 0; i < 50; i++) 
                     {
+
                         if (i % 2 == 0)
-                            bgLines[i] += new Vector2(2, 0);
+                            bgLines[i] += new Vector2(2.5f + (i / 15), 0);
                         else
-                            bgLines[i] -= new Vector2(2, 0);
-                        //bgLines[i] += new Vector2(-7, 0).RotatedBy(rotation);
+                            bgLines[i] -= new Vector2(2.5f + (i / 15), 0);
 
-                        //xPos[i] += 2;
-
-                        //if (xPos[i] > Main.screenWidth) { }
-                        //xPos[i] = 0;
-
-                        if (bgLines[i].X > Main.screenWidth || bgLines[i].X < 0)
+                        if (bgLines[i].X > (Main.screenWidth + 300))
                         {
-                            bgLines[i].X = Main.rand.Next(Main.screenWidth);
+                            bgLines[i].X = -200 + Main.rand.Next(-1000, 180);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
                         }
+                        else if (bgLines[i].X < -300)
+                        {
+                            bgLines[i].X = Main.screenWidth + 200 + Main.rand.Next(-180, 1000);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
+                        }
+
                         //if (bgLines[i].Y > Main.screenHeight || bgLines[i].Y < 0)
                         //{
-                            //bgLines[i].Y = Main.rand.Next(Main.screenHeight - 500);
+                        //bgLines[i].Y = Main.rand.Next(Main.screenHeight - 500);
                         //}
 
-                        int width = Main.rand.Next(3, 100);
+                        //int width = Main.rand.Next(3, 100);
+                        int width = Main.rand.Next(30, 60);
+                        float width2 = Main.rand.NextFloat(0.25f, 1.75f);
+
 
                         /*
                         Main.spriteBatch.End();
@@ -155,7 +163,18 @@ namespace AerovelenceMod.Content.Skies
                         Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
                         */
                         //0.2f alpha is old
-                        spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * bonusIntensity * intensity);
+                        //~spriteBatch.Draw(Terraria.GameContent.TextureAssets.BlackTile.Value, new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 1), Color.HotPink * bonusIntensity * intensity);
+
+                        //spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/TrailImages/RainbowRod", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                        //new Rectangle((int)bgLines[i].X - width / 2, (int)bgLines[i].Y, width, 10), Color.HotPink with { A = 0 } * bonusIntensity * intensity);
+
+                        Color colToUse = Color.Lerp(Color.DeepSkyBlue, Color.DeepPink, bgLines[i].Y / Main.screenHeight);
+
+                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/TrailImages/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                            new Vector2(bgLines[i].X, bgLines[i].Y), null, colToUse with { A = 0 } * bonusIntensity * intensity * 2f, 0, new Vector2(36,36), new Vector2(width2, 0.10f), SpriteEffects.None, 0f );
+
+                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/TrailImages/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                            new Vector2(bgLines[i].X, bgLines[i].Y), null, Color.White with { A = 0 } * bonusIntensity * intensity, 0, new Vector2(36, 36), new Vector2(width2, 0.10f + (2f * bgLineBoost)) * 0.5f, SpriteEffects.None, 0f);
                     }
                 }
                 

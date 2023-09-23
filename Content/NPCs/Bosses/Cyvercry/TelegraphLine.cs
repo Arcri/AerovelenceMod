@@ -45,7 +45,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.scale = 1f;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 110;
+            Projectile.timeLeft = 110 + 5;
             Projectile.hide = true;
         }
         public override bool? CanDamage()
@@ -87,6 +87,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             endPoint = Projectile.Center + Rotation.ToRotationVector2() * 2500f;
             Projectile.velocity = Vector2.Zero;
 
+            Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(0f, 1f, Easings.easeInQuad(timer / 15f)), 0f, 1f);
             timer++;
         }
 
@@ -94,14 +95,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor)
         {
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 1.2f);
+            myEffect.Parameters["uColor"].SetValue(new Color(255, 25, 155).ToVector3() * 1.5f);
             myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.8f); //0.8
+            myEffect.Parameters["uOpacity"].SetValue(0.3f); //0.8
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             //myEffect.CurrentTechnique.Passes[0].Apply();
 
             if (timer > 0)
@@ -110,9 +111,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
 
-                float height = 50f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
-                float height2 = 25f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
-
+                float height = 30f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
+                float height2 = 15f * Projectile.scale * (sweepTell ? 0.5f : 1); //15
 
                 if (height == 0)
                     Projectile.active = false;
@@ -123,10 +123,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1f));
                 var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height2 * 1f));
 
-                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, Rotation, origin2, 0, 0);
+
+
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink * Projectile.ai[0], Rotation, origin2, 0, 0);
 
                 if (!sweepTell)
-                    Main.spriteBatch.Draw(texBeam, target2, null, Color.HotPink, Rotation, origin2, 0, 0);
+                {
+                    Main.spriteBatch.Draw(texBeam, target2, null, Color.HotPink * Projectile.ai[0], Rotation, origin2, 0, 0);
+
+                }
             }
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -160,7 +165,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.scale = 1f;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 50;
+            Projectile.timeLeft = 40;
             Projectile.hide = true;
         }
         public override bool? CanDamage()
@@ -181,14 +186,37 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (NPCTetheredTo.active == false)
                     Projectile.active = false;
 
-                Projectile.Center = NPCTetheredTo.Center;
-                Projectile.rotation += 0.13f * (sweepDir ? 1 : -1);
 
+                float progress = 1f - (Projectile.timeLeft / 40f);
+                Projectile.rotation += (0.1f + (progress * 0.15f)) * (sweepDir ? 1 : -1);
+
+
+
+                float progressA = 1f - (Projectile.timeLeft / 25f);
+                float progressB = 1f - ((Projectile.timeLeft - 25f) / 25f);
+
+                Projectile.Center = NPCTetheredTo.Center;
+
+                //scale = 1.5f * MathF.Sin((MathF.PI * Projectile.timeLeft) / 50f);
 
                 if (Projectile.timeLeft > 10)
-                    scale = Math.Clamp(MathHelper.Lerp(scale, 1.25f, 0.1f), 0, 1);
+                {
+                    scale = Math.Clamp(MathHelper.Lerp(scale, 1.2f, 0.1f), 0, 1.2f);
+                    Projectile.ai[0] = 2f;
+                }
                 else
-                    scale = Math.Clamp(MathHelper.Lerp(scale, -0.1f, 0.08f), 0, 1);
+                {
+                    //Projectile.rotation += (0.02f) * (sweepDir ? 1 : -1);
+
+                    scale = scale + 0.02f;
+                    Projectile.ai[0] = Math.Clamp(Projectile.ai[0] * 0.92f, 0, 5);
+                }
+
+
+                //if (Projectile.timeLeft > 10)
+                //scale = Math.Clamp(MathHelper.Lerp(scale, 1.1f, 0.1f), 0, 1);
+                //else
+                //scale = Math.Clamp(MathHelper.Lerp(scale, -0.1f, 0.1f), 0, 1);
 
 
             }
@@ -200,19 +228,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor)
         {
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2f);
+            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * Projectile.ai[0]);
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(0.4f); //0.8
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
-            Texture2D twirl = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/twirl_01");
+            Texture2D twirl = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/twirl_01pixel");
 
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
             myEffect.CurrentTechnique.Passes[0].Apply();
 
-            Main.spriteBatch.Draw(twirl, Projectile.Center - Main.screenPosition, null, Color.HotPink, Projectile.rotation, twirl.Size() / 2, 0.5f * scale, !sweepDir ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(twirl, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Projectile.rotation, twirl.Size() / 2, 1.6f * scale, !sweepDir ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(twirl, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2,2), null, Color.DeepPink, Projectile.rotation, twirl.Size() / 2, 1.5f * scale, !sweepDir ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+
+            //Main.spriteBatch.Draw(twirl, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Projectile.rotation + MathF.PI, twirl.Size() / 2, 1.5f * scale, !sweepDir ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            //Main.spriteBatch.Draw(twirl, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2, 2), null, Color.DeepPink, Projectile.rotation + MathF.PI, twirl.Size() / 2, 1.4f * scale, !sweepDir ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);

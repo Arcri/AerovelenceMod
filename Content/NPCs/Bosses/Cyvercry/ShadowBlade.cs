@@ -97,11 +97,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 				Projectile.alpha += 10;
 
 			whiteIntensity = Math.Clamp(MathHelper.Lerp(whiteIntensity, -0.01f, 0.04f), 0f, 1f);
+			startBonus = Math.Clamp(MathHelper.Lerp(startBonus, -0.25f, 0.07f), 0, 1);
+
 
 			timer++;
 		}
 
 		float whiteIntensity = 0f;
+		float startBonus = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
 			Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBladeOuter").Value;
@@ -110,14 +113,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Rectangle rectangle = new Rectangle(0, y3, texture.Width, num156);
 			Vector2 origin2 = rectangle.Size() / 2f;
 
-			Vector2 scaleV2 = new Vector2(1f - (whiteIntensity * 0.5f), 1f);
+			Vector2 scaleV2 = new Vector2(1f - (whiteIntensity * 0.75f), 1f);
 			Color col1 = Color.Lerp(Color.DeepPink, Color.White, whiteIntensity);
-			Color col2 = Color.Lerp(Color.HotPink, Color.White, whiteIntensity);
+			Color col2 = Color.Lerp(Color.DeepPink * 1.5f, Color.White, whiteIntensity);
 
 
 			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/CyverAura", AssetRequestMode.ImmediateLoad).Value;
 
-			myEffect.Parameters["uColor"].SetValue(col1.ToVector3() * 0.5f);
+			myEffect.Parameters["uColor"].SetValue(col1.ToVector3() * 0.5f * (1f + (0.5f * startBonus)));
 			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/CoolNoise").Value);
 			myEffect.Parameters["uTime"].SetValue(timer);
 
@@ -125,14 +128,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 			myEffect.CurrentTechnique.Passes[0].Apply();
 
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + new Vector2(0f, 0f), new Microsoft.Xna.Framework.Rectangle?(rectangle), Projectile.GetAlpha(lightColor), Projectile.rotation, origin2, scaleV2 * 1.2f, SpriteEffects.None, 0f);
-			
-			
+			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + new Vector2(0f, 0f), new Microsoft.Xna.Framework.Rectangle?(rectangle), Projectile.GetAlpha(lightColor), Projectile.rotation, origin2, scaleV2 * 1.2f * (1f + (0.5f * startBonus)), SpriteEffects.None, 0f);
+
+
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 			var TexOut = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBladeOuter").Value;
-			Main.spriteBatch.Draw(TexOut, Projectile.Center - Main.screenPosition, TexOut.Frame(1, 1, 0, 0), col2, Projectile.rotation, TexOut.Size() / 2, scaleV2, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(TexOut, Projectile.Center - Main.screenPosition, TexOut.Frame(1, 1, 0, 0), col2, Projectile.rotation, TexOut.Size() / 2, scaleV2 * (1f + (0.25f * startBonus)), SpriteEffects.None, 0f);
 
 
 			var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowBlade").Value;

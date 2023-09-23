@@ -233,9 +233,15 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
         public override bool Update(Dust dust)
         {
 			dust.velocity *= 0.99f;
-			if (Math.Abs(dust.velocity.Length()) < 0.5f)
+			if (dust.fadeIn > 55)
+				dust.scale *= 0.85f;
+
+			if (dust.scale < 0.03f)
+			{
 				dust.active = false;
-            return base.Update(dust);
+			}
+
+			return base.Update(dust);
         }
     }
 }

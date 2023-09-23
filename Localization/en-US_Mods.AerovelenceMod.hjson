@@ -670,6 +670,12 @@ Projectiles: {
 	ArcriTrail.DisplayName: Arcri Trail
 	FireDart.DisplayName: Fire Dart
 	GreenStarThing.DisplayName: Green Star Thing
+	BisexualIceCreamCone.DisplayName: Bisexual Ice Cream Cone
+	FireBlastAlt.DisplayName: Fire Blast Alt
+	CyverDeathExplosion.DisplayName: Cyver Death Explosion
+	CyverRoarPulse.DisplayName: Cyver Roar Pulse
+	ComboLaserTest.DisplayName: Combo Laser Test
+	ComboVertexTest.DisplayName: Combo Vertex Test
 }
 
 Configs: {

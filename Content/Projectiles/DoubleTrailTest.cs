@@ -31,6 +31,8 @@ namespace AerovelenceMod.Content.Projectiles
 
             Projectile.timeLeft = 600;
             Projectile.penetrate = -1;
+
+            Projectile.extraUpdates = 2;
         }
 
         TrailInfo trail1 = new TrailInfo();
@@ -45,13 +47,13 @@ namespace AerovelenceMod.Content.Projectiles
             trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value;
             trail1.trailColor = Color.White * 1f;
             trail1.trailPointLimit = 800;
-            trail1.trailWidth = 20;
-            trail1.trailMaxLength = 300;
+            trail1.trailWidth = 30;
+            trail1.trailMaxLength = 1200;
             trail1.timesToDraw = 1;
             trail1.usePinchedWidth = true;
 
 
-            trail1.trailTime = timer * 0.02f;
+            trail1.trailTime = timer * 0.007f;
             trail1.trailRot = Projectile.velocity.ToRotation();
             trail1.trailPos = Projectile.Center;
             trail1.TrailLogic();
@@ -60,17 +62,17 @@ namespace AerovelenceMod.Content.Projectiles
             trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
             trail2.trailColor = Color.Wheat;
             trail2.trailPointLimit = 800;
-            trail2.trailWidth = 60;
-            trail2.trailMaxLength = 300;
+            trail2.trailWidth = 90;
+            trail2.trailMaxLength = 1200;
             trail2.timesToDraw = 2;
             trail2.usePinchedWidth = true;
 
             trail2.gradient = true;
             trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
             trail2.shouldScrollColor = true;
-            trail2.gradientTime = timer * 0.03f;
+            trail2.gradientTime = timer * 0.01f;
 
-            trail2.trailTime = timer * 0.04f;
+            trail2.trailTime = timer * 0.013f;
             trail2.trailRot = Projectile.velocity.ToRotation();
             trail2.trailPos = Projectile.Center;
             trail2.TrailLogic();
@@ -81,7 +83,7 @@ namespace AerovelenceMod.Content.Projectiles
             //if (timer < 60)
                 //Projectile.velocity *= 1.05f;
 
-            Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 10;
+            Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 8;
 
             timer++;
         }

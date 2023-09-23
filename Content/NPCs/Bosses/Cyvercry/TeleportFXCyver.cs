@@ -227,30 +227,25 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
     }
 
-	public class BigExplosionCyver : ModProjectile
-    {
-		private int timer;
+	public class CyverDeathExplosion : ModProjectile
+	{
 		public override string Texture => "Terraria/Images/Projectile_0";
 
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("ShadowBlade");
-		}
-
+		public bool PinkTrueBlueFalse = false;
 		public override void SetDefaults()
 		{
+			Projectile.damage = 0;
 			Projectile.friendly = false;
-			Projectile.hostile = false;
-			Projectile.penetrate = -1;
-
-			Projectile.scale = 1f;
-			Projectile.timeLeft = 700;
-
-			Projectile.ignoreWater = true;
+			Projectile.width = 10;
+			Projectile.height = 10;
 			Projectile.tileCollide = false;
 
-			Projectile.width = 1;
-			Projectile.height = 1;
+			Projectile.ignoreWater = true;
+			Projectile.aiStyle = -1;
+			Projectile.penetrate = -1;
+			Projectile.hostile = false;
+			Projectile.timeLeft = 800;
+			Projectile.scale = 1f;
 
 		}
 
@@ -259,90 +254,184 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			return false;
 		}
 
-        bool firstFrame = true;
-        float colorIntensity = 1f;
-        float scale2 = 0;
-        float scale3 = 0;
+		int timer = 0;
+		public float scale = 0.25f;
+		float alpha = 1;
 
-        float randomRot = 0;
-        public override void AI()
-        {
-            if (firstFrame)
-            {
-                firstFrame = false;
+		public override void AI()
+		{
+			if (timer >= 0)
+			{
+				scale = scale + 0.09f;
 
-                Projectile.rotation = Main.rand.NextFloat(6.28f);
+				if (timer >= 6)
+					alpha -= 0.065f;
+			}
 
-                //Spawn Dust
-                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+			Projectile.timeLeft = 2;
 
-                for (int i = 0; i < 30; i++)
-                {
-                    if (true)
-                    {
-                        Vector2 randomStart = Main.rand.NextVector2CircularEdge(5, 5);
-                        Dust gd = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<LineGlow>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f) * 3f, Color.HotPink, 0.15f, 0.2f, 0f, dustShader2);
-                        gd.fadeIn = 45 + Main.rand.NextFloat(-3f, 14f);
-                        gd.scale *= Main.rand.NextFloat(0.9f, 2.1f);
-                    }
-                    else if (i % 2 == 0)
-                    {
-                        Vector2 randomStart = Main.rand.NextVector2CircularEdge(6, 6);
-                        Dust gd = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleFlare>(), randomStart * Main.rand.NextFloat(0.65f, 1.35f), Color.HotPink, 0.7f, 0.4f, 0f, dustShader2);
-                        gd.fadeIn = 1;
-                    }
-                }
+			if (alpha <= 0)
+				Projectile.active = false;
 
-            }
+			timer++;
+		}
 
-            Projectile.scale = Math.Clamp(MathHelper.Lerp(Projectile.scale, 2.6f, 0.15f), 0f, 2.5f);
-            scale2 = Math.Clamp(MathHelper.Lerp(scale2, 2.6f, 0.05f), 0f, 2.5f);
-            scale3 = Math.Clamp(MathHelper.Lerp(scale3, 2.6f, 0.10f), 0f, 2.5f);
-
-            //Projectile.Center = Main.player[Projectile.owner].Center;
-            Projectile.velocity = Vector2.Zero;
-
-            if (timer > 10)
-            {
-                //Projectile.scale *= 0.9f;
-                colorIntensity -= 0.12f;
-                if (colorIntensity <= 0)
-                    Projectile.active = false;
-            }
-            Projectile.rotation += 0.06f;
-
-            timer++;
-        }
-
-        //OrangeRed, Orange, Gold, Gold, Wheat, White
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Texture2D sixStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
-            Texture2D circle = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/MagmaBall");
-            Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
-            Texture2D color = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/color_burst_cyver");
-            Texture2D fourStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_06");
+		Effect myEffect = null;
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/spotlight_8").Value;
+			Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
 
 
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.Black * 0.85f * colorIntensity, Projectile.rotation * 1.5f, circle2.Size() / 2, Projectile.scale * 0.75f, 0, 0f);
+			if (myEffect == null)
+				myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.7f * colorIntensity, Projectile.rotation * 2f, sixStar.Size() / 2, Projectile.scale * 0.5f, 0, 0f);
+			myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
+			myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/PinkGrad").Value); //also works well with GreenGrad and softer blue grad
+			myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Swirl").Value);
 
-            Main.spriteBatch.Draw(sixStar, Projectile.Center - Main.screenPosition, null, Color.DeepPink * colorIntensity, Projectile.rotation, sixStar.Size() / 2, Projectile.scale * 0.75f, 0, 0f);
-            Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, null, Color.HotPink * colorIntensity, Projectile.rotation, circle.Size() / 2, scale3 * 0.17f, 0, 0f);
-            Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, null, Color.HotPink * colorIntensity, Projectile.rotation, circle.Size() / 2, scale3 * 0.17f, 0, 0f);
+			myEffect.Parameters["flowSpeed"].SetValue(0.3f);
+			myEffect.Parameters["vignetteSize"].SetValue(1f);
+			myEffect.Parameters["vignetteBlend"].SetValue(0.8f);
+			myEffect.Parameters["distortStrength"].SetValue(0.06f);
+			myEffect.Parameters["xOffset"].SetValue(0.0f);
+			myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
+			myEffect.Parameters["colorIntensity"].SetValue(alpha * 3f);
 
-            Main.spriteBatch.Draw(color, Projectile.Center - Main.screenPosition, null, Color.White * colorIntensity, randomRot, color.Size() / 2, Projectile.scale * 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.HotPink * 1f * colorIntensity, Projectile.rotation * 1.5f, circle2.Size() / 2, Projectile.scale * 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.White * 1f * colorIntensity, Projectile.rotation * 1.5f, circle2.Size() / 2, Projectile.scale * 0.25f, 0, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            return false;
-        }
-    }
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+			myEffect.CurrentTechnique.Passes[0].Apply();
+
+			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Flare.Size() / 2, scale, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Flare.Size() / 2, scale, SpriteEffects.None, 0f);
+
+			Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Star.Size() / 2, scale * 2f, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Star2, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Star2.Size() / 2, scale * 1f, SpriteEffects.None, 0f);
+
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+			return false;
+		}
+	}
+
+	public class CyverRoarPulse : ModProjectile
+	{
+		public override string Texture => "Terraria/Images/Projectile_0";
+
+		public bool forRoar = true;
+		public bool pixel = false;
+		public override void SetDefaults()
+		{
+			Projectile.damage = 0;
+			Projectile.friendly = false;
+			Projectile.width = 10;
+			Projectile.height = 10;
+			Projectile.tileCollide = false;
+
+			Projectile.ignoreWater = true;
+			Projectile.aiStyle = -1;
+			Projectile.penetrate = -1;
+			Projectile.hostile = false;
+			Projectile.timeLeft = 800;
+			Projectile.scale = 0.28f;
+
+		}
+
+		public override bool? CanDamage()
+		{
+			return false;
+		}
+
+		int timer = 0;
+		public float scale = 0.25f;
+		float alpha = 1;
+
+		public override void AI()
+		{
+
+			if (timer == 0)
+				Projectile.rotation = Main.rand.NextFloat(6.28f);
+
+			if (timer <= 40)
+			{
+				scale = MathHelper.Lerp(0f, 1f, Easings.easeOutQuint(timer / 40f));
+			}
+
+			if (timer >= 0)
+			{
+				//if (timer < 12)
+					//scale = scale + 0.11f;
+				//else
+					//scale = scale + 0.07f; 
+
+				if (timer >= 6)
+					alpha -= 0.065f;
+			}
+
+			Projectile.timeLeft = 2;
+
+			if (alpha <= 0)
+				Projectile.active = false;
+
+			timer++;
+		}
+
+		Effect myEffect = null;
+		public override bool PreDraw(ref Color lightColor)
+		{
+			String toAsset = (pixel ? "Assets/ImpactTextures/Royal_Resonance" : "Content/NPCs/Bosses/Cyvercry/Textures/circle_02");
+			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
+			Texture2D Flare = Mod.Assets.Request<Texture2D>(toAsset).Value;
+			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopDA").Value;
+
+			//Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_21").Value;
+
+			//Vector2 scale2 = new Vector2(scale * 0.5f, scale);
+			float rot = ((float)Main.timeForVisualEffects * 0.05f * Projectile.ai[0]) + Projectile.rotation;
+			float scale2 = scale * (pixel ? 3f : 1f) * 1f;
+
+			if (myEffect == null)
+				myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
+
+			myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
+			myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/PinkGrad").Value); 
+			myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Swirl").Value);
+
+			myEffect.Parameters["flowSpeed"].SetValue(0.3f);
+			myEffect.Parameters["vignetteSize"].SetValue(1f);
+			myEffect.Parameters["vignetteBlend"].SetValue(0.8f);
+			myEffect.Parameters["distortStrength"].SetValue(0.06f);
+			myEffect.Parameters["xOffset"].SetValue(0.0f);
+			myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
+			myEffect.Parameters["colorIntensity"].SetValue(alpha * (!forRoar ? 1f : 3f));
+
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+			myEffect.CurrentTechnique.Passes[0].Apply();
+
+			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+			
+			//if (!forRoar)
+				//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+			
+			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot + MathHelper.ToRadians(120), Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);
+			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot - MathHelper.ToRadians(120), Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);
+			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);
+
+
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+			return false;
+		}
+	}
+
 }
 
 

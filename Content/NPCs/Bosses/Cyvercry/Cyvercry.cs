@@ -12,6 +12,8 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
+using AerovelenceMod.Content.Projectiles;
+using System;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -759,12 +761,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         {
             // DisplayName.SetDefault("Energy Ball");
             Main.projFrames[Projectile.type] = 9;
+
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 3;
         }
         public float strength = 1f;
         int fakeTimeLeft = 540;
         public override void SetDefaults()
         {
-            Projectile.width = 62;
+            Projectile.width = 48;
             Projectile.height = 48;
             Projectile.timeLeft = 540;
             Projectile.penetrate = -1;
@@ -779,6 +784,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         {
             return Color.White;
         }
+
+        TrailInfo trail1 = new TrailInfo();
+        TrailInfo trail2 = new TrailInfo();
         public override void AI()
         {
             Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0.9f / 255f, (255 - Projectile.alpha) * 0.5f / 255f, (255 - Projectile.alpha) * 0.7f / 255f);
@@ -810,12 +818,69 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             if (Projectile.timeLeft == 380)
                 Projectile.Kill();
 
+
+            int trailVersion = 1;
+            if (trailVersion == 1)
+            {
+                trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value;
+                trail1.trailColor = new Color(78, 225, 245) * 0.75f;
+                trail1.trailPointLimit = 800;
+                trail1.trailWidth = 36;
+                trail1.trailMaxLength = 100;
+                trail1.timesToDraw = 2;
+                trail1.trailTime = (float)Main.timeForVisualEffects * 0.05f;
+                trail1.trailRot = Projectile.rotation;
+
+                trail1.trailPos = Projectile.Center + Projectile.velocity;
+                trail1.TrailLogic();
+            }
+            else if (trailVersion == 2)
+            {
+                trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value;
+                trail1.trailColor = Color.White * 1f;
+                trail1.trailPointLimit = 800;
+                trail1.trailWidth = 15;
+                trail1.trailMaxLength = 600;
+                trail1.timesToDraw = 1;
+                trail1.usePinchedWidth = true;
+                trail1.trailTime = Projectile.ai[2] * 0.021f;
+                trail1.trailRot = Projectile.velocity.ToRotation();
+                trail1.trailPos = Projectile.Center;
+                trail1.TrailLogic();
+
+                //Trail2 Info Dump
+                trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
+                trail2.trailColor = Color.Wheat;
+                trail2.trailPointLimit = 800;
+                trail2.trailWidth = 45;
+                trail2.trailMaxLength = 600;
+                trail2.timesToDraw = 2;
+                trail2.usePinchedWidth = true;
+
+                trail2.gradient = true;
+                trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
+                trail2.shouldScrollColor = true;
+                trail2.gradientTime = Projectile.ai[2] * 0.03f;
+
+                trail2.trailTime = Projectile.ai[2] * 0.04f;
+                trail2.trailRot = Projectile.velocity.ToRotation();
+                trail2.trailPos = Projectile.Center;
+                trail2.TrailLogic();
+            }
+
+            Projectile.ai[2]++;
             fakeTimeLeft--;
         }
         public override void Kill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Main.myPlayer);
+            int explo = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
+
+            if (Main.projectile[explo].ModProjectile is CyverRoarPulse crp)
+            {
+                crp.pixel = true;
+                crp.forRoar = false;
+            }
             /*
             for (int i = 0; i < 360; i += 5)
             {
@@ -833,26 +898,59 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 bonus = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
-            //Draw the Circlular Glow
-            var Tex = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.7f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + bonus, Tex.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * 0.2f, Projectile.rotation, Tex.Size() / 2, 0.9f, SpriteEffects.None, 0f);
+            //trail1.TrailDrawing(Main.spriteBatch);
+            //trail2.TrailDrawing(Main.spriteBatch);
+            //return false;
 
+            trail1.TrailDrawing(Main.spriteBatch);
+            trail1.trailColor = Color.White;
+            trail1.trailWidth = 8;
 
+            trail1.TrailDrawing(Main.spriteBatch);
+            trail1.trailColor = new Color(78, 225, 245) * 0.75f;
+            trail1.trailWidth = 36;
+
+            Color pinkToUse = new Color(255, 25, 155);
+
+            var newTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle128PMA").Value;
             var BallTexture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBall").Value;
+            var BallTextureWhite = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBallWhite").Value;
+            var BallTextureBlack = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/EnergyBallBlack").Value;
 
             int frameHeight = BallTexture.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
-
-            // Get this frame on texture
             Rectangle sourceRectangle = new Rectangle(0, startY, BallTexture.Width, frameHeight);
-
-
             Vector2 origin = sourceRectangle.Size() / 2f;
 
-            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.HotPink with { A = 0 } * 0.25f, Projectile.rotation, origin, 1.15f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+            Vector2 bonus = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 0f;
+            Vector2 vec2Scale = new Vector2(1f, 0.75f) * Projectile.scale;
+
+            //Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, pinkToUse with { A = 0 } * 0.8f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 0.35f, SpriteEffects.None, 0f);
+
+
+            for (int k = 0; k < 0; k++)
+            {
+                float progress = k / (float)Projectile.oldPos.Length;
+                Vector2 scale = new Vector2(1f, 0.85f - (progress * 0.85f));// * (Projectile.scale + (progress * 0.25f));
+
+                float alpha = ((float)(Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + origin + new Vector2(0f, Projectile.gfxOffY) - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10;
+                Color color = Color.Lerp(pinkToUse, Color.SkyBlue, Easings.easeInQuint(progress)) with { A = 0 } * alpha;
+                Main.spriteBatch.Draw(BallTexture, drawPos, sourceRectangle, color * 0.4f, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
+            }
+                        
+            for (int am = 0; am < 8; am++)
+            {
+                Main.spriteBatch.Draw(BallTexture, Main.rand.NextVector2Circular(2.5f, 2.5f) + Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.DeepPink with { A = 0 }, Projectile.rotation, origin, new Vector2(1f, 0.85f), SpriteEffects.None, 0f);
+            }
+
+            Main.spriteBatch.Draw(BallTextureBlack, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White * 0.3f, Projectile.rotation, origin, new Vector2(1f, 0.85f) * 1.1f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White * 1f, Projectile.rotation, origin, new Vector2(1f, 0.85f), SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.White with { A = 0 } * 0.7f, Projectile.rotation, origin, new Vector2(1f, 0.85f) * 0.98f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, pinkToUse with { A = 0 } * 0.17f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(newTex, Projectile.Center - Main.screenPosition + bonus, null, pinkToUse with { A = 0 } * 0.4f, Projectile.rotation, newTex.Size() / 2, vec2Scale * 0.5f, SpriteEffects.None, 0f);
 
             return false;
 
@@ -911,6 +1009,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public int numberOfLasers = 12;
         public int projType = ModContent.ProjectileType<CyverLaser>();
         public float vel = 5;
+        public bool burstFX = true;
 
         public int projTimeLeft = -1;
         public override void SetStaticDefaults()
@@ -919,7 +1018,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Main.projFrames[Projectile.type] = 7;
         }
         public override void SetDefaults()
-          {
+        {
             Projectile.width = 48;
             Projectile.height = 42;
             Projectile.timeLeft = 1;
@@ -946,13 +1045,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
             Projectile.velocity *= 0.9f;
+
+            if (burstFX && Projectile.timeLeft <= 10)
+            {
+                scale -= 0.08f; //MathHelper.Lerp(0f, 1f, Easings.easeInQuint(Projectile.timeLeft / 10f));
+                Projectile.scale = scale;
+            }
         }
         public override void Kill(int timeLeft)
         {
             var entitySource = Projectile.GetSource_FromAI();
 
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
-            SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item91 with { Pitch = 0.4f, PitchVariance = 0.2f }, Projectile.Center);
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = .16f, Volume = 0.8f, Pitch = 0.7f };
             SoundEngine.PlaySound(style, Projectile.Center);
 
@@ -972,19 +1077,40 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
                     if (projTimeLeft > 0)
                         Main.projectile[proj].timeLeft = projTimeLeft;
+
                 }
             }
+
             base.Kill(timeLeft);
         }
 
+        float scale = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
+            Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/feather_circle128PMA");
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.DeepPink with { A = 0 } * 0.7f, Projectile.rotation, glow.Size() / 2, Projectile.scale * 0.6f * scale, 0, 0f);
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.HotPink with { A = 0 } * 0.7f, Projectile.rotation, glow.Size() / 2, Projectile.scale * 0.45f * scale, 0, 0f);
+
+            Texture2D BallTexture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/LaserExplosionBall").Value;
+
+            int frameHeight = BallTexture.Height / Main.projFrames[Projectile.type];
+            int startY = frameHeight * Projectile.frame;
+            Rectangle sourceRectangle = new Rectangle(0, startY, BallTexture.Width, frameHeight);
+            Vector2 origin = sourceRectangle.Size() / 2f;
+
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * 0.7f, Projectile.rotation, origin, Projectile.scale * scale, 0, 0f);
+            Main.spriteBatch.Draw(BallTexture, Projectile.Center - Main.screenPosition, sourceRectangle, Color.HotPink with { A = 0 } * 0.8f, Projectile.rotation, origin, Projectile.scale * scale, 0, 0f);
+
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.35f, Projectile.rotation, glow.Size() / 2, Projectile.scale * 0.35f * scale, 0, 0f);
+
+
+            return false;
             Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.7f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.7f, Projectile.rotation, circle2.Size() / 2, Projectile.scale * 0.3f * scale, 0, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
