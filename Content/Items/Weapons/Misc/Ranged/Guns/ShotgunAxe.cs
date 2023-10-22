@@ -790,7 +790,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             // Description.SetDefault("Losing this much blood can't be good, right?");
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
-            BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
+            BuffID.Sets.IsATagBuff[Type] = true;
 
         }
 

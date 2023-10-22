@@ -26,6 +26,7 @@ namespace AerovelenceMod.Content.Skies
         private float rotation = 0;
         private float bigShotTimer = 0;
         private float bgLineBoost = 0;
+        private float whiteStrength = 0f;
 
         bool runOnce = true;
 
@@ -86,6 +87,7 @@ namespace AerovelenceMod.Content.Skies
                         whichAttack(Cyver.getAttack());
                         bigShotTimer = Cyver.bigShotTimer;
                         bgLineBoost = Cyver.extraBoost;
+                        whiteStrength = Cyver.whiteBackgroundPower;
                     }
                     return true;
                 }
@@ -101,10 +103,13 @@ namespace AerovelenceMod.Content.Skies
 
                 spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/Cyversky1080", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                     new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * (intensity) * (bonusIntensity));
+
+                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/WhiteSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                    new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White with { A = 0 } * whiteStrength);
+
                 //Texture2D tex = AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/pisschar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 //spriteBatch.Draw(tex, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), null, Color.White * intensity * 0.10f, MathHelper.ToRadians(timer), tex.Size() / 2 + new Vector2(100,100), SpriteEffects.None, 0);
 
-                //Code based off Fargos Mutant Sky 
                 if (CyverAttack == -1)
                 {
                     if (runOnce)
@@ -114,14 +119,11 @@ namespace AerovelenceMod.Content.Skies
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
                             bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
 
-
                             //xPos[i] = Main.rand.Next(Main.screenWidth);
                             //yPos[i] = Main.rand.Next(Main.screenHeight);
                         }
                         runOnce = false;
                     }
-
-                    
 
                     for (int i = 0; i < 50; i++) 
                     {

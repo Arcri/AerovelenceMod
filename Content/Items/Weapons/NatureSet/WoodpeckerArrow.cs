@@ -59,7 +59,7 @@ namespace AerovelenceMod.Content.Items.Weapons.NatureSet
 			//Projectile.spriteDirection = Projectile.direction;
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			float storedRandomRot = Main.rand.NextFloat(-0.25f, 0.25f);
 
@@ -77,7 +77,7 @@ namespace AerovelenceMod.Content.Items.Weapons.NatureSet
 
 			SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollideBetter") with { PitchVariance = 0.3f, Volume = 0.1f, Pitch = -0.2f }, Projectile.Center);
 
-			base.Kill(timeLeft);
+			base.OnKill(timeLeft);
         }
 
         public override bool PreDraw(ref Color lightColor)

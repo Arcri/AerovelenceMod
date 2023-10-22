@@ -40,6 +40,8 @@ namespace AerovelenceMod.Content.Projectiles
         //Adds a delay to the projectile dying after the swing is done
         public float timeAfterEnd = 4;
 
+        public float progressToKill = 0.99f;
+
         // ------ Things used locally ------
         public int timer = 0;
 
@@ -174,7 +176,7 @@ namespace AerovelenceMod.Content.Projectiles
 
 
             
-            if (getProgress(easingProgress) >= .99f)
+            if (getProgress(easingProgress) >= progressToKill)
             {
                 if (storedTimeAfterEnd <= 0)
                 {

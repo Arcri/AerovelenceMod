@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
             // Description.SetDefault("So cold it burns!"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
-            BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
+            BuffID.Sets.IsATagBuff[Type] = true;
         }
 
         public override void Update(NPC npc, ref int buffIndex)

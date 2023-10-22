@@ -321,6 +321,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 	{
 		public override string Texture => "Terraria/Images/Projectile_0";
 
+		public float intensity = 1f;
 		public bool forRoar = true;
 		public bool pixel = false;
 		public override void SetDefaults()
@@ -349,15 +350,33 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public float scale = 0.25f;
 		float alpha = 1;
 
+		public bool special = false;
+
 		public override void AI()
 		{
-
+			Projectile.velocity *= 0.95f;
 			if (timer == 0)
+            {
+				Projectile.ai[0] = Main.rand.NextBool() ? 1 : -1;
 				Projectile.rotation = Main.rand.NextFloat(6.28f);
+			}
 
 			if (timer <= 40)
 			{
-				scale = MathHelper.Lerp(0f, 1f, Easings.easeOutQuint(timer / 40f));
+				if (special)
+                {
+					if (timer <= 16)
+                    {
+						scale = MathHelper.Lerp(0f, 1f, Easings.easeOutQuint(timer / 60f));
+					}
+                    else
+                    {
+						scale += 0.08f;
+						alpha -= 0.04f;
+					}
+				}
+				else
+					scale = MathHelper.Lerp(0f, 1f, Easings.easeOutQuint(timer / 40f));
 			}
 
 			if (timer >= 0)
@@ -367,15 +386,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 				//else
 					//scale = scale + 0.07f; 
 
-				if (timer >= 6)
-					alpha -= 0.065f;
+				if (timer >= (special ? 3 : 6))
+					alpha -= special ? 0.08f : 0.065f;
 			}
 
 			Projectile.timeLeft = 2;
 
 			if (alpha <= 0)
+            {
 				Projectile.active = false;
+			}
 
+			if (special)
+				timer++;
 			timer++;
 		}
 
@@ -383,15 +406,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public override bool PreDraw(ref Color lightColor)
 		{
 			String toAsset = (pixel ? "Assets/ImpactTextures/Royal_Resonance" : "Content/NPCs/Bosses/Cyvercry/Textures/circle_02");
+
+			if (special) toAsset = "Assets/TrailImages/RainbowRod";//"Assets/Orbs/ElectricPopC";
+
 			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
 			Texture2D Flare = Mod.Assets.Request<Texture2D>(toAsset).Value;
 			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopDA").Value;
 
 			//Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
-			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_21").Value;
+			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
 
 			//Vector2 scale2 = new Vector2(scale * 0.5f, scale);
-			float rot = ((float)Main.timeForVisualEffects * 0.05f * Projectile.ai[0]) + Projectile.rotation;
+			float rot = ((float)Main.timeForVisualEffects * 0.12f * Projectile.ai[0]) + Projectile.rotation;
 			float scale2 = scale * (pixel ? 3f : 1f) * 1f;
 
 			if (myEffect == null)
@@ -407,7 +433,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			myEffect.Parameters["distortStrength"].SetValue(0.06f);
 			myEffect.Parameters["xOffset"].SetValue(0.0f);
 			myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
-			myEffect.Parameters["colorIntensity"].SetValue(alpha * (!forRoar ? 1f : 3f));
+			myEffect.Parameters["colorIntensity"].SetValue(alpha * (!forRoar ? 1f : 3f) * intensity);
 
 
 			Main.spriteBatch.End();
@@ -417,9 +443,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
 			Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
 			
+			if (special)
+            {
+				Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, -rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+				Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, -rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+
+			}
+
+
 			//if (!forRoar)
-				//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
-			
+			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale2 * Projectile.scale, SpriteEffects.None, 0f);
+
 			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot + MathHelper.ToRadians(120), Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);
 			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot - MathHelper.ToRadians(120), Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);
 			//Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, rot, Flare.Size() / 2, scale * Projectile.scale, SpriteEffects.None, 0f);

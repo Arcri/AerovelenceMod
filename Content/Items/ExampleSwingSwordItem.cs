@@ -114,18 +114,18 @@ namespace AerovelenceMod.Content.Items
 
 
             //Trail
-            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdgeBottomLine").Value;
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
             relativeTrail.trailColor = Color.DodgerBlue;
             relativeTrail.trailPointLimit = 800;
-            relativeTrail.trailWidth = 35;
+            relativeTrail.trailWidth = 20;
             relativeTrail.trailMaxLength = 300;
-            relativeTrail.timesToDraw = 2;
+            relativeTrail.timesToDraw = 3;
             relativeTrail.relativeToPlayer = true;
             relativeTrail.myPlayer = Main.player[Projectile.owner];
             //relativeTrail.trailTime = timer * 0.0035f;
             relativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
 
-            relativeTrail.trailPos = Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (15 + (intensity * 15)) - Main.player[Projectile.owner].Center;
+            relativeTrail.trailPos = Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (30 + (intensity * 15)) - Main.player[Projectile.owner].Center;
             
             if (getProgress(easingProgress) >= 0.03f)
             relativeTrail.TrailLogic();

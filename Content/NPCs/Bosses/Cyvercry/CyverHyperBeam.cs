@@ -11,6 +11,7 @@ using ReLogic.Content;
 using rail;
 using Terraria.Audio;
 using System.Net;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 {
@@ -58,7 +59,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		{
             if (timer == 0)
             {
-                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .17f, Pitch = 0.2f, MaxInstances = 1 };
+                SoundStyle style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_fire") with { Volume = 0.5f, Pitch = 0f, MaxInstances = -1, PitchVariance = 0.1f };
+                SoundEngine.PlaySound(style32, Projectile.Center);
+
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .17f, Pitch = 0.2f, MaxInstances = -1 };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
                 SoundStyle styla = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, PitchVariance = 0.11f, Volume = 0.4f, MaxInstances = -1 };
@@ -66,6 +70,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 SoundStyle styleb = new SoundStyle("AerovelenceMod/Sounds/Effects/Item125Trim") with { Volume = .75f, Pitch = .93f, PitchVariance = .11f, MaxInstances = -1 };
                 SoundEngine.PlaySound(styleb, Projectile.Center);
+
+                //SoundStyle style4 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .2f, Pitch = .8f, PitchVariance = 0.1f, MaxInstances = -1 };
+                //SoundEngine.PlaySound(style4, Projectile.Center);
+
                 Projectile.ai[0] = 300;
 
                 LaserRotation = Projectile.velocity.ToRotation();// + (float)Math.PI;
@@ -73,12 +81,35 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.velocity = Vector2.Zero;
 
                 Projectile.ai[1] = Main.rand.NextFloat(-1, 2);
+                Projectile.ai[2] = LaserRotation.ToRotationVector2().X > 0f ? 1f : -1f;
+
+                //int pulse = Projectile.NewProjectile(null, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
+                //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
+                //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 0.5f;
+                //Main.projectile[pulse].scale = 0.85f;
 
             }
+
+            if (timer < 40)
+            {
+                //todo optimize
+                for (int i = 0; i < 2; i++)
+                {
+                    float randomDustPercent = Main.rand.NextFloat(0f, 0.85f);
+                    Vector2 dustPercentPoint = (endPoint - Projectile.Center) * randomDustPercent;
+                    Vector2 dustVel = LaserRotation.ToRotationVector2() * Main.rand.NextFloat(4.5f, 6.1f) * 4f;
+                    //new Color(255,155,190)
+                    Dust.NewDustPerfect(Projectile.Center + dustPercentPoint + Main.rand.NextVector2Circular(65f, 65f), ModContent.DustType<MuraLineBasic>(), dustVel, 15, Color.HotPink, Main.rand.NextFloat(0.45f, 0.65f) * 0.75f);
+                }
+
+            }
+
+
             //LaserRotation += 0.005f;
             Projectile.scale = 1f;
             if (timer >= 35) //15
                 Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], -45, 0.06f), 0, 400);
+
             timer++;
         }
 
@@ -86,86 +117,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor) 
 		{
             
-			#region RimeBeam
-			/*
-			endPoint = storedCenter;
-			float height2 = 65; 
-
-            if (height2 == 0)
-				Projectile.active = false;
-
-			int width2 = (int)(Projectile.Center - endPoint).Length() - 24;
-
-			var pos2 = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-			var target2 = new Rectangle((int)pos2.X, (int)pos2.Y, width2, (int)(height2 * 1.2f));
-
-			Texture2D newTex = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Aurora/LineBlack").Value;
-			Vector2 origin22 = new Vector2(0, newTex.Height / 2);
-
-			//Main.spriteBatch.Draw(newTex, target2, null, Color.Black * 2, LaserRotation, origin22, 0, 0);
-
-			//Texture2D newTex = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/SolsearLaser").Value;
-
-
-			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value;
-
-			myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2f);
-			//myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
-			//myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
-
-			myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
-			myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
-			myEffect.Parameters["uTime"].SetValue(timer * -0.01f); //0.006
-			myEffect.Parameters["uSaturation"].SetValue(2);
-
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-
-			//Activate Shader
-			myEffect.CurrentTechnique.Passes[0].Apply();
-
-			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-
-
-			Vector2 origin2 = new Vector2(0, texture.Height / 2);
-
-			float height = Math.Clamp(Projectile.ai[0], 0, 500); //25
-
-			if (height == 0)
-				Projectile.active = false;
-
-			int width = (int)(Projectile.Center - endPoint).Length() - 24;
-
-			var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-			var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
-
-			Main.spriteBatch.Draw(texture, target, null, Color.Black, LaserRotation, origin2, 0, 0);
-			Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-			//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-			//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			*/
-			#endregion
-
-            
 			if (timer > 0) //Laser might be fucked up on first frame if we don't do this
 			{
-
-
 				Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/LaserShader", AssetRequestMode.ImmediateLoad).Value;
 
-				//Extra_196
-				//spark_07
-
 				myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 0.6f);
-				myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+				myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
 				myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
-				myEffect.Parameters["uTime"].SetValue(timer * -0.01f + Projectile.ai[1]);
+				myEffect.Parameters["uTime"].SetValue(timer * -0.015f + Projectile.ai[1]);
 				myEffect.Parameters["uSaturation"].SetValue(2);
 
 
@@ -197,6 +156,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 				Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0); //e196
 
 
                 //for (int i = 0; i < width; i += 6)
@@ -234,21 +194,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-			var spotTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
-			
+            var spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_21").Value;
+            var spotTex2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
 
-            //Texture2D glowTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/GlowLine1").Value;
             Texture2D glowTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/GlowLine1Half");
 
             Texture2D Ball = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
             Texture2D BallHalf = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05half");
-
-
             Texture2D Ball2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
 
+            Vector2 thisPos = endPoint - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (-14 * (Projectile.ai[0] / 300));
 
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-			//myEffect.Parameters["uColor"].SetValue(Color.WhiteSmoke.ToVector3() * 1f); 
+
+
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value; 
 
 			myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 2.5f);
 			myEffect.Parameters["uTime"].SetValue(2);
@@ -258,55 +217,31 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
-			Vector2 thisPos = endPoint - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (-14 * (Projectile.ai[0] / 300));
-
 			Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball.Frame(1, 1, 0, 0), Color.HotPink * 0.5f, 0, Ball.Size() / 2, 0.6f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink * 0.5f, 0, Ball.Size() / 2, 0.3f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink, 0, Ball.Size() / 2, 0.3f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink * 0.5f, 0, Ball.Size() / 2, 0.4f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Ball, thisPos, Ball.Frame(1, 1, 0, 0), Color.HotPink, 0, Ball.Size() / 2, 0.4f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 
             //Activate Shader
             myEffect.CurrentTechnique.Passes[0].Apply();
 
-            //Main.spriteBatch.Draw(spotTex, storedCenter - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.2f), spotTex.Size() / 2, 0.15f, SpriteEffects.None, 0);
-            //Main.spriteBatch.Draw(spotTex, storedCenter - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.1f, SpriteEffects.None, 0);
-
-
-            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer), spotTex.Size() / 2, 0.68f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer), spotTex.Size() / 2, 0.45f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.HotPink, LaserRotation, glowTex.Size() / 2, 3f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Ball2, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball2.Frame(1, 1, 0, 0), Color.DeepPink * 0.8f, (timer * 0.06f), Ball2.Size() / 2, 0.65f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(Ball2, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball2.Frame(1, 1, 0, 0), Color.DeepPink * 0.8f, (timer * -0.06f), Ball2.Size() / 2, 0.65f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.HotPink * 1.5f, Projectile.rotation + MathHelper.ToRadians((5f * Projectile.ai[2]) * timer), spotTex.Size() / 2, 1f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation + MathHelper.ToRadians((-3f * Projectile.ai[2]) * timer), spotTex.Size() / 2, 0.75f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+
+
+            Main.spriteBatch.Draw(Ball2, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball2.Frame(1, 1, 0, 0), Color.DeepPink * 1.1f, (timer * 0.06f), Ball2.Size() / 2, 0.68f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(Ball2, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, Ball2.Frame(1, 1, 0, 0), Color.DeepPink * 1.1f, (timer * -0.06f), Ball2.Size() / 2, 0.68f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 
 
             Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (24.9f), glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation + MathHelper.Pi, glowTex.Size() / 2, 4f * (Projectile.ai[0] / 300), SpriteEffects.FlipHorizontally, 0);
 			Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (24.9f), glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation + MathHelper.Pi, glowTex.Size() / 2, 4f * (Projectile.ai[0] / 300), SpriteEffects.FlipHorizontally, 0);
-			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (25), glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation + MathHelper.Pi, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.FlipHorizontally, 0);
-			
-            
-            //Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-			//Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-
-            for (int i = 0; i < 1; i++)
-            {
-                Main.spriteBatch.Draw(BallHalf, endPoint - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (126.5f * (Projectile.ai[0] / 300)), BallHalf.Frame(1, 1, 0, 0), Color.DeepPink * 0.55f, LaserRotation, BallHalf.Size() / 2, 1f * (Projectile.ai[0] / 300), SpriteEffects.FlipHorizontally, 0);
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                //Main.spriteBatch.Draw(BallHalf, Projectile.Center - Main.screenPosition + (Vector2.UnitX.RotatedBy(LaserRotation) * -30), BallHalf.Frame(1, 1, 0, 0), Color.DeepPink * 0.55f, LaserRotation, BallHalf.Size() / 2, 1f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-            }
-
-            //Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), Color.DeepPink, LaserRotation, glowTex.Size() / 2, 4.5f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-
-            //Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.HotPink, 0, glowTex.Size() / 2, 0.7f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
-            //Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 30, glowTex.Frame(1, 1, 0, 0), Color.HotPink, 0, glowTex.Size() / 2, 0.7f * (Projectile.ai[0] / 300), SpriteEffects.None, 0);
 
 
+            Main.spriteBatch.Draw(BallHalf, endPoint - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * (126.5f * (Projectile.ai[0] / 300)), BallHalf.Frame(1, 1, 0, 0), Color.DeepPink * 0.6f, LaserRotation, BallHalf.Size() / 2, 1f * (Projectile.ai[0] / 300), SpriteEffects.FlipHorizontally, 0);
+
+            //Fix this later (ping me)
             Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 		}

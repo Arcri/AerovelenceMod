@@ -129,6 +129,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             {
                 if (dashes > 0)
                 {
+                    Main.NewText("Penis");
                     Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0 };
                     doubleAttackCount = 10;
                     Item.useTime = 20;
@@ -154,6 +155,12 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         {
             //col = new Color(141, 13, 184);
             //col = new Color(210, 101, 255);
+            if (player.altFunctionUse == 2)
+            {
+                doubleAttackCount = 10;
+                dash = true;
+            }
+
             if (!dash)
             {
                 float rotationOffset = doubleAttackCount > 0 ? Main.rand.NextFloat(-0.1f, 0.2f) : Main.rand.NextFloat(-0.3f, 0.4f);
@@ -297,8 +304,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             if (player.altFunctionUse == 2)
             {
                 doubleAttackCount = 10;
-                dash = true;
-                
+                dash = true;                
             }
 
             if (!dash)
@@ -361,7 +367,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 */
             }
 
-
+            dash = false;
         }
 
 

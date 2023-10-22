@@ -15,6 +15,7 @@ float tex2reps;
 float tex3reps;
 float tex4reps;
 
+float satPower;
 float uTime;
 
 texture sampleTexture1;
@@ -76,7 +77,7 @@ float4 ComboLaserPixel(float4 screenspace : TEXCOORD0) : COLOR0
     col3 *= Color3 * Color3Mult;
     col4 *= Color4 * Color4Mult;
 	
-    float4 combined1 = length(col1 + col2 + col3 + col4) * float4(input_color.rgb * 0.3f, 0.5f) * input_color.a;
+    float4 combined1 = length(col1 + col2 + col3 + col4) * float4(input_color.rgb * 0.3f, satPower) * input_color.a;
     float4 combined2 = (combined1 * totalMult) + (pow(col1 + col2 + col3 + col4, float4(2, 2, 2, 2)));
     return combined2;
 

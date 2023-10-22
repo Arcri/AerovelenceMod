@@ -88,7 +88,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 			return lightColor * 2f;
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { PitchVariance = 0.1f, Volume = 0.2f, Pitch = 0.7f }, Projectile.Center);
 
@@ -127,7 +127,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 				dust2.noGravity = true;
 			}
 
-			base.Kill(timeLeft);
+			base.OnKill(timeLeft);
         }
 
         public override bool PreDraw(ref Color lightColor)

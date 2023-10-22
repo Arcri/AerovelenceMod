@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
             Main.debuff[Type] = true;  // Is it a debuff?
             //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
-            BuffID.Sets.IsAnNPCWhipDebuff[Type] = true;
+            BuffID.Sets.IsATagBuff[Type] = true;
 
         }
 

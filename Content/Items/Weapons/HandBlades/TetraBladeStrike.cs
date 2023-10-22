@@ -127,17 +127,17 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             Vector2 origin = sourceRectangle.Size() / 2f;
 
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, color * opacity, Projectile.rotation, origin, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
             //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, color * opacity * 0.5f, Projectile.rotation, origin, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, strikeCol, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, strikeCol * 0.5f, Projectile.rotation, origin, scale * 1.25f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, strikeCol with { A = 0 }, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, strikeCol with { A = 0 } * 0.5f, Projectile.rotation, origin, scale * 1.25f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

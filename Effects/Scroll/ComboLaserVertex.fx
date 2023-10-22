@@ -16,7 +16,20 @@ float tex2reps;
 float tex3reps;
 float tex4reps;
 
+float satPower;
+float3 baseColor;
 float uTime;
+
+texture onTex;
+sampler2D samplerOnTex = sampler_state
+{
+    texture = <onTex>;
+    magfilter = LINEAR;
+    minfilter = LINEAR;
+    mipfilter = LINEAR;
+    AddressU = wrap;
+    AddressV = wrap;
+};
 
 texture sampleTexture1;
 sampler2D samplerTex1 = sampler_state
@@ -85,8 +98,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 float4 ComboLaser(VertexShaderOutput input) : COLOR0
 {
     float2 uv = input.TextureCoordinates;
-    float4 input_color = input.Color;
-	
+    //float4 input_color = input.Color;
+    float alpha = tex2D(samplerOnTex, float2(uv.x + (1.0f * uTime), uv.y)).a;
+    float4 input_color = float4(baseColor, alpha);
+    
     float4 col1 = tex2D(samplerTex1, float2(frac(uv.x * tex1reps + (0.75f * uTime)), uv.y)) * float4(1, 1, 1, 0);
     float4 col2 = tex2D(samplerTex2, float2(frac(uv.x * tex1reps + (1.0f * uTime)), uv.y)) * float4(1, 1, 1, 0);
     float4 col3 = tex2D(samplerTex3, float2(frac(uv.x * tex1reps + (1.25f * uTime)), uv.y)) * float4(1, 1, 1, 0);
@@ -96,8 +111,9 @@ float4 ComboLaser(VertexShaderOutput input) : COLOR0
     col3 *= Color3 * Color3Mult;
     col4 *= Color4 * Color4Mult;
 	
-    float4 combined1 = length(col1 + col2 + col3 + col4) * float4(input_color.rgb * 0.3f, 0.5f) * input_color.a;
-    float4 combined2 = (combined1 * totalMult) + (pow(col1 + col2 + col3 + col4, float4(2, 2, 2, 2)));
+    float4 combined1 = length(col1 + col2 + col3 + col4) * float4(input_color.rgb * 0.3f, satPower) * input_color.a;
+    float4 combined2 = (combined1 * totalMult) + (pow(col1 + col2 + col3 + col4, float4(2, 2, 2, 2))); //2,2,2,2
+    
     return combined2;
 
 }

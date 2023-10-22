@@ -12,6 +12,8 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Content.Projectiles;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 {   
@@ -329,7 +331,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer < 20) //20
                 Projectile.velocity *= 1.088f;
 
-
+            //FTW | GFB timer % 5
             if (timer > 10 && timer % 10 == 0) // > 10
             {
                 int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 20, 0);
@@ -421,6 +423,234 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             // It will look for collisions on the given line using AABB
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
                 Projectile.Center + Projectile.velocity * 30, 10, ref point);
+        }
+    }
+
+    public class EyeSword : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 42;
+            Projectile.height = 42;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 1000;
+            Projectile.extraUpdates = 20;
+        }
+        public float LaserRotation = 0;
+        public float laserWidth = 70;
+        int timer = 0;
+        public float direction = 0;
+        public Vector2 endPoint;
+        public int parentIndex = 0;
+
+        Vector2 startCenter = Vector2.Zero;
+
+        public float initialBurst = 1f;
+
+
+        public float alpha = 1f;
+        public float progress = 0f;
+
+        public bool dash = false;
+        public bool spinDir = false;
+        public bool fade = false;
+        public bool start = false;
+
+        public List<float> previousRotations = new List<float>();
+
+        float easeProg = 0f;
+        BaseTrailInfo Trail = new BaseTrailInfo();
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                easeProg = 0.03f;
+                startCenter = Projectile.Center;
+                Projectile.ai[2] = 0;
+            }
+
+            if (fade)
+            {
+                Projectile.active = false;
+            }
+            else
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, 0f, 0.08f), 1f, 1f);
+
+            previousRotations.Add(Projectile.rotation);
+            if (previousRotations.Count > 10)
+            {
+                previousRotations.RemoveAt(0);
+            }
+
+            //Trail Bad sad face
+            if (true)
+            {
+                if (Projectile.ai[2] > (Projectile.extraUpdates * 1.75f))
+                {
+                    float swingDistance = MathHelper.ToRadians(150);//MathHelper.PiOver2 + 1f;
+                    float additionAmount = 0.015f / (float)Projectile.extraUpdates; //015
+
+                    easeProg = Math.Clamp(easeProg + additionAmount, 0f, 1f);
+
+                    float rotationValue = MathHelper.Lerp(-swingDistance, swingDistance, Easings.easeInOutExpo(easeProg));
+
+                    float rotResult = Projectile.ai[0] + rotationValue + MathF.PI;
+
+                    Trail.trailPos = Projectile.Center + rotResult.ToRotationVector2() * 340f;
+                    Trail.trailRot = rotResult + MathHelper.PiOver2;
+
+                    for (int i = 0; i < 0; i++)
+                    {
+                        float randomDustPercent = Main.rand.NextFloat(0f, 1f);
+
+                        Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
+                        Vector2 dustVel = Projectile.rotation.ToRotationVector2() * Main.rand.NextFloat(4.5f, 6.1f) * 4f;
+                        Dust.NewDustPerfect(Projectile.Center + dustPercentPoint + Main.rand.NextVector2Circular(65f, 65f), ModContent.DustType<GlowStrong>(), dustVel, 15, Color.HotPink, Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
+                    }
+
+
+                    Trail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/ShiroTrail").Value;
+                    Trail.trailColor = Color.HotPink * MathF.Sin(MathF.PI * progress);
+                    Trail.trailPointLimit = 800;
+                    Trail.trailWidth = (int)(350f);
+                    Trail.trailMaxLength = 600;
+                    Trail.timesToDraw = 2;
+
+                    //Trail.trailTime = (float)Main.timeForVisualEffects * 0.03f;
+
+                    Trail.TrailLogic();
+                }
+                Projectile.ai[2]++;
+            }
+
+            timer++;
+        }
+
+
+        Effect myEffect = null;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (timer <= 1)
+                return false;
+
+            Trail.TrailDrawing(Main.spriteBatch);
+
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/circle_053").Value;
+            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/muzzle_flash_12").Value;
+            Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/spotlight_8").Value;
+            Texture2D glow4 = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/EasyLightray").Value;
+
+            float ySinVal = (float)Math.Sin(Main.timeForVisualEffects * 0.22f) * 0.15f;
+            float xSinVal = (float)Math.Sin(Main.timeForVisualEffects * 0.22f) * 0.05f;
+
+            //re-name these 
+            Vector2 newScale = new Vector2(1.5f, 1f) * 0.5f; //sword
+            Vector2 newScale2 = new Vector2(0.75f, 1.3f + ySinVal) * (0.5f + xSinVal); //spiky
+            Vector2 newScale3 = new Vector2(0.25f, 0.25f); //Hilt
+            Vector2 newScale4 = new Vector2(1f, 0.5f) * 1f; //After Image
+
+            newScale *= 1f;// + (0.5f * MathF.Sin(MathF.PI * progress));
+            newScale2 *= 1f;// + (0.5f * MathF.Sin(MathF.PI * progress));
+
+            Vector2 origin1 = new Vector2(0f, glow.Height / 2f);
+            Vector2 origin2 = new Vector2(0f, glow2.Height / 2f);
+            Vector2 origin4 = new Vector2(0f, glow4.Height / 2f);
+
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Scroll/ComboLaser", AssetRequestMode.ImmediateLoad).Value;
+
+            //Black Base
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition - new Vector2(0f, 0f), null, Color.Black * 0.35f, Projectile.rotation, origin1, newScale, SpriteEffects.None, 0f);
+
+            ShaderParams();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            //MainBlade
+            Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition + new Vector2(-60f, 0f).RotatedBy(Projectile.rotation), null, Color.White, Projectile.rotation, origin1, newScale, SpriteEffects.None, 0f);
+
+            //Spiky part near guard
+            Main.spriteBatch.Draw(glow2, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, Color.White, Projectile.rotation, origin2, newScale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(glow2, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, Color.White, Projectile.rotation, origin2, newScale2 * 0.5f, SpriteEffects.FlipVertically, 0f);
+
+            //"Hilt"
+            Vector2 off = Projectile.rotation.ToRotationVector2() * 8f;
+            Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation + MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
+            Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation - MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            for (int i = 0; i < 0; i++)
+            {
+                float listProgress = (float)i / previousRotations.Count;
+                Main.spriteBatch.Draw(glow4, Projectile.Center - Main.screenPosition + new Vector2(-60f, 0f).RotatedBy(previousRotations[i]), null, Color.HotPink * listProgress * MathF.Sin(MathF.PI * progress) * 2f, previousRotations[i], origin4, newScale4, SpriteEffects.None, 0f);
+
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return false;
+        }
+
+        public void ShaderParams()
+        {
+            myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value);
+            myEffect.Parameters["sampleTexture3"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
+            myEffect.Parameters["sampleTexture4"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/ThinGlowLine").Value);
+
+            Color c1 = Color.DeepPink;
+            Color c2 = Color.DeepPink;
+            Color c3 = Color.DeepPink;
+            Color c4 = Color.DeepPink;
+
+            myEffect.Parameters["Color1"].SetValue(c1.ToVector4());
+            myEffect.Parameters["Color2"].SetValue(c2.ToVector4());
+            myEffect.Parameters["Color3"].SetValue(c3.ToVector4());
+            myEffect.Parameters["Color4"].SetValue(c4.ToVector4());
+
+            myEffect.Parameters["Color1Mult"].SetValue(1.5f);
+            myEffect.Parameters["Color2Mult"].SetValue(1.5f);
+            myEffect.Parameters["Color3Mult"].SetValue(1.5f);
+            myEffect.Parameters["Color4Mult"].SetValue(1.1f);
+            myEffect.Parameters["totalMult"].SetValue(1f * alpha);
+
+            myEffect.Parameters["tex1reps"].SetValue(1f);
+            myEffect.Parameters["tex2reps"].SetValue(1f);
+            myEffect.Parameters["tex3reps"].SetValue(1f);
+            myEffect.Parameters["tex4reps"].SetValue(1f);
+
+            myEffect.Parameters["satPower"].SetValue(1f);
+            myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * -0.03f);
+            
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            Vector2 unit = LaserRotation.ToRotationVector2();
+            float point = 0f;
+
+            if (laserWidth > 5)
+            {
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+                    endPoint, 30, ref point);
+            }
+
+            return false;
         }
     }
 

@@ -218,11 +218,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             {
                 var texBeam = Mod.Assets.Request<Texture2D>("Assets/ThinLineGlowClear").Value;
 
-                Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
+                Vector2 origin2 = new Vector2(0, texBeam.Height / 2f);
 
                 float height = 0.15f * Projectile.scale * lineWidth;
 
-                if (height == 0)
+                if (height == 0f)
                     Projectile.active = false;
 
                 //int width = (int)(Projectile.Center - endPoint).Length() - 24;
@@ -242,7 +242,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                 Texture2D circle = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
 
-                Vector2 offset = new Vector2(0, (0.5f * Projectile.height) * -Main.player[Projectile.owner].direction).RotatedBy(Rotation - MathHelper.Pi) * Projectile.scale;
+                Vector2 offset = new Vector2(0f, (0.5f * Projectile.height) * -Main.player[Projectile.owner].direction).RotatedBy(Rotation - MathHelper.Pi) * Projectile.scale;
 
                 Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
                 Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, 0f, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);

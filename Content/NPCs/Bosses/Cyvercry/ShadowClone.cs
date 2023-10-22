@@ -149,8 +149,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
 
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), lightColor * alpha, Projectile.rotation, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * 0.5f * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(50,50,50) * alpha, Projectile.rotation, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
+            
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(1.5f, 1.5f), Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue with { A = 0 } * 0.5f * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.DeepSkyBlue * glowVal * 1f * alpha, Projectile.rotation, Tex2.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
 
@@ -220,6 +221,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool PreDraw(ref Color lightColor)
         {
             var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowClonePink").Value;
+            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/ShadowCloneBorder").Value;
 
             Color drawingCol = Color.HotPink;
             for (int k = 0; k < Projectile.oldPos.Length; k++)
@@ -228,9 +230,25 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 drawingCol = Color.HotPink * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 Main.EntitySpriteDraw(Tex, drawPos + new Vector2(22, 22), Tex.Frame(1, 1, 0, 0), drawingCol with { A = 0 } * 0.5f, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0);
             }
-
-
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, 0.75f, SpriteEffects.None, 0f);
+
+            float rot = (float)Main.timeForVisualEffects * 0.12f;
+            float offsetVal = MathF.Sin((float)Main.timeForVisualEffects * 0.14f) * 0.5f;
+
+            Vector2 v = new Vector2(1.5f + offsetVal * 2, 0) + Main.rand.NextVector2Circular(2f, 2f);
+
+            float scale1 = (1f + (MathF.Sin((float)Main.timeForVisualEffects * 0.08f) * 0.025f)) * 0.75f;
+            float scale2 = (1f + (MathF.Cos((float)Main.timeForVisualEffects * 0.02f) * 0.035f)) * 0.75f;//scale * 1f;
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center + v.RotatedBy(rot - MathHelper.PiOver2) - Main.screenPosition, null, Color.Pink with { A = 0 } * 0.5f, Projectile.rotation, Tex2.Size() / 2, scale1, 0, 0f);
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center + v.RotatedBy(rot) - Main.screenPosition, null, Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, Tex2.Size() / 2, scale1, 0, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center + v.RotatedBy(rot + MathHelper.PiOver2) - Main.screenPosition, null, Color.Pink with { A = 0 } * 0.5f, Projectile.rotation, Tex2.Size() / 2, scale1, 0, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center + v.RotatedBy(rot + MathHelper.Pi) - Main.screenPosition, null, Color.DeepPink with { A = 0 } * 0.5f, Projectile.rotation, Tex2.Size() / 2, scale1, 0, 0f);
+
+
+
+
             return false;
         }
 

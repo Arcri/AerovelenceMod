@@ -129,7 +129,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
 
-			Kill(5);
+			OnKill(5);
 
 			//onHit();
 			return false;
@@ -137,11 +137,11 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-			Kill(5);
+			OnKill(5);
 			
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			
 			if (shouldHide == false)

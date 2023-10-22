@@ -22,6 +22,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Projectiles.TempVFX;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
+using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -57,10 +58,28 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<ComboVertexTest>(), 0, 0, Main.myPlayer);
+            int pulse = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
+            (Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
+            (Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 2f;
+            Main.projectile[pulse].scale = 1f; //0.1
+            //int explosion = Projectile.NewProjectile(null, position + new Vector2(-550f, 0f), velocity, ModContent.ProjectileType<Cyver2EnergyBall>(), 0, 0, Main.myPlayer);
+
+
+            for (int i22 = 0; i22 < 8; i22++) //4 //2,2
+            {
+                Dust p = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowStarSharp>(),
+                    velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1.2f, 1.2f)) * Main.rand.Next(4, 12),
+                    newColor: Main.DiscoColor, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.85f);
+                p.velocity += velocity * (0.45f + Main.rand.NextFloat(-0.1f, -0.2f));
+
+                StarDustDrawInfo info = new StarDustDrawInfo(true, false, true, true, false, 1f);
+                p.customData = AssignBehavior_GSSBase(rotPower: 0.04f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.8f, shouldFadeColor: false, sdci: info);
+
+            }
+
             return false;
 
-            /*
+            
             for (double m = 0; m < 6.28; m += 1)
             {
                 Dust dust = Dust.NewDustPerfect(player.Center + new Vector2(200f, 0f), ModContent.DustType<GlowPixelCross>(), new Vector2((float)Math.Sin(m) * 1.3f, (float)Math.Cos(m)) * 2.4f);
@@ -73,7 +92,7 @@ namespace AerovelenceMod.Content.Items
                     rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 8, postSlowPower: 0.92f, velToBeginShrink: 2f, fadePower: 0.87f, shouldFadeColor: false);
 
             }
-            */
+            
             for (int i11 = 0; i11 < 10; i11++) //4 //2,2
             {
                 Dust p = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowPixelCross>(),
@@ -81,8 +100,7 @@ namespace AerovelenceMod.Content.Items
                     newColor: Color.DeepSkyBlue, Scale: Main.rand.NextFloat(0.3f, 0.5f) * 1.25f);
                 p.velocity += velocity * (0.75f + Main.rand.NextFloat(-0.1f, -0.2f));
 
-                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
-    rotPower: 0.13f, timeBeforeSlow: 10, preSlowPower: 0.94f, postSlowPower: 0.91f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
+                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.13f, timeBeforeSlow: 10, preSlowPower: 0.94f, postSlowPower: 0.91f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
             }
 
             for (int i22 = 0; i22 < 8; i22++) //4 //2,2
@@ -92,12 +110,12 @@ namespace AerovelenceMod.Content.Items
                     newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(0.3f, 0.5f)  * 1.25f);
                 p.velocity += velocity * (0.45f + Main.rand.NextFloat(-0.1f, -0.2f));
 
-                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
-    rotPower: 0.3f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+                p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.3f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
 
             }
 
             return false;
+
             for (int fg = 0; fg < 11; fg++)
             {
                 Vector2 randomStart = Main.rand.NextVector2Circular(1f,1f) * 6f;

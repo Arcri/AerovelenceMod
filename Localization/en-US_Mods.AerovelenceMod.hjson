@@ -676,6 +676,10 @@ Projectiles: {
 	CyverRoarPulse.DisplayName: Cyver Roar Pulse
 	ComboLaserTest.DisplayName: Combo Laser Test
 	ComboVertexTest.DisplayName: Combo Vertex Test
+	EyeSword.DisplayName: Eye Sword
+	CurveLineTelegraph.DisplayName: Curve Line Telegraph
+	CurveDashShot.DisplayName: Curve Dash Shot
+	NewEntourageCrusherHeldProj.DisplayName: New Entourage Crusher Held Proj
 }
 
 Configs: {

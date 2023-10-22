@@ -14,11 +14,22 @@ namespace AerovelenceMod.Common.Globals.Players
         public bool cutscene = false;
         public Vector2 ScreenGoalPos;
         public float interpolant = 0f;
-        public bool lerpBackToPlayer = false; 
+        public bool lerpBackToPlayer = false;
+
+        public float DirectionalScreenShakePower;
+        public float DirectionalScreenShakeDirection;
+
+        public DSSB DSSBehavior = DSSB.RandomTwoDirections;
+        //Default behavoir is Base with preset values
+        public enum DSSB
+        {
+            RandomTwoDirections = 0,
+            RandomOneDirection = 1,
+            NoRandom = 2,
+        }
 
         public override void PostUpdate()
         {
-
             //If we are in a cutscene, lerp the interpolant value to 1, otherwise lerp it to zero
             if (cutscene)
             {
@@ -33,8 +44,6 @@ namespace AerovelenceMod.Common.Globals.Players
 
         }
 
-
-
         public override void ModifyScreenPosition()
         {
             if (cutscene || lerpBackToPlayer)
@@ -45,9 +54,35 @@ namespace AerovelenceMod.Common.Globals.Players
                 Main.screenPosition = Vector2.SmoothStep(Main.screenPosition, TrueGoalPos, interpolant);
 
             }
+
+            //NoRandom
+            
+            if (DirectionalScreenShakePower > 0.1f)
+            {
+
+                switch (DSSBehavior)
+                {
+                    case DSSB.RandomOneDirection:
+                        Main.screenPosition += new Vector2(Main.rand.NextFloat(DirectionalScreenShakePower), 0f).RotatedBy(DirectionalScreenShakeDirection);
+                        DirectionalScreenShakePower *= 0.9f;
+                        break;
+
+                    case DSSB.RandomTwoDirections:
+                        Main.screenPosition += new Vector2(Main.rand.NextFloat(-DirectionalScreenShakePower, DirectionalScreenShakePower), 0f).RotatedBy(DirectionalScreenShakeDirection);
+                        DirectionalScreenShakePower *= 0.9f;
+                        break;
+
+                    case DSSB.NoRandom:
+                        Main.screenPosition -= new Vector2(DirectionalScreenShakePower, 0f).RotatedBy(DirectionalScreenShakeDirection);
+                        DirectionalScreenShakePower *= 0.9f;
+                        break;
+                }
+
+
+            }
         }
 
-        //Would be bad if the player could die during a boss animation
+        //Would be cringe if the player could die during a boss animation
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             if (cutscene)
