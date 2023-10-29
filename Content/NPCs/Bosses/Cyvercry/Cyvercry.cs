@@ -801,11 +801,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Lighting.AddLight(Projectile.Center, 0.5f, 0.65f, 0.75f);
 
             Player player = Main.player[(int)Projectile.ai[0]];
-            int dust = Dust.NewDust(Projectile.Center + new Vector2(0, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 0.5f);
-            Main.dust[dust].noGravity = true;
-            Main.dust[dust].velocity += Projectile.velocity;
-            Main.dust[dust].velocity *= 0.1f;
-            Main.dust[dust].scale *= 0.7f;
+            //int dust = Dust.NewDust(Projectile.Center + new Vector2(0, -4), 0, 0, DustID.Electric, 0, 0, Projectile.alpha, default, 0.5f);
+            //Main.dust[dust].noGravity = true;
+            //Main.dust[dust].velocity += Projectile.velocity;
+            //Main.dust[dust].velocity *= 0.1f;
+            //Main.dust[dust].scale *= 0.7f;
             if (player.active)
             {
                 float x = Main.rand.Next(-10, 11) * 0.005f * approaching;
@@ -898,13 +898,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (Projectile.ai[2] == 0)
+                return false;
+            
             //trail1.TrailDrawing(Main.spriteBatch);
             //trail2.TrailDrawing(Main.spriteBatch);
             //return false;
             
             trail1.TrailDrawing(Main.spriteBatch);
             trail1.trailColor = Color.White;
-            trail1.trailWidth = 10;
+            trail1.trailWidth = 11;
 
             trail1.TrailDrawing(Main.spriteBatch);
             trail1.trailColor = new Color(78, 225, 245) * 0.75f;
@@ -938,7 +941,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
             for (int am = 0; am < 4; am++)
             {
-                Main.spriteBatch.Draw(BallTextureWhite, Main.rand.NextVector2Circular(2.5f, 2.5f) + Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.DeepPink with { A = 0 } * 0.65f, Projectile.rotation, origin, new Vector2(1f, 0.85f), SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(BallTextureWhite, Main.rand.NextVector2Circular(2.5f, 2.5f) + Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, new Color(230, 40, 140) with { A = 0 } * 0.65f, Projectile.rotation, origin, new Vector2(1f, 0.85f), SpriteEffects.None, 0f);
             }
             //Main.spriteBatch.Draw(BallTextureWhite, Projectile.Center - Main.screenPosition - Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10, sourceRectangle, Color.Pink with { A = 0 } * 0.5f, Projectile.rotation, origin, new Vector2(1f, 0.85f), SpriteEffects.None, 0f);
 

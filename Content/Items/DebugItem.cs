@@ -58,12 +58,14 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int pulse = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
-            (Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
-            (Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 2f;
-            Main.projectile[pulse].scale = 1f; //0.1
-            //int explosion = Projectile.NewProjectile(null, position + new Vector2(-550f, 0f), velocity, ModContent.ProjectileType<Cyver2EnergyBall>(), 0, 0, Main.myPlayer);
+            //int pulse = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
+            //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
+            //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 2f;
+            //Main.projectile[pulse].scale = 1f; //0.1
 
+
+            int balls = Projectile.NewProjectile(null, Main.MouseWorld, velocity * -1f, ModContent.ProjectileType<EnergyBall>(), 0, 0, Main.myPlayer);
+            return false;
 
             for (int i22 = 0; i22 < 8; i22++) //4 //2,2
             {

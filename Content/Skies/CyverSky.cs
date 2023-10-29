@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Skies
         private int timer = 0;
         private float bonusIntensity;
 
-        private Vector2[] bgLines = new Vector2[50];
+        private Vector2[] bgLines = new Vector2[100]; //50
         private int[] xPos = new int[50];
         private int[] yPos = new int[50];
 
@@ -27,6 +27,8 @@ namespace AerovelenceMod.Content.Skies
         private float bigShotTimer = 0;
         private float bgLineBoost = 0;
         private float whiteStrength = 0f;
+        private float lineBonusSpeed = 0f;
+        private float bonusLines = 0f;
 
         bool runOnce = true;
 
@@ -88,6 +90,7 @@ namespace AerovelenceMod.Content.Skies
                         bigShotTimer = Cyver.bigShotTimer;
                         bgLineBoost = Cyver.extraBoost;
                         whiteStrength = Cyver.whiteBackgroundPower;
+                        lineBonusSpeed = Cyver.lineBonusSpeed;
                     }
                     return true;
                 }
@@ -114,7 +117,7 @@ namespace AerovelenceMod.Content.Skies
                 {
                     if (runOnce)
                     {
-                        for (int i = 0; i < 50; i++) 
+                        for (int i = 0; i < 100; i++) 
                         {
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
                             bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
@@ -129,9 +132,9 @@ namespace AerovelenceMod.Content.Skies
                     {
 
                         if (i % 2 == 0)
-                            bgLines[i] += new Vector2(2.5f + (i / 15), 0);
+                            bgLines[i] += new Vector2(2.5f + (i / 15), 0) * (1f + lineBonusSpeed);
                         else
-                            bgLines[i] -= new Vector2(2.5f + (i / 15), 0);
+                            bgLines[i] -= new Vector2(2.5f + (i / 15), 0) * (1f + lineBonusSpeed);
 
                         if (bgLines[i].X > (Main.screenWidth + 300))
                         {

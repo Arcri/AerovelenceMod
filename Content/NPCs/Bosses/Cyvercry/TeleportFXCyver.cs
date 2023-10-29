@@ -357,8 +357,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Projectile.velocity *= 0.95f;
 			if (timer == 0)
             {
-				Projectile.ai[0] = Main.rand.NextBool() ? 1 : -1;
-				Projectile.rotation = Main.rand.NextFloat(6.28f);
+				Projectile.ai[0] = 0;
+                //Projectile.ai[0] = Main.rand.NextBool() ? 1 : -1;
+                Projectile.rotation = Main.rand.NextFloat(6.28f);
 			}
 
 			if (timer <= 40)

@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int tileCollideDelay = 45;
 
         public bool accelerate = false;
-        public float accelerateAmount = 1.03f;
+        public float accelerateAmount = 1.02f;
         public float accelerateTime = 65f;
 
         public bool teleAhead = false;
@@ -53,6 +53,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.tileCollide = false;
             else
                 Projectile.tileCollide = true;
+
+            if (accelerate && timer < accelerateTime)
+                Projectile.velocity *= accelerateAmount;
 
             damageDelay--;
             timer++;
