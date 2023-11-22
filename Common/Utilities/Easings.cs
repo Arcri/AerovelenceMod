@@ -202,5 +202,12 @@ namespace AerovelenceMod.Common.Utilities
             return toReturn;
         }
 
+        //Misc
+        public static float easeInOutHarsh(float progress)
+        {
+            float toReturn = 0f;
+            toReturn = progress * progress / (2f * (progress * progress - progress) + 1f);
+            return toReturn;
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace AerovelenceMod.Content.Items
             //Main.projectile[pulse].scale = 1f; //0.1
 
 
-            int balls = Projectile.NewProjectile(null, Main.MouseWorld, velocity * -1f, ModContent.ProjectileType<EnergyBall>(), 0, 0, Main.myPlayer);
+            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, Main.myPlayer);
             return false;
 
             for (int i22 = 0; i22 < 8; i22++) //4 //2,2

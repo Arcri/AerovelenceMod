@@ -680,6 +680,10 @@ Projectiles: {
 	CurveLineTelegraph.DisplayName: Curve Line Telegraph
 	CurveDashShot.DisplayName: Curve Dash Shot
 	NewEntourageCrusherHeldProj.DisplayName: New Entourage Crusher Held Proj
+	NewCyverBombBeam.DisplayName: New Cyver Bomb Beam
+	CyverBotProjOld.DisplayName: Cyver Bot Proj Old
+	CyverWhipProjOld.DisplayName: Cyver Whip Proj Old
+	TrojanForceBot.DisplayName: Trojan Force Bot
 }
 
 Configs: {

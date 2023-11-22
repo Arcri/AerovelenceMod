@@ -94,7 +94,7 @@ namespace AerovelenceMod.Content.Items
             */
             
             SwingHalfAngle = 190;
-            easingAdditionAmount = 0.025f / Projectile.extraUpdates; //0.02f
+            easingAdditionAmount = 0.025f / Projectile.extraUpdates; //0.02f // 0.025f
             offset = 50;
             frameToStartSwing = 3;
             timeAfterEnd = 6;
@@ -114,10 +114,10 @@ namespace AerovelenceMod.Content.Items
 
 
             //Trail
-            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
             relativeTrail.trailColor = Color.DodgerBlue;
             relativeTrail.trailPointLimit = 800;
-            relativeTrail.trailWidth = 20;
+            relativeTrail.trailWidth = 40;
             relativeTrail.trailMaxLength = 300;
             relativeTrail.timesToDraw = 3;
             relativeTrail.relativeToPlayer = true;
@@ -207,6 +207,14 @@ namespace AerovelenceMod.Content.Items
             //Utils.DrawLine(Main.spriteBatch, frontHandPos, frontHandPos + (angle.ToRotationVector2() * 200), Color.Red);
 
             return false;
+        }
+
+        public override float getProgress(float x)
+        {
+
+            //return x * x / (2.5f * (x * x - x) + 1f);
+            return Easings.easeInOutExpo(x);
+            //return base.getProgress(x);
         }
     }
 

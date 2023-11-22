@@ -443,7 +443,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 1000;
-            Projectile.extraUpdates = 20;
+            //Projectile.extraUpdates = 20;
         }
         public float LaserRotation = 0;
         public float laserWidth = 70;
@@ -491,8 +491,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 previousRotations.RemoveAt(0);
             }
 
+            if (false)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    float randomDustPercent = Main.rand.NextFloat();
+                    Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
+                    Vector2 dustVel = (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(4f, 10f) * 1.5f;
+
+                    Dust.NewDustPerfect(Projectile.Center + dustPercentPoint, ModContent.DustType<MuraLineBasic>(), dustVel, 0, Color.HotPink, Main.rand.NextFloat(0.18f, 0.33f));
+                }
+            }
+
             //Trail Bad sad face
-            if (true)
+            if (false)
             {
                 if (Projectile.ai[2] > (Projectile.extraUpdates * 1.75f))
                 {
@@ -510,11 +522,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     for (int i = 0; i < 0; i++)
                     {
-                        float randomDustPercent = Main.rand.NextFloat(0f, 1f);
+                        ///float randomDustPercent = Main.rand.NextFloat(0f, 1f);
 
-                        Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
-                        Vector2 dustVel = Projectile.rotation.ToRotationVector2() * Main.rand.NextFloat(4.5f, 6.1f) * 4f;
-                        Dust.NewDustPerfect(Projectile.Center + dustPercentPoint + Main.rand.NextVector2Circular(65f, 65f), ModContent.DustType<GlowStrong>(), dustVel, 15, Color.HotPink, Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
+                        ///Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
+                        ///Vector2 dustVel = Projectile.rotation.ToRotationVector2() * Main.rand.NextFloat(4.5f, 6.1f) * 4f;
+                        //Dust.NewDustPerfect(Projectile.Center + dustPercentPoint + Main.rand.NextVector2Circular(65f, 65f), ModContent.DustType<GlowStrong>(), dustVel, 15, Color.HotPink, Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
                     }
 
 

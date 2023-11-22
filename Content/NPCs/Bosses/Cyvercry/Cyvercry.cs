@@ -812,7 +812,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 float y = Main.rand.Next(-10, 11) * 0.005f * approaching;
                 Vector2 toPlayer = Projectile.Center - player.Center;
                 toPlayer = toPlayer.SafeNormalize(Vector2.Zero);
-                Projectile.velocity += -toPlayer * (0.155f * Projectile.timeLeft / 540f) + new Vector2(x, y);
+                Projectile.velocity += -toPlayer * (strength * (0.155f * Projectile.timeLeft / 540f)) + new Vector2(x, y);
             }
 
             if (Projectile.timeLeft == 380)

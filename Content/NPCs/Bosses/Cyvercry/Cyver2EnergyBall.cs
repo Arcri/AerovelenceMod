@@ -21,16 +21,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override string Texture => "Terraria/Images/Projectile_0";
 
         public int timer = 0;
+        public float curveAmount = 1f;
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 8;
+           
         }
         public override void SetDefaults()
         {
             Projectile.width = 48;
             Projectile.height = 48;
-            Projectile.timeLeft = 200;
+            Projectile.timeLeft = 180;
             Projectile.penetrate = -1;
             Projectile.damage = 80;
             Projectile.friendly = false;
@@ -64,27 +65,69 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (player.active)
             {
-                float curvePower = timer < 60 ? 0.012f : 0.009f;
+                float curvePower = (timer < 60 ? 0.012f : 0.009f) * 1.25f;
 
                 Projectile.rotation = Projectile.rotation.AngleTowards((player.Center - Projectile.Center).ToRotation(), curvePower); //(0.001f * timer) + 0.01f
                 Projectile.velocity = Projectile.velocity.Length() * Projectile.rotation.ToRotationVector2();
+                Projectile.velocity *= 1.002f;
             }
 
             if (timer < 0)
                 Projectile.velocity *= 0.2f;
 
-            if (timer == 120)
-                Projectile.active = false;
+            //if (timer == 220)
+                //Projectile.active = false;
 
             float scale = 2f;
 
-            #region trail
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+            trail1.trailColor = Color.HotPink;
+            trail1.trailPointLimit = (int)(125 * scale);
+            trail1.trailWidth = (int)(20 * scale);
+            trail1.trailMaxLength = (int)(225 * scale); //225
+            trail1.timesToDraw = 3;
+            trail1.pinch = false;
+            trail1.pinchAmount = 0.2f;
+
+            trail1.gradient = false;
+            trail1.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad").Value;
+            trail1.shouldScrollColor = true;
+            trail1.gradientTime = 0.0f;
+
+            trail1.trailTime = (float)(timer * 0.02f);
+            trail1.trailRot = Projectile.velocity.ToRotation();
+            trail1.trailPos = Projectile.Center + Projectile.velocity;
+            if (timer > 0) trail1.TrailLogic();
+
+            //Trail2 Info Dump
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value;
+            trail2.trailColor = Color.DeepPink;
+            trail2.trailPointLimit = (int)(125 * scale);
+            trail2.trailWidth = (int)(10 * scale);
+            trail2.trailMaxLength = (int)(225 * scale); //255
+            trail2.timesToDraw = 2;
+            trail2.pinch = false;
+            trail2.pinchAmount = 0.2f;
+
+            trail2.gradient = false;
+            trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad").Value;
+            trail2.shouldScrollColor = true;
+            trail2.gradientTime = 0.0f;
+
+            trail2.trailTime = (float)timer * 0.015f;
+            trail2.trailRot = Projectile.velocity.ToRotation();
+            trail2.trailPos = Projectile.Center + Projectile.velocity;
+            if (timer > 0) trail2.TrailLogic();
+
+            #region trail
+            /*
+            //Trail1 Info Dump
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightning").Value;
             trail1.trailColor = Color.White;
-            trail1.trailPointLimit = (int)(200 * scale);
-            trail1.trailWidth = (int)(7 * scale);
-            trail1.trailMaxLength = (int)(200 * scale);
+            trail1.trailPointLimit = (int)(125 * scale);
+            trail1.trailWidth = (int)(15 * scale);
+            trail1.trailMaxLength = (int)(125 * scale);
             trail1.timesToDraw = 2;
             trail1.pinch = true;
             trail1.pinchAmount = 0.01f;
@@ -92,9 +135,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail1.gradient = true;
             trail1.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
             trail1.shouldScrollColor = true;
-            trail1.gradientTime = (timer + 0.25f) * 0.02f;
+            ///trail1.gradientTime = timer * 0.01f;
 
-            //trail2.trailTime = timer * 0.04f;
+            trail1.trailTime = timer * 0.05f;
             trail1.trailRot = Projectile.velocity.ToRotation();
             trail1.trailPos = Projectile.Center + Projectile.velocity;
             if (timer > 0) trail1.TrailLogic();
@@ -103,21 +146,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
             trail2.trailColor = Color.White;
             trail2.trailPointLimit = (int)(250 * scale);
-            trail2.trailWidth = (int)(10 * scale);
+            trail2.trailWidth = (int)(8 * scale);
             trail2.trailMaxLength = (int)(250 * scale);
-            trail2.timesToDraw = 1;
+            trail2.timesToDraw = 3;
             trail2.pinch = true;
             trail2.pinchAmount = 0.01f;
 
             trail2.gradient = true;
             trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
             trail2.shouldScrollColor = true;
-            trail2.gradientTime = timer * 0.01f;
+            ///trail2.gradientTime = timer * 0.01f;
 
             //trail2.trailTime = timer * 0.04f;
             trail2.trailRot = Projectile.velocity.ToRotation();
             trail2.trailPos = Projectile.Center + Projectile.velocity;
             if (timer > 0) trail2.TrailLogic();
+            */
             #endregion
 
             timer++;
@@ -131,6 +175,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
+
+            Texture2D spike = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+
+            float spikeRot = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Vector2 spikeScale = new Vector2(0.85f, 1f) * 0.35f;
+            Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition, null, Color.HotPink with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale * 0.5f, SpriteEffects.None, 0f);
+            
+            //Main.spriteBatch.Draw(glow4, Projectile.Center - Main.screenPosition, null, Color.HotPink with { A = 0 } * 0.65f, Projectile.velocity.ToRotation() + rot - MathHelper.ToRadians(110), glow4.Size() / 2, 0.2f * scale, SpriteEffects.None, 0f);
+
+
+            return false;
 
             float scale = 2f;
             float rot = (float)Main.timeForVisualEffects * 0.2f;

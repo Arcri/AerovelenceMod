@@ -17,9 +17,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
-	public class CyverWhipProj : ModProjectile
+	public class CyverWhipProjOld : ModProjectile
 	{
-		Vector2 WhipEndPos;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        Vector2 WhipEndPos;
 		bool shouldDust = false;
 		int DustCounter = 50;
 
@@ -258,10 +260,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			return false;
 		}
 	}
-	public class CyverBotProj : ModProjectile
+	public class CyverBotProjOld : ModProjectile
 	{
-		// a whole lot of variables
-		Vector2 movePos;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        // a whole lot of variables
+        Vector2 movePos;
 		Vector2 targetPos;
 
 		NPC closestNPC;
@@ -495,7 +499,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Projectile.timeLeft = 2;
             }
 
-            if (owner.ownedProjectileCounts[ModContent.ProjectileType<CyverBotProj>()] > 1)
+            if (owner.ownedProjectileCounts[ModContent.ProjectileType<CyverBotProjOld>()] > 1)
 			{
 				Projectile.Kill();
             }

@@ -11,6 +11,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
     {
         float scaleVal = 0;
         public int timer = 0;
+        public int timeToLast = 350;
 
         public int ParentIndex
         {
@@ -46,123 +47,61 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         public override void AI()
         {
-
             Player player = Main.player[Main.myPlayer];
             Projectile.Center = player.Center;
             //Projectile.rotation = MathHelper.ToRadians(timer);
 
-            
             NPC parentNPC = Main.npc[ParentIndex];
 
             if (parentNPC != null)
             {
                 rotationValue = player.AngleTo(parentNPC.Center);
-                //rotationValue = MathHelper.Lerp(rotationValue, player.AngleTo(parentNPC.Center), 0.2f);  //player.AngleTo(parentNPC.Center);
-                //Projectile.rotation = player.AngleTo(parentNPC.Center);
             }
             if (parentNPC.life <= 0)
             {
                 Projectile.active = false;
             }
             
-            if (timer < 350)
+            if (timer < timeToLast)
             {
                 scaleVal = Math.Clamp(MathHelper.Lerp(scaleVal, 1.5f, 0.03f), 0f, 1f);
             }
             else
             {
                 scaleVal = Math.Clamp(MathHelper.Lerp(scaleVal, -0.5f, 0.03f), 0f, 1f);
-
             }
+
+            boostPower = Math.Clamp(MathHelper.Lerp(scaleVal, -0.5f, 0.03f), 0f, 1f);
 
             timer++;
 
         }
 
+        public float fadeProgress = 1f;
+        public float boostPower = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player player = Main.player[(int)Projectile.ai[0]];
-            //Projectile.Center = player.Center;
 
-            //Draw the Circlular Glow
-            //var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/RetHalfSolid").Value;
-            var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/RetHalfGhost").Value;
-            var Tex3 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/GlowConnectorSolid").Value;
-            var Tex4 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/GlowConnectorGhost").Value;
+            Texture2D Inner = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/NewInnerRet").Value;
+            Texture2D Outer = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/NewOuterRet").Value;
+            Texture2D Danger = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Danger5").Value;
 
-
-            //var Danger = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Danger4").Value;
-            //
+            Main.spriteBatch.Draw(Danger, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f), Danger.Frame(1, 1, 0, 0), Color.Pink with { A = 0 } * scaleVal, 0f, Danger.Size() / 2, 2f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Danger, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f), Danger.Frame(1, 1, 0, 0), Color.White * scaleVal * 0.85f, 0f, Danger.Size() / 2, 2f, SpriteEffects.None, 0f);
 
 
-            var Danger = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Danger5").Value;
-            var DangerGlow = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/Danger4Glow").Value;
+            float scale = 0.75f;
+            float newRot = MathHelper.Lerp(0f, MathF.PI * 2f, boostPower) + rotationValue;
+            float distance = MathHelper.Lerp(70f, 35f, scaleVal);
 
+            Main.spriteBatch.Draw(Outer, Projectile.Center - Main.screenPosition + new Vector2(0, distance).RotatedBy(newRot), Outer.Frame(1, 1, 0, 0), Color.White with { A = 0 } * scaleVal, newRot + MathHelper.Pi, Outer.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Outer, Projectile.Center - Main.screenPosition + new Vector2(0,-distance).RotatedBy(newRot), Outer.Frame(1, 1, 0, 0), Color.White with { A = 0 } * scaleVal, newRot, Outer.Size() / 2, scale, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + new Vector2(0, 35).RotatedBy(rotationValue), Tex2.Frame(1, 1, 0, 0), Color.White * scaleVal, rotationValue + MathHelper.Pi, Tex2.Size() / 2, 2, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition + new Vector2(0,-35).RotatedBy(rotationValue), Tex2.Frame(1, 1, 0, 0), Color.White * scaleVal, rotationValue, Tex2.Size() / 2, 2, SpriteEffects.None, 0f);
-
-            /*
-            for (int i = -2; i < 3; i++)
-            {
-                if (i != 0)
-                {
-                    Main.spriteBatch.Draw(Tex4, Projectile.Center - Main.screenPosition + new Vector2(50 * i, 0).RotatedBy(rotationValue), Tex4.Frame(1, 1, 0, 0), Color.White, rotationValue, Tex4.Size() / 2, scaleVal, SpriteEffects.None, 0f);
-                }
-            }
-            */
-
-            //Main.spriteBatch.Draw(DangerGlow, Projectile.Center - Main.screenPosition, DangerGlow.Frame(1, 1, 0, 0), Color.White, 0f, DangerGlow.Size() / 2, scaleVal * 3f, SpriteEffects.None, 0f);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-            /*
-            for (int i = -2; i < 3; i++)
-            {
-                if (i != 0)
-                {
-                    Main.spriteBatch.Draw(Tex3, Projectile.Center - Main.screenPosition + new Vector2(50 * i, 0).RotatedBy(rotationValue), Tex3.Frame(1, 1, 0, 0), Color.White, rotationValue, Tex3.Size() / 2, scaleVal, SpriteEffects.None, 0f);
-                }
-            }
-            */
-
-            Main.spriteBatch.Draw(Danger, Projectile.Center - Main.screenPosition, Danger.Frame(1, 1, 0, 0), Color.White * scaleVal, 0f, Danger.Size() / 2, 2f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + new Vector2(0, 35).RotatedBy(rotationValue), Tex.Frame(1, 1, 0, 0), Color.White * scaleVal, rotationValue + MathHelper.Pi, Tex.Size() / 2, 2f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + new Vector2(0, -35).RotatedBy(rotationValue), Tex.Frame(1, 1, 0, 0), Color.White * scaleVal, rotationValue, Tex.Size() / 2, 2f, SpriteEffects.None, 0f);
-
-
+            Main.spriteBatch.Draw(Inner, Projectile.Center - Main.screenPosition + new Vector2(0, distance).RotatedBy(newRot), Inner.Frame(1, 1, 0, 0), Color.HotPink * scaleVal * 0.8f, newRot + MathHelper.Pi, Inner.Size() / 2, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Inner, Projectile.Center - Main.screenPosition + new Vector2(0, -distance).RotatedBy(newRot), Inner.Frame(1, 1, 0, 0), Color.HotPink * scaleVal * 0.8f, newRot, Inner.Size() / 2, scale, SpriteEffects.None, 0f);
 
             return false;
-        }
-
-        public override void PostDraw(Color lightColor)
-        {
-            /*
-            var Tex = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverReticle").Value;
-
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.Cyan.ToVector3() * 2f); //2.5f makes it more spear like
-            myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
-            myEffect.Parameters["uSaturation"].SetValue(1.2f);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-
-            //Activate Shader
-            myEffect.CurrentTechnique.Passes[0].Apply();
-
-            //0.2f
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Cyan, Projectile.rotation, Tex.Size() / 2, scaleVal * 2.6f, SpriteEffects.None, 0f);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-            */
         }
 
         public override bool? CanDamage()

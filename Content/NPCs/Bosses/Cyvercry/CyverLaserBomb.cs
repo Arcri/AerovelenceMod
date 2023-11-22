@@ -47,7 +47,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer > 32)
             {
                 teleScale = MathHelper.Clamp(MathHelper.Lerp(teleScale, 1.9f, 0.05f), 0f, 1.75f);
-
             }
 
             if (timer == 50) //50
@@ -58,7 +57,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .08f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
                 SoundEngine.PlaySound(style2, Projectile.Center);
 
-                Vector2 offset = new Vector2(25, 0).RotatedBy(Projectile.rotation);
+                Vector2 offset = new Vector2(24f, 0f).RotatedBy(Projectile.rotation);
 
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + offset,
                     Projectile.rotation.ToRotationVector2() * -0.1f, ModContent.ProjectileType<CyverBeam>(),
@@ -230,7 +229,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.height = 5;
             Projectile.hostile = true;
             Projectile.friendly = false;
-            Projectile.scale = 1f;
+            Projectile.scale = 2.5f;
             Projectile.timeLeft = 50;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
@@ -251,20 +250,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float additional = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-            //int sin = (int)(Math.Sin(secondTimer * 0.05) * 40f);
-            //var color = new Color(255, 160 + sin, 40 + sin / 2);
-
-            Color col = timer < 2 ? Color.White * 0.5f : Color.DeepPink;
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             if (timer > 0)
             {
-                //Main.spriteBatch.End();
-                //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
                 endPoint = LaserRotation.ToRotationVector2() * 2000f;
                 var texBeam = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
 
@@ -280,21 +270,37 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
                 var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
 
+
+                Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Scroll/CheapScroll", AssetRequestMode.ImmediateLoad).Value;
+                #region Shader Params
+                myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+                myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+
+                Color c1 = new Color(255, 20, 125);//Color.DeepPink;
+                Color c2 = new Color(255, 20, 125);//Color.DeepPink;
+
+                myEffect.Parameters["Color1"].SetValue(c1.ToVector4());
+                myEffect.Parameters["Color2"].SetValue(c2.ToVector4());
+                myEffect.Parameters["Color1Mult"].SetValue(1f);
+                myEffect.Parameters["Color2Mult"].SetValue(1f);
+                myEffect.Parameters["totalMult"].SetValue(0.75f);
+
+                myEffect.Parameters["tex1reps"].SetValue(10f);
+                myEffect.Parameters["tex2reps"].SetValue(10f);
+                myEffect.Parameters["satPower"].SetValue(0.8f);
+                myEffect.Parameters["time1Mult"].SetValue(1f);
+                myEffect.Parameters["time2Mult"].SetValue(1f);
+                myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * -0.018f);
+                #endregion
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+                myEffect.CurrentTechnique.Passes[0].Apply();
+
                 Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
 
-                //for (int i = 0; i < width; i += 6)
-                    //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
-
-                //Main.spriteBatch.End();
-                //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-                float progress = additional / (50f * Projectile.scale);
-
-
-                //Main.spriteBatch.End();
-                //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             }
             secondTimer++;
             Main.spriteBatch.End();
@@ -317,6 +323,99 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public void setExtraAngle(float input)
         {
             extraAngle = input;
+        }
+    }
+
+    public class NewCyverBombBeam : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+        }
+
+        Vector2 center = Vector2.Zero;
+        Vector2 end1 = Vector2.Zero;
+        Vector2 end2 = Vector2.Zero;
+
+
+        public float luminos = 0.8f;
+        public Vector2 endPoint;
+        public float LaserRotation = (float)Math.PI / 2f;
+        int timer = 0;
+
+        public float width = 1f;
+        public float scale = 1f;
+        float progress = 0f;
+
+        public override void SetDefaults()
+        {
+            Projectile.penetrate = -1;
+            Projectile.width = 5;
+            Projectile.height = 5;
+            Projectile.hostile = true;
+            Projectile.friendly = false;
+            Projectile.scale = 1f;
+            Projectile.timeLeft = 50;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+        }
+
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                LaserRotation = Projectile.velocity.ToRotation();
+            }
+            Projectile.velocity = Vector2.Zero;
+            additional = Math.Clamp(MathHelper.Lerp(additional, 120 * Projectile.scale, 0.04f), 0, 50 * Projectile.scale);
+
+            timer++;
+        }
+
+        float additional = 0f;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            if (timer > 0)
+            {
+                endPoint = LaserRotation.ToRotationVector2() * 2000f;
+                var texBeam = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
+
+                Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
+
+                float height = (50f * Projectile.scale) - additional; //15
+
+                if (height == 0)
+                    Projectile.active = false;
+
+                int width = (int)(Projectile.Center - endPoint).Length() - 24;
+
+                var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
+
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.HotPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+
+            }
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return false;
+        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (timer > 7) return false;
+
+            Vector2 unit = LaserRotation.ToRotationVector2();
+            float point = 0f;
+            // Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
+            // It will look for collisions on the given line using AABB
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
+                Projectile.Center + unit * 1000, 22, ref point);
         }
     }
 } 

@@ -656,8 +656,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
-            whatAttack = 17;
-            
+            //whatAttack = 33;
+            //whatAttack = 13;
+
             if (whatAttack != 24)
                 hideRegreGlow = false;
 
@@ -1851,12 +1852,24 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public bool spinningClockwise = false;
         float approachAccelValue = 0f;
         bool shouldSlowApproach = false;
+        Projectile reticle = null;
         public void SpinPhase3(Player myPlayer)
         {
             //Do the normal startup
             phase3PulseColor = Color.White;
             if (timer <= 150)
             {
+                if (timer == 0)
+                {
+                    //int retIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<CyverReticle>(), 0, 0, myPlayer.whoAmI);
+                    //Projectile Reticle = Main.projectile[retIndex];
+                    //if (Reticle.ModProjectile is CyverReticle target)
+                    //{
+                        //target.ParentIndex = NPC.whoAmI;
+                    //}
+                    //reticle = Reticle;
+                }
+
                 ballScale += 2;
                 if (timer >= 20)
                 {
@@ -1885,8 +1898,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 1f;
 
-
-
                 float newRotation = 0;
                 if (timer > 300 && timer < 315)
                     newRotation = Utils.AngleTowards(NPC.rotation, (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi + (spinningClockwise ? 1.2f : -1.2f), 0.2f);
@@ -1896,6 +1907,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 if (timer == 300)
                 {
+                    //(reticle.ModProjectile as CyverReticle).boostPower = 1f;
+
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Research_1") with { Pitch = .65f, PitchVariance = .2f, Volume = 1f, MaxInstances = -1 };
                     SoundEngine.PlaySound(style, NPC.Center);
 
@@ -2469,7 +2482,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         Vector2 circular = new Vector2(Phase3 ? 40 : 32, 0).RotatedBy(MathHelper.ToRadians(i));
                         circular = circular.RotatedBy(NPC.rotation);
                         Vector2 dustVelo = -circular * 0.1f;
-                        Dust b = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + circular, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader2);
+                        //Dust b = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + circular, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader2);
                     }
 
                     int type = Phase3 ? (advancer % 8 == 0 ? ModContent.ProjectileType<CyverLaserBomb>() : ModContent.ProjectileType<CyverLaserBomb>()) : ModContent.ProjectileType<ShadowBlade>(); //Cyver2EnergyBall
@@ -2733,12 +2746,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .16f, Pitch = .42f, PitchVariance = 0.1f };
                     SoundEngine.PlaySound(style3, NPC.Center);
 
-                    Vector2 vel = (NPC.rotation + 2f).ToRotationVector2() * 6;
-                    Vector2 vel2 = (NPC.rotation - 2f).ToRotationVector2() * 6;
+                    Vector2 vel = (NPC.rotation + 2.5f).ToRotationVector2() * 10;
+                    Vector2 vel2 = (NPC.rotation - 2.5f).ToRotationVector2() * 10;
                     if (isExpert || isMaster)
                     {
                         int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<EnergyBall>(), 20, 1);
                         int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<EnergyBall>(), 20, 1);
+                        (Main.projectile[a].ModProjectile as EnergyBall).strength = 1f;
+                        (Main.projectile[b].ModProjectile as EnergyBall).strength = 1f;
+
+                        ///Main.projectile[a].extraUpdates = 1;
+                        ///Main.projectile[b].extraUpdates = 1;
+                        ///Main.projectile[a].timeLeft = 210;
+                        ///Main.projectile[b].timeLeft = 210;
 
                         if (isMaster)
                         {
@@ -3036,20 +3056,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/ElectricExplode") with { Volume = .05f, Pitch = 1f, };
                     SoundEngine.PlaySound(style3, NPC.Center);
 
-                    /*
-                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.rotation.ToRotationVector2() * 0, ModContent.ProjectileType<LaserExplosionBall>(),
-                        ContactDamage / 10, 2, Main.myPlayer);
-                    Projectile p = Main.projectile[a];
-                    p.timeLeft = 30;
-
-                    if (p.ModProjectile is LaserExplosionBall ball)
-                    {
-                        ball.numberOfLasers = 12;
-                        ball.projType = ModContent.ProjectileType<StretchLaser>();
-                        ball.vel = 1.3f;
-                    }
-                    */
-
                     
                     int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.rotation.ToRotationVector2() * 0, ModContent.ProjectileType<LaserExplosionBall>(), ContactDamage / 10, 2, Main.myPlayer);
                     Projectile p = Main.projectile[a];
@@ -3058,18 +3064,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     if (p.ModProjectile is LaserExplosionBall ball)
                     {
                         ball.projType = ModContent.ProjectileType<EnergyBall>();
-
-
                         ball.numberOfLasers = 3;
-                        //ball.projType = ModContent.ProjectileType<StretchLaser>();
                         ball.vel = 5f;
-                        
                     }
-                    
-
                     storedVec2 = NPC.rotation.ToRotationVector2() * 25;
-
-
                 }
 
                 if (timer == 62)
