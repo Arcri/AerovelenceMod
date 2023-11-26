@@ -53,6 +53,8 @@ namespace AerovelenceMod.Content.Items
             Item.shoot = ModContent.ProjectileType<EosSlash>();
             //Item.useAmmo = AmmoID.Bullet;
             Item.shootSpeed = 10f;
+
+            Item.noUseGraphic = true;
         }
 
         bool tick = false;
@@ -64,7 +66,11 @@ namespace AerovelenceMod.Content.Items
             //Main.projectile[pulse].scale = 1f; //0.1
 
 
-            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, Main.myPlayer);
+            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0.5f, ModContent.ProjectileType<OtherVertexLaserTest>(), 0, 0, Main.myPlayer);
+            //int thunder = Projectile.NewProjectile(null, Main.MouseWorld, velocity * -1f, ModContent.ProjectileType<SkylightThunderStrike>(), 10, 1, Main.myPlayer);
+            //Main.projectile[thunder].friendly = false;
+            //Main.projectile[thunder].hostile = true;
+
             return false;
 
             for (int i22 = 0; i22 < 8; i22++) //4 //2,2

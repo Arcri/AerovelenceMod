@@ -646,6 +646,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             return false;
         }
 
+        public override bool CanHitPlayer(Player target)
+        {
+            return true;
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkylightVFX>(), 0, 0, Main.myPlayer);
+            AoE();
+            spawnedExplosion = true;
+        }
+
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkylightVFX>(), 0, 0, Main.myPlayer);

@@ -684,6 +684,8 @@ Projectiles: {
 	CyverBotProjOld.DisplayName: Cyver Bot Proj Old
 	CyverWhipProjOld.DisplayName: Cyver Whip Proj Old
 	TrojanForceBot.DisplayName: Trojan Force Bot
+	LowTierPrime.DisplayName: Low Tier Prime
+	OtherVertexLaserTest.DisplayName: Other Vertex Laser Test
 }
 
 Configs: {

@@ -1087,9 +1087,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             }
             Projectile.velocity *= 0.9f;
 
-            if (burstFX && Projectile.timeLeft <= 10)
+            if (burstFX && Projectile.timeLeft <= 20)
             {
-                scale -= 0.08f; //MathHelper.Lerp(0f, 1f, Easings.easeInQuint(Projectile.timeLeft / 10f));
+                scale = MathHelper.Lerp(0f, 1f, Easings.easeOutBack(Projectile.timeLeft / 20f)) * 1.03f;
+                //scale -= 0.08f; //MathHelper.Lerp(0f, 1f, Easings.easeInQuint(Projectile.timeLeft / 10f));
                 Projectile.scale = scale;
             }
         }

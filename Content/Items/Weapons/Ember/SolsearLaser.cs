@@ -119,15 +119,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 				myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
 				myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
 				myEffect.Parameters["uTime"].SetValue(timer * 0.002f);
-				myEffect.Parameters["uSaturation"].SetValue(2);
+				myEffect.Parameters["uSaturation"].SetValue(1);
 
 
-				Main.spriteBatch.End();
-				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
 
-				//Activate Shader
-				myEffect.CurrentTechnique.Passes[0].Apply();
+                //Activate Shader
+                myEffect.CurrentTechnique.Passes[0].Apply();
 
 				Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
 
@@ -149,16 +149,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 				var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
 
 				Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
-				//Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+                //Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
 
 
-				//for (int i = 0; i < width; i += 6)
-				//Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
+                //for (int i = 0; i < width; i += 6)
+                //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
 
-				Main.spriteBatch.End();
-				Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-				float height2 = (20f); //25
+
+                float height2 = (20f); //25
 
 				if (height2 == 0)
 					Projectile.active = false;
@@ -193,10 +194,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			myEffect.Parameters["uOpacity"].SetValue(0.9f); 
 			myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-			Vector2 thisPos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
+            Vector2 thisPos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
 
 			Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50), 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
 			Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50), 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
@@ -210,9 +211,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.2f), spotTex.Size() / 2, 0.15f, SpriteEffects.None, 0);
 			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.1f, SpriteEffects.None, 0);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-		}
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+        }
 
         public override void Kill(int timeLeft)
         {

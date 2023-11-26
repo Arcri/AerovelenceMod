@@ -47,7 +47,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1.15f;
+            Projectile.scale = 1f;
         }
 
 

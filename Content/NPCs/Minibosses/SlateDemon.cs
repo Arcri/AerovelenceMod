@@ -105,7 +105,7 @@ namespace AerovelenceMod.Content.NPCs.Minibosses
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return !Main.dayTime ? .2f : 0f;
+            return 0f;//!Main.dayTime ? .2f : 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)

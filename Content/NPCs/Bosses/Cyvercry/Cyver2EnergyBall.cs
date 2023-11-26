@@ -65,11 +65,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (player.active)
             {
-                float curvePower = (timer < 60 ? 0.012f : 0.009f) * 1.25f;
+                float curvePower = (timer < 60 ? 0.012f : 0.009f) * 0.75f;
 
                 Projectile.rotation = Projectile.rotation.AngleTowards((player.Center - Projectile.Center).ToRotation(), curvePower); //(0.001f * timer) + 0.01f
                 Projectile.velocity = Projectile.velocity.Length() * Projectile.rotation.ToRotationVector2();
-                Projectile.velocity *= 1.002f;
+                Projectile.velocity *= 1.008f;
             }
 
             if (timer < 0)
@@ -95,7 +95,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail1.shouldScrollColor = true;
             trail1.gradientTime = 0.0f;
 
-            trail1.trailTime = (float)(timer * 0.02f);
+            trail1.trailTime = (float)timer * 0.025f;
             trail1.trailRot = Projectile.velocity.ToRotation();
             trail1.trailPos = Projectile.Center + Projectile.velocity;
             if (timer > 0) trail1.TrailLogic();
@@ -176,12 +176,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D spike = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D spike = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Spike").Value;
             Texture2D star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
 
             float spikeRot = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             Vector2 spikeScale = new Vector2(0.85f, 1f) * 0.35f;
-            Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition, null, Color.HotPink with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(1.5f, 1.5f), null, Color.HotPink with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, Color.HotPink with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(spike, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 1f, spikeRot, spike.Size() / 2, spikeScale * 0.5f, SpriteEffects.None, 0f);
             
             //Main.spriteBatch.Draw(glow4, Projectile.Center - Main.screenPosition, null, Color.HotPink with { A = 0 } * 0.65f, Projectile.velocity.ToRotation() + rot - MathHelper.ToRadians(110), glow4.Size() / 2, 0.2f * scale, SpriteEffects.None, 0f);

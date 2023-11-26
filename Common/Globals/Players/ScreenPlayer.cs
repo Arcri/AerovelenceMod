@@ -88,7 +88,7 @@ namespace AerovelenceMod.Common.Globals.Players
             if (cutscene)
             {
                 Player.statLife = 1;
-                return false;
+                //return false;
             }
             return true;
         }

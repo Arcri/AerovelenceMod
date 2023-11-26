@@ -62,10 +62,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public bool Phase2 = false;
         public bool Phase3 = false;
 
-        public override bool CheckActive()
-        {
-            return false;
-        }
+        public override bool CheckActive() { return false; }
+        
         public override void SetDefaults()
         {
             ContactDamage = 80;
@@ -101,7 +99,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
         {
-
             if (item.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
             {
                 if ((NPC.Center - Main.player[NPC.target].Center).Length() < 300)
@@ -153,6 +150,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float fadeDashValue = 0f;
         float justDashValue = 0f;
         float overlayPower = 0f;
+        float curveDashTelegraphValue = 0f;
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Vector2 squashScale = new Vector2(1f, 1f - (0.5f * squashPower)) * NPC.scale;
@@ -321,6 +319,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Main.spriteBatch.Draw(Flare, eyeStarDrawPos, Flare.Frame(1, 1, 0, 0), Color.SkyBlue * 0.4f, eyeStarRotation * -1, Flare.Size() / 2, eyeStarValue * 2.5f, SpriteEffects.None, 0f);
                 Main.spriteBatch.Draw(Flare, eyeStarDrawPos, Flare.Frame(1, 1, 0, 0), Color.White, eyeStarRotation * -1, Flare.Size() / 2, eyeStarValue * 0.8f, SpriteEffects.None, 0f);
             }
+
+            //Curve Dash Telegraph
+            Texture2D Ray = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/EasyLightray").Value;
+            Main.spriteBatch.Draw(Ray, eyeStarDrawPos, Ray.Frame(1, 1, 0, 0), Color.DeepPink * curveDashTelegraphValue * 0.5f, NPC.rotation + MathF.PI, new Vector2(0, Ray.Height / 2f), 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ray, eyeStarDrawPos, Ray.Frame(1, 1, 0, 0), Color.DeepPink * curveDashTelegraphValue * 0.25f, NPC.rotation + MathF.PI, new Vector2(0, Ray.Height / 2f), 0.6f, SpriteEffects.None, 0f);
+
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -2259,9 +2263,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 #region daggers
                 if (timer == 80 && Phase2)
                 {
-                    for (int i = 0; i < 3 + (isExpert ? 1 : 0); i++)
+                    int daggerCount = 3 + (isExpert ? 1 : 0);
+                    for (int i = 0; i < daggerCount; i++)
                     {
-                        Vector2 toLocation = myPlayer.Center + new Vector2(Main.rand.NextFloat(240, 400), 0).RotatedBy(Main.rand.NextFloat(6.28f)); //240 600
+                        Vector2 outVec = new Vector2(300f, 0f).RotatedBy((MathHelper.TwoPi / daggerCount) * i);
+
+                        Vector2 toLocation = myPlayer.Center + outVec;//new Vector2(Main.rand.NextFloat(240, 400), 0).RotatedBy(Main.rand.NextFloat(6.28f)); //240 600
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int damage = 20;
@@ -2746,14 +2753,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .16f, Pitch = .42f, PitchVariance = 0.1f };
                     SoundEngine.PlaySound(style3, NPC.Center);
 
-                    Vector2 vel = (NPC.rotation + 2.5f).ToRotationVector2() * 10;
-                    Vector2 vel2 = (NPC.rotation - 2.5f).ToRotationVector2() * 10;
+                    Vector2 vel = (NPC.rotation + 2.5f).ToRotationVector2() * 6;
+                    Vector2 vel2 = (NPC.rotation - 2.5f).ToRotationVector2() * 6;
                     if (isExpert || isMaster)
                     {
-                        int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<EnergyBall>(), 20, 1);
-                        int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<EnergyBall>(), 20, 1);
-                        (Main.projectile[a].ModProjectile as EnergyBall).strength = 1f;
-                        (Main.projectile[b].ModProjectile as EnergyBall).strength = 1f;
+                        int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 1);
+                        int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel2, ModContent.ProjectileType<Cyver2EnergyBall>(), 20, 1);
+                        //(Main.projectile[a].ModProjectile as EnergyBall).strength = 1f;
+                        //(Main.projectile[b].ModProjectile as EnergyBall).strength = 1f;
 
                         ///Main.projectile[a].extraUpdates = 1;
                         ///Main.projectile[b].extraUpdates = 1;
@@ -2959,7 +2966,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         int ballDashCount = 0;
         public void BallDash(Player myPlayer)
         {
-
             NPC.damage = 0;
             NPC.dontTakeDamage = true;
             fadeDashing = true;
@@ -3124,6 +3130,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer < 35 + 10)
             {
+                curveDashTelegraphValue = 1f;
 
                 Vector2 move = (vecOut + myPlayer.Center) - NPC.Center;
 
@@ -3138,6 +3145,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             int extra = 10;
             if (timer >= 40 + extra && timer <= 100 + extra)
             {
+                curveDashTelegraphValue = 0f;
                 if (timer == 40 + extra)
                 {
                     storedRotaion = (myPlayer.Center - NPC.Center).ToRotation();// NPC.rotation;
@@ -3800,8 +3808,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public void CCPhantomDash(Player myPlayer)
         {
             //Spawn Area
-
-
             fadeDashing = false;
             if (timer == 0)
             {

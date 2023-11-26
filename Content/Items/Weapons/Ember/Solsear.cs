@@ -105,7 +105,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 SoundStyle styla = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .44f, Volume = 0.9f, PitchVariance = 0.11f};
                 SoundEngine.PlaySound(styla, player.Center);
 
-                for (int i = 0; i < 2; i++) //4 //2,2
+                for (int i = 0; i < 5; i++)
                 {
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                     Vector2 vel = velocity.RotatedBy(0);
@@ -114,11 +114,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                         Color.OrangeRed, Main.rand.NextFloat(0.1f * 5, 0.3f * 5), 0.4f, 0f, dustShader);
                     p.noLight = false;
                     //p.velocity += NPC.velocity * (0.8f + Main.rand.NextFloat(-0.1f, -0.2f));
-                    p.fadeIn = 10 + Main.rand.NextFloat(-5, 10);
-                    p.velocity *= 0.4f;
+                    p.fadeIn = 30 + Main.rand.NextFloat(-5, 10);
+                    p.velocity *= 0.3f;
                 }
 
-                for (int i = 0; i < 7; i++) //4 //2,2
+                for (int i = 0; i < 12; i++)
                 {
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
                     Vector2 vel = velocity.RotatedBy(Main.rand.NextFloat(-1f, 1f));
@@ -126,8 +126,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                     Dust p = GlowDustHelper.DrawGlowDustPerfect(position + muzzleOffset * 0.2f, ModContent.DustType<GlowLine1Fast>(), vel * (3f + Main.rand.NextFloat(-1f, 1f)),
                         Color.OrangeRed, Main.rand.NextFloat(0.07f * 0.75f, 0.2f * 0.75f), 0.5f, 0f, dustShader);
                     p.noLight = false;
-                    p.fadeIn = 10 + Main.rand.NextFloat(-5, 10);
-                    p.velocity *= 0.4f;
+                    p.fadeIn = 40 + Main.rand.NextFloat(-5, 10);
+                    p.velocity *= 0.3f;
                 }
 
                 return false;
@@ -217,6 +217,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         //public override void SetStaticDefaults() => DisplayName.SetDefault("Solsear");
 
+        float justShotPower = 1f;
         public override void SetDefaults()
         {
             Projectile.hostile = false;
@@ -248,6 +249,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 initialized = true;
                 Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
             }
+
+            justShotPower = Math.Clamp(MathHelper.Lerp(justShotPower, -0.15f, 0.1f), 0f, 1f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -255,21 +258,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/SolesearGlowMask").Value;
 
-
             Vector2 position = (owner.Center + (currentDirection * 22)) - Main.screenPosition;
+
+            Vector2 scale = new Vector2(1f - (0.1f * justShotPower), 1f) * 1f;
 
             if (owner.direction == 1)
             {
                 SpriteEffects effects1 = SpriteEffects.None;
-                Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation(), texture.Size() / 2, 1.15f, effects1, 0.0f);
-                Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation(), texture.Size() / 2, 1.15f, effects1, 0.0f);
+                Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation(), texture.Size() / 2, scale, effects1, 0.0f);
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation(), texture.Size() / 2, scale, effects1, 0.0f);
+
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPower * 2f, currentDirection.ToRotation(), glowMask.Size() / 2, scale, effects1, 0.0f);
 
             }
             else
             {
                 SpriteEffects effects1 = SpriteEffects.FlipHorizontally;
-                Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation() - 3.14f, texture.Size() / 2, 1.15f, effects1, 0.0f);
-                Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, 1.15f, effects1, 0.0f);
+                Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation() - 3.14f, texture.Size() / 2, scale, effects1, 0.0f);
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, scale, effects1, 0.0f);
+
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPower * 2f, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, scale, effects1, 0.0f);
 
             }
 
