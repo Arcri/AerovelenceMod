@@ -686,6 +686,9 @@ Projectiles: {
 	TrojanForceBot.DisplayName: Trojan Force Bot
 	LowTierPrime.DisplayName: Low Tier Prime
 	OtherVertexLaserTest.DisplayName: Other Vertex Laser Test
+	BigShot.DisplayName: Big Shot
+	SigilForBlast.DisplayName: Sigil For Blast
+	WarBowSpike.DisplayName: War Bow Spike
 }
 
 Configs: {

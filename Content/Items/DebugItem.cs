@@ -66,7 +66,7 @@ namespace AerovelenceMod.Content.Items
             //Main.projectile[pulse].scale = 1f; //0.1
 
 
-            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0.5f, ModContent.ProjectileType<OtherVertexLaserTest>(), 0, 0, Main.myPlayer);
+            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<SigilForBlast>(), 0, 0, Main.myPlayer);
             //int thunder = Projectile.NewProjectile(null, Main.MouseWorld, velocity * -1f, ModContent.ProjectileType<SkylightThunderStrike>(), 10, 1, Main.myPlayer);
             //Main.projectile[thunder].friendly = false;
             //Main.projectile[thunder].hostile = true;

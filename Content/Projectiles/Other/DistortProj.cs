@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
                 if (Projectile.scale > 0.95f)
                 {
                     Projectile.active = false;
-                    Main.NewText(timer);
+                    
                 }
             }
 

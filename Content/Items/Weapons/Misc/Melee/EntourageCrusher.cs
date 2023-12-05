@@ -634,7 +634,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             trail1.trailTime = (float)Main.timeForVisualEffects * 0.04f;
             trail2.trailTime = (float)Main.timeForVisualEffects * 0.02f;
 
-
             Texture2D JustBladeWhite = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/EntourageCrusherBladeWhite");
             Texture2D JustBlade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/EntourageCrusherBlade");
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/EntourageCrusher");

@@ -256,12 +256,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer > 0)
             {
                 endPoint = LaserRotation.ToRotationVector2() * 2000f;
-                var texBeam = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
 
+                //Star
+                Texture2D star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+                Main.spriteBatch.Draw(star, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24 - Main.screenPosition, null, Color.HotPink with { A = 0 }, LaserRotation, star.Size() / 2f, (50f * Projectile.scale - additional) * 0.01f, 0, 0);
+                Main.spriteBatch.Draw(star, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24 - Main.screenPosition, null, Color.White with { A = 0 }, LaserRotation, star.Size() / 2f, (50f * Projectile.scale - additional) * 0.005f, 0, 0);
+
+                //Beam
+                Texture2D texBeam = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
-
                 float height = (50f * Projectile.scale) - additional; //15
-
+                //height *= 4f;
                 if (height == 0)
                     Projectile.active = false;
 
@@ -273,7 +278,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Scroll/CheapScroll", AssetRequestMode.ImmediateLoad).Value;
                 #region Shader Params
-                myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
+                myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
                 myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
 
                 Color c1 = new Color(255, 20, 125);//Color.DeepPink;

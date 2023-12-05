@@ -1108,8 +1108,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 
                 for (int i = 0; i < 360; i += 360 / numberOfLasers)
                 {
+                    //For Ball Dash
+                    bool aimToPlayer = projType == ModContent.ProjectileType<EnergyBall>();
+                    Player player = Main.player[(int)Projectile.ai[0]];
+                    Vector2 toPlayer = (player.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
 
-                    int proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i) + rotationOffset), projType, Projectile.damage, 0, Main.myPlayer);
+                    int proj = 0;
+                    if (aimToPlayer) 
+                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, toPlayer.RotatedBy(MathHelper.ToRadians(i) + rotationOffset) * vel, projType, Projectile.damage, 0, Main.myPlayer);
+                    else
+                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i) + rotationOffset), projType, Projectile.damage, 0, Main.myPlayer);
+
                     if (Main.projectile[proj].ModProjectile is StretchLaser laser)
                     {
                         Main.projectile[proj].timeLeft = stretchLaserTimeLeft;

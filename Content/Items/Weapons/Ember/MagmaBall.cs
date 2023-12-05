@@ -21,8 +21,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 	public class MagmaBall : ModProjectile
 	{
 		private int timer = 0;
-
-		
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Burning Blaze Ball");
@@ -36,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.hostile = false;
 			Projectile.penetrate = -1;
 			Projectile.scale = 1;
-			Projectile.timeLeft = 300;
+			Projectile.timeLeft = 3000; //300
 			Projectile.tileCollide = true; //false;
 			Projectile.width = 50;
 			Projectile.height = 50;
@@ -127,7 +125,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D starA = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
             Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
 
-			globalScale = 1f;
+			globalScale = 2f;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);

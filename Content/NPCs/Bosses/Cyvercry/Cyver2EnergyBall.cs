@@ -65,11 +65,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (player.active)
             {
-                float curvePower = (timer < 60 ? 0.012f : 0.009f) * 0.75f;
+                float curvePower = (timer < 60 ? 0.04f : 0.04f) * 1f;
 
                 Projectile.rotation = Projectile.rotation.AngleTowards((player.Center - Projectile.Center).ToRotation(), curvePower); //(0.001f * timer) + 0.01f
                 Projectile.velocity = Projectile.velocity.Length() * Projectile.rotation.ToRotationVector2();
                 Projectile.velocity *= 1.008f;
+
+                //float curvePower = (timer < 60 ? 0.04f : 0.04f) * 1f;
+                //Projectile.velocity += (player.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * curvePower;
             }
 
             if (timer < 0)
@@ -81,12 +84,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             float scale = 2f;
 
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/s06sBloom").Value;
             trail1.trailColor = Color.HotPink;
             trail1.trailPointLimit = (int)(125 * scale);
             trail1.trailWidth = (int)(20 * scale);
-            trail1.trailMaxLength = (int)(225 * scale); //225
-            trail1.timesToDraw = 3;
+            trail1.trailMaxLength = (int)(175 * scale); //225
+            trail1.timesToDraw = 1;
             trail1.pinch = false;
             trail1.pinchAmount = 0.2f;
 
@@ -105,7 +108,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail2.trailColor = Color.DeepPink;
             trail2.trailPointLimit = (int)(125 * scale);
             trail2.trailWidth = (int)(10 * scale);
-            trail2.trailMaxLength = (int)(225 * scale); //255
+            trail2.trailMaxLength = (int)(175 * scale); //255
             trail2.timesToDraw = 2;
             trail2.pinch = false;
             trail2.pinchAmount = 0.2f;
