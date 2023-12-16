@@ -443,7 +443,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 1000;
-            //Projectile.extraUpdates = 20;
+            Projectile.extraUpdates = 0;
         }
         public float LaserRotation = 0;
         public float laserWidth = 70;
@@ -467,7 +467,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public List<float> previousRotations = new List<float>();
 
-        float easeProg = 0f;
+        public float easeProg = 0f;
+        public float currentAngle = 0f;
+        public float centerAngle = 0f;
+        public bool drawSlash = false;
+
         BaseTrailInfo Trail = new BaseTrailInfo();
         public override void AI()
         {
@@ -489,6 +493,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (previousRotations.Count > 10)
             {
                 previousRotations.RemoveAt(0);
+            }
+
+            if (timer % 2 == 0 && progress > 0.3f && progress < 0.7f)
+            {
+                //int shot = Projectile.NewProjectile(null, Projectile.Center + Projectile.rotation.ToRotationVector2() * -120f, Projectile.rotation.ToRotationVector2() * 1f, ModContent.ProjectileType<StretchLaser>(), 15, 2);
+
             }
 
             if (false)
@@ -601,8 +611,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation + MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation - MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
 
+            Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/KennySlashHalfBig").Value;
+            float slashOpacity = MathF.Pow(MathF.Sin(MathF.PI * progress), 2);
+            Vector2 slashScale = new Vector2(1f, 2f) * 1.5f * slashOpacity;
+            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * 130f, null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * 130f, null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
+
+
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
 
             for (int i = 0; i < 0; i++)
             {
@@ -613,6 +631,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            
+            
+
+
+            //pixelKennySlashBlack
+
+            //draw
 
 
             return false;

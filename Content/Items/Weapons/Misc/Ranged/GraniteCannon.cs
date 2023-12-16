@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.knockBack = 0;
+            Item.knockBack = 2;
             Item.value = Item.sellPrice(0, 0, 50, 0);
             Item.rare = ItemRarityID.Blue;
             Item.autoReuse = true;
@@ -196,20 +196,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             TrailDrawing();
             Texture2D Chunk = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GraniteChunk");
 
-            for (int j = 0; j < 4; j++)
+            
+            for (int i = 0; i < 8; i++)
             {
-                //Main.spriteBatch.Draw(Chunk, Projectile.oldPos[j] - Main.screenPosition, null, Color.Black * (1 - j * 0.15f), Projectile.oldRot[j], Chunk.Size() / 2, 1f, SpriteEffects.None, 0);
+                Color col = i == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
+
+                Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, col * 1f, Projectile.rotation, Chunk.Size() / 2, Projectile.scale * 1.1f, SpriteEffects.None, 0f);
+
             }
-            /*
-            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Width() * 0.5f, Projectile.height * 0.5f);
-            for (int k = 0; k < Projectile.oldPos.Length; k++)
-            {
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / Projectile.oldPos.Length);
-                Main.EntitySpriteDraw((Texture2D)TextureAssets.Projectile[Projectile.type], drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0);
-            }*/
 
             Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Chunk.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.25f, Projectile.rotation, Chunk.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
+
 
             return false;
         }
@@ -232,7 +231,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             TrailLogic();
             timer++;
 
-            //Logic from Spirit cannonbubble
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
@@ -263,8 +261,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .27f, Volume = 0.7f }; 
                     SoundEngine.PlaySound(style, Projectile.Center);
 
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), 2, 1, Main.myPlayer);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), 2, 1, Main.myPlayer);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
 
                     Projectile.active = false;
                     p.active = false;
@@ -291,13 +289,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_89") with { Pitch = .19f, PitchVariance = 0.2f, Volume = 0.4f };
             SoundEngine.PlaySound(style2, Projectile.Center);
 
-            int g1 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<GraniteShard1>(), Scale: 0.75f);
-            int g2 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<GraniteShard2>(), Scale: 0.75f);
-            int g3 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(2, 2), ModContent.GoreType<GraniteShard3>(), Scale: 0.75f);
-
-            Main.dust[g1].velocity.Y *= -2f;
-            Main.dust[g2].velocity.Y *= -2f; 
-            Main.dust[g3].velocity.Y *= -2f;
+            int g1 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard1>(), Scale: 0.75f);
+            int g2 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard2>(), Scale: 0.75f);
+            int g3 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard3>(), Scale: 0.75f);
         }
 
         public override float WidthFunction(float progress)
@@ -339,25 +333,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Texture2D Glorb = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Glorb");
 
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Glorb, Projectile.Center - Main.screenPosition, null, Color.LightSkyBlue, Projectile.rotation, Glorb.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Glorb, Projectile.Center - Main.screenPosition, null, Color.DeepSkyBlue, Projectile.rotation, Glorb.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
 
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 8;  j++)
                 {
-                    Main.spriteBatch.Draw(Core, Projectile.oldPos[j] - Main.screenPosition + new Vector2(Projectile.width / 2, Projectile.height / 2), null, Color.SkyBlue, Projectile.rotation, Core.Size() / 2, (1 - j * 0.15f) * scale, SpriteEffects.None, 0);
+                    Color col = new Color(125, 198, 255) with { A = 0 };
+                    Main.spriteBatch.Draw(Core, Projectile.oldPos[j] - Main.screenPosition + new Vector2(Projectile.width / 2, Projectile.height / 2), null, col, Projectile.rotation + (i == 0 ? 1.57f / 2f : 0f), Core.Size() / 2, (1 - j * 0.15f) * scale, SpriteEffects.None, 0);
                 }
             }
 
            
 
-            Main.spriteBatch.Draw(Core, Projectile.Center - Main.screenPosition, null, Color.SkyBlue, Projectile.rotation, Core.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
-            
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Draw(Core, Projectile.Center - Main.screenPosition, null, Color.SkyBlue with { A = 0 }, Projectile.rotation, Core.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
 
             return false;
         }
@@ -373,7 +369,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                     NPC npc = Main.npc[index];
                     Projectile.velocity *= .98f;
                     Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(npc.Center) * 20f, .1f);
+
+                    Math.Clamp(Projectile.timeLeft, 2, 1000);
                 }
+                else
+                {
+                    Projectile.timeLeft -= 3;
+                }
+
             } else
             {
                 Projectile.velocity *= 0.98f;
@@ -397,7 +400,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 7; i++)
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(),
                     Main.rand.NextVector2Circular(2,2) * Main.rand.Next(1, 3),

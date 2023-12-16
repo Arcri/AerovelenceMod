@@ -18,9 +18,11 @@ using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
-	public class MagmaBall : ModProjectile
+	public class SolsearBomb : ModProjectile
 	{
-		private int timer = 0;
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        private int timer = 0;
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Burning Blaze Ball");
@@ -34,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.hostile = false;
 			Projectile.penetrate = -1;
 			Projectile.scale = 1;
-			Projectile.timeLeft = 3000; //300
+			Projectile.timeLeft = 300; //300
 			Projectile.tileCollide = true; //false;
 			Projectile.width = 50;
 			Projectile.height = 50;
@@ -111,9 +113,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.height = (int)MathHelper.Clamp((int)(100 * globalScale), 20, 150);
 		}
 
-		float globalScale = 0.5f;
-		float globalMax = 0.5f;
-		float globalGoal = 0.75f;
+		float globalScale = 0.55f;
+		float globalMax = 0.55f;
+		float globalGoal = 0.8f;
 
 		public override bool PreDraw(ref Color lightColor)
 		{
@@ -125,7 +127,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D starA = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
             Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
 
-			globalScale = 2f;
+			//globalScale = 2f;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
@@ -228,17 +230,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void PostDraw(Color lightColor)
         {
-			//Main.pixelShader.CurrentTechnique.Passes[0].Apply();
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
+			int explo = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SolsearBombExplosion>(), 
+				(int)(Projectile.damage * 3f * globalScale), 2f, Main.player[Projectile.owner].whoAmI);
+			(Main.projectile[explo].ModProjectile as SolsearBombExplosion).size = 0.35f;
 
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 170 * globalScale)
+				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 170 * globalScale && false)
 				{
 					int Direction = 0;
 					if (Projectile.position.X - Main.npc[i].position.X < 0)
@@ -254,7 +258,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 					Main.npc[i].StrikeNPC(myHit);
 
 					ArmorShaderData thisDustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-					for (int j = 0; j < 4; j++)
+					for (int j = 0; j < 0; j++)
 					{
 						Dust d = GlowDustHelper.DrawGlowDustPerfect(Main.npc[i].Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
 							Color.OrangeRed, 0.65f, 0.4f, 0f, thisDustShader);
@@ -279,7 +283,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 
 			//remember that global scale ranges from 0 -> 0.5 -> 1.25
-			for (int i = 0; i < 24 * globalScale; i++) //2
+			for (int i = 100; i < 24 * globalScale; i++) //2
 			{
 				float rotValue = i * 30;
 				Vector2 bonus = new Vector2(5, 0).RotatedBy(rotValue);
@@ -292,7 +296,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 				//p.rotation = Main.rand.NextFloat(6.28f);
 			}
 
-			for (int i = 0; i < 4 ; i++)
+			for (int i = 0; i < 0 ; i++)
 			{
 				for (int j = 1; j < 4; j++)
 				{
@@ -315,35 +319,127 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 }
 
 			}
-
-			/*
-			for (int i = 0; i < 4; i++) //2
-			{
-				Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleDust>(),
-					Main.rand.NextVector2Circular(7, 7), new Color(255, 75, 50), Main.rand.NextFloat(0.4f, 0.65f), 0.4f, 0f, dustShader3);
-				p.alpha = 0;
-				//p.rotation = Main.rand.NextFloat(6.28f);
-			}
-			*/
-
-			/*
-			for (int i = 0; i < 8; i++) //2
-			{
-				Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleQuadStar>(),
-					Main.rand.NextVector2CircularEdge(6, 6), Color.OrangeRed, Main.rand.NextFloat(0.7f, 0.9f), 0.4f, 0f, dustShader);
-				p.alpha = 0;
-				//p.rotation = Main.rand.NextFloat(6.28f);
-			}
-			*/
-
 		}
 
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-			float damage = Projectile.damage * globalScale;
+			//float damage = Projectile.damage * globalScale;
             //base.ModifyHitNPC(ref damage);
         }
     }
+
+    public class SolsearBombExplosion : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        int timer = 0;
+        public float opacity = 1f;
+		public float size = 1f;
+		public bool maxPower = false;
+        
+        public override void SetDefaults()
+        {
+            Projectile.width = 1;
+            Projectile.height = 1;
+            Projectile.DamageType = DamageClass.Ranged;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 200;
+            Projectile.tileCollide = false;
+            Projectile.scale = 0.1f;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+        }
+
+        Vector2 startingCenter;
+		float rotVal = 0f;
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+
+            if (timer == 0)
+			{
+                startingCenter = Projectile.Center;
+				timer = Main.rand.Next(0, 200);
+            }
+
+            timer++;
+
+            Projectile.scale = MathHelper.Clamp(MathHelper.Lerp(Projectile.scale, 1.25f * size, 0.08f), 0f, 1f * size);
+
+            if (Projectile.scale >= 0.8f * size)
+                opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, -0.2f, 0.15f), 0, 2);
+			//else
+                //opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, 1.5f, 0.15f), 0f, 1f);
+
+            if (opacity <= 0)
+                Projectile.active = false;
+
+            Projectile.width = (int)(190 * Projectile.scale);
+            Projectile.height = (int)(190 * Projectile.scale);
+            Projectile.Center = startingCenter;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopDA").Value;
+            Texture2D Tex2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopE").Value;
+
+            Texture2D Orb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+
+
+            //Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Burst_09").Value;
+
+            float scale = Projectile.scale * 0.25f;
+
+
+			float timeFade = 1f - (0.25f * (Projectile.scale / size));
+
+            float timeA = timer * 0.045f * timeFade;
+			float timeB = timer * -0.07f * timeFade;
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Black * opacity * 0.75f, timeA, Tex.Size() / 2, scale * 1.65f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Black * opacity * 0.75f, timeB, Tex.Size() / 2, scale * 1.65f + (0.15f * scale), SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), Color.Black * opacity * 1f, timeB, Orb.Size() / 2, scale * 9f, SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity * 1f, timeB, Orb.Size() / 2, scale * 8f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), Color.Orange * opacity * 1f, timeB, Orb.Size() / 2, scale * 5f, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
+
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
+
+
+
+            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.15f, SpriteEffects.None, 0f);
+            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity, timeB, Tex.Size() / 2, scale * 1.15f + (0.15f * scale), SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex2.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity * 1f, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex2.Frame(1, 1, 0, 0), Color.Orange * opacity * 1f, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(BuffID.OnFire3, 100);
+        }
+    }
+
 }
 
 

@@ -93,7 +93,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 {
                     position += muzzleOffset;
                 }
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<MagmaBall>(), damage, 0, player.whoAmI);
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<SolsearBomb>(), damage, 0, player.whoAmI);
                 player.velocity += velocity * -1;
 
                 SoundStyle styleba = new SoundStyle("AerovelenceMod/Sounds/Effects/fireLoopBad") with { Volume = .12f, PitchVariance = .11f, MaxInstances = -1 };

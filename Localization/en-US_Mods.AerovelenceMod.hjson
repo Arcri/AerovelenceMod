@@ -689,6 +689,8 @@ Projectiles: {
 	BigShot.DisplayName: Big Shot
 	SigilForBlast.DisplayName: Sigil For Blast
 	WarBowSpike.DisplayName: War Bow Spike
+	SolsearBomb.DisplayName: Solsear Bomb
+	SolsearBombExplosion.DisplayName: Solsear Bomb Explosion
 }
 
 Configs: {
