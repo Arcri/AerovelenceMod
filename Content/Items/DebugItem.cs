@@ -60,17 +60,53 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //int pulse = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
-            //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
-            //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 2f;
-            //Main.projectile[pulse].scale = 1f; //0.1
+            int[] orbitValues1 = { 20,  80, 140,
+                                  40,  100, 160,
+                                  60,  120, 180 };
+
+            int[] orbitValues2 = { 20,  60, 40,
+                                  100,  40, 100,
+                                  60,  80, 80 };
+
+            int[][] orbitValues = { orbitValues1, orbitValues2 };
+
+            int numberOfFeahters = 9;
+            for (int ab = 0; ab < 2; ab++)
+            {
+                for (int index = 1; index <= numberOfFeahters; index++)
+                {
+                    int feather = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<OrbitingFeatherOld>(), damage, 0, Main.myPlayer);
+
+                    if (Main.projectile[feather].ModProjectile is OrbitingFeatherOld of)
+                    {
+                        of.timeToOrbit = 60 + (orbitValues[ab][index - 1] * 2) + (180 * ab * 2);  //60 * index;
+                        of.orbitVector = new Vector2(355f - (100 * ab), 0f).RotatedBy(MathHelper.TwoPi * ((index - 1f) / numberOfFeahters));
+                        of.orbitVal = 355f - (100 * ab);
+                        of.rotSpeed = ab == 0 ? 1.85f : 1.5f;
+                    }
+
+                }
+            }
+
+            int barrier = Projectile.NewProjectile(null, player.Center + new Vector2(0f, -245f), Vector2.Zero, ModContent.ProjectileType<WindBarrierTest>(), 0, 0, Main.myPlayer);
 
 
-            int bomb = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<SolsearBombExplosion>(), 0, 0, Main.myPlayer);
-            //int thunder = Projectile.NewProjectile(null, Main.MouseWorld, velocity * -1f, ModContent.ProjectileType<SkylightThunderStrike>(), 10, 1, Main.myPlayer);
-            //Main.projectile[thunder].friendly = false;
-            //Main.projectile[thunder].hostile = true;
+            return false;
 
+            int bomb = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(1f) * 1.5f, ModContent.ProjectileType<FeatherProjTest>(), damage, 0, Main.myPlayer);
+            (Main.projectile[bomb].ModProjectile as FeatherProjTest).rotGoal = (Main.MouseWorld - (position + velocity * 200f)).ToRotation() + 3.14f;
+
+            for (int i22 = 0; i22 < 8; i22++) //4 //2,2
+            {
+                Dust p = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<LineSpark>(),
+                    velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-2.2f, 2.2f)) * Main.rand.Next(4, 12),
+                    newColor: Color.HotPink, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
+                p.velocity += velocity * (1.45f + Main.rand.NextFloat(-0.1f, -0.2f));
+
+                p.customData = AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80, 
+                    1f, 0.75f);
+
+            }
             return false;
 
             for (int i22 = 0; i22 < 8; i22++) //4 //2,2

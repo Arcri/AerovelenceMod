@@ -71,7 +71,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (isExpert) ContactDamage = 100;
             if (isMaster) ContactDamage = 120;
 
-            NPC.lifeMax = 37500;
+            NPC.lifeMax = 43110;
             NPC.damage = 105;
             NPC.defense = 30;
             NPC.knockBackResist = 0f;
@@ -91,36 +91,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
         }
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
+
+        float baseDamageMult = 1f;
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = 43110;
-            NPC.damage = 125;
-            NPC.defense = 10;
+            NPC.lifeMax = (int)(NPC.lifeMax * 0.75f * balance * bossAdjustment);
+            NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref NPC.HitModifiers modifiers)
-        {
-            if (item.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
-            {
-                if ((NPC.Center - Main.player[NPC.target].Center).Length() < 300)
-                    item.damage = (int)(item.damage * (whatAttack == 3 && !spammingLaser ? 2 : 3f));
 
-            }
-        }
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            if (projectile.DamageType == DamageClass.Melee && (NPC.velocity.Length() > 17 || whatAttack == 3))
-            {
-                if ((NPC.Center - Main.player[NPC.target].Center).Length() < 350)
-                {
-                    projectile.damage = (int)(projectile.damage * (whatAttack == 3 && !spammingLaser ? 2 : 3f));
-                }
-            }
-
+            
 
             //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
-                projectile.damage = (int)(projectile.damage * 0.75f);
+                projectile.damage = (int)(projectile.damage * 0.7f);
             if (projectile.type == ProjectileID.ChlorophyteArrow)
                 projectile.damage = (int)(projectile.damage * 0.8f);
         }
@@ -168,8 +154,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.EntitySpriteDraw(Ball2, from - Main.screenPosition, Ball2.Frame(), Color.DeepPink * 1.5f, NPC.rotation - ((float)Main.timeForVisualEffects * 0.045f), Ball2.Frame().Size() / 2f, (ballScale / 130) * 0.11f, SpriteEffects.None, 0);
             Main.EntitySpriteDraw(Ball2, from - Main.screenPosition, Ball2.Frame(), Color.HotPink * 2f, NPC.rotation - ((float)Main.timeForVisualEffects * 0.045f), Ball2.Frame().Size() / 2f, (ballScale / 130) * 0.095f, SpriteEffects.None, 0);
 
-            Main.EntitySpriteDraw(Ball, from - Main.screenPosition + Main.rand.NextVector2Circular(3,3), Ball.Frame(), Color.HotPink * 2f, NPC.rotation - ((float)Main.timeForVisualEffects * 0.065f), Ball.Frame().Size() / 2f, (ballScale / 130) * 0.17f, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(Ball, from - Main.screenPosition + Main.rand.NextVector2Circular(3,3), Ball.Frame(), Color.DeepPink * 1f, NPC.rotation + ((float)Main.timeForVisualEffects * 0.04f), Ball.Frame().Size() / 2f, (ballScale / 130) * 0.15f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(Ball, from - Main.screenPosition + Main.rand.NextVector2Circular(3,3), Ball.Frame(), Color.Pink * 2f, NPC.rotation - ((float)Main.timeForVisualEffects * 0.065f), Ball.Frame().Size() / 2f, (ballScale / 130) * 0.17f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(Ball, from - Main.screenPosition + Main.rand.NextVector2Circular(3,3), Ball.Frame(), Color.HotPink * 1f, NPC.rotation + ((float)Main.timeForVisualEffects * 0.04f), Ball.Frame().Size() / 2f, (ballScale / 130) * 0.15f, SpriteEffects.None, 0);
 
             float glowIntensity = fadeDashing ? 0.25f : 1f;
             if (!hideRegreGlow)
@@ -642,6 +628,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
             }
         }
+
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        {
+            float newScale = 0.75f;
+            return base.DrawHealthBar(hbPosition, ref newScale, ref position);
+        }
         #endregion
 
         float bonusSpinCharge = 120;
@@ -662,7 +654,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override void AI()
         {
             whatAttack = 33;
-            //whatAttack = 13;
+            //whatAttack = 7;
 
             if (whatAttack != 24)
                 hideRegreGlow = false;
@@ -708,6 +700,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     break;
                 case -2:
                     IntroAnimation(myPlayer);
+                    break;
+                case -3:
+                    PhaseTransition(myPlayer);
                     break;
                 case 1:
                     IdleLaser(myPlayer);
@@ -917,7 +912,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer == 220)
             {
                 timer = -1;
-                whatAttack = 2;
+                ////whatAttack = 2;
+                whatAttack = -3;
                 advancer = 0;
             }
             if (advanceNegative)
@@ -2064,18 +2060,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         Projectile eyeSwordInstance = null;
         float swordEasingProgress = 0f;
+        bool hasDoneSwordSound = false;
+        bool hasDoneSwordShot = false;
+        int swordJustHitTime = 0;
         public void EyeSword(Player myPlayer)
         {
-            //How long the swing lasts
-            float timeToLast = 60f;
-            //The total distance (radians) of the swing)
-            float swingDistance = MathHelper.ToRadians(180);//MathHelper.PiOver2 + 1f;
-            float additionAmount = 0.018f; //015
-            int frameToStartSwing = 0;
+            //The total distance (radians) of the swing
+            float swingDistance = MathHelper.ToRadians(180);
+
+            float additionAmount = 0.025f;
             float startingProgress = 0.1f;
-            
             float dashTime = 30f;
-            float dashDistance = 900f; //750
+            float dashDistance = 800f; 
+
+            int frameToStartSwing = 8;
+            int frameToStartDash = 10;
 
             //Move towards player and telegraph
             if (advancer == 0)
@@ -2129,21 +2128,29 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Create Sword after a bit
             else if (advancer == 1)
             {
-                if (timer == 5)
+                if (timer == frameToStartDash)
                 {
-                    //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorCharge") with { Volume = .62f, Pitch = .64f, };
-                    //SoundEngine.PlaySound(style, NPC.Center);
-
                     SoundStyle style3 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 0, Volume = 0.3f };
                     SoundEngine.PlaySound(style3, NPC.Center);
 
-
-                    //SoundStyle style4 = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Volume = .3f, Pitch = .8f, MaxInstances = -1 };
-                    //SoundEngine.PlaySound(style4, NPC.Center);
+                    SoundStyle style4 = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Volume = .3f, Pitch = 1f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style4, NPC.Center);
 
                     SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .16f, Pitch = 0f, PitchVariance = .2f, MaxInstances = 1 };
                     SoundEngine.PlaySound(style2, NPC.Center);
 
+                    //Distortion
+                    int afg = Projectile.NewProjectile(null, NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX) * 1f, ModContent.ProjectileType<DistortProj>(), 0, 0);
+                    Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
+                    Main.projectile[afg].timeLeft = 12;
+                    if (Main.projectile[afg].ModProjectile is DistortProj distort)
+                    {
+                        distort.tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/MagmaBall");
+                        distort.implode = false;
+                        distort.scale = 0.4f;
+                    }
+
+                    //Sword
                     int sword = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -65f, Vector2.Zero, ModContent.ProjectileType<EyeSword>(), 15, 2, ai0: NPC.rotation);
                     eyeSwordInstance = Main.projectile[sword];
                     Main.projectile[sword].timeLeft = 100000;
@@ -2164,7 +2171,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
 
             //Dash
-            
             else if (advancer == 2)
             {
                 if (timer == 0)
@@ -2172,6 +2178,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Common.Systems.FlashSystem.SetCAFlashEffect(0.5f, 35, 1f, 0.5f, false, true);
                     squashPower = 1f;
                     myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 15;
+                    justDashValue = 1f;
+                    lineBonusSpeed = 1f;
                 }
                 
                 float progress = timer / dashTime;
@@ -2179,7 +2187,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.Center = Vector2.Lerp(originalPosForLerp, originalPosForLerp + storedRotaion.ToRotationVector2() * -dashDistance, Easings.easeOutExpo(progress));
 
 
-                thrusterValue = 1f;
+                thrusterValue = 0f;
                 phase3PulseValue = 1f;
                 extraBoost = 1f - progress;
                 eyeStarValue = 1f - Easings.easeOutQuad(progress);
@@ -2188,7 +2196,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 eyeSwordInstance.Center = NPC.Center + NPC.rotation.ToRotationVector2() * -60f;
                 eyeSwordInstance.rotation = NPC.rotation + MathHelper.Pi;
 
-                if (timer == dashTime)
+                if (timer == dashTime - 8f)
                 {
                     timer = -1;
                     advancer++;
@@ -2200,7 +2208,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     //NPC.rotation = storedRotaion;
 
                     //swordEasingProgress = startingProgress;
-                    //storedRotaion = NPC.rotation;
+                    //storedRotaion = NPC.rotation;  
                     //originalPosForLerp = NPC.Center;
 
                     if (advancer == 5)
@@ -2212,11 +2220,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
             } 
             
-            
             //Speeen
             else if (advancer == 3)
             {
-                if (timer >= frameToStartSwing)
+                if (timer >= frameToStartSwing && swordJustHitTime <= 0)
                 {
                     (eyeSwordInstance.ModProjectile as EyeSword).start = true;
 
@@ -2225,27 +2232,26 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     float rotationValue = MathHelper.Lerp(-swingDistance, swingDistance, Easings.easeInOutExpo(swordEasingProgress));
 
                     NPC.rotation = (storedRotaion + 0f) + (rotationValue * (sweepLaserDir ? 1f : -1f));
+
                 }
 
                 //float progress = timer / timeToLast;
                 //float rotationValue = MathHelper.Lerp(-swingDistance, swingDistance, Easings.easeInOutQuint(progress));
                 //NPC.rotation = (storedRotaion + 0f) + (rotationValue * (sweepLaserDir ? 1f : -1f));
 
-
                 phase3PulseValue = 1f;
-                extraBoost = 1f - swordEasingProgress;
+                extraBoost = (1f - swordEasingProgress);
                 eyeStarValue = 1f - Easings.easeOutQuad(swordEasingProgress);
                 phase3PulseColor = Color.HotPink * 1f;
 
-                if (timer % 5 == 0) ShotDust(1.5f);
+                if (timer % 5 == 0 && swordEasingProgress < 0.65f) ShotDust(1.5f);
 
-                if (timer % 1 == 0 && swordEasingProgress > 0.45f && swordEasingProgress < 0.55f) //0.4 0.6
+                if (timer % 1 == 0 && swordEasingProgress > 0.45f && swordEasingProgress < 0.55f && false) //0.4 0.6
                 {
                     //int shot = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -120f, NPC.rotation.ToRotationVector2() * -13f, ModContent.ProjectileType<Cyver2EnergyBall>(), 15, 2, ai0: myPlayer.whoAmI);
-                    //Main.projectile[shot].extraUpdates = 1;
-                    ShotDust(1f);
+                    //Main.projectile[shot].extraUpdates = 0;
                     
-                    
+                    /*
                     for (int i = -1; i < 2; i += 1)
                     {
                         int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.rotation.ToRotationVector2() * -220f, NPC.rotation.ToRotationVector2().RotatedBy(i * 0.15f) * -0.3f, ModContent.ProjectileType<StretchLaser>(), 15, 2, ai0: myPlayer.whoAmI);
@@ -2256,8 +2262,57 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                             laser.accelerateStrength = 1.025f; //1.025
                         }
                     }
-                    
+                    */
                 }
+
+                if (swordEasingProgress >= 0.5f && !hasDoneSwordShot)
+                {
+                    for (int j = -4; j < 5; j++)
+                    {
+                        //float rotVal = Easings.easeInSine(Math.Abs(j) * 0.3f) * (j >= 0 ? 1f : -1f);
+                        float rotVal = Math.Abs(j) * 0.4f * (j >= 0 ? 1f : -1f);
+
+                        Vector2 pos = NPC.Center + (storedRotaion.ToRotationVector2() * -160f).RotatedBy(rotVal);
+                        Vector2 vel = storedRotaion.ToRotationVector2().RotatedBy(rotVal);
+
+                        //int shot = Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel * -18f, ModContent.ProjectileType<Cyver2EnergyBall>(), 15, 2, ai0: myPlayer.whoAmI);
+                        //Main.projectile[shot].extraUpdates = 0;
+                        //Main.projectile[shot].timeLeft = 120;
+
+                        int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel * -0.2f, ModContent.ProjectileType<StretchLaser>(), 15, 2, ai0: myPlayer.whoAmI);
+                        Main.projectile[a].timeLeft = 400;
+                        if (Main.projectile[a].ModProjectile is StretchLaser laser)
+                        {
+                            laser.accelerateTime = 180;
+                            laser.accelerateStrength = 1.03f; //1.025
+                        }
+
+                    }
+                    swordJustHitTime = 1;
+                    hasDoneSwordShot = true;
+                }
+
+                if (swordEasingProgress >= 0.35f && !hasDoneSwordSound)
+                {
+                    Common.Systems.FlashSystem.SetCAFlashEffect(0.75f, 25, 1f, 0.45f, false, true);
+                    myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 10;
+
+                    
+                    lineBonusSpeed = 4f; //2.5
+                    whiteBackgroundPower = 0.05f;
+
+                    phase3PulseValue = 1;
+                    extraBoost = 1;
+                    overlayPower = 1.5f;
+
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_56") with { Pitch = 0.65f, PitchVariance = .11f, Volume = 0.5f, MaxInstances = -1 }; 
+                    SoundEngine.PlaySound(style, NPC.Center);
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Killed_55") with { Pitch = 0.36f, PitchVariance = .15f, Volume = 0.5f, MaxInstances = -1 };
+                    SoundEngine.PlaySound(style2, NPC.Center);
+
+                    hasDoneSwordSound = true;
+                }
+
 
                 eyeSwordInstance.Center = NPC.Center + NPC.rotation.ToRotationVector2() * -60f;
                 eyeSwordInstance.rotation = NPC.rotation + MathHelper.Pi;
@@ -2271,6 +2326,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     advancer = 0;
                     swordEasingProgress = 0f;
                     sweepLaserReps++;
+                    hasDoneSwordSound = false;
+                    hasDoneSwordShot = false;
 
                     (eyeSwordInstance.ModProjectile as EyeSword).fade = true;
 
@@ -2284,6 +2341,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
             }
 
+            swordJustHitTime--;
             timer++;
         }
 
@@ -2513,11 +2571,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //55 to 60 for faster dashes
             //velocity from 35 to 55
 
+
+            //This bullshit makes it so that the player can dash with the SoC, but cannot bonk off anything 
+            if (myPlayer.timeSinceLastDashStarted == 0 && myPlayer.dashType == 2)
+            {
+                myPlayer.eocDash = 0;
+            }
+
             float minusTime = (isExpert || isMaster) ? 8 : 0;
 
             NPC.damage = 0;
             NPC.hide = false;
-            NPC.dontTakeDamage = true;
+            NPC.dontTakeDamage = false;
             fadeDashing = true;
             //Cyver spawns Target Reticle
             if (timer == 0)
@@ -2575,11 +2640,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Main.projectile[a].rotation = storedRotaion;
 
 
-                    storedVec2 = storedRotaion.ToRotationVector2() * (Phase3 ? 28 : 35);
+                    storedVec2 = storedRotaion.ToRotationVector2().RotatedByRandom(0f) * (Phase3 ? 25 : 35); //28 35
                     NPC.velocity = Vector2.Zero;
 
 
-                    NPC.velocity = storedRotaion.ToRotationVector2() * 55;
+                    NPC.velocity = storedRotaion.ToRotationVector2() * 175; //55
 
                     SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/GloogaSlide") with { Volume = 0.15f, Pitch = 0.6f, MaxInstances = 2 }, NPC.Center);
 
@@ -3192,6 +3257,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Vector2 storedToPlayer = Vector2.Zero;
         public void CurvedDash(Player myPlayer)
         {
+            //This bullshit makes it so that the player can dash with the SoC, but cannot bonk off anything 
+            if (myPlayer.timeSinceLastDashStarted == 0 && myPlayer.dashType == 2)
+            {
+                myPlayer.eocDash = 0;
+            }
+
             if (timer == 0)
             {
                 fadeDashing = false;
@@ -3229,7 +3300,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
 
                 //NPC.damage = ContactDamage;
-                NPC.dontTakeDamage = true;
                 fadeDashing = true;
                 fadeDashValue = 1f;
                 justDashValue = 1f;
@@ -5059,6 +5129,141 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             timer++;
         }
 
+        public void PhaseTransition(Player myPlayer)
+        {
+            if (timer == 0)
+            {
+                Common.Systems.FlashSystem.SetFlashEffect(1f, 20);
+
+                myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 100;
+
+                SoundStyle slash = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Impact_Sword_L_a") with { Pitch = 1f, PitchVariance = .1f, Volume = 0.2f };
+                SoundEngine.PlaySound(slash, NPC.Center);
+
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .4f, Pitch = .84f, };
+                SoundEngine.PlaySound(style2, NPC.Center);
+
+
+                Vector2 towardPlayer = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
+
+                NPC.velocity = towardPlayer * -20f;
+
+                NPC.hide = false;
+                fadeDashing = false;
+            }
+
+            NPC.dontTakeDamage = true;
+            myPlayer.GetModPlayer<ScreenPlayer>().cutscene = true;
+            myPlayer.GetModPlayer<ScreenPlayer>().ScreenGoalPos = NPC.Center;
+
+            if (timer == 85)
+                NPC.velocity *= 0.5f;
+
+            if (NPC.velocity.Length() > 2f)
+                NPC.velocity *= 0.96f;
+            else
+                NPC.velocity *= 0.96f;
+
+            if (timer > 5 && timer < 110)
+            {
+                Main.GameZoomTarget = MathHelper.Lerp(Main.GameZoomTarget, 1.10f, 0.03f);
+
+                float rotGoal = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+                NPC.rotation = MathHelper.Lerp(rotGoal + (MathF.PI * 5), rotGoal, Easings.easeOutExpo((timer - 5) / 110f));
+            }
+            else if (timer >= 110)
+            {
+                NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
+            }
+
+            //Dust
+            if (timer > 110 && timer < 140)
+            {
+                for (int a = 0; a < 3 + Main.rand.Next(0, 2); a++)
+                {
+                    Vector2 vel = Main.rand.NextVector2CircularEdge(30f, 30f) * Main.rand.NextFloat(1f, 2.2f);
+                    float dustScale = Main.rand.NextFloat(0.5f, 0.8f);
+                    Color col = Color.HotPink;
+                    Dust d = Dust.NewDustPerfect(NPC.Center + new Vector2(-80, 0).RotatedBy(NPC.rotation), ModContent.DustType<MuraLineBasic>(), vel, Main.rand.Next(10, 16), col, dustScale);
+                }
+                myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 30;
+                phase3PulseValue = 1f;
+
+                Main.GameZoomTarget *= Main.rand.NextFloat(0.9f, 1.1f);
+            }
+
+            //Pulse
+            if (timer == 110)
+            {
+                SoundStyle style2 = new SoundStyle("Terraria/Sounds/Zombie_67") with { Pitch = -0.1f, PitchVariance = 0f, MaxInstances = -1, Volume = 0.5f };
+                SoundEngine.PlaySound(style2, NPC.Center);
+
+                SoundStyle style3 = new SoundStyle("Terraria/Sounds/Zombie_68") with { Pitch = .6f, PitchVariance = 0f, MaxInstances = -1, Volume = 0.65f };
+                SoundEngine.PlaySound(style3, NPC.Center);
+
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Volume = .3f, Pitch = 0f, MaxInstances = -1 };
+                SoundEngine.PlaySound(style, NPC.Center);
+
+                SoundStyle style4 = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Volume = .4f, Pitch = .7f, MaxInstances = -1 };
+                SoundEngine.PlaySound(style4, NPC.Center);
+
+                int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-68, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0f);
+                //int b2 = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-68, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0f);
+                Main.projectile[b].scale = 5f;
+                Main.projectile[b].ai[0] = 1f;
+                //Main.projectile[b2].scale = 6f;
+                //Main.projectile[b2].ai[0] = -1f;
+
+                if (Main.projectile[b].ModProjectile is CyverRoarPulse crp1)
+                {
+                   crp1.pixel = false;
+                   crp1.forRoar = true;
+                }
+                //if (Main.projectile[b2].ModProjectile is CyverRoarPulse crp2) crp2.pixel = false;
+
+                for (int a = 0; a < 10 + Main.rand.Next(0, 2); a++)
+                {
+                    Vector2 vel = Main.rand.NextVector2CircularEdge(30f, 30f) * Main.rand.NextFloat(1f, 2.2f);
+                    float dustScale = Main.rand.NextFloat(0.5f, 0.8f);
+                    Color col = a >= 8 ? Color.SkyBlue : Color.HotPink;
+                    Dust d = Dust.NewDustPerfect(NPC.Center + new Vector2(-80, 0).RotatedBy(NPC.rotation), ModContent.DustType<MuraLineBasic>(), vel, 10, col, dustScale);
+                    //d.fadeIn = 10;
+                }
+
+                //myPlayer.GetModPlayer<ScreenPlayer>().ScreenGoalPos = NPC.Center + new Vector2(95, 0).RotatedBy(NPC.rotation);
+                myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 100;
+
+                Main.GameZoomTarget = 1.95f; //1.75
+                phase3PulseValue = 1f;
+            }
+
+            if (timer == 125)
+            {
+                myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
+                myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
+            }
+
+            if (timer >= 135)
+            {
+                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.1f), 1, 2);
+            }
+
+            if (timer == 165)
+            {
+                Main.GameZoomTarget = 1;
+                whatAttack = 1;
+                myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
+                myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
+                timer = -1;
+                startingAngBonus = 0;
+                startingQuadrant = 3;
+                NPC.dontTakeDamage = false;
+            }
+
+            timer++;
+        }
+
+
         float barrageCount = 1;
         bool trueSpinFalseAzzy = true;
         bool trueWrapFalseChase = true;
@@ -5262,15 +5467,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 return whatAttack;
         }
 
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        public Dictionary<string, int> DamageNumbers = new Dictionary<string, int>
         {
-            float newScale = 0.75f;
-            return base.DrawHealthBar(hbPosition, ref newScale, ref position);
+                ["LightAttack"] = 30,
+                ["MediumAttack"] = 40,
+                ["HeavyAttack"] = 55,
+        };
+        public int GetDamage(string type)
+        {
+            return (int)(DamageNumbers[type] * baseDamageMult);
         }
 
-        public float easeOutQuint(float input)
-        {
-            return 1f - MathF.Pow(1f - input, 5f);
-        }
     }
 }

@@ -72,37 +72,36 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 
             //Homing
+
             bool shouldHome = timer > 0f;
+            float homeVal = MathHelper.Lerp(0f, 30f, Easings.easeInQuart(Math.Clamp(timer / 60f, 0f, 1f)));
             if (shouldHome)
             {
                 //lol
                 Projectile.velocity = Projectile.velocity.ToRotation().AngleLerp((player.Center - Projectile.Center).ToRotation(), 0.01f).ToRotationVector2() * Projectile.velocity.Length();
                 Projectile.timeLeft -= 1;
-                //Projectile.velocity = Projectile.velocity.ToRotation().AngleTowards((player.Center - Projectile.Center).ToRotation(), 0.02f).ToRotationVector2() * Projectile.velocity.Length();
 
-                //Projectile.velocity
+                float turnPower = homeVal;
+                int turn2 = 30;
 
-                //Projectile.extraUpdates = 1;
-                //Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(player.MountedCenter).SafeNormalize(Vector2.Zero) * new Vector2(25f, 25f), 0.04f);
-                //Projectile.velocity += Projectile.DirectionTo(player.MountedCenter).SafeNormalize(Vector2.Zero).RotatedByRandom(0.1f) * 0.6f;
-                //Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero) * 15;
+                Vector2 targetPos = player.Center;
+
+                Vector2 toMouse = (targetPos - Projectile.Center).SafeNormalize(Vector2.UnitX);
+                toMouse *= turnPower;
+
+                Projectile.velocity = (Projectile.velocity * (turn2 - 1) + toMouse) / turn2;
+                if (Projectile.velocity.Length() > 22f)
+                {
+                    Projectile.velocity.Normalize();
+                    Projectile.velocity *= 22f;
+                }
+                else if (Projectile.velocity.Length() < 15f)
+                {
+                    Projectile.velocity.Normalize();
+                    Projectile.velocity *= 15f;
+                }
             }
 
-            /*
-            if (player.active)
-            {
-                float curvePower = (timer < 25 ? 0.01f : 0.03f) * 1f;
-
-                Projectile.rotation = Projectile.rotation.AngleTowards((player.Center - Projectile.Center).ToRotation(), curvePower); //(0.001f * timer) + 0.01f
-                Projectile.velocity = Projectile.velocity.Length() * Projectile.rotation.ToRotationVector2();
-                
-                if (timer < 15)
-                    Projectile.velocity *= 1f;
-
-                //float curvePower = (timer < 60 ? 0.04f : 0.04f) * 1f;
-                //Projectile.velocity += (player.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * curvePower;
-            }
-            */
             if (timer < 0)
                 Projectile.velocity *= 0.2f;
 
@@ -155,19 +154,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             #region trail
             
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightning").Value;
-            trail1.trailColor = Color.White;
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/s06sBloom").Value;
+            trail1.trailColor = Color.HotPink;
             trail1.trailPointLimit = (int)(125 * scale);
-            trail1.trailWidth = (int)(15 * scale);
-            trail1.trailMaxLength = (int)(125 * scale);
+            trail1.trailWidth = (int)(20 * scale);
+            trail1.trailMaxLength = (int)(100 * scale);
             trail1.timesToDraw = 2;
-            trail1.pinch = true;
-            trail1.pinchAmount = 0.01f;
+            trail1.pinch = false;
+            trail1.pinchAmount = 0.35f;
 
             trail1.gradient = true;
-            trail1.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
+            trail1.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad").Value;
             trail1.shouldScrollColor = true;
-            ///trail1.gradientTime = timer * 0.01f;
+            trail1.gradientTime = 0.25f;//timer * 0.015f;
 
             trail1.trailTime = timer * 0.05f;
             trail1.trailRot = Projectile.velocity.ToRotation();
@@ -175,21 +174,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer > 0) trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/spark_06").Value;
             trail2.trailColor = Color.White;
-            trail2.trailPointLimit = (int)(250 * scale);
-            trail2.trailWidth = (int)(8 * scale);
-            trail2.trailMaxLength = (int)(250 * scale);
-            trail2.timesToDraw = 3;
-            trail2.pinch = true;
-            trail2.pinchAmount = 0.01f;
+            trail2.trailPointLimit = (int)(105 * scale);
+            trail2.trailWidth = (int)(14 * scale);
+            trail2.trailMaxLength = (int)(105 * scale);
+            trail2.timesToDraw = 2;
+            trail2.pinch = false;
+            trail2.pinchAmount = 0.35f;
 
-            trail2.gradient = true;
+            trail2.gradient = false;
             trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/CyverGrad2").Value;
             trail2.shouldScrollColor = true;
-            ///trail2.gradientTime = timer * 0.01f;
+            trail2.gradientTime = timer * 0.01f;
 
-            //trail2.trailTime = timer * 0.04f;
+            trail2.trailTime = timer * 0.04f;
             trail2.trailRot = Projectile.velocity.ToRotation();
             trail2.trailPos = Projectile.Center + Projectile.velocity;
             if (timer > 0) trail2.TrailLogic();

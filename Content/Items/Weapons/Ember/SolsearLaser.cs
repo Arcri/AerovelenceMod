@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.DamageType = DamageClass.Ranged;
 		}
 
-		public override void AI()
+        public override void AI()
 		{
 			if (timer % 120 == 0 && timer != 0)
             {
@@ -56,15 +56,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 					if (Main.rand.NextBool() && Main.rand.NextBool() && Main.rand.NextBool() && Main.rand.NextBool())
 					{
-						GlowDustHelper.DrawGlowDustPerfect(storedCenter + Vector2.UnitX.RotatedBy(LaserRotation + Math.PI) * i, ModContent.DustType<GlowCircleDust>()
-							, Main.rand.NextVector2CircularEdge(2f, 2f) + ( (LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f ), Color.OrangeRed, 0.2f, dustShader); //0.2f
+						GlowDustHelper.DrawGlowDustPerfect(storedCenter + Vector2.UnitX.RotatedBy(LaserRotation + Math.PI) * i, ModContent.DustType<GlowCircleDust>(),
+							Main.rand.NextVector2CircularEdge(2f, 2f) + ( (LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f ), Color.OrangeRed, 0.2f, dustShader); //0.2f
 						
 					}
 
 				}
 			}
 
-			distFromPlayer = Math.Clamp(distFromPlayer + 2, 0, 300);
+			distFromPlayer = Math.Clamp(distFromPlayer + 2, 0, 270);
 			if (timer == 0)
             {
 				baseDamage = Projectile.damage;
@@ -98,16 +98,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override bool PreDraw(ref Color lightColor) 
 		{
 
-            if (false && timer > 0) //Laser might be fucked up on first frame if we don't do this
+            if (true && timer > 0) //Laser might be fucked up on first frame if we don't do this
             {
 
                 Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Scroll/CheapScroll", AssetRequestMode.ImmediateLoad).Value;
                 #region Shader Params
-                myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+                myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value);
                 myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
 
-				Color c1 = new Color(255, 80, 25);
-				Color c2 = new Color(255, 80, 25);
+                Color c1 = new Color(255, 80, 25);
+                Color c2 = new Color(255, 80, 25);
 
                 myEffect.Parameters["Color1"].SetValue(c1.ToVector4());
                 myEffect.Parameters["Color2"].SetValue(c2.ToVector4());
@@ -115,65 +115,58 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 myEffect.Parameters["Color2Mult"].SetValue(1f);
                 myEffect.Parameters["totalMult"].SetValue(1f);
 
-                myEffect.Parameters["tex1reps"].SetValue(0.35f);
-                myEffect.Parameters["tex2reps"].SetValue(0.5f);
-                myEffect.Parameters["satPower"].SetValue(0.8f);
+                myEffect.Parameters["tex1reps"].SetValue(0.25f);
+                myEffect.Parameters["tex2reps"].SetValue(0.25f);
+                myEffect.Parameters["satPower"].SetValue(1f);
                 myEffect.Parameters["time1Mult"].SetValue(1f);
-                myEffect.Parameters["time2Mult"].SetValue(1.5f);
-                myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.0018f);
+                myEffect.Parameters["time2Mult"].SetValue(1f);
+                myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.018f);
                 #endregion
 
-                endPoint = storedCenter;
-                var texBeam = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
+                //Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/FlashLightBeam").Value;
+                Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Assets/ThinLineGlowClear").Value;
 
-                Vector2 origin2 = new Vector2(0, texBeam.Height / 2);
+                Texture2D Black = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
 
-                float height = (55f); //25
+                Vector2 origin2 = new Vector2(0, LaserTexture.Height / 2);
 
-                if (height == 0)
-                    Projectile.active = false;
+                float height = (140f); //25
 
-                int width = (int)(Projectile.Center - endPoint).Length() - 24;
+                int width = (int)(Projectile.Center - storedCenter).Length() - 24;
 
-                var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.4f));
+                var pos = Projectile.Center - Main.screenPosition;
+                var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.7f));
+                var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.65f));
+                var target3 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.55f));
 
-                var targetBlack = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.65f));
-
-                Main.spriteBatch.Draw(texBeam, targetBlack, null, Color.Black * 1f, LaserRotation, origin2, 0, 0);
-
+                Main.spriteBatch.Draw(Black, target3, null, Color.Black * 1f, LaserRotation, new Vector2(0, Black.Height / 2), 0, 0);
 
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+                //Activate Shader
                 myEffect.CurrentTechnique.Passes[0].Apply();
 
-                Main.spriteBatch.Draw(texBeam, target, null, Color.White, LaserRotation, origin2, 0, 0);
-                //Main.spriteBatch.Draw(texture, target, null, Color.DeepPink, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
 
+                //Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
 
-                //for (int i = 0; i < width; i += 6)
-                //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.DeepPink.ToVector3() * height * 0.020f); //0.030
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
+                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.5f, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.25f, LaserRotation, origin2, 0, 0);
+                //for (int i = 0; i < width; i += 6)
+                //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.015f); //0.030
 
-                float height2 = (20f); //25
 
-                if (height2 == 0)
-                    Projectile.active = false;
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-                int width2 = (int)(Projectile.Center - endPoint).Length() - 24;
 
-                var pos2 = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-                var target2 = new Rectangle((int)pos2.X, (int)pos2.Y, width2, (int)(height2 * 1.6f));
-
-                Main.spriteBatch.Draw(texBeam, target2, null, new Color(255, 70, 5), LaserRotation, origin2, 0, 0);
-
-                for (int i = 0; i < width; i += 6)
-                    Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.015f); //0.030
-
-				return false;
+                return false;
             }
 
             #region oldFireLaser
@@ -257,31 +250,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 		public override void PostDraw(Color lightColor)
         {
-			var spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
-			Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
+			Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
+            Vector2 thisPos = Projectile.Center - Main.screenPosition;
 
-			//Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-			//myEffect.Parameters["uColor"].SetValue(Color.WhiteSmoke.ToVector3() * 1f); 
+            Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), Color.Black * 0.65f, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), glowTex.Size() / 2, 0.15f, SpriteEffects.None, 0);
 
-			//myEffect.Parameters["uColor"].SetValue(new Color(255, 75, 50).ToVector3() * 2.5f); 
-			//myEffect.Parameters["uTime"].SetValue(2);
-			//myEffect.Parameters["uOpacity"].SetValue(0.9f); 
-			//myEffect.Parameters["uSaturation"].SetValue(1.2f);
+            //Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Black, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), spotTex.Size() / 2, 0.6f * 2f, SpriteEffects.None, 0);
+            //Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Black, Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.37f * 2f, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Vector2 thisPos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
 
-			//Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50) with { A = 0 }, 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
-			//Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50) with { A = 0 }, 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
+			//Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50) with { A = 255 }, 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
+			//Main.spriteBatch.Draw(glowTex, thisPos, glowTex.Frame(1, 1, 0, 0), new Color(255, 75, 50) with { A = 255 }, 0, glowTex.Size() / 2, 1.3f, SpriteEffects.None, 0);
 
-			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.OrangeRed with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.2f), spotTex.Size() / 2, 1.2f, SpriteEffects.None, 0);
-			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.OrangeRed with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), spotTex.Size() / 2, 1.2f, SpriteEffects.None, 0);
+			Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.OrangeRed with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.75f, SpriteEffects.None, 0);
 
-            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.2f), spotTex.Size() / 2, 0.6f, SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.White with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(timer * 0.1f), spotTex.Size() / 2, 0.37f, SpriteEffects.None, 0);
-            Main.spriteBatch.End();
+            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.Orange with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), spotTex.Size() / 2, 0.6f, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(spotTex, thisPos, spotTex.Frame(1, 1, 0, 0), Color.White with { A = 255 }, Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.37f, SpriteEffects.None, 0);
+            
+			Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
         }
@@ -308,7 +299,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			float point = 0f;
 			// Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
 			// It will look for collisions on the given line using AABB
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 12,
+			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center - Vector2.UnitX.RotatedBy(LaserRotation) * 12,
 				Player.Center, 22, ref point);
 
 		}

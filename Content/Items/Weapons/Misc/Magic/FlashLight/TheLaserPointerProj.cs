@@ -92,7 +92,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             lerpVal = Math.Clamp(MathHelper.Lerp(lerpVal, -0.2f, 0.002f), 0, 0.4f);
 
             direction = Angle.ToRotationVector2().RotatedBy(lerpVal * player.direction * -1f);
-            Projectile.Center = player.Center + (direction * OFFSET);
+            Projectile.Center = player.MountedCenter + (direction * OFFSET);
             Projectile.velocity = Vector2.Zero;
             player.itemRotation = direction.ToRotation();
 
@@ -278,9 +278,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Vector2 actualPos = new Vector2((int)Projectile.Center.X, (int)Projectile.Center.Y) - new Vector2((int)Main.screenPosition.X, (int)Main.screenPosition.Y);
             Main.spriteBatch.Draw(texture, actualPos, null, lightColor, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             //Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(glowMask, actualPos, null, (Color.White * 0.3f) * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(glowMask, actualPos, null, (Color.White with { A = 0 } * 0.3f) * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
 
-            Color glowCol = Color.Lerp(Color.Red, Color.Gold, SSGlowAmount);
+            Color glowCol = Color.Lerp(Color.DarkRed, Color.Gold, SSGlowAmount);
             Main.spriteBatch.Draw(glowMask, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * 0.5f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(white, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * 0.4f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(white, actualPos, null, glowCol with { A = 0 } * (laserWidth * 0.2f) * SSGlowAmount, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.15f, spriteEffects, 0.0f);
@@ -289,64 +289,81 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             #region Laser
 
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Scroll/CheapScroll", AssetRequestMode.ImmediateLoad).Value;
+            #region Shader Params
+            myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Laser1").Value);
+            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
 
+            Color c1 = Color.Red;
+            Color c2 = Color.Red;
+
+            myEffect.Parameters["Color1"].SetValue(c1.ToVector4());
+            myEffect.Parameters["Color2"].SetValue(c2.ToVector4());
+            myEffect.Parameters["Color1Mult"].SetValue(1f);
+            myEffect.Parameters["Color2Mult"].SetValue(1f);
+            myEffect.Parameters["totalMult"].SetValue(1f);
+
+            myEffect.Parameters["tex1reps"].SetValue(0.25f);
+            myEffect.Parameters["tex2reps"].SetValue(0.25f);
+            myEffect.Parameters["satPower"].SetValue(0.8f);
+            myEffect.Parameters["time1Mult"].SetValue(1f);
+            myEffect.Parameters["time2Mult"].SetValue(1f);
+            myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * -0.018f);
+            #endregion
+            
             Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/FlashLightBeam").Value;
-
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value;
-
-            myEffect.Parameters["uColor"].SetValue(Color.Red.ToVector3() * 0.52f);
-            myEffect.Parameters["sampleTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value);
-            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
-            myEffect.Parameters["uTime"].SetValue(timer * -0.01f); //0.006
-            myEffect.Parameters["uSaturation"].SetValue(2);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-            //Activate Shader
-            myEffect.CurrentTechnique.Passes[0].Apply();
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
 
             Vector2 origin2 = new Vector2(0, LaserTexture.Height / 2);
 
-            float height = (laserWidth); //25
+            float height = (laserWidth * 4f); //25
 
             int width = (int)((Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25)) - endPoint).Length();
 
             var pos = Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition;
             var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.7f));
+            var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.65f));
+            var target3 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.35f));
 
-            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
-            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(LaserTexture, target3, null, Color.Black * 0.5f, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Black * 0.35f, timer * 0.03f, flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Black * 0.5f, timer * 0.07f, flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
 
-            //Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-            var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.8f));
-            var target3 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.8f));
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            //Activate Shader
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.5f, LaserRotation, origin2, 0, 0);
-            Main.spriteBatch.Draw(LaserTexture, target3, null, Color.Red * 0.25f, LaserRotation, origin2, 0, 0);
+            Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.25f, LaserRotation, origin2, 0, 0);
 
             //Flares
 
-            Effect myEffect2 = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            myEffect2.Parameters["uColor"].SetValue(Color.Red.ToVector3() * 3f);
-            myEffect2.Parameters["uTime"].SetValue(2);
-            myEffect2.Parameters["uOpacity"].SetValue(0.7f);
-            myEffect2.Parameters["uSaturation"].SetValue(0f);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect2, Main.GameViewMatrix.TransformationMatrix);
-
-            myEffect2.CurrentTechnique.Passes[0].Apply();
-            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
-            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
-
+            float sinScale = laserWidth < 5 ? 0f : MathF.Sin((float)Main.timeForVisualEffects * 0.06f) * 0.008f;
             Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Red, timer * 0.03f, flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Red, timer * 0.07f, flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
 
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.White, timer * -0.02f, flare12.Size() / 2, 0.14f * laserWidth * 0.025f + sinScale, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.White, timer * 0.07f, flare1.Size() / 2, 0.01f * laserWidth + (sinScale * 0.2f), spriteEffects, 0.0f);
+
+
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            //Reset because tmod still haven't fixed bug
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             #endregion
 
             return false;

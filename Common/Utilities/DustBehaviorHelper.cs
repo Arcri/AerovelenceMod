@@ -75,9 +75,26 @@ namespace AerovelenceMod.Common.Utilities
 			return b;
 		}
 
+        public static LineSparkBehavior AssignBehavior_LSBase(
+            float velFadePower = 0.97f, float preShrinkPower = 0.99f, float postShrinkPower = 0.97f, int timeToStartShrink = 40, int killEarlyTime = 60,
+			float XScale = 1f, float YScale = 1f, bool shouldFadeColor = true, float colorFadePower = 0.95f)
+        {
+            LineSparkBehavior b = new LineSparkBehavior();
 
+            b.base_velFadePower = velFadePower;
+            b.base_preShrinkPower = preShrinkPower;
+            b.base_postShrinkPower = postShrinkPower;
+            b.base_timeToStartShrink = timeToStartShrink;
+            b.base_killEarlyTime = killEarlyTime;
+			b.Vector2DrawScale = new Vector2(XScale, YScale);
 
-		public class StarDustDrawInfo
+            b.base_shouldFadeColor = shouldFadeColor;
+            b.base_colorFadePower = colorFadePower;
+
+            return b;
+        }
+
+        public class StarDustDrawInfo
 		{
 			public bool DrawWhiteCore = true;
 			public bool DrawBlackCore = false;

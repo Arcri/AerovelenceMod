@@ -414,6 +414,11 @@ Items: {
 		DisplayName: Crystal Glade
 		Tooltip: ""
 	}
+
+	PoundOfFeathers: {
+		DisplayName: Pound Of Feathers
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -425,6 +430,7 @@ NPCs: {
 	Rimegeist.DisplayName: Rimegeist
 	SlateDemon.DisplayName: Slate Demon
 	MovingPlatform.DisplayName: Moving Platform
+	FeatheredFoe.DisplayName: Feathered Foe
 }
 
 Projectiles: {
@@ -691,6 +697,14 @@ Projectiles: {
 	WarBowSpike.DisplayName: War Bow Spike
 	SolsearBomb.DisplayName: Solsear Bomb
 	SolsearBombExplosion.DisplayName: Solsear Bomb Explosion
+	FeatherProjTest.DisplayName: Feather Proj Test
+	PoundOfFeatherProj.DisplayName: Pound Of Feather Proj
+	OrbitingFeather.DisplayName: Orbiting Feather
+	StraightFeather.DisplayName: Straight Feather
+	WindBarrierTest.DisplayName: Wind Barrier Test
+	WindBarrier.DisplayName: Wind Barrier
+	OrbitingFeatherOld.DisplayName: Orbiting Feather Old
+	StraightFeatherOld.DisplayName: Straight Feather Old
 }
 
 Configs: {

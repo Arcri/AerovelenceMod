@@ -332,7 +332,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Projectile.velocity *= 1.088f;
 
             //FTW | GFB timer % 5
-            if (timer > 10 && timer % 10 == 0) // > 10
+            if (timer > 9 && timer % 9 == 0) // > 10 % 10
             {
                 int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 20, 0);
                 Main.projectile[a].rotation = Projectile.rotation;
@@ -342,8 +342,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 for (int i = 0; i < 360; i += 20)
                 {
                     Vector2 circular = new Vector2(40, 0).RotatedBy(MathHelper.ToRadians(i));
-                    Vector2 dustVelo = -circular * 0.1f;
-
                     Dust b = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + circular, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.DeepPink, 0.3f, 0.6f, 0f, dustShader);
                 }
             }
@@ -580,8 +578,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Vector2 newScale3 = new Vector2(0.25f, 0.25f); //Hilt
             Vector2 newScale4 = new Vector2(1f, 0.5f) * 1f; //After Image
 
-            newScale *= 1f;// + (0.5f * MathF.Sin(MathF.PI * progress));
-            newScale2 *= 1f;// + (0.5f * MathF.Sin(MathF.PI * progress));
+            newScale *= 0.75f;// + (0.5f * MathF.Sin(MathF.PI * progress));
+            newScale2 *= 0.75f;// + (0.5f * MathF.Sin(MathF.PI * progress));
+            newScale3 *= 0.75f;
+            newScale4 *= 0.75f;
 
             Vector2 origin1 = new Vector2(0f, glow.Height / 2f);
             Vector2 origin2 = new Vector2(0f, glow2.Height / 2f);
@@ -613,9 +613,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/KennySlashHalfBig").Value;
             float slashOpacity = MathF.Pow(MathF.Sin(MathF.PI * progress), 2);
-            Vector2 slashScale = new Vector2(1f, 2f) * 1.5f * slashOpacity;
-            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * 130f, null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
-            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * 130f, null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
+            Vector2 slashScale = new Vector2(1f, 2f) * 1.5f * slashOpacity * 0.75f;
+            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * (130f * 0.75f), null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * (130f * 0.75f), null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
 
 
             //Main.spriteBatch.End();

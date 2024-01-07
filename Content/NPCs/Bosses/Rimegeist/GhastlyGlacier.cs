@@ -9,11 +9,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
 {
     public class GhastlyGlacier : ModNPC
     {
-
-
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 8;    //boss frame/animation 
+            Main.npcFrameCount[NPC.type] = 1;    //boss frame/animation 
         }
         public override void SetDefaults()
         {
@@ -38,12 +36,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         {
             Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Rimegeist/GhastlyGlacier").Value;
             Vector2 drawPos = NPC.Center + new Vector2(0, NPC.gfxOffY) - Main.screenPosition;
-            Main.EntitySpriteDraw(texture, drawPos, null, Color.White, NPC.rotation, texture.Size() * 0.5f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture, drawPos, null, Color.White, NPC.rotation, texture.Size() / 2f, NPC.scale, NPC.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
         }
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
         {
             NPC.lifeMax = 10000;  //boss life scale in expertmode
             NPC.damage = 40;  //boss damage increase in expermode
+        }
+
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage *= 0f;
+            base.ModifyIncomingHit(ref modifiers);
         }
     }
 }

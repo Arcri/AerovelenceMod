@@ -181,7 +181,8 @@ namespace AerovelenceMod.Common.Systems
 
 
                 // Set frame and origin
-                // If we just have the frame be (0,0,width,height) aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                // If we just have the frame be (0,0,width,height) then the edges of the screen will be visible and ugly when we move the position
+                // so we adjust the bounds to give us a little wiggle room
                 Rectangle screenFrame = new(-100, -100, Main.screenWidth + 200, Main.screenHeight + 200);
                 Vector2 origin = new Vector2(100, 100) - Main.screenPosition;
 
