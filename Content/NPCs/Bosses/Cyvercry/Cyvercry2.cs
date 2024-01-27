@@ -102,8 +102,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
-            
-
             //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
                 projectile.damage = (int)(projectile.damage * 0.7f);
@@ -653,7 +651,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
-            whatAttack = 33;
+            //whatAttack = 33;
             //whatAttack = 7;
 
             if (whatAttack != 24)
@@ -674,7 +672,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             isExpert = true;
             isMaster = true;
             Phase2 = true;
-            Phase3 = true;
+            Phase3 = false;
 
             ////Main.dayTime = false;
             ///Main.time = 12600 + 3598; //midnight - 2 cause we don't want to keep activating stuff that happens at midnight probably
@@ -912,8 +910,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer == 220)
             {
                 timer = -1;
-                ////whatAttack = 2;
-                whatAttack = -3;
+                whatAttack = 2;
+                /////whatAttack = -3;
                 advancer = 0;
             }
             if (advanceNegative)
@@ -5133,20 +5131,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             if (timer == 0)
             {
-                Common.Systems.FlashSystem.SetFlashEffect(1f, 20);
+                Common.Systems.FlashSystem.SetCAFlashEffect(1f, 40, 1f, 1f, false, true);
 
                 myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 100;
 
                 SoundStyle slash = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Impact_Sword_L_a") with { Pitch = 1f, PitchVariance = .1f, Volume = 0.2f };
                 SoundEngine.PlaySound(slash, NPC.Center);
 
-                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .4f, Pitch = .84f, };
+                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .4f, Pitch = 1f, };
                 SoundEngine.PlaySound(style2, NPC.Center);
 
 
                 Vector2 towardPlayer = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
 
-                NPC.velocity = towardPlayer * -20f;
+                NPC.velocity = towardPlayer * -18f; //20
 
                 NPC.hide = false;
                 fadeDashing = false;
@@ -5187,9 +5185,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Dust d = Dust.NewDustPerfect(NPC.Center + new Vector2(-80, 0).RotatedBy(NPC.rotation), ModContent.DustType<MuraLineBasic>(), vel, Main.rand.Next(10, 16), col, dustScale);
                 }
                 myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 30;
-                phase3PulseValue = 1f;
+                phase3PulseValue = 0.75f + (Main.rand.Next(-1, 2) * 0.15f);
 
-                Main.GameZoomTarget *= Main.rand.NextFloat(0.9f, 1.1f);
+                thrusterValue = 0f;
+                Main.GameZoomTarget *= Main.rand.NextFloat(0.95f, 1.05f);
             }
 
             //Pulse
@@ -5209,7 +5208,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-68, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0f);
                 //int b2 = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-68, 0).RotatedBy(NPC.rotation), Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0f);
-                Main.projectile[b].scale = 5f;
+                Main.projectile[b].scale = 4f;
                 Main.projectile[b].ai[0] = 1f;
                 //Main.projectile[b2].scale = 6f;
                 //Main.projectile[b2].ai[0] = -1f;
@@ -5233,6 +5232,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //myPlayer.GetModPlayer<ScreenPlayer>().ScreenGoalPos = NPC.Center + new Vector2(95, 0).RotatedBy(NPC.rotation);
                 myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 100;
 
+                eyeStarValue = 1f;
+                justDashValue = 1f;
+                overlayPower = 1f;
                 Main.GameZoomTarget = 1.95f; //1.75
                 phase3PulseValue = 1f;
             }
@@ -5248,7 +5250,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.1f), 1, 2);
             }
 
-            if (timer == 165)
+            if (timer == 180)
             {
                 Main.GameZoomTarget = 1;
                 whatAttack = 1;

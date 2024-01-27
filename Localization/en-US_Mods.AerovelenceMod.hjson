@@ -419,6 +419,11 @@ Items: {
 		DisplayName: Pound Of Feathers
 		Tooltip: ""
 	}
+
+	CerobaStaffItem: {
+		DisplayName: Ceroba Staff Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -705,6 +710,13 @@ Projectiles: {
 	WindBarrier.DisplayName: Wind Barrier
 	OrbitingFeatherOld.DisplayName: Orbiting Feather Old
 	StraightFeatherOld.DisplayName: Straight Feather Old
+	TempJadeFirePulse.DisplayName: Temp Jade Fire Pulse
+	CerobaFireBall.DisplayName: Ceroba Fire Ball
+	CerobaIdleHeldProj.DisplayName: Ceroba Idle Held Proj
+	CerobaWard.DisplayName: Ceroba Ward
+	CerobaM1HeldProj.DisplayName: Ceroba M1 Held Proj
+	CerobaSwing.DisplayName: Ceroba Swing
+	CerobaPrimarySwing.DisplayName: Ceroba Primary Swing
 }
 
 Configs: {

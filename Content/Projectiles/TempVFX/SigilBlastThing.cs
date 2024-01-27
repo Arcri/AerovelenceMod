@@ -13,6 +13,8 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Utilities;
+using static Humanizer.In;
+using System.Linq;
 
 namespace AerovelenceMod.Content.Projectiles.TempVFX
 {
@@ -42,7 +44,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         {
             Player owner = Main.player[Projectile.owner];
 
-            
+
             if (timer > 20)
             {
                 float prog = Math.Clamp((timer - 20f) / 60f, 0f, 1f);
@@ -235,6 +237,71 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             return false;
         }
+    }
+
+    
+    public class TempJadeFirePulse : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetDefaults()
+        {
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.hostile = false;
+            Projectile.penetrate = -1;
+
+            Projectile.scale = 0.1f;
+
+            Projectile.timeLeft = 29;
+            Projectile.tileCollide = false; //false;
+            Projectile.width = 20;
+            Projectile.height = 20;
+        }
+
+        int timer = 0;
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                Projectile.rotation = Main.rand.NextFloat(6.28f);
+            }
+
+            Projectile.scale = MathHelper.Lerp(Projectile.scale, 0.81f, 0.2f); //1.51
+            timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Player Player = Main.player[Projectile.owner];
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPop").Value;
+
+            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
+
+            myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/tstar").Value);
+            myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
+            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/fireStar2").Value);
+            myEffect.Parameters["uTime"].SetValue(timer * 0.08f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            myEffect.CurrentTechnique.Passes[0].Apply();
+
+            int height1 = texture.Height;
+            Vector2 origin1 = new Vector2(texture.Width / 2f, height1 / 2f);
+
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.Orange, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.Orange, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.Orange, Projectile.rotation, origin1, Projectile.scale * 0.15f, SpriteEffects.None, 0.0f);
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return false;
+        }
+
     }
 
 }

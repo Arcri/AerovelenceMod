@@ -92,8 +92,8 @@ namespace AerovelenceMod.Content.Items
             timeAfterEnd = 5;
             startingProgress = 0.1f;
             */
-            
-            SwingHalfAngle = 190;
+
+            SwingHalfAngle = 190; // 190
             easingAdditionAmount = 0.025f / Projectile.extraUpdates; //0.02f // 0.025f
             offset = 50;
             frameToStartSwing = 3;

@@ -493,64 +493,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 previousRotations.RemoveAt(0);
             }
 
-            if (timer % 2 == 0 && progress > 0.3f && progress < 0.7f)
-            {
-                //int shot = Projectile.NewProjectile(null, Projectile.Center + Projectile.rotation.ToRotationVector2() * -120f, Projectile.rotation.ToRotationVector2() * 1f, ModContent.ProjectileType<StretchLaser>(), 15, 2);
-
-            }
-
-            if (false)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    float randomDustPercent = Main.rand.NextFloat();
-                    Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
-                    Vector2 dustVel = (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(4f, 10f) * 1.5f;
-
-                    Dust.NewDustPerfect(Projectile.Center + dustPercentPoint, ModContent.DustType<MuraLineBasic>(), dustVel, 0, Color.HotPink, Main.rand.NextFloat(0.18f, 0.33f));
-                }
-            }
-
-            //Trail Bad sad face
-            if (false)
-            {
-                if (Projectile.ai[2] > (Projectile.extraUpdates * 1.75f))
-                {
-                    float swingDistance = MathHelper.ToRadians(150);//MathHelper.PiOver2 + 1f;
-                    float additionAmount = 0.015f / (float)Projectile.extraUpdates; //015
-
-                    easeProg = Math.Clamp(easeProg + additionAmount, 0f, 1f);
-
-                    float rotationValue = MathHelper.Lerp(-swingDistance, swingDistance, Easings.easeInOutExpo(easeProg));
-
-                    float rotResult = Projectile.ai[0] + rotationValue + MathF.PI;
-
-                    Trail.trailPos = Projectile.Center + rotResult.ToRotationVector2() * 340f;
-                    Trail.trailRot = rotResult + MathHelper.PiOver2;
-
-                    for (int i = 0; i < 0; i++)
-                    {
-                        ///float randomDustPercent = Main.rand.NextFloat(0f, 1f);
-
-                        ///Vector2 dustPercentPoint = new Vector2(400f, 0f).RotatedBy(Projectile.rotation) * randomDustPercent;
-                        ///Vector2 dustVel = Projectile.rotation.ToRotationVector2() * Main.rand.NextFloat(4.5f, 6.1f) * 4f;
-                        //Dust.NewDustPerfect(Projectile.Center + dustPercentPoint + Main.rand.NextVector2Circular(65f, 65f), ModContent.DustType<GlowStrong>(), dustVel, 15, Color.HotPink, Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
-                    }
-
-
-                    Trail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/ShiroTrail").Value;
-                    Trail.trailColor = Color.HotPink * MathF.Sin(MathF.PI * progress);
-                    Trail.trailPointLimit = 800;
-                    Trail.trailWidth = (int)(350f);
-                    Trail.trailMaxLength = 600;
-                    Trail.timesToDraw = 2;
-
-                    //Trail.trailTime = (float)Main.timeForVisualEffects * 0.03f;
-
-                    Trail.TrailLogic();
-                }
-                Projectile.ai[2]++;
-            }
 
             timer++;
         }
@@ -678,13 +620,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            Vector2 unit = LaserRotation.ToRotationVector2();
+            Vector2 unit = Projectile.rotation.ToRotationVector2();
             float point = 0f;
+            float bonusWidth = MathF.Pow(MathF.Sin(MathF.PI * progress), 3) * 250;
 
             if (laserWidth > 5)
             {
                 return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                    endPoint, 30, ref point);
+                    Projectile.Center + unit * 345, 80 + bonusWidth , ref point);
             }
 
             return false;

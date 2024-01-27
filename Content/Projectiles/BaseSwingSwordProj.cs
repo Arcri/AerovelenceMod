@@ -42,6 +42,8 @@ namespace AerovelenceMod.Content.Projectiles
 
         public float progressToKill = 0.99f;
 
+        public bool useMeleeSpeed = true;
+
         // ------ Things used locally ------
         public int timer = 0;
 
@@ -162,7 +164,9 @@ namespace AerovelenceMod.Content.Projectiles
                 else
                     currentAngle = startingAngle + MathHelper.ToRadians((SwingHalfAngle * 2) * getProgress(easingProgress));
 
-                easingProgress = Math.Clamp(easingProgress + easingAdditionAmount * Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee), 0.01f, 1f);
+                float meleeSpeed = useMeleeSpeed ? Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) : 1f;
+
+                easingProgress = Math.Clamp(easingProgress + easingAdditionAmount * meleeSpeed, 0.01f, 1f);
             }
 
             Projectile.rotation = currentAngle + MathHelper.PiOver4;

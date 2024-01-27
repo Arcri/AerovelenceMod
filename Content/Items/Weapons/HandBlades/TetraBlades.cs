@@ -29,11 +29,6 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         private int dashRefreshCounter = -1;
         private int dashes = 4;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Tetra Blades");
-            // Tooltip.SetDefault("");
-        }
         public override void SetDefaults()
         {
             Item.damage = 50;
