@@ -22,11 +22,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         int combo = 1;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Example Swing Sword");
-            // Tooltip.SetDefault("Debug/Example Item");
-        }
         public override void SetDefaults()
         {
             Item.knockBack = 2f;

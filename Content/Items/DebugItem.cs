@@ -64,12 +64,13 @@ namespace AerovelenceMod.Content.Items
             Vector2 randomVel = velocity.RotatedByRandom(0.75f);
 
 
-            int cerobaSwing = Projectile.NewProjectile(null, player.Center, velocity, ModContent.ProjectileType<CerobaPrimarySwing>(), 0, 0, Main.myPlayer, ai1: tick ? 1f : -1f);
+            int cerobaSwing = Projectile.NewProjectile(null, player.Center, velocity, ModContent.ProjectileType<CerobaSpinProj>(), 0, 0, Main.myPlayer, ai1: tick ? 1f : -1f);
+            int cerobaWard = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<CerobaWard>(), 0, 0, Main.myPlayer, ai1: tick ? 1f : -1f);
 
-            tick = !tick;
+            //tick = !tick;
 
-            //int firePulse = Projectile.NewProjectile(null, player.Center + velocity * 10f, randomVel * 0f, ModContent.ProjectileType<CerobaWard>(), 0, 0, Main.myPlayer);
 
+            //int CerobaSpike = Projectile.NewProjectile(null, Main.MouseWorld, Main.rand.NextVector2CircularEdge(1f, 1f), ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
 
             for (int d = 0; d < 18; d++)
             {

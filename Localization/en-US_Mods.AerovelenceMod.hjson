@@ -47,6 +47,11 @@ Buffs: {
 		DisplayName: Shotgun Axe Debuff
 		Description: Mods.AerovelenceMod.Buffs.ShotgunAxeDebuff.Description
 	}
+
+	CerobaMark: {
+		DisplayName: Ceroba Mark
+		Description: Mods.AerovelenceMod.Buffs.CerobaMark.Description
+	}
 }
 
 Items: {
@@ -717,6 +722,8 @@ Projectiles: {
 	CerobaM1HeldProj.DisplayName: Ceroba M1 Held Proj
 	CerobaSwing.DisplayName: Ceroba Swing
 	CerobaPrimarySwing.DisplayName: Ceroba Primary Swing
+	CerobaSkillStrikeFX.DisplayName: Ceroba Skill Strike F X
+	CerobaSpinProj.DisplayName: Ceroba Spin Proj
 }
 
 Configs: {

@@ -672,7 +672,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             isExpert = true;
             isMaster = true;
             Phase2 = true;
-            Phase3 = false;
+            Phase3 = true;
 
             ////Main.dayTime = false;
             ///Main.time = 12600 + 3598; //midnight - 2 cause we don't want to keep activating stuff that happens at midnight probably
