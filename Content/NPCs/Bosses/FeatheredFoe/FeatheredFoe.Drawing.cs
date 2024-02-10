@@ -20,7 +20,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 {
     public partial class FeatheredFoe : ModNPC
     {
-        
         Texture2D NPCTexture => (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "FeatheredFoe");
 
 
@@ -28,6 +27,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
         public float overallScale = 1f;
 
         float stretchIntensity = 0f;
+        float squashAmount = 0f;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Vector2 drawPos = NPC.Center - Main.screenPosition;

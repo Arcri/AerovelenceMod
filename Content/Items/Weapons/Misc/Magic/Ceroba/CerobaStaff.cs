@@ -413,7 +413,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         public float accelTime = 40f;
 
         float alpha = 0f;
-        float dashVal = 0f;
         float pulseIntensity = 0f;
 
         public override void AI()
@@ -425,8 +424,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 previousRotations = new List<float>();
                 previousPostions = new List<Vector2>();
 
-
-                //Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX);
                 Projectile.rotation = Projectile.velocity.ToRotation();
 
                 pulseIntensity = 1f;
@@ -436,12 +433,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             {
                 if (timer % 3 == 0 && Main.rand.NextBool())
                 {
-
-
-                    //Vector2 vel = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 5f;
-                    //float scale = Main.rand.NextFloat(0.75f, 1f);
-                    //int leaf2 = Dust.NewDust(Projectile.Center + Projectile.rotation.ToRotationVector2() * 30f, 1, 1, DustID.Enchanted_Pink, vel.X, vel.Y, 150, Color.HotPink with { A = 0 }, scale);
-                    //Main.dust[leaf2].noGravity = true;
 
                     Color col = Main.rand.NextBool() ? Color.DeepPink : Color.HotPink;
 
@@ -457,6 +448,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
             NPC target = Main.npc.Where(n => n.CanBeChasedBy() && n.Distance(Projectile.Center) < 1000f && (Collision.CanHitLine(Projectile.Center, 1, 1, n.Center, 1, 1) || Collision.CanHitLine(Main.player[Projectile.owner].Center, 1, 1, n.Center, 1, 1))).OrderBy(n => n.Distance(Projectile.Center)).FirstOrDefault();
 
+            #region myHoming
+            
             if (target != null && timer > 15 && timer < 120)
             {
                 float homingVal = Utils.GetLerpValue(0f, 1f, (timer - 10f) / 80f, true);
@@ -469,25 +462,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 else if (timer > 75)
                     Projectile.velocity *= 0.97f;
             }
+            
+            #endregion
 
-            /*
-            if (timer <= 10)
+            #region Photonic
+            if (target != null && timer > 0 && false)
             {
-                float prog = Math.Clamp(timer / 10f, 0.1f, 1f);
-                dashVal = MathHelper.Lerp(1f, Projectile.ai[0], Easings.easeOutCubic(prog));
-
-                Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * dashVal;
-
-                if (timer == 10f)
-                    Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * Projectile.ai[0];
+                float homingStrength = RemapEased((timer - 0f) * 0.25f, 1, 20, 0, .3f);
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.Normalize(target.Center - Projectile.Center) * Projectile.ai[0] * 1.5f, homingStrength);
 
             }
-            */
-                    Projectile.rotation = Projectile.velocity.ToRotation();
+            #endregion
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
-
-            //float prog = Math.Clamp(timer / accelTime, 0f, 1f);
-            //dashVal = MathHelper.Lerp(0f, Projectile.ai[0], Easings.easeInExpo(prog));
 
             int trailCount = 14;
             previousRotations.Add(Projectile.rotation);
@@ -503,6 +490,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.25f, 0.06f), 0f, 1f);
 
             timer++;
+        }
+
+        //Photonic0
+        public float RemapEased(float fromValue, float fromMin, float fromMax, float toMin, float toMax, bool clamp = true)
+        {
+            return MathHelper.Lerp(toMin, toMax, Easings.easeInOutSine(Utils.GetLerpValue(fromMin, fromMax, fromValue, clamp)));
         }
 
         public List<float> previousRotations;
@@ -575,6 +568,34 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
         public override void OnKill(int timeLeft)
         {
+            //On trail
+            if (previousRotations != null && previousPostions != null)
+            {
+                for (int i = 0; i < previousRotations.Count; i += 2)
+                {
+                    //Color col = Main.rand.NextBool() ? Color.DeepPink : Color.HotPink;
+
+                    //Vector2 randomStart = Main.rand.NextVector2Circular(1f, 1f) * 1f;
+                    //Dust dust = Dust.NewDustPerfect(previousPostions[i], ModContent.DustType<GlowPixelCross>(), randomStart, newColor: col, Scale: Main.rand.NextFloat(0.2f, 0.45f));
+                    //dust.velocity += previousRotations[i].ToRotationVector2() * Projectile.velocity.Length() * 0.15f;
+
+                    //dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                    //    rotPower: 0.15f, preSlowPower: 0.95f, timeBeforeSlow: 12, postSlowPower: 0.92f, velToBeginShrink: 3f, fadePower: 0.91f, shouldFadeColor: false);
+
+                    
+                    if (Main.rand.NextBool())
+                    {
+                        int dust2 = Dust.NewDust(previousPostions[i], 1, 1, ModContent.DustType<GlowPixelRise>(), Scale: 0.35f + Main.rand.NextFloat(-0.25f, 0.1f), newColor: Main.rand.NextBool() ? Color.HotPink : Color.Pink);
+                        Main.dust[dust2].velocity *= 0.35f;
+                        Main.dust[dust2].velocity += previousRotations[i].ToRotationVector2() * Projectile.velocity.Length() * 0.25f;
+                        Main.dust[dust2].alpha = 5;
+                        Main.dust[dust2].noLight = true;
+                    }
+                }
+
+            }
+
+            //Impact
             for (int i = 0; i < 12; i++)
             {
                 Vector2 randomStart = Main.rand.NextVector2Circular(3.5f, 3.5f) * 1f;

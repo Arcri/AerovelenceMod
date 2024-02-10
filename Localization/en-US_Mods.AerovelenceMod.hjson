@@ -724,6 +724,7 @@ Projectiles: {
 	CerobaPrimarySwing.DisplayName: Ceroba Primary Swing
 	CerobaSkillStrikeFX.DisplayName: Ceroba Skill Strike F X
 	CerobaSpinProj.DisplayName: Ceroba Spin Proj
+	StopAndStartFeather.DisplayName: Stop And Start Feather
 }
 
 Configs: {

@@ -71,9 +71,71 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 
         }
 
+        Vector2 fiveSpreadGoalVec = Vector2.Zero;
+        Vector2 fiveSpreadStartVec = Vector2.Zero;
+        float fiveSpreadRotAmount = 0f;
+        Vector2 resultingVec = Vector2.Zero;
         public void FiveSpread()
         {
+            //Choose point oposite player
+            //
+            //
 
+            Vector2 toPlayer = (NPC.Center - player.Center).SafeNormalize(Vector2.UnitX);
+
+            BasicMovementVariant2(new Vector2(0f, -300f));
+
+            /*
+            if (substate == 1) 
+            {
+                if (timer == 0)
+                {
+                    Vector2 toPlayer = (NPC.Center - player.Center).SafeNormalize(Vector2.UnitX);
+
+                    fiveSpreadStartVec = toPlayer;
+
+                    float randAmount = Main.rand.NextFloat(-0.1f, 0.11f);
+                    float rotAmount = ((MathHelper.Pi * 0.85f) + randAmount);// * (Main.rand.NextBool() ? 1f : -1f);
+
+                    fiveSpreadGoalVec = toPlayer.RotatedBy(rotAmount); //(toPlayer * -1f).RotatedByRandom(0.75f);
+                }
+
+
+                float easingProg = Utils.GetLerpValue(0f, 1f, timer / 70f, true);
+
+                float functedEase = Easings.easeInOutHarsh(easingProg);
+
+                
+                float dist = 425f;
+
+                float currentVecAngle = fiveSpreadStartVec.ToRotation().AngleLerp(fiveSpreadGoalVec.ToRotation(), functedEase); 
+                    //MathHelper.Lerp(fiveSpreadStartVec.ToRotation(), fiveSpreadGoalVec.ToRotation(), Easings.easeInOutHarsh(easingProg));
+
+                Vector2 npcPosFromPlayer = currentVecAngle.ToRotationVector2() * dist;
+
+                NPC.Center = player.Center + npcPosFromPlayer;
+                NPC.velocity = Vector2.Zero;
+
+                if (timer == 75)
+                {
+
+                    resultingVec = (NPC.Center - player.Center);
+                    substate++;
+                    timer = -1;
+                }
+            }
+            else if (substate == 2)
+            {
+                //BasicMovementVariant1(player.Center + resultingVec);
+
+                if (timer == 30)
+                {
+                    timer = -1;
+                    substate = 1;
+                }
+
+            }
+            */
         }
 
         public void MartletOrbitFeather()
@@ -111,7 +173,36 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 
         void BasicMovementVariant2(Vector2 goalPos)
         {
+            Vector2 trueTarget = player.Center + goalPos;
+            float moveSpeed = 4f;
 
+            float maxSpeed = 8f;
+            float minSpeed = 4f;
+
+
+            // 0 = 0 | 1 = 1000
+
+
+            //float dist = Utils.GetLerpValue();
+            //NPC.Distance(trueTarget)
+
+            //float trueSpeed = Utils.GetLerpValue(minSpeed, maxSpeed, (clampedDistance / 500f), true);
+
+
+            if (NPC.Distance(trueTarget) > moveSpeed)
+            {
+                NPC.velocity += NPC.DirectionTo(trueTarget) * moveSpeed;
+            }
+
+            float clampedDistance = Math.Clamp(NPC.Distance(trueTarget), 5f, 800f);
+
+            float velocityMult = MathHelper.Lerp(0.8f, 1f, clampedDistance / 800f);
+                
+                //Utils.GetLerpValue(0.9f, 0.9f, (clampedDistance / 800f), true);
+            //Main.NewText((clampedDistance / 800f));
+
+            NPC.velocity *= velocityMult;
+            
         }
     }
 }

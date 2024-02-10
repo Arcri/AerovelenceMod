@@ -24,6 +24,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
+using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -61,44 +62,11 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2 randomVel = velocity.RotatedByRandom(0.75f);
+            Vector2 randomVel = velocity.RotatedByRandom(1f);
 
 
-            int cerobaSwing = Projectile.NewProjectile(null, player.Center, velocity, ModContent.ProjectileType<CerobaSpinProj>(), 0, 0, Main.myPlayer, ai1: tick ? 1f : -1f);
-            int cerobaWard = Projectile.NewProjectile(null, Main.MouseWorld, velocity * 0f, ModContent.ProjectileType<CerobaWard>(), 0, 0, Main.myPlayer, ai1: tick ? 1f : -1f);
+            int feather = Projectile.NewProjectile(null, position, velocity * 1f, ModContent.ProjectileType<StopAndStartFeather>(), 1, 0, Main.myPlayer);
 
-            //tick = !tick;
-
-
-            //int CerobaSpike = Projectile.NewProjectile(null, Main.MouseWorld, Main.rand.NextVector2CircularEdge(1f, 1f), ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
-
-            for (int d = 0; d < 18; d++)
-            {
-                Color col = Main.rand.NextBool() ? Color.Pink : Color.HotPink;
-
-                //Dust dust = Dust.NewDustPerfect(position, ModContent.DustType<RoaParticle>(), randomVel.RotatedByRandom(0.4f) * Main.rand.NextFloat(0.35f, 1f), newColor: col, Scale: Main.rand.NextFloat(0.5f, 1f));
-                //dust.fadeIn = Main.rand.Next(0, 4);
-                //dust.alpha = Main.rand.Next(0, 2);
-
-                //dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
-                //rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 12, postSlowPower: 0.92f, velToBeginShrink: 3f, fadePower: 0.91f, shouldFadeColor: false);
-
-                if (d % 3 == 0)
-                {
-                    //int leaf = Gore.NewGore(null, position, velocity * -1f, GoreID.TreeLeaf_VanityTreeSakura, 0.6f);
-                    //Main.gore[leaf].sticky = false;
-                    //Main.gore[leaf].alpha = 50;
-
-                    int leaf2 = Dust.NewDust(position, 20, 20, 443, velocity.X, velocity.Y, 100, Color.HotPink, 1f);
-                    Main.dust[leaf2].noGravity = false;
-
-                }
-
-            }
-
-
-            //SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_etherian_portal_dryad_touch") with { Volume = .44f, Pitch = .81f, PitchVariance = .32f, MaxInstances = -1, }; 
-            //SoundEngine.PlaySound(style3, player.Center);
 
             return false;
             int[] orbitValues1 = { 20,  80, 140,
@@ -116,7 +84,7 @@ namespace AerovelenceMod.Content.Items
             {
                 for (int index = 1; index <= numberOfFeahters; index++)
                 {
-                    int feather = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<OrbitingFeatherOld>(), damage, 0, Main.myPlayer);
+                    int orbfeather = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<OrbitingFeatherOld>(), damage, 0, Main.myPlayer);
 
                     if (Main.projectile[feather].ModProjectile is OrbitingFeatherOld of)
                     {

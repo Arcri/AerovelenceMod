@@ -156,8 +156,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.5f, LaserRotation, origin2, 0, 0);
-                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.25f, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.Red * 0.35f, LaserRotation, origin2, 0, 0);
+                Main.spriteBatch.Draw(LaserTexture, target2, null, Color.OrangeRed * 0.45f, LaserRotation, origin2, 0, 0);
                 //for (int i = 0; i < width; i += 6)
                 //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.015f); //0.030
 

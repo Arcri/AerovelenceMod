@@ -282,7 +282,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
     }
 
-
     public class AdamantitePulsarHeldProj : ModProjectile
     {
         int timer = 0;

@@ -272,8 +272,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             }
 
             //Opacity
-            if (timer > 4)
-                Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], 1.2f, 0.07f), 0, 1);
+            if (timer > 0)
+                Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], 1.2f, 0.08f), 0, 1);
 
             Lighting.AddLight(Projectile.position, new Color(255, 20, 20).ToVector3() * 0.8f * Projectile.ai[0]);
 
@@ -286,7 +286,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -40, Tex.Frame(1, 1, 0, 0), Color.Black * 0.1f * Projectile.ai[0], Projectile.rotation, Tex.Size() / 2, new Vector2(0.3f * Projectile.ai[0], 0.25f), SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -40, Tex.Frame(1, 1, 0, 0), Color.Black * 0.2f * Projectile.ai[0], Projectile.rotation, Tex.Size() / 2, new Vector2(0.3f * Projectile.ai[0], 0.25f), SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);

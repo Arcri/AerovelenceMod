@@ -80,6 +80,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                 player.itemAnimation = player.itemTime;
 
                 Projectile.NewProjectile(source, position, velocity * 1.5f, ModContent.ProjectileType<CrystalGladeFirst>(), damage, knockback, player.whoAmI);
+
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_2") with { Pitch = 0.3f, Volume = 1f, PitchVariance = 0.2f, MaxInstances = -1 };
+                SoundEngine.PlaySound(style, player.Center);
             }
             else
             {
@@ -109,8 +112,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                         d.alpha = Main.rand.Next(3, 8);
                     }
 
-                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = .07f, PitchVariance = .12f, Volume = 0.5f, MaxInstances = -1 };
-                    SoundEngine.PlaySound(style2, position);
+                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = 0f, PitchVariance = .1f, Volume = 0.35f };
+                    SoundEngine.PlaySound(style2, player.Center);
+
+                    //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = .07f, PitchVariance = .12f, Volume = 0.5f, MaxInstances = -1 };
+                    //SoundEngine.PlaySound(style2, position);
                 }
 
             }
@@ -217,8 +223,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
         public override void AI()
         {
-            if (timer < 30 && timer > 10)
-                Projectile.velocity *= 1.1f;
+            if (timer < 25 && timer > 5) //30 10  1.1f
+                Projectile.velocity *= 1.105f;
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
 
@@ -272,14 +278,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         public override void Kill(int timeLeft)
         {
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = .4f, Volume = 0.8f, PitchVariance = 0.2f, MaxInstances = -1 };
-            SoundEngine.PlaySound(style, Projectile.Center);
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = 2f, Volume = 0.5f, PitchVariance = 0.2f, MaxInstances = -1 };
+            //SoundEngine.PlaySound(style, Projectile.Center);
 
-            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_2") with { Pitch = .45f, Volume = 0.35f, PitchVariance = 0.2f, MaxInstances = -1 };
-            SoundEngine.PlaySound(style2, Projectile.Center);
+            //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_2") with { Pitch = 0f, Volume = 0.35f, PitchVariance = 0.2f, MaxInstances = -1 };
+            //SoundEngine.PlaySound(style2, Projectile.Center);
 
-            SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_1") with { Pitch = .25f, Volume = 0.45f, PitchVariance = 0.2f, MaxInstances = -1 };
-            SoundEngine.PlaySound(style3, Projectile.Center);
+            //SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_1") with { Pitch = .35f, Volume = 0.85f, PitchVariance = 0.25f, MaxInstances = -1 };
+            //SoundEngine.PlaySound(style3, Projectile.Center);
+
+            SoundStyle style4 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_crystal_impact_1") with { Pitch = 0f, PitchVariance = .25f, MaxInstances = 0, Volume = 0.5f }; 
+            SoundEngine.PlaySound(style4, Projectile.Center);
 
             for (int i = 0; i < 4; i++)
             {
@@ -535,6 +544,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                 cgp.rotDir = rotDir;
 
             Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+            Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.35f;
 
             for (int i = 0; i < 6; i++)
             {
@@ -554,10 +564,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                 dust1.color = Color.Green;
             }
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = .43f, Volume = 0.45f, PitchVariance = 0.15f };
-            SoundEngine.PlaySound(style, Projectile.Center);
+            //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = 0.15f, Volume = 0.3f, PitchVariance = 0.15f };
+            //SoundEngine.PlaySound(style, Projectile.Center);
 
-            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = .07f, PitchVariance = .12f, Volume = 0.65f };
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = 0f, PitchVariance = .1f, Volume = 0.25f };
             SoundEngine.PlaySound(style2, Projectile.Center);
         }
 

@@ -49,7 +49,11 @@ namespace AerovelenceMod.Common.Globals.Players
             if (cutscene || lerpBackToPlayer)
             {
                 float shakeVal = Player.GetModPlayer<AeroPlayer>().ScreenShakePower;
-                Vector2 rand = new Vector2(Main.rand.NextFloat(shakeVal), Main.rand.NextFloat(shakeVal));
+
+                //This runs less often at lower frame rates (and vice versa) so this normalizes that 
+                float adjustedShakeVal = shakeVal * (Main.frameRate / 144f);
+
+                Vector2 rand = new Vector2(Main.rand.NextFloat(adjustedShakeVal), Main.rand.NextFloat(adjustedShakeVal));
                 Vector2 TrueGoalPos = (ScreenGoalPos - new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f) + rand;
                 Main.screenPosition = Vector2.SmoothStep(Main.screenPosition, TrueGoalPos, interpolant);
 
