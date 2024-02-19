@@ -286,6 +286,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D Glowmask = Mod.Assets.Request<Texture2D>(path + "CerobaStaffGlowMask").Value;
 
             Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
+            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraSwingD").Value;
             Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
 
 
@@ -309,6 +310,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
             Main.EntitySpriteDraw(Swirl, armPos, null, Color.HotPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.4f, swirlRot1 + (dir == 1 ? 0f : 0.5f), Swirl.Size() / 2, Projectile.scale * 0.5f, spriteFX);
             Main.EntitySpriteDraw(Swirl, armPos, null, Color.DeepPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.4f, swirlRot2 + (dir == 1 ? 0f : 4f), Swirl.Size() / 2, Projectile.scale * 0.5f, spriteFX);
+
+            Main.EntitySpriteDraw(SwirlD, armPos, null, Color.HotPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.2f, swirlRot1 + (dir == 1 ? 0f : 0.5f), SwirlD.Size() / 2, Projectile.scale * 0.5f, spriteFX);
+            Main.EntitySpriteDraw(SwirlD, armPos, null, Color.DeepPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.2f, swirlRot2 + (dir == 1 ? 0f : 4f), SwirlD.Size() / 2, Projectile.scale * 0.5f, spriteFX);
+
 
             if (previousRotations != null)
             {
@@ -489,6 +494,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             pulseIntensity = Math.Clamp(MathHelper.Lerp(pulseIntensity, -0.25f, 0.03f), 0f, 2f);
             alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.25f, 0.06f), 0f, 1f);
 
+            Lighting.AddLight(Projectile.Center, Color.DeepPink.ToVector3() * 0.65f);
+
             timer++;
         }
 
@@ -589,7 +596,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                         Main.dust[dust2].velocity *= 0.35f;
                         Main.dust[dust2].velocity += previousRotations[i].ToRotationVector2() * Projectile.velocity.Length() * 0.25f;
                         Main.dust[dust2].alpha = 5;
-                        Main.dust[dust2].noLight = true;
+                        Main.dust[dust2].noLight = false;
                     }
                 }
 
@@ -602,6 +609,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: Color.DeepPink, Scale: Main.rand.NextFloat(0.35f, 0.65f));
                 //dust.velocity += Projectile.velocity * 0.25f;
 
+                dust.noLight = false;
                 dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                     rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 12, postSlowPower: 0.92f, velToBeginShrink: 3f, fadePower: 0.91f, shouldFadeColor: false);
             }
@@ -613,9 +621,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 Dust d = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<RoaParticle>(), vel, newColor: col, Scale: Main.rand.NextFloat(0.75f, 1.5f));
                 d.fadeIn = Main.rand.Next(0, 4);
                 d.alpha = Main.rand.Next(0, 2);
+                d.noLight = false;
 
             }
 
+            //Light Dust
+            Dust softGlow = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
+
+            softGlow.customData = DustBehaviorUtil.AssignBehavior_SGDBase(timeToStartFade: 3, timeToChangeScale: 0, fadeSpeed: 0.9f, sizeChangeSpeed: 0.95f, timeToKill: 10,
+                overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
+
+            //Sound
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .3f, MaxInstances = -1, PitchVariance = 0.2f, Volume = 0.3f };
             SoundEngine.PlaySound(style, Projectile.Center);
 
@@ -637,16 +653,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         {
             if (target.HasBuff(ModContent.BuffType<CerobaMark>())) {
 
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0f;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.75f;
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity, ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].scale = 0.75f;
 
-                modifiers.FinalDamage *= 2f;
+                modifiers.FinalDamage *= 1.5f;
             }
             
             base.ModifyHitNPC(target, ref modifiers);
@@ -1130,7 +1142,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             animProgress = staffSpinProgress;
 
 
-            Projectile.rotation = MathHelper.Lerp(goalAngle + (2f * MathHelper.TwoPi) * -dir, goalAngle, Easings.easeOutCirc(staffSpinProgress));
+            Projectile.rotation = MathHelper.Lerp(goalAngle + (2.1f * MathHelper.TwoPi) * -dir, goalAngle, Easings.easeOutCirc(staffSpinProgress));
             alpha = MathHelper.Lerp(0f, 1f, Easings.easeOutQuad(alphaProg));
 
 
@@ -1231,6 +1243,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D Glowmask = Mod.Assets.Request<Texture2D>(path + "CerobaStaffGlowMask").Value;
 
             Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
+            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraSwingD").Value;
+
             Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
 
             Player player = Main.player[Projectile.owner];
@@ -1249,8 +1263,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             float swirlRot2 = Projectile.rotation;
 
             SpriteEffects swirlFX = dir == 1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
-            Main.EntitySpriteDraw(Swirl, offset - Main.screenPosition, null, Color.HotPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.5f, swirlRot1 + (dir == 1 ? -0.5f : 0.5f), Swirl.Size() / 2, Projectile.scale * 0.5f, swirlFX);
-            Main.EntitySpriteDraw(Swirl, offset - Main.screenPosition, null, Color.DeepPink with { A = 0 } * Easings.easeInQuad(swirlAlpha) * 0.4f, swirlRot2 + (dir == 1 ? -2f : 2f), Swirl.Size() / 2, Projectile.scale * 0.5f, swirlFX);
+            Main.EntitySpriteDraw(Swirl, offset - Main.screenPosition, null, Color.HotPink with { A = 0 } * Easings.easeInCubic(swirlAlpha) * 0.4f, swirlRot1 + (dir == 1 ? -0.5f : 0.5f), Swirl.Size() / 2, Projectile.scale * 0.5f, swirlFX);
+            Main.EntitySpriteDraw(Swirl, offset - Main.screenPosition, null, Color.DeepPink with { A = 0 } * Easings.easeInCubic(swirlAlpha) * 0.4f, swirlRot2 + (dir == 1 ? -2f : 2f), Swirl.Size() / 2, Projectile.scale * 0.5f, swirlFX);
+
+            Main.EntitySpriteDraw(SwirlD, offset - Main.screenPosition, null, Color.HotPink with { A = 0 } * Easings.easeInCubic(swirlAlpha) * 0.2f, swirlRot1 + (dir == 1 ? -0.5f : 0.5f), SwirlD.Size() / 2, Projectile.scale * 0.5f, swirlFX);
+            Main.EntitySpriteDraw(SwirlD, offset - Main.screenPosition, null, Color.DeepPink with { A = 0 } * Easings.easeInCubic(swirlAlpha) * 0.2f, swirlRot2 + (dir == 1 ? -2f : 2f), SwirlD.Size() / 2, Projectile.scale * 0.5f, swirlFX);
 
             if (previousRotations != null)
             {

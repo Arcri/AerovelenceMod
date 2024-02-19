@@ -13,7 +13,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Common.Globals.SkillStrikes
 {
-	public class SkillStrikeGProj : GlobalProjectile
+	public class SkillStrikeOldGProj : GlobalProjectile
 	{
 		public override bool InstancePerEntity => true;
 

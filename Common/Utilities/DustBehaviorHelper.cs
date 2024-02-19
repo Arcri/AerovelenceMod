@@ -94,6 +94,23 @@ namespace AerovelenceMod.Common.Utilities
             return b;
         }
 
+		public static SoftGlowDustBehavior AssignBehavior_SGDBase(float timeToStartFade = 5, float timeToChangeScale = 5, float fadeSpeed = 0.95f, float sizeChangeSpeed = 0.9f, int timeToKill = 60,
+			float overallAlpha = 1f, bool DrawWhiteCore = false, float XScale = 1f, float YScale = 1f)
+        {
+            SoftGlowDustBehavior b = new SoftGlowDustBehavior();
+			b.base_timeToStartFade = timeToStartFade;
+			b.base_timeToChangeScale = timeToChangeScale;
+			b.base_fadeSpeed = fadeSpeed;
+			b.base_sizeChangeSpeed = sizeChangeSpeed;
+			b.base_timeToKill = timeToKill;
+
+			b.DrawWhiteCore = DrawWhiteCore;
+			b.Vector2DrawScale = new Vector2(XScale, YScale);
+			b.overallAlpha = overallAlpha;
+
+            return b;
+        }
+
         public class StarDustDrawInfo
 		{
 			public bool DrawWhiteCore = true;

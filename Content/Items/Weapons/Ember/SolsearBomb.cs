@@ -35,12 +35,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			Projectile.scale = 1;
 			Projectile.timeLeft = 300; //300
 			Projectile.tileCollide = true; //false;
-			Projectile.width = 50;
-			Projectile.height = 50;
+			Projectile.width = 80;
+			Projectile.height = 80;
 			Projectile.alpha = 0;
 			Projectile.hide = true;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 15;
 
-		}
+        }
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
@@ -92,7 +94,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                             {
                                 Dust a = Dust.NewDustPerfect(Projectile.Center, DustID.Torch, Scale: 1f, newColor: Color.Orange);
                                 a.noGravity = true;
-                                a.velocity *= 4f;
+                                a.velocity *= 5f;
 
                                 scaleProgVal = Math.Clamp(scaleProgVal + 0.025f, 0f, 1f);
                                 globalScale = MathHelper.Lerp(1f, 2f, Easings.easeInQuad(scaleProgVal));
@@ -118,13 +120,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             if (stopped)
             {
-                Projectile.width = (int)MathHelper.Clamp((int)(100 * globalScale), 20, 150);
-                Projectile.height = (int)MathHelper.Clamp((int)(100 * globalScale), 20, 150);
+                Projectile.width = (int)MathHelper.Clamp((int)(80 * globalScale), 20, 150);
+                Projectile.height = (int)MathHelper.Clamp((int)(80 * globalScale), 20, 150);
                 Projectile.Center = stoppedPos;
             }
 
             if (Projectile.timeLeft <= 20)
             {
+                isFading = true;
                 if (Projectile.timeLeft == 20)
                     storedScale = globalScale;
                 float outProg = 1f - (Projectile.timeLeft / 20f);
@@ -145,8 +148,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
 
             float drawScale = globalScale * 0.55f * drawnScale;
-
-			//globalScale = 2f;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
@@ -182,72 +183,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Main.spriteBatch.Draw(starB, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(globalScale, globalScale), null, new Color(255, 120, 30) * 2f * (globalScale * globalScale), (float)Main.timeForVisualEffects * -0.04f, starB.Size() / 2, 0.38f * drawScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(starB, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(globalScale, globalScale), null, new Color(255, 120, 30) * 2f * (globalScale * globalScale), (float)Main.timeForVisualEffects * -0.04f + MathHelper.PiOver4, starB.Size() / 2, 0.5f * drawScale, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(starB, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(1.5f, 1.5f), null, new Color(255, 120, 30) * 1f, (float)Main.timeForVisualEffects * -0.04f, starB.Size() / 2, 0.38f * drawScale, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(starB, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(1.5f, 1.5f), null, new Color(255, 120, 30) * 1f, (float)Main.timeForVisualEffects * -0.04f + MathHelper.PiOver4, starB.Size() / 2, 0.5f * drawScale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-
             return false;
-			Player Player = Main.player[Projectile.owner];
-			Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/MagmaBall").Value;
-			//Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_03").Value;
-
-			Texture2D texture2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/Textures/circle_05").Value;
-			var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
-
-
-			int height1 = texture.Height;
-			Vector2 origin1 = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-
-			int height2 = texture.Height;
-			Vector2 origin2 = new Vector2((float)texture2.Width / 2f, (float)height2 / 2f);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-			Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.OrangeRed * 0.7f, timer * 0.02f, star.Size() / 2, 0.4f * globalScale, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, star.Frame(1, 1, 0, 0), Color.Orange * 0.7f, timer * 0.02f, star.Size() / 2, 0.4f * globalScale, SpriteEffects.None, 0f);
-
-			Main.spriteBatch.Draw(texture2, Projectile.Center + new Vector2(0, 150 * globalScale) - Main.screenPosition, null, Color.OrangeRed, 0, origin2, 0.3f * globalScale, SpriteEffects.None, 0.0f);
-			Main.spriteBatch.Draw(texture2, Projectile.Center + new Vector2(0, 100 * globalScale) - Main.screenPosition, null, Color.Red * 2, 0, origin2, 0.2f * globalScale, SpriteEffects.None, 0.0f);
-			Main.spriteBatch.Draw(texture2, Projectile.Center + new Vector2(0, 50 * globalScale) - Main.screenPosition, null, Color.White * 2, 0, origin2, 0.1f * globalScale, SpriteEffects.None, 0.0f);
-
-			//gradientTex
-			//time
-			//distort
-			//caustics tex
-
-			//for purple pulse -> Uses timer * 0.08 and the Alpenine for the gradient input
-
-			Effect myEffect2 = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
-			myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/FireBallGradientTrim").Value);
-			myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
-			myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/FireBallGradientTrim").Value);
-			myEffect.Parameters["uTime"].SetValue(timer * 0.06f);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-			myEffect.CurrentTechnique.Passes[0].Apply();
-
-			Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, 0, origin1, 0.1f * globalScale, SpriteEffects.None, 0.0f);
-			//Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, lightColor, 0, origin1, Projectile.scale, SpriteEffects.None, 0.0f);
-			return false;
 			
 		}
 
-        public override void PostDraw(Color lightColor)
-        {
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-		}
-
+        bool isFading = false;
         public override void OnKill(int timeLeft)
         {
+            float exploScale = isFading ? storedScale : globalScale;
+
 			int explo = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SolsearBombExplosion>(), 
 				(int)(Projectile.damage * 3f * globalScale), 2f, Main.player[Projectile.owner].whoAmI);
-			(Main.projectile[explo].ModProjectile as SolsearBombExplosion).size = 0.35f * globalScale;
+			(Main.projectile[explo].ModProjectile as SolsearBombExplosion).size = 0.35f * exploScale;
+
 
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
@@ -302,7 +254,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 {
                     FadeExplosionClass newSmoke = new FadeExplosionClass(Projectile.Center, Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(0.5f, 2f) * 2f);
 
-                    newSmoke.size = 0.55f + Main.rand.NextFloat(-0.15f, 0.15f);
+                    newSmoke.size = (0.45f + Main.rand.NextFloat(-0.15f, 0.15f)) * exploScale;
                     feh.Smokes.Add(newSmoke);
 
                 }
@@ -329,11 +281,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             }
         }
 
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
-        {
-			//float damage = Projectile.damage * globalScale;
-            //base.ModifyHitNPC(ref damage);
-        }
     }
 
     public class SolsearBombExplosion : ModProjectile
@@ -362,11 +309,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         }
 
         Vector2 startingCenter;
-		float rotVal = 0f;
         public override void AI()
         {
-            Player player = Main.player[Projectile.owner];
-
             if (timer == 0)
 			{
                 startingCenter = Projectile.Center;
@@ -379,14 +323,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             if (Projectile.scale >= 0.8f * size)
                 opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, -0.2f, 0.15f), 0, 2);
-			//else
-                //opacity = MathHelper.Clamp(MathHelper.Lerp(opacity, 1.5f, 0.15f), 0f, 1f);
 
             if (opacity <= 0)
                 Projectile.active = false;
 
-            Projectile.width = (int)(190 * Projectile.scale);
-            Projectile.height = (int)(190 * Projectile.scale);
+            Projectile.width = (int)(375 * Projectile.scale);
+            Projectile.height = (int)(375 * Projectile.scale);
             Projectile.Center = startingCenter;
         }
 
@@ -395,14 +337,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopDA").Value;
             Texture2D Tex2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopE").Value;
 
-            Texture2D Orb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
-
-
-            //Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Burst_09").Value;
-
             float scale = Projectile.scale * 0.25f;
-
-
 			float timeFade = 1f - (0.25f * (Projectile.scale / size));
 
             float timeA = timer * 0.045f * timeFade;
@@ -410,26 +345,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Black * opacity * 0.35f, timeA, Tex.Size() / 2, scale * 1.65f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Black * opacity * 0.35f, timeB, Tex.Size() / 2, scale * 1.65f + (0.15f * scale), SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), Color.Black * opacity * 1f, timeB, Orb.Size() / 2, scale * 9f, SpriteEffects.None, 0f);
-
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity * 1f, timeB, Orb.Size() / 2, scale * 8f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Orb, Projectile.Center - Main.screenPosition, Orb.Frame(1, 1, 0, 0), Color.Orange * opacity * 1f, timeB, Orb.Size() / 2, scale * 5f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.Red * opacity, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
-
-
-
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity, timeA, Tex.Size() / 2, scale * 1.15f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.OrangeRed * opacity, timeB, Tex.Size() / 2, scale * 1.15f + (0.15f * scale), SpriteEffects.None, 0f);
-
 
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex2.Frame(1, 1, 0, 0), new Color(255, 130, 30) * opacity * 1f, timeA, Tex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex2, Projectile.Center - Main.screenPosition, Tex2.Frame(1, 1, 0, 0), Color.OrangeRed * opacity * 1f, timeB, Tex.Size() / 2, scale * 1.5f + (0.15f * scale), SpriteEffects.None, 0f);
@@ -441,13 +365,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-
             return false;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.OnFire3, 100);
+            target.AddBuff(BuffID.OnFire3, 230);
+            Projectile.damage = (int)(Projectile.damage * 0.9f);
         }
     }
 

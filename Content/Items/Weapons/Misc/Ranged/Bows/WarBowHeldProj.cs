@@ -142,9 +142,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                             gd.fadeIn = 50 + Main.rand.NextFloat(-3f, 4f);
                         }
 
-                        proj.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                        proj.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
-                        proj.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelProjCenter;
+                        SkillStrikeUtil.setSkillStrike(proj, 1.3f);
 
                         SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_ballista_tower_shot_1") with { Pitch = .54f, };
                         SoundEngine.PlaySound(style3, Player.Center);

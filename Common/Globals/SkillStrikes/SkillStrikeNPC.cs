@@ -16,7 +16,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Common.Globals.SkillStrikes
 {
-	public class SkillStrikeNPC : GlobalNPC
+	public class SkillStrikeOldNPC : GlobalNPC
 	{
         public override bool InstancePerEntity => true;
 
@@ -55,7 +55,9 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
         public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             //Main.NewText("OnHitByProjectile");
-
+            
+            #region old
+            /*
             int recent = -1;
             for (int i = 99; i >= 0; i--)
             {
@@ -96,23 +98,22 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 //Main.NewText("Spawned proj with CT index: " + recent);
             } else
             {
-                /*
-                CombatText anchor = Main.combatText[recent];
-                anchor.color = Color.White * 0f;
-                int a = Projectile.NewProjectile(null, anchor.position, anchor.velocity, ProjectileType<SkillStrikeProj>(), 0, 0, Main.myPlayer, recent, recent);
-                if (Main.projectile[a].ModProjectile is SkillStrikeProj SS)
-                {
-                    SS.damageNumber = anchor.text;
-                    SS.skillCrit = false;
-                    SS.superCrit = false;
-                }
-                */
-            }
 
-            
+            }
+            */
+            #endregion
         }
 
-        
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            base.ModifyHitByProjectile(npc, projectile, ref modifiers);
+        }
+
+        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+        {
+            
+            base.ModifyIncomingHit(npc, ref modifiers);
+        }
     }
 
 }

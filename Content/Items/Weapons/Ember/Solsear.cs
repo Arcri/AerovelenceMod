@@ -9,7 +9,9 @@ using Terraria.ModLoader;
 using System;
 using Terraria.Audio;
 using AerovelenceMod.Common.Utilities;
+using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Projectiles.Other;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -105,29 +107,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 SoundStyle styla = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .44f, Volume = 0.9f, PitchVariance = 0.11f};
                 SoundEngine.PlaySound(styla, player.Center);
 
-                for (int i = 0; i < 5; i++)
-                {
-                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                    Vector2 vel = velocity.RotatedBy(0);
 
-                    Dust p = GlowDustHelper.DrawGlowDustPerfect(position + muzzleOffset * 0.2f, ModContent.DustType<GlowCircleQuadStar>(), vel * (3f + Main.rand.NextFloat(-1f, 1f) + i),
-                        Color.OrangeRed, Main.rand.NextFloat(0.1f * 5, 0.3f * 5), 0.4f, 0f, dustShader);
-                    p.noLight = false;
-                    //p.velocity += NPC.velocity * (0.8f + Main.rand.NextFloat(-0.1f, -0.2f));
-                    p.fadeIn = 30 + Main.rand.NextFloat(-5, 10);
-                    p.velocity *= 0.3f;
+                for (int i22 = 0; i22 < 10; i22++) //4 //2,2
+                {
+                    Color col = Main.rand.NextBool(2) ? new Color(255, 45, 0) : Color.OrangeRed;
+
+                    /// rotBy(-2.2, 2.2)
+
+                    Dust p = Dust.NewDustPerfect(position + velocity.SafeNormalize(Vector2.UnitX) * 5, ModContent.DustType<LineSpark>(),
+                        velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1.8f, 1.8f)) * Main.rand.Next(4, 12),
+                        newColor: col, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
+                    p.velocity += velocity * (2.45f + Main.rand.NextFloat(-0.1f, -0.2f));
+
+                    p.customData = AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
+                        1f, 0.75f);
+
                 }
 
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 2; i++)
                 {
-                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                    Vector2 vel = velocity.RotatedBy(Main.rand.NextFloat(-1f, 1f));
-
-                    Dust p = GlowDustHelper.DrawGlowDustPerfect(position + muzzleOffset * 0.2f, ModContent.DustType<GlowLine1Fast>(), vel * (3f + Main.rand.NextFloat(-1f, 1f)),
-                        Color.OrangeRed, Main.rand.NextFloat(0.07f * 0.75f, 0.2f * 0.75f), 0.5f, 0f, dustShader);
-                    p.noLight = false;
-                    p.fadeIn = 40 + Main.rand.NextFloat(-5, 10);
-                    p.velocity *= 0.3f;
+                    int b = Projectile.NewProjectile(null, position, velocity * 0.65f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    Main.projectile[b].rotation = velocity.ToRotation();
+                    if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
+                    {
+                        pulseb.color = new Color(255, 60, 5);
+                        pulseb.size = 0.3f;
+                    }
                 }
 
                 return false;
@@ -208,7 +213,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
     public class SolsearHeld2 : ModProjectile
     {
-        //This class exists literally to just draw the glowmask, also this is pmuch copied from SLR
+        //This class exists literally to just draw the glowmask
         private bool initialized = false;
 
         private Vector2 currentDirection => Projectile.rotation.ToRotationVector2();
@@ -218,6 +223,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         //public override void SetStaticDefaults() => DisplayName.SetDefault("Solsear");
 
         float justShotPower = 1f;
+        float justShotPowerWeaker = 1f;
         public override void SetDefaults()
         {
             Projectile.hostile = false;
@@ -250,7 +256,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
             }
 
-            justShotPower = Math.Clamp(MathHelper.Lerp(justShotPower, -0.15f, 0.1f), 0f, 1f);
+            justShotPower = Math.Clamp(MathHelper.Lerp(justShotPower, -0.25f, 0.2f), 0f, 1f);
+            justShotPowerWeaker = Math.Clamp(MathHelper.Lerp(justShotPowerWeaker, -0.2f, 0.1f), 0f, 1f);
+
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -260,7 +268,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Vector2 position = (owner.Center + (currentDirection * 22)) - Main.screenPosition;
 
-            Vector2 scale = new Vector2(1f - (0.1f * justShotPower), 1f) * 1f;
+            Vector2 scale = new Vector2(1f - (0.15f * justShotPower), 1f) * 1f;
 
             if (owner.direction == 1)
             {
@@ -268,7 +276,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation(), texture.Size() / 2, scale, effects1, 0.0f);
                 Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation(), texture.Size() / 2, scale, effects1, 0.0f);
 
-                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPower * 2f, currentDirection.ToRotation(), glowMask.Size() / 2, scale, effects1, 0.0f);
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPowerWeaker * 2f, currentDirection.ToRotation(), glowMask.Size() / 2, scale, effects1, 0.0f);
 
             }
             else
@@ -277,7 +285,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Main.spriteBatch.Draw(texture, position, null, lightColor, currentDirection.ToRotation() - 3.14f, texture.Size() / 2, scale, effects1, 0.0f);
                 Main.spriteBatch.Draw(glowMask, position, null, Color.White, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, scale, effects1, 0.0f);
 
-                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPower * 2f, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, scale, effects1, 0.0f);
+                Main.spriteBatch.Draw(glowMask, position, null, Color.White with { A = 0 } * justShotPowerWeaker * 2f, currentDirection.ToRotation() - 3.14f, glowMask.Size() / 2, scale, effects1, 0.0f);
 
             }
 

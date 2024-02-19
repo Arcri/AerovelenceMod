@@ -327,11 +327,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             if (target.GetGlobalNPC<AdamShotNPC>().AdamShotHitCounter >= 4)
             {
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0f;
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0f;
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<H3Impact>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].rotation = Projectile.rotation;

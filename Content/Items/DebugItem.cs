@@ -62,13 +62,18 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Vector2 randomVel = velocity.RotatedByRandom(1f);
 
+            //int Muraa = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, player.whoAmI);
 
-            int feather = Projectile.NewProjectile(null, position, velocity * 1f, ModContent.ProjectileType<StopAndStartFeather>(), 1, 0, Main.myPlayer);
+            
+            Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
 
+            softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 0.95f, timeToKill: 10, 
+                overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
+            
 
             return false;
+            /*
             int[] orbitValues1 = { 20,  80, 140,
                                   40,  100, 160,
                                   60,  120, 180 };
@@ -96,9 +101,9 @@ namespace AerovelenceMod.Content.Items
 
                 }
             }
-
+            
             int barrier = Projectile.NewProjectile(null, player.Center + new Vector2(0f, -245f), Vector2.Zero, ModContent.ProjectileType<WindBarrierTest>(), 0, 0, Main.myPlayer);
-
+            */
 
             return false;
 

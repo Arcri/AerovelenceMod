@@ -861,10 +861,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                         Main.dust[p].velocity *= 1.5f;
                     }
 
-                    projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                    projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                    projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-                    projectile.GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0f;
+                    SkillStrikeUtil.setSkillStrike(projectile, 1.3f);
 
                 }
             }

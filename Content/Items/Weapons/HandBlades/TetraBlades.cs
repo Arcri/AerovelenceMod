@@ -124,7 +124,6 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             {
                 if (dashes > 0)
                 {
-                    Main.NewText("Penis");
                     Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0 };
                     doubleAttackCount = 10;
                     Item.useTime = 20;
@@ -166,18 +165,18 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 Main.projectile[a].scale = 1f;
 
                 if (Main.projectile[a].ModProjectile is TetraBladeStrike strike)
-                {
                     strike.strikeCol = col;
-                }
 
                 if (dashes == 0)
                 {
+                    SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f);
+                    /*
                     Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
                     Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
                     Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.glowTargetCenter;
                     Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.35f;
                     Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.9f;
-
+                    */
                 }
 
 

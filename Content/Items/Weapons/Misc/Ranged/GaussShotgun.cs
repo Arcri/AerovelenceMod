@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
@@ -90,24 +91,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					SoundStyle stylev2 = new SoundStyle("Terraria/Sounds/Item_38") with { Pitch = .66f, Volume = 0.3f };
 					SoundEngine.PlaySound(stylev2);
 
-					//Oh my goodness gracious
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.55f;
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.55f;
-					Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactRot = MathHelper.PiOver2 / 2;
+					SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f);
+                    SkillStrikeUtil.setSkillStrike(Main.projectile[b], 1.3f);
 
-
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.pixelTargetCenter;
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.55f;
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.55f;
-					Main.projectile[b].GetGlobalProjectile<SkillStrikeGProj>().impactRot = -1 * MathHelper.PiOver2 / 2;
-
-
-					this.shotCounter++;
+                    this.shotCounter++;
 					break;
 
 				case 2:

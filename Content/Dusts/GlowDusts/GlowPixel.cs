@@ -1,4 +1,4 @@
-﻿using Terraria;
+﻿   using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
@@ -293,6 +293,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
         public override void OnSpawn(Dust dust)
 		{
 			dust.noGravity = true;
+			dust.noLight = true;
 			dust.frame = new Rectangle(0, 0, 68, 68);
 		}
 
@@ -363,8 +364,11 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 				dust.fadeIn++;
 			}
-			
-			return false;
+
+            if (!dust.noLight)
+                Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.5f * dust.scale);
+
+            return false;
 		}
 
 

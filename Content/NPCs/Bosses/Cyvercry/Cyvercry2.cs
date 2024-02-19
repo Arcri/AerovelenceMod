@@ -576,7 +576,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
-            //whatAttack = -1;
+            //whatAttack = 33;
             //whatAttack = 7;
 
             if (whatAttack != 24)
@@ -5250,17 +5250,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     whatAttack = 6;
 
-                    if (Phase3)
-                        whatAttack = 23;
+                    //if (Phase3)
+                        //whatAttack = 23;
+
+                    //whatAttack = 23;
 
                     trueCloneFalseBot = !trueCloneFalseBot;
                 }
                 else
                 {
-                    whatAttack = 8;
+                    //whatAttack = 8;
 
-                    if (Phase3)
-                        whatAttack = 10;
+                    //if (Phase3)
+                    //whatAttack = 10;
+
+                    whatAttack = 10;
 
                     trueCloneFalseBot = !trueCloneFalseBot;
                 }

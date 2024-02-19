@@ -399,12 +399,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                     if (skillCritWindow > 0 && reticleProgress == 1)
                     {
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.glowTargetCenter;
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.4f;
-                        Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.8f;
-
+                        SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 2);
                     }
 
                     SoundStyle style23 = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_shot_0") with { Pitch = .10f, PitchVariance = 0.4f, Volume = 0.4f };

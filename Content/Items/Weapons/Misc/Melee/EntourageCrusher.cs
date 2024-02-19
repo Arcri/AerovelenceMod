@@ -149,9 +149,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             {
                 if (Main.player[Projectile.owner].GetModPlayer<EntourageCounter>().successiveHits >= Main.player[Projectile.owner].GetModPlayer<EntourageCounter>().hitsForCrit)
                 {
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.glowTargetCenter;
+                    SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
                 }
 
                 easingProgress = 0.15f;
@@ -492,10 +490,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
                 if (Main.player[Projectile.owner].GetModPlayer<EntourageCounter>().successiveHits >= Main.player[Projectile.owner].GetModPlayer<EntourageCounter>().hitsForCrit)
                 {
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-                    //Projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.35f;
+                    SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
 
                     skillStrike = true;
                 }

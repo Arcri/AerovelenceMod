@@ -28,6 +28,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 		public override void OnSpawn(Dust dust)
 		{
+			dust.noLight = true;
 			dust.customData = false;
 			dust.noGravity = true;
 			dust.fadeIn = 0f;
@@ -56,8 +57,10 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 				dust.alpha = (dust.alpha + 1) % 4;
 			}
 
+            if (!dust.noLight)
+                Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.5f * dust.scale);
 
-			return false;
+            return false;
 		}
 
 

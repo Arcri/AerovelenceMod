@@ -543,8 +543,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             if (Main.projectile[a].ModProjectile is CrystalGladePulse cgp)
                 cgp.rotDir = rotDir;
 
-            Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-            Main.projectile[shot].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.35f;
+            SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f);
 
             for (int i = 0; i < 6; i++)
             {
@@ -567,7 +566,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_101") with { Pitch = 0.15f, Volume = 0.3f, PitchVariance = 0.15f };
             //SoundEngine.PlaySound(style, Projectile.Center);
 
-            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = 0f, PitchVariance = .1f, Volume = 0.25f };
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = 0f, PitchVariance = .1f, Volume = 0.35f };
             SoundEngine.PlaySound(style2, Projectile.Center);
         }
 

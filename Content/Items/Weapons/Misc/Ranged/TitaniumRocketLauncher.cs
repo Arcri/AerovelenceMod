@@ -201,11 +201,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 			if (i == 60)
             {
-				Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-				Projectile.GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.glowProjCenter;
-				Projectile.GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-				Projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = 1f;
-				colVal = 1f;
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
+
+                colVal = 1f;
 			}
 			if (i >= 60)
 				colVal = Math.Clamp(MathHelper.Lerp(colVal, -0.25f, 0.07f), 0, 1);
