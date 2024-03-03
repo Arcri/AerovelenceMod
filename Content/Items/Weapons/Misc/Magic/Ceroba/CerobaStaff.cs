@@ -626,7 +626,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             }
 
             //Light Dust
-            Dust softGlow = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
+            Dust softGlow = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.DeepPink, Scale: 0.35f);
 
             softGlow.customData = DustBehaviorUtil.AssignBehavior_SGDBase(timeToStartFade: 3, timeToChangeScale: 0, fadeSpeed: 0.9f, sizeChangeSpeed: 0.95f, timeToKill: 10,
                 overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
@@ -753,7 +753,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                     {
                         if (Main.npc[i].active)
                         {
-                            if (!Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 80f)
+                            if (!Main.npc[i].friendly && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 80f)
                             {
                                 int Direction = 0;
                                 if (Projectile.Center.X - Main.npc[i].Center.X < 0)
@@ -1108,6 +1108,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         }
 
         public override bool? CanCutTiles() { return false; }
+
+        public override bool? CanDamage() { return false; }
 
         int timer = 0;
 

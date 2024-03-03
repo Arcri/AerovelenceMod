@@ -620,6 +620,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
+            float range = 325f; //345
+            
             Vector2 unit = Projectile.rotation.ToRotationVector2();
             float point = 0f;
             float bonusWidth = MathF.Pow(MathF.Sin(MathF.PI * progress), 3) * 250;
@@ -627,7 +629,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (laserWidth > 5)
             {
                 return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center,
-                    Projectile.Center + unit * 345, 80 + bonusWidth , ref point);
+                    Projectile.Center + unit * range, 80 + bonusWidth , ref point);
             }
 
             return false;

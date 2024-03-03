@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 	
 	public class SoftGlowDust : ModDust
 	{
-		public override string Texture => "AerovelenceMod/Assets/Orbs/SolidBloom";
+		public override string Texture => "AerovelenceMod/Assets/Orbs/SoftGlow";
 
 		public override void OnSpawn(Dust dust)
 		{
