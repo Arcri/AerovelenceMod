@@ -15,6 +15,7 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using Terraria.Graphics.Effects;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
@@ -296,7 +297,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             Color c1 = Color.Red;
             Color c2 = Color.Red;
-
+            
             myEffect.Parameters["Color1"].SetValue(c1.ToVector4());
             myEffect.Parameters["Color2"].SetValue(c2.ToVector4());
             myEffect.Parameters["Color1Mult"].SetValue(1f);

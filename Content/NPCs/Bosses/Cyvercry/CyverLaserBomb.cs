@@ -41,6 +41,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             return false;
         }
 
+        public bool longTelegraph = false;
+
         public float overallScale = 0f;
         public override void AI()
         {
@@ -130,10 +132,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Vector2 L1pos = new Vector2(extraLPos1.X, 10 + extraLPos1.Y).RotatedBy(Projectile.rotation + extraAngle) + Projectile.Center;
             Vector2 L2pos = new Vector2(extraLPos2.X, -10 + extraLPos2.Y).RotatedBy(Projectile.rotation + extraAngle) + Projectile.Center;
 
-            //Vector2 L1pos = (L1rot.ToRotationVector2() * 30) + Projectile.Center;
-            //Vector2 L2pos = (L2rot.ToRotationVector2() * 30) + Projectile.Center;
-
-
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 3);
             myEffect.Parameters["uTime"].SetValue(2);
@@ -147,63 +145,36 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 Vector2 vec2Scale = new Vector2(teleScale, teleScale * 0.5f);
 
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(-50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation + MathHelper.Pi, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 1f, Projectile.rotation, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
+                if (longTelegraph)
+                    vec2Scale = new Vector2(teleScale * 2.65f, teleScale * 0.6f); //2.5 0.6
+
+                Vector2 origin = new Vector2(0f, RayTex.Height / 2);
+
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition, null, Color.DeepPink * drawAlpha * 1f, Projectile.rotation + MathHelper.Pi, origin, vec2Scale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition, null, Color.DeepPink * drawAlpha * 1f, Projectile.rotation, origin, vec2Scale, SpriteEffects.None, 0);
 
             }
-            //Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Glorb").Value;
-            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 0.7f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.2f, SpriteEffects.None, 0);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            if (telegraphLong)
-            {
-
-                Vector2 vec2Scale = new Vector2(1.5f, 0.15f) * (2 + (teleScale * 0.6f));
-
-                Vector2 offsetAdd = Projectile.rotation.ToRotationVector2() * 10;
-
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink * drawAlpha * 0.5f, Projectile.rotation, new Vector2(0, RayTex.Height / 2), vec2Scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink * drawAlpha * 0.5f, Projectile.rotation + MathHelper.Pi, new Vector2(0, RayTex.Height / 2), vec2Scale, SpriteEffects.None, 0f);
-
-
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.White * 0.65f * drawAlpha, Projectile.rotation, new Vector2(0, RayTex.Height / 2), vec2Scale * 0.75f, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.White * 0.65f * drawAlpha, Projectile.rotation + MathHelper.Pi, new Vector2(0, RayTex.Height / 2), vec2Scale * 0.75f, SpriteEffects.None, 0f);
-
-
-                //Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(-50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.HotPink * drawAlpha * 0.3f, Projectile.rotation + MathHelper.Pi, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
-                //Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.HotPink * drawAlpha * 0.3f, Projectile.rotation, RayTex.Size() / 2, vec2Scale, SpriteEffects.None, 0);
-
-
-                //Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(-50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 0.9f, Projectile.rotation + MathHelper.Pi, RayTex.Size() / 2, vec2Scale * 2f, SpriteEffects.None, 0);
-                //Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + new Vector2(50 * teleScale, 0).RotatedBy(Projectile.rotation), RayTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 0.9f, Projectile.rotation, RayTex.Size() / 2, vec2Scale * 2f, SpriteEffects.None, 0);
-
-            }
-
-            //Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L1rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White * 1f * drawAlpha, L2rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L1rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.8f * drawAlpha * whiteIntensity, L2rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
-
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            if (telegraphLong)
+            {
+                Vector2 vec2Scale = new Vector2(1.35f, 0.15f) * (2 + (teleScale * 0.6f));
+                Vector2 offsetAdd = Projectile.rotation.ToRotationVector2() * 10;
+
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink with { A = 0 } * drawAlpha * 0.3f, Projectile.rotation, new Vector2(0, RayTex.Height / 2), vec2Scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink with { A = 0 } * drawAlpha * 0.3f, Projectile.rotation + MathHelper.Pi, new Vector2(0, RayTex.Height / 2), vec2Scale, SpriteEffects.None, 0f);
+
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.White with { A = 0 } * 0.45f * drawAlpha, Projectile.rotation, new Vector2(0, RayTex.Height / 2), vec2Scale * 0.75f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.White with { A = 0 } * 0.45f * drawAlpha, Projectile.rotation + MathHelper.Pi, new Vector2(0, RayTex.Height / 2), vec2Scale * 0.75f, SpriteEffects.None, 0f);
+            }
 
             Main.spriteBatch.Draw(Tex, L1pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White with { A = 0 } * 0.75f * drawAlpha, L1rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, L2pos - Main.screenPosition, Tex.Frame(1, 1, 0, 0), Color.White with { A = 0 } * 0.75f * drawAlpha, L2rot, Tex.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
             
             Main.spriteBatch.Draw(White, L1pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.75f * drawAlpha, L1rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(White, L2pos - Main.screenPosition, White.Frame(1, 1, 0, 0), Color.White * 0.75f * drawAlpha, L2rot, White.Size() / 2, overallScale * 0.9f, SpriteEffects.None, 0f);
-
-
-
-
-            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
-            //Main.spriteBatch.Draw(spotTex, Projectile.Center - Main.screenPosition, spotTex.Frame(1, 1, 0, 0), Color.DeepPink * drawAlpha * 2f, Projectile.rotation, spotTex.Size() / 2, drawAlpha * 0.4f, SpriteEffects.None, 0);
-
-
 
             return false;
         }
@@ -330,7 +301,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             extraAngle = input;
         }
     }
-
     public class NewCyverBombBeam : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";

@@ -835,7 +835,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         }
 
     }
-        public class EntourageCounter : ModPlayer
+    public class EntourageCounter : ModPlayer
     {
         public int successiveHits = 1;
         public int hitsForCrit = 4;

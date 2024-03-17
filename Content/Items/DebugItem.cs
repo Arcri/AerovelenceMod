@@ -63,14 +63,15 @@ namespace AerovelenceMod.Content.Items
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
-            //int Muraa = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, player.whoAmI);
+            int Muraa = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, player.whoAmI);
+            if (Main.projectile[Muraa].ModProjectile is CyverLaserBomb clb)
+                clb.longTelegraph = true;
 
-            
-            Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
+            //Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
 
-            softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 0.95f, timeToKill: 10, 
-                overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
-            
+            //softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 0.95f, timeToKill: 10, 
+            //overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
+
 
             return false;
             /*

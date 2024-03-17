@@ -562,6 +562,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             float newScale = 0.75f;
+            
+            //Hide healthbar when Cyver is on top of pink clone
+            if (whatAttack == 19 && timer < 120)
+                return false;
+
             return base.DrawHealthBar(hbPosition, ref newScale, ref position);
         }
         #endregion
@@ -583,8 +588,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
-            whatAttack = 33;
-            //whatAttack = 7;
+            //whatAttack = 33;
+            //whatAttack = 19;
 
             if (whatAttack != 24)
                 hideRegreGlow = false;
@@ -606,9 +611,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Phase2 = true;
             Phase3 = true;
 
-            ////Main.dayTime = false;
             ///Main.time = 12600 + 3598; //midnight - 2 cause we don't want to keep activating stuff that happens at midnight probably
-            //Main.time = MathHelper.Lerp((float)Main.time, 12600 + 3598, 0.02f); //midnight - 2 cause we don't want to keep activating stuff that happens at midnight probably
             Main.time = MathHelper.Lerp(moonStartPos, 12600 + 3598, Easings.easeInOutQuad(Math.Clamp((totalTime / 90f), 0f, 1f)));
             NPC.damage = 0;
 
@@ -1469,7 +1472,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     gigaLaserCount = 0;
                     ballScale = 0;
 
-                    whatAttack = 14;
+                    whatAttack = 33;
                 }
                 else
                 {
@@ -2015,6 +2018,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         bool hasDoneSwordShot = false;
         int swordJustHitTime = 0;
         float swordDangerTelegraphPower = 0f;
+        int swordSwingsCount = 0;
         public void EyeSword(Player myPlayer)
         {
             //The total distance (radians) of the swing
@@ -2029,7 +2033,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             int frameToStartSwing = (isMaster ? 8 : (isExpert ? 12 : 16));
 
             //Master: 10 | Expert: 14 | Classic  16
-            int frameToStartDash = (isMaster ? 10 : (isExpert ? 14 : 16)); 
+            int frameToStartDash = (isMaster ? 10 : (isExpert ? 14 : 16));
+
+            // 7 in all difficulties
+            int swordTotalReps = 7;
 
             //Move towards player and telegraph
             if (advancer == 0)
@@ -2282,19 +2289,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     timer = -1;
                     advancer = 0;
                     swordEasingProgress = 0f;
-                    sweepLaserReps++;
+                    swordSwingsCount++;
+
                     hasDoneSwordSound = false;
                     hasDoneSwordShot = false;
 
                     (eyeSwordInstance.ModProjectile as EyeSword).fade = true;
 
-                    /*
-                    if (sweepLaserReps == 3)
+                    
+                    if (swordSwingsCount >= swordTotalReps)
                     {
                         SetNextAttack("Dash");
-                        sweepLaserReps = 0;
+                        swordSwingsCount = 0;
                     }
-                    */
+                    
                 }
             }
 
@@ -2412,12 +2420,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     {
                         for (int i = 0; i < 360; i += 360 / 12)
                         {
-                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(5f, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), 2, 0, Main.myPlayer);
+                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(3f, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), 2, 0, Main.myPlayer);
                             if (Main.projectile[proj].ModProjectile is CyverLaser laser)
                             {
                                 laser.accelerate = true;
                                 laser.accelerateTime = 90;
-                                laser.accelerateAmount = 1.008f;
+                                laser.accelerateAmount = 1.013f;
                             }
 
                         }
@@ -2593,6 +2601,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         ball.numberOfLasers = 6;
                         Main.projectile[a].timeLeft = 50;
                     }
+
+                    if (Main.projectile[a].ModProjectile is CyverLaserBomb clb)
+                        clb.longTelegraph = true;
 
                     Main.projectile[a].rotation = storedRotaion;
 
@@ -4322,39 +4333,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Main.projectile[FX].rotation = NPC.rotation;
                 }
 
-                //goalLocation = new Vector2(0, 500).RotatedBy(MathHelper.ToRadians(20 * i * (whichSide ? -1 : 1)));
-                //Vector2 goalLocation = new Vector2(0, 500).RotatedBy(20 * i * (whichSide ? -1 : 1));
                 float startingRotation = Main.rand.NextFloat(6.28f);
                 bool whichSide = Main.rand.NextBool();
                 bool topOrBottom = Main.rand.NextBool();
 
                 for (int i = 0; i < 6; i++)
                 {
-                    Vector2 goalLocation = new Vector2(0, 465 * (topOrBottom ? -1 : 1)).RotatedBy(startingRotation + MathHelper.ToRadians(36 * i * (whichSide ? -1 : 1)));
+                    Vector2 goalLocation = new Vector2(0, 470 * (topOrBottom ? -1 : 1)).RotatedBy(startingRotation + MathHelper.ToRadians(36 * i * (whichSide ? -1 : 1)));
                     int cloneIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + goalLocation * 2, Vector2.Zero, ModContent.ProjectileType<ShadowClone>(), ContactDamage / 4, 2, Main.myPlayer);
                     Projectile Clone = Main.projectile[cloneIndex];
 
                     if (Clone.ModProjectile is ShadowClone dashers)
                     {
-                        dashers.dashSpeed = 18.5f;
+                        dashers.dashSpeed = 18.5f; //18.5f
                         dashers.SetGoalPoint(goalLocation);
                     }
                 }
-
-                /*
-                for (int i = 0; i < 7; i++)
-                {
-                    Vector2 goalLocation = new Vector2(0, 500 * (topOrBottom ? -1 : 1)).RotatedBy(startingRotation + MathHelper.ToRadians(30 * i * (whichSide ? -1 : 1)));
-                    int cloneIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + goalLocation * 2, Vector2.Zero, ModContent.ProjectileType<ShadowClone>(), ContactDamage / 4, 2, Main.myPlayer);
-                    Projectile Clone = Main.projectile[cloneIndex];
-
-                    if (Clone.ModProjectile is ShadowClone dashers)
-                    {
-                        dashers.dashSpeed = 16;
-                        dashers.SetGoalPoint(goalLocation);
-                    }
-                }
-                */
             }
 
             if (timer == 90)
@@ -4370,7 +4364,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
             }
 
-            //
             NPC.dontTakeDamage = true;
             NPC.hide = true;
             NPC.Center = myPlayer.Center + new Vector2(0, 500);
@@ -4532,9 +4525,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             else if (timer < 120)
             {
-                NPC.dontTakeDamage = true;
+                NPC.velocity = Vector2.Zero;
+
+                //Put NPC on the pink clone
+                NPC.dontTakeDamage = false;
                 NPC.hide = true;
-                NPC.Center = myPlayer.Center + new Vector2(0, 800);
+
+                if (pinkProj != null && pinkProj.active == true && pinkProj.type == ModContent.ProjectileType<ShadowClonePink>())
+                {
+                    NPC.Center = pinkProj.Center;
+                    NPC.rotation = pinkProj.rotation;
+                }
             }
 
             timer++;
@@ -5230,6 +5231,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             timer++;
         }
 
+        public void PowerDownAttack(Player myPlayer)
+        {
+            //Do shite
+        }
 
         float barrageCount = 1;
         bool trueSpinFalseAzzy = true;

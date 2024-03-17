@@ -217,7 +217,7 @@ namespace AerovelenceMod
 			ModDetours.Load();
 
 
-			if (Main.netMode != NetmodeID.Server)
+			if (!Main.dedServ)
 			{
 
 				string shaderName = "AerovelenceMod:DistortScreen";
@@ -245,8 +245,8 @@ namespace AerovelenceMod
 
 				Filters.Scene["Shockwave"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("AerovelenceMod/Effects/Shockwave", AssetRequestMode.ImmediateLoad).Value), "Shockwave"), EffectPriority.VeryHigh);
 				Filters.Scene["Shockwave"].Load();
-
-			}
+				
+            }
 			GemGrapplingRange.Load();
 
             
