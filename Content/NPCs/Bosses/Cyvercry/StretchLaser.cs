@@ -22,6 +22,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int timer = 0;
         public override void SetStaticDefaults()
         {
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 9000;
         }
         public int enemiesHit = 0;
         public override void SetDefaults()
@@ -470,6 +471,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float centerAngle = 0f;
         public bool drawSlash = false;
 
+        int fadeTimeLeft = 0;
+
         BaseTrailInfo Trail = new BaseTrailInfo();
         public override void AI()
         {
@@ -478,11 +481,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 easeProg = 0.03f;
                 startCenter = Projectile.Center;
                 Projectile.ai[2] = 0;
+                fadeTimeLeft = 5;
             }
 
             if (fade)
             {
-                Projectile.active = false;
+                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.25f, 0.2f), 0f, 1f);
+                if (fadeTimeLeft == 0)
+                    Projectile.active = false;
+                fadeTimeLeft--;
             }
             else
                 alpha = Math.Clamp(MathHelper.Lerp(alpha, 0f, 0.08f), 1f, 1f);

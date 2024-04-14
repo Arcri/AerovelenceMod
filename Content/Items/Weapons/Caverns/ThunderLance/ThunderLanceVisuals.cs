@@ -79,26 +79,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
             myEffect.Parameters["uTime"].SetValue(timer * 0.015f);
 
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, new Color(0, 0, 0, 0), Projectile.rotation, Ball.Size() / 2, 0.15f * ballScale * 2f * Projectile.scale, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, new Color(0, 0, 0, 0) * 0.5f, Projectile.rotation, Ball.Size() / 2, 0.15f * ballScale * 2.5f, SpriteEffects.None, 0f);
-
-
+            
+            
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Color col = Color.DeepSkyBlue;
-            //col.A = 0;
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation * -1, Ball.Size() / 2, 0.15f * ballScale * 2f * Projectile.scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col * 0.8f, Projectile.rotation, Ball.Size() / 2, 0.2f * ballScale * 2f * Projectile.scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, col * 0.3f, Projectile.rotation * -1, Ball.Size() / 2, 0.3f * ballScale * 2f * Projectile.scale, SpriteEffects.None, 0f);
 
-            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.Black * 0.6f, Projectile.rotation, Ball.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
-
             Vector2 scaleV = new Vector2(1f, 1f);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-            myEffect.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
             //Main.spriteBatch.Draw(Pupil, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), 0f, Pupil.Size() / 2, Projectile.scale * scaleV, SpriteEffects.None, 0f);
             //Main.spriteBatch.Draw(Pupil, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), 0f, Pupil.Size() / 2, Projectile.scale * scaleV, SpriteEffects.None, 0f);
@@ -108,9 +101,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
             Main.spriteBatch.Draw(Lightning, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), Projectile.rotation * -1f, Lightning.Size() / 2, 0.4f * Projectile.scale * 0.7f * (ballScale + 0.4f), SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Main.spriteBatch.Draw(Lightning, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), Projectile.rotation, Lightning.Size() / 2, Projectile.scale * (ballScale + 0.4f), SpriteEffects.None, 0f);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

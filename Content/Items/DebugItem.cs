@@ -25,6 +25,7 @@ using System;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
+using Microsoft.CodeAnalysis;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -62,15 +63,37 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            //Vector2 spawnPoss = new Vector2(48253, 3161);
+            int barrier = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<OtherVertexLaserTest>(), 0, 0, Main.myPlayer);
 
-            int Muraa = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 0, 0, player.whoAmI);
-            if (Main.projectile[Muraa].ModProjectile is CyverLaserBomb clb)
-                clb.longTelegraph = true;
+            //48253 3161
 
-            //Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.HotPink, Scale: 0.65f);
+            return false;
+            float impactScale = 2f;
+            for (int j = 0; j < (5 + Main.rand.Next(0, 2)) * impactScale; j++)
+            {
+                //Dust star = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowStarSharp>(),
+                //Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1, 4), newColor: new Color(255, 180, 60), Scale: Main.rand.NextFloat(0.20f, 0.35f) * 1.5f);
 
-            //softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 0.95f, timeToKill: 10, 
-            //overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
+                //StarDustDrawInfo info = new StarDustDrawInfo(true, false, true, true, false, 1f);
+                //star.customData = AssignBehavior_GSSBase(rotPower: 0.03f, timeBeforeSlow: 8, preSlowPower: 0.94f, postSlowPower: 0.92f, velToBeginShrink: 4f, fadePower: 0.95f, shouldFadeColor: false, sdci: info);
+
+                Dust star = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<GlowPixelCross>(),
+                Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1.5f, 3.25f), newColor: new Color(255, 180, 60), Scale: Main.rand.NextFloat(0.35f, 0.50f) * 1f);
+
+                star.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                                rotPower: 0.15f, preSlowPower: 0.91f, timeBeforeSlow: 15, postSlowPower: 0.90f, velToBeginShrink: 2f, fadePower: 0.93f, shouldFadeColor: false);
+            }
+            for (int ii = 0; ii < (6 + Main.rand.Next(0, 2)) * impactScale; ii++)
+            {
+                Dust d = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<MuraLineBasic>(),
+                        Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1.5f, 3.25f), Alpha: Main.rand.Next(10, 15), new Color(255, 180, 60), 0.35f);
+            }
+
+            Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: new Color(255, 180, 60), Scale: 0.1f);
+
+            softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 1.1f, timeToKill: 10, 
+            overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
 
 
             return false;

@@ -206,7 +206,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             //Trail1 Info Dump
             trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyTex").Value;
-            trail1.trailColor = Color.White * 0.5f;
+            trail1.trailColor = Color.White * 0f;
             trail1.trailPointLimit = 800;
             trail1.trailWidth = 60;
             trail1.trailMaxLength = 200;
@@ -220,13 +220,13 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail4").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/LavaTrailV1").Value;
             trail2.trailColor = Color.Wheat;
             trail2.trailPointLimit = 800;
             trail2.trailWidth = 40;
             trail2.trailMaxLength = 600;
-            trail2.timesToDraw = 1;
-            trail2.usePinchedWidth = false;
+            trail2.timesToDraw = 2;
+            trail2.usePinchedWidth = true;
 
             trail2.gradient = true;
             trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/FireGradLoop").Value;

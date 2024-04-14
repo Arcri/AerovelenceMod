@@ -46,12 +46,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float overallScale = 0f;
         public override void AI()
         {
-            if (timer > 32)
+            int extraTimeBeforeShoot = longTelegraph ? 0 : 0; //this thing is fucked
+
+            //Main.NewText(Projectile.ai[0]);
+
+            if (timer > 32 + extraTimeBeforeShoot)
             {
                 teleScale = MathHelper.Clamp(MathHelper.Lerp(teleScale, 1.9f, 0.05f), 0f, 1.75f);
             }
 
-            if (timer == 50) //50
+            if (timer == 50 + extraTimeBeforeShoot) //50
             {
                 SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = 1.5f, PitchVariance = .47f, MaxInstances = 1, Volume = 0.25f };
                 SoundEngine.PlaySound(style, Projectile.Center);
@@ -68,6 +72,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     Projectile.rotation.ToRotationVector2() * 0.1f, ModContent.ProjectileType<CyverBeam>(),
                     Projectile.damage, Projectile.knockBack);
 
+
                 //whiteIntensity = 1;
 
                 /*
@@ -82,20 +87,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 */
             }
 
-            if (timer >= 65)
+            if (timer >= 65 + extraTimeBeforeShoot)
             {
                 drawAlpha -= 0.08f;
                 Projectile.ai[0] += 0.03f;
                 ///drawAlpha = MathHelper.Clamp(MathHelper.Lerp(drawAlpha, -0.2f, 0.1f), 0f, 1f);
                 //overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 5f, 0.2f), 0f, 1f);
 
-                if (drawAlpha == 0)
+                if (drawAlpha <= 0)
                     Projectile.active = false;
             }
-            else if (timer > 50)
+            else if (timer > 50 + extraTimeBeforeShoot)
             {
+
                 drawAlpha -= 0.075f;
-                Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(0f, 1f, Easings.easeOutCirc((timer - 50f) / 20f)), 0f, 1f);
+                Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(0f, 1f, Easings.easeOutCirc((timer - 50f + extraTimeBeforeShoot) / 20f)), 0f, 1f);
                 overallScale -= 0.02f;
 
 
@@ -141,7 +147,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
             myEffect.CurrentTechnique.Passes[0].Apply();
-            if (timer < 50)
+
+            int extraTimeBeforeShoot = longTelegraph ? 0 : 0;
+            if (timer < 50 + extraTimeBeforeShoot)
             {
                 Vector2 vec2Scale = new Vector2(teleScale, teleScale * 0.5f);
 
@@ -160,7 +168,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (telegraphLong)
             {
-                Vector2 vec2Scale = new Vector2(1.35f, 0.15f) * (2 + (teleScale * 0.6f));
+                float longTeleBoost = longTelegraph ? 1.15f : 1f;
+
+                Vector2 vec2Scale = new Vector2(1.35f * longTeleBoost, 0.15f) * (2 + (teleScale * 0.6f));
                 Vector2 offsetAdd = Projectile.rotation.ToRotationVector2() * 10;
 
                 Main.spriteBatch.Draw(RayTex, Projectile.Center - Main.screenPosition + offsetAdd, null, Color.DeepPink with { A = 0 } * drawAlpha * 0.3f, Projectile.rotation, new Vector2(0, RayTex.Height / 2), vec2Scale, SpriteEffects.None, 0f);

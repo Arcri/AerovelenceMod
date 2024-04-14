@@ -459,8 +459,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             {
                 float homingVal = Utils.GetLerpValue(0f, 1f, (timer - 10f) / 80f, true);
 
+                float extraHoming = target.Distance(Projectile.Center) < 35 ? 0.09f : 0f;
+
                 Projectile.velocity = Vector2.Normalize(Vector2.Lerp(Projectile.velocity,
-                    Vector2.Normalize(target.Center - Projectile.Center) * Projectile.velocity.Length(), homingVal * 0.4f)) * Projectile.velocity.Length();
+                    Vector2.Normalize(target.Center - Projectile.Center) * Projectile.velocity.Length(), homingVal * 0.4f + extraHoming)) * Projectile.velocity.Length();
 
                 if (timer < 75)
                     Projectile.velocity *= 1.01f;
@@ -578,7 +580,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             //On trail
             if (previousRotations != null && previousPostions != null)
             {
-                for (int i = 0; i < previousRotations.Count; i += 2)
+                for (int i = 0; i < previousRotations.Count; i += 1)
                 {
                     //Color col = Main.rand.NextBool() ? Color.DeepPink : Color.HotPink;
 
@@ -590,7 +592,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                     //    rotPower: 0.15f, preSlowPower: 0.95f, timeBeforeSlow: 12, postSlowPower: 0.92f, velToBeginShrink: 3f, fadePower: 0.91f, shouldFadeColor: false);
 
                     
-                    if (Main.rand.NextBool())
+                    if (!Main.rand.NextBool(2))
                     {
                         int dust2 = Dust.NewDust(previousPostions[i], 1, 1, ModContent.DustType<GlowPixelRise>(), Scale: 0.35f + Main.rand.NextFloat(-0.25f, 0.1f), newColor: Main.rand.NextBool() ? Color.HotPink : Color.Pink);
                         Main.dust[dust2].velocity *= 0.35f;
@@ -653,12 +655,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         {
             if (target.HasBuff(ModContent.BuffType<CerobaMark>())) {
 
-                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, impactVolume: 0.5f, impactScale: 0f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity, ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].scale = 0.75f;
 
-                modifiers.FinalDamage *= 1.5f;
+                modifiers.FinalDamage *= 1f;
             }
             
             base.ModifyHitNPC(target, ref modifiers);

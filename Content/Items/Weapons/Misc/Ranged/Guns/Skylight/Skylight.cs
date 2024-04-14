@@ -854,17 +854,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             myEffect.Parameters["vignetteBlend"].SetValue(0.8f);
             myEffect.Parameters["distortStrength"].SetValue(0.02f);
             myEffect.Parameters["xOffset"].SetValue(0.0f);
-            myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
+            myEffect.Parameters["uTime"].SetValue(timer * 0.015f);
             myEffect.Parameters["colorIntensity"].SetValue(alpha * 1.25f);
-
-
-            //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.Black with { A = 0 }, Projectile.rotation, Flare.Size() / 2, scale * 1f, SpriteEffects.None, 0f);
-            //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.Black with { A = 0 }, Projectile.rotation * -1, Flare.Size() / 2, scale * 1.25f, SpriteEffects.None, 0f);            //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.Black with { A = 0 }, Projectile.rotation * -1, Flare.Size() / 2, scale * 1.25f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.Black * 0.5f * alpha, Projectile.rotation, Ball.Size() / 2, scale * 0.5f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.DeepSkyBlue * 0.3f * alpha, Projectile.rotation, Ball.Size() / 2, glowScale * 2f, SpriteEffects.None, 0f);
 
@@ -875,9 +871,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White * alpha, Projectile.rotation * -0.8f, Flare.Size() / 2, scale * 0.35f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-            myEffect.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), Projectile.rotation, Ball.Size() / 2, scale * 0.45f, SpriteEffects.None, 0f);
 
@@ -890,7 +884,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             Main.spriteBatch.Draw(Flare2, Projectile.Center - Main.screenPosition, null, new Color(255, 255, 255, 0), Projectile.rotation * -1 + 1, Flare2.Size() / 2, scale * 0.7f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
         }
     }

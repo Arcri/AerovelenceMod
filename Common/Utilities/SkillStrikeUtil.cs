@@ -15,14 +15,18 @@ namespace AerovelenceMod.Common.Utilities
 {
 	public static class SkillStrikeUtil
 	{
-		public static void setSkillStrike(Projectile projectile, float multiplier, int timesToStrike = 1)
-		{
-			Player player = Main.player[projectile.owner];
+        public static void setSkillStrike(Projectile projectile, float multiplier, int timesToStrike = 1, float impactVolume = 0f, float impactScale = 0f)
+        {
+            Player player = Main.player[projectile.owner];
 
             projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
             projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().skillStrikeMultiplier;
             projectile.GetGlobalProjectile<SkillStrikeGProj>().superCritMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().superCritMultiplier;
             projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeAmount = timesToStrike;
+
+            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactVolume = impactVolume;
+            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = impactScale;
+
         }
 
         // TODO:

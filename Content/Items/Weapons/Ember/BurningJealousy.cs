@@ -153,7 +153,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Vector2 frontHandPos = Main.GetPlayerArmPosition(Projectile);
             player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - player.Center).ToRotation() - MathHelper.PiOver2);
-            //player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, (frontHandPos - Projectile.Center).ToRotation() + MathHelper.PiOver2);
+            //player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - player.Center).ToRotation() - MathHelper.PiOver2);
             #endregion
 
             if (!player.active || player.dead || player.CCed || player.noItems)
@@ -326,7 +326,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             relativeTrail.timesToDraw = 2;
             relativeTrail.relativeToPlayer = true;
             relativeTrail.myPlayer = Main.player[Projectile.owner];
-            //relativeTrail.trailTime = timer * 0.0035f;
+            relativeTrail.trailTime = (float)trailTimeCounter * 0.004f;
             relativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
 
             relativeTrail.trailPos = Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) 
@@ -384,9 +384,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 d.scale *= Projectile.scale;
             }
 
+            trailTimeCounter++;
             justHitTime--;
         }
 
+        int trailTimeCounter = 0;
         public override bool PreDraw(ref Color lightColor)
         {
             //TODO load textures once cause wowie
@@ -401,7 +403,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Flare");
 
             Texture2D Wave = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlashBlack");
-            Texture2D Wave2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlash");
 
             Vector2 origin;
             float rotationOffset;
@@ -434,7 +435,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Main.spriteBatch.Draw(Hilt, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), effects, 0f);
 
             //float justHitBoost = Math.Clamp(justHitTime / 30f, 0f, 1f) + 1f;
-            Vector2 waveScale = new Vector2(0.85f, 1f) * (bigSwing ? 1.2f : Projectile.scale);
+            Vector2 waveScale = new Vector2(0.85f, 1f) * 0.97f * (bigSwing ? 1.2f : Projectile.scale);
             float lerpVal = MathF.Pow(intensity, 3);
             Color waveColor = Color.Lerp(Color.Black * 0.3f, new Color(255, 85, 0), Easings.easeInOutCirc(intensity));
 
@@ -500,7 +501,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override void OnHitNPC(NPC target, HitInfo hit, int damageDone)
         {
             //Want less hitpause at higher attack speeds for basic swing
-            justHitTime = bigSwing ? 50 : (5 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 4f)) * Projectile.extraUpdates; //6
+            justHitTime = bigSwing ? 50 : 37;///(4 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 3f)) * Projectile.extraUpdates; //6
 
             float bigSwingMultiplier = bigSwing ? 1.25f : 1f;
 

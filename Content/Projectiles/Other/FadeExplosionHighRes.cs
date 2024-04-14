@@ -132,7 +132,6 @@ namespace AerovelenceMod.Content.Projectiles.Other
 			Projectile.timeLeft = 200;
 			Projectile.tileCollide = false;
 			Projectile.scale = 1f;
-
 		}
 
 		public override bool? CanDamage() => false;
@@ -149,6 +148,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 			if (colorIntensity <= 0)
 				Projectile.active = false;
+
 		}
 
 		public override bool PreDraw(ref Color lightColor)
@@ -162,20 +162,19 @@ namespace AerovelenceMod.Content.Projectiles.Other
 			myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-			myEffect.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            myEffect.CurrentTechnique.Passes[0].Apply();
 			foreach (FadeExplosionClass smoke in Smokes)
 			{
 				smoke.DrawExplo(Main.spriteBatch, Tex);
-
-				//Main.spriteBatch.Draw(Tex, smoke.Center - Main.screenPosition, null, color * colorIntensity, smoke.rotation, Tex.Size() / 2, smoke.size, SpriteEffects.None, 0f);
 			}
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, default, default, default, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-			return false;
+            return false;
 		}
 
 
@@ -192,6 +191,9 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public float size = 1f;
 		float scale = 0;
 		bool rotDir = false;
+
+		public bool shouldSlow = false;
+		public float slowAmount = 0.98f;
 
 		public int timer;
 		public FadeExplosionClass(Vector2 pos, Vector2 vel)
@@ -210,6 +212,9 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 			scale = MathHelper.Clamp(MathHelper.Lerp(scale, size, 0.15f), 0f, size / 2);
 
+			if (shouldSlow)
+				Velocity *= slowAmount;
+
 			timer++;
 
 		}
@@ -218,7 +223,6 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public void DrawExplo(SpriteBatch sb, Texture2D tex)
 		{
 			sb.Draw(tex, Center - Main.screenPosition, null, Color.White, rotation, tex.Size() / 2, scale, SpriteEffects.None, 0f);
-
 		}
 
 	}

@@ -12,6 +12,7 @@ using Terraria.Graphics;
 using ReLogic.Content;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles.Other;
+using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Projectiles.TempVFX
 {
@@ -302,7 +303,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             myEffect.Parameters["satPower"].SetValue(0.75f);
 
             myEffect.Parameters["sampleTexture1"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlameTrail").Value);
-            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value);
+            myEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/LavaTrailV1").Value);
             myEffect.Parameters["sampleTexture3"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value);
             myEffect.Parameters["sampleTexture4"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value);
 
@@ -322,7 +323,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             myEffect.Parameters["Color4"].SetValue(c4.ToVector4());
 
             myEffect.Parameters["Color1Mult"].SetValue(1.75f);
-            myEffect.Parameters["Color2Mult"].SetValue(1f);
+            myEffect.Parameters["Color2Mult"].SetValue(0.75f);
             myEffect.Parameters["Color3Mult"].SetValue(0.25f);
             myEffect.Parameters["Color4Mult"].SetValue(0.75f);
             myEffect.Parameters["totalMult"].SetValue(1.15f);
@@ -368,7 +369,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             Projectile.friendly = true;
 
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 4400; //180
+            Projectile.timeLeft = 3100; //180
             Projectile.extraUpdates = 20;
         }
 
@@ -394,7 +395,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
                 previousRotations = new List<float>();
                 origin = Projectile.Center;
 
-                Projectile.timeLeft = 3400;
+                Projectile.timeLeft = 3700;
             }
 
             if (timer < 1000)
@@ -412,6 +413,39 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             }
             else
                 Projectile.velocity = Vector2.Zero;
+            
+            int mod = 30;
+            if (timer % mod == 0)
+            {
+                int maxAdd = Projectile.timeLeft < 300 ? 50 : 100;
+                for (int i = Main.rand.Next(0, 15); i < previousPositions.Count; i += Main.rand.Next(5, maxAdd))
+                {
+                    int randChance = 20;
+                    if (Main.rand.NextBool(randChance))
+                    {
+
+                        float size = Main.rand.NextFloat(0.35f, 0.5f) * 0.5f;
+                        //Color col = Main.rand.NextBool() ? new Color(255, 75, 15) : Color.DarkOrange;
+                        Color col = Main.rand.NextBool() ? new Color(255, 75, 15) : Color.OrangeRed;
+                        Vector2 sideOffset = (previousRotations[i] + MathHelper.PiOver2).ToRotationVector2() * (Projectile.timeLeft < 300 ? Main.rand.NextFloat(-5, 5.01f) : Main.rand.NextFloat(-10, 10.1f));
+
+                        Dust star = Dust.NewDustPerfect(previousPositions[i] + sideOffset, ModContent.DustType<GlowPixelAlts>(),
+                        previousRotations[i].ToRotationVector2().RotatedByRandom(0.2f) * Main.rand.NextFloat(4f, 14f), newColor: col, Scale: Main.rand.NextFloat(0.35f, 0.50f) * 1.25f);
+
+                        //star.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                            //rotPower: 0.15f, preSlowPower: 0.91f, timeBeforeSlow: 15, postSlowPower: 0.90f, velToBeginShrink: 2f, fadePower: 0.93f, shouldFadeColor: false);
+
+
+                        //float maxVel = Projectile.timeLeft < 200 ? 7.5f : 10f;
+
+                        //Dust orb = Dust.NewDustPerfect(previousPositions[i] + sideOffset, ModContent.DustType<GlowStrong>(),
+                            //previousRotations[i].ToRotationVector2().RotatedByRandom(0.15f) * Main.rand.NextFloat(4f, maxVel), 
+                            //newColor: col, Scale: size);
+
+
+                    }
+                }
+            }
 
             /*
             int val = timer * 6;
@@ -457,9 +491,6 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             //strip.DrawTrail();
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-
-
 
             //Main.pixelShader.CurrentTechnique.Passes[0].Apply();
             return false;
@@ -519,7 +550,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         }
         public float StripWidth(float progress)
         {
-            float size = Utils.GetLerpValue(3400f, 2800f, Projectile.timeLeft, true) * Utils.GetLerpValue(0f, 200f, Projectile.timeLeft, true);
+            float size = Utils.GetLerpValue(3700f, 3100f, Projectile.timeLeft, true) * Easings.easeOutQuart(Utils.GetLerpValue(0f, 600f, Projectile.timeLeft, true));
             float start = Math.Clamp(1.5f * (float)Math.Pow(progress, 0.5f), 0f, 1f);
             float cap = (float)Math.Cbrt(Utils.GetLerpValue(1f, 0.85f, progress, true));
             return start * size * 150f * cap;// * (1.1f + (float)Math.Cos(timer) * (0.08f - progress * 0.06f));

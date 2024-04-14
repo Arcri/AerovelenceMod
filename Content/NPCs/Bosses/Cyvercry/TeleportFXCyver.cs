@@ -324,7 +324,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public float intensity = 1f;
 		public bool forRoar = true;
 		public bool pixel = false;
-		public override void SetDefaults()
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 9000;
+        }
+        public override void SetDefaults()
 		{
 			Projectile.damage = 0;
 			Projectile.friendly = false;

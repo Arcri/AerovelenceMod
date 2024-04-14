@@ -74,7 +74,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
                 NPC.TargetClosest();
             }
 
-            CurrentAttack = FeatheredFoeState.FiveSpread;
+            CurrentAttack = FeatheredFoeState.BasicAttack;
 
             switch (CurrentAttack)
             {
