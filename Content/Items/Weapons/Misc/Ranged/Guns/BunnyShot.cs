@@ -112,7 +112,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
 
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
 
@@ -190,7 +190,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
 
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
 
@@ -268,7 +268,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
 
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
 

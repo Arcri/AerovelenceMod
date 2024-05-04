@@ -340,7 +340,7 @@ namespace AerovelenceMod.Content.Projectiles.Weapons.Magic
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/StampAirSwing2") with { Volume = .46f, Pitch = .35f, };

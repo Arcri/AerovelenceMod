@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_40") with { Pitch = -.71f, PitchVariance = .28f, MaxInstances = 1, Volume = 0.5f };
             SoundEngine.PlaySound(style, Projectile.Center);

@@ -164,7 +164,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         //!
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             for (int b = 0; b < 20; b++)
                 Dust.NewDust(Projectile.Center, 12, Projectile.height, ModContent.DustType<DashTrailDust>(), Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 0, new Color(0, 255, 255), 1f);

@@ -134,7 +134,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 			return false;
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			Filters.Scene.Deactivate("Shockwave", Main.LocalPlayer.Center);
 			Filters.Scene["Shockwave"].GetShader().UseOpacity(1f);

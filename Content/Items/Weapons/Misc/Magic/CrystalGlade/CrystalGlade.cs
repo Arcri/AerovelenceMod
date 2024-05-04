@@ -275,7 +275,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
 
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = 2f, Volume = 0.5f, PitchVariance = 0.2f, MaxInstances = -1 };
@@ -570,7 +570,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             SoundEngine.PlaySound(style2, Projectile.Center);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             for (int i = 0; i < 8; i++)
             {

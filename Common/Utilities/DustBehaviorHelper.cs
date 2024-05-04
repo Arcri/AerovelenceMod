@@ -111,6 +111,22 @@ namespace AerovelenceMod.Common.Utilities
             return b;
         }
 
+		//Didn't use my 'base_' nomenclature for this and I don't know why
+		public static HighResSmokeBehavior AssignBehavior_HRSBase(int frameToStartFade = 5, int fadeDuration = 25, float velSlowAmount = 1f, 
+			float overallAlpha = 1f, bool drawSoftGlowUnder = true, float softGlowIntensity = 1f)
+		{
+            HighResSmokeBehavior b = new HighResSmokeBehavior();
+
+			b.frameToStartFade = frameToStartFade;
+			b.fadeDuration = fadeDuration;
+			b.velSlowAmount = velSlowAmount;
+			b.overallAlpha = overallAlpha;
+			b.drawSoftGlowUnder = drawSoftGlowUnder;
+            b.softGlowIntensity = softGlowIntensity;
+
+            return b;
+		}
+
         public class StarDustDrawInfo
 		{
 			public bool DrawWhiteCore = true;

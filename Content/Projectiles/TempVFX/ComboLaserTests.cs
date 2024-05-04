@@ -729,4 +729,185 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         }
     }
 
+    public class TendrilTest : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 7500;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 16;
+            Projectile.ignoreWater = true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 4400; //180
+            Projectile.extraUpdates = 0;
+        }
+
+
+        float startAngle = 0f;
+        float endAngle = 0f;
+        int timer = 0;
+        float width = 1f;
+
+        public List<Vector2> Positions;
+        public List<float> Rotations;
+
+        Vector2[] arr_positions = new Vector2[75];
+        float[] arr_rotations = new float[75];
+        int TotalPoints = 75; 
+
+        Vector2 anchor = Vector2.Zero;
+        public override void AI()
+        {
+            Player owner = Main.player[Projectile.owner];
+
+            if (timer == 0)
+            {
+                Projectile.velocity = Vector2.Zero;
+                anchor = Projectile.Center;
+
+                //Create all of the points and set all the rotations to be the same
+                for (int i = 0; i < TotalPoints; i++)
+                {
+                    arr_positions[i] = Projectile.Center + Projectile.rotation.ToRotationVector2() * (5 * i);
+                    arr_rotations[i] = Projectile.rotation;
+                }
+
+                Projectile.ai[0] = 1f;
+            }
+
+            //Rotate the anchor
+            Projectile.rotation += 0.07f * Projectile.ai[0];
+
+            if (timer % 130 == 0 && timer != 0)
+                Projectile.ai[0] *= -1f;
+
+
+            //Have all points try to rotate towards the acnhor
+            for (int j = 0; j < TotalPoints; j++)
+            {
+                float progress = (j / (float)TotalPoints);
+
+                //The further along the trail, the weaker the turning
+                float lerpValue = MathHelper.Lerp(1f, 0.3f, progress);
+
+
+                //Keep angle within 2pi 
+                float NormalizedGoalRotation = Projectile.rotation;//Projectile.rotation.ToRotationVector2().ToRotation();
+
+                float newRotation = MathHelper.Lerp(arr_rotations[j], NormalizedGoalRotation, lerpValue * 0.15f); //0.25f
+
+                arr_rotations[j] = newRotation;
+                arr_positions[j] = Projectile.Center + newRotation.ToRotationVector2() * (5 * j);
+            }
+
+
+            timer++;
+        }
+
+        Effect myEffect = null;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
+
+            float[] new_rots = new float[TotalPoints];
+            Vector2[] new_pos = new Vector2[TotalPoints];
+            for (int k = 0; k < TotalPoints - 1; k++)
+            {
+                //We have to flip the first point over for some reason or else we get a weird tear.
+                if (k == 0)
+                    new_rots[k] = arr_rotations[k] + MathHelper.Pi;
+                else
+                    new_rots[k] = (arr_positions[k - 1] - arr_positions[k]).ToRotation();
+                new_pos[k] = arr_positions[k];
+            }
+
+            //Utils.DrawLine(Main.spriteBatch, Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * 250f, Color.White * 1f, Color.White * 0.25f, 2f);
+
+
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStar").Value;
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/ReverseFadeTrailShader", AssetRequestMode.ImmediateLoad).Value;
+                //myEffect = AerovelenceMod.BasicTrailShader;
+
+            //Immediate ssm sadly required
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            //VertexStrip strip = new VertexStrip();
+            //strip.PrepareStripWithProceduralPadding(new_pos, new_rots, StripColor, StripWidth, -Main.screenPosition, true);
+
+            //PrepShader();
+
+            myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
+            myEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector4() * 2f);
+
+            int width = Main.graphics.GraphicsDevice.Viewport.Width;
+            int height = Main.graphics.GraphicsDevice.Viewport.Height;
+
+            Vector2 zoom = Main.GameViewMatrix.Zoom;
+            Matrix view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) *
+                          Matrix.CreateTranslation(width / 2f, height / -2f, 0) * Matrix.CreateRotationZ(MathHelper.Pi) *
+                          Matrix.CreateScale(zoom.X, zoom.Y, 1f);
+
+            Matrix projection = Matrix.CreateOrthographic(width, height, 0, 1000);
+            myEffect.Parameters["WorldViewProjection"].SetValue(view * projection);
+
+            myEffect.Parameters["progress"].SetValue(timer * -0.04f);
+
+            myEffect.CurrentTechnique.Passes["DefaultPass"].Apply();
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+
+            VertexStrip vertexStrip = new VertexStrip();
+            vertexStrip.PrepareStrip(new_pos, new_rots, StripColor, StripWidth, -Main.screenPosition, includeBacksides: true);
+
+            vertexStrip.DrawTrail();
+            vertexStrip.DrawTrail();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return false;
+        }
+
+        public void PrepShader()
+        {
+            
+        }
+
+        public Color StripColor(float progress)
+        {
+            Color color = Color.White;
+            color.A = 0;
+            return color;
+        }
+        public float StripWidth(float progress)
+        {
+            //float size = Utils.GetLerpValue(13400f, 12800f, Projectile.timeLeft, true) * Utils.GetLerpValue(0f, 200f, Projectile.timeLeft, true);
+            //float start = Math.Clamp(1.5f * (float)Math.Pow(progress, 0.5f), 0f, 1f);
+            //float cap = (float)Math.Cbrt(Utils.GetLerpValue(1f, 0.5f, progress, true));
+            //return 60f * cap; //start * size * 150f * cap;// * (1.1f + (float)Math.Cos(timer) * (0.08f - progress * 0.06f));
+
+
+            //float num = 1f;
+            //float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
+            //num *= 1f - (1f - lerpValue) * (1f - lerpValue);
+            //return MathHelper.Lerp(0f, 60f, num) * 1f; // 0.3f 
+
+            //return 40f;
+
+            float num = 1f;
+            float lerpValue = Utils.GetLerpValue(0f, 0.8f, 1f - progress, clamped: true);
+            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
+            return MathHelper.Lerp(0f, 100f, num) * 1f; // 0.3f 
+        }
+    }
+
 }

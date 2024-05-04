@@ -3284,7 +3284,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Vector2 storedToPlayer = Vector2.Zero;
         public void CurvedDash(Player myPlayer)
         {
-            int reps = 7;
+            int reps = 6;
 
             //This bullshit makes it so that the player can dash with the SoC, but cannot bonk off anything 
             if (myPlayer.timeSinceLastDashStarted == 0 && myPlayer.dashType == 2)

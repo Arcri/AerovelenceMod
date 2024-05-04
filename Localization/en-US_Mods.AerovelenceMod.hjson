@@ -429,6 +429,11 @@ Items: {
 		DisplayName: Ceroba Staff Item
 		Tooltip: ""
 	}
+
+	MarbleMusket: {
+		DisplayName: Marble Musket
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -726,6 +731,11 @@ Projectiles: {
 	CerobaSpinProj.DisplayName: Ceroba Spin Proj
 	StopAndStartFeather.DisplayName: Stop And Start Feather
 	NewElementalShiftProj.DisplayName: New Elemental Shift Proj
+	MarbleBullet.DisplayName: Marble Bullet
+	MarbleStar.DisplayName: Marble Star
+	MarbleMusketHeldProjectile.DisplayName: Marble Musket Held Projectile
+	SmokeTest.DisplayName: Smoke Test
+	TendrilTest.DisplayName: Tendril Test
 }
 
 Configs: {

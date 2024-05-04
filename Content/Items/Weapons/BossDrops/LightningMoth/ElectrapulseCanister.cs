@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.LightningMoth
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 300;
         }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item70, Projectile.Center);
             //Main.PlaySound(SoundID.Shatter, projectile.Center);

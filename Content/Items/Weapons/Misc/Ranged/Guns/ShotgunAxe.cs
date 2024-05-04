@@ -405,7 +405,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_10") with { Pitch = -0.5f, PitchVariance = .28f, MaxInstances = 4, Volume = 0.2f };
             SoundEngine.PlaySound(style, Projectile.Center);

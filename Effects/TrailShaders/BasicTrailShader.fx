@@ -6,7 +6,7 @@ float progress;
 float4 ColorOne;
 matrix WorldViewProjection;
 float4 uShaderSpecificData;
-float fadeAmount = 0f;
+float fadeAmount = 0.0;
 
 struct VertexShaderInput
 {

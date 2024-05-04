@@ -256,7 +256,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             //projectile.netImportant = true;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
 

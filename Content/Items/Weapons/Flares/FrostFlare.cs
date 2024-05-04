@@ -203,7 +203,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             noSound = true;
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_1") with { Pitch = -.53f, PitchVariance = 0.2f };
@@ -369,7 +369,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/deerclops_ice_attack_0") with { Volume = .05f, Pitch = .81f, PitchVariance = 0.34f };

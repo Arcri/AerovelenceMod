@@ -679,7 +679,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             //Projectile.velocity = new Vector2((Projectile.velocity.X == oldVelocity.X) ? Projectile.velocity.X : -oldVelocity.X, (Projectile.velocity.Y == oldVelocity.Y) ? Projectile.velocity.Y : -oldVelocity.Y);
             return false;
         }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             for (int i = 0; i < 8; i++)

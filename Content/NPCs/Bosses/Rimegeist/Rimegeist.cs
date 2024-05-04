@@ -1480,7 +1480,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.AncientLight, 0f, 0f, 255);
             dust.noGravity = true;
         }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             if (Main.netMode != 1)
@@ -1821,7 +1821,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             //Main.Main.EntitySpriteDraw(texture, projectile.Center - Main.screenPosition, null, color, projectile.rotation, origin, projectile.scale, SpriteEffects.None, 0.0f);
             return false;
         }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             if (Main.netMode != 1)
             {

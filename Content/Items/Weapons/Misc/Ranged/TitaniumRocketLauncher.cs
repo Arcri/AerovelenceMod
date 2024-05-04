@@ -237,7 +237,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			}
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
 			//SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_109") with { Volume = .31f, Pitch = .55f, PitchVariance = 0.2f, MaxInstances = -1 }; 
 			//SoundEngine.PlaySound(stylea, Projectile.Center);
@@ -457,7 +457,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			return false;
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			//SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.55f, PitchVariance = 0.25f, MaxInstances = -1, Volume = 0.75f };
 			//SoundEngine.PlaySound(style, Projectile.Center);

@@ -63,12 +63,49 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //Vector2 spawnPoss = new Vector2(48253, 3161);
-            int barrier = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<OtherVertexLaserTest>(), 0, 0, Main.myPlayer);
-
-            //48253 3161
+            int tendril = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<GraniteCore>(), 10, 0, Main.myPlayer);
 
             return false;
+
+
+            /* I LOVE this dust patter
+            for (int i = 0; i < 9; i++)
+            {
+                Vector2 vel = Main.rand.NextVector2Circular(7, 7);
+
+                if (Main.rand.NextBool())
+                {
+                    Dust star = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(),
+                        vel, newColor: Color.Goldenrod, Scale: 0.75f);
+
+                    star.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                                    rotPower: 0.07f, preSlowPower: 0.95f, timeBeforeSlow: 20, postSlowPower: 0.86f, velToBeginShrink: 3f, fadePower: 0.90f, shouldFadeColor: false);
+                }
+                else
+                {
+                    //int mydust = Dust.NewDust(Projectile.Center, 4, 4, ModContent.DustType<MuraLineDust>(), vel.X, vel.Y, 0, Color.Gold, 0.35f);
+                    //Main.dust[mydust].noGravity = true;
+
+                    Dust d = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<MuraLineBasic>(),
+                        Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(0.75f, 2.5f), Alpha: Main.rand.Next(10, 15), new Color(255, 180, 0), 0.2f);
+                }
+
+            }
+            */
+            for (int kl2 = 0; kl2 < 4; kl2++)
+            {
+                Dust smoke = Dust.NewDustPerfect(Main.MouseWorld + new Vector2(0f, 0f), ModContent.DustType<HighResSmoke>(), Main.rand.NextVector2CircularEdge(1f, 1f), newColor: new Color(255, 100, 15));
+                //Projectile.NewProjectile(null, Main.MouseWorld + new Vector2(500f, 0f), Main.rand.NextVector2CircularEdge(1f, 1f), ModContent.ProjectileType<SmokeTest>(), 0, 0, Main.myPlayer);
+
+                smoke.customData = AssignBehavior_HRSBase(5, 25, 1f, 1f, true, 1f);
+
+                //Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.Orange, Scale: 0.15f);
+
+                //softGlow.customData = DustBehaviorUtil.AssignBehavior_SGDBase(timeToStartFade: 3, timeToChangeScale: 0, fadeSpeed: 0.9f, sizeChangeSpeed: 0.95f, timeToKill: 10,
+                //overallAlpha: 0.1f, DrawWhiteCore: false, 1f, 1f);
+
+            }
+
             float impactScale = 2f;
             for (int j = 0; j < (5 + Main.rand.Next(0, 2)) * impactScale; j++)
             {
@@ -89,11 +126,6 @@ namespace AerovelenceMod.Content.Items
                 Dust d = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<MuraLineBasic>(),
                         Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1.5f, 3.25f), Alpha: Main.rand.Next(10, 15), new Color(255, 180, 60), 0.35f);
             }
-
-            Dust softGlow = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: new Color(255, 180, 60), Scale: 0.1f);
-
-            softGlow.customData = AssignBehavior_SGDBase(timeToStartFade: 4, timeToChangeScale: 2, fadeSpeed: 0.7f, sizeChangeSpeed: 1.1f, timeToKill: 10, 
-            overallAlpha: 0.15f, DrawWhiteCore: false, 1f, 1f);
 
 
             return false;

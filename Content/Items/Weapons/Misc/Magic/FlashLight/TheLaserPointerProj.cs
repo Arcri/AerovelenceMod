@@ -528,7 +528,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             return true;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             //GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(), Projectile.velocity * 0.75f, Color.Red, 1f, 0.7f, 0, dustShader);

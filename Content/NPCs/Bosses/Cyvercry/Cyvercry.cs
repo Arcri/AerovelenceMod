@@ -871,7 +871,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             Projectile.ai[2]++;
             fakeTimeLeft--;
         }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
             int explo = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);

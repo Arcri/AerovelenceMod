@@ -102,7 +102,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         }
 
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");

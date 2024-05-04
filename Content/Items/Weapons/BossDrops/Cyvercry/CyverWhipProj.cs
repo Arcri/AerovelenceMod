@@ -506,7 +506,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             return true;
         }
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
             int projType1 = ModContent.ProjectileType<PinkExplosion>();
             var source = Projectile.InheritSource(Projectile);

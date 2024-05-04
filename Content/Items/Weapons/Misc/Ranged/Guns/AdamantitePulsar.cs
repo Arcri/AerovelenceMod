@@ -216,7 +216,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetDefaults()
         {
-            Projectile.DamageType = DamageClass.Magic;
+            Projectile.DamageType = DamageClass.Ranged;
 
 
             Projectile.hostile = false;

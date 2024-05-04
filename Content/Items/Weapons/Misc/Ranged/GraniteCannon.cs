@@ -15,34 +15,32 @@ using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
     public class GraniteCannon : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Granite Cannon");
-            // Tooltip.SetDefault("TODO");
-        }
         public override void SetDefaults()
         {
-            //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
             Item.damage = 20;
-            Item.DamageType = DamageClass.Ranged;
-            Item.width = 46;
-            Item.height = 28;
             Item.useTime = 20;
             Item.useAnimation = 20;
+            Item.shootSpeed = 5f;
+            Item.knockBack = 4;
+
+            Item.width = 40;
+            Item.height = 24;
+
+            Item.DamageType = DamageClass.Ranged;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 2;
+            Item.shoot = ModContent.ProjectileType<GraniteChunk>();
+
             Item.value = Item.sellPrice(0, 0, 50, 0);
             Item.rare = ItemRarityID.Blue;
             Item.autoReuse = true;
-            Item.shootSpeed = 5f;
+            Item.noMelee = true;
             Item.noUseGraphic = true;
-            Item.shoot = ModContent.ProjectileType<GraniteChunk>(); //Need this for shoot() to activate
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -53,7 +51,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_62") with { Pitch = .68f, Volume = 0.5f };
             SoundEngine.PlaySound(style2, player.Center);
 
-
+            //Spawn dust in oval pattern
             for (int i = 0; i < 16; ++i)
             {
                 Vector2 spinningpoint5 = -Vector2.UnitY.RotatedBy(i * (MathHelper.TwoPi / 16)) * new Vector2(1f, 4f);
@@ -63,62 +61,65 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                 dust.noGravity = true;
             }
 
+            //Adjust shot spawn position to be further away from player center
+            //But make sure this won't make it clip through tiles
             Vector2 muzzleOffset = Vector2.Normalize(velocity) * 20f;
             if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
             {
                 position += muzzleOffset;
             }
 
+            //Spawn projectile and 'held' projectile
             Projectile.NewProjectile(null, position, Vector2.Zero, ModContent.ProjectileType<GraniteCannonHeldProj>(), 0, 0, player.whoAmI);
             Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<GraniteChunk>(), damage, knockback, player.whoAmI);
 
-
-
             return false;
         }
-
-
-        
     }
 
+
+    //A bit messy still but good enough
     public class GraniteCannonHeldProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
         int timer = 0;
-        public float OFFSET = 20; //30
+
+        //How far away the held projectile is from player
+        public float OFFSET = 20;
 
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;
+
+        //Remnants of other held projectiles (upward recoil)
         public float lerpToStuff = 0;
         public bool hasReachedDestination = false;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Granite Cannon");
-        }
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.timeLeft = 30;
             Projectile.width = Projectile.height = 20;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Ranged;
+
+            Projectile.scale = 1f;
+            Projectile.damage = 0;
+
+            Projectile.friendly = false;
+            Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() { return false; }
+        public override bool? CanCutTiles() { return false; }
 
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
 
+            //Basic Held projectile code
             Projectile.velocity = Vector2.Zero;
             Player.itemTime = 2;
             Player.itemAnimation = 2;
@@ -131,11 +132,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             direction = Angle.ToRotationVector2();
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
 
-
-            if (timer == 2)
+            //On frame 2, recoil
+            if (timer == 1)
             {
                 OFFSET = 5f;
             }
+            //Move back to original offset
             OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 20f, 0.07f), 0, 17);
 
             direction = Angle.ToRotationVector2();
@@ -151,23 +153,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Player.heldProj = Projectile.whoAmI;
             Projectile.rotation = direction.ToRotation();
 
-            
+            glowStrength = Math.Clamp(MathHelper.Lerp(glowStrength, -0.3f, 0.08f), 0f, 1f);
+
             timer++;
         }
 
+        float glowStrength = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
             Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GraniteCannon");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GraniteCannonOverglow");
+
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
             Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
+
+            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.9f * glowStrength, Projectile.rotation, Glow.Size() / 2, Projectile.scale, mySE, 0f);
+
 
             return false;
         }
     }
 
-    public class GraniteChunk : TrailProjBase
+    public class GraniteChunk : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -177,12 +186,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         }
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
+
             Projectile.width = 20;
             Projectile.height = 20;
             Projectile.aiStyle = 1;
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
             Projectile.ignoreWater = true;
@@ -190,117 +201,153 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Projectile.extraUpdates = 1;
         }
 
+        int timer = 0;
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                previousRotations = new List<float>();
+                previousPostions = new List<Vector2>();
+            }
 
+            //Check for collision with other granite chunks
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile p = Main.projectile[i];
+
+                //Do this check first as it thins the herd the most while also being simple (as opposed to checking collision first)
+                if (p.type == Projectile.type)
+                {
+                    //Found nearby projectile, break both and spawn stars
+                    if (p.active && p != null && p.whoAmI != Projectile.whoAmI && p.Hitbox.Intersects(Projectile.Hitbox))
+                    {
+                        Vector2 projSpawnDir = ((p.Center - Projectile.Center) * 0.5f);
+
+                        for (float m = 0f; m < 6.28f; m += 0.5f)
+                        {
+                            Dust dust = Dust.NewDustPerfect(Projectile.Center + projSpawnDir, DustID.Granite, new Vector2((float)Math.Sin(m) * 1.3f, (float)Math.Cos(m)) * 2.4f);
+                            dust.velocity *= Main.rand.NextFloat(0.4f, 1.3f);
+                            dust.noGravity = true;
+                            dust.scale = 1.3f;
+                        }
+
+                        for (int t = 0; t < 8; t++)
+                        {
+                            //Vector2 dir = projSpawnDir.SafeNormalize(Vector2.UnitX) * (Main.rand.NextBool() ? 1f : -1f);
+                            //Vector2 dustVel = dir.RotatedByRandom(2f) * Main.rand.NextFloat(2f, 3.25f); 
+
+                            Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(2f, 3.25f);
+
+                            Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: Color.SkyBlue, Scale: Main.rand.NextFloat(0.2f, 0.4f));
+                            gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5, 
+                                preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+                        }
+
+                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .27f, Volume = 0.7f, MaxInstances = -1 };
+                        SoundEngine.PlaySound(style, Projectile.Center);
+
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
+
+                        Projectile.active = false;
+                        p.active = false;
+
+                    }
+                }
+
+                
+            }
+
+            if (timer % 2 == 0)
+            {
+                int trailCount = 10;
+                previousRotations.Add(Projectile.rotation);
+                previousPostions.Add(Projectile.Center);
+
+                if (previousRotations.Count > trailCount)
+                    previousRotations.RemoveAt(0);
+
+                if (previousPostions.Count > trailCount)
+                    previousPostions.RemoveAt(0);
+            }
+
+            timer++;
+        }
+
+        public List<float> previousRotations;
+        public List<Vector2> previousPostions;
         public override bool PreDraw(ref Color lightColor)
         {
-            TrailDrawing();
             Texture2D Chunk = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/GraniteChunk");
 
-            
+            #region after image
+            if (previousRotations != null && previousPostions != null)
+            {
+                for (int i = 0; i < previousRotations.Count; i++)
+                {
+                    float progress = (float)i / previousRotations.Count;
+
+                    float size = (1f - ((1f - progress) * 0.5f)) * Projectile.scale;
+
+                    Color col = Color.DeepSkyBlue * Easings.easeOutCirc(progress);
+
+                    int reverseI = (previousPostions.Count - 1) - i;
+                    float size1 = Math.Clamp(Projectile.scale - (reverseI * 0.05f), 0f, 1f);
+
+                    Main.EntitySpriteDraw(Chunk, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * progress * 0.9f,
+                            previousRotations[i], Chunk.Size() / 2f, size1, SpriteEffects.None);
+
+                    Vector2 size2 = new Vector2(0.25f, 1.15f) * size;
+
+                    Main.EntitySpriteDraw(Chunk, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 0.9f,
+                        previousRotations[i], Chunk.Size() / 2f, size2 * 1.5f, SpriteEffects.None);
+
+                    //Main.EntitySpriteDraw(Chunk, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 1.25f * colVal,
+                        //previousRotations[i], Chunk.Size() / 2f, vec2Scale * 1.5f, SpriteEffects.None);
+                }
+
+            }
+            #endregion
+
             for (int i = 0; i < 8; i++)
             {
                 Color col = i == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
 
                 Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, col * 1f, Projectile.rotation, Chunk.Size() / 2, Projectile.scale * 1.1f, SpriteEffects.None, 0f);
-
             }
 
             Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Chunk.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Chunk, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.25f, Projectile.rotation, Chunk.Size() / 2, Projectile.scale, SpriteEffects.None, 0f);
 
-
             return false;
         }
 
-        int timer = 0;
-        public override void AI()
-        {
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Laser1").Value;
-            trailColor = new Color(25,25,255);
-            trailTime = timer * 0.02f;
-            timesToDraw = 4;
-
-            trailPointLimit = 120;
-            trailWidth = 10;
-            trailMaxLength = 100;
-
-            trailRot = Projectile.velocity.ToRotation();
-            trailPos = Projectile.Center + Projectile.velocity;
-
-            TrailLogic();
-            timer++;
-
-            for (int i = 0; i < Main.maxProjectiles; i++)
-            {
-                Projectile p = Main.projectile[i];
-                if (p.type == Projectile.type && p.active && p != null && p.whoAmI != Projectile.whoAmI && p.Hitbox.Intersects(Projectile.Hitbox))
-                {
-                    Vector2 projSpawnDir = ((p.Center - Projectile.Center) * 0.5f);
-
-                    for (double m = 0; m < 6.28; m += 0.3)
-                    {
-                        Dust dust = Dust.NewDustPerfect(Projectile.Center + projSpawnDir, DustID.Granite, new Vector2((float)Math.Sin(m) * 1.3f, (float)Math.Cos(m)) * 2.4f);
-                        dust.velocity *= Main.rand.NextFloat(0.4f, 1.3f);
-                        dust.noGravity = true;
-                        dust.scale = 1.3f;
-                    }
-
-                    ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                    for (int t = 0; t < 6; t++)
-                    {
-                        Dust b = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center, ModContent.DustType<GlowCircleQuadStar>(),
-                            Main.rand.NextVector2Circular(3, 3) * Main.rand.Next(1, 3),
-                            Color.LightBlue, 0.4f, 0.4f, 0f, dustShader);
-                        //b.fadeIn = 1;
-                        //b.velocity += Projectile.velocity * 0.2f;
-                        //p.alpha = 0;
-                        //p.rotation = Main.rand.NextFloat(6.28f);
-                    }
-
-                    SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .27f, Volume = 0.7f }; 
-                    SoundEngine.PlaySound(style, Projectile.Center);
-
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack, Main.myPlayer);
-
-                    Projectile.active = false;
-                    p.active = false;
-
-                }
-            }
-
-
-        }
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
-            for (double i = 0; i < 6.28; i += 0.3)
+            for (float i = 0; i < 6.28f; i += 0.3f)
             {
-                Dust dust = Dust.NewDustPerfect(Projectile.Center, DustID.Granite, new Vector2((float)Math.Sin(i) * 1.3f, (float)Math.Cos(i)) * 2.4f);
+                Dust dust = Dust.NewDustPerfect(Projectile.Center, DustID.Granite, new Vector2(MathF.Sin(i) * 1.3f, MathF.Cos(i)) * 2.4f);
                 dust.velocity *= Main.rand.NextFloat(0.8f, 1.3f);
                 dust.noGravity = true;
             }
 
-            //SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { PitchVariance = 0.3f, Volume = 0.2f, Pitch = 0.2f }, Projectile.Center);
-            
-            //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .27f, Volume = 0.7f }; 
-            //SoundEngine.PlaySound(style, Projectile.Center);
-            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_89") with { Pitch = .19f, PitchVariance = 0.2f, Volume = 0.4f };
+            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_89") with { Pitch = 0.2f, PitchVariance = 0.2f, Volume = 0.4f, MaxInstances = -1 };
             SoundEngine.PlaySound(style2, Projectile.Center);
 
-            int g1 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard1>(), Scale: 0.75f);
-            int g2 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard2>(), Scale: 0.75f);
-            int g3 = Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, Main.rand.NextVector2Circular(1.5f, 1.5f), ModContent.GoreType<GraniteShard3>(), Scale: 0.75f);
-        }
+            int gore1 = ModContent.GoreType<GraniteShard1>();
+            int gore2 = ModContent.GoreType<GraniteShard2>();
+            int gore3 = ModContent.GoreType<GraniteShard3>();
 
-        public override float WidthFunction(float progress)
-        {
-            float num = 1f;
-            float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
-            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 30f, num) * 0.25f; //* 0.5f
+            for (int g = 1; g < 4; g++)
+            {
 
+                int type = g == 1 ? gore1 : (g == gore2 ? gore2 : gore3);
+                Vector2 vel = Projectile.velocity * 0.45f + Main.rand.NextVector2Circular(1.5f, 1.5f);
+                Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center + Vector2.UnitY * -2, vel, type, Scale: 0.75f);
+
+            }
         }
     }
 
@@ -311,17 +358,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 1;
-            // DisplayName.SetDefault("Granite Score");
         }
+
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.width = 30;
             Projectile.height = 30;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
         }
@@ -330,31 +378,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Twinkle");
-            Texture2D Glorb = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Glorb");
-
-
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Main.spriteBatch.Draw(Glorb, Projectile.Center - Main.screenPosition, null, Color.DeepSkyBlue, Projectile.rotation, Glorb.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
 
             for (int i = 0; i < 2; i++)
             {
-                for (int j = 0; j < 8;  j++)
+                for (int j = 0; j < 8; j++)
                 {
-                    Color col = new Color(125, 198, 255) with { A = 0 };
+                    Color col = new Color(125, 198, 255) with { A = 0 } * 0.85f;
                     Main.spriteBatch.Draw(Core, Projectile.oldPos[j] - Main.screenPosition + new Vector2(Projectile.width / 2, Projectile.height / 2), null, col, Projectile.rotation + (i == 0 ? 1.57f / 2f : 0f), Core.Size() / 2, (1 - j * 0.15f) * scale, SpriteEffects.None, 0);
                 }
             }
 
-           
+            //for (int j = 0; j < 8; j++)
+            //{
+                //Color col = new Color(125, 198, 255) with { A = 0 } * 2f;
+                //Main.spriteBatch.Draw(Core, Projectile.oldPos[j] - Main.screenPosition + new Vector2(Projectile.width / 2, Projectile.height / 2), null, col, Projectile.rotation, Core.Size() / 2, (1 - j * 0.15f) * scale, SpriteEffects.None, 0);
+            //}
 
             Main.spriteBatch.Draw(Core, Projectile.Center - Main.screenPosition, null, Color.SkyBlue with { A = 0 }, Projectile.rotation, Core.Size() / 2, Projectile.scale * scale, SpriteEffects.None, 0f);
-
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-
             return false;
         }
 
@@ -364,12 +404,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
             if (timer > 25)
             {
+                //Home in on nearest enemy
                 if (FindNearestNPC(600f, true, false, true, out int index))
                 {
                     NPC npc = Main.npc[index];
                     Projectile.velocity *= .98f;
                     Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(npc.Center) * 20f, .1f);
 
+                    //Dont die if we have a target
                     Math.Clamp(Projectile.timeLeft, 2, 1000);
                 }
                 else
@@ -388,17 +430,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                 Projectile.rotation += 0.3f;
             else
                 Projectile.rotation -= 0.3f;
+
+            if (timer % 3 == 0)
+            {
+                Vector2 dustVel = Main.rand.NextVector2Circular(1.5f, 1.5f);
+                dustVel += Projectile.velocity * 0.6f;
+
+                Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: Color.SkyBlue, Scale: Main.rand.NextFloat(0.1f, 0.3f));
+                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.3f, timeBeforeSlow: 5,
+                    preSlowPower: 0.94f, postSlowPower: 0.90f, velToBeginShrink: 3f, fadePower: 0.89f, shouldFadeColor: false);
+            }
+
             timer++;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = .4f, }; 
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = .4f, MaxInstances = -1 }; 
             SoundEngine.PlaySound(style, Projectile.Center);
 
-            SoundEngine.PlaySound(SoundID.Item93 with { Pitch = 0.4f, Volume = 0.2f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item93 with { Pitch = 0.4f, Volume = 0.2f, MaxInstances = -1 }, Projectile.Center);
 
 
+
+
+            for (int i = 0; i < 6; i++)
+            {
+                Vector2 dustVel = Main.rand.NextVector2Circular(2.25f, 2.25f) * Main.rand.Next(1, 3);
+                dustVel += Projectile.velocity * 0.3f;
+
+                Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: Color.SkyBlue, Scale: Main.rand.NextFloat(0.2f, 0.35f));
+                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.3f, timeBeforeSlow: 5,
+                    preSlowPower: 0.94f, postSlowPower: 0.90f, velToBeginShrink: 1f, fadePower: 0.92f, shouldFadeColor: false);
+            }
+
+            /*
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             for (int i = 0; i < 7; i++)
             {
@@ -411,6 +477,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                 //p.rotation = Main.rand.NextFloat(6.28f);
             }
             //base.Kill(timeLeft);
+            */
         }
 
 

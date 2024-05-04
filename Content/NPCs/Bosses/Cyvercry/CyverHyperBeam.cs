@@ -368,7 +368,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             
         }

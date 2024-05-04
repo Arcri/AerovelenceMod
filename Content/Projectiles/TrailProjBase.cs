@@ -207,6 +207,7 @@ namespace AerovelenceMod.Content.Projectiles
     }
 
     //An alternate way of doing trails, useful when you want more than one in a projectile
+    //Based of tSoRC trail system
     public class BaseTrailInfo
     {
         #region variables

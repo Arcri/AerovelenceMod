@@ -140,7 +140,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 		}
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 			//Main.NewText("amg");
         }
