@@ -127,6 +127,27 @@ namespace AerovelenceMod.Common.Utilities
             return b;
 		}
 
+		public static PixelGlowOrbBehavior AssignBehavior_PGOBase(
+			float rotPower = 0.05f, int killEarlyTime = -1, int timeBeforeSlow = 3, float preSlowPower = 0.99f, float postSlowPower = 0.92f, float velToBeginShrink = 1f, float fadePower = 0.95f,
+            bool dontDrawOrb = false, float glowIntensity = 0.2f, float colorFadePower = 0.95f)
+        {
+            PixelGlowOrbBehavior b = new PixelGlowOrbBehavior();
+
+            b.base_rotPower = rotPower;
+			b.base_killEarlyTime = killEarlyTime;
+            b.base_timeBeforeSlow = timeBeforeSlow;
+            b.base_preSlowPower = preSlowPower;
+            b.base_postSlowPower = postSlowPower;
+            b.base_velToBeginShrink = velToBeginShrink;
+            b.base_fadePower = fadePower;
+
+            b.base_dontDrawOrb = dontDrawOrb;
+            b.base_glowIntensity = glowIntensity;
+			b.base_colorFadePower = colorFadePower;
+
+            return b;
+        }
+
         public class StarDustDrawInfo
 		{
 			public bool DrawWhiteCore = true;

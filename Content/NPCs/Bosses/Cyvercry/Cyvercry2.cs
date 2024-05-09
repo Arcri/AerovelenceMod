@@ -573,6 +573,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
         #endregion
 
+        bool hasDoneMusicSync = false;
+
         float bonusSpinCharge = 120;
         int whatAttack = -2;
         int timer = 0;
@@ -592,8 +594,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             //whatAttack = -1;
 
-            ///if (whatAttack != 24)
-                //hideRegreGlow = false;
+            Main.NewText(timer);
 
             if (firstFrame)
             {
@@ -756,6 +757,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         bool advanceNegative = false;
         public void IdleLaser(Player myPlayer)
         {
+            int extraTime = hasDoneMusicSync ? 0 : 19;
+
+            //Have a bit more delay on shots when it is first cycle
+            int extraShotDelay = hasDoneMusicSync ? 0 : 3;
+
             NPC.hide = false;
             NPC.dontTakeDamage = false;
             //startingQuadrant = 2;
@@ -788,6 +794,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             int shotDelay = Phase3 ? 25 : 30;
             float shotSpeed = isMaster ? 8 : 6;
+
+            shotDelay += extraShotDelay;
 
             Vector2 goalPoint = new Vector2(550, 0).RotatedBy(MathHelper.ToRadians(advancer * 0.2f + startingAngBonus)); //advancer * 0.4
 
@@ -844,10 +852,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 if (Phase3)
                     FireLaser(ModContent.ProjectileType<StretchLaser>(), 1.5f, 8f);
                 else
-                    FireLaser(ModContent.ProjectileType<CyverLaser>(), speed: shotSpeed); //Death Laser
+                    FireLaser(ModContent.ProjectileType<CyverLaser>(), speed: shotSpeed);
             }
 
-            if (timer == 220)
+            if (timer == 220 + extraTime)
             {
                 timer = -1;
                 whatAttack = 2;
@@ -855,9 +863,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 advancer = 0;
             }
             if (advanceNegative)
-                advancer = (timer > 140 ? --advancer : advancer - 2); //++ 2
+                advancer = (timer > 140 ? --advancer : advancer - 2);
             else
-                advancer = (timer > 140 ? ++advancer : advancer + 2); //++ 2
+                advancer = (timer > 140 ? ++advancer : advancer + 2);
 
 
             timer++;
@@ -1825,9 +1833,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Projectile reticle = null;
         public void SpinPhase3(Player myPlayer)
         {
+            int extraStartupTime = hasDoneMusicSync ? 0 : 35;
+
             //Do the normal startup
             phase3PulseColor = Color.White;
-            if (timer <= 150)
+            if (timer <= 150 + extraStartupTime)
             {
                 if (timer == 0)
                 {
@@ -1853,22 +1863,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 //NPC.Center = Vector2.Lerp(NPC.Center, myPlayer.Center + vecToPlayer, Math.Clamp(timer * 0.005f, 0, 0.8f));
                 //NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
 
-                if (Math.Abs(NPC.Center.Distance(myPlayer.Center)) > 450)
+                if (Math.Abs(NPC.Center.Distance(myPlayer.Center)) > 450) 
                 {
-                    approachAccelValue = Math.Clamp(approachAccelValue + 7, 10, 90);  
-                    NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (7f + (approachAccelValue * 0.075f));
+                    approachAccelValue = Math.Clamp(approachAccelValue + 7, 10, 100);  
+                    NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (7f + (approachAccelValue * 0.11f)); //0.075
                 }
                 else
                 {
-                    approachAccelValue = Math.Clamp(approachAccelValue - 3, 10, 90);
-                    NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (4f + (approachAccelValue * 0.075f));
+                    approachAccelValue = Math.Clamp(approachAccelValue - 3, 10, 100);
+                    NPC.velocity = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * (4f + (approachAccelValue * 0.08f)); //0.075
                 }
 
                 NPC.rotation = (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi;
             }
 
             //Turn towards player 
-            else if (timer > 150)
+            else if (timer > 150 + extraStartupTime)
             {
                 ballScale = 0;
                 spammingLaser = true;
@@ -1883,13 +1893,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 
                 float newRotation = 0;
-                if (timer > 300 && timer < 315)
+                if (timer > 300 + extraStartupTime && timer < 315 + extraStartupTime)
                     newRotation = Utils.AngleTowards(NPC.rotation, (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi + (spinningClockwise ? 1.2f : -1.2f), 0.2f);
                 else
                     newRotation = Utils.AngleTowards(NPC.rotation, (myPlayer.Center - NPC.Center).ToRotation() + MathHelper.Pi, 0.04f); //25
 
 
-                if (timer == 300)
+                if (timer == 300 + extraStartupTime)
                 {
 
                     //Teleport nearby if the player is too far
@@ -1938,7 +1948,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 NPC.rotation = newRotation;
 
-                if (timer % 5 == 0 && !(timer >= 300 && timer < 315))
+                if (timer % 5 == 0 && !(timer >= 300 + extraStartupTime && timer < 315 + extraStartupTime))
                 {
                     overlayPower = Math.Clamp(overlayPower + 0.2f, 0f, 1f);
                     SoundStyle stylea = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .56f, PitchVariance = .27f, };
@@ -1963,14 +1973,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     eyeStarRotation = Main.rand.NextFloat(6.28f);
                 }
 
-                if (timer == 400)
+                if (timer == 400 + extraStartupTime)
                 {
-                    timer = 255;
+                    timer = 255 + extraStartupTime;
                     advancer++;
 
                     if (advancer == 3)
                     {
                         phase3PulseColor = Color.White;
+
+                        hasDoneMusicSync = true;
 
                         whatAttack = 15;
                         timer = -1;
@@ -2360,6 +2372,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Vector2 storedVec2 = Vector2.Zero;
         public void IdleDash(Player myPlayer)
         {
+            int extraTime = hasDoneMusicSync ? 0 : 15;
+
+
             if (timer == 0)
             {
                 switch (dashQuadrant)
@@ -2449,7 +2464,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     NPC.rotation = storedRotaion;//(float)(storedRotaion + MathHelper.ToRadians(3f * (float)Math.Sin(timer)) );
 
             }
-            else if (timer >= 105)
+            else if (timer >= 105 && timer < 130)
             {
                 NPC.damage = ContactDamage;
                 thrusterValue = 0;
@@ -2534,7 +2549,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             else if (!advanceNegative && timer < 69)
                 advancer++;
 
-            if (timer == 130)
+            //Have him slow if the attack has more endlag
+            if (timer > 132)
+                NPC.velocity *= 0.9f;
+
+            if (timer == 140 + extraTime)
             {
                 startingQuadrant = dashQuadrant;
                 accelFloat = 0f;
@@ -4980,7 +4999,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         Vector2 introCenter = Vector2.Zero;
         public void IntroAnimation(Player myPlayer)
         {
-            int timeHelper = 30; 
+            int timeHelper = 10; 
 
             if (timer == 0)
             {
@@ -5009,7 +5028,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     SoundStyle styleas = new SoundStyle("Terraria/Sounds/Item_131") with { Pitch = -.2f, PitchVariance = .13f, Volume = 0.4f };
                     SoundEngine.PlaySound(styleas, introCenter);
 
-                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .05f, Pitch = 0.3f, };
+                    SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/flame_thrower_airblast_rocket_redirect") with { Volume = .05f, Pitch = 0.25f, };
                     SoundEngine.PlaySound(style2, introCenter);
 
                     myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 10;
@@ -5040,14 +5059,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 NPC.rotation = MathHelper.ToRadians(180) + (myPlayer.Center - NPC.Center).ToRotation();
                 Vector2 move = (introCenter) - NPC.Center;
 
-                float scalespeed = 0.7f; //2
+                float scalespeed = 0.75f; //0.7
 
                 NPC.velocity.X = (NPC.velocity.X + move.X) / 20f * scalespeed;
                 NPC.velocity.Y = (NPC.velocity.Y + move.Y) / 20f * scalespeed;
 
-                if (timer > 250 + timeHelper && timer < 300 + timeHelper)
+                if (timer > 230 + timeHelper && timer < 280 + timeHelper)
                 {
-                    if (timer < 270 + timeHelper)
+                    if (timer < 250 + timeHelper)
                     {
                         for (int a = 0; a < 2 + Main.rand.Next(0,2); a++)
                         {
@@ -5072,12 +5091,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         phase3PulseValue = 1f;
                     }
 
-                    if (timer == 253 + timeHelper)
-                    {
-                        //SoundStyle style4 = new SoundStyle("AerovelenceMod/Sounds/Effects/EvilEnergy") with { Volume = .3f, Pitch = .6f, MaxInstances = -1 };
-                        //SoundEngine.PlaySound(style4, NPC.Center);
-                    }
-                    if (timer == 251 + timeHelper)
+
+                    if (timer == 231 + timeHelper)
                     {
                         SoundStyle style2 = new SoundStyle("Terraria/Sounds/Zombie_67") with { Pitch = -.5f, PitchVariance = 0f, MaxInstances = -1, Volume = 0.5f };
                         SoundEngine.PlaySound(style2, NPC.Center);
@@ -5121,18 +5136,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 }
             }
-            if (timer == 300 + timeHelper)
+            if (timer == 280 + timeHelper)
             {
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
             }
 
-            if (timer >= 300 + timeHelper)
+            if (timer >= 280 + timeHelper)
             {
                 Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.05f), 1, 2);
             }
 
-            if (timer == 350 + timeHelper)
+            if (timer == 330 + timeHelper)
             {
                 whatAttack = 1;
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
@@ -5159,7 +5174,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .4f, Pitch = 1f, };
                 SoundEngine.PlaySound(style2, NPC.Center);
-
 
                 Vector2 towardPlayer = (myPlayer.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
 
