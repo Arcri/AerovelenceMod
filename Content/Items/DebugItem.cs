@@ -63,9 +63,28 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //int tendril = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<GraniteCore>(), 10, 0, Main.myPlayer);
 
-            for (int aaaa = 0; aaaa < 3; aaaa++)
+            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
+
+            if (Main.projectile[explosion].ModProjectile is FadeExplosionHandler feh)
+            {
+                feh.color = Color.Lerp(Color.OrangeRed, Color.Red, 0.15f);
+                feh.colorIntensity = 1f;
+                feh.fadeSpeed = 0.045f;
+                for (int m = 0; m < 10; m++)
+                {
+                    FadeExplosionClass newSmoke = new FadeExplosionClass(position, Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(0.5f, 2f) * 2f);
+
+                    newSmoke.size = (0.45f + Main.rand.NextFloat(-0.15f, 0.15f)) * 1f;
+                    feh.Smokes.Add(newSmoke);
+
+                }
+            }
+            return false;
+            //
+            int tendril = Projectile.NewProjectile(null, position, velocity * 0.3f, ModContent.ProjectileType<StretchLaser>(), 10, 0, Main.myPlayer);
+
+            for (int aaaa = 0; aaaa > 3; aaaa++)
             {
                 Dust orb = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<PixelGlowOrb>(),
                 Vector2.One.RotatedByRandom(1f) * Main.rand.NextFloat(5.5f, 8.25f), newColor: Main.DiscoColor, Scale: Main.rand.NextFloat(0.65f, 0.85f) * 1f);

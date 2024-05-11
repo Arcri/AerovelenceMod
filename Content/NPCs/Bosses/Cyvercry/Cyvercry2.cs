@@ -594,7 +594,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             //whatAttack = -1;
 
-            Main.NewText(timer);
+            //Main.NewText(timer);
 
             if (firstFrame)
             {
@@ -5531,6 +5531,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public float extraBoost = 0f;
         public float whiteBackgroundPower = 0f;
         public float lineBonusSpeed = 0f;
+        public float lineAlpha = 1f;
         public int getAttack()
         {
             if (spammingLaser)

@@ -21,7 +21,6 @@ namespace AerovelenceMod.Content.Projectiles
         // - Add more stuff to basic trail shader
         //    - Glow effect from GlowMisc
         // - Just make it better in general
-        // - Actually understand what im doing instead of just using other people's code
 
         //Heavily based off of tsorc trail system 
 

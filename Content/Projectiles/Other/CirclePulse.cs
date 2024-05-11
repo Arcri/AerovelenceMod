@@ -88,7 +88,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, null, color with { A = 0 } * opacity * 0.2f, Projectile.rotation + MathF.PI, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, null, color * opacity, Projectile.rotation + MathF.PI, Tex.Size() / 2, vec2Scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, null, color * opacity * 0.6f, Projectile.rotation + MathF.PI, Tex.Size() / 2, vec2Scale * 1.1f, SpriteEffects.None, 0f);
@@ -98,7 +98,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

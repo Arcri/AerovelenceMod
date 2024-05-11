@@ -27,17 +27,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public int enemiesHit = 0;
         public override void SetDefaults()
         {
-            Projectile.extraUpdates = 2;
             Projectile.width = 40;
             Projectile.height = 40;
-            Projectile.friendly = false;
-            Projectile.hostile = true;
             Projectile.scale = 1f;
             Projectile.timeLeft = 200;
-            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 2;
+            Projectile.penetrate = -1;
+
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
 
         }
         public int accelerateTime = 65;
@@ -50,56 +51,59 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer < accelerateTime)
                 Projectile.velocity *= accelerateStrength;
 
-            Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], Projectile.scale + 0.2f, 0.12f), 0, Projectile.scale); //1.1f
+            Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], Projectile.scale + 0.2f, 0.12f), 0, Projectile.scale); 
             timer++;
 
         }
 
-        //TODO Make this more efficient without sacrificing looks (either via 1 less spritebatch reset or no shader)
         public override bool PreDraw(ref Color lightColor)
         {
-            
             if (timer == 0)
                 return false;
-            //Hot Pink (255, 105, 180)
-            //Deep Pink (255, 20, 147)
 
-
+            Color newPink = new Color(255, 50, 140);
             Color pinkToUse = new Color(255, 25, 155);
-
-            var softGlow = Mod.Assets.Request<Texture2D>("Assets/DiamondGlow").Value;
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
 
             Vector2 vscale = new Vector2(0.5f, Projectile.velocity.Length() * 0.15f) * Projectile.ai[0] * 0.95f;
             Vector2 vscale2 = new Vector2(0.2f, Projectile.velocity.Length() * 0.15f) * Projectile.ai[0] * 0.95f;
-            Vector2 vscale3 = new Vector2(0.5f, Projectile.velocity.Length() * 0.3f) * Projectile.ai[0] * 0.95f;
+            Vector2 vscale3 = new Vector2(0.4f, Projectile.velocity.Length() * 0.3f) * Projectile.ai[0] * 0.95f;
+
+            //Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/DiamondGlow").Value;
+            Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/DiamondGlowPMA").Value;
+            //Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/GlowDartBlack").Value;
+
 
             Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), Color.Black * 0.25f, Projectile.rotation, softGlow.Size() / 2, vscale3 * 0.85f, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX)), Tex.Frame(1, 1, 0, 0), pinkToUse * 0.85f, Projectile.rotation, Tex.Size() / 2, vscale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), pinkToUse * 0.75f, Projectile.rotation, softGlow.Size() / 2, vscale3, SpriteEffects.None, 0f);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX)), null, newPink with { A = 0 } * 0.8f, Projectile.rotation, Tex.Size() / 2, vscale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, null, pinkToUse with { A = 0 } * 0.75f, Projectile.rotation, softGlow.Size() / 2, vscale3, SpriteEffects.None, 0f);
 
             //Set up glowy shader 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 2.2f);
+            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * 2.5f);
             myEffect.Parameters["uTime"].SetValue(2);
             myEffect.Parameters["uOpacity"].SetValue(0.28f); //0.6
             myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
             //Activate Shader
-            myEffect.CurrentTechnique.Passes[0].Apply();
+            myEffect.CurrentTechnique.Passes["Glow"].Apply();
 
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX), Tex.Frame(1, 1, 0, 0), Color.White, Projectile.rotation, Tex.Size() / 2, vscale2, SpriteEffects.None, 0f);
+            
 
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX), null, Color.LightPink with { A = 0 } * 0.85f, Projectile.rotation, Tex.Size() / 2, vscale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX), null, Color.LightPink with { A = 0 } * 0.35f, Projectile.rotation, Tex.Size() / 2, vscale2, SpriteEffects.None, 0f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
             /*
