@@ -748,47 +748,53 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             Projectile.tileCollide = false;
             Projectile.timeLeft = 4400; //180
             Projectile.extraUpdates = 0;
+            Projectile.penetrate = -1;
         }
 
 
-        float startAngle = 0f;
-        float endAngle = 0f;
         int timer = 0;
         float width = 1f;
 
         public List<Vector2> Positions;
         public List<float> Rotations;
 
-        Vector2[] arr_positions = new Vector2[150]; //75
+        Vector2[] arr_positions = new Vector2[150];
         float[] arr_rotations = new float[150];
+
+        float[] draw_rotations = new float[150];
+        Vector2[] draw_positions = new Vector2[150];
+
+
         int TotalPoints = 150; 
 
         Vector2 anchor = Vector2.Zero;
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-
+                        
             if (timer == 0)
             {
-                Projectile.velocity = Vector2.Zero;
+                //Projectile.velocity = Vector2.Zero;
                 anchor = Projectile.Center;
 
                 //Create all of the points and set all the rotations to be the same
                 for (int i = 0; i < TotalPoints; i++)
                 {
-                    arr_positions[i] = Projectile.Center + Projectile.rotation.ToRotationVector2() * (2.5f * i);
+                    arr_positions[i] = Vector2.Zero + Projectile.rotation.ToRotationVector2() * (2.5f * i);
                     arr_rotations[i] = Projectile.rotation;
                 }
 
                 Projectile.ai[0] = 1f;
             }
 
+            anchor += Projectile.velocity;
+
+
             //Rotate the anchor
             Projectile.rotation += 0.07f * Projectile.ai[0];
 
-            if (timer % 130 == 0 && timer != 0)
-                Projectile.ai[0] *= -1f;
-
+            //if (timer % 130 == 0 && timer != 0)
+                //Projectile.ai[0] *= -1f;
 
             //Have all points try to rotate towards the acnhor
             for (int j = 0; j < TotalPoints; j++)
@@ -802,12 +808,21 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
                 //Keep angle within 2pi 
                 float NormalizedGoalRotation = Projectile.rotation;//Projectile.rotation.ToRotationVector2().ToRotation();
 
-                float newRotation = MathHelper.Lerp(arr_rotations[j], NormalizedGoalRotation, lerpValue * 0.2f); //0.25f
+                float newRotation = MathHelper.Lerp(arr_rotations[j], NormalizedGoalRotation, lerpValue * 0.175f); //0.2
 
                 arr_rotations[j] = newRotation;
-                arr_positions[j] = Projectile.Center + newRotation.ToRotationVector2() * (2.5f * j);
+                arr_positions[j] = Vector2.Zero + newRotation.ToRotationVector2() * (2.5f * j);
             }
 
+            for (int k = 0; k < TotalPoints - 1; k++)
+            {
+                //We have to flip the first point over for some reason or else we get a weird tear.
+                if (k == 0)
+                    draw_rotations[k] = arr_rotations[k] + MathHelper.Pi;
+                else
+                    draw_rotations[k] = (arr_positions[k - 1] - arr_positions[k]).ToRotation();
+                draw_positions[k] = arr_positions[k] + anchor;
+            }
 
             timer++;
         }
@@ -817,20 +832,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         {
             //Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
             Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
-
-            float[] new_rots = new float[TotalPoints];
-            Vector2[] new_pos = new Vector2[TotalPoints];
-            for (int k = 0; k < TotalPoints - 1; k++)
-            {
-                //We have to flip the first point over for some reason or else we get a weird tear.
-                if (k == 0)
-                    new_rots[k] = arr_rotations[k] + MathHelper.Pi;
-                else
-                    new_rots[k] = (arr_positions[k - 1] - arr_positions[k]).ToRotation();
-                new_pos[k] = arr_positions[k];
-            }
-
-            //Utils.DrawLine(Main.spriteBatch, Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * 250f, Color.White * 1f, Color.White * 0.25f, 2f);
+            Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Extra_196_Black").Value;            
 
             Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStar").Value;
             if (myEffect == null)
@@ -838,20 +840,49 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
 
             VertexStrip vertexStrip = new VertexStrip();
-            vertexStrip.PrepareStrip(new_pos, new_rots, StripColor, StripWidth, -Main.screenPosition, includeBacksides: true);
-            myEffect.Parameters["WorldViewProjection"].SetValue(Main.GameViewMatrix.NormalizedTransformationmatrix);
+            vertexStrip.PrepareStrip(draw_positions, draw_rotations, StripColor, StripWidth, -Main.screenPosition, includeBacksides: true);
 
-            myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
-            myEffect.Parameters["ColorOne"].SetValue(Color.DeepSkyBlue.ToVector3() * 4f);
+            VertexStrip vertexStripBlack = new VertexStrip();
+            vertexStripBlack.PrepareStrip(draw_positions, draw_rotations, StripColorBlack, StripWidthBlack, -Main.screenPosition, includeBacksides: true);
+
+
+            myEffect.Parameters["WorldViewProjection"].SetValue(Main.GameViewMatrix.NormalizedTransformationmatrix);
             myEffect.Parameters["progress"].SetValue(timer * -0.04f);
 
-            myEffect.Parameters["glowThreshold"].SetValue(0.4f);
-            myEffect.Parameters["glowIntensity"].SetValue(1.75f);
+            //Black Layer
+            #region black
+            myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
+            myEffect.Parameters["ColorOne"].SetValue(Color.Black.ToVector3() * 1f);
+            myEffect.Parameters["glowThreshold"].SetValue(1f);
+
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+
+            //vertexStripBlack.DrawTrail();
+            #endregion
+
+            //Main layer
+            myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
+            myEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector3() * 4f);
+
+            myEffect.Parameters["glowThreshold"].SetValue(0.8f);
+            myEffect.Parameters["glowIntensity"].SetValue(1.4f);
 
 
             myEffect.CurrentTechnique.Passes["MainPS"].Apply();
             vertexStrip.DrawTrail();
             vertexStrip.DrawTrail();
+
+            //Layer 2
+            myEffect.Parameters["TrailTexture"].SetValue(trailTexture2);
+            myEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector3() * 4f);
+
+            myEffect.Parameters["glowThreshold"].SetValue(0.5f);
+            myEffect.Parameters["glowIntensity"].SetValue(1.8f);
+
+
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+            vertexStripBlack.DrawTrail();
+            vertexStripBlack.DrawTrail();
 
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
             
@@ -860,21 +891,38 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
         public Color StripColor(float progress)
         {
-            Color color = new Color(0f, 0f, 0f, 0f); 
+            float alpha = 1f;
+
+            alpha = 1f - Easings.easeOutQuad(progress);
+
+            Color color = new Color(0f, 0f, 0f, alpha); 
             
             return color;
         }
         public float StripWidth(float progress)
         {
-            //float size = Utils.GetLerpValue(13400f, 12800f, Projectile.timeLeft, true) * Utils.GetLerpValue(0f, 200f, Projectile.timeLeft, true);
-            //float start = Math.Clamp(1.5f * (float)Math.Pow(progress, 0.5f), 0f, 1f);
-            //float cap = (float)Math.Cbrt(Utils.GetLerpValue(1f, 0.5f, progress, true));
-            //return 60f * cap; //start * size * 150f * cap;// * (1.1f + (float)Math.Cos(timer) * (0.08f - progress * 0.06f));
-
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, 1f - progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 140f, Easings.easeInCirc(num)) * 1f; // 0.3f 
+            return MathHelper.Lerp(0f, 140f, Easings.easeInCirc(num)) * 1.15f; // 0.3f 
+        }
+
+        public Color StripColorBlack(float progress)
+        {
+            float alpha = 1f;
+
+            alpha = 1f - Easings.easeOutQuad(progress);
+
+            Color color = new Color(0f, 0f, 0f, alpha);
+
+            return color;
+        }
+        public float StripWidthBlack(float progress)
+        {
+            float num = 1f;
+            float lerpValue = Utils.GetLerpValue(0f, 0.4f, 1f - progress, clamped: true);
+            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
+            return MathHelper.Lerp(0f, 60f, Easings.easeInCirc(num)) * 1f; // 0.3f 
         }
     }
 

@@ -874,6 +874,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item94 with { Pitch = 0.4f, Volume = 0.35f, PitchVariance = 0.2f }, Projectile.Center);
+
             int explo = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
 
             if (Main.projectile[explo].ModProjectile is CyverRoarPulse crp)
@@ -881,26 +882,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 crp.pixel = true;
                 crp.forRoar = false;
             }
-            /*
-            for (int i = 0; i < 360; i += 5)
-            {
-                Vector2 circular = new Vector2(12, 0).RotatedBy(MathHelper.ToRadians(i));
-                Vector2 dustVelo = circular * 0.5f;
-                Dust dust = Dust.NewDustDirect(Projectile.Center - new Vector2(5) + circular, 0, 0, DustID.PinkCrystalShard, 0, 0, Projectile.alpha);
-                dust.velocity *= 0.15f;
-                dust.velocity += dustVelo;
-                dust.scale = 1.75f;
-                dust.noGravity = true;
-            }
-            base.Kill(timeLeft);
-            */
+            
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             if (Projectile.ai[2] == 0)
                 return false;
-            
+
             //trail1.TrailDrawing(Main.spriteBatch);
             //trail2.TrailDrawing(Main.spriteBatch);
             //return false;

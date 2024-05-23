@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             Projectile.timeLeft = 75;
             Projectile.penetrate = -1;
 
-                        Projectile.usesLocalNPCImmunity = true;
+            Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
         }
         public override bool? CanDamage() { return !stuckIn; }
@@ -87,7 +87,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 //Home towards cursor
                 if (timer < 70) //50
                 {
-                    float turnPower = 25f;//timer < 50f ? 25f : 40;
+                    float turnPower = 25f;
                     int turn2 = timer < 50f ? 30 : 35;
 
                     Vector2 mousePos = Vector2.Zero;
@@ -112,6 +112,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             }
             else
             {
+                //Fade out for a little bit instead of immediately dying on hit
                 fadeAlpha = Math.Clamp(MathHelper.Lerp(fadeAlpha, -0.5f, 0.15f), 0f, 1f);
             }
 
@@ -182,28 +183,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
         }
 
         bool stuckIn = false;
-        float stuckInProgress = 0f;
         public override void OnKill(int timeLeft)
         {
             if (!stuckIn)
-                hitFX();
-            
-            /*
-            for (int i = 0; i < 3 + Main.rand.Next(-1, 2); i++)
-            {
-                Vector2 randomStart = Main.rand.NextVector2Circular(1.5f, 1.5f) * 1f;
-                Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: new Color(0, 100, 255), Scale: Main.rand.NextFloat(0.35f, 0.45f));
-                dust.velocity += Projectile.velocity * 0.25f;
-
-                dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
-                    rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 8, postSlowPower: 0.92f, velToBeginShrink: 4f, fadePower: 0.88f, shouldFadeColor: false);
-            }
-            SoundStyle style = new SoundStyle("Terraria/Sounds/Grab") with { Pitch = .89f, PitchVariance = .33f, Volume = 0.35f }; 
-            SoundEngine.PlaySound(style, Projectile.Center);
-
-            SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_11") with { Pitch = .61f, PitchVariance = .26f, MaxInstances = -1, Volume = 0.35f }; 
-            SoundEngine.PlaySound(style2, Projectile.Center);
-            */
+                hitFX();  
             base.OnKill(timeLeft);
         }
 

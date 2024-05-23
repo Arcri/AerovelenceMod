@@ -62,7 +62,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 return false;
 
             Color newPink = new Color(255, 50, 140);
-            Color pinkToUse = new Color(255, 25, 155);
+            Color pinkToUse = new Color(255, 35, 155);
 
             Vector2 vscale = new Vector2(0.5f, Projectile.velocity.Length() * 0.15f) * Projectile.ai[0] * 0.95f;
             Vector2 vscale2 = new Vector2(0.2f, Projectile.velocity.Length() * 0.15f) * Projectile.ai[0] * 0.95f;
@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX)), null, newPink with { A = 0 } * 0.8f, Projectile.rotation, Tex.Size() / 2, vscale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, null, pinkToUse with { A = 0 } * 0.75f, Projectile.rotation, softGlow.Size() / 2, vscale3, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, null, pinkToUse with { A = 0 } * 0.65f, Projectile.rotation, softGlow.Size() / 2, vscale3, SpriteEffects.None, 0f);
 
             //Set up glowy shader 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;

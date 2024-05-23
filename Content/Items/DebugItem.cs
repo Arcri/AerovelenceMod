@@ -62,27 +62,8 @@ namespace AerovelenceMod.Content.Items
 
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-
-            int explosion = Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
-
-            if (Main.projectile[explosion].ModProjectile is FadeExplosionHandler feh)
-            {
-                feh.color = Color.Lerp(Color.OrangeRed, Color.Red, 0.15f);
-                feh.colorIntensity = 1f;
-                feh.fadeSpeed = 0.045f;
-                for (int m = 0; m < 10; m++)
-                {
-                    FadeExplosionClass newSmoke = new FadeExplosionClass(position, Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(0.5f, 2f) * 2f);
-
-                    newSmoke.size = (0.45f + Main.rand.NextFloat(-0.15f, 0.15f)) * 1f;
-                    feh.Smokes.Add(newSmoke);
-
-                }
-            }
-            return false;
-            //
-            int tendril = Projectile.NewProjectile(null, position, velocity * 0.3f, ModContent.ProjectileType<StretchLaser>(), 10, 0, Main.myPlayer);
+        {   
+            int tendril = Projectile.NewProjectile(null, position, velocity * 1f, ModContent.ProjectileType<LaserPointerSpark>(), 10, 0, Main.myPlayer);
 
             for (int aaaa = 0; aaaa > 3; aaaa++)
             {
@@ -368,17 +349,8 @@ namespace AerovelenceMod.Content.Items
             //Main.projectile[a].timeLeft = 50;
             return false;
 
-            for (int i2 = 0; i2 < 0; i2++)
-            {
-                int a2 = Projectile.NewProjectile(null, position + new Vector2(0, -15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                int b2 = Projectile.NewProjectile(null, position + new Vector2(0, 15).RotatedBy(velocity.ToRotation()), velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-                int c2 = Projectile.NewProjectile(null, position, velocity, ModContent.ProjectileType<BeaconShot>(), 3, 0, player.whoAmI);
-            }
-
-
             //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
             //SoundEngine.PlaySound(style, player.Center);
-
 
             if (Main.rand.NextBool(3))
             {

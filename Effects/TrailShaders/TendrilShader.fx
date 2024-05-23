@@ -62,7 +62,11 @@ float4 White(VertexShaderOutput input) : COLOR0
     //Get average of color
     float average = ((in_color.x + in_color.y + in_color.z) / 3.0);
     
-    return float4(better_color, in_color.a * average) * average * (1.0 - sqrt(input.TextureCoordinates.x));
+    float input_alpha = input.Color.a;
+    
+    return float4(better_color, in_color.a * average) * average * input_alpha;
+
+    //return float4(better_color, in_color.a * average) * average * (1.0 - sqrt(input.TextureCoordinates.x));
 }
 
 technique BasicColorDrawing

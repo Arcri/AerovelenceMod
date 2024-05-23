@@ -736,6 +736,7 @@ Projectiles: {
 	MarbleMusketHeldProjectile.DisplayName: Marble Musket Held Projectile
 	SmokeTest.DisplayName: Smoke Test
 	TendrilTest.DisplayName: Tendril Test
+	BeaconTendril.DisplayName: Beacon Tendril
 }
 
 Configs: {

@@ -141,10 +141,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		float alpha = 1f;
 		public override bool PreDraw(ref Color lightColor)
         {
+            
 			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-			foreach (StarParticle star in stars)
+            foreach (StarParticle star in stars)
             {
 				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value, blue ? Color.SkyBlue : Color.HotPink);
             }
@@ -165,8 +166,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Square(3, 3), Tex.Frame(1, 1, 0, 0), Color.HotPink * 0.5f * alpha, Projectile.rotation, Tex.Size() / 2, 1.4f * (1f - scale), SpriteEffects.None, 0f);
 			}
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            
 			return false;
         }
 
@@ -415,14 +417,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 			if (special) toAsset = "Assets/TrailImages/RainbowRod";//"Assets/Orbs/ElectricPopC";
 
-			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
 			Texture2D Flare = Mod.Assets.Request<Texture2D>(toAsset).Value;
-			//Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/ElectricPopDA").Value;
 
-			//Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
-			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
-
-			//Vector2 scale2 = new Vector2(scale * 0.5f, scale);
 			float rot = ((float)Main.timeForVisualEffects * 0.12f * Projectile.ai[0]) + Projectile.rotation;
 			float scale2 = scale * (pixel ? 3f : 1f) * 1f;
 
@@ -468,7 +464,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-			return false;
+			//Reset Again cuz rainbowrod bullshit
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            return false;
 		}
 	}
 
