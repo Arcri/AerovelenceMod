@@ -336,10 +336,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             SpriteEffects spriteEffects = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-            Vector2 actualPos = new Vector2((int)Projectile.Center.X, (int)Projectile.Center.Y) - new Vector2((int)Main.screenPosition.X, (int)Main.screenPosition.Y);
+            Vector2 actualPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
 
             Main.spriteBatch.Draw(texture, actualPos, null, lightColor, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
-            //Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(glowMask, actualPos, null, (Color.White with { A = 0 } * 0.3f) * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
 
             Color glowCol = Color.Lerp(Color.DarkRed, Color.Gold, SSGlowAmount);

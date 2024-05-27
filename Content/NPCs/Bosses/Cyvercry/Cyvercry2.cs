@@ -69,9 +69,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override void SetDefaults()
         {
-            ContactDamage = 80;
+            ContactDamage = 70;
             if (isExpert) ContactDamage = 100;
-            if (isMaster) ContactDamage = 120;
+            if (isMaster) ContactDamage = 130;
 
             NPC.lifeMax = 43110;
             NPC.damage = 105;
@@ -544,7 +544,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     if ((!fadeDashing || !NPC.hide) && !NPC.hide && whatAttack != 24) //!= BallDash
                     {
-                        for (int i = 0; i < 5; i++) //4 //2,2
+                        for (int i = 0; i < 0; i++) //5
                         {
                             Vector2 vel = NPC.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.2f, 0.2f)) * Main.rand.Next(5, 10) * -1f;
 
@@ -1822,12 +1822,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public bool spinningClockwise = false;
         float approachAccelValue = 0f;
+        bool firstSpin = true;
         public void SpinPhase3(Player myPlayer)
         {
-            int extraStartupTime = hasDoneMusicSync ? 0 : 0;
+            int extraStartupTime = firstSpin ? 40 : 0;
 
             if (!hasDoneMusicSync)
-                lineAlpha = Math.Clamp(lineAlpha + 0.0035f, 0f, 1f);
+                lineAlpha = Math.Clamp(lineAlpha + 0.0045f, 0f, 1f);
 
             //Do the normal startup
             phase3PulseColor = Color.White;
@@ -1870,15 +1871,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Turn towards player 
             else if (timer > 150 + extraStartupTime)
             {
-                if (timer == 151 + extraStartupTime && !hasDoneMusicSync)
+                if (timer == 151 + extraStartupTime + 5 && !hasDoneMusicSync)
                 {
                     lineAlpha = 1f;
-                    extraBoost = 3f;
-                    lineBonusSpeed = 2f;
                     overlayPower = 1.5f;
                     hasDoneMusicSync = true;
-
-                    Common.Systems.FlashSystem.SetCAFlashEffect(0.65f, 25, 1f, 0.45f, false, true);
                 }
 
                 ballScale = 0;
@@ -1982,6 +1979,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         phase3PulseColor = Color.White;
 
                         hasDoneMusicSync = true;
+                        firstSpin = false;
 
                         whatAttack = 15;
                         timer = -1;
