@@ -30,7 +30,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         {
             Item.damage = 80;
             Item.mana = 7;
-            Item.knockBack = 0;
             Item.width = 46;
             Item.height = 46;
             Item.knockBack = 5f;

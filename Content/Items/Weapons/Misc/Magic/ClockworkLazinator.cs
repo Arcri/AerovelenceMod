@@ -16,39 +16,44 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 {
     public class ClockworkLazinator : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            // Tooltip.SetDefault("");
-        }
         public override void SetDefaults()
         {
-            Item.DamageType = DamageClass.Magic;
-            Item.damage = 50;
-            Item.knockBack = 2;
-            Item.rare = ItemRarityID.Pink;
+            Item.damage = 42;
+            Item.knockBack = 4f; //Weak-Average Knockback
+            Item.mana = 5;
 
-            Item.shoot = ModContent.ProjectileType<LazinatorHeldProj>();
-            Item.shootSpeed = 10;
-            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.width = 74;
+            Item.height = 34;
 
             Item.useTime = 4;
             Item.useAnimation = 20;
             Item.reuseDelay = 10;
+            Item.shootSpeed = 10f;
+
+
+            Item.DamageType = DamageClass.Magic;
+            Item.rare = ItemRarities.PrePlantPostMech;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.shoot = ModContent.ProjectileType<LazinatorHeldProj>();
+            Item.value = Item.sellPrice(0, 4, 10, 0);
+
             Item.noMelee = true;
             Item.autoReuse = true;
-            Item.mana = 20;
             Item.noUseGraphic = true;
         }
         public override bool AltFunctionUse(Player player) => true;
 
-        public override Vector2? HoldoutOffset()
+        public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
         {
-            return new Vector2(-15, 0);
+            //Dont consume mana on right-click
+            if (player.altFunctionUse == 2)
+                mult *= 0;
         }
 
         public override bool CanUseItem(Player player)
@@ -69,8 +74,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 }
             }
 
-
-            return true;
+            //Don't let them use if they don't have enough for a full burst
+            return player.CheckMana(player.inventory[player.selectedItem], amount: player.inventory[player.selectedItem].mana * 5, pay: false); ;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -92,7 +97,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 9999;
         }
 
         public Vector2 endPoint = new Vector2(0,0);
@@ -103,6 +108,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         bool collided = false;
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = 5;
             Projectile.height = 5;
             Projectile.penetrate = -1;
@@ -121,73 +128,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Projectile.extraUpdates = 100;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            //ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            //Dust d = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Rotation.ToRotationVector2() * -6, ModContent.DustType<GlowCircleDust>(), Vector2.Zero, Color.HotPink, 0.4f, 0.4f, 0, dustShader);
-            //d.fadeIn = 3;
-
-            collided = true;
-            Projectile.velocity = Vector2.Zero;
-
-            for (int ia = 0; ia < 1 + (Main.rand.NextBool() ? 1 : 0); ia++)
-            {
-                Vector2 speed = new Vector2(5, 0).RotatedBy(Rotation);
-                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
-                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
-                extraInfo.gravityIntensity = 0.1f;
-                Main.dust[a].fadeIn = 0.5f;
-                Main.dust[a].alpha = 53;
-                Main.dust[a].customData = extraInfo;
-            }
-            return false;
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-
-            for (int ia = 0; ia < 2; ia++)
-            {
-                Vector2 speed = new Vector2(-7, 0).RotatedBy(Rotation);
-                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
-                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
-                extraInfo.gravityIntensity = 0.05f;
-                Main.dust[a].fadeIn = 0.3f;
-                Main.dust[a].alpha = 50;
-                Main.dust[a].customData = extraInfo;
-            }
-
-            //Dust
-            for (int i = 0; i < 3 - Main.rand.Next(0, 2); i++) //4 //2,2
-            {
-                Vector2 vel = new Vector2(-8, 0).RotatedBy(Rotation);
-
-                Dust p = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LineSpark>(),
-                    vel.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.15f, 0.15f)) * Main.rand.Next(7, 18),
-                    newColor: Color.HotPink, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.3f);
-
-                p.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
-                    1f, 0.5f);
-            }
-
-            collided = true;
-            Projectile.velocity = Vector2.Zero;
-        }
-
-        public override bool? CanDamage()
-        {
-            return !collided;
-        }
+        public override bool? CanDamage() { return !collided; }        
 
         public override void AI()
         {
             if (timer == 0)
             {
                 Rotation = Projectile.velocity.ToRotation() + MathHelper.Pi;
-
                 endPoint = Projectile.Center;
-                //if (endPoint == new Vector2(0,0))
-                    //endPoint = Projectile.Center;
             }
 
             if (collided)
@@ -237,14 +185,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 if (height == 0f)
                     Projectile.active = false;
 
-                //int width = (int)(Projectile.Center - endPoint).Length() - 24;
-
-                //var pos = Projectile.Center - Main.screenPosition;
-                //var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
-                
-                //Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
-                //Main.spriteBatch.Draw(texBeam, target, null, Color.DeepPink, Rotation, origin2, 0, 0);
-
                 float distance = (Projectile.Center - endPoint).Length() / 256f;
 
                 Vector2 v2Scale = new Vector2(distance, height);
@@ -268,8 +208,58 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             return false;
             
         }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            collided = true;
+            Projectile.velocity = Vector2.Zero;
+
+            for (int ia = 0; ia < 1 + (Main.rand.NextBool() ? 1 : 0); ia++)
+            {
+                Vector2 speed = new Vector2(5, 0).RotatedBy(Rotation);
+                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
+                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                extraInfo.gravityIntensity = 0.1f;
+                Main.dust[a].fadeIn = 0.5f;
+                Main.dust[a].alpha = 53;
+                Main.dust[a].customData = extraInfo;
+            }
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+
+            for (int ia = 0; ia < 2; ia++)
+            {
+                Vector2 speed = new Vector2(-7, 0).RotatedBy(Rotation);
+                int a = Dust.NewDust(Projectile.position, 5, 5, ModContent.DustType<ColorSpark>(), SpeedX: speed.X, SpeedY: speed.Y, newColor: Color.HotPink, Scale: 0.3f);
+                ColorSparkBehavior extraInfo = new ColorSparkBehavior();
+                extraInfo.gravityIntensity = 0.05f;
+                Main.dust[a].fadeIn = 0.3f;
+                Main.dust[a].alpha = 50;
+                Main.dust[a].customData = extraInfo;
+            }
+
+            //Dust
+            for (int i = 0; i < 3 - Main.rand.Next(0, 2); i++) //4 //2,2
+            {
+                Vector2 vel = new Vector2(-8, 0).RotatedBy(Rotation);
+
+                Dust p = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LineSpark>(),
+                    vel.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.15f, 0.15f)) * Main.rand.Next(7, 18),
+                    newColor: Color.HotPink, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.3f);
+
+                p.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
+                    1f, 0.5f);
+            }
+
+            collided = true;
+            Projectile.velocity = Vector2.Zero;
+        }
     }
 
+    //Why did i do it like this
     public class LazinatorHeldProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -283,27 +273,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public bool hasReachedDestination = false;
         public bool ShouldFire = true;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Lazinator");
-        }
+
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 50; //50
+            Projectile.timeLeft = 50;
             Projectile.width = Projectile.height = 20;
+            Projectile.penetrate = -1;
+
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Magic;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() { return false; }
+
         bool firstFrame = true;
         public override void AI()
         {
@@ -341,17 +327,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     //Dust
                     for (int i = 0; i < 4 - Main.rand.Next(0, 2); i++) //4 //2,2
                     {
-                        Dust p = Dust.NewDustPerfect(pos, ModContent.DustType<LineSpark>(),
+                        Dust dp = Dust.NewDustPerfect(pos, ModContent.DustType<LineSpark>(),
                             vel.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.Next(7, 18),
                             newColor: Color.HotPink, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.35f);
 
-                        p.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
+                        dp.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
                             1f, 0.5f);
 
                     }
 
                     glowIntensity = 1f;
                     drawXScale = 0.85f;
+
+                    Player p = Main.player[Projectile.owner];
+
+                    if (!p.CheckMana(p.inventory[p.selectedItem], pay: true))
+                    {
+                        Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = 0;
+                        Projectile.active = false;
+                    }
                 }
             }
 
@@ -428,7 +422,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             Vector2 drawScale = new Vector2(drawXScale, 1f);
 
-            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
             Vector2 drawOffset = new Vector2(0f, 2f * Player.direction).RotatedBy(Projectile.rotation); //This helps the bullets better align with the muzzle
 
             Main.spriteBatch.Draw(Weapon, drawPos + drawOffset, null, lightColor * alpha, Projectile.rotation, Weapon.Size() / 2, drawScale, mySE, 0f);
@@ -479,14 +473,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                         SoundEngine.PlaySound(style, Projectile.Center);
                         SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_72") with { Volume = .75f, Pitch = .6f, }; 
                         SoundEngine.PlaySound(style2, Projectile.Center);
-                        //SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TwinsDual_Union04") with { Volume = 0.8f, Pitch = 0.35f };
-                        //SoundEngine.PlaySound(style3, Projectile.Center);
+
 
                         SoundStyle style4 = new SoundStyle("Terraria/Sounds/Item_149") with { Pitch = .7f, Volume = 1f };
                         SoundEngine.PlaySound(style4, Projectile.Center);
 
                         pinkGlowPower = 1f;
-                        //Projectile.active = false;
                     }
                     else
                     {
@@ -499,10 +491,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                         glowIntensity = 1f;
                     }
 
-                    //SoundStyle styl2e = new SoundStyle("Terraria/Sounds/Item_82") with { Volume = .4f, Pitch = .33f }; SoundEngine.PlaySound(styl2e, Projectile.Center);
-                    //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_75") with { Volume = .7f, Pitch = .33f, };
-                    //SoundEngine.PlaySound(style2, Projectile.Center);
-                    //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_72") with { Volume = .19f, Pitch = .33f, }; SoundEngine.PlaySound(style2, Projectile.Center);
                 }
 
                 windUpPercent = Math.Clamp((windUpTimer - 20) * 0.3f, 0, MathHelper.TwoPi); 
@@ -522,14 +510,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     if (shouldKill || maxWind)
                         Projectile.active = false;
 
-                    //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_108") with { Pitch = .33f, PitchVariance = 0.2f, Volume = 0.65f };
-                    //SoundEngine.PlaySound(style, Projectile.Center);
-
-
                 }
             }
             windUpValue = (float)Math.Sin(windUpPercent) * 0.4f;
-
 
             Main.player[Projectile.owner].SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - Main.player[Projectile.owner].Center).ToRotation() - MathHelper.PiOver2 + windUpValue);
 

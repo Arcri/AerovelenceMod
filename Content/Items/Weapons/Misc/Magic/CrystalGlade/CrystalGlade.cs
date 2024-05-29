@@ -21,26 +21,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         public override void SetDefaults()
         {
             Item.damage = 47;
-            Item.knockBack = 2f;
-            Item.width = 30;
-            Item.height = 34;
-
-            Item.DamageType = DamageClass.Magic;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.shoot = ModContent.ProjectileType<CrystalGladeHeld>();
-
+            Item.knockBack = KnockbackTiers.Average;
+            Item.mana = 9;
 
             Item.useAnimation = 18;
             Item.useTime = 18;
-            //Item.reuseDelay = 4;
             Item.shootSpeed = 10f;
 
+            Item.width = 34;
+            Item.height = 38;
+
+            Item.DamageType = DamageClass.Magic;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.rare = ItemRarities.PlanteraGolemTier;
+            Item.shoot = ModContent.ProjectileType<CrystalGladeHeld>();
+            Item.value = Item.sellPrice(0, 4, 90, 0);
 
             Item.noMelee = true;
             Item.channel = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
-
         }
         public override void AddRecipes()
         {
@@ -54,6 +54,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
         public override bool AltFunctionUse(Player player) {  return true; }
 
+        public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
+        {
+            if (player.altFunctionUse == 2)
+                mult = 2f;
+        }
+
         public override float UseTimeMultiplier(Player player)
         {
             if (player.altFunctionUse == 2)
@@ -64,8 +70,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //Projectile.NewProjectile(source, position, velocity * 0.5f, ModContent.ProjectileType<CrystalGladeShot>(), damage, knockback, player.whoAmI);
-
             if (player.altFunctionUse == 2)
             {
                 foreach (Projectile p in Main.projectile)
@@ -102,6 +106,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                     }
                 }
 
+                //Shoot normally
                 if (!found)
                 {
                     Projectile.NewProjectile(source, position, velocity * 0.5f, ModContent.ProjectileType<CrystalGladeShot>(), damage, knockback, player.whoAmI);
@@ -115,8 +120,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
                     SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = 0f, PitchVariance = .1f, Volume = 0.35f };
                     SoundEngine.PlaySound(style2, player.Center);
 
-                    //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = .07f, PitchVariance = .12f, Volume = 0.5f, MaxInstances = -1 };
-                    //SoundEngine.PlaySound(style2, position);
                 }
 
             }
@@ -141,15 +144,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         {
             Projectile.DamageType = DamageClass.Magic;
 
-
-            Projectile.hostile = false;
             Projectile.width = 2;
             Projectile.height = 2;
             Projectile.aiStyle = -1;
-            Projectile.friendly = true;
             Projectile.penetrate = -1;
-            Projectile.tileCollide = false;
             Projectile.timeLeft = 999999;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
         public override bool? CanDamage() { return false; }
@@ -178,20 +181,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Texture2D GlowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/CrystalGlade/CrystalGladeNewGlowmask").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/CrystalGlade/CrystalGladeNewWhite2").Value;
 
-
             Vector2 position = (owner.Center + (currentDirection * 10)) - Main.screenPosition;
             position.Y += owner.gfxOffY;
-            //position = new Vector2((int)position.X, (int)position.Y);
-
 
             float rotation = currentDirection.ToRotation() + (owner.direction == 1 ? 0 : -MathF.PI);
             SpriteEffects SE = (owner.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
 
-
             Main.spriteBatch.Draw(Texture, position, null, lightColor, rotation, Texture.Size() / 2, 1f, SE, 0.0f);
             Main.spriteBatch.Draw(GlowMask, position, null, Color.White, rotation, Texture.Size() / 2, 1f, SE, 0.0f);
             Main.spriteBatch.Draw(Glow, position, null, Color.MediumSeaGreen with { A = 0 } * glowIntensity * 0.8f, rotation, Glow.Size() / 2, 1f, SE, 0.0f);
-            //Main.spriteBatch.Draw(Glow, position, null, Color.DarkGreen with { A = 0 } * glowIntensity * 2f, rotation, Glow.Size() / 2, 1f, SE, 0.0f);
 
             return false;
         }
@@ -223,8 +221,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
         public override void AI()
         {
-            if (timer < 25 && timer > 5) //30 10  1.1f
+            if (timer < 25 && timer > 5) 
                 Projectile.velocity *= 1.105f;
+
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
 
@@ -277,16 +276,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
         public override void OnKill(int timeLeft)
         {
-
-            //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_1") with { Pitch = 2f, Volume = 0.5f, PitchVariance = 0.2f, MaxInstances = -1 };
-            //SoundEngine.PlaySound(style, Projectile.Center);
-
-            //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_2") with { Pitch = 0f, Volume = 0.35f, PitchVariance = 0.2f, MaxInstances = -1 };
-            //SoundEngine.PlaySound(style2, Projectile.Center);
-
-            //SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_death_1") with { Pitch = .35f, Volume = 0.85f, PitchVariance = 0.25f, MaxInstances = -1 };
-            //SoundEngine.PlaySound(style3, Projectile.Center);
-
             SoundStyle style4 = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_crystal_impact_1") with { Pitch = 0f, PitchVariance = .25f, MaxInstances = 0, Volume = 0.5f }; 
             SoundEngine.PlaySound(style4, Projectile.Center);
 
@@ -315,14 +304,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
             if (Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike == true)
             {
-                Color col = hit.Crit == true ? Color.DeepPink : Color.Gold;
+                Color col = Color.Gold;
                 for (int i = 0; i < 3; i++)
                 {
                     Vector2 randomStart = Main.rand.NextVector2CircularEdge(2f, 2f) * 1.75f;
                     Dust dust1 = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowStrong>(), randomStart * Main.rand.NextFloat(0.9f, 1.5f));
                     dust1.velocity += (Projectile.velocity * 0.25f);
                     dust1.scale = 0.3f;
-                    dust1.alpha = 2;
+                    dust1.alpha = 0; //2
                     dust1.color = col;
                 }
             }
@@ -330,6 +319,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
     }
 
+    //THis is the little vfx pulse the star does
     public class CrystalGladePulse : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -352,11 +342,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Projectile.extraUpdates = 1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
-
+        public override bool? CanDamage() { return false; }
+        
         int timer = 0;
         float scale = 0;
         float alpha = 1;

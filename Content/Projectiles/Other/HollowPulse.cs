@@ -19,11 +19,6 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public Color color = Color.White;
 		public float size = 1f;
 		public bool oval = false;
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Hollow Pulse");
-
-		}
 
         public override void SetDefaults()
 		{
@@ -39,11 +34,8 @@ namespace AerovelenceMod.Content.Projectiles.Other
 
 		}
 
-		public override bool? CanDamage()
-		{
-			return false;
-		}
-
+        public override bool? CanDamage() { return false; }
+	
 		public override void AI()
         {
 			Player player = Main.player[Projectile.owner];

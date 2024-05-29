@@ -17,7 +17,7 @@ using AerovelenceMod.Content.Projectiles.Other;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 
-namespace AerovelenceMod.Content.Items.Weapons.HandBlades
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
 {
     public class TetraBlades : ModItem
     {
@@ -32,25 +32,24 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         public override void SetDefaults()
         {
             Item.damage = 50;
-            Item.DamageType = DamageClass.Melee;
-
-            Item.width = 28;
-            Item.height = 28;
-
+            Item.knockBack = KnockbackTiers.Weak;
             Item.useTime = 20;
             Item.useAnimation = 20;
+            Item.shootSpeed = 13f;
+
+            Item.width = 34;
+            Item.height = 34;
+            Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 2;
 
             Item.value = Item.sellPrice(0, 3, 0, 0);
-            Item.rare = Common.ItemStatHelper.RarityPreMechs;
-
-            Item.autoReuse = false;
+            Item.rare = ItemRarities.EarlyHardmode;
             Item.shoot = ModContent.ProjectileType<TetraBladeStrike>();
-            Item.shootSpeed = 10f;
-            Item.noUseGraphic = true;
             Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0.35f, Pitch = 0.8f, PitchVariance = 0.1f };
+
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
         }
 
         public override void AddRecipes()
@@ -77,23 +76,22 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             if (dashRefreshCounter == 0)
             {
                 dashes = 4;
-                //CombatText.NewText(new Rectangle((int)player.Center.X, (int)player.Center.Y, 2, 2), Color.Green, "Dashes Refreshed!", false, true);
 
                 int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<TetraBladeRefreshFX>(), 0, 0, Main.myPlayer);
                 SoundEngine.PlaySound(new SoundStyle("Terraria/Sounds/Custom/dd2_phantom_phoenix_shot_2") with { Pitch = .76f, Volume = 0.8f}, player.Center);
 
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_06") with { Pitch = .5f, Volume = 0.05f }; 
                 SoundEngine.PlaySound(style, player.Center);
-                //dashRefreshCounter = -1;
             }
 
-            //dust while dashing
+            //Dust while dashing
             if (dashRefreshCounter > 80 && dashRefreshCounter % 2 == 0)
             {
-                int a = Dust.NewDust(player.position, player.width, player.height, ModContent.DustType<DashTrailDust>(), player.velocity.X * 0.1f, player.velocity.Y * 0.1f,  newColor: Color.White, Scale: 1f);
-                Main.dust[a].velocity = player.velocity * 0.1f;
-                Main.dust[a].scale = 1f;
+                int p = Dust.NewDust(player.position, player.width, player.height, ModContent.DustType<LineSpark>(), player.velocity.X * 0.1f, player.velocity.Y * 0.1f, newColor: Color.White, Scale: 0.25f);
+                Main.dust[p].customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 40, 
+                    0.9f, 0.35f);
 
+                Main.dust[p].velocity = player.velocity * 0.15f;
             }
 
             if (player.itemAnimation == 0)
@@ -111,11 +109,6 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 modPlayer.useStyleInt++;
             }
             return true;
-        }
-
-        public override bool CanShoot(Player player)
-        {
-            return base.CanShoot(player);// && player.GetModPlayer<AeroPlayer>().useStyleInt != 0 && !player.controlUseItem && player.itemAnimation < player.itemAnimationMax && player.GetModPlayer<AeroPlayer>().useStyleData.Equals(true);
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
@@ -147,8 +140,6 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //col = new Color(141, 13, 184);
-            //col = new Color(210, 101, 255);
             if (player.altFunctionUse == 2)
             {
                 doubleAttackCount = 10;
@@ -157,7 +148,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
             if (!dash)
             {
-                float rotationOffset = doubleAttackCount > 0 ? Main.rand.NextFloat(-0.1f, 0.2f) : Main.rand.NextFloat(-0.3f, 0.4f);
+                float rotationOffset = Main.rand.NextFloat(-0.1f, 0.1f);
 
                 velocity = velocity.RotatedBy(rotationOffset);
                 int a = Projectile.NewProjectile(source, position + velocity * 3, Vector2.Zero, ModContent.ProjectileType<TetraBladeStrike>(), damage, knockback, Main.myPlayer);
@@ -170,19 +161,10 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 if (dashes == 0)
                 {
                     SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f);
-                    /*
-                    Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                    Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                    Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.glowTargetCenter;
-                    Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().impactScale = 0.35f;
-                    Main.projectile[a].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.9f;
-                    */
                 }
-
 
                 for (int i = 0; i < 3 + (Main.rand.NextBool() ? 1 : 0); i++)
                 {
-
                     Dust d = Dust.NewDustPerfect(player.Center + velocity * 1, ModContent.DustType<GlowPixelAlts>(), newColor: col, Scale: 0.4f + Main.rand.NextFloat(-0.1f, 0.2f));
                     d.alpha = 2;
                     d.velocity = velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(2f, 4f);
@@ -200,8 +182,11 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 modPlayer.useStyleInt = 0;
                 modPlayer.useStyleData = false;
 
+                float soundPitch = -0.07f;
+
                 if (doubleAttackCount > 0)
                 {
+                    soundPitch = 0.05f;
                     if (doubleAttackCount == 10)
                     {
                         player.itemAnimation = 10;
@@ -211,16 +196,8 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                 }
                 SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing with { Volume = 0.35f, Pitch = 0.8f, PitchVariance = 0.1f }, player.Center);
 
-                SoundStyle styl1e = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_06") with { Pitch = .1f, PitchVariance = .42f, MaxInstances = 0, Volume = 0.1f}; 
-                SoundEngine.PlaySound(styl1e, player.Center);
-
-
-                SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/katana_impact_object_03") with { Volume = .17f, Pitch = .2f, PitchVariance = 0.2f, MaxInstances = 0 };
-                SoundEngine.PlaySound(style2, player.Center);
-
-                //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Heavy_M_a") with { Pitch = .14f, PitchVariance = .16f, Volume = 0.25f, MaxInstances = -1 };
-                //SoundEngine.PlaySound(style, player.Center);
-
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/Metallic/joker_stab1") with { Volume = .25f, Pitch = soundPitch, PitchVariance = 0.1f, MaxInstances = -1 }; 
+                SoundEngine.PlaySound(style, player.Center);
 
             }
             else
@@ -230,16 +207,13 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                     Vector2 mousePos = Main.MouseWorld;
                     player.velocity = (mousePos - player.Center).SafeNormalize(Vector2.UnitX) * 10; //12
 
-                    for (int m = 0; m < 2; m++)
+
+                    int b = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -0.5f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    Main.projectile[b].rotation = velocity.ToRotation();
+                    if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
                     {
-                        int a = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -0.5f, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
-                        Main.projectile[a].rotation = player.velocity.ToRotation();
-                        if (Main.projectile[a].ModProjectile is HollowPulse pulse)
-                        {
-                            pulse.color = Color.White;
-                            pulse.oval = true;
-                            pulse.size = 1f;
-                        }
+                        pulseb.color = Color.White;
+                        pulseb.size = 0.25f;
                     }
 
                     int afg = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -1f, ModContent.ProjectileType<DistortProj>(), 0, 0);
@@ -261,29 +235,16 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
                     dashes--;
                     dashRefreshCounter = 100;
 
-                    for (int i = 0; i < 1; i++) //4 //2,2
+
+                    for (int i = 0; i < 5; i++)
                     {
-                        ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                        Vector2 vel = velocity.RotatedBy(0);
+                        Vector2 vel = velocity.RotatedBy(Main.rand.NextFloat(-0.5f, 0.5f));
 
-                        Dust p = GlowDustHelper.DrawGlowDustPerfect(player.Center, ModContent.DustType<GlowCircleQuadStar>(), vel.SafeNormalize(Vector2.UnitX) * (-8f + Main.rand.NextFloat(-1f, 1f) + i),
-                            Color.White, Main.rand.NextFloat(0.1f * 3, 0.3f * 3), 0.4f, 0f, dustShader);
-                        p.noLight = false;
-                        //p.velocity += NPC.velocity * (0.8f + Main.rand.NextFloat(-0.1f, -0.2f));
-                        p.fadeIn = 10 + Main.rand.NextFloat(-5, 10);
-                        p.velocity *= 0.4f;
-                    }
+                        Dust p = Dust.NewDustPerfect(player.Center, ModContent.DustType<LineSpark>(), vel.SafeNormalize(Vector2.UnitX) * (-8f + Main.rand.NextFloat(-1f, 1f)),
+                            newColor: Color.White, Scale: 0.45f);
 
-                    for (int i = 0; i < 7; i++) //4 //2,2
-                    {
-                        ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                        Vector2 vel = velocity.RotatedBy(Main.rand.NextFloat(-1f, 1f));
-
-                        Dust p = GlowDustHelper.DrawGlowDustPerfect(player.Center, ModContent.DustType<GlowLine1Fast>(), vel.SafeNormalize(Vector2.UnitX) * (-8f + Main.rand.NextFloat(-1f, 1f)),
-                            Color.White, Main.rand.NextFloat(0.07f * 0.75f, 0.2f * 0.75f), 0.5f, 0f, dustShader);
-                        p.noLight = false;
-                        p.fadeIn = 10 + Main.rand.NextFloat(-10, 15);
-                        p.velocity *= 0.4f;
+                        p.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.92f, preShrinkPower: 0.97f, postShrinkPower: 0.85f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 20,
+                            0.5f, 0.35f);
                     }
                 }
 
@@ -364,17 +325,10 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
             dash = false;
         }
 
-
-        public override bool CanUseItem(Player player)
-        {
-
-            return true;
-        }
     }
 
     public class TetraBladeRefreshFX : ModProjectile
     {
-
         public override string Texture => "Terraria/Images/Projectile_0";
 
         int timer = 0;
@@ -383,12 +337,14 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         {
             Projectile.width = 8;
             Projectile.height = 8;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.scale = 0.3f;
             Projectile.timeLeft = 1000;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
+            Projectile.hide = true;
         }
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
@@ -420,6 +376,7 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
             timer++;
         }
+
         public override bool PreDraw(ref Color lightColor)
         {
             if (timer == 0) return false;
@@ -434,17 +391,15 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
 
             Vector2 vec2Scale = new Vector2(scale, scale) * 0.35f;
 
-            Vector2 drawPos = Main.GetPlayerArmPosition(Projectile) - Main.screenPosition;
+            Vector2 drawPos = Main.GetPlayerArmPosition(Projectile) - Main.screenPosition - new Vector2(0f, player.gfxOffY);
 
 
             //If the player is using the tetras we need to adjust the draw because ^ doesn't account for composite arms
-
-
             if (player.itemAnimation > 1)
             {
                 TetraPlayer modPlayer = player.GetModPlayer<TetraPlayer>();
 
-                drawPos = player.GetFrontHandPosition((Player.CompositeArmStretchAmount)modPlayer.stretchAmount, modPlayer.frontArmRotation) - Main.screenPosition;
+                drawPos = player.GetFrontHandPosition((Player.CompositeArmStretchAmount)modPlayer.stretchAmount, modPlayer.frontArmRotation) - Main.screenPosition + new Vector2(0f, player.gfxOffY);
             }
 
 
@@ -472,6 +427,5 @@ namespace AerovelenceMod.Content.Items.Weapons.HandBlades
         //Literally just need to sync this info between the wep and the refresh effect
         public float frontArmRotation = 0f;
         public int stretchAmount = 0;
-
     }
 }
