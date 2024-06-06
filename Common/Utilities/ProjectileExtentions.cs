@@ -58,5 +58,16 @@ namespace AerovelenceMod.Common.Utilities
 
 		#endregion
 
-	}
+		public static void KillHeldProjIfPlayerDeadOrStunned(Projectile p)
+		{
+            Player Player = Main.player[p.owner];
+
+            // Kill the projectile if the player dies or gets crowd controlled
+            if (!Player.active || Player.dead || Player.noItems || Player.CCed)
+            {
+                p.active = false;
+            }
+        }
+
+    }
 }

@@ -12,6 +12,7 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
@@ -103,7 +104,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         {
             Player player = Main.player[Projectile.owner];
 
+
             #region heldProjStuff
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             Projectile.velocity = Vector2.Zero;
             Projectile.timeLeft = 2;

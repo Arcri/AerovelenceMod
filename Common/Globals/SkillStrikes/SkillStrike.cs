@@ -98,8 +98,11 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
             }
             else
             {
+                
                 //Do normal skill strike stuff
             }
+
+            Main.NewText("SkillStrike! - " + hit.Damage, Color.White);
 
             if (impactType == SkillStrikeImpactType.Basic)
             {

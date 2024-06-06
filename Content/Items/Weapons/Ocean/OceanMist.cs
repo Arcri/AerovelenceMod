@@ -17,6 +17,7 @@ using Terraria.Audio;
 using System.Reflection.PortableExecutable;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using System.Threading;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
@@ -104,9 +105,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             // Kill the projectile if the player dies or gets crowd controlled
             if (!Player.active || Player.dead || Player.noItems || Player.CCed)
             {
-                Projectile.Kill();
+                Projectile.active = false;
                 return;
             }
+
+            //KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             //Get angle to mouse
             if (Projectile.owner == Main.myPlayer)

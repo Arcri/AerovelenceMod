@@ -831,10 +831,9 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
             //Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
-            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
-            Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Extra_196_Black").Value;            
+            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/Trail5Loop").Value;
+            Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;            
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStar").Value;
             if (myEffect == null)
                 myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
@@ -862,10 +861,10 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             //Main layer
             myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
-            myEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector3() * 4f);
+            myEffect.Parameters["ColorOne"].SetValue(Color.DeepSkyBlue.ToVector3() * 2f);
 
-            myEffect.Parameters["glowThreshold"].SetValue(0.8f);
-            myEffect.Parameters["glowIntensity"].SetValue(1.4f);
+            myEffect.Parameters["glowThreshold"].SetValue(0.5f);
+            myEffect.Parameters["glowIntensity"].SetValue(1.3f);
 
 
             myEffect.CurrentTechnique.Passes["MainPS"].Apply();
@@ -874,10 +873,10 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             //Layer 2
             myEffect.Parameters["TrailTexture"].SetValue(trailTexture2);
-            myEffect.Parameters["ColorOne"].SetValue(Color.OrangeRed.ToVector3() * 4f);
+            myEffect.Parameters["ColorOne"].SetValue(Color.SkyBlue.ToVector3() * 2f);
 
-            myEffect.Parameters["glowThreshold"].SetValue(0.5f);
-            myEffect.Parameters["glowIntensity"].SetValue(1.8f);
+            myEffect.Parameters["glowThreshold"].SetValue(0.9f);
+            myEffect.Parameters["glowIntensity"].SetValue(1.1f);
 
 
             myEffect.CurrentTechnique.Passes["MainPS"].Apply();
@@ -904,7 +903,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, 1f - progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 140f, Easings.easeInCirc(num)) * 1.15f; // 0.3f 
+            return MathHelper.Lerp(0f, 100f, Easings.easeInCirc(num)) * 0.5f; // 0.3f 
         }
 
         public Color StripColorBlack(float progress)
@@ -922,7 +921,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             float num = 1f;
             float lerpValue = Utils.GetLerpValue(0f, 0.4f, 1f - progress, clamped: true);
             num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, 60f, Easings.easeInCirc(num)) * 1f; // 0.3f 
+            return MathHelper.Lerp(0f, 90f, Easings.easeInCirc(num)) * 2f; // 0.3f 
         }
     }
 

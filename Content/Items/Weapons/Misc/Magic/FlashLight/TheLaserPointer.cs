@@ -15,6 +15,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Terraria.Graphics.Shaders;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
@@ -114,6 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             if (timer == 0)
                 Projectile.ai[0] = player.direction;

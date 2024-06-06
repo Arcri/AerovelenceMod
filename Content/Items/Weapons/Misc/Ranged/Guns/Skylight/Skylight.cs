@@ -6,17 +6,15 @@ using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Mono.Cecil;
 using ReLogic.Content;
 using System;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.PlayerDrawLayer;
 using static Terraria.NPC;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 {
@@ -25,26 +23,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         public override void SetDefaults()
         {
             Item.damage = 95;
-            Item.DamageType = DamageClass.Ranged;
-            Item.knockBack = 0;
+            Item.knockBack = KnockbackTiers.Average;
 
-            Item.width = 46;
+            Item.width = 76;
             Item.height = 28;
-            Item.useTime = 10;
+
+            Item.useTime = 30;
             Item.useAnimation = 30;
 
+            Item.DamageType = DamageClass.Ranged;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.value = Item.sellPrice(0, 9, 0, 0);
-            Item.rare = ItemRarityID.Orange;
+            Item.rare = ItemRarityID.Yellow;
 
             Item.shoot = ModContent.ProjectileType<SkylightElectricShot>();
-            Item.shootSpeed = 2f;
+            Item.shootSpeed = 12f;
 
             Item.channel = true;
             Item.autoReuse = true;
             Item.noUseGraphic = true;
             Item.noMelee = true;
-
         }
 
         public override bool AltFunctionUse(Player Player) { return true; }
@@ -72,28 +70,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         int timer = 0;
         int burstTimer = 0;
         float recoilTimer = 20;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Adamantite Pulsar");
-        }
+
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 999999;
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = Projectile.height = 20;
+            Projectile.scale = 1f;
+            Projectile.penetrate = -1;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
+        public override bool? CanCutTiles() => false;
+    
         Vector2 offset = Vector2.Zero;
 
         float recoilAngle = 0f;
@@ -101,6 +96,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             if (timer == 0)
                 Projectile.velocity = player.DirectionTo(Main.MouseWorld);
@@ -120,8 +117,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             Projectile.rotation += recoilAngle * -player.direction;
 
-            //Projectile.velocity = player.DirectionTo(Main.MouseWorld);
-
             Projectile.timeLeft = 2;
 
             offset = Vector2.Lerp(offset, new Vector2(10, 0), 0.3f);    //new Vector2(10, 0);
@@ -131,6 +126,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             player.ChangeDir(Projectile.direction);
 
 
+            //Shoot the solo shot
             if (burstTimer % 19 == 0 && burstTimer > 0 && burstTimer < 85)
             {
                 Projectile.velocity = player.DirectionTo(Main.MouseWorld);
@@ -146,17 +142,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/lightning_flash_01") with { Pitch = 1f, PitchVariance = 0.2f, Volume = 0.4f };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
-                for (int m = 0; m < 5; m++) // m < 8
+                //Line Dust on shot
+                for (int m = 0; m < 5; m++) 
                 {
-
                     Color col = new Color(0, 155, 255);
-                    //Color.DodgerBlue
                     Dust d = Dust.NewDustPerfect(Projectile.Center + Projectile.velocity * 25, ModContent.DustType<MuraLineDust>(),
                         Projectile.velocity.RotatedBy(Main.rand.NextFloat(-0.12f, 0.12f)) * Main.rand.NextFloat(1, 5) * 2, newColor: col, Scale: 0.3f + Main.rand.NextFloat(0, 0.2f));
                     d.alpha = 2; //Dust color will fade out
                 }
 
-                for (int m = 0; m < 6; m++) // m < 9
+                //Orb dust on shot
+                for (int m = 0; m < 6; m++) 
                 {
                     float rotAdd = (Main.rand.NextBool() ? 0.5f : -0.5f) + Main.rand.NextFloat(-0.22f, 0.22f);
 
@@ -166,10 +162,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 }
 
                 glowVal = 1;
-                offset = new Vector2(2, 0);
+
+                //Recoil
+                offset = new Vector2(2, 0); 
                 recoilTimer = 0;
             }
 
+
+            //Shoot the rapid shots
             if (burstTimer == 85 || burstTimer == 90 || burstTimer == 95 || burstTimer == 100) {
 
                 Projectile.velocity = player.DirectionTo(Main.MouseWorld);
@@ -190,14 +190,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
                 SoundStyle style3 = new SoundStyle("Terraria/Sounds/Item_106") with { Volume = .2f, Pitch = .82f, }; SoundEngine.PlaySound(style3, Projectile.Center);
 
-                for (int m = 0; m < 6; m++) //6
+                //Line Dust
+                for (int m = 0; m < 6; m++) 
                 {
-
                     Dust d = Dust.NewDustPerfect(Projectile.Center + Projectile.velocity * 25, ModContent.DustType<GlowStrong>(),
                         Projectile.velocity.RotatedBy(Main.rand.NextFloat(-0.12f, 0.12f)) * Main.rand.NextFloat(1, 5) * 2, newColor: Color.DodgerBlue, Scale: 0.3f + Main.rand.NextFloat(0, 0.2f));
                     d.alpha = 2; //Dust color will fade out
                 }
 
+                //Orb dust
                 for (int m = 0; m < 4; m++) 
                 {
                     float rotAdd = (Main.rand.NextBool() ? 0.5f : -0.5f) + Main.rand.NextFloat(-0.22f, 0.22f);
@@ -208,6 +209,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 }
 
                 glowVal = 1;
+
+                //Recoil gun
                 recoilTimer = 0;
                 offset = new Vector2(2, 0);
 
@@ -297,11 +300,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = 20;
             Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
 
@@ -404,26 +409,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
             Texture2D DiamondGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/DiamondGlow");
 
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Vector2 pos = Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -6;
+
+            Vector2 glowScale1 = new Vector2(Projectile.scale * 0.7f, Projectile.scale) * 0.4f * scale;
+            Vector2 glowScale2 = new Vector2(Projectile.scale * 0.6f, Projectile.scale) * 0.3f * scale;
+            Vector2 glowScale3 = new Vector2(Projectile.scale * 0.4f, Projectile.scale) * 0.35f * scale;
+
+            float rot = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+
+            Main.spriteBatch.Draw(Ball, pos, null, Color.DeepSkyBlue * alpha * 0.26f, rot, Ball.Size() / 2, Projectile.scale * 0.25f * scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ball, pos, null, Color.SkyBlue * alpha * 0.35f, rot, Ball.Size() / 2, Projectile.scale * 0.18f * scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Ball, pos, null, Color.White * alpha * 0.2f, rot, Ball.Size() / 2, Projectile.scale * 0.12f * scale, SpriteEffects.None, 0f);
 
 
+            Main.spriteBatch.Draw(DiamondGlow, pos, null, Color.DeepSkyBlue * alpha, rot, DiamondGlow.Size() / 2, glowScale1, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(DiamondGlow, pos, null, Color.SkyBlue * alpha, rot, DiamondGlow.Size() / 2, glowScale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(DiamondGlow, pos, null, Color.White * alpha, rot, DiamondGlow.Size() / 2, glowScale3, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.DeepSkyBlue * alpha * 0.26f, Projectile.velocity.ToRotation() - MathHelper.PiOver2, Ball.Size() / 2, Projectile.scale * 0.25f * scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.SkyBlue * alpha * 0.35f, Projectile.velocity.ToRotation() - MathHelper.PiOver2, Ball.Size() / 2, Projectile.scale * 0.18f * scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.White * alpha * 0.2f, Projectile.velocity.ToRotation() - MathHelper.PiOver2, Ball.Size() / 2, Projectile.scale * 0.12f * scale, SpriteEffects.None, 0f);
-
-
-            Main.spriteBatch.Draw(DiamondGlow, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.DeepSkyBlue * alpha, Projectile.velocity.ToRotation() - MathHelper.PiOver2, DiamondGlow.Size() / 2, new Vector2(Projectile.scale * 0.6f, Projectile.scale) * 0.4f * scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(DiamondGlow, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.SkyBlue * alpha, Projectile.velocity.ToRotation() - MathHelper.PiOver2, DiamondGlow.Size() / 2, new Vector2(Projectile.scale * 0.5f, Projectile.scale) * 0.3f * scale, SpriteEffects.None, 0f);
-
-            Main.spriteBatch.Draw(DiamondGlow, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3, null, Color.White * alpha, Projectile.velocity.ToRotation() - MathHelper.PiOver2, DiamondGlow.Size() / 2, new Vector2(Projectile.scale * 0.3f, Projectile.scale) * 0.35f * scale, SpriteEffects.None, 0f);
-
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
 
 
@@ -433,8 +441,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkylightHitFlare>(), 0, 0, Main.myPlayer);
-            //Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<HitFlare>(), Vector2.Zero, newColor: Color.DodgerBlue);
-
 
             Projectile.velocity *= 0.8f;
 
@@ -452,26 +458,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 d.alpha = 13;
             }
 
-            /*
-            for (int i = 0; i < 5 + Main.rand.Next(0, 2); i++)
-            {
-
-                Dust a = Dust.NewDustPerfect(Projectile.Center , ModContent.DustType<GlowStrong>(),
-                    Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-2, 2)) * Main.rand.NextFloat(1, 3) * 0.7f,
-                    newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(0.2f, 0.25f));
-
-                a.fadeIn = 2;
-            }
-            */
-
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Volume = 0.2f, Pitch = 1f, MaxInstances = 3, PitchVariance = 0.2f };
             SoundEngine.PlaySound(style2, target.Center);
         }
 
-        public override bool? CanDamage()
-        {
-            return !hasHit;
-        }
+        public override bool? CanDamage() => !hasHit;
+        
     }
 
     public class SkylightHitFlare : ModProjectile
@@ -480,25 +472,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         public override void SetDefaults()
         {
-            Projectile.damage = 0;
             Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.tileCollide = false;
-
-            Projectile.ignoreWater = true;
             Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
-            Projectile.hostile = false;
             Projectile.timeLeft = 100;
             Projectile.scale = 1f;
-
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
 
         int timer = 0;
         public float scale = 1.5f;
@@ -533,16 +522,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 9000;
         }
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = 20;
             Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
 
@@ -557,18 +548,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         int timer = 0;
 
-
-        int turnDir = 1;
-        int turnTime = 10;
-
-        Vector2 initialVel = Vector2.Zero;
-
         bool spawnedExplosion = false;
 
         public override void AI()
         {
-            if (timer == 0)
-                initialVel = Projectile.velocity;
 
             //Trail1 Info Dump
             trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value;
@@ -595,7 +578,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail2.pinch = true;
             trail2.pinchAmount = 0.8f;
 
-            //trail2.gradient = true;
             trail2.gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/LoopingThunderGrad").Value;
             trail2.shouldScrollColor = true;
             trail2.gradientTime = timer * 0.02f;
@@ -605,24 +587,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail2.trailPos = Projectile.Center;
             trail2.TrailLogic();
 
-            //Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 15;
-
-            if (timer % turnTime == 0)
-            {
-                //Projectile.velocity = initialVel.RotatedBy(Main.rand.NextFloat(0.5f) * turnDir);
-
-                turnDir *= -1;
-                turnTime = 10;
-            }
-
             timer++;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-
             trail1.trailTime = (float)Main.timeForVisualEffects * 0.01f;
-
 
             trail2.gradientTime = (float)Main.timeForVisualEffects * 0.02f;
             trail2.trailTime = (float)Main.timeForVisualEffects * 0.03f;
@@ -630,26 +600,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/bigCircle2").Value;
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.1f, SpriteEffects.None, 0f);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-
-
             return false;
         }
 
-        public override bool CanHitPlayer(Player target)
-        {
-            return true;
-        }
+        public override bool CanHitPlayer(Player target) { return true; }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
@@ -665,10 +619,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             spawnedExplosion = true;
         }
 
-        public override bool? CanDamage()
-        {
-            return !spawnedExplosion;
-        }
+        public override bool? CanDamage() { return !spawnedExplosion; }
 
         public void AoE()
         {
@@ -711,33 +662,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         public override void SetDefaults()
         {
-            Projectile.damage = 0;
-            Projectile.friendly = false;
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.tileCollide = false;
 
-            Projectile.ignoreWater = true;
             Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
+
+            Projectile.friendly = false;
             Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+
             Projectile.timeLeft = 800;
             Projectile.scale = 1f;
 
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
         int timer = 0;
         float scale = 0;
         float alpha = 1;
 
         float glowScale = 0f;
-        float glowScale2 = 0f;
-        float recoilAmount = 0f;
         public override void AI()
         {
             if (timer == 0)
@@ -822,7 +769,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
             Projectile.rotation += 0.12f;
 
-
             Projectile.timeLeft = 2;
 
             if (alpha <= 0)
@@ -894,29 +840,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         public override string Texture => "Terraria/Images/Projectile_0";
 
         int timer = 0;
-        int burstTimer = 0;
-        float recoilTimer = 20;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Adamantite Pulsar");
-        }
+
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.timeLeft = 999999;
             Projectile.width = Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.scale = 1;
+            Projectile.penetrate = -1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
 
         Vector2 offset = Vector2.Zero;
 
@@ -958,11 +900,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 float angle = (Main.MouseWorld - aimPos).ToRotation();
                 int afg = Projectile.NewProjectile(Projectile.GetSource_FromAI(), aimPos, new Vector2(30f, 0).RotatedBy(angle), ModContent.ProjectileType<SkylightThunderStrike>(), Projectile.damage * 3, 0);
 
-                //Main.projectile[afg].GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-                //Main.projectile[afg].GetGlobalProjectile<SkillStrikeGProj>().critImpact = (int)SkillStrikeGProj.CritImpactType.None;
-                //Main.projectile[afg].GetGlobalProjectile<SkillStrikeGProj>().travelDust = (int)SkillStrikeGProj.TravelDustType.None;
-                //Main.projectile[afg].GetGlobalProjectile<SkillStrikeGProj>().hitSoundVolume = 0.85f;
-
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/lightning_flash_01") with { Pitch = 0.7f, PitchVariance = 0.2f, Volume = 0.35f };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
@@ -992,9 +929,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
                 int Spark = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Projectile.velocity * 40, Vector2.Zero, ModContent.ProjectileType<SkylightHitFlare>(), 0, 0);
 
-
                 offset = new Vector2(-5, 0);
-                glowVal2 = 1;
                 glowVal = 20;
             }
 
@@ -1015,7 +950,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         }
 
         float glowVal = 0;
-        float glowVal2 = 0;
         Effect myEffect = null;
         public override bool PreDraw(ref Color lightColor)
         {
@@ -1028,9 +962,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
             SpriteEffects fx = Main.player[Projectile.owner].direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
-            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition, null, Color.DeepSkyBlue with { A = 0 } * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition, null, Color.SkyBlue with { A = 0 } * 0.85f * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale * 0.9f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale * 0.5f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + new Vector2(0, Main.player[Projectile.owner].gfxOffY), null, Color.DeepSkyBlue with { A = 0 } * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + new Vector2(0, Main.player[Projectile.owner].gfxOffY), null, Color.SkyBlue with { A = 0 } * 0.85f * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale * 0.9f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Line, Projectile.Center - Main.screenPosition + new Vector2(0, Main.player[Projectile.owner].gfxOffY), null, Color.White with { A = 0 } * glowVal, Projectile.rotation - MathHelper.PiOver2, new Vector2(0, Line.Height / 2), lineScale * 0.5f, SpriteEffects.None, 0f);
 
 
             Vector2 GlowOffset = new Vector2(glowVal * -2f, 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2);

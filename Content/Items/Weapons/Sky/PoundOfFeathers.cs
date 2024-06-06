@@ -10,7 +10,6 @@ using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles.TempVFX;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
-using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Sky
@@ -21,29 +20,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
         public override void SetDefaults()
         {
             Item.damage = 14;
+            Item.knockBack = KnockbackTiers.ExtremelyWeak;
             Item.mana = 3;
-            Item.DamageType = DamageClass.Magic;
-            Item.useTime = 7; 
-            Item.useAnimation = 7;
-            Item.shootSpeed = 10f;
-            Item.knockBack = 1;
-
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.noMelee = true;
-            Item.noUseGraphic = true;
-
-            Item.value = Item.sellPrice(0, 0, 0, 300);
-
+            
             Item.width = 32;
             Item.height = 32;
-            Item.rare = ItemRarityID.Green;
+            Item.useTime = 7;
+            Item.useAnimation = 7;
+            Item.shootSpeed = 10f;
+
+
+            Item.DamageType = DamageClass.Magic;
+            Item.shoot = ModContent.ProjectileType<PoundOfFeathersProj>();
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.rare = ItemRarities.MidPHM;
+            Item.value = Item.sellPrice(0, 0, 50, 0);
+
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<FeatherProjTest>();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int feather = Projectile.NewProjectile(source, position, velocity.RotatedByRandom(1f) * 1f, ModContent.ProjectileType<PoundOfFeatherProj>(), damage, knockback, Main.myPlayer);
+            int feather = Projectile.NewProjectile(source, position, velocity.RotatedByRandom(1f) * 1f, ModContent.ProjectileType<PoundOfFeathersProj>(), damage, knockback, Main.myPlayer);
 
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_1") with { Pitch = .89f, PitchVariance = .33f, }; 
             SoundEngine.PlaySound(style, player.Center);
@@ -53,21 +53,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
         
     }
 
-    public class PoundOfFeatherProj : ModProjectile
+    public class PoundOfFeathersProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
         int timer = 0;
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 12;
-            Projectile.ignoreWater = false;
-            Projectile.hostile = false;
-            Projectile.friendly = true;
-
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.tileCollide = true;
+            Projectile.width = Projectile.height = 12;
             Projectile.timeLeft = 75;
             Projectile.penetrate = -1;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = false;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
@@ -75,6 +75,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
         public override bool? CanDamage() { return !stuckIn; }
         public override void AI()
         {
+            //Initialize lists
             if (timer == 0)
             {
                 Projectile.ai[0] = Projectile.velocity.Length();
@@ -82,11 +83,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 previousPostions = new List<Vector2>();
             }
 
+            //Normal behavior
             if (!stuckIn)
             {
-                //Home towards cursor
-                if (timer < 70) //50
+                //Home towards cursor 
+                if (timer < 70) 
                 {
+                    //Home a little stronger after half a second
                     float turnPower = 25f;
                     int turn2 = timer < 50f ? 30 : 35;
 
@@ -108,7 +111,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 Projectile.rotation = Projectile.velocity.ToRotation();
 
                 fadeAlpha = Math.Clamp(MathHelper.Lerp(fadeAlpha, 1.5f, 0.15f), 0f, 1f);
-
             }
             else
             {
@@ -127,7 +129,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
 
                 if (previousPostions.Count > trailCount)
                     previousPostions.RemoveAt(0);
-
             }
 
             timer++;
@@ -178,7 +179,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
 
             Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.4f * fadeAlpha, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
 
-
             return false;
         }
 
@@ -187,7 +187,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
         {
             if (!stuckIn)
                 hitFX();  
-            base.OnKill(timeLeft);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -196,7 +195,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             stuckIn = true;
             Projectile.timeLeft = 10;
             Projectile.velocity = Vector2.Zero;
-            base.OnHitNPC(target, hit, damageDone);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -208,6 +206,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             Projectile.timeLeft = 10;
             Projectile.velocity = Vector2.Zero;
             Projectile.Center = previousPostions[previousPostions.Count - 1]; //To make sure it doesn't break on slopes because terraria sucks dick
+
             return false;
         }
 

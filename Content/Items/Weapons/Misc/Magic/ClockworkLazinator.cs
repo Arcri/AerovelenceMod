@@ -17,6 +17,7 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 {
@@ -288,7 +289,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Projectile.tileCollide = false;
         }
 
-        public override bool? CanDamage() { return false; }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
+        
 
         bool firstFrame = true;
         public override void AI()
@@ -360,6 +364,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public void HeldProjCode(bool windup)
         {
             Player Player = Main.player[Projectile.owner];
+
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             Projectile.velocity = Vector2.Zero;
             Player.itemTime = 2;

@@ -5,18 +5,13 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
 using AerovelenceMod.Common.Utilities;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using System.Reflection.Metadata;
 using Terraria.DataStructures;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System.Linq;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
-using Microsoft.CodeAnalysis;
-using System.Drawing.Drawing2D;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -43,11 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAmmo = AmmoID.Bullet;
-            //Item.holdStyle = ItemHoldStyleID.HoldHeavy;
-            //Item.UseSound = SoundID.Item110 with { Volume = 0.35f, PitchVariance = 0.15f, Pitch = 0.25f };
         }
-
-        int itemShoot = 0; 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             Vector2 muzzleOffset = Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 25f;
@@ -55,8 +46,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             {
                 position += muzzleOffset;
             }
-
-            //velocity *= 0.25f;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -92,40 +81,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
             Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<MarbleBullet>(), damage, knockback, player.whoAmI);
 
-            //Dust softGlow = Dust.NewDustPerfect(position + position.SafeNormalize(Vector2.UnitX) * 4f, ModContent.DustType<SoftGlowDust>(), Vector2.Zero, newColor: Color.Orange, Scale: 0.15f);
-
-            //softGlow.customData = DustBehaviorUtil.AssignBehavior_SGDBase(timeToStartFade: 3, timeToChangeScale: 0, fadeSpeed: 0.9f, sizeChangeSpeed: 0.95f, timeToKill: 10,
-            //overallAlpha: 0.1f, DrawWhiteCore: false, 1f, 1f);
-
             return false;
         }
 
         public override void AddRecipes()
         {
             CreateRecipe(1)
-                .AddIngredient(ItemID.MarbleBlock, 20)
+                .AddIngredient(ItemID.MarbleBlock, 25)
                 .AddIngredient(ItemID.GoldBar, 5)
                 .AddIngredient(ItemID.FlintlockPistol, 1)
                 .AddTile(TileID.Anvils)
                 .Register();
         }
-        public override Vector2? HoldoutOffset()
-        {
-            return new Vector2(-4, 0);
-        }
 
-        public override void UseStyle(Player player, Rectangle heldItemFrame)
-        {
-            /*
-            Vector2 targetPosition = Main.MouseWorld - Main.LocalPlayer.Center;
-            int direction = Math.Sign(targetPosition.X);
-
-            player.ChangeDir(direction);
-
-            player.direction = direction;
-            player.itemRotation = (targetPosition * direction).ToRotation();
-            */
-        }
     }
     public class MarbleMusketHeldProjectile : ModProjectile
     {
@@ -157,10 +125,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
-        public override bool? CanDamage() { return false; }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
+        
+
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             if (owner.itemTime <= 1)
                 Projectile.active = false;
@@ -183,8 +156,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             if (timer > 2)
             {
                 float easeProgress = MathHelper.Lerp(0f, 1f, Math.Clamp((timer - 3f) / 20f, 0f, 1f));
-                //Offset = MathHelper.Lerp(5f, 22f, Easings.easeOutQuart(easeProgress)); 
-                //Math.Clamp(MathHelper.Lerp(Offset, 28f, 0.1f), 0, 22);
                 Offset = MathHelper.Lerp(5f, 22f, Easings.easeOutQuart(easeProgress));
             }
 
@@ -234,13 +205,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Player Player = Main.player[Projectile.owner];
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
-            Vector2 muzzleFlashPos = Projectile.Center - Main.screenPosition + new Vector2(24f, -1f * Player.direction).RotatedBy(Projectile.rotation);
+            Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
+
+            Vector2 muzzleFlashPos = drawPos + new Vector2(24f, -1f * Player.direction).RotatedBy(Projectile.rotation);
             Vector2 muzzleFlashOrigin = new Vector2(0f, MuzzleFlash.Height / 2f);
             Main.spriteBatch.Draw(MuzzleFlashGlow, muzzleFlashPos, null, Color.White with { A = 0 } * glowIntensity * 0.5f, Projectile.rotation, muzzleFlashOrigin, Projectile.scale * glowIntensity, mySE, 0f);
             Main.spriteBatch.Draw(MuzzleFlash, muzzleFlashPos, null, Color.White * glowIntensity * 0.75f, Projectile.rotation, muzzleFlashOrigin, Projectile.scale * glowIntensity, mySE, 0f);
 
-            Main.spriteBatch.Draw(Texture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, Texture.Size() / 2, Projectile.scale, mySE, 0f);
-            Main.spriteBatch.Draw(TextureGlowLayer, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * glowIntensity * 1f, Projectile.rotation, TextureGlowLayer.Size() / 2, Projectile.scale, mySE, 0f);
+            Main.spriteBatch.Draw(Texture, drawPos, null, lightColor, Projectile.rotation, Texture.Size() / 2, Projectile.scale, mySE, 0f);
+            Main.spriteBatch.Draw(TextureGlowLayer, drawPos, null, Color.White with { A = 0 } * glowIntensity * 1f, Projectile.rotation, TextureGlowLayer.Size() / 2, Projectile.scale, mySE, 0f);
 
             return false;
         }
@@ -426,9 +399,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             {
                 Main.player[Projectile.owner].GetModPlayer<MarbleMusketPlayer>().consecutiveHits = 0;
             }
-
-            //SoundEngine.PlaySound(SoundID.Item10 with { Pitch = 0.25f, Volume = 0.5f }, Projectile.Center);
-            //int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Teleporter);
         }
     }
     public class MarbleStar : ModProjectile
@@ -449,7 +419,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.penetrate = 1;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.timeLeft = 160;
 
         }

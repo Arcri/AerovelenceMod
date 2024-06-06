@@ -111,6 +111,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         
         List<int> tendrils = new List<int>();
 
+        //TODO use a function for killing tendrils instead 
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -127,6 +128,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             }
 
             #region heldProjStuff
+
+
+            // Kill the projectile if the player dies or gets crowd controlled
+            if (!player.active || player.dead || player.noItems || player.CCed)
+            {
+                Projectile.active = false;
+                //Delete all tendrils
+                foreach (int k in tendrils)
+                {
+                    (Main.projectile[k].ModProjectile as BeaconTendril).fadeOut = true;
+                }
+                tendrils.Clear();
+            }
 
             Projectile.velocity = Vector2.Zero;
             Projectile.timeLeft = 2;
@@ -297,7 +311,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 tendrils.Clear();
             }
 
-            if (!player.CheckMana(player.inventory[player.selectedItem], pay: false))
+            bool checkDead = !player.active || player.dead || player.noItems || player.CCed;
+
+            if (!player.CheckMana(player.inventory[player.selectedItem], pay: false) && checkDead)
             {
                 //Delete all tendrils
                 foreach (int k in tendrils)

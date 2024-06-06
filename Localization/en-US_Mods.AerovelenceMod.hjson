@@ -737,6 +737,7 @@ Projectiles: {
 	SmokeTest.DisplayName: Smoke Test
 	TendrilTest.DisplayName: Tendril Test
 	BeaconTendril.DisplayName: Beacon Tendril
+	PoundOfFeathersProj.DisplayName: Pound Of Feathers Proj
 }
 
 Configs: {

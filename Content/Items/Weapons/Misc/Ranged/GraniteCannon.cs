@@ -15,6 +15,7 @@ using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
+using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -122,6 +123,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
+
+            KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
 
             //Basic Held projectile code
             Projectile.velocity = Vector2.Zero;

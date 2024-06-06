@@ -58,6 +58,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public override bool PreDraw(ref Color lightColor)
         {
+            //One reset to fix bugs
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             if (timer == 0)
                 return false;
 
