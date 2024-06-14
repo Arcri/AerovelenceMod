@@ -54,6 +54,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             return false;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.PalmWood, 25).
+                AddIngredient(ItemID.Coral, 5).
+                AddIngredient(ItemID.FallenStar, 3).
+                AddTile(TileID.Anvils).
+                Register();
+        }
+
     }
 
     public class OceanMistHeldProj : ModProjectile

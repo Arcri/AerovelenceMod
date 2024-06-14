@@ -34,16 +34,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
+            Projectile.width = Projectile.height = 20;
+            Projectile.penetrate = -1;
+            Projectile.scale = 1f;
+
             maxTime = 90;
             Projectile.timeLeft = maxTime;
-            Projectile.width = Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1f;
         }
 
 

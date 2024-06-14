@@ -17,7 +17,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
     public class MarbleMusket : ModItem 
     {
-
         public override void SetDefaults()
         {
             Item.damage = 12;
@@ -86,9 +85,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override void AddRecipes()
         {
-            CreateRecipe(1)
-                .AddIngredient(ItemID.MarbleBlock, 25)
-                .AddIngredient(ItemID.GoldBar, 5)
+            CreateRecipe()
+                .AddIngredient(ItemID.Marble, 25)
+                .AddRecipeGroup("AerovelenceMod:GoldOrPlatinum", 5)
                 .AddIngredient(ItemID.FlintlockPistol, 1)
                 .AddTile(TileID.Anvils)
                 .Register();

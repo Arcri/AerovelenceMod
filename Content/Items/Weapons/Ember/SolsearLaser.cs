@@ -34,16 +34,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		public float baseDamage = 0f;
 		public override void SetDefaults()
 		{
-			Projectile.friendly = true;
-			Projectile.width = 16;
-			Projectile.height = 16;
-			Projectile.penetrate = -1;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.timeLeft = 1000;
+            Projectile.penetrate = -1;
+            Projectile.extraUpdates = 10; 
+            Projectile.scale = 1f;
+
+            Projectile.friendly = true;
+			Projectile.hostile = false;
 			Projectile.ignoreWater = true;
-			Projectile.timeLeft = 1000;
 			Projectile.tileCollide = false;
-			Projectile.extraUpdates = 10; //200
-			Projectile.scale = 1f;
-			Projectile.DamageType = DamageClass.Ranged;
+
 		}
 
         public override void AI()
@@ -58,10 +61,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 						Color dustCol = Main.rand.NextBool() ? Color.OrangeRed : new Color(255, 100, 0);
 						Dust.NewDustPerfect(storedCenter + Vector2.UnitX.RotatedBy(LaserRotation + Math.PI) * i, ModContent.DustType<GlowStrong>(),
 							Main.rand.NextVector2CircularEdge(2f, 2f) + ((LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f), newColor: dustCol, Scale: Main.rand.NextFloat(0.10f, 0.15f));
-
-						//GlowDustHelper.DrawGlowDustPerfect(storedCenter + Vector2.UnitX.RotatedBy(LaserRotation + Math.PI) * i, ModContent.DustType<GlowCircleDust>(),
-							//Main.rand.NextVector2CircularEdge(2f, 2f) + ( (LaserRotation + MathHelper.Pi).ToRotationVector2() * 3f ), Color.OrangeRed, 0.2f, dustShader); //0.2f
-						
 					}
 
 				}
@@ -132,7 +131,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
                 Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Assets/Trails/Clear/ThinnerGlowTrailClear").Value;
 
-                //Texture2D Black = Mod.Assets.Request<Texture2D>("Assets/GlowTrailMoreRes").Value;
 
                 Vector2 origin2 = new Vector2(0, LaserTexture.Height / 2);
 
@@ -156,20 +154,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(LaserTexture, target, null, Color.White, LaserRotation, origin2, 0, 0);
 
-                //Main.spriteBatch.Draw(texture, target, null, Color.White, LaserRotation, origin2, 0, 0);
-
-
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-				//orange: 255 165 0 | orangeRed: 255 69 0 
 
                 Main.spriteBatch.Draw(LaserTexture, target2, null, Color.OrangeRed * 0.75f, LaserRotation, origin2, 0, 0);
                 Main.spriteBatch.Draw(LaserTexture, target2, null, new Color(255, 45, 0) * 0.55f, LaserRotation, origin2, 0, 0);
-                
-				//for (int i = 0; i < width; i += 6)
-                //Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Orange.ToVector3() * height * 0.015f); //0.030
-
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);

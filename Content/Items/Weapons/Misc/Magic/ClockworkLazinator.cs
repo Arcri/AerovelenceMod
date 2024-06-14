@@ -50,6 +50,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         }
         public override bool AltFunctionUse(Player player) => true;
 
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.Cog, 50).
+                AddIngredient(ItemID.SoulofLight, 10).
+                AddIngredient(ItemID.Lens, 3).
+                AddTile(TileID.MythrilAnvil).
+                Register();
+        }
+
         public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
         {
             //Dont consume mana on right-click

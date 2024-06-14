@@ -50,7 +50,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             
             return false;
         }
-        
+
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.ShadowScale, 5).
+                AddIngredient(ItemID.Silk, 20).
+                AddIngredient(ItemID.Feather, 15).
+                AddTile(TileID.Anvils).
+                Register();
+
+            CreateRecipe().
+                AddIngredient(ItemID.TissueSample, 5).
+                AddIngredient(ItemID.Silk, 20).
+                AddIngredient(ItemID.Feather, 15).
+                AddTile(TileID.Anvils).
+                Register();
+        }
+
     }
 
     public class PoundOfFeathersProj : ModProjectile

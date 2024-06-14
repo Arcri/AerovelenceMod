@@ -16,7 +16,6 @@ using AerovelenceMod.Common.Utilities;
 using Terraria.Graphics.Shaders;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Globals.SkillStrikes;
-using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Content.Projectiles.Other;
 using static Terraria.NPC;
 
@@ -30,17 +29,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             // DisplayName.SetDefault("Burning Jealousy");
             // Tooltip.SetDefault("Hold Right-Click to guard, gaining a large defense boost\nRetailiate with an explosive burst when hit while guarding");
         }
+
         public override void SetDefaults()
         {
-            Item.knockBack = 3f;
-            Item.crit = 2;
-            Item.damage = 48; //38
-            Item.useAnimation = 10;
-            Item.useTime = 10;
+            Item.damage = 68; 
+            Item.knockBack = KnockbackTiers.Average;
+
+            Item.width = 52;
+            Item.height = 64;
+            Item.useAnimation = 40;
+            Item.useTime = 40;
+
+
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
-            Item.rare = ItemRarityID.Purple;
+            Item.rare = ItemRarities.EarlyHardmode;
             Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.channel = true;
@@ -50,9 +54,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         }
         public override bool AltFunctionUse(Player player) => true;
 
-        public override void HoldItem(Player player)
+        public override void AddRecipes()
         {
-
+            CreateRecipe().
+                AddIngredient(ItemID.HellstoneBar, 15).
+                AddIngredient(ItemID.SoulofNight, 7).
+                AddRecipeGroup("AerovelenceMod:MechSouls", 3).
+                AddTile(TileID.MythrilAnvil).
+                Register();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -64,7 +73,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, (tick ? 1 : 0));
             return false;
         }
-
     }
 
     public class BurningJealousyHeldProj : TrailProjBase
@@ -74,28 +82,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Burning Jealousy");
-            ProjectileID.Sets.HeldProjDoesNotUsePlayerGfxOffY[Type] = true;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 50;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
 
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
+
+            Projectile.timeLeft = 10000;
             Projectile.width = Projectile.height = 85;
+            Projectile.penetrate = -1;
+            Projectile.scale = 1f;
+            Projectile.extraUpdates = 8;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
+
+            Projectile.noEnchantmentVisuals = true;
+
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
-            Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
-            Projectile.extraUpdates = 8;
-            //Projectile.scale = 1.5f;
         }
 
         public override bool? CanDamage()
@@ -193,10 +203,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
                 currentAng = startingAng;
                 firstFrame = false;
-
-
-                //for (int i = 0; i < previousRotations.; i++)
-                //Projectile.oldRot[i] = Projectile.rotation;
 
                 previousRotations = new List<float>();
                 Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
@@ -301,13 +307,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Color trailCol = (getProgress(easingProgress) <= 0.2f) ? Color.OrangeRed : Color.OrangeRed * (getProgress(easingProgress) >= 0.85f ? (1.2f - getProgress(easingProgress)) : 1.2f);
             Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
 
-            //Color trailCol = (getProgress(easingProgress) <= 0.2f) ? Color.OrangeRed * (getProgress(easingProgress) / 0.2f) : Color.OrangeRed * (getProgress(easingProgress) >= 0.85f ? (1.2f - getProgress(easingProgress * 1.1f)) : 1.2f);
-
-            ////Color trailCol = (getProgress(easingProgress) <= 0.2f) ? Color.OrangeRed : Color.OrangeRed * 1.2f;
-
-            ////if (getProgress(easingProgress) > 0.85f)
-            ////trailCol = Color.Lerp(Color.OrangeRed * 1.2f, Color.Black, (getProgress(easingProgress) - 0.85f) / 0.15f);
-
             if (bigSwing && getProgress(easingProgress) >= 0.93f)
             {
                 trailCol = Color.Lerp(Color.OrangeRed * 1.2f, Color.OrangeRed * 0.3f, (getProgress(easingProgress) - 0.93f) / 0.7f);
@@ -335,44 +334,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             if (justHitTime <= 0 && getProgress(easingProgress) > 0.07) 
                 relativeTrail.TrailLogic();
-
-
-            //Trail
-            /*
-            String assetLocation = bigSwing ? "Trail5" : "Trail5";
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/" + assetLocation).Value;
-
-            //if (getProgress(easingProgress) <= 0.2f)
-                //trailColor = Color.OrangeRed * (getProgress(easingProgress) / 0.2f);
-            //else
-                //trailColor = Color.OrangeRed * (getProgress(easingProgress) >= 0.7f ? (1.2f - getProgress(easingProgress * 0.7f)) : 1.2f);
-            trailColor = trailCol;
-
-            trailPointLimit = 800;
-            trailMaxLength = 300; //300
-            trailTime = timer * 0.0035f;
-            timesToDraw = bigSwing ? 2 : 2;
-            
-
-            trailRot = Projectile.rotation + MathHelper.PiOver4;
-            trailPos = Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (bigSwing ? 15f : 12f * (1 + intensity * 0.35f));
-            TrailLogic();
-            */
-
-            //OldDust
-            /*
-            if (timer % 4 == 0 && getProgress(easingProgress) > 0.3f && getProgress(easingProgress) < 0.85f && justHitTime <= 0)
-            {
-                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
-                int a = GlowDustHelper.DrawGlowDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GlowCircleFlare>(),
-                    Color.OrangeRed, 0.55f, 0.35f, 0f, dustShader2);
-                Main.dust[a].noGravity = true;
-                Main.dust[a].velocity *= 0.5f;
-                Main.dust[a].velocity += Projectile.rotation.ToRotationVector2() * 4;
-                Main.dust[a].fadeIn = 1;
-            }
-            */
 
             //NewDust
             int dustMod = (int)Math.Clamp(4f - (2f * (player.GetTotalAttackSpeed(DamageClass.Melee) - 1f)), 0, 5);
@@ -430,18 +391,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             //1f at middle of swing, 0f at both ends
             float intensity = (float)Math.Sin(getProgress(easingProgress) * Math.PI);
 
-            //Sword
-            //Main.spriteBatch.Draw(Sword, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), effects, 0f);
+            //Hilt
             Main.spriteBatch.Draw(Hilt, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), effects, 0f);
 
-            //float justHitBoost = Math.Clamp(justHitTime / 30f, 0f, 1f) + 1f;
+
+            //Big slash texture
             Vector2 waveScale = new Vector2(0.85f, 1f) * 0.97f * (bigSwing ? 1.2f : Projectile.scale);
-            float lerpVal = MathF.Pow(intensity, 3);
             Color waveColor = Color.Lerp(Color.Black * 0.3f, new Color(255, 85, 0), Easings.easeInOutCirc(intensity));
-
             Vector2 BusterPos = Main.player[Projectile.owner].Center + new Vector2(-30f + (70f * intensity), 0).RotatedBy(startingAng) - Main.screenPosition;
-
-            //Main.spriteBatch.Draw(Wave2, BusterPos, Wave.Frame(1, 1, 0, 0), Color.Black * 0.15f * intensity, startingAng - MathHelper.PiOver2, Wave2.Size() / 2, waveScale * (0.3f + (intensity * 0.75f)), SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(Wave, BusterPos, Wave.Frame(1, 1, 0, 0), waveColor with { A = 0 } * 0.6f, startingAng - MathHelper.PiOver2, Wave.Size() / 2, waveScale * (0.3f + (intensity * 0.75f)), SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Wave, BusterPos, Wave.Frame(1, 1, 0, 0), waveColor with { A = 0 } * 0.3f, startingAng - MathHelper.PiOver2, Wave.Size() / 2, waveScale * (0.15f + (intensity * 0.75f)), SpriteEffects.None, 0f);
@@ -454,7 +411,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-
+            //Sword
             Main.spriteBatch.Draw(WithoutHilt, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f), effects, 0f);
 
 
@@ -474,8 +431,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 {
                     float progress = (float)afterI / previousRotations.Count;
 
-                    //1f 1f | 0 | 0.25f
-
                     float size = (Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.25f));
                     size *= (0.75f + (progress * 0.25f));
 
@@ -484,6 +439,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             }
 
+            //OnHit star
             Vector2 starPos = Main.player[Projectile.owner].Center + (new Vector2(1 + (intensity * 0.25f), 0f).RotatedBy(currentAng + (Projectile.ai[0] == 1 ? 0.1f : -0.1f)) * 75f * (bigSwing ? 1.25f : 1f));
             float starRot = (float)Main.timeForVisualEffects * 0.1f;
             Vector2 starScale = new Vector2(0.9f, 2f) * Projectile.scale;
@@ -500,12 +456,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void OnHitNPC(NPC target, HitInfo hit, int damageDone)
         {
-            //Want less hitpause at higher attack speeds for basic swing
-            justHitTime = bigSwing ? 50 : 37;///(4 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 3f)) * Projectile.extraUpdates; //6
+            //justHitTime = bigSwing ? 50 : 37;
+
+            //Want less hitpause at higher attack speeds for swing
+
+            if (bigSwing)
+            {
+                justHitTime = (6 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 4f)) * Projectile.extraUpdates;
+                Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = 15f - ((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 10f); ;
+
+            }
+            else
+            {
+                justHitTime = (4 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 3f)) * Projectile.extraUpdates;
+                Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = 8f - ((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 4f);
+
+            }
 
             float bigSwingMultiplier = bigSwing ? 1.25f : 1f;
 
-            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = bigSwing ? 15 : 10;
+            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = bigSwing ? 10 : 5;
+
+
 
             Vector2 vec = (target.Center - Main.player[Projectile.owner].Center).SafeNormalize(Vector2.UnitX);
 
@@ -644,20 +616,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 4000;
             Projectile.DamageType = DamageClass.Melee;
+
+
+            Projectile.timeLeft = 4000;
             Projectile.width = Projectile.height = 85;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
+
             Projectile.scale = 1f;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+        public override bool? CanCutTiles() => false;
 
         int timer = 0;
         float Angle = 0;
@@ -666,7 +640,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         float fadeCounter = 0;
         float symbolIntensity_Sword = 0;
 
-        float desiredAngle = 0f;
         float fadeInVal = 0.05f;
 
         float x1 = 0f;
@@ -722,7 +695,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 player.GetModPlayer<BurningJealousyPlayer>().gaurding = false;
                 Projectile.Kill();
             }
-            //Projectile.velocity = Vector2.Zero;
+
             Projectile.Center = player.Center + new Vector2(20 * Projectile.direction,0);
             player.itemTime = 10;
             player.itemAnimation = 10;
@@ -798,11 +771,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D Sword = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/BurningJealousy");
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/BurningJealousyGlow");
 
-            //Get arm Pos
-            //float xOffset = (p.velocity.X * 0.04f) * p.direction;
-            //float yOffset = (p.velocity.Y * 0.02f) * p.direction;
-            //float armAngle = (0.3f - MathHelper.PiOver2 + xOffset + yOffset) * Projectile.direction;
-
             Vector2 armPosition = Main.player[Projectile.owner].GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, Projectile.rotation);
 
             //NewDraw
@@ -829,7 +797,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
     public class BlockFX : ModProjectile
     {
-
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
@@ -840,23 +807,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         {
             Projectile.timeLeft = 4000; 
             Projectile.width = Projectile.height = 85;
-            Projectile.friendly = true;
+            Projectile.scale = 0f;
+
+            Projectile.friendly = false;
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 0f;
+
         }
 
-        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-        {
-            //overPlayers.Add(index);
-            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
-        }
-
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+        public override bool? CanCutTiles() => false;
 
         int timer = 0;
         public float fadeCounter = 0;
@@ -877,8 +838,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         {
             float offset = 0;
 
-            //if (symbolIntensity == 1)
-                offset = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2) * 0.15f;
+            offset = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2) * 0.15f;
 
             float offset2 = (float)Math.Sin(Main.GlobalTimeWrappedHourly) * 0.15f;
 
@@ -886,21 +846,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             float scale2 = (1.2f + (offset * symbolIntensity)) * MathHelper.Lerp(1.8f, 1f, symbolIntensity);
             float colIntensity = Math.Clamp(symbolIntensity * symbolIntensity, 0f, 1f);
 
-            /*
-            if (fadeInBonus < 1f)
-            {
-                scale = (1.55f + offset) * MathHelper.Lerp(2f, 1f, symbolIntensity);
-                scale2 = (1.2f + offset) * MathHelper.Lerp(2f, 1f, symbolIntensity);
-                colIntensity = Math.Clamp((symbolIntensity * symbolIntensity), 0f, 1f);
-
-            }
-            else
-            {
-                scale = (Projectile.scale * 1.55f + offset);
-                scale2 = (Projectile.scale * 1.2f + offset);
-                colIntensity = Math.Clamp((symbolIntensity * symbolIntensity), 0f, 1f);
-            }
-            */
 
             Vector2 center = (Projectile.Center - Main.screenPosition) + new Vector2(0, Main.player[Projectile.owner].gfxOffY);
             Texture2D Symbol = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/BlockSymbol");
@@ -910,8 +855,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-            //orange red = 255 165 0
-            // orange = 255 69 0
+
             Color ReddishOrange = new Color(255, 80, 0);
             Main.spriteBatch.Draw(Symbol, new Vector2((int)center.X, (int)center.Y), null, ReddishOrange * colIntensity, offset2, Symbol.Size() / 2, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Symbol, new Vector2((int)center.X, (int)center.Y), null, Color.Gold * colIntensity, offset2, Symbol.Size() / 2, scale2, SpriteEffects.None, 0f);
@@ -952,12 +896,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         {
             if (gaurding)
             {
+                int itemDamage = Player.inventory[Player.selectedItem].damage;
+                int bigSwingDamage = (int)(itemDamage * 2.5f);
 
                 Player player = Main.player[Main.myPlayer];
 
                 int swingDir = Main.MouseWorld.X > player.Center.X ? 0 : 1;
 
-                Projectile a = Projectile.NewProjectileDirect(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<BurningJealousyHeldProj>(), (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(140), 4, Main.myPlayer, swingDir);
+                Projectile a = Projectile.NewProjectileDirect(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<BurningJealousyHeldProj>(), (int)player.GetTotalDamage(DamageClass.Melee).ApplyTo(bigSwingDamage), KnockbackTiers.Average, Main.myPlayer, swingDir);
                 if (a.ModProjectile is BurningJealousyHeldProj sword)
                 {
                     sword.bigSwing = true;
@@ -975,95 +921,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             {
                 Player player = Main.player[Main.myPlayer];
                 player.statDefense = player.statDefense + 30;
-
-                /*
-                Projectile a = Projectile.NewProjectileDirect(null, player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<BurningJealousyHeldProj>(), 120, 0, Main.myPlayer);
-                if (a.ModProjectile is BurningJealousyHeldProj sword)
-                {
-                    sword.bigSwing = true;
-                }
-                justHit = true;
-                gaurding = false;
-                */
             }
-
-            //return base.ModifyHurt(ref modifiers);
-        }
-    }
-
-    //Gotta replace/remove this later and move to a different weapon
-    public class BurningJealousyExplode : ModProjectile
-    {
-        public override string Texture => "Terraria/Images/Projectile_0";
-
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Burning Explosion");
-        }
-
-        public override void SetDefaults()
-        {
-            Projectile.friendly = true;
-            Projectile.ignoreWater = true;
-            Projectile.DamageType = DamageClass.Ranged;
-            Projectile.hostile = false;
-            Projectile.penetrate = -1;
-
-            Projectile.scale = 0.1f;
-
-            Projectile.timeLeft = 60; //30
-            Projectile.tileCollide = false; //false;
-            Projectile.width = 20;
-            Projectile.height = 20;
-        }
-
-        int timer = 0;
-        public override void AI()
-        {
-            if (timer == 0)
-            {
-                //Projectile.rotation = Main.rand.NextFloat(6.28f);
-            }
-            //Projectile.scale = 1f;
-            Projectile.scale = MathHelper.Lerp(Projectile.scale, 0.6f, 0.2f); //1.51
-            //Projectile.rotation += 0.06f;
-            timer++;
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Player Player = Main.player[Projectile.owner];
-            Texture2D texture = Mod.Assets.Request<Texture2D>("Assets/EnergyBalls/energyball_4").Value;
-
-            Vector2 tTex = new Vector2(Projectile.scale, Projectile.scale);
-            //Use bigCircle (Cyvercry/Textures) for caustics and energyBall_9 for eye effect (3draws)
-            //GlowConnectorGhost for double circle (3draws)
-
-            //tstar caus, heartOriginal grad, eball4 tex (3draws)
-
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/tstar").Value);
-            myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
-            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/EnergyBalls/energyball_9").Value);
-            myEffect.Parameters["uTime"].SetValue(timer * 0.08f); //0.04
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-            myEffect.CurrentTechnique.Passes[0].Apply();
-
-            int height1 = texture.Height;
-            Vector2 origin1 = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, tTex, SpriteEffects.None, 0.0f);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, tTex, SpriteEffects.None, 0.0f);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, tTex, SpriteEffects.None, 0.0f);
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, origin1, tTex, SpriteEffects.None, 0.0f);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-            return false;
         }
     }
 
@@ -1071,26 +929,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
-        public override bool? CanDamage() { return false; }
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Burning Explosion");
+            //DisplayName.SetDefault("Burning Explosion");
         }
 
         public override void SetDefaults()
         {
-            Projectile.friendly = true;
-            Projectile.ignoreWater = true;
-            Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.scale = 0.1f;
+            Projectile.DamageType = DamageClass.Melee;
 
-            Projectile.timeLeft = 300;
-            Projectile.tileCollide = false; //false;
             Projectile.width = 20;
             Projectile.height = 20;
+            Projectile.scale = 0.1f;
+            Projectile.timeLeft = 300;
+            Projectile.penetrate = -1;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false; 
         }
+
+        //Damage is done through a strike
+        public override bool? CanDamage() => false;
+
 
         int timer = 0;
         bool firstFrame = true;
@@ -1116,9 +979,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                             Direction = -1;
 
                         HitInfo myHit = new HitInfo();
-                        myHit.Damage = (int)(Projectile.damage * 0.5f); //CHANGE ME
+                        myHit.Damage = (int)(Projectile.damage * 1f);
                         myHit.Knockback = Projectile.knockBack;
                         myHit.HitDirection = Direction;
+                        myHit.DamageType = DamageClass.Melee;
 
                         Main.npc[i].StrikeNPC(myHit);
 
@@ -1157,7 +1021,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             scale2 = Math.Clamp(MathHelper.Lerp(scale2, 2.1f, 0.05f), 0f, 2f);
             scale3 = Math.Clamp(MathHelper.Lerp(scale3, 2.1f, 0.10f), 0f, 2f);
 
-            //Projectile.Center = Main.player[Projectile.owner].Center;
             Projectile.velocity = Vector2.Zero;
 
             if (timer > 10)
@@ -1179,13 +1042,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D circle = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/MagmaBall");
             Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
             Texture2D color = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/color_burst_30");
-            Texture2D fourStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_06");
 
 
             Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.Black * 0.85f * colorIntensity, Projectile.rotation * 1.5f, circle2.Size() / 2, Projectile.scale * 0.75f, 0, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.OrangeRed * 0.7f * colorIntensity, Projectile.rotation * 2f, sixStar.Size() / 2, Projectile.scale * 0.5f, 0, 0f);
 
             Main.spriteBatch.Draw(sixStar, Projectile.Center - Main.screenPosition, null, Color.OrangeRed * colorIntensity, Projectile.rotation, sixStar.Size() / 2, Projectile.scale * 0.75f, 0, 0f);
@@ -1196,7 +1059,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Main.spriteBatch.Draw(circle2, Projectile.Center - Main.screenPosition, null, Color.White * 1f * colorIntensity, Projectile.rotation * 1.5f, circle2.Size() / 2, Projectile.scale * 0.25f, 0, 0f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             return false;
         }
     }

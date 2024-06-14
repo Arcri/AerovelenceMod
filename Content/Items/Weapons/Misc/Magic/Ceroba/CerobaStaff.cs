@@ -28,12 +28,17 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 {
+
+    //This weapon is a fucking atrocity codewise
+    //I am sorry for anyone going through this that isn't me
+
     public class CerobaStaffItem : ModItem
     {
         public override void SetDefaults()
         {
             Item.damage = 76;
-            Item.knockBack = 2;
+            Item.knockBack = KnockbackTiers.Average;
+            Item.mana = 12;
             Item.shootSpeed = 10;
 
             Item.useTime = 9; //13
@@ -44,7 +49,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Item.width = 62;
             Item.height = 62;
             Item.value = Item.sellPrice(0, 12, 9, 23);
-            Item.rare = ItemRarityID.Pink;
+            Item.rare = ItemRarities.PostPlantDungeon;
 
             Item.DamageType = DamageClass.Magic;
             Item.noMelee = true;
@@ -56,6 +61,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         }
 
         public override bool AltFunctionUse(Player player) => true;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.SpectreBar, 12).
+                AddIngredient(ItemID.SoulofLight, 6).
+                AddIngredient(ItemID.GoldBar, 6).
+                AddTile(TileID.MythrilAnvil).
+                Register();
+
+            CreateRecipe().
+                AddIngredient(ItemID.SpectreBar, 12).
+                AddIngredient(ItemID.SoulofLight, 6).
+                AddIngredient(ItemID.PlatinumBar, 6).
+                AddTile(TileID.MythrilAnvil).
+                Register();
+        }
 
         public override void HoldItem(Player player)
         {
@@ -84,23 +106,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                     {
                         if (p.owner == player.whoAmI)
                         {
+
                             (p.ModProjectile as CerobaIdleHeldProj).justShotValue = 1;
                             (p.ModProjectile as CerobaIdleHeldProj).starRot += MathHelper.PiOver4;
                             (p.ModProjectile as CerobaIdleHeldProj).starDir *= -1;
 
                             Vector2 spawnPos = (p.ModProjectile as CerobaIdleHeldProj).ProjSpawnPosition;
 
-                            int FireBall = Projectile.NewProjectile(null, spawnPos, randomVel * 2f, ModContent.ProjectileType<CerobaFireBall>(), damage, knockback, Main.myPlayer);
-
-                            for (int d = 0; d < 18; d++)
+                            //Make sure dumb shit didnt happen
+                            if (spawnPos.Distance(player.Center) < 100)
                             {
-                                int rand = Main.rand.Next(0, 3);
-                                Color col = rand == 0 ? Color.DeepPink : (rand == 1 ? Color.Pink : Color.HotPink);
+                                int FireBall = Projectile.NewProjectile(null, spawnPos, randomVel * 2f, ModContent.ProjectileType<CerobaFireBall>(), damage, knockback, Main.myPlayer);
 
-                                Dust dust = Dust.NewDustPerfect(spawnPos, ModContent.DustType<RoaParticle>(), randomVel.RotatedByRandom(0.4f) * Main.rand.NextFloat(0.35f, 1f), newColor: col, Scale: Main.rand.NextFloat(0.5f, 1f));
-                                dust.fadeIn = Main.rand.Next(0, 4);
-                                dust.alpha = Main.rand.Next(0, 2);
+                                for (int d = 0; d < 18; d++)
+                                {
+                                    int rand = Main.rand.Next(0, 3);
+                                    Color col = rand == 0 ? Color.DeepPink : (rand == 1 ? Color.Pink : Color.HotPink);
+
+                                    Dust dust = Dust.NewDustPerfect(spawnPos, ModContent.DustType<RoaParticle>(), randomVel.RotatedByRandom(0.4f) * Main.rand.NextFloat(0.35f, 1f), newColor: col, Scale: Main.rand.NextFloat(0.5f, 1f));
+                                    dust.fadeIn = Main.rand.Next(0, 4);
+                                    dust.alpha = Main.rand.Next(0, 2);
+                                }
                             }
+
                         }
                     }
                 }
@@ -132,7 +160,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Projectile.penetrate = -1;
         }
 
-        public override bool? CanCutTiles() { return false; }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
 
         public bool startDone = false;
 
@@ -222,6 +252,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             timer++;
         }
 
+        //SHUT UP SHUT UP SHUT UP SHUT UP SHUT UP SHUT UP
         public void FaceRightLogic(Player player)
         {
             float progress = Utils.GetLerpValue(0f, 1f, timer / 40f, true);
@@ -405,6 +436,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         public int advancer = 0;
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = Projectile.height = 30;
             Projectile.ignoreWater = false;
             Projectile.hostile = false;
@@ -679,6 +712,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         public int advancer = 0;
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = Projectile.height = 30;
             Projectile.ignoreWater = false;
             Projectile.hostile = false;
@@ -691,7 +726,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
         Vector2 storedDistanceFromOwner = Vector2.Zero;
 
-        public override bool? CanDamage() { return false; }
+        public override bool? CanDamage() => false; 
 
         float alpha = 1f;
         float progress = 0f;
@@ -820,23 +855,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D Overlay = ModContent.Request<Texture2D>(path + "CerobaWardCore").Value;
 
             Vector2 position = Projectile.Center - Main.screenPosition;
-            Rectangle framing = Ward.Frame(1, 1, 0, 0);// new Rectangle(0, 0, (int)(Quarter.Width * progress), (int)(Quarter.Height * 0.25f) + (int)(Quarter.Height * 0.75f)); 
-
-
-            /*
-            for (int i = 0; i < 4; i++)
-            {
-                Vector2 bonusPos = new Vector2(0f, 0f);//new Vector2(50f, 0f).RotatedBy(Projectile.rotation + MathHelper.PiOver2) * (1f - progress); 
-
-                float rot = Projectile.rotation + MathHelper.PiOver2 * i;
-
-                Main.EntitySpriteDraw(Quarter, position + bonusPos, framing, Color.HotPink with { A = 0 } * alpha, rot, Quarter.Size() / 2f, Projectile.scale, SpriteEffects.None);
-                Main.EntitySpriteDraw(Quarter, position + bonusPos, framing, Color.HotPink with { A = 0 } * alpha, rot, Quarter.Size() / 2f, Projectile.scale, SpriteEffects.None);
-
-                Main.EntitySpriteDraw(QuarterTop, position + bonusPos, framing, Color.White * alpha * 1f, rot, QuarterTop.Size() / 2f, Projectile.scale, SpriteEffects.None);
-
-            }
-            */
+            Rectangle framing = Ward.Frame(1, 1, 0, 0);
 
             Main.EntitySpriteDraw(Ward, position, framing, Color.HotPink with { A = 0 } * alpha, Projectile.rotation, Ward.Size() / 2f, Projectile.scale, SpriteEffects.None);
             Main.EntitySpriteDraw(Ward, position, framing, Color.DeepPink with { A = 0 } * alpha, Projectile.rotation, Ward.Size() / 2f, Projectile.scale, SpriteEffects.None);
@@ -869,7 +888,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Projectile.penetrate = -1;
         }
 
-        public override bool? CanCutTiles() { return false; }
+        public override bool? CanCutTiles() => false;
+
+        public override bool? CanDamage() => false;
 
         int timer = 0;
         float armRot = 0f;
@@ -1001,14 +1022,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Main.EntitySpriteDraw(Staff, offset - Main.screenPosition, null, lightColor * alpha, Projectile.rotation + MathHelper.PiOver4, origin, Projectile.scale, SpriteEffects.None);
             Main.EntitySpriteDraw(Glowmask, offset - Main.screenPosition, null, Color.White * alpha, Projectile.rotation + MathHelper.PiOver4, origin, Projectile.scale, SpriteEffects.None);
 
-            
-
-
-
-            //Utils.DrawLine(Main.spriteBatch, player.Center, player.Center + arcStartAngle.ToRotationVector2() * 150f, Color.HotPink);
-            //Utils.DrawLine(Main.spriteBatch, player.Center, player.Center + arcCurrentAngle.ToRotationVector2() * 150f, Color.DeepSkyBlue);
-            //Utils.DrawLine(Main.spriteBatch, player.Center, player.Center + arcEndAngle.ToRotationVector2() * 150f, Color.White);
-
             return false;
         }
 
@@ -1020,7 +1033,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
         public override void SetDefaults()
         {
-            Projectile.damage = 0;
             Projectile.width = 10;
             Projectile.height = 10;
 
@@ -1036,7 +1048,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
         }
 
-        public override bool? CanDamage() { return false; }
+        public override bool? CanDamage() => false;
+
+        public override bool? CanCutTiles() => false;
 
         int timer = 0;
         public float scale = 1f;
@@ -1050,12 +1064,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 Projectile.velocity = Vector2.Zero;
             }
 
-            //float easeProg = Utils.GetLerpValue(0f, 1f, timer / 20f, true);
-
-            //scale = MathHelper.Lerp(1f, 0f, Easings.easeInBack(easeProg));
-            //alpha = MathHelper.Lerp(1f, 0f, Easings.easeInQuint(easeProg));
-
-            
             if (timer < 5)
             {
                 scale += 0.15f;

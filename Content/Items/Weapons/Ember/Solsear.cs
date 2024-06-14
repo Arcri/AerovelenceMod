@@ -25,35 +25,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 "Aim the tip of the laser into the flare to increase its size\n" +
                 "The tip of the laser also deals more damage"); */
         }
-        public override bool AltFunctionUse(Player player) => true;
+
 
         public override void SetDefaults()
         {
-            //item.UseSound = SoundID.Item11;
-            //Item.UseSound = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, };
-            Item.crit = 4;
             Item.damage = 60;
-            Item.DamageType = DamageClass.Ranged;
-            Item.width = 46;
-            Item.height = 28;
+            Item.knockBack = 1f; //Very weak
+            Item.width = 92;
+            Item.height = 30;
             Item.useTime = 15;
             Item.useAnimation = 15;
+            Item.shootSpeed = 4f; 
+            Item.scale = 1.15f;
+
+            Item.DamageType = DamageClass.Ranged;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 0;
-            Item.value = Item.sellPrice(0, 9, 0, 0);
-            Item.rare = ItemRarityID.Orange;
+            Item.shoot = ModContent.ProjectileType<SolsearHeldProj>();
+            Item.rare = ItemRarities.EarlyHardmode;
+            Item.value = Item.sellPrice(0, 4, 50, 0);
+
             Item.autoReuse = false;
             Item.noUseGraphic = true;
-            Item.shoot = ModContent.ProjectileType<SolsearHeldProj>();
-            //Item.useAmmo = AmmoID.Bullet;
             Item.channel = true;
-            Item.shootSpeed = 4f; //2
-            Item.scale = 1.15f;
+            Item.noMelee = true;
+
         }
-        public override Vector2? HoldoutOffset()
+        public override bool AltFunctionUse(Player player) => true;
+
+        public override void AddRecipes()
         {
-            return new Vector2(-25, 0); //-4
+            CreateRecipe().
+                AddIngredient(ItemID.HellstoneBar, 15).
+                AddIngredient(ItemID.SoulofLight, 7).
+                AddRecipeGroup("AerovelenceMod:MechSouls", 3).
+                AddTile(TileID.MythrilAnvil).
+                Register();
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
@@ -62,29 +68,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             {
                 damage = (int)damage / 2;
             }
-            /*
-            Vector2 muzzleOffset = Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 25f;
-            if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
-            {
-                position += muzzleOffset;
-            }
-            if (player.direction == -1)
-                position += new Vector2(0, 4).RotatedBy(velocity.ToRotation());
-            else
-                position += new Vector2(0, -4).RotatedBy(velocity.ToRotation());
-            Main.NewText(player.direction);
-            */
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (player.altFunctionUse == 2)
             {
-                /*
-                if (player.ownedProjectileCounts[ModContent.ProjectileType<MagmaBall>()] < 3)
-                {
-                    return false;
-                }
-                */
 
                 Vector2 offset = Vector2.Normalize(velocity).RotatedBy(-1.57f * player.direction) * 10;
                 offset += position;
@@ -111,8 +99,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 for (int i22 = 0; i22 < 10; i22++) //4 //2,2
                 {
                     Color col = Main.rand.NextBool(2) ? new Color(255, 45, 0) : Color.OrangeRed;
-
-                    /// rotBy(-2.2, 2.2)
 
                     Dust p = Dust.NewDustPerfect(position + velocity.SafeNormalize(Vector2.UnitX) * 5, ModContent.DustType<LineSpark>(),
                         velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-1.8f, 1.8f)) * Main.rand.Next(4, 12),
@@ -156,17 +142,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             {
                 Item.noUseGraphic = true;
             }
-        }
-
-        public override bool CanUseItem(Player player)
-        {
-
-            return true;
-        }
-
-        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
-        {
-            return true;
         }
 
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
@@ -213,7 +188,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
     public class SolsearHeld2 : ModProjectile
     {
-        //This class exists literally to just draw the glowmask
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+
+        //This class exists literally to just draw the glowmask on m2
         private bool initialized = false;
 
         private Vector2 currentDirection => Projectile.rotation.ToRotationVector2();
@@ -226,21 +204,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         float justShotPowerWeaker = 1f;
         public override void SetDefaults()
         {
-            Projectile.hostile = false;
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.width = 2;
             Projectile.height = 2;
-            Projectile.aiStyle = -1;
-            Projectile.friendly = true;
             Projectile.penetrate = -1;
-            Projectile.tileCollide = false;
             Projectile.timeLeft = 999999;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+        public override bool? CanCutTiles() => false;
+
         public override void AI()
         {
             owner.heldProj = Projectile.whoAmI;

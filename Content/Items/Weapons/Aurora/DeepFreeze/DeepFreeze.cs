@@ -15,7 +15,7 @@ using Terraria.Audio;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 
-namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
+namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 {
     public class DeepFreeze : ModItem
     {
@@ -24,67 +24,55 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             // DisplayName.SetDefault("Deep Freeze");
             // Tooltip.SetDefault("'Is it cold in here, or is it just me?'");
         }
+
         public override void SetDefaults()
         {
-            Item.value = Item.sellPrice(0, 6, 0, 0);
-            Item.knockBack = 0f;
-            Item.width = Item.height = 82;
-            Item.damage = 35;
-            Item.useAnimation = 8;
-            Item.useTime = 1;
+            Item.damage = 42;
+            Item.knockBack = KnockbackTiers.VeryWeak;
+            Item.mana = 4;
+            Item.shootSpeed = 9f; //8f
+
+            Item.width = 98;
+            Item.height = 40;
+            Item.useAnimation = 15; //8 1
+            Item.useTime = 15;
+
+            Item.DamageType = DamageClass.Magic;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.rare = ItemRarities.LatePHM;
+            Item.shoot = ModContent.ProjectileType<DeepFreezeHeldProjectile>();
+            Item.value = Item.sellPrice(0, 4, 0, 0);
+
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.channel = true;
             Item.autoReuse = true;
-            Item.mana = 3;
-            Item.DamageType = DamageClass.Magic;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.rare = ItemRarityID.Orange;
-            Item.shootSpeed = 8f;
-            Item.shoot = ModContent.ProjectileType<DeepFreezeHeldProjectile>();
+
         }
 
-        public override Vector2? HoldoutOffset()
-        {
-            return new Vector2(-25, -5);
-        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            //SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_55") with { Volume = .14f, Pitch = .85f, PitchVariance = .19f, MaxInstances = 0, };
-            //SoundEngine.PlaySound(style, position);
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_wind_attack_0") with { Volume = .36f, Pitch = -.84f, PitchVariance = .15f, MaxInstances = 0, };
             SoundEngine.PlaySound(style2, position);
-            /*
-            Vector2 muzzleOffset = Vector2.Normalize(velocity) * 40f;
-
-            if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
-            {
-                position += muzzleOffset;
-            }
-
-            int a = Projectile.NewProjectile(null, position, velocity.RotatedBy(Main.rand.NextFloat(-0.1f,0.1f)), ModContent.ProjectileType<DeepFreezeProj>(), 0, 0);
-            Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
-            if (Main.projectile[a].ModProjectile is DeepFreezeProj explo)
-            {
-                //Color col = i >= 60 ? Color.Goldenrod : Color.OrangeRed;
-                //explo.color = col;
-                //explo.size = 0.65f;
-                //explo.colorIntensity = 0.7f; //0.5
-                //explo.rise = true;
-            }
-            */
+            
             return true;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.MeteoriteBar, 7).
+                AddIngredient(ItemID.HellstoneBar, 7).
+                AddRecipeGroup("AerovelenceMod:EvilBars", 7).
+                AddTile(TileID.Anvils).
+                Register();
         }
 
     }
 
     public class DeepFreezeHeldProjectile : ModProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Deep Freeze");
-        }
         int maxTime = 50;
 
         int timer = 0;
@@ -101,27 +89,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
         Color eyeCol = Color.White;
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             maxTime = 90;
             Projectile.timeLeft = maxTime;
+
+
             Projectile.width = Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Magic;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
+
+            Projectile.penetrate = -1;
             Projectile.scale = 1f;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
-        public override bool? CanCutTiles()
-        {
-            return false;
-        }
+        public override bool? CanCutTiles() => false;
+        
 
         Color[] bandColors = new Color[3];
         public override void AI()
@@ -132,21 +120,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             bandColors[1] = FetchRainbow((int)(timer * 2f));
             bandColors[2] = FetchRainbow((int)(timer * 2.5f));
 
-            //storedMousePos = Vector2.SmoothStep(storedMousePos, Main.MouseWorld, 0.12f);
-            storedMousePos = Vector2.Lerp(storedMousePos, Main.MouseWorld, 0.03f); //0.08
+            storedMousePos = Vector2.Lerp(storedMousePos, Main.MouseWorld, 0.04f);
 
-            if (timer % 10 == 0 && Main.rand.NextBool() && timer > 0) //40 | 30
+            if (timer % 10 == 0 && Main.rand.NextBool() && timer > 0) 
             {
                 
                 ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
                 Vector2 offsetVel = Projectile.rotation.ToRotationVector2().RotatedBy(Main.rand.NextBool() ? Main.rand.NextFloat(-0.6f, -0.3f) : Main.rand.NextFloat(0.3f, 0.6f));
                 Dust p = GlowDustHelper.DrawGlowDustPerfect((Projectile.rotation.ToRotationVector2() * 45) + Projectile.Center, 
                     ModContent.DustType<FuzzySpark>(), offsetVel * (4f + Main.rand.NextFloat(-1f, 1f)),
                     eyeCol, Main.rand.NextFloat(0.1f, 0.1f), 0.4f, 0f, dustShader);
                 p.noLight = true;
-                //p.fadeIn = 40 + Main.rand.NextFloat(5, 10);
                 
             }
 
@@ -169,19 +154,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
                 }
 
                 direction = Angle.ToRotationVector2();
-                //Player.ChangeDir(direction.X > 0 ? 1 : -1);
                 maxTime = 30;
             }
             else
             {
                 maxTime--;
-                //Projectile.active = false;
             }
 
-            if (maxTime <= 0 || Player.dead)
-            {
+            if (maxTime <= 0 || Player.CheckMana(Player.inventory[Player.selectedItem], pay: false))
                 Projectile.active = false;
-            }
+
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
 
             float targetRot = (Main.MouseWorld - Player.Center).ToRotation();
             float diff = CompareAngle(Projectile.rotation, targetRot);
@@ -205,15 +189,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Projectile.rotation = rotDirection;// direction.ToRotation();
 
             //The > 5 check is for weird instances where the shot would go off in random dir
-            if (timer % 6 == 0 && maxTime > 5 && Player.statMana > 3)
+            if (timer % 6 == 0 && maxTime > 5 && Player.CheckMana(Player.inventory[Player.selectedItem], pay: true))
             {
-                Player.statMana -= 3;
                 SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_55") with { Volume = .06f, Pitch = .85f, PitchVariance = .1f, MaxInstances = 0, };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
                 if (Player.channel)
                 {
-                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_wind_attack_0") with { Volume = .30f, Pitch = -.84f, PitchVariance = .15f, MaxInstances = 0, };
+                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_wind_attack_0") with { Volume = .30f, Pitch = -.84f, PitchVariance = .25f, MaxInstances = 0, };
                     SoundEngine.PlaySound(style2, Projectile.Center);
                 }
                 
@@ -244,7 +227,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Player Player = Main.player[Projectile.owner];
 
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-            Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreeze_Glow").Value;
+            Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/DeepFreeze_Glow").Value;
             Texture2D orb = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/spiky_10").Value;
             Texture2D orb2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
 
@@ -252,16 +235,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             Texture2D eyeOrb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_3").Value;
 
 
-            Texture2D eye = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/eyeGlow").Value;
-            Texture2D band1 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/band1").Value;
-            Texture2D band2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/band2").Value;
-            Texture2D band3 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/band3").Value;
+            Texture2D eye = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/eyeGlow").Value;
+            Texture2D band1 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band1").Value;
+            Texture2D band2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band2").Value;
+            Texture2D band3 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band3").Value;
 
 
-            int height1 = texture.Height;
-            Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-            Vector2 position = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -1f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
-            Vector2 orbPosition = (Projectile.position - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -10f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
+            Vector2 origin = texture.Size() / 2f;
+            Vector2 position = (Projectile.Center - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -1f)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition).Floor();
+            Vector2 orbPosition = (Projectile.Center - (0.5f * (rotDirection.ToRotationVector2() * OFFSET * -10f)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition).Floor();
 
             SpriteEffects effects = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             float extraRot = Player.direction == 1 ? 0 : MathF.PI;
@@ -281,7 +263,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
             //MouthOrb
             Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.3f, rotDirection - (timer * 0.1f * Player.direction), orb.Size() / 2, 0.17f + sinScale, effects, 0.0f);
-            //Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.2f, effects, 0.0f);
             Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction), orb.Size() / 2, 0.15f + sinScale, effects, 0.0f);
             Main.spriteBatch.Draw(orb2, orbPosition, null, Color.White, rotDirection + (timer * 0.01f * Player.direction), orb2.Size() / 2, 0.15f + sinScale, effects, 0.0f);
 
@@ -308,74 +289,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
             //I have no fucking idea why I have to do this twice but if I don't the player's arm will draw with additive blending somehow someway somewhy help
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-            /*
-
-            if (Player.direction == 1)
-            {
-                SpriteEffects effects1 = SpriteEffects.None;
-                Main.spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), null, lightColor, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                //Main.spriteBatch.Draw(texture, position, null, eyeCol * 0.5f, rotDirection, origin, Projectile.scale * 1.1f, effects1, 0.0f);
-
-                
-
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-                Main.spriteBatch.Draw(eye, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                //Main.spriteBatch.Draw(band1, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                //Main.spriteBatch.Draw(band2, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                //Main.spriteBatch.Draw(band3, position, null, eyeCol, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-
-                //MouthOrb
-                ///Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection + (timer * 0.1f), orb.Size() / 2, 0.15f, effects1, 0.0f);
-                ///Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.1f, effects1, 0.0f);
-                //Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol, rotDirection - (timer * 0.05f), orb.Size() / 2, 0.1f, effects1, 0.0f);
-                ///Main.spriteBatch.Draw(orb, orbPosition, null, Color.White, rotDirection - (timer * 0.01f), orb.Size() / 2, 0.07f, effects1, 0.0f);
-
-                Vector2 eyeScale = new Vector2(0.15f, 1f);
-                Vector2 eyePos = new Vector2(23f, -9f).RotatedBy(rotDirection) + position;
-
-                //EyeOrb
-                Main.spriteBatch.Draw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f), eyeOrb.Size() / 2, 0.4f * eyeScale, effects1, 0.0f);
-                Main.spriteBatch.Draw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection - (timer * 0.05f), eyeOrb.Size() / 2, 0.3f * eyeScale, effects1, 0.0f);
-                Main.spriteBatch.Draw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection - (timer * 0.01f), eyeOrb.Size() / 2, 0.2f * eyeScale, effects1, 0.0f);
-
-                //ExtraEye
-                for (int i = 0; i < 3; i++)
-                {
-                    Main.spriteBatch.Draw(eye, position + Main.rand.NextVector2Circular(4,4), null, bandColors[i] * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-
-                    Main.spriteBatch.Draw(band1, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                    Main.spriteBatch.Draw(band2, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-                    Main.spriteBatch.Draw(band3, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection, origin, Projectile.scale, effects1, 0.0f);
-
-                }
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            }
-            else 
-            {
-                SpriteEffects effects1 = SpriteEffects.FlipHorizontally;
-                Main.spriteBatch.Draw(texture, position, null, lightColor, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-                //Main.spriteBatch.Draw(glowMask, position, null, eyeCol, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(eye, position, null, eyeCol, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band1, position, null, eyeCol, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band2, position, null, eyeCol, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-                Main.spriteBatch.Draw(band3, position, null, eyeCol, rotDirection - 3.14f, origin, Projectile.scale, effects1, 0.0f);
-
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            }
-
-            */
 
             return false;
         }
@@ -444,11 +357,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
     public class AuroraBlast : ModProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Icy Wind");
-
-        }
 
         public List<IcyWind> Wind = new List<IcyWind>();
         public int timer = 0;
@@ -458,22 +366,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = 20;
             Projectile.height = 20;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
-            Projectile.penetrate = -1;
             Projectile.timeLeft = 200;
-            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
             Projectile.scale = 3f;
 
-            Projectile.hide = false;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
         }
 
-        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-        {
-            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
-        }
 
         bool enemyHit = false;
         public override bool? CanDamage()
@@ -531,7 +436,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreezeProj").Value;
+            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/DeepFreezeProj").Value;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
             myEffect.Parameters["uColor"].SetValue(FetchRainbow().ToVector3() * (colorIntensity));

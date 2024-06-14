@@ -55,8 +55,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
         public override void AddRecipes()
         {
             CreateRecipe().
-                AddIngredient(ItemID.CrystalShard, 30).
-                AddIngredient(ItemID.SoulofNight, 10).
+                AddIngredient(ItemID.NeonTetra, 4).
+                AddIngredient(ItemID.SoulofLight, 4).
+                AddIngredient(ItemID.SoulofNight, 4).
                 AddTile(TileID.MythrilAnvil).
                 Register();
         }

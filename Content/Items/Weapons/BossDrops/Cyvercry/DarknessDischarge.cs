@@ -662,16 +662,16 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 			#region trailInfo
 			//Trail1 
-			trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FireEdge").Value;
+			trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/smokeTrail4_512").Value;
 			//trail1.trailColor = Color.DodgerBlue;
 			trail1.trailPointLimit = 300;
 			trail1.trailWidth = 30;
 			trail1.trailMaxLength = 700;
 			trail1.timesToDraw = 10;
-			trail1.pinch = true;
+			trail1.pinch = false;
 			trail1.pinchAmount = 0.4f;
 
-			//trail1.trailTime = mainTimer * 0.03f;
+			trail1.trailTime = mainTimer * 0.03f;
 			trail1.trailRot = Projectile.velocity.ToRotation();
 
 			trail1.trailPos = Projectile.Center + Projectile.velocity;
@@ -683,13 +683,13 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			trail1.gradientTime = (float)Main.timeForVisualEffects * 0.03f;
 
 			//Trail2
-			trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
-			trail2.trailColor = Color.White;
+			trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/ThinnerGlowTrail").Value;
+			trail2.trailColor = Color.White * 1f;
 			trail2.trailPointLimit = 300;
-			trail2.trailWidth = 40;
+			trail2.trailWidth = 20;
 			trail2.trailMaxLength = 300;
 			trail2.timesToDraw = 2;
-			trail2.pinch = true;
+			trail2.pinch = false;
 			trail2.pinchAmount = 0.4f;
 
 			trail2.trailTime = mainTimer * 0.06f;

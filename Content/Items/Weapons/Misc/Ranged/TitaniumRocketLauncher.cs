@@ -3,6 +3,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Ember;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,49 +24,41 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Titanium Rocket Launcher");
-			// Tooltip.SetDefault("Right click to shoot a larger rocket that tries to follow the mouse\nDoes not require ammo");
-		}
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<AdamantitePulsar>();
+            // DisplayName.SetDefault("Titanium Rocket Launcher");
+            // Tooltip.SetDefault("Right click to shoot a larger rocket that tries to follow the mouse\nDoes not require ammo");
+        }
 
 		public override void SetDefaults()
 		{
 			Item.damage = 60;
-			Item.rare = ItemRarityID.Cyan;
-			Item.width = 58;
-			Item.height = 20;
-			Item.useTime = 30; 
-			Item.useAnimation = 30; 
+			Item.knockBack = KnockbackTiers.Strong;
+            Item.width = 86;
+            Item.height = 34;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.shootSpeed = 7f;
+
+
+
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.shootSpeed = 7f;
-			Item.knockBack = 6f;
-			Item.DamageType = DamageClass.Ranged;
-			Item.autoReuse = true;
-			Item.noMelee = true;
-			Item.value = Item.buyPrice(0, 5, 0, 0);
-			Item.shoot = ProjectileID.WoodenArrowFriendly;
+            Item.shoot = ProjectileID.WoodenArrowFriendly;
+            Item.DamageType = DamageClass.Ranged;
+            Item.rare = ItemRarities.PrePlantPostMech;
+            Item.value = Item.buyPrice(0, 5, 0, 0);
+
 			Item.noUseGraphic = true;
-			//Item.UseSound = SoundID.Item145;
-			//Item.useAmmo = AmmoID.Rocket;
-		}
+            Item.autoReuse = true;
+            Item.noMelee = true;
+        }
 
 		public override bool AltFunctionUse(Player player) => true;
 
-		public override Vector2? HoldoutOffset()
-		{
-			return new Vector2(-20, 5);
-		}
-
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			float multiplier = 0f;
 			if (player.altFunctionUse == 2)
             {
-				//SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { Volume = 0.4f, PitchVariance = 0.2f, Pitch = 0.5f }, player.Center);
-
-				//player.velocity += velocity * -0.55f;
-				multiplier = 2f;
 				damage *= 4;
-				//type = ModContent.ProjectileType<TitaniumRocket>();
 				Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldLarge>(), damage, knockback, player.whoAmI);
 				return false;
 			}
@@ -73,12 +66,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             {
 				Vector2 oopsie = velocity * 0.25f;
 
-				SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { Volume = 0.2f, PitchVariance = 0.2f, Pitch = 0.3f }, player.Center);
-				multiplier = 1f;
+				SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { Volume = 0.2f, PitchVariance = 0.2f, Pitch = 0.2f, MaxInstances = -1 }, player.Center);
 				type = ModContent.ProjectileType<TitaniumMiniRocket>();
 				damage *= 2;
 				velocity *= 0.2f;
-				//player.velocity += velocity * -0.1f;
 
 				Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldSmall>(), 0, 0, player.whoAmI);
 
@@ -97,47 +88,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				position += muzzleOffset;
 			}
 
-			Projectile.NewProjectile(source, position, velocity.RotatedBy(Main.rand.NextFloat(-0.07f, 0.07f)) * 2f, type, damage, knockback, player.whoAmI);
+			Projectile.NewProjectile(source, position, velocity.RotatedBy(Main.rand.NextFloat(-0.05f, 0.05f)) * 2f, type, damage, knockback, player.whoAmI);
 
-			/*
-			ArmorShaderData dustShader1 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-			for (int i = 0; i < 2; i++)
-            {
-				Vector2 vel = velocity.SafeNormalize(Vector2.UnitX).RotatedBy(i == 0 ? -0.25f : 0.25f);
-				Dust p = GlowDustHelper.DrawGlowDustPerfect(position, ModContent.DustType<LineGlow>(), vel * 4,
-					Color.White, 0.2f * (multiplier * 0.5f), 0.4f, 0f, dustShader1);
-			}
-
-			for (int i = 0; i < 4 * multiplier; i++)
-            {
-				Vector2 offsetVel = velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.2f, 0.2f));
-				Dust p = GlowDustHelper.DrawGlowDustPerfect(position, ModContent.DustType<GlowCircleFlare>(), offsetVel * (4f + Main.rand.NextFloat(-1f, 1f) + i * 0.5f),
-					Color.White, Main.rand.NextFloat(0.3f + 0.2f * multiplier, 0.3f + 0.2f * multiplier), 0.4f, 0f, dustShader1);
-				p.fadeIn = 40 + Main.rand.NextFloat(5,10);
-			}
-			*/
 
 			return false;
-
-			
 		}
-
-        public override float UseTimeMultiplier(Player player)
-        {
-			/*
-			if (player.altFunctionUse == 2)
-			{
-				Item.useTime = 70;
-				Item.useAnimation = 70;
-			}
-			else
-			{
-				Item.useTime = 24; //28
-				Item.useAnimation = 24; //28
-			}
-			*/
-			return base.UseTimeMultiplier(player);
-        }
 
         public override void HoldItem(Player player)
 		{
@@ -149,8 +104,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			}
 			else
 			{
-				Item.useTime = 26; //28
-				Item.useAnimation = 26; //28
+				Item.useTime = 25; //26
+				Item.useAnimation = 25; //26
 			}
 			
 		}
@@ -158,14 +113,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		{
 			/*
 			int itemID = ModContent.ItemType<GaussShotgun>();
-			TooltipLine line = new(Mod, "SS", "[i:" + ItemID.FallenStar  + "] Skill Strikes on the second shot [i:" + ItemID.FallenStar + "]")
+			TooltipLine line = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar  + "] Big Rocket Skill Strikes after a second [i:" + ItemID.FallenStar + "]")
 			{
 				OverrideColor = Color.Gold,
 			};
 			tooltips.Add(line);
 			*/
 		}
-	}
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.TitaniumBar, 15).
+                AddIngredient(ItemID.ChlorophyteBar, 4).
+                AddTile(TileID.MythrilAnvil).
+                Register();
+        }
+    }
 	public class TitaniumRocket : ModProjectile
 	{
         public override void SetStaticDefaults()
@@ -196,7 +160,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			if (Main.myPlayer == Projectile.owner)
             {
 				Projectile.velocity += (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 0.5f;
-
 			}
 
 			if (i == 60)
@@ -212,21 +175,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			i++;
 			++Projectile.localAI[0];
 
-			ArmorShaderData dustShader1 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+			//Dust
+			//ArmorShaderData dustShader1 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
 			float piFraction = MathHelper.Pi / oneHelixRevolutionInUpdateTicks;
-			Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * Projectile.height;
-			Dust newDust = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<GlowCircleQuadStar>(),
-				Vector2.Zero, Color.White, 0.35f, 0.4f, 0f, dustShader1);
-			newDust.noGravity = true;
-			newDustPosition.Y *= -1;
-			newDust.noLight = true;
+			
+			Vector2 newDustPosition = new Vector2(0, (float)Math.Sin((Projectile.localAI[0] % oneHelixRevolutionInUpdateTicks) * piFraction)) * 19; //Projectile.height
+			
+			//Dust newDust = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<GlowCircleQuadStar>(),
+				//Vector2.Zero, Color.White, 0.35f, 0.4f, 0f, dustShader1);
 
-			Dust newDust2 = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<GlowCircleQuadStar>(),
-				Vector2.Zero, Color.White, 0.35f, 0.4f, 0f, dustShader1); newDust.noGravity = true;
-			newDust2.velocity *= 0f;
-			newDust2.noLight = true;
-			Projectile.rotation = Projectile.velocity.ToRotation();
+			Dust starDust1 = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<GlowPixelCross>(),
+				Vector2.Zero, newColor: Color.White, Scale: 0.35f);
+            starDust1.noLight = true;
+            starDust1.rotation = Main.rand.NextFloat(6.28f);
+
+            newDustPosition.Y *= -1;
+
+            Dust starDust2 = Dust.NewDustPerfect(Projectile.Center + newDustPosition.RotatedBy(Projectile.velocity.ToRotation()), ModContent.DustType<GlowPixelCross>(),
+                Vector2.Zero, newColor: Color.White, Scale: 0.35f);
+            starDust2.noLight = true;
+			starDust2.rotation = Main.rand.NextFloat(6.28f);
+
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
 			if (i % 2 == 0)
 			{
@@ -284,7 +256,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 					sa.velocity.Y = MathF.Abs(sa.velocity.Y) * -1;
 			}
 
-			int explosion = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
+            //                smoke.customData = AssignBehavior_HRSBase(5, 25, 1f, 1f, true, 1f);
+
+            int explosion = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FadeExplosionHandler>(), 0, 0, Main.myPlayer);
 
 			if (Main.projectile[explosion].ModProjectile is FadeExplosionHandler feh)
 			{
@@ -301,41 +275,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				}
 			}
 
-			/*
-			for (int j = 0; j < 10; j++)
-            {
-				int a = Projectile.NewProjectile(null, Projectile.Center, new Vector2(1f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.7f, 2f), ModContent.ProjectileType<FadeExplosion>(), 0, 0);
-				Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
-				if (Main.projectile[a].ModProjectile is FadeExplosion explo)
-				{
-					Color col = i >= 60 ? Color.Goldenrod : Color.OrangeRed;
-					explo.color = col;
-					explo.size = 0.65f;
-					explo.colorIntensity = 0.7f; //0.5
-					explo.rise = true;
-				}
-			}
-
-
-			Projectile.position.X = Projectile.position.X + (Projectile.width / 2);
-			Projectile.position.Y = Projectile.position.Y + (Projectile.width / 2);
-			Projectile.width = 30;
-			Projectile.height = 30;
-			Projectile.position.X = Projectile.position.X - (Projectile.width / 2);
-			Projectile.position.Y = Projectile.position.Y - (Projectile.width / 2);
-
-			for (int i = 0; i < 20; i++)
-			{
-				int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 0.5f);
-				Main.dust[dust].noGravity = true;
-				Main.dust[dust].velocity *= 5f;
-				Main.dust[dust].velocity.Y += -1;
-
-				dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 0.5f);
-				Main.dust[dust].velocity *= 2f;
-				Main.dust[dust].velocity.Y += -1;
-			}
-			*/
 		}
 
 		float colVal = 0f;
@@ -459,29 +398,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override void OnKill(int timeLeft)
         {
-			//SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.55f, PitchVariance = 0.25f, MaxInstances = -1, Volume = 0.75f };
-			//SoundEngine.PlaySound(style, Projectile.Center);
 
-			SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/hero_fury_charm_burst") with { Pitch = .65f, PitchVariance = 0.2f, MaxInstances = -1, Volume = 0.75f }; 
-			SoundEngine.PlaySound(style2, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.4f, Volume = 0.45f, MaxInstances = -1, PitchVariance = 0.35f }, Projectile.Center);
 
-			SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.25f, Volume = 0.5f, MaxInstances = -1, PitchVariance = 0.25f }, Projectile.Center);
+            SoundStyle style3 = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = -.55f, Volume = 0.66f, MaxInstances = -1, PitchVariance = 0.2f };
+            SoundEngine.PlaySound(style3, Projectile.Center);
 
-			SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 0.15f, Pitch = 0.1f, Volume = 0.75f };
-			SoundEngine.PlaySound(style3, Projectile.Center);
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/hero_fury_charm_burst") with { Pitch = .4f, PitchVariance = 0.25f, MaxInstances = -1, Volume = 0.3f };
+            SoundEngine.PlaySound(style2, Projectile.Center);
 
-			/*
-			for (int i = 0; i < 10; i++)
-			{
-				int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 0.5f);
-				Main.dust[dust].noGravity = true;
-				Main.dust[dust].velocity *= 5f;
-				dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 91, 0f, 0f, 100, default, 0.5f);
-				Main.dust[dust].velocity *= 2f;
-			}
+            SoundStyle style4 = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 0.25f, Pitch = -0.05f, Volume = 0.4f, MaxInstances = -1 };
+            SoundEngine.PlaySound(style4, Projectile.Center);
+
+            /*
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_74") with { Volume = 0.35f, Pitch = .6f, MaxInstances = -1, PitchVariance = 0.15f };
+            SoundEngine.PlaySound(style, Projectile.Center);
+
+            SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_62") with { Volume = 0.4f, Pitch = .8f, PitchVariance = .25f, MaxInstances = -1 };
+            SoundEngine.PlaySound(style2, Projectile.Center);
+
+            SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_2") with { Volume = 0.65f, Pitch = 0.2f, PitchVariance = .25f, MaxInstances = -1, };
+            SoundEngine.PlaySound(style3, Projectile.Center);
 			*/
 
-			for (int fg = 0; fg < 10; fg++)
+            for (int fg = 0; fg < 10; fg++)
 			{
 				Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
 				Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: new Color(255, 130, 0), Scale: Main.rand.NextFloat(1f, 1.4f) * 0.5f);
@@ -508,7 +448,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 				for (int m = 0; m < 5; m++)
 				{
-					FadeExplosionClass newSmoke = new FadeExplosionClass(Main.projectile[explosion].Center, new Vector2(0.45f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.5f, 2f));
+					FadeExplosionClass newSmoke = new FadeExplosionClass(Main.projectile[explosion].Center, new Vector2(0.45f, 0).RotatedByRandom(6) * Main.rand.NextFloat(0.5f, 1.75f));
 
 					newSmoke.size = 0.3f + Main.rand.NextFloat(-0.1f, 0.15f);
 					feh.Smokes.Add(newSmoke);
@@ -558,10 +498,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
 			}
 
-			if (Projectile.ai[0] == 2)
+			if (Projectile.ai[0] == 1)
 				offset = 7;
 
-			if (Projectile.ai[0] > 2)
+			if (Projectile.ai[0] > 1)
 				offset = Math.Clamp(MathHelper.Lerp(offset, 21, 0.1f), 0, 22);
 			/*
 			if (Projectile.ai[0] < 9)

@@ -10,7 +10,7 @@ using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 
-namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
+namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 {
     public class DeepFreezeProj : ModProjectile
     {
@@ -25,38 +25,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 		public bool sticky = false;
 
-		Vector2 startingVel = Vector2.Zero;
 		Vector2 distFromPlayer = Vector2.Zero;
-
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Icy Wind");
-
-		}
 
         public override void SetDefaults()
 		{
 			Projectile.width = 20;
 			Projectile.height = 20;
-			Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 200;
+            Projectile.scale = 0f;
+
+            Projectile.friendly = true;
 			Projectile.hostile = false;
-			Projectile.penetrate = -1;
-			Projectile.timeLeft = 200;
 			Projectile.tileCollide = false;
-			Projectile.scale = 0f;
 
 		}
 
-		public override bool? CanDamage()
-		{
-			return false;
-		}
+		public override bool? CanDamage() => false;
 
-		public override void AI()
+		public override bool? CanCutTiles() => false;        
+
+        public override void AI()
         {
 			color = Color.SkyBlue;
-			//multiplier = 1.5f;
-			//size = 0.25f;
 
 			Player player = Main.player[Projectile.owner];
 			timer++;
@@ -77,8 +68,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 			if (sticky)
 			{
-				//startingVel = Projectile.velocity;
-				//Projectile.velocity = Vector2.Zero;
 
 				if (timer == 1)
 					distFromPlayer = Projectile.Center - player.Center;
@@ -121,7 +110,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze
 
 			if (timer > 3)
 				Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.Black * colorIntensity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
-			//Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
 
 			return false;
 		}

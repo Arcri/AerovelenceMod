@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -6,6 +7,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 {
@@ -23,10 +25,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
             {
                 if (timer == 0)
                 {
-                    basicAttackPoint = Main.rand.NextVector2CircularEdge(550, 550);
+                    basicAttackPoint = Main.rand.NextVector2CircularEdge(550, 250);
                 }
 
-                BasicMovementVariant1(player.Center + basicAttackPoint, 0.06f, 22, 5, 0.1f, 60);
+                //BasicMovementVariant1(player.Center + basicAttackPoint, 0.06f, 22, 2, 0.1f, 60);
+                
+                //////BasicMovementVariant2(player.Center + basicAttackPoint); bad
+                
+                BasicMovementVariant3(player.Center + basicAttackPoint, 3f, 270f);
 
                 if (timer == 100)
                 {
@@ -38,7 +44,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
             {
                 //NPC.velocity = Vector2.Zero;
 
-                BasicMovementVariant1(player.Center + basicAttackPoint);
+                //BasicMovementVariant1(player.Center + basicAttackPoint);
+
+                BasicMovementVariant3(player.Center + basicAttackPoint, 3f, 540f);
 
 
                 if (timer > 20 && timer < 65 && timer % 8 == 0)
@@ -56,14 +64,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
                     }
                 }
 
-                if (timer == 100)
+                if (timer == 100) //100
                 {
                     substate = 1;
                     timer = -1;
                 }
             }
 
-
+            Dust.NewDustPerfect(player.Center + basicAttackPoint, ModContent.DustType<StillDust>(), Velocity: Vector2.Zero, newColor: Color.Black, Scale: 2f);
         }
 
         public void SwoopFeatherBehind()
@@ -173,36 +181,37 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 
         void BasicMovementVariant2(Vector2 goalPos)
         {
-            Vector2 trueTarget = player.Center + goalPos;
-            float moveSpeed = 4f;
+            Vector2 trueTarget = goalPos;
+            float moveSpeed = 8f; //4f
 
-            float maxSpeed = 8f;
-            float minSpeed = 4f;
-
-
-            // 0 = 0 | 1 = 1000
-
-
-            //float dist = Utils.GetLerpValue();
-            //NPC.Distance(trueTarget)
-
-            //float trueSpeed = Utils.GetLerpValue(minSpeed, maxSpeed, (clampedDistance / 500f), true);
-
-
-            if (NPC.Distance(trueTarget) > moveSpeed)
+            if (NPC.Distance(trueTarget) > moveSpeed * 2f)
             {
                 NPC.velocity += NPC.DirectionTo(trueTarget) * moveSpeed;
             }
 
             float clampedDistance = Math.Clamp(NPC.Distance(trueTarget), 5f, 800f);
 
-            float velocityMult = MathHelper.Lerp(0.8f, 1f, clampedDistance / 800f);
+            float velocityMult = MathHelper.Lerp(0.5f, 0.9f, clampedDistance / 800f);
                 
                 //Utils.GetLerpValue(0.9f, 0.9f, (clampedDistance / 800f), true);
             //Main.NewText((clampedDistance / 800f));
 
             NPC.velocity *= velocityMult;
             
+        }
+
+        void BasicMovementVariant3(Vector2 goalPos, float moveSpeed = 6f, float clampDistance = 240f)
+        {
+            NPC.velocity *= 0.875f;
+
+            Vector2 goTo = goalPos - NPC.Center;
+            float speed = moveSpeed * MathHelper.Clamp(goTo.Length() / clampDistance, 0, 1);
+            if (goTo.Length() < speed)
+            {
+                speed = goTo.Length();
+            }
+            NPC.velocity += goTo.SafeNormalize(Vector2.Zero) * speed;
+
         }
     }
 }

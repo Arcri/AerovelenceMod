@@ -39,8 +39,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
-            dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
             //Immune to fire debuffs because they make him ugly :(
             NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
@@ -79,12 +77,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPC.knockBackResist = 0f;
             NPC.width = 100;
             NPC.height = 100;
+
             NPC.boss = true;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
+
             NPC.HitSound = SoundID.NPCHit4 with { Pitch = -0.5f, PitchVariance = 0.14f };
             NPC.DeathSound = SoundID.NPCDeath14;
-            NPC.value = Item.buyPrice(0, 22, 11, 5);
+
+            NPC.value = Item.buyPrice(0, 25, 50, 0);
             if (!Main.dedServ)
             {
                 Music = MusicLoader.GetMusicSlot(Mod, "Sounds/Music/Cyvercry");
@@ -101,14 +102,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPC.damage = (int)(NPC.damage * 0.75f);
         }
 
-
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
-                projectile.damage = (int)(projectile.damage * 0.7f);
-            if (projectile.type == ProjectileID.ChlorophyteArrow)
-                projectile.damage = (int)(projectile.damage * 0.8f);
+                projectile.damage = (int)(projectile.damage * 0.7f); 
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -2442,11 +2440,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     {
                         for (int i = 0; i < 360; i += 360 / 12)
                         {
-                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1f, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), GetDamage("IdleBurst"), 0, Main.myPlayer);
+                            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0.5f, 0).RotatedBy(MathHelper.ToRadians(i)), ModContent.ProjectileType<CyverLaser>(), GetDamage("IdleBurst"), 0, Main.myPlayer);
                             if (Main.projectile[proj].ModProjectile is CyverLaser laser)
                             {
                                 laser.accelerate = true;
-                                laser.accelerateTime = 85;
+                                laser.accelerateTime = 120;
                                 laser.accelerateAmount = 1.025f;
                             }
 
@@ -4663,6 +4661,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/MetalClank") with { Pitch = -.19f, PitchVariance = .22f, MaxInstances = 1, Volume = 0.3f }; 
             //SoundEngine.PlaySound(style, NPC.Center);
         }
+
+        //Turns things like the Eye sword projectile off
+        public void DeathCleanup() { }
 
         public void DeathAnimation(Player myPlayer)
         {

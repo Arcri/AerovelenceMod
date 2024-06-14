@@ -448,39 +448,9 @@ namespace AerovelenceMod
 			foreach (Projectile projectile in Main.projectile)
 			{
 				//Want to do this first and separate because it will weed out more projectiles first, despite checking again later
-				if (projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>() || 
-					projectile.type == ModContent.ProjectileType<OzoneShredderImpact>() || 
-					projectile.type == ModContent.ProjectileType<DistortProj>())
+				if (projectile.type == ModContent.ProjectileType<DistortProj>())
                 {
-					
-					if (projectile.active && projectile.ai[1] == 1 && projectile.type == ModContent.ProjectileType<OzoneShredderHeldProj>())
-                    {
-						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
-						//Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.FlipVertically, 0f);
-
-						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/twirl_02");
-						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/twirl_01");
-
-
-						float extraRotation = projectile.ai[0] != 1 ? MathHelper.PiOver4 + 0.3f : MathHelper.PiOver2 - 1f;
-						Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation + extraRotation, a.Size() / 2, new Vector2(0.75f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-
-
-						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/spiky_16-export");
-						//float extraRotation = projectile.ai[0] != 1 ? MathHelper.PiOver4 - 0.1f : MathHelper.PiOver2 * -1 - MathHelper.PiOver4 + 0.1f;
-						//Main.spriteBatch.Draw(a, Main.player[projectile.owner].Center - Main.screenPosition, null, Color.White, projectile.rotation + extraRotation, a.Size() / 2, new Vector2(2.25f, 0.75f) * projectile.scale, projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-					}
-                    else if (projectile.active && projectile.type == ModContent.ProjectileType<OzoneShredderImpact>())
-                    {
-						//Main.GameZoomTarget (from 1 to 2)
-						
-						Vector2 toProj = (projectile.Center - Main.player[Main.myPlayer].Center);
-
-						Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
-						//Texture2D a = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Melee/OzoneShredderImpact");
-						Main.spriteBatch.Draw(a, projectile.Center - Main.screenPosition + (toProj * (1 - Main.GameZoomTarget) * -1), null, Color.White, projectile.rotation, a.Size() / 2, projectile.scale * 0.5f * Main.GameZoomTarget, SpriteEffects.None, 0f);
-					}
-					else if (projectile.active && projectile.type == ModContent.ProjectileType<DistortProj>())
+					if (projectile.active && projectile.type == ModContent.ProjectileType<DistortProj>())
                     {
 						Texture2D tex = null;
 						float overallScale = 1;

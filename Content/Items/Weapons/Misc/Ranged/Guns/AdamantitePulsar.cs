@@ -21,15 +21,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     {
         public override void SetStaticDefaults()
         {
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<TitaniumRocketLauncher>();
             // DisplayName.SetDefault("Adamantite Pulsar");
             // Tooltip.SetDefault("Right-click to switch between 2 modes");
         }
+
         public override void SetDefaults()
         {
             Item.damage = 95;
             Item.DamageType = DamageClass.Ranged;
-            Item.width = 46;
-            Item.height = 28;
+            Item.width = 82;
+            Item.height = 30;
             Item.useTime = 10;
             Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Shoot;
@@ -173,7 +175,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             if (mode == 0)
             {
-
                 TooltipLine modeDesc = new(Mod, "mode", "Charge - Hold to charge a piercing shot, accuracy increasing the longer you charge")
                 {
                     
@@ -181,7 +182,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 };
                 tooltips.Add(modeDesc);
 
-                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Skill Strike by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
+                TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strike by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
                 {
                     OverrideColor = Color.Gold,
                 };
@@ -195,12 +196,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 };
                 tooltips.Add(modeDesc);
 
-                TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Third shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
+                TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Third shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
                 {
                     OverrideColor = Color.Gold,
                 };
                 tooltips.Add(SSline);
             }
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.AdamantiteBar, 15).
+                AddIngredient(ItemID.ChlorophyteBar, 4).
+                AddTile(TileID.MythrilAnvil).
+                Register();
         }
     }
 

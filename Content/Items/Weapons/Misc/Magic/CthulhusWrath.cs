@@ -41,10 +41,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Item.noUseGraphic = true;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.PlatinumBar, 12).
+                AddIngredient(ItemID.Fireblossom, 2).
+                AddTile(TileID.Anvils).
+                Register();
+
+            CreateRecipe().
+                AddIngredient(ItemID.GoldBar, 12).
+                AddIngredient(ItemID.Fireblossom, 2).
+                AddTile(TileID.Anvils).
+                Register();
+        }
+
         public override bool CanUseItem(Player player)
         {
-            //Main.NewText("meow");
-            return true;
+            return player.statMana > 6;
         }
 
         public override bool? UseItem(Player player)

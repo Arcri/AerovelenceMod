@@ -43,6 +43,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Item.noUseGraphic = true;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Granite, 25)
+                .AddRecipeGroup("AerovelenceMod:GoldOrPlatinum", 5)
+                .AddIngredient(ItemID.FlintlockPistol, 1)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_70") with { Pitch = .48f, };

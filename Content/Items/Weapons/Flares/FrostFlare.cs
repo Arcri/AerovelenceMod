@@ -12,7 +12,7 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using AerovelenceMod.Content.Dusts;
 using static Terraria.ModLoader.PlayerDrawLayer;
-using AerovelenceMod.Content.Items.Weapons.Frost.DeepFreeze;
+using AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze;
 using XPT.Core.Audio.MP3Sharp.Decoding.Decoders.LayerIII;
 using AerovelenceMod.Content.Buffs.FlareDebuffs;
 

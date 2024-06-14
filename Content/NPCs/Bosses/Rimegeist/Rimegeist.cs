@@ -875,8 +875,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     {
                         
                         shouldShadow = true;
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(-1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
+                        //Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
+                        //Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(-1, 0), ModContent.ProjectileType<AuroraPillar>(), 3, 1);
                     }
 
                     if (AttackTimer > 40 && AttackTimer % 60 == 0)

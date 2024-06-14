@@ -16,6 +16,7 @@ using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 {
+    /*
     public class OzoneShredderHeldProj : ModProjectile
     {
         public override bool ShouldUpdatePosition() => true;
@@ -213,19 +214,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
-            #region old version need to try something with a new tex
-            /*
-            SpriteEffects spriteEffects = Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Rectangle rect = new(0, 0, texture.Width, texture.Height);
-            Vector2 origin = new(texture.Width / 2f, texture.Height / 2f);
-
-            for (int k = 0; k < Projectile.oldPos.Length; k++)
-            {
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + origin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                Main.EntitySpriteDraw(texture, drawPos, null, color * 0.5f, Projectile.oldRot[k], origin, Projectile.scale, spriteEffects, 0);
-            }
-            */
+            
             #endregion
 
             return false;
@@ -369,5 +358,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             return false;
         }
     }
-
+    */
 }

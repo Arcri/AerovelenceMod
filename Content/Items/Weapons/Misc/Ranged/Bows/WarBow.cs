@@ -55,6 +55,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 			return false;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.GoldBow, 1).
+                AddIngredient(ItemID.SpikyBall, 25).
+                AddTile(TileID.TinkerersWorkbench).
+                Register();
+
+            CreateRecipe().
+                AddIngredient(ItemID.PlatinumBow, 1).
+                AddIngredient(ItemID.SpikyBall, 25).
+                AddTile(TileID.TinkerersWorkbench).
+                Register();
+        }
     }
     public class WarBowHeldProj : ModProjectile
     {

@@ -48,7 +48,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 			Item.noUseGraphic = true;
 		}
 
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			Projectile proj2 = Projectile.NewProjectileDirect(source, position, Vector2.Zero, ModContent.ProjectileType<TheSaharaHeldProj>(), damage, 0, player.whoAmI);
@@ -59,6 +58,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             }
 
 			return false;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.FossilOre, 15).
+                AddIngredient(ItemID.HellstoneBar, 5).
+                AddTile(TileID.Anvils).
+                Register();
         }
 
     }

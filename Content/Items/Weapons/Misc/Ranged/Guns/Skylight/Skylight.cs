@@ -60,7 +60,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
             return false;
         }
-        
+
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.Nanites, 50).
+                AddIngredient(ItemID.ShroomiteBar, 12).
+                AddTile(TileID.MythrilAnvil).
+                Register();
+        }
+
     }
 
     public class SkylightHeldProjectile : ModProjectile

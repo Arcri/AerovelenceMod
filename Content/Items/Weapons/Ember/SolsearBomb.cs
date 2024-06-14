@@ -27,20 +27,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		
 		public override void SetDefaults()
 		{
-			Projectile.friendly = true;
-			Projectile.ignoreWater = true;
-			Projectile.DamageType = DamageClass.Ranged;
-			Projectile.hostile = false;
-			Projectile.penetrate = -1;
-			Projectile.scale = 1;
-			Projectile.timeLeft = 300; //300
-			Projectile.tileCollide = true; //false;
-			Projectile.width = 80;
-			Projectile.height = 80;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.width = Projectile.height = 80;
+            
+            Projectile.timeLeft = 300;
+            Projectile.penetrate = -1;
+            Projectile.scale = 1;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+			Projectile.tileCollide = true; 
+
 			Projectile.alpha = 0;
 			Projectile.hide = true;
+
+
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 15;
+            Projectile.localNPCHitCooldown = 40;
 
         }
 
@@ -294,16 +298,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = 1;
             Projectile.height = 1;
-            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.timeLeft = 200;
+            Projectile.penetrate = -1;
+            Projectile.scale = 0.1f;
 
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 200;
             Projectile.tileCollide = false;
-            Projectile.scale = 0.1f;
+
+
+
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
         }
