@@ -132,7 +132,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             lerpVal = Math.Clamp(MathHelper.Lerp(lerpVal, -0.2f, 0.002f), 0, 0.4f);
 
             direction = Angle.ToRotationVector2().RotatedBy(lerpVal * player.direction * -1f);
-            Projectile.Center = player.MountedCenter + (direction * OFFSET);
+            Projectile.Center = player.MountedCenter + (direction * OFFSET) + new Vector2(0f, player.gfxOffY);
             Projectile.velocity = Vector2.Zero;
             player.itemRotation = direction.ToRotation();
 
@@ -170,7 +170,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     }
 
                     lockedOn = true;
-                    endPoint = npc.Center;
+                    endPoint = npc.Center + new Vector2(0f, player.gfxOffY);
                     LaserRotation = (npc.Center - (Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25))).ToRotation();
 
                     laserWidth = MathHelper.Clamp(0 + (laserTimer * 0.4f), 0, 15);
@@ -248,7 +248,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                                 if (compDist < dist && compDist > 0)
                                 {
                                     //ignore tiles, OR scan tiles and can hit anyway
-                                    if (!scanTiles || (scanTiles && Collision.CanHit(Projectile, new NPCAimedTarget(npc))))
+                                    if (!scanTiles || (scanTiles && Collision.CanHitLine(Projectile.Center, 1, 1, npc.Center, 1, 1)))
                                     {
                                         npcIndex = i;
                                         dist = compDist;
@@ -279,7 +279,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             int height1 = texture.Height;
             Vector2 origin = new Vector2(texture.Width / 2f, height1 / 2f);
 
-            Vector2 actualPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
+            Vector2 actualPos = Projectile.Center - Main.screenPosition;// + new Vector2(0f, Player.gfxOffY);
             Main.spriteBatch.Draw(texture, actualPos, null, lightColor, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0.0f);
             Main.spriteBatch.Draw(glowMask, actualPos, null, Color.White * 0.1f * (laserWidth * 0.1f), direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale + 0.1f, spriteEffects, 0.0f);
@@ -358,8 +358,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Main.spriteBatch.Draw(flare12, startDrawPoint, null, Color.LightGoldenrodYellow with { A = 0 }, timer * 0.075f * Projectile.ai[0], flare12.Size() / 2, 0.013f * laserWidth, spriteEffects, 0.0f);
 
             //End
-            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, null, Color.Orange with { A = 0 }, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.007f * laserWidth, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(flare2, endPoint - Main.screenPosition, null, Color.White with { A = 0 }, timer * 0.07f * Projectile.ai[0], flare2.Size() / 2, 0.03f * laserWidth, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition - new Vector2(0f, Player.gfxOffY), null, Color.Orange with { A = 0 }, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.007f * laserWidth, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare2, endPoint - Main.screenPosition - new Vector2(0f, Player.gfxOffY), null, Color.White with { A = 0 }, timer * 0.07f * Projectile.ai[0], flare2.Size() / 2, 0.03f * laserWidth, spriteEffects, 0.0f);
 
             #endregion
 

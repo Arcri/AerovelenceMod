@@ -57,6 +57,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         {
             Player Player = Main.player[Projectile.owner];
 
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             storedMousePos = Vector2.Lerp(storedMousePos, Main.MouseWorld, 0.42f); //0.08
 
             Vector2 exhaustLocation;
@@ -83,15 +85,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 
             }
 
-            if (soundTimer % 295 == 0)
-            {
-                //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/movingshield_sound") { MaxInstances = 2 };
-                //SoundEngine.PlaySound(style2, Projectile.Center);
-                //SoundEngine.PlaySound(style2, Projectile.Center);
-                //SoundEngine.PlaySound(style2, Projectile.Center);
-                //MORE POWER AHAHAHAHHA
-
-            }
             if (timer == 0)
             {
                 storedMousePos = Main.MouseWorld;

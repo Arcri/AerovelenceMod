@@ -24,17 +24,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override void SetDefaults()
         {
-            Item.knockBack = 2f;
-            Item.crit = 14;
             Item.damage = 92;
+            Item.knockBack = KnockbackTiers.Average;
+
+            Item.width = 58;
+            Item.height = 72;
+
             Item.useAnimation = 30;
             Item.useTime = 30;
-            Item.noMelee = true;
-            Item.noUseGraphic = true;
-            Item.autoReuse = true;
+
             Item.rare = ItemRarityID.Pink;
             Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Shoot;
+            Item.value = Item.sellPrice(0, 5, 0, 0);
+
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.autoReuse = true;
             Item.channel = true;
 
             Item.shootSpeed = 1f;
@@ -145,26 +151,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
         }
         public override void SetDefaults()
         {
-            Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
+
+            Projectile.timeLeft = 10000;
             Projectile.width = Projectile.height = 70;
+            Projectile.penetrate = -1;
+            Projectile.scale = 1f;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
 
-            Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
             Projectile.extraUpdates = 8;
 
+            Projectile.noEnchantmentVisuals = true;
+
             Projectile.usesLocalNPCImmunity = true;
-            //Projectile.localNPCHitCooldown = -1;
+            Projectile.localNPCHitCooldown = 25; //20
+
         }
 
         public override bool? CanDamage()
         {
-            if (justHitTime > -5) //-5 so the sword continues to swing a bit and won't get stuck on a bunch of npcs
+            if (justHitTime > -20) //-20 so the sword continues to swing a bit and won't get stuck on a bunch of npcs
                 return false;
 
             if (spin)
@@ -219,13 +230,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
                 previousRotations = new List<float>();
             }
 
-            //SwingHalfAngle = 190;
-            //easingAdditionAmount = 0.015f / Projectile.extraUpdates;
             offset = 50 * 1.5f * Projectile.scale;
-            //frameToStartSwing = 3 * Projectile.extraUpdates;
-            //timeAfterEnd = 6 * Projectile.extraUpdates;
-            //startingProgress = 0.01f;
-            
             
             StandardSwingUpdate();
             StandardHeldProjCode();
@@ -315,7 +320,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public void Trail()
         {
-            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+            Vector2 gfxOffset = new Vector2(0, Main.player[Projectile.owner].gfxOffY);
 
             float width = 0f;
             if (getProgress(easingProgress) <= 0.2f)
@@ -626,9 +631,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
         {
             Projectile.width = 20;
             Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
 
@@ -966,25 +971,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override void SetDefaults()
         {
-            Projectile.damage = 0;
-            Projectile.friendly = false;
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.tileCollide = false;
 
-            Projectile.ignoreWater = true;
-            Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
-            Projectile.hostile = false;
+
             Projectile.timeLeft = 100;
-            Projectile.scale = 1f;
 
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
         int timer = 0;
         public float scale = 1.5f;
@@ -999,7 +999,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
             if (Projectile.scale == 0)
                 Projectile.active = false;
-            //Projectile.rotation += 0.2f * (starRotDir ? 1 : -1);
 
             timer++;
         }
@@ -1025,7 +1024,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, default, default, default, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

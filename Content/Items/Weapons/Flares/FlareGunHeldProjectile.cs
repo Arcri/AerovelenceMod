@@ -7,15 +7,13 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.Audio;
 using ReLogic.Content;
+using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {
     public class FlareGunHeldProjectile : ModProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Flare Gun");
-        }
+
         int maxTime = 50;
 
         private float OFFSET = 15; //30
@@ -35,35 +33,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Summon;
+
             maxTime = 90;
             Projectile.timeLeft = maxTime;
-            Projectile.DamageType = DamageClass.Melee;
             Projectile.width = Projectile.height = 20;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Summon;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1.15f;
+            Projectile.scale = 1f; //1.15f
         }
 
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
-        public override bool? CanCutTiles()
-        {
-            return false;
-        }
+        public override bool? CanCutTiles() => false;
 
         float muzzlewidth = 1f;
         public override void AI() 
         {
             Player Player = Main.player[Projectile.owner];
 
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             Projectile.velocity = Vector2.Zero;
             Projectile.timeLeft = 2;
@@ -143,7 +136,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-            Vector2 position = (Projectile.position - (0.5f * (direction * OFFSET * -0.25f)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
+            Vector2 position = (Projectile.Center - (0.5f * (direction * OFFSET * -0.25f)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition).Floor();
             if (Player.direction == 1)
             {
                 SpriteEffects effects1 = SpriteEffects.None;
@@ -181,6 +174,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 Main.spriteBatch.Draw(texture2, new Vector2(0,5 * Player.direction * -1).RotatedBy(direction.ToRotation()) + position + direction * 38, texture2.Frame(1, 1, 0, 0), Color.Red, direction.ToRotation() + MathHelper.Pi / 2, 
                     texture2.Size() / 2, new Vector2(0.1f * muzzlewidth, 0.1f), flipMuzzle ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
 
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+                //Reset again to fix tmod bug
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             }

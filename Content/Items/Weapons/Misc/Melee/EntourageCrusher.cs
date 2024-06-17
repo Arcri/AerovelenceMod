@@ -192,7 +192,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         public void Trail()
         { 
-            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+            Vector2 gfxOffset = new Vector2(0, Main.player[Projectile.owner].gfxOffY);
 
             float width = 0f;
             if (getProgress(easingProgress) <= 0.2f)

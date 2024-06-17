@@ -84,7 +84,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 		public override bool PreDraw(ref Color lightColor)
 		{
 
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Frost/DeepFreeze/DeepFreezeProj").Value;
+            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/DeepFreezeProj").Value;
 
             int frameHeight = Tex.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;

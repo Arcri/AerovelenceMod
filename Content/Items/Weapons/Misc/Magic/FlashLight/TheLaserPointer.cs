@@ -187,7 +187,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     }
                     lockedOn = true;
 
-                    Vector2 npcPos = npc.Center;
+                    Vector2 npcPos = npc.Center - new Vector2(0f, player.gfxOffY);
 
                     //Store direction that star should turn
                     if (timer == 0)
@@ -195,7 +195,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
                     //Manually offset position for Cyvercry so it looks a bit better
                     if (npc.type == ModContent.NPCType<Cyvercry2>())
-                        npcPos = npc.Center + new Vector2(-25, 0).RotatedBy(npc.rotation);
+                        npcPos = npc.Center + new Vector2(-25, 0).RotatedBy(npc.rotation) - new Vector2(0f, player.gfxOffY);
 
                     endPoint = npcPos;
 
@@ -305,7 +305,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                                 if (compDist < dist && compDist > 0)
                                 {
                                     //ignore tiles, OR scan tiles and can hit anyway
-                                    if (!scanTiles || (scanTiles && Collision.CanHit(Projectile, new NPCAimedTarget(npc))))
+                                    if (!scanTiles || (scanTiles && Collision.CanHitLine(Projectile.Center, 1, 1, npc.Center, 1, 1)))
                                     {
                                         npcIndex = i;
                                         dist = compDist;
@@ -384,14 +384,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             int width = (int)((Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25)) - endPoint).Length();
 
-            var pos = Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition;
+            var pos = Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
             var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.7f));
             var target2 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.65f));
             var target3 = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 0.35f));
 
             Main.spriteBatch.Draw(LaserTexture, target3, null, Color.Black * 0.5f, LaserRotation, origin2, 0, 0);
-            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Black * 0.35f, timer * 0.03f * Projectile.ai[0], flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Black * 0.5f, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare12.Frame(1, 1, 0, 0), Color.Black * 0.35f, timer * 0.03f * Projectile.ai[0], flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare1.Frame(1, 1, 0, 0), Color.Black * 0.5f, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
 
 
             Main.spriteBatch.End();
@@ -413,11 +413,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             //Flares
 
             float sinScale = laserWidth < 5 ? 0f : MathF.Sin((float)Main.timeForVisualEffects * 0.06f) * 0.008f;
-            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Red, timer * 0.03f * Projectile.ai[0], flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.Red, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare12.Frame(1, 1, 0, 0), Color.Red, timer * 0.03f * Projectile.ai[0], flare12.Size() / 2, 0.2f * laserWidth * 0.025f, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare1.Frame(1, 1, 0, 0), Color.Red, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.015f * laserWidth, spriteEffects, 0.0f);
 
-            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.White, timer * -0.02f * Projectile.ai[0], flare12.Size() / 2, 0.14f * laserWidth * 0.025f + sinScale, spriteEffects, 0.0f);
-            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition, flare1.Frame(1, 1, 0, 0), Color.White, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.01f * laserWidth + (sinScale * 0.2f), spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare12, Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 25) - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare12.Frame(1, 1, 0, 0), Color.White, timer * -0.02f * Projectile.ai[0], flare12.Size() / 2, 0.14f * laserWidth * 0.025f + sinScale, spriteEffects, 0.0f);
+            Main.spriteBatch.Draw(flare1, endPoint - Main.screenPosition + new Vector2(0f, Player.gfxOffY), flare1.Frame(1, 1, 0, 0), Color.White, timer * 0.07f * Projectile.ai[0], flare1.Size() / 2, 0.01f * laserWidth + (sinScale * 0.2f), spriteEffects, 0.0f);
 
 
             Main.spriteBatch.End();

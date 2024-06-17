@@ -228,20 +228,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         {
             Projectile.DamageType = DamageClass.Ranged;
 
-
-            Projectile.hostile = false;
             Projectile.width = 2;
             Projectile.height = 2;
-            Projectile.aiStyle = -1;
-            Projectile.friendly = true;
-            Projectile.penetrate = -1;
-            Projectile.tileCollide = false;
             Projectile.timeLeft = 999999;
+            Projectile.penetrate = -1;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
         public override bool? CanDamage() { return false; }
+
+        public override bool? CanCutTiles() => false; 
+        
+
         public override void AI()
         {
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             owner.heldProj = Projectile.whoAmI;
 
             if (owner.itemTime <= 1)
@@ -310,21 +315,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.timeLeft = 999999;
             Projectile.width = Projectile.height = 20;
+            Projectile.penetrate = -1;
+
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = -1;
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.scale = 1;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+        public override bool? CanCutTiles() => false;
 
         bool hasLetGo = false;
 
@@ -332,6 +337,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public override void AI()
         {
             Player Player = Main.player[Projectile.owner];
+
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
             Projectile.velocity = Vector2.Zero;
             Player.itemTime = 2; 
@@ -521,7 +528,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             int height1 = texture.Height;
             Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
-            Vector2 position = (Projectile.position - (0.5f * (direction * -17)) + new Vector2((float)Projectile.width, (float)Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition).Floor();
+            Vector2 position = (Projectile.Center - (0.5f * (direction * -17)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition).Floor();
 
             Vector2 newOffset = new Vector2(0, 3 * Player.direction).RotatedBy(Angle);
 

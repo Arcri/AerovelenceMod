@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Item.noUseGraphic = true;
             Item.autoReuse = true;
 
-            Item.rare = ItemRarityID.Blue;
+            Item.rare = ItemRarities.LatePHM;
             Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Shoot;
             
@@ -281,10 +281,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         {
             Projectile.width = 8;
             Projectile.height = 8;
+            Projectile.timeLeft = 100;
+
             Projectile.friendly = true;
             Projectile.hostile = false;
-            //Projectile.scale = 0.3f;
-            Projectile.timeLeft = 100;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
         }
@@ -342,14 +342,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
             Vector2 vec2scale = new Vector2(scale * 0.5f, scale) * Projectile.scale; //1f scale
 
-            //Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            //myEffect.Parameters["uColor"].SetValue(FetchRainbow().ToVector3() * 2f * alpha);
-            //myEffect.Parameters["uTime"].SetValue(2);
-            //myEffect.Parameters["uOpacity"].SetValue(0.4f); //0.6
-            //myEffect.Parameters["uSaturation"].SetValue(0);
+
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha * (alpha == 1 ? 2f : 1), Projectile.rotation, Flare.Size() / 2, vec2scale * 0.6f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation, Flare.Size() / 2, vec2scale * 0.7f, SpriteEffects.None, 0f);
@@ -359,7 +355,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, Glow.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation + MathHelper.PiOver4, Glow.Size() / 2, scale * 0.3f + alpha * 0.3f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, OuterGlow.Frame(1, 1, 0, 0), FetchRainbow(100) * alpha, Projectile.rotation + MathHelper.PiOver4, OuterGlow.Size() / 2, scale * 0.6f + alpha * 0.6f, SpriteEffects.None, 0f);
 
-            //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, Flare.Frame(1, 1, 0, 0), FetchRainbow() * 1.5f, Projectile.rotation + MathHelper.PiOver2, Flare.Size() / 2, scale * 0.7f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -430,8 +425,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         bool skillStrike = false;
         bool playedSound = false;
-        BaseTrailInfo trail1 = new BaseTrailInfo();
-        BaseTrailInfo trail2 = new BaseTrailInfo();
 
         int afterImageTimer = 0;
         bool hasDoneBallHitDetection = false;
@@ -690,9 +683,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public override float getProgress(float x)
         {
-            //return Easings.easeInOutExpo(x);
 
-            //
             float toReturn = 0f;
             #region easeExpo
 
@@ -718,11 +709,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
             #endregion;
 
-            //
-            return Easings.easeOutCirc(x);
-
-
-            //return base.getProgress(x);
         }
 
         public Color FetchRainbow(int offset = 0)

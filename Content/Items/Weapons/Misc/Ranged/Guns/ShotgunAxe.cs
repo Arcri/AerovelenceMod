@@ -145,6 +145,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         {
             Player Player = Main.player[Projectile.owner];
 
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             Projectile.velocity = Vector2.Zero;
             Player.itemTime = 2;
             Player.itemAnimation = 2;

@@ -23,25 +23,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         }
         public override void SetDefaults()
         {
-            Item.UseSound = SoundID.Item110;
-            Item.crit = 4;
-            Item.damage = 20;
-            Item.DamageType = DamageClass.Summon;
+            Item.damage = 21;
+            Item.knockBack = KnockbackTiers.ExtremelyWeak;
+
             Item.width = 46;
             Item.height = 28;
             Item.useTime = 70;
             Item.useAnimation = 70;
+
+            Item.UseSound = SoundID.Item110;
+            Item.DamageType = DamageClass.Summon;
             Item.useStyle = ItemUseStyleID.Shoot;
+            Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.rare = ItemRarities.MidPHM;
+
+            Item.shoot = ModContent.ProjectileType<FlareGunHeldProjectile>();
+            Item.shootSpeed = 17f;
+
             Item.noMelee = true;
-            Item.knockBack = 0;
-            Item.value = Item.sellPrice(0, 9, 0, 0);
-            Item.rare = ItemRarityID.Orange;
+            Item.channel = true;
             Item.autoReuse = true;
             Item.noUseGraphic = true;
-            Item.shoot = ModContent.ProjectileType<FlareGunHeldProjectile>();
-            //Item.useAmmo = AmmoID.Bullet;
-            Item.shootSpeed = 17f;
-            Item.channel = true;
         }
         public override Vector2? HoldoutOffset()
         {
@@ -51,14 +53,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FrostFlare>(), damage, knockback, Main.myPlayer);
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<FireFlare>(), damage, knockback, Main.myPlayer);
             
             float aim = velocity.ToRotation() + MathHelper.Pi;
 
             for (int m = 0; m < 8; m++) // m < 9
             {
                 float dustRot = aim + 1.57f * 1.5f + Main.rand.NextFloat(-0.4f, 0.4f);
-
 
                 Dust d = GlowDustHelper.DrawGlowDustPerfect(player.Center - aim.ToRotationVector2() * 35, ModContent.DustType<GlowCircleDust>(), Vector2.One.RotatedBy(dustRot) * (Main.rand.NextFloat(4) + 1),
                     new Color(255, 75, 50), 0.60f + Main.rand.NextFloat(0,0.2f), 0.7f, 0f, dustShader); // 0.6
@@ -79,15 +80,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                     SoundEngine.PlaySound(style, player.Center);
                     SoundEngine.PlaySound(style, player.Center);
 
-                    //CombatText.NewText(new Rectangle((int)Projectile.Center.X, (int)Projectile.Center.Y, 2, 2), Color.BlanchedAlmond, Line2, dramatic: true);
                     CombatText.NewText(new Rectangle((int)player.Center.X, (int)player.Center.Y, 2, 2), Color.Red, "Too Early", false, true);
                 }
 
-                //Main.NewText("pressed");
                 lockOutTimer = 70;
             }
             lockOutTimer = Math.Clamp(lockOutTimer - 1, 0, 70);
-            //Main.NewText("lt is " + lockOutTimer);
         }
 
         public override bool CanUseItem(Player player)

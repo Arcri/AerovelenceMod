@@ -329,7 +329,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             float yOffset = player.velocity.Y * -0.02f;// * player.direction;
             Vector2 moveOff = new Vector2(xOffset, yOffset);
 
-            Vector2 armPos = player.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, armRot) - Main.screenPosition + moveOff + new Vector2(0f, 0f);
+            Vector2 armPos = player.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, armRot) - Main.screenPosition + moveOff + new Vector2(0f, player.gfxOffY);
             int dir = player.direction;
 
             SpriteEffects spriteFX = dir == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
@@ -902,6 +902,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         float arcEndAngle = 0f;
         public override void AI()
         {
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             if (timer == 0)
             {
                 previousRotations = new List<float>();
@@ -1132,14 +1134,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             {
                 previousRotations = new List<float>();
 
-                //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/trident_twirl_01") with { Pitch = .6f, Volume = 0.25f, PitchVariance = 0.1f, MaxInstances = -1 };
-                //SoundEngine.PlaySound(style2, Projectile.Center);
-
                 goalAngle = Projectile.velocity.ToRotation();
                 Projectile.velocity = Vector2.Zero;
             }
 
             Player player = Main.player[Projectile.owner];
+
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             player.heldProj = Projectile.whoAmI;
             Projectile.Center = player.Center;
 
@@ -1268,7 +1270,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             
             float leftRotBonus = dir == 1 ? 0f : MathHelper.PiOver2;
 
-            Vector2 offset = player.Center + Projectile.rotation.ToRotationVector2() * 10f * distanceMult;
+            Vector2 offset = player.Center + Projectile.rotation.ToRotationVector2() * 10f * distanceMult + new Vector2(0f, player.gfxOffY);
 
             float swirlAlpha = (1f - animProgress);
             float swirlRot1 = Projectile.rotation;

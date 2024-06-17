@@ -207,12 +207,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = 15;
             Projectile.height = 15;
             Projectile.scale = 1f;
 
             Projectile.timeLeft = 125;
-            Projectile.DamageType = DamageClass.Magic;
 
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -319,30 +320,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         }
     }
 
-    //THis is the little vfx pulse the star does
+    //This is the little vfx pulse the star does
     public class CrystalGladePulse : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
         public override void SetDefaults()
         {
-            Projectile.damage = 0;
-            Projectile.friendly = false;
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.tileCollide = false;
-
-            Projectile.ignoreWater = true;
-            Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
-            Projectile.hostile = false;
             Projectile.timeLeft = 800;
-            Projectile.scale = 1f;
-
             Projectile.extraUpdates = 1;
+
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
         }
 
-        public override bool? CanDamage() { return false; }
+        public override bool? CanDamage() => false;
         
         int timer = 0;
         float scale = 0;
@@ -406,9 +403,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
             myEffect.Parameters["colorIntensity"].SetValue(alpha * 1.6f);
 
-            
+
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
+
             myEffect.CurrentTechnique.Passes[0].Apply();
 
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Flare.Size() / 2, scale * 2.5f, SpriteEffects.None, 0f);
@@ -417,10 +415,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Flare.Size() / 2, scale * 2.5f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation + MathHelper.PiOver4, Flare.Size() / 2, scale * 2.25f, SpriteEffects.None, 0f);
 
-            //Main.spriteBatch.Draw(Flare, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Flare.Size() / 2, scale, SpriteEffects.None, 0f);
-
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
             return false;
         }
     }
@@ -432,12 +429,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
         public override void SetDefaults()
         {
+            Projectile.DamageType = DamageClass.Magic;
+
             Projectile.width = 15;
             Projectile.height = 15;
-            Projectile.scale = 1f;
-
             Projectile.timeLeft = 500;
-            Projectile.DamageType = DamageClass.Magic;
 
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -467,7 +463,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         float glowRot = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-            //Texture2D Base = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/DrawnStar");
             Texture2D Base = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/GlowStar");
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
 
@@ -478,7 +473,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
 
             Main.spriteBatch.Draw(Glow, pos, null, Color.Green * 0.65f, glowRot, Glow.Size() / 2, scale * 0.28f, 0, 0f);
             Main.spriteBatch.Draw(Glow, pos, null, Color.Green * 0.65f, glowRot * -1.5f, Glow.Size() / 2, scale * 0.22f, 0, 0f);
@@ -505,15 +501,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Main.spriteBatch.Draw(Base, pos + v.RotatedBy(rot - MathHelper.PiOver2), null, Color.Aqua * 0.65f, Projectile.rotation + MathHelper.PiOver4, Base.Size() / 2, scale2, 0, 0f);
 
 
-            //Main.spriteBatch.Draw(Base, Projectile.Center - Main.screenPosition, null, Color.Green, Projectile.rotation, Base.Size() / 2, scale * 0.5f, 0, 0f);
             Main.spriteBatch.Draw(Base, pos, null, Color.White * 0.85f, Projectile.rotation, Base.Size() / 2, scale1, 0, 0f);
             Main.spriteBatch.Draw(Base, pos, null, Color.White * 0.85f, Projectile.rotation + MathHelper.PiOver4, Base.Size() / 2, scale2, 0, 0f);
 
-
-
-
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }

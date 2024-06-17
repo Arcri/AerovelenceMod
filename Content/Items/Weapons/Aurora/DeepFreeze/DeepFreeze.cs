@@ -114,6 +114,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
         Color[] bandColors = new Color[3];
         public override void AI()
         {
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             Player Player = Main.player[Projectile.owner];
             eyeCol = FetchRainbow(timer);
             bandColors[0] = FetchRainbow((int)(timer * 1.5f));
@@ -161,7 +163,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
                 maxTime--;
             }
 
-            if (maxTime <= 0 || Player.CheckMana(Player.inventory[Player.selectedItem], pay: false))
+            if (maxTime <= 0 || !Player.CheckMana(Player.inventory[Player.selectedItem], pay: false))
                 Projectile.active = false;
 
             ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);

@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             myEffect.Parameters["uSaturation"].SetValue(0);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
             Main.spriteBatch.Draw(Fire, Projectile.Center - Main.screenPosition, Fire.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation, Fire.Size() / 2, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(Fire, Projectile.Center - Main.screenPosition, Fire.Frame(1, 1, 0, 0), Color.OrangeRed, Projectile.rotation + 2, Fire.Size() / 2, scale * 0.2f, SpriteEffects.None, 0f);
