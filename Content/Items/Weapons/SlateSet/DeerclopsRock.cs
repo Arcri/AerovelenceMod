@@ -1,4 +1,5 @@
-﻿ using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -216,7 +217,7 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
 				float progress = 1f / ProjectileID.Sets.TrailCacheLength[Projectile.type] * i;
 				Main.spriteBatch.Draw(PinkAfterimage, Projectile.oldPos[i] - Main.screenPosition + new Vector2(16, 16)
-					+ (Projectile.velocity.SafeNormalize(Vector2.UnitX) * i * 0.75f * -1f), pinkSourceRect, Color.Pink * additionalAlpha /*(1f - progress)*/,
+					+ (Projectile.velocity.SafeNormalize(Vector2.UnitX) * i * 0.75f * -1f), pinkSourceRect, Color.Pink * additionalAlpha,
 					Projectile.rotation, pinkSourceRect.Size() / 2f, Math.Max((Projectile.scale + scaleBonus + 0.05f) * (1f - progress), 0.1f), 
 					Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 			}
@@ -246,3 +247,4 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 		}
 	}
 }
+*/

@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -143,32 +144,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            /*for (int i = 0; i < 20; i++)
-            {
-                Vector2 dirToTarger = Projectile.DirectionTo(target.Center).SafeNormalize(Vector2.UnitX);
-
-                Vector2 spawnOffset = dirToTarger.RotatedBy(MathHelper.ToRadians(180)) * (target.width / 2) * (target.height/2);
-
-
-
-                for (int ar = 0; ar < 10; ar++)
-                {
-                    Vector2 rawprojdir = dirToTarger;
-                    Vector2 dustydiry = dirToTarger.RotatedBy(MathHelper.ToRadians(180));
-                    Dust m = Dust.NewDustPerfect(target.Center, DustID.Stone, rawprojdir * (1.1f + (ar * 1.5f) / 10), Alpha: 100, Scale: 1.25f);
-                    Dust n = Dust.NewDustPerfect(target.Center, DustID.Stone, dustydiry * (1.1f + (ar * 1.5f) / 10), Alpha: 100, Scale: 1.25f);
-                    m.noGravity = true;
-                    n.noGravity = true;
-                }
-                //Dust d = Dust.NewDustPerfect()
-
-                //Vector2 dirToProj = (Projectile.Center - target.Center).SafeNormalize(Vector2.UnitX);
-                //Dust dust = Dust.NewDustDirect(target.Center, target.width, target.height, DustID.Stone, 0, 0, Projectile.alpha);
-                //dust.velocity *= 0.55f;
-                //dust.velocity += Projectile.velocity * 0.5f;
-                //dust.scale *= 1.25f;
-                //dust.noGravity = true;
-            }*/
             SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { Volume = .1f, PitchVariance = 0.3f, Pitch = -0.3f }, Projectile.Center);
         }
 
@@ -221,3 +196,4 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         }
     }
 }
+*/

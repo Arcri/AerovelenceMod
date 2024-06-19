@@ -52,6 +52,11 @@ Buffs: {
 		DisplayName: Ceroba Mark
 		Description: Mods.AerovelenceMod.Buffs.CerobaMark.Description
 	}
+
+	FearsomeFoe: {
+		DisplayName: Fearsome Foe
+		Description: Mods.AerovelenceMod.Buffs.FearsomeFoe.Description
+	}
 }
 
 Items: {

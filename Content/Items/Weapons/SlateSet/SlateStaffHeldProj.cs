@@ -1,4 +1,5 @@
-﻿ using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -208,51 +209,13 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 				}
 
 			}
-
-			/*
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-			Player Owner = Main.player[Projectile.owner];
-			//LaserRotation = (Main.MouseWorld - Owner.Center).ToRotation();
-			
-			endPoint = Projectile.rotation.ToRotationVector2() * 200f;
-			var texBeam = Mod.Assets.Request<Texture2D>("Items/Weapons/SlateSet/GlowTrail").Value;
-
-			Vector2 origin = new Vector2(0, texBeam.Height / 2);
-
-			float height = 15f + ((float)Math.Sin(timer * 0.08f) * 4f);
-			int width = (int)(Projectile.Center - endPoint).Length() - 24;
-
-			var pos = Projectile.Center - Main.screenPosition + Vector2.UnitX.RotatedBy(LaserRotation) * 24;
-			var target = new Rectangle((int)pos.X, (int)pos.Y, width, (int)(height * 1.2f));
-
-			Main.spriteBatch.Draw(texBeam, target, null, Color.Red * 2f, LaserRotation, origin, 0, 0);
-
-			for (int i = 0; i < width; i += 10)
-				Lighting.AddLight(pos + Vector2.UnitX.RotatedBy(LaserRotation) * i + Main.screenPosition, Color.Red.ToVector3() * height * 0.030f);
-
-			var spotTex = Mod.Assets.Request<Texture2D>("NPCs/Boss/SkeletronPrime/GlowEye").Value;
-			Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Red * 2, Projectile.rotation, spotTex.Size() / 2, 0.55f, SpriteEffects.None, 0);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			*/
 			return true;
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			/*
-			Player player = Main.player[Projectile.owner];
-			Vector2 unit = LaserRotation.ToRotationVector2();
-			float point = 0f;
-			// Run an AABB versus Line check to look for collisions, look up AABB collision first to see how it works
-			// It will look for collisions on the given line using AABB
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), player.Center,
-				player.Center + unit * 1000, 22, ref point);
-			*/
 			return false;
 		}
 	}
 }
+*/

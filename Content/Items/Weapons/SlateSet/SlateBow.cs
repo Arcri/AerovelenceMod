@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,8 +25,8 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Slate Bow");
-            /* Tooltip.SetDefault("Deals high damage, but fires slowly \n" +
-                "Fires faster if you are standing still"); */
+            Tooltip.SetDefault("Deals high damage, but fires slowly \n" +
+                "Fires faster if you are standing still"); 
         }
         public override void SetDefaults()
         {
@@ -118,3 +119,4 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         }
     }
 }
+*/

@@ -28,6 +28,9 @@ using static System.Net.Mime.MediaTypeNames;
 using Terraria.GameContent.Bestiary;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using System.Security.Policy;
+using AerovelenceMod.Content.Buffs.FlareDebuffs;
+using AerovelenceMod.Content.Buffs;
+using Terraria.Map;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry 
 {
@@ -592,6 +595,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             //whatAttack = 24;
 
+
             if (firstFrame)
             {
                 firstFrame = false;
@@ -623,6 +627,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 NPC.active = false;
             }
+
+            myPlayer.AddBuff(ModContent.BuffType<FearsomeFoe>(), 1);
 
             switch (whatAttack)
             {
@@ -4663,7 +4669,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         //Turns things like the Eye sword projectile off
-        public void DeathCleanup() { }
+        public void OnDeathCleanup(Player myPlayer) 
+        {
+            if (eyeSwordInstance != null)
+                eyeSwordInstance.active = false;
+            if (pinkProj != null)
+                pinkProj.active = false;
+
+            //Fade out Proj
+
+
+
+            myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
+            myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
+        }
 
         public void DeathAnimation(Player myPlayer)
         {
@@ -4865,12 +4884,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer <= 219)
             {
-                Main.GameZoomTarget = MathHelper.Lerp(Main.GameZoomTarget, 1.3f, 0.02f); //1.15 0.03f
+                Main.GameZoomTarget = MathHelper.Lerp(Main.GameZoomTarget, 1.3f, 0.02f); 
 
-
-
-
-                //if (timer == 70 || timer == 130 || timer == 170 || timer == 177 || timer == 184 || timer == 192 || timer == 199 || timer == 206 || timer == 213)
+                //Lmao
                 if (timer == 85 || timer == 118 || timer == 140 || timer == 155 || timer == 168 || timer == 175 || timer == 182 || timer == 190 || timer == 197 || timer == 204 || timer == 211)
                     Main.GameZoomTarget += 0.02f;
 
@@ -5447,11 +5463,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         #region DamageValues
         private enum AtkVals
         {
-            VeryLight = 50,
-            Light = 60,
-            Medium = 80,
-            Heavy = 100,
-            VeryHeavy = 110
+            //50 60 80 100 110
+            VeryLight = 40, 
+            Light = 45,
+            Medium = 50,
+            Heavy = 60,
+            VeryHeavy = 65
         }
 
         //Idle Spin toanl Wrap Curve Bots | Azzy Giga Chase Sword Clone1 PinkClone
@@ -5507,17 +5524,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         public int GetDamage(string type)
         {
-            int normalizationValue = 1;
+            float normalizationValue = 2f;
+            baseDamageMult = 1.25f;
 
             if (Main.masterMode)
-                normalizationValue = 4;
+            {
+                normalizationValue = 6f;
+                baseDamageMult = 2.35f;
+            }
             else if (Main.expertMode)
-                normalizationValue = 2;
+            {
+                normalizationValue = 4f;
+                baseDamageMult = 1.9f; //1.8
+            }
 
-            return (int)((DamageValues[type] * baseDamageMult) / normalizationValue);
+            return (int)((DamageValues[type] / normalizationValue) * baseDamageMult);
         }
         #endregion
-
-
     }
 }

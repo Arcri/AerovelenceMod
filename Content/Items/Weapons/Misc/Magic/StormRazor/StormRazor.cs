@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -93,14 +94,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.StormRazor
                 alpha -= 0.05f;
             }
 
-
-            /*
-            float ts = 0.4f;
-            if (timer < 40)
-                scale = Math.Clamp(MathHelper.Lerp(scale, 2f * ts, (float)(timer * 0.02f)), 0, 1.5f * ts);
-            else
-                scale = Math.Clamp(MathHelper.Lerp(scale, -0.5f, 0.05f), 0, 1.5f * ts);
-            */
             Projectile.rotation += 0.12f;
 
 
@@ -170,3 +163,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.StormRazor
 
 
 }
+*/

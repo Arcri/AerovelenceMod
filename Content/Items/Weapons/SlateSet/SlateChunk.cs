@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -99,13 +100,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 				//if (dust.position != Projectile.Center)
 				//	dust.velocity = Projectile.DirectionTo(Main.dust[num].position) * 0.1f;
 
-				/*
-				Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, ModContent.DustType<RisingSmokeDust>(), 0, 0, 100, Scale: 0.2f + Main.rand.NextFloat(-0.1f, 0.3f));
-				dust.velocity.X *= 0.2f;
-				dust.velocity.Y = Math.Abs(dust.velocity.Y) * -1;
-				dust.noGravity = true;
-				dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.Gray * 0.5f);
-				*/
 
 				//SoundEngine.PlaySound(SoundID.Item73, Projectile.position);
 			}
@@ -141,3 +135,4 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 		}
 	}
 }
+*/

@@ -38,12 +38,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.timeLeft = 200;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.penetrate = 1;
+            Projectile.penetrate = -1;
 
         }
         public override void AI()
         {
-            //Lighting.AddLight(Projectile.Center, Color.SkyBlue.ToVector3() * 0.5f);
             Player player = Main.player[(int)Projectile.ai[0]];
 
             if (timer < 65)
@@ -65,8 +64,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 storedRotation = (player.Center - GoalPoint).ToRotation();
                 //SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Hit_53") with { Pitch = .15f, MaxInstances = -1, Volume = 0.4f };
-                //SoundEngine.PlaySound(style, Projectile.Center);
-
             }
 
             if (timer >= 65)

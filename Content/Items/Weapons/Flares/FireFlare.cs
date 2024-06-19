@@ -174,7 +174,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             SoundEngine.PlaySound(style2, Projectile.Center);
 
             SoundStyle style = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = .75f, PitchVariance = 0.2f };
-            SoundEngine.PlaySound(style);
+            SoundEngine.PlaySound(style, Projectile.Center);
 
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;

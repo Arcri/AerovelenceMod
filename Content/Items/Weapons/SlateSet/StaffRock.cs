@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -55,16 +56,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
             {
 				ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-				/*
-				for (int i = 0; i < 3; i++)
-                {
-					int d = GlowDustHelper.DrawGlowDust(Projectile.Center, 2, 2, ModContent.DustType<GlowCircleFlare>(), 
-						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).X, 
-						new Vector2(Main.rand.NextFloat(8, 13), 0).RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(0, 360))).Y, Color.DeepPink, 0.4f, dustShader);
-					Main.dust[d].velocity *= 0.1f;
-				}
-				*/
-
 				Projectile.timeLeft = 50;
 				Projectile.rotation = Main.rand.NextFloat(-3, 4);
 			}
@@ -109,13 +100,6 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
 				//if (dust.position != Projectile.Center)
 				//	dust.velocity = Projectile.DirectionTo(Main.dust[num].position) * 0.1f;
 
-				/*
-				Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, ModContent.DustType<RisingSmokeDust>(), 0, 0, 100, Scale: 0.2f + Main.rand.NextFloat(-0.1f, 0.3f));
-				dust.velocity.X *= 0.2f;
-				dust.velocity.Y = Math.Abs(dust.velocity.Y) * -1;
-				dust.noGravity = true;
-				dust.shader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/TestShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic").UseColor(Color.Gray * 0.5f);
-				*/
 
 				//SoundEngine.PlaySound(SoundID.Item73, Projectile.position);
 			}
@@ -158,3 +142,4 @@ namespace AerovelenceMod.Content.Items.Weapons.SlateSet
         }
 	}
 }
+*/
