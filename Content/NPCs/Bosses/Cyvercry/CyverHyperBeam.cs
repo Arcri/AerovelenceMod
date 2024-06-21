@@ -22,12 +22,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		public float LaserRotation = 0;
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Hyper Beam Shot");
-
 			//ALWAYS DRAW CODE
 			ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
-			//ProjectileID.Sets.TrailCacheLength[Projectile.type] = 80;
-			//ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		Vector2 storedCenter = Vector2.Zero;
@@ -43,26 +39,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Projectile.ignoreWater = true;
 			Projectile.timeLeft = 1000;
 			Projectile.tileCollide = false;
-			//Projectile.extraUpdates = 100; //200
 			Projectile.extraUpdates = 1;
-			Projectile.hide = false;
 		}
 
-
-        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-        {
-			//behindNPCs.Add(index);
-            base.DrawBehind(index, behindNPCsAndTiles, behindNPCs, behindProjectiles, overPlayers, overWiresUI);
-        }
 
         public override void AI()
 		{
             if (timer == 0)
             {
-                SoundStyle style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_fire") with { Volume = 0.5f, Pitch = 0f, MaxInstances = -1, PitchVariance = 0.1f };
+                SoundStyle style32 = new SoundStyle("AerovelenceMod/Sounds/Effects/laser_fire") with { Volume = 0.48f, Pitch = 0f, MaxInstances = -1, PitchVariance = 0.1f };
                 SoundEngine.PlaySound(style32, Projectile.Center);
 
-                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .17f, Pitch = 0.2f, MaxInstances = -1 };
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .15f, Pitch = 0.2f, MaxInstances = -1 };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
                 SoundStyle styla = new SoundStyle("Terraria/Sounds/Item_122") with { Pitch = .86f, PitchVariance = 0.11f, Volume = 0.4f, MaxInstances = -1 };
@@ -82,11 +70,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 Projectile.ai[1] = Main.rand.NextFloat(-1, 2);
                 Projectile.ai[2] = LaserRotation.ToRotationVector2().X > 0f ? 1f : -1f;
-
-                //int pulse = Projectile.NewProjectile(null, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24, Vector2.Zero, ModContent.ProjectileType<CyverRoarPulse>(), 0, 0, Main.myPlayer);
-                //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).special = true;
-                //(Main.projectile[pulse].ModProjectile as CyverRoarPulse).intensity = 0.5f;
-                //Main.projectile[pulse].scale = 0.85f;
 
             }
 

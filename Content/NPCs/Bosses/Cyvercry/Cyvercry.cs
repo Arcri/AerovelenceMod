@@ -14,6 +14,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry;
 using AerovelenceMod.Content.Projectiles;
 using System;
+using Terraria.GameContent.Bestiary;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
@@ -22,13 +23,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Cyvercry"); //DONT Change me
             Main.npcFrameCount[NPC.type] = 5;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
             dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
-        ArmorShaderData dustShader = null; 
+        ArmorShaderData dustShader = null;
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            database.Entries.Remove(bestiaryEntry);
+        }
 
         public override bool CheckActive()
         {
@@ -1064,6 +1069,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         {
             return Color.White;
         }
+
+        public int CyverIndex = 0;
+
         public override void AI()
         {
             Lighting.AddLight(Projectile.Center, (255 - Projectile.alpha) * 0.9f / 255f, (255 - Projectile.alpha) * 0.5f / 255f, (255 - Projectile.alpha) * 0.7f / 255f);
@@ -1102,11 +1110,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                     Player player = Main.player[(int)Projectile.ai[0]];
                     Vector2 toPlayer = (player.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
 
+                    NPC cyver = Main.npc[CyverIndex];
+                    int damage = (cyver.ModNPC as Cyvercry2).GetDamage("BallDash");
+
                     int proj = 0;
                     if (aimToPlayer) 
-                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, toPlayer.RotatedBy(MathHelper.ToRadians(i) + rotationOffset) * vel, projType, Projectile.damage, 0, Main.myPlayer);
+                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, toPlayer.RotatedBy(MathHelper.ToRadians(i) + rotationOffset) * vel, projType, damage, 0);
                     else
-                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i) + rotationOffset), projType, Projectile.damage, 0, Main.myPlayer);
+                        proj = Projectile.NewProjectile(entitySource, Projectile.Center, new Vector2(vel, 0).RotatedBy(MathHelper.ToRadians(i) + rotationOffset), projType, damage, 0);
 
                     if (Main.projectile[proj].ModProjectile is StretchLaser laser)
                     {

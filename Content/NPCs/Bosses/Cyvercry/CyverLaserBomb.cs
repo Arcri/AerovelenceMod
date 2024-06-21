@@ -36,19 +36,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
         }
-        public override bool? CanDamage()
-        {
-            return false;
-        }
-
+        public override bool? CanDamage() => false;
+    
         public bool longTelegraph = false;
 
         public float overallScale = 0f;
+        public int CyverIndex = 0;
+
+        public bool fromSplitLaser = false;
         public override void AI()
         {
             int extraTimeBeforeShoot = longTelegraph ? 0 : 0; //this thing is fucked
-
-            //Main.NewText(Projectile.ai[0]);
 
             if (timer > 32 + extraTimeBeforeShoot)
             {
@@ -65,34 +63,25 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 Vector2 offset = new Vector2(24f, 0f).RotatedBy(Projectile.rotation);
 
+                NPC cyver = Main.npc[CyverIndex];
+                int damage = (cyver.ModNPC as Cyvercry2).GetDamage("ChaseShard");
+
+                if (fromSplitLaser)
+                    damage = (cyver.ModNPC as Cyvercry2).GetDamage("SplitLaserShard");
+
+
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + offset,
                     Projectile.rotation.ToRotationVector2() * -0.1f, ModContent.ProjectileType<CyverBeam>(),
                     Projectile.damage, Projectile.knockBack);
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + offset * -1,
                     Projectile.rotation.ToRotationVector2() * 0.1f, ModContent.ProjectileType<CyverBeam>(),
                     Projectile.damage, Projectile.knockBack);
-
-
-                //whiteIntensity = 1;
-
-                /*
-                int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
-                if (Main.projectile[a].ModProjectile is HollowPulse pulse)
-                {
-                    pulse.color = Color.Pink;
-                    pulse.oval = false;
-                    pulse.size = 0.5f;
-                    
-                }
-                */
             }
 
             if (timer >= 65 + extraTimeBeforeShoot)
             {
                 drawAlpha -= 0.08f;
                 Projectile.ai[0] += 0.03f;
-                ///drawAlpha = MathHelper.Clamp(MathHelper.Lerp(drawAlpha, -0.2f, 0.1f), 0f, 1f);
-                //overallScale = Math.Clamp(MathHelper.Lerp(overallScale, 5f, 0.2f), 0f, 1f);
 
                 if (drawAlpha <= 0)
                     Projectile.active = false;

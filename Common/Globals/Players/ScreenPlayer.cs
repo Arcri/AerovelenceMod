@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Threading;
 using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Content.Biomes;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -28,6 +30,8 @@ namespace AerovelenceMod.Common.Globals.Players
             NoRandom = 2,
         }
 
+        int safetyTimer = 0;
+
         public override void PostUpdate()
         {
             //If we are in a cutscene, lerp the interpolant value to 1, otherwise lerp it to zero
@@ -42,6 +46,30 @@ namespace AerovelenceMod.Common.Globals.Players
                     lerpBackToPlayer = false;
             }
 
+            //This is a safety check to make sure that a cutscene stops if the boss/event despawns unexpectedly (like via dragonlens)
+            //Only check the npc array once every 2 seconds
+            if (safetyTimer % 120 == 0)
+            {
+                bool foundNPC = false;
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC npc = Main.npc[i];
+
+                    if (npc.type == ModContent.NPCType<Cyvercry2>())
+                    {
+                        if (npc.active == true)
+                            foundNPC = true;
+                    }
+
+                }
+                if (!foundNPC)
+                {
+                    cutscene = false;
+                    lerpBackToPlayer = true;
+                }
+            }
+
+            safetyTimer++;
         }
 
         public override void ModifyScreenPosition()
@@ -53,7 +81,9 @@ namespace AerovelenceMod.Common.Globals.Players
                 //This runs less often at lower frame rates (and vice versa) so this normalizes that 
                 float adjustedShakeVal = shakeVal * (Main.frameRate / 144f);
 
-                Vector2 rand = new Vector2(Main.rand.NextFloat(adjustedShakeVal), Main.rand.NextFloat(adjustedShakeVal));
+                float totalIntensity = adjustedShakeVal * ModContent.GetInstance<AeroClientConfig>().ScreenshakeIntensity;
+
+                Vector2 rand = new Vector2(Main.rand.NextFloat(totalIntensity), Main.rand.NextFloat(totalIntensity));
                 Vector2 TrueGoalPos = (ScreenGoalPos - new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f) + rand;
                 Main.screenPosition = Vector2.SmoothStep(Main.screenPosition, TrueGoalPos, interpolant);
 
@@ -92,7 +122,6 @@ namespace AerovelenceMod.Common.Globals.Players
             if (cutscene)
             {
                 Player.statLife = 1;
-                //return false;
             }
             return true;
         }

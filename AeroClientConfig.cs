@@ -9,8 +9,23 @@ namespace AerovelenceMod
 
         public static AeroClientConfig Instance;
 
-        [DefaultValue(true)]
-        [Label("Discord Rich Presence")]
-        public bool DiscordRPCEnabled;
+        [Range(0f, 1f)]
+        [Slider]
+        [DefaultValue(1f)]
+        public float ScreenshakeIntensity;
+
+
+
+        //[LabelKey("$Mods.ExampleMod.Configs.Common.LocalizedLabel")]
+        //TooltipKey("CyvercryDifficultyOverride")]
+
+        [DrawTicks]
+        [OptionStrings(new string[] { "None", "Normal", "Expert", "Master" })]
+        [DefaultValue("None")]
+        public string CyvercryAIOverride;
+
     }
+
+
+
 }

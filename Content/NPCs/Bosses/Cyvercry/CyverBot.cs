@@ -8,6 +8,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -54,19 +55,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             NPC.knockBackResist = 0f;
             NPC.dontTakeDamage = true;
         }
-        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            return false;
-        }
-        public override bool? CanBeHitByItem(Player player, Item item)
-        {
-            return false;
+            database.Entries.Remove(bestiaryEntry);
         }
 
-        public override bool? CanBeHitByProjectile(Projectile projectile)
-        {
-            return false;
-        }
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
+        public override bool? CanBeHitByItem(Player player, Item item) => false;
+
+        public override bool? CanBeHitByProjectile(Projectile projectile) => false;
 
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
@@ -133,6 +130,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         Vector2 originalVec = Vector2.Zero;
 
+        public int CyverIndex = 0;
         public override void AI()
         {
             NPC.spriteDirection = NPC.direction;
@@ -237,9 +235,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         //eyeStarRot = Main.rand.NextFloat(6.28f);
                     }
 
+                    NPC cyver = Main.npc[CyverIndex];
+                    int damage = (cyver.ModNPC as Cyvercry2).GetDamage("Bots");
+
+
                     Vector2 offset = (NPC.rotation + MathHelper.Pi).ToRotationVector2();    //NPC.direction == 1 ? (NPC.rotation + MathHelper.Pi).ToRotationVector2() : NPC.rotation.ToRotationVector2(); 
                     float speedMultiplier = (isFarFromCenter ? 6.5f : 6.5f); //13 : 8
-                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset * 20, (NPC.rotation + MathHelper.Pi).ToRotationVector2() * speedMultiplier, ModContent.ProjectileType<CyverLaser>(), 10, 0, Main.myPlayer);
+                    int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset * 20, (NPC.rotation + MathHelper.Pi).ToRotationVector2() * speedMultiplier, 
+                        ModContent.ProjectileType<CyverLaser>(), damage, 1);
+                    
+                    
+                    
                     Main.projectile[a].scale = 0.8f;
                     Main.projectile[a].timeLeft = 300;
 
@@ -480,14 +486,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * MathHelper.Clamp((1.5f * auraIntensity), 0, 1.5f)); //2.5f makes it more spear like
-            myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
-            myEffect.Parameters["uSaturation"].SetValue(1.2f);
+            ///Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+            ///myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * MathHelper.Clamp((1.5f * auraIntensity), 0, 1.5f)); //2.5f makes it more spear like
+            ///myEffect.Parameters["uTime"].SetValue(2);
+            ///myEffect.Parameters["uOpacity"].SetValue(0.2f); //0.6
+            ///myEffect.Parameters["uSaturation"].SetValue(1.2f);
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            ///Main.spriteBatch.End();
+            ///Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             //myEffect.CurrentTechnique.Passes[0].Apply();
 
 

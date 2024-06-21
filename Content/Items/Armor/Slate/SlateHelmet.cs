@@ -1,3 +1,4 @@
+/*
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -53,13 +54,8 @@ namespace AerovelenceMod.Content.Items.Armor.Slate
         }
         public override void AddRecipes()
         {
-            /*
-            CreateRecipe(1)
-                .AddIngredient(ModContent.ItemType<SlateOre>(), 55)
-                .AddRecipeGroup("Wood", 20)
-                .AddTile(TileID.Anvils)
-                .Register();
-            */
+
         }
     }
 }
+*/

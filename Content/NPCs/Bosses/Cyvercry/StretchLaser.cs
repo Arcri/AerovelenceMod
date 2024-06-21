@@ -324,13 +324,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Projectile.hostile = true;
             Projectile.scale = 1f;
             Projectile.timeLeft = 90; //125
-            Projectile.DamageType = DamageClass.Ranged;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
 
         }
         int timer = 0;
+        public int CyverIndex = 0;
         public override void AI()
         {
             
@@ -343,8 +343,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //FTW | GFB timer % 5
             if (timer > 9 && timer % 9 == 0) // > 10 % 10
             {
-                int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 20, 0);
+                NPC cyver = Main.npc[CyverIndex];
+                int damage = (cyver.ModNPC as Cyvercry2).GetDamage("SplitLaserShard");
+
+                int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), damage, 0);
                 Main.projectile[a].rotation = Projectile.rotation;
+
+                (Main.projectile[a].ModProjectile as CyverLaserBomb).CyverIndex = CyverIndex;
+                (Main.projectile[a].ModProjectile as CyverLaserBomb).fromSplitLaser = true;
 
                 ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 

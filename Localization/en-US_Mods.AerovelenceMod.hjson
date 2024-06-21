@@ -55,7 +55,7 @@ Buffs: {
 
 	FearsomeFoe: {
 		DisplayName: Fearsome Foe
-		Description: Mods.AerovelenceMod.Buffs.FearsomeFoe.Description
+		Description: Drastically lowered enemy spawn rates
 	}
 }
 
@@ -65,29 +65,19 @@ Items: {
 		Tooltip: ""
 	}
 
-	SlateChestplate: {
-		DisplayName: Slate Chestplate
-		Tooltip: ""
-	}
-
-	SlateHelmet: {
-		DisplayName: Slate Helmet
-		Tooltip: ""
-	}
-
-	SlateLeggings: {
-		DisplayName: Slate Leggings
-		Tooltip: ""
-	}
-
 	ObsidianEye: {
 		DisplayName: Obsidian Eye
-		Tooltip: ""
+		Tooltip:
+			'''
+			Not consumable
+			Summons Cyvercry
+			Only usuable at night
+			'''
 	}
 
 	DebugItem: {
 		DisplayName: Debug Item
-		Tooltip: ""
+		Tooltip: This is a debug item
 	}
 
 	Emoji: {
@@ -97,7 +87,7 @@ Items: {
 
 	ExampleSwingSwordItem: {
 		DisplayName: Example Swing Sword Item
-		Tooltip: ""
+		Tooltip: This is a debug item
 	}
 
 	EvilLightbulb: {
@@ -122,7 +112,7 @@ Items: {
 
 	AntiquePistol: {
 		DisplayName: Antique Pistol
-		Tooltip: ""
+		Tooltip: This item is unobtainable as it does not meet my quality standards, but I decided to leave it in because I think it is still pretty neat.
 	}
 
 	Alpenine: {
@@ -132,7 +122,7 @@ Items: {
 
 	ElementalShift: {
 		DisplayName: Elemental Shift
-		Tooltip: ""
+		Tooltip: Attacking creates an energy ball that can be hit around
 	}
 
 	CyverCannon: {
@@ -155,19 +145,13 @@ Items: {
 		Tooltip: ""
 	}
 
-	ElectrapulseCanister: {
-		DisplayName: Electrapulse Canister
-		Tooltip: ""
-	}
-
-	StaffOfShiftingSands: {
-		DisplayName: Staff Of Shifting Sands
-		Tooltip: ""
-	}
-
 	BurningJealousy: {
-		DisplayName: Burning Jealousy
-		Tooltip: ""
+		DisplayName: Hell Brigade
+		Tooltip:
+			'''
+			Hold Right-Click to guard, gaining a large defense boost
+			Retaliate with an explosive counter-attack if hit while guarding
+			'''
 	}
 
 	PagesOfDawn: {
@@ -177,12 +161,23 @@ Items: {
 
 	Solsear: {
 		DisplayName: Solsear
-		Tooltip: ""
+		Tooltip:
+			'''
+			Fires a continuous laser that deals more damage at the tip
+			Right-Click to fire a bomb
+			Aim the tip of the laser into the bomb to increase its damage and size
+			'With great firepower comes great irresponsibility'
+			'''
 	}
 
 	FlareGun: {
-		DisplayName: Flare Gun
-		Tooltip: ""
+		DisplayName: Combat Flare Gun
+		Tooltip:
+			'''
+			Does not require ammo
+			5% summon tag crit chance
+			Click again with good timing to fire faster
+			'''
 	}
 
 	FlareShark: {
@@ -192,17 +187,17 @@ Items: {
 
 	DeepFreeze: {
 		DisplayName: Deep Freeze
-		Tooltip: ""
+		Tooltip: "'Is it cold in here, or is it just me?'"
 	}
 
 	TetraBlades: {
 		DisplayName: Tetra Blades
-		Tooltip: ""
+		Tooltip: Right-Click to dash up to 4 times
 	}
 
 	ClockworkLazinator: {
 		DisplayName: Clockwork Lazinator
-		Tooltip: ""
+		Tooltip: Right-Click to wind up the weapon, increasing how long it fires for
 	}
 
 	CrystalSpray: {
@@ -217,17 +212,25 @@ Items: {
 
 	TheBeacon: {
 		DisplayName: The Beacon
-		Tooltip: ""
+		Tooltip:
+			'''
+			Targets the closest enemy to the mouse
+			Releases flaming tendrils around the targeted enemy
+			'''
 	}
 
 	TheFlashlight: {
 		DisplayName: The Flashlight
-		Tooltip: ""
+		Tooltip: Targets the closest enemy to the mouse
 	}
 
 	TheLaserPointer: {
 		DisplayName: The Laser Pointer
-		Tooltip: ""
+		Tooltip:
+			'''
+			Targets the closest enemy to the mouse
+			Releases homing sparks after locking onto the same enemy for a while
+			'''
 	}
 
 	Iridian: {
@@ -237,12 +240,7 @@ Items: {
 
 	WandOfExploding: {
 		DisplayName: Wand Of Exploding
-		Tooltip: ""
-	}
-
-	Aliban: {
-		DisplayName: Aliban
-		Tooltip: ""
+		Tooltip: Inflicts Mana Burn, causing enemies to leak stars that restore mana
 	}
 
 	EntourageCrusher: {
@@ -260,19 +258,22 @@ Items: {
 		Tooltip: ""
 	}
 
-	Asunder: {
-		DisplayName: Asunder
-		Tooltip: ""
-	}
-
 	TheSahara: {
 		DisplayName: The Sahara
-		Tooltip: ""
+		Tooltip:
+			'''
+			Hold to charge, increasing damage and velocity
+			Releases a fire vortex at full charge
+			'''
 	}
 
 	WarBow: {
 		DisplayName: War Bow
-		Tooltip: ""
+		Tooltip:
+			'''
+			Hold to charge, increasing damage and velocity
+			Embeds a spike into enemies at full charge
+			'''
 	}
 
 	FirePyre: {
@@ -287,56 +288,42 @@ Items: {
 
 	GraniteCannon: {
 		DisplayName: Granite Cannon
-		Tooltip: ""
+		Tooltip:
+			'''
+			Converts bullet into granite chunks
+			If two chunks collide midair, the break into homing stars
+			'''
 	}
 
 	AdamantitePulsar: {
 		DisplayName: Adamantite Pulsar
-		Tooltip: ""
+		Tooltip:
+			'''
+			Does not require ammo
+			Right-Click to change modes
+			'''
 	}
 
 	ShotgunAxe: {
 		DisplayName: Shotgun Axe
-		Tooltip: ""
-	}
-
-	ICER: {
-		DisplayName: I C E R
-		Tooltip: ""
+		Tooltip:
+			'''
+			Converts bullets into a special projectile
+			Right-Click to chop with the axe
+			'''
 	}
 
 	TitaniumRocketLauncher: {
 		DisplayName: Titanium Rocket Launcher
-		Tooltip: ""
-	}
-
-	Woodpecker: {
-		DisplayName: Woodpecker
-		Tooltip: ""
+		Tooltip:
+			'''
+			Does not require ammo
+			Right-Click to shoot a large rocket that follows the mouse
+			'''
 	}
 
 	OceanMist: {
 		DisplayName: Ocean Mist
-		Tooltip: ""
-	}
-
-	SlateAxeRanged: {
-		DisplayName: Slate Axe Ranged
-		Tooltip: ""
-	}
-
-	SlateBow: {
-		DisplayName: Slate Bow
-		Tooltip: ""
-	}
-
-	SlateStaff: {
-		DisplayName: Slate Staff
-		Tooltip: ""
-	}
-
-	SlateSword: {
-		DisplayName: Slate Sword
 		Tooltip: ""
 	}
 
@@ -395,14 +382,13 @@ Items: {
 		Tooltip: ""
 	}
 
-	LightOfTheAncients: {
-		DisplayName: Light Of The Ancients
-		Tooltip: ""
-	}
-
 	Skylight: {
 		DisplayName: Skylight
-		Tooltip: ""
+		Tooltip:
+			'''
+			Does not require ammo
+			Right-Click to summon a massive lightning bolt from the sky
+			'''
 	}
 
 	StormRazor: {
@@ -412,40 +398,64 @@ Items: {
 
 	Eos: {
 		DisplayName: Eos
-		Tooltip: ""
-	}
-
-	Gaia: {
-		DisplayName: Gaia
-		Tooltip: ""
+		Tooltip:
+			'''
+			Ends a combo with a spin attack
+			Hit enemies with the spin while dashing to bash off of them, gaining brief invulnerability
+			After bashing an enemy, your next 2 combos will fire projectiles
+			'''
 	}
 
 	CrystalGlade: {
 		DisplayName: Crystal Glade
-		Tooltip: ""
+		Tooltip: Right-Click to summon a portal that will change where your shots originate from
 	}
 
 	PoundOfFeathers: {
 		DisplayName: Pound Of Feathers
-		Tooltip: ""
+		Tooltip: "'Weighs less than a pound of bricks!'"
 	}
 
 	CerobaStaffItem: {
-		DisplayName: Ceroba Staff Item
-		Tooltip: ""
+		DisplayName: Devotion
+		Tooltip:
+			'''
+			Right-Click to attack with a ward that marks enemies
+			Marked enemies take massively increased damage from the weapon
+			'''
 	}
 
 	MarbleMusket: {
 		DisplayName: Marble Musket
-		Tooltip: ""
+		Tooltip: Converts bullets into special gravity-affected projectiles
+	}
+
+	CyvercryThumbnailHelper: {
+		DisplayName: Cyvercry Thumbnail Helper
+		Tooltip:
+			'''
+			Summons Cyvercry to stand still and turn towards the player
+			Useful for making thumbnails
+			'''
+	}
+
+	CyverSummonSkipIntro: {
+		DisplayName: Cyver Summon Skip Intro
+		Tooltip:
+			'''
+			Not consumable
+			Summons Cyvercry, but skips the intro animation
+			However, the music sync will no longer work
+			Only usuable at night
+			'''
 	}
 }
 
 NPCs: {
 	CyverBot.DisplayName: Cyver Bot
 	CyverBotOrbiter.DisplayName: Cyver Bot Orbiter
-	Cyvercry.DisplayName: Cyvercry
-	Cyvercry2.DisplayName: Cyvercry2
+	Cyvercry.DisplayName: OldCyvercry
+	Cyvercry2.DisplayName: Cyvercry
 	GhastlyGlacier.DisplayName: Ghastly Glacier
 	Rimegeist.DisplayName: Rimegeist
 	SlateDemon.DisplayName: Slate Demon
@@ -596,7 +606,7 @@ Projectiles: {
 	ShadowClonePink.DisplayName: Shadow Clone Pink
 	ShadowCyvercry.DisplayName: Shadow Cyvercry
 	SplittingLaser.DisplayName: Splitting Laser
-	StretchLaser.DisplayName: Stretch Laser
+	StretchLaser.DisplayName: Cyver Laser
 	SweepLaserTell.DisplayName: Sweep Laser Tell
 	TelegraphLineCyver.DisplayName: Telegraph Line Cyver
 	TeleportFXCyver.DisplayName: Teleport F X Cyver
@@ -686,9 +696,9 @@ Projectiles: {
 	FadeExplosionHandler.DisplayName: Fade Explosion Handler
 	CirclePulse.DisplayName: Circle Pulse
 	DreadDart.DisplayName: Dread Dart
-	AdamantitePulsarHeldBurst.DisplayName: Adamantite Pulsar Held Burst
-	TitaniumLauncherHeldLarge.DisplayName: Titanium Launcher Held Large
-	TitaniumLauncherHeldSmall.DisplayName: Titanium Launcher Held Small
+	AdamantitePulsarHeldBurst.DisplayName: Adamantite Pulsar
+	TitaniumLauncherHeldLarge.DisplayName: Titanium Launcher
+	TitaniumLauncherHeldSmall.DisplayName: Titanium Launcher
 	NewDarknessDischargeStar.DisplayName: New Darkness Discharge Star
 	AnotherTrailTest.DisplayName: Another Trail Test
 	AnotherTrailTestTheSqueakquel.DisplayName: Another Trail Test The Squeakquel
@@ -702,11 +712,11 @@ Projectiles: {
 	CyverRoarPulse.DisplayName: Cyver Roar Pulse
 	ComboLaserTest.DisplayName: Combo Laser Test
 	ComboVertexTest.DisplayName: Combo Vertex Test
-	EyeSword.DisplayName: Eye Sword
+	EyeSword.DisplayName: Hyper Blade
 	CurveLineTelegraph.DisplayName: Curve Line Telegraph
 	CurveDashShot.DisplayName: Curve Dash Shot
-	NewEntourageCrusherHeldProj.DisplayName: New Entourage Crusher Held Proj
-	NewCyverBombBeam.DisplayName: New Cyver Bomb Beam
+	NewEntourageCrusherHeldProj.DisplayName: Entourage Crusher
+	NewCyverBombBeam.DisplayName: Cyver Beam
 	CyverBotProjOld.DisplayName: Cyver Bot Proj Old
 	CyverWhipProjOld.DisplayName: Cyver Whip Proj Old
 	TrojanForceBot.DisplayName: Trojan Force Bot
@@ -735,23 +745,28 @@ Projectiles: {
 	CerobaSkillStrikeFX.DisplayName: Ceroba Skill Strike F X
 	CerobaSpinProj.DisplayName: Ceroba Spin Proj
 	StopAndStartFeather.DisplayName: Stop And Start Feather
-	NewElementalShiftProj.DisplayName: New Elemental Shift Proj
+	NewElementalShiftProj.DisplayName: Elemental Shift
 	MarbleBullet.DisplayName: Marble Bullet
 	MarbleStar.DisplayName: Marble Star
-	MarbleMusketHeldProjectile.DisplayName: Marble Musket Held Projectile
+	MarbleMusketHeldProjectile.DisplayName: Marble Musket
 	SmokeTest.DisplayName: Smoke Test
 	TendrilTest.DisplayName: Tendril Test
 	BeaconTendril.DisplayName: Beacon Tendril
-	PoundOfFeathersProj.DisplayName: Pound Of Feathers Proj
+	PoundOfFeathersProj.DisplayName: Pound Of Feathers
 }
 
 Configs: {
 	AeroClientConfig: {
 		DisplayName: Aero Client Config
 
-		DiscordRPCEnabled: {
-			Label: Discord Rich Presence
-			Tooltip: ""
+		ScreenshakeIntensity: {
+			Label: Screenshake Intensity
+			Tooltip: Set to 0 to turn of screenshake entirely
+		}
+
+		CyvercryAIOverride: {
+			Label: Cyvercry Difficulty Override
+			Tooltip: Allows you to set the difficulty of Cyvercry's AI no matter what difficulty you are actually in.
 		}
 	}
 }

@@ -207,6 +207,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                 Projectile.Kill();
             }
 
+            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
             if (player.ownedProjectileCounts[ModContent.ProjectileType<CerobaSpinProj>()] >= 1 && timer != 0 && !(startDone && timer == 40))
                 Projectile.active = false;
 

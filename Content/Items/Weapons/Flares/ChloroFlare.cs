@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -203,3 +204,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         }
     }
 } 
+*/

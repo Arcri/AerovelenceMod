@@ -11,7 +11,6 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using Terraria.Audio;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
-using AerovelenceMod.Content.Items.Weapons.SlateSet;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using System.Collections.Generic;
@@ -35,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
             Item.knockBack = KnockbackTiers.Weak;
             Item.useTime = 20;
             Item.useAnimation = 20;
-            Item.shootSpeed = 13f;
+            Item.shootSpeed = 18f; //13f
 
             Item.width = 34;
             Item.height = 34;
@@ -64,7 +63,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine SSline = new(Mod, "SS", "[i:" + ItemID.FallenStar + "] Skill Strikes when all 4 dashed are used [i:" + ItemID.FallenStar + "]")
+            TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes when all 4 dashed are used [i:" + ItemID.FallenStar + "]")
             {
                 OverrideColor = Color.Gold,
             };

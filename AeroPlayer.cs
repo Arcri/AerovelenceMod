@@ -29,7 +29,10 @@ namespace AerovelenceMod
 				//This runs less often at lower frame rates (and vice versa) so this normalizes that 
 				float adjustedValue = ScreenShakePower * (Main.frameRate / 144f);
 
-				Main.screenPosition += new Vector2(Main.rand.NextFloat(adjustedValue), Main.rand.NextFloat(adjustedValue));
+                float totalIntensity = adjustedValue * ModContent.GetInstance<AeroClientConfig>().ScreenshakeIntensity;
+
+				if (totalIntensity > 0)
+					Main.screenPosition += new Vector2(Main.rand.NextFloat(totalIntensity), Main.rand.NextFloat(totalIntensity));
 				ScreenShakePower *= 0.9f;
 			}
 		}
