@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -135,10 +136,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 Main.EntitySpriteDraw(solidColor, Projectile.Center + (Vector2.Normalize(Projectile.velocity) * -f * scale) - Main.screenPosition, solidColor.Frame(1, 1, 0, 0), Color.Black * (1f - (f / Projectile.velocity.Length())), Projectile.rotation, solidColor.Size() / 2f, Projectile.scale - f, SpriteEffects.None, 0);
             }
             */
-
+/*
             Main.EntitySpriteDraw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1,1,0,0), Color.White, Projectile.rotation, Tex.Size() / 2f, Projectile.scale, SpriteEffects.None, 0);
 
             return false;
         }
     }
 } 
+*/

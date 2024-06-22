@@ -62,9 +62,21 @@ namespace AerovelenceMod.Content.Items
 
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {   
+        {
             //int tendril = Projectile.NewProjectile(null, position, velocity * 0f, ModContent.ProjectileType<TendrilTest>(), 10, 0, Main.myPlayer);
 
+            Dust text = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -3f), Scale: 0.5f);
+
+            text.velocity = new Vector2(0f, -10f);
+            text.scale = 1f;
+
+            SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
+            sstb.isCrit = false;
+            sstb.damageNumber = "47";
+
+            text.customData = sstb;
+
+            return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)
             {
                 Dust orb = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<PixelGlowOrb>(),
@@ -88,6 +100,7 @@ namespace AerovelenceMod.Content.Items
                 //overallAlpha: 0.1f, DrawWhiteCore: false, 1f, 1f);
 
             }
+
 
             float impactScale = 1f;
             for (int j = 0; j < (5 + Main.rand.Next(0, 2)) * impactScale; j++)

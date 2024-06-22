@@ -71,7 +71,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 for (float i = 0f; i < 6.28f; i += 6.28f / numOfShots)
                 {
                     //int pindexa = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(1, 0).RotatedBy(initialRotation + i) * 9f, ModContent.ProjectileType<IcySpike>(), Projectile.damage, 0);
-                    int pindexb = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(1,0).RotatedBy(initialRotation + i) * 8f, ModContent.ProjectileType<WispSouls>(), Projectile.damage, 0);
+                    //int pindexb = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, new Vector2(1,0).RotatedBy(initialRotation + i) * 8f, ModContent.ProjectileType<WispSouls>(), Projectile.damage, 0);
                 }
                 Projectile.active = false;
                 timer = -1;

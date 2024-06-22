@@ -34,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
             Item.knockBack = KnockbackTiers.Weak;
             Item.useTime = 20;
             Item.useAnimation = 20;
-            Item.shootSpeed = 18f; //13f
+            Item.shootSpeed = 14f; //13f
 
             Item.width = 34;
             Item.height = 34;

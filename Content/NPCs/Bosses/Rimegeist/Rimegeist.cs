@@ -1,3 +1,4 @@
+/*
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Aurora;
@@ -112,14 +113,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
 
 
-        /*
-        public override bool Autoload(ref string name)
-        {
-            ScreenObstruction.Draw += DrawOverBlackout;
-            return true;
-        }
-        */
-
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 8;    //boss frame/animation 
@@ -159,7 +152,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             return NPC.localAI[2] > -30f && State != RimegeistState.ShadowDash ? false : base.CanHitPlayer(target, ref cooldownSlot);
         }
 
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = 10000;  //boss life scale in expertmode
             NPC.damage = 40;  //boss damage increase in expermode
@@ -304,48 +297,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                                     telegraph.initialRotation = Main.rand.NextFloat(6.28f);
                                     telegraph.numOfShots = 12;
                                 }
-                                /*
-                                   for (int j = 0; j < 1; j++)
-                                   {
-                                       Vector2 vecout = new Vector2(350, 0).RotatedBy(1 * j);
 
-                                       for (int i = 0; i < 7; i++)
-                                       {
-
-                                           int a = Projectile.NewProjectile(Projectile.InheritSource(NPC), NPC.Center, Vector2.Zero, ModContent.ProjectileType<IcySpikeOrbit>(), damage, 2f, Main.myPlayer);
-                                           if (Main.projectile[a].ModProjectile is IcySpikeOrbit spike)
-                                           {
-                                               spike.RotDir = rotDir;
-                                               spike.goalPos = randomVec.RotatedBy(MathHelper.ToRadians((360 / 7) * i));
-                                           }
-                                       }
-                                   }
-                                   */
-
-                                /*
-                                for (int i = 0; i < 18; i++)
-                                {
-
-                                    int a = Projectile.NewProjectile(Projectile.InheritSource(NPC), NPC.Center, Vector2.Zero, ModContent.ProjectileType<IcySpike2>(), damage, 2f, Main.myPlayer);
-                                    if (Main.projectile[a].ModProjectile is IcySpike2 spike)
-                                    {
-                                        spike.RotDir = rotDir;
-                                        spike.goalPos = randomVec.RotatedBy(MathHelper.ToRadians((360 / 7) * i));
-                                        spike.startingPos = NPC.Center;
-                                        spike.outValue = (i % 2 == 0 ? 25 : 5);
-                                        spike.rotation = 20 * i;
-                                    }
-                                }
-                                */
 
                             }
-                            /*
-                            for (int i = 0; i < 8; i++)
-                                {
-                                    Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.ToRadians(45 * i));
-                                    Projectile.NewProjectile(Projectile.InheritSource(NPC), position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 2f, Main.myPlayer);
-                                }
-                            */
+
                             shootTimer = 0;
                         }
                         if (AttackTimer == 220)
@@ -412,22 +367,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     if (++AttackTimer <= 180)
                     {
                         // Main.NewText("IceBoltBlast");
-                        /*Vector2 playerPos = player.position + new Vector2(0, -300);
-                        float speed = 5.1f;
-                        Vector2 moving = playerPos - npc.Center;
-                        float magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                        if (magnitude > speed)
-                        {
-                            moving *= speed / magnitude;
-                        }
-                        float turnResistance = 5f;
-                        moving = (npc.velocity * turnResistance + moving) / (turnResistance + 1f);
-                        magnitude = (float)Math.Sqrt(moving.X * moving.X + moving.Y * moving.Y);
-                        if (magnitude > speed)
-                        {
-                            moving *= speed / magnitude;
-                        }
-                        npc.velocity = moving;*/
+
                         int damage = Main.expertMode ? 10 : 5;// if u want to change this, 15 is for expert mode, 10 is for normal mod
                         Vector2 position = NPC.Center;
                         int type = Mod.Find<ModProjectile>("IceBolt").Type;
@@ -652,23 +592,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                                     }
                                     
                                 }
-                                /*
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(moveSpeed * (1 + (0.1f * i)), -2 - i), ProjectileID.DeerclopsRangedProjectile, 10, 1, ai1: 8);
-                                    Main.projectile[proj].localAI[0] = 7;
-                                    Main.projectile[proj].localAI[1] = 7;
-                                    Main.projectile[proj].ai[0] = 7;
-                                    Main.projectile[proj].ai[1] = 7;
-                                    //its fukin one of ya
 
-                                    int proj2 = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, new Vector2(moveSpeed * (-1 + (0.1f * i)), -4 - i), ProjectileID.DeerclopsRangedProjectile, 10, 1, ai1: 8);
-                                    Main.projectile[proj2].localAI[0] = 7;
-                                    Main.projectile[proj2].localAI[1] = 7;
-                                    Main.projectile[proj2].ai[0] = 7;
-                                    Main.projectile[proj2].ai[1] = 7;
-                                }
-                                */
                                 if (PhaseTwo < 1)
                                 {
                                     NPC.velocity.X = moveSpeed;
@@ -785,12 +709,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                     {
                         PhaseTwo = 1;
 
-                        /*Microsoft.Xna.Framework.Audio.SoundEffectInstance snd = SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
-
-                        if (snd != null)
-                        {
-                            snd.Pitch = -0.25f;
-                        }*/
 
                         SoundEngine.PlaySound(SoundID.Roar with { Pitch = -0.5f}, NPC.Center); 
                         for (int i = 0; i < 7; i++)
@@ -941,13 +859,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         {
             orig(spriteBatch);
 
-            /*
-            foreach(Projectile homingshot in Main.projectile.Where(testby => testby.active && testby.type == ModContent.ProjectileType<HomingWispSouls>()))
-            {
-                Color newColor = Color.White;
-                homingshot.ModProjectile.PreDraw(lightColor: ref newColor);
-            }
-            */
+
 
             if (Rimegeist.rimegeist != null && Rimegeist.rimegeist.NPC.active)
             {
@@ -1044,10 +956,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             toPlayer *= speed;
             Vector2 from = NPC.Center - new Vector2(96, 0).RotatedBy(NPC.rotation);
             int damage = 75;
-            /*if (Main.expertMode)
-            {
-                damage = (int)(damage / Main.expertDamage);
-            }*/
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(Projectile.InheritSource(NPC), from, toPlayer, type, damage, 3, Main.myPlayer, ai1, ai2);
@@ -1231,23 +1140,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         public override void PostDraw(Color lightColor)
         {
         
-            /*
-            Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Rimegeist.AssetDirectory + "IcySpike_Glowmask");
-            Vector2 drawPos = Projectile.Center + new Vector2(0, Projectile.gfxOffY) - Main.screenPosition;
-            //keep an eye on the width and height when doing this. It matters
-            Main.EntitySpriteDraw
-            (
-                texture,
-                drawPos,
-                new Rectangle(0, 0, texture.Width, texture.Height),
-                Color.White,
-                Projectile.rotation,
-                texture.Size() * 0.5f,
-                Projectile.scale,
-                SpriteEffects.None, //adjust this according to the sprite
-                0
-                );
-            */
+
         }
 
     }
@@ -1730,27 +1623,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
             //if (Timer < 60)
                 //Projectile.velocity /= 1.03f;
 
-            /*
-            Projectile.ai[0] += 1;
-
-            if (Projectile.ai[0] >= 8)
-            {
-                Vector2 perturbedSpeed = new Vector2(Projectile.velocity.X, Projectile.velocity.Y).RotatedByRandom(MathHelper.ToRadians(radians));
-                if (radians >= 16)
-                {
-                    radians = -24;
-                }
-                if (radians <= -16)
-                {
-                    radians = 16;
-                }
-                float scale = 1f - (Main.rand.NextFloat() * .3f);
-                perturbedSpeed = perturbedSpeed * scale;
-                Projectile.velocity.Y = perturbedSpeed.Y;
-                Projectile.velocity.X = perturbedSpeed.X;
-                Projectile.ai[0] = 0;
-            }
-            */
         }
     }
 
@@ -1895,3 +1767,4 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
     }
 }
+*/

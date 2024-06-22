@@ -162,6 +162,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         }
         public override void PostDraw(Color lightColor)
         {
+            /*
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Rimegeist.AssetDirectory + "IceBolt_Glowmask");
             Vector2 drawPos = Projectile.Center + new Vector2(0, Projectile.gfxOffY) - Main.screenPosition;
             //keep an eye on the width and height when doing this. It matters
@@ -177,6 +178,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
                 SpriteEffects.None, //adjust this according to the sprite
                 0
                 );
+            */
         }
     }
 }

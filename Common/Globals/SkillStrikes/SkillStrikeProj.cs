@@ -18,6 +18,8 @@ using ReLogic.Graphics;
 
 namespace AerovelenceMod.Common.Globals.SkillStrikes
 {
+
+    //TODO convert this into a particle
 	public class SkillStrikeProj : ModProjectile
 	{
         int combatTextIndex = 0;
@@ -144,7 +146,6 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.DeathText.Value, damageNumber, drawPos.X, drawPos.Y, innerColor * mainOpacity, outerColor * anchorOpacity * mainOpacity, origin, Projectile.scale * 0.47f);
 
             }
-            //Utils.DrawBorderStringFourWay(Main.spriteBatch, Terraria.GameContent.FontAssets.DeathText.Value, damageNumber, Projectile.Center.X - Main.screenPosition.X, Projectile.Center.Y - Main.screenPosition.Y, Color.BlanchedAlmond, Color.Purple, new Vector2(0,0), Projectile.scale * 0.4f);
 
         }
     }

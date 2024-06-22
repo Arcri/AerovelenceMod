@@ -18,6 +18,7 @@ using Terraria.GameContent.Bestiary;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
 {
+    /*
     [AutoloadBossHead]
     public class Cyvercry : ModNPC
     {
@@ -59,7 +60,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
             }
             dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
         }
-        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)/* tModPorter Note: bossLifeScale -> balance (bossAdjustment is different, see the docs for details) */
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             NPC.lifeMax = 41500;
             NPC.damage = 125;
@@ -111,43 +112,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            /*
-            var entitySource = NPC.GetSource_Death();
-
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CyvercryBag>()));
-
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CyvercryTrophy>(), 10));
-
-            //npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<RimegeistRelic>()));
-
-            //npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<RimegeistPetItem>(), 4));
-
-            LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
-            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CyvercryMask>(), 7));
-
-            npcLoot.Add(notExpertRule);
-
-            if (!Main.expertMode)
-            {
-                if (Main.rand.NextBool(7))
-                {
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyvercryMask>());
-                }
-                if (Main.rand.NextBool(10))
-                {
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyvercryTrophy>());
-                }
-                int rand = Main.rand.Next(4);
-                if (rand == 0)
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<CyverCannon>());
-                if (rand == 1)
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<Cyverthrow>());
-                if (rand == 2)
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<DarknessDischarge>());
-                if (rand == 3)
-                    Item.NewItem(entitySource, NPC.getRect(), ModContent.ItemType<Oblivion>());
-            }
-            */
         }
 
 
@@ -464,13 +428,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                             //Main.dust[a].velocity *= 0.15f;
                             //Main.dust[a].velocity += dustVelo;
 
-                            /*
-                            Dust dust = Dust.NewDustDirect(from - new Vector2(5) + circular, 0, 0, DustID.Electric, 0, 0, NPC.alpha);
-                            dust.velocity *= 0.15f;
-                            dust.velocity += dustVelo;
-                            dust.scale = 1.2f;
-                            dust.noGravity = true;
-                            */
                         }
                         ai2++;
                     }
@@ -686,10 +643,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int damage = 70;
-                            /*if (Main.expertMode)
-                            {
-                                damage = (int)(damage / Main.expertDamage);
-                            }*/
                             Projectile.NewProjectile(entitySource, toLocation, Vector2.Zero, ModContent.ProjectileType<DarkDagger>(), damage, 0, Main.myPlayer, player.whoAmI);
                         }
                         Vector2 toLocationVelo = toLocation - NPC.Center;
@@ -760,6 +713,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry //Change me
                 NPC.netUpdate = true;
         }
     }
+    */
+
     public class EnergyBall : ModProjectile
     {
         public override void SetStaticDefaults()

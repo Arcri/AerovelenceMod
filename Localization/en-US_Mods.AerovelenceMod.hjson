@@ -1,4 +1,4 @@
-"Keybinds.Armor Set Bonus.DisplayName": Armor  Set  Bonus
+"Keybinds.Armor Set Bonus.DisplayName": Armor Set Bonus
 
 Biomes: {
 	ZonePlayer: {
@@ -115,14 +115,13 @@ Items: {
 		Tooltip: This item is unobtainable as it does not meet my quality standards, but I decided to leave it in because I think it is still pretty neat.
 	}
 
-	Alpenine: {
-		DisplayName: Alpenine
-		Tooltip: ""
-	}
-
 	ElementalShift: {
 		DisplayName: Elemental Shift
-		Tooltip: Attacking creates an energy ball that can be hit around
+		Tooltip:
+			'''
+			Attacking creates an energy ball that can be hit around
+			Right-Click to destroy the ball
+			'''
 	}
 
 	CyverCannon: {
@@ -197,7 +196,11 @@ Items: {
 
 	ClockworkLazinator: {
 		DisplayName: Clockwork Lazinator
-		Tooltip: Right-Click to wind up the weapon, increasing how long it fires for
+		Tooltip:
+			'''
+			Right-Click to wind up the weapon, increasing how long it fires for
+			Caps out at 4 winds
+			'''
 	}
 
 	CrystalSpray: {
@@ -206,7 +209,7 @@ Items: {
 	}
 
 	CthulhusWrath: {
-		DisplayName: Cthulhus Wrath
+		DisplayName: Kindling Wrath
 		Tooltip: ""
 	}
 
@@ -291,7 +294,7 @@ Items: {
 		Tooltip:
 			'''
 			Converts bullet into granite chunks
-			If two chunks collide midair, the break into homing stars
+			If two chunks collide midair, the break into homing energy cores
 			'''
 	}
 
@@ -427,7 +430,11 @@ Items: {
 
 	MarbleMusket: {
 		DisplayName: Marble Musket
-		Tooltip: Converts bullets into special gravity-affected projectiles
+		Tooltip:
+			'''
+			Converts bullets into special gravity-affected projectiles
+			Hitting 3 consecutive shots releases homing stars
+			'''
 	}
 
 	CyvercryThumbnailHelper: {
@@ -454,11 +461,7 @@ Items: {
 NPCs: {
 	CyverBot.DisplayName: Cyver Bot
 	CyverBotOrbiter.DisplayName: Cyver Bot Orbiter
-	Cyvercry.DisplayName: OldCyvercry
 	Cyvercry2.DisplayName: Cyvercry
-	GhastlyGlacier.DisplayName: Ghastly Glacier
-	Rimegeist.DisplayName: Rimegeist
-	SlateDemon.DisplayName: Slate Demon
 	MovingPlatform.DisplayName: Moving Platform
 	FeatheredFoe.DisplayName: Feathered Foe
 }

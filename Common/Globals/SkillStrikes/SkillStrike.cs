@@ -80,7 +80,8 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 modifiers.CritDamage *= superCritMultiplier;
                 skillStrikeAmount--;
 
-                //modifiers.HideCombatText();
+                if (skillStrikeAmount >= 0)
+                    modifiers.HideCombatText();
             }
 
         }
@@ -135,6 +136,15 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
                 SoundEngine.PlaySound(style2, target.Center);
             }
 
+            //Damage number
+            Vector2 randomSpawnPos = Main.rand.NextVector2FromRectangle(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, (int)(target.height * 0.75f)));
+            Dust text = Dust.NewDustPerfect(randomSpawnPos, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -12f), Scale: 1f);
+
+            SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
+            sstb.isCrit = false;
+            sstb.damageNumber = "" + hit.Damage;
+
+            text.customData = sstb;
             base.OnHitNPC(projectile, target, hit, damageDone);
         }
 
