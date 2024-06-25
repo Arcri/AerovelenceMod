@@ -24,11 +24,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
     public class BurningJealousy : ModItem
     {
         bool tick = false;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Burning Jealousy");
-            // Tooltip.SetDefault("Hold Right-Click to guard, gaining a large defense boost\nRetailiate with an explosive burst when hit while guarding");
-        }
 
         public override void SetDefaults()
         {
@@ -53,6 +48,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Item.shoot = ModContent.ProjectileType<BurningJealousyHeldProj>();
         }
         public override bool AltFunctionUse(Player player) => true;
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Counter-Attack Skill Strikes [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override void AddRecipes()
         {
@@ -741,7 +744,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 1.16f, };
                 SoundEngine.PlaySound(style, player.Center);
+                
                 int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<BurningJealousyPulse>(), Projectile.damage * 2, 0, player.whoAmI);
+
+                SkillStrikeUtil.setSkillStrike(Main.projectile[a], 2f, 1000, 0f, 0f);
+
+                
                 if (symbol != null)
                     symbol.active = false;
                 Projectile.active = false;
@@ -780,8 +788,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
             Vector2 otherOffset = new Vector2(0, Main.player[Projectile.owner].gfxOffY);
             float rot = p.direction == 1 ? 2f : 2f - (MathF.PI / 4f);
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             float scale = Projectile.scale + ((1f - fadeInVal) * 0.15f);
 
@@ -885,6 +891,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 {
                     sword.bigSwing = true;
                 }
+
+                SkillStrikeUtil.setSkillStrike(a, 3f, 1000, 0f, 0f);
+
+
                 player.ChangeDir(Main.MouseWorld.X > player.Center.X ? 1 : -1);
                 justHit = true;
                 gaurding = false;
@@ -908,6 +918,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 {
                     sword.bigSwing = true;
                 }
+                SkillStrikeUtil.setSkillStrike(a, 3f, 1000, 0f, 0f);
+
                 player.ChangeDir(Main.MouseWorld.X > player.Center.X ? 1 : -1);
                 justHit = true;
                 gaurding = false;

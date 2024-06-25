@@ -14,6 +14,7 @@ using AerovelenceMod.Common.Utilities;
 using Terraria.Audio;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 {
@@ -48,6 +49,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
             Item.channel = true;
             Item.autoReuse = true;
 
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes under 25% mana [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
         }
 
 
@@ -212,7 +222,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
                     explo.multiplier = 1.5f;
                     explo.sticky = true;
                 }
-                Projectile.NewProjectile(null, spawnPos, Projectile.rotation.ToRotationVector2() * 4.5f, ModContent.ProjectileType<AuroraBlast>(), Projectile.damage, 0, Main.myPlayer);
+                int aa = Projectile.NewProjectile(null, spawnPos, Projectile.rotation.ToRotationVector2() * 4.5f, ModContent.ProjectileType<AuroraBlast>(), Projectile.damage, 0, Main.myPlayer);
+
+                if (Player.statMana < (Player.statManaMax2 / 4))
+                    SkillStrikeUtil.setSkillStrike(Main.projectile[aa], 1.3f, 100, 0.15f, 0f);
             }
 
             timer++;
@@ -412,8 +425,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 
                 startingVel = Projectile.velocity;
                 Projectile.velocity = Vector2.Zero;
-
-
 
             }
 

@@ -71,13 +71,16 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (skillStrikeAmount <= 0 && !SkillStrike)
+            if (!SkillStrike)
                 return;
+
+            if (skillStrikeAmount <= 0)
+                SkillStrike = false;
 
             if (SkillStrike)
             {
-                modifiers.FinalDamage *= skillStrikeMultiplier * 1f;
-                modifiers.CritDamage *= superCritMultiplier;
+                modifiers.FinalDamage *= skillStrikeMultiplier * 1f; //1f
+                //modifiers.CritDamage *= superCritMultiplier;
                 skillStrikeAmount--;
 
                 if (skillStrikeAmount >= 0)
@@ -91,7 +94,10 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
         {
             // < 0 and not <= 0 because skillStrikeAmount is decremented in ModifyHitNPC which runs before OnHitNPC
             if (!SkillStrike || skillStrikeAmount < 0)
+            {
+                SkillStrike = false;
                 return;
+            }
 
             if (hit.Crit)
             {
@@ -123,7 +129,15 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
             }
             else if (impactType == SkillStrikeImpactType.Pixel)
             {
+                int a = Projectile.NewProjectile(null, projectile.Center, Vector2.Zero, ModContent.ProjectileType<SkillCritImpact>(), 0, 0);
+                Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
+                Main.projectile[a].scale = impactScale;
 
+                for (int ii = 0; ii < (6 + Main.rand.Next(0, 2)) * impactScale; ii++)
+                {
+                    Dust d = Dust.NewDustPerfect(projectile.Center, ModContent.DustType<MuraLineBasic>(),
+                            Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1.5f, 3.25f), Alpha: Main.rand.Next(10, 15), new Color(255, 180, 60), 0.35f);
+                }
             }
 
             //Hit Sound
@@ -145,6 +159,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
             sstb.damageNumber = "" + hit.Damage;
 
             text.customData = sstb;
+
             base.OnHitNPC(projectile, target, hit, damageDone);
         }
 

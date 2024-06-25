@@ -30,17 +30,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetDefaults()
         {
-            Projectile.extraUpdates = 3;
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = 40;
             Projectile.height = 40;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.scale = 1f;
             Projectile.timeLeft = 110;
-            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = -1;
+            Projectile.extraUpdates = 3;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
@@ -129,29 +131,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-            //Inner
-            /*
-            int maxDust = 15 + Main.rand.Next(2) + (big ? 2 : 0);
-            for (int i = 0; i < maxDust; i++)
-            {
-                float dustScale = 0.6f + Main.rand.NextFloat(0, 0.2f) + (big ? 0.1f : 0f);
-
-                float progress = (i + 1) / maxDust;
-
-                float velMult = progress > 0.8f ? Main.rand.NextFloat(0.55f, 1f) : Main.rand.NextFloat(0.4f, 0.75f);// + (0.2f * progress);
-
-                Vector2 baseVel = Projectile.velocity.SafeNormalize(Vector2.UnitX) * (10f * velMult) * (Easings.easeOutQuad(velMult));
-
-                Vector2 dustVel = baseVel.RotatedBy((1 - velMult) * 0.7f * (Main.rand.NextBool() ? 1 : -1)).RotateRandom(0.01f);
-
-                int gd = GlowDustHelper.DrawGlowDust(target.Center, 1, 1, ModContent.DustType<GlowCircleFlare>(),
-                    new Color(255, 30, 30), dustScale, 0.6f, 0f, dustShader);
-                Main.dust[gd].velocity = dustVel * Main.rand.NextFloat(0.95f, 1.05f);
-                Main.dust[gd].noLight = true;
-                Main.dust[gd].alpha = 0;
-
-            }
-            */
             float dustScale1 = 0.85f + Main.rand.NextFloat(0, 0.15f) + (big ? 0.1f : 0f);
             float dustScale2 = 0.6f + Main.rand.NextFloat(0, 0.10f) + (big ? 0.1f : 0f);
 
@@ -237,24 +216,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     public class AdamSmallShot : ModProjectile
     {
         public int timer = 0;
-        public override void SetStaticDefaults()
-        {
-        }
 
         public override void SetDefaults()
         {
-            Projectile.extraUpdates = 4;
+            Projectile.DamageType = DamageClass.Ranged;
+
             Projectile.width = 15;
             Projectile.height = 15;
-            Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.scale = 1f;
             Projectile.timeLeft = 400;
-            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 4;
+
+            Projectile.friendly = true;
+            Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
-            Projectile.penetrate = 1;
         }
+
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
@@ -319,6 +297,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
 
 
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (target.GetGlobalNPC<AdamShotNPC>().AdamShotHitCounter >= 3)
+                SkillStrikeUtil.setSkillStrike(Projectile, 2f);
+        }
+
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[Projectile.owner];
@@ -327,7 +311,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             if (target.GetGlobalNPC<AdamShotNPC>().AdamShotHitCounter >= 4)
             {
-                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<H3Impact>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].rotation = Projectile.rotation;

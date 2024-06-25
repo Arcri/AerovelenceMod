@@ -12,6 +12,7 @@ using AerovelenceMod.Common.Utilities;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles.Other;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -51,6 +52,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         }
         public override bool AltFunctionUse(Player player) => true;
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Bomb Skill Strikes at maximum size [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override void AddRecipes()
         {

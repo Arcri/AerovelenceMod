@@ -16,6 +16,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using System.Runtime.InteropServices;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -41,6 +42,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Item.autoReuse = true;
             Item.noMelee = true;
             Item.noUseGraphic = true;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Energy Cores Skill Strike [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()
@@ -259,8 +269,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                         SoundStyle style = new SoundStyle("Terraria/Sounds/Item_14") with { Pitch = .27f, Volume = 0.7f, MaxInstances = -1 };
                         SoundEngine.PlaySound(style, Projectile.Center);
 
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack * 0.5f, Main.myPlayer);
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack * 0.5f, Main.myPlayer);
+                        int core1 = Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * 0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack * 0.5f, Main.myPlayer);
+                        int core2 = Projectile.NewProjectile(Projectile.GetSource_FromAI(), projSpawnDir + Projectile.Center, projSpawnDir * -0.5f, ModContent.ProjectileType<GraniteCore>(), (int)(Projectile.damage * 1f), Projectile.knockBack * 0.5f, Main.myPlayer);
+
+                        SkillStrikeUtil.setSkillStrike(Main.projectile[core1], 1.5f);
+                        SkillStrikeUtil.setSkillStrike(Main.projectile[core2], 1.5f);
 
                         Projectile.active = false;
                         p.active = false;

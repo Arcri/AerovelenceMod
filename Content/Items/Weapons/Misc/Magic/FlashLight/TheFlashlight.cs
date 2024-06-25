@@ -13,6 +13,7 @@ using Terraria.DataStructures;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
@@ -44,6 +45,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noMelee = true;
             Item.autoReuse = true;
         }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe().
@@ -76,6 +87,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public Vector2 endPoint;
         public float LaserRotation = 0;
         public float laserWidth = 20;
+
+        int timeUntilSkillStrike = 140;
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
@@ -158,6 +171,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 {
                     laserWidth = 0;
                     laserTimer = 0;
+                    lockedOnTimer = 0;
                     timer = -1;
                     lockedOn = false;
                 }
@@ -202,6 +216,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     {
                         player.CheckMana(player.inventory[player.selectedItem], pay: true);
                     }
+
+                    lockedOnTimer++;
                 }
 
             }
@@ -210,8 +226,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 lockedOn = false;
                 laserWidth = 0;
                 laserTimer = 0;
+                lockedOnTimer = 0;
             }
             #endregion
+
+            if (lockedOnTimer > timeUntilSkillStrike)
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 10000, 0.5f, 0f);
+            else
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
 
             //Store direction that star should turn
             if (timer == 0)

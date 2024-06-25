@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+/*
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -203,3 +204,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         }
     }
 }
+*/

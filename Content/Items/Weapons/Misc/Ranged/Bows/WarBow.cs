@@ -44,6 +44,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             Item.noMelee = true;
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			Projectile proj2 = Projectile.NewProjectileDirect(source, position, Vector2.Zero, ModContent.ProjectileType<WarBowHeldProj>(), damage, 0, player.whoAmI);
@@ -72,10 +81,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
     }
     public class WarBowHeldProj : ModProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("War Bow");
-        }
 
         public int OFFSET = 10; //15
         public ref float Angle => ref Projectile.ai[1];
@@ -191,7 +196,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                                     Vector2.One.RotatedByRandom(6.28f) * Main.rand.NextFloat(1.5f, 2.75f), Alpha: Main.rand.Next(13, 15), new Color(255, 180, 60), 0.3f);
                         }
 
-                        SkillStrikeUtil.setSkillStrike(proj, 1.3f, 1, 1f, 1f);
+                        SkillStrikeUtil.setSkillStrikeWithImpactType(proj, 1.3f, 1, SkillStrikeImpactType.Pixel, 1f, 1f);
 
                         SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_ballista_tower_shot_1") with { Pitch = .54f, };
                         SoundEngine.PlaySound(style3, Player.Center);
@@ -327,6 +332,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         public List<Vector2> previousPositions = new List<Vector2>();
         int timer = 0;
 
+        bool hasHitYet = false;
+
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!trailActive)
@@ -346,7 +353,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                     rotPower: 0.15f, preSlowPower: 0.97f, timeBeforeSlow: 6, postSlowPower: 0.92f, velToBeginShrink: 4f, fadePower: 0.85f, shouldFadeColor: true);
             }
 
-            for (int i = 0; i < 1; i++)
+            if (!hasHitYet)
             {
 
                 int a = Projectile.NewProjectile(projectile.GetSource_FromAI(), projectile.Center, Vector2.Zero, ModContent.ProjectileType<WarBowSpike>(), (int)(hit.Damage / 6f), 0f, Main.player[projectile.owner].whoAmI);
@@ -358,6 +365,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                     wbs.TargetWhoAmI = target.whoAmI;
                 }
             }
+
+            hasHitYet = true;
         }
 
         public override void PostAI(Projectile projectile)

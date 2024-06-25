@@ -109,7 +109,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             NPC.lifeMax = (int)(NPC.lifeMax * 0.65f * balance * bossAdjustment); //0.75
             NPC.damage = (int)(NPC.damage * 0.75f);
-        }
+        } 
 
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {

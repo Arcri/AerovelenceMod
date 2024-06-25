@@ -48,6 +48,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 			Item.noUseGraphic = true;
 		}
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Fire Vortex Skill Strikes [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
 			Projectile proj2 = Projectile.NewProjectileDirect(source, position, Vector2.Zero, ModContent.ProjectileType<TheSaharaHeldProj>(), damage, 0, player.whoAmI);
@@ -371,6 +380,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             Projectile.hostile = false;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+
+
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 30;
         }
 
         int timer = 0;
@@ -390,7 +403,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
             if (timer == 65 || timer == 77 || timer == 89)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SaharaFirePulse>(), Projectile.damage, 0, Main.myPlayer);
+                int fire = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SaharaFirePulse>(), Projectile.damage, 0, Main.myPlayer);
+
+                SkillStrikeUtil.setSkillStrike(Main.projectile[fire], 1.3f, 100, 0.35f);
 
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_0") with { Pitch = -.33f, MaxInstances = -1, Volume = 0.8f };
                 SoundEngine.PlaySound(style, Projectile.Center);

@@ -49,6 +49,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
         public override bool AltFunctionUse(Player player) => true;
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Bullets Skill Strike gouged enemies [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (player.altFunctionUse == 2)
@@ -58,7 +67,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 return false;
             }
 
-            player.GetModPlayer<AeroPlayer>().ScreenShakePower = 2;
+            player.GetModPlayer<AeroPlayer>().ScreenShakePower = 1.5f;
 
             Vector2 muzzleOffset = Vector2.Normalize(velocity) * 40f;
             muzzleOffset += new Vector2(0, -10 * player.direction).RotatedBy(velocity.ToRotation());
@@ -76,10 +85,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
 
             //lol
-            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/back_scatter") with { Volume = .06f, Pitch = .6f, PitchVariance = 0.25f };
-            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/rescue_ranger_fire") with { Volume = .13f, Pitch = .4f, };
-            SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Impact_Sword_L_a") with { Volume = .19f, Pitch = .6f, PitchVariance = 0.25f };
-            SoundStyle style4 = new SoundStyle("Terraria/Sounds/Item_71") with { Pitch = -.51f, PitchVariance = .25f, Volume = 0.32f };
+            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/back_scatter") with { Volume = .055f, Pitch = .6f, PitchVariance = 0.25f };
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/TF2/rescue_ranger_fire") with { Volume = .12f, Pitch = .4f, };
+            SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Impact_Sword_L_a") with { Volume = .18f, Pitch = .6f, PitchVariance = 0.25f };
+            SoundStyle style4 = new SoundStyle("Terraria/Sounds/Item_71") with { Pitch = -.51f, PitchVariance = .25f, Volume = 0.3f };
             SoundEngine.PlaySound(style, player.Center);
             SoundEngine.PlaySound(style2, player.Center);
             SoundEngine.PlaySound(style3, player.Center);
@@ -373,6 +382,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     Color.Red, Main.rand.NextFloat(0.35f, 0.55f), 0.4f, 0f, dustShader);
             }
         }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (target.HasBuff(ModContent.BuffType<ShotgunAxeDebuff>()))
+            {
+                ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+                for (int i = 0; i < 2 + (Main.rand.NextBool() ? 1 : 0); i++)
+                {
+                    int p = GlowDustHelper.DrawGlowDust(target.position, target.width, target.height, ModContent.DustType<GlowCircleQuadStar>(), Color.Crimson,
+                        Main.rand.NextFloat(0.4f, 0.9f), 0.4f, 0f, dustShader);
+                    Main.dust[p].velocity *= 2.6f;
+                    Main.dust[p].fadeIn = 2f;
+                }
+
+                for (int i = 0; i < 7; i++)
+                {
+                    int p = Dust.NewDust(target.position, target.width, target.height, DustID.Blood, 0f, 0f, 0, new Color(255, 255, 255), 1.15f);
+                    Main.dust[p].velocity *= 1.5f;
+                }
+
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.5f, impactVolume: 0.35f);
+            }
+
+        }
     }
 
     public class ShotgunAxeMeleeProj : ModProjectile
@@ -600,7 +634,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             #endregion
         }
 
-
         int justHitTime = 0;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -765,6 +798,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
+            /*
             if (BloodDebuff)
             {
                 ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
@@ -788,7 +822,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                 }
             }
-
+            */
         }
     }
 }

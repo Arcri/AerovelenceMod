@@ -35,7 +35,7 @@ Buffs: {
 
 	ManaLeech: {
 		DisplayName: Mana Leech
-		Description: Mods.AerovelenceMod.Buffs.ManaLeech.Description
+		Description: You're leaking mana!
 	}
 
 	CyverBotBuff: {
@@ -44,8 +44,8 @@ Buffs: {
 	}
 
 	ShotgunAxeDebuff: {
-		DisplayName: Shotgun Axe Debuff
-		Description: Mods.AerovelenceMod.Buffs.ShotgunAxeDebuff.Description
+		DisplayName: Gouged
+		Description: Losing this much blood can't be good, right?
 	}
 
 	CerobaMark: {
@@ -151,11 +151,6 @@ Items: {
 			Hold Right-Click to guard, gaining a large defense boost
 			Retaliate with an explosive counter-attack if hit while guarding
 			'''
-	}
-
-	PagesOfDawn: {
-		DisplayName: Pages Of Dawn
-		Tooltip: ""
 	}
 
 	Solsear: {
@@ -279,11 +274,6 @@ Items: {
 			'''
 	}
 
-	FirePyre: {
-		DisplayName: Fire Pyre
-		Tooltip: ""
-	}
-
 	GaussShotgun: {
 		DisplayName: Gauss Shotgun
 		Tooltip: ""
@@ -312,7 +302,7 @@ Items: {
 		Tooltip:
 			'''
 			Converts bullets into a special projectile
-			Right-Click to chop with the axe
+			Right-Click to chop with the axe, gouging enemies
 			'''
 	}
 

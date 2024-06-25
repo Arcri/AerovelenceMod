@@ -98,7 +98,9 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         {
             if (FlareFireDebuff && !projectile.npcProj && !projectile.trap && (projectile.minion || ProjectileID.Sets.MinionShot[projectile.type]))
             {
-                projectile.damage += 5;
+                //5% summon tag crit
+                if (Main.rand.Next(1, 101) <= 5)
+                    modifiers.SetCrit();
             }
         }
     }

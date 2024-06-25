@@ -21,29 +21,30 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     {
         public override void SetStaticDefaults()
         {
-            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<TitaniumRocketLauncher>();
-            // DisplayName.SetDefault("Adamantite Pulsar");
-            // Tooltip.SetDefault("Right-click to switch between 2 modes");
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<TitaniumRocketLauncher>();;
         }
 
         public override void SetDefaults()
         {
             Item.damage = 95;
+            Item.knockBack = KnockbackTiers.Average;
             Item.DamageType = DamageClass.Ranged;
+
             Item.width = 82;
             Item.height = 30;
             Item.useTime = 10;
             Item.useAnimation = 30;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 0;
-            Item.value = Item.sellPrice(0, 9, 0, 0);
-            Item.rare = ItemRarityID.Orange;
-            Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<AdamantitePulseShot>();
-            Item.channel = true;
             Item.shootSpeed = 2f;
+
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.value = Item.sellPrice(0, 7, 0, 0);
+            Item.rare = ItemRarityID.Orange;
+            Item.shoot = ModContent.ProjectileType<AdamantitePulseShot>();
+
+            Item.channel = true;
             Item.noUseGraphic = true;
+            Item.autoReuse = true;
+            Item.noMelee = true;
         }
         public override bool AltFunctionUse(Player player) => true;
 
@@ -375,7 +376,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                     //float velRot = Angle + (Main.rand.NextFloat(1 - reticleProgress, (1 - reticleProgress) * -1) * 0.5f);
                     //Vector2 vel = new Vector2(2, 0).RotatedBy(velRot);
-                    int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + adjustedVel * 10, adjustedVel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), Projectile.damage * 2, Projectile.knockBack, Main.myPlayer);
+
+                    int damage = (int)(Projectile.damage * (1f + reticleProgress));
+
+                    int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + adjustedVel * 10, adjustedVel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), damage, Projectile.knockBack, Main.myPlayer);
 
                     if (Main.projectile[shot].ModProjectile is AdamantitePulseShot aps)
                         aps.big = reticleProgress == 1;

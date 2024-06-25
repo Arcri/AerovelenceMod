@@ -19,6 +19,7 @@ using AerovelenceMod.Content.Items.Weapons.Starglass;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
+    /*
     public class PagesOfDawn : ModItem
     {
         public override void SetStaticDefaults()
@@ -55,6 +56,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             return false;
         }
     }
+
+    */
 
     public class PagesOfDawnProj : TrailProjBase
     {

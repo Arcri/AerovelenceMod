@@ -1,3 +1,4 @@
+/*
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -120,21 +121,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				}
 			}
 			SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
-			/*
-			for (double i = 0; i < 7.2; i += 0.2)
-			{
-				
-				if (Main.rand.NextFloat() <= 0.3f)
-				{
-					Dust dust = Dust.NewDustPerfect(Projectile.Center, DustID.Electric, new Vector2((float)Math.Sin(i) * 2.6f, (float)Math.Cos(i)) * 2.6f); //cos2.4
-					Dust dust2 = Dust.NewDustPerfect(Projectile.Center, DustID.Electric, new Vector2((float)Math.Sin(i) * 2.4f, (float)Math.Cos(i)).RotatedBy(Math.PI / 2) * 2.4f); //cos2.4
 
-					dust.noGravity = true;
-					dust2.noGravity = true;
-					SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
-				}
-			}
-			*/
 		}
 
 		public override bool PreDraw(ref Color lightColor)
@@ -237,3 +224,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         }
     }
 }
+*/

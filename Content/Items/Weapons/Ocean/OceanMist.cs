@@ -18,6 +18,7 @@ using System.Reflection.PortableExecutable;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using System.Threading;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
@@ -46,10 +47,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Item.noMelee = true;
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at full mana [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<OceanMistHeldProj>(), damage, knockback, player.whoAmI);
+            int a = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<OceanMistHeldProj>(), damage, knockback, player.whoAmI);
+            
+            if (player.statMana + player.GetManaCost(player.inventory[player.selectedItem]) == player.statManaMax2)
+                (Main.projectile[a].ModProjectile as OceanMistHeldProj).shouldSkillStrike = true;
 
             return false;
         }
@@ -93,14 +105,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Projectile.tileCollide = false;
         }
 
-        public override bool? CanDamage()
-        {
-            return false;
-        }
-        public override bool? CanCutTiles()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
+        public override bool? CanCutTiles() => false;
+        
+        public bool shouldSkillStrike = false;
 
         public override void AI()
         {
@@ -194,7 +202,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 SoundEngine.PlaySound(style, Projectile.Center);
 
                 //Spawn Proj
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
+                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
+
+                if (shouldSkillStrike)
+                    SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 100, 0.35f, 0f);
             }
 
             //Swoosh Sound 
@@ -227,9 +238,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             float rot = timer <= 20 ? timer * 0.45f * Projectile.ai[0] : Projectile.rotation;
             Vector2 pos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
 
+            Color col = shouldSkillStrike ? Color.Yellow with { A = 0 } : Color.White;
+
             if (timer <= 20)
             {
-                Main.spriteBatch.Draw(Twirl, pos, null, Color.White * 0.5f * alphaPercent, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Twirl, pos, null, col * 0.5f * alphaPercent, rot, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
             }
 
             Main.spriteBatch.Draw(Glow, pos, null, Color.SkyBlue with { A = 0 } * glowAlpha, rot, Glow.Size() / 2, Projectile.scale * glowScale, mySE, 0f);

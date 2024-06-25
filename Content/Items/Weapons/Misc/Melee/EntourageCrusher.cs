@@ -48,6 +48,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Item.autoReuse = true;
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after hitting 3 times in a row [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
            tick = !tick;
@@ -366,24 +375,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             justHitTime = (5 - (int)((Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) - 1) * 5f)) * Projectile.extraUpdates; //6
 
             float currentShakePower = Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower;
-            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = currentShakePower > 1 ? Math.Clamp(currentShakePower, 5, 10) : 10;
+            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = currentShakePower > 1 ? Math.Clamp(currentShakePower, 3, 8) : 8;
 
             SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_wither_beast_hurt_2") with { Pitch = .25f, PitchVariance = .35f, Volume = 1f, MaxInstances = 1 };
             SoundEngine.PlaySound(style, target.Center);
 
             SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/star_impact_01") with { Pitch = -.22f, PitchVariance = .25f, Volume = 0.5f, MaxInstances = 1 }; 
             SoundEngine.PlaySound(style3, target.Center);
-
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-            for (int i = 0; i < 0; i++)
-            {
-                Vector2 vel = (target.Center - Projectile.Center).RotatedBy(Main.rand.NextFloat(-0.4f, 0.4f));
-
-                Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowSpark>(), vel.SafeNormalize(Vector2.UnitX) * (14f + Main.rand.NextFloat(-2f, 2f)),
-                    Color.Purple, Main.rand.NextFloat(0.1f, 0.3f), 0.9f, 0f, dustShader);
-                p.fadeIn = 50 + Main.rand.NextFloat(-10, 15);
-                p.velocity *= 0.3f;
-            }
 
             for (int i = 0; i < 6 + Main.rand.Next(0, 5) + (skillStrike ? 3 : 0); i++)
             {

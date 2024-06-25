@@ -1,3 +1,4 @@
+/*
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -44,22 +45,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			return new Vector2(-8, 0);
 		}
 
-        //public static Vector2[] randomSpread(float speedX, float speedY, int angle, int num)
-        //{
-        /*
-        var posArray = new Vector2[num];
-        float spread = (float)(angle * 0.0555);
-        float baseSpeed = (float)System.Math.Sqrt(speedX * speedX + speedY * speedY);
-        double baseAngle = System.Math.Atan2(speedX, speedY);
-        double randomAngle;
-        for (int i = 0; i < num; ++i)
-        {
-            randomAngle = baseAngle + (Main.rand.NextFloat() - 0.5f) * spread;
-            posArray[i] = new Vector2(baseSpeed * (float)System.Math.Sin(randomAngle), baseSpeed * (float)System.Math.Cos(randomAngle));
-        }
-        return posArray;
-        */
-        //}
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -145,3 +130,4 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         }
     }
 }
+*/

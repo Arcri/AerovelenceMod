@@ -161,6 +161,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
     {
         public override bool AppliesToEntity(Item item, bool lateInstatiation)
         {
+            return false;
             return item.type == ItemID.CursedBullet;
         }
 

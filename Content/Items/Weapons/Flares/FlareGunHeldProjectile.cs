@@ -63,6 +63,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Player.itemTime = 2; // Set Item time to 2 frames while we are used
             Player.itemAnimation = 2; // Set Item animation time to 2 frames while we are used
 
+            Player.heldProj = Projectile.whoAmI;
+
             if (Player.channel)
             {
                 if (Projectile.owner == Main.myPlayer)

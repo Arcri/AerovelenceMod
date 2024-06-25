@@ -15,6 +15,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.NPC;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 {
@@ -46,6 +47,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         }
 
         public override bool AltFunctionUse(Player Player) { return true; }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Lightning Bolt Skill Strikes on a direct hit [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -909,6 +919,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                 float angle = (Main.MouseWorld - aimPos).ToRotation();
                 int afg = Projectile.NewProjectile(Projectile.GetSource_FromAI(), aimPos, new Vector2(30f, 0).RotatedBy(angle), ModContent.ProjectileType<SkylightThunderStrike>(), Projectile.damage * 3, 0);
 
+                SkillStrikeUtil.setSkillStrike(Main.projectile[afg], 1.3f);
+
+
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/lightning_flash_01") with { Pitch = 0.7f, PitchVariance = 0.2f, Volume = 0.35f };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
@@ -936,7 +949,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
                         Projectile.velocity.RotatedBy(rotAdd) * Main.rand.NextFloat(0.5f, 5) * 1.5f, newColor: Color.DodgerBlue, Scale: 0.2f + Main.rand.NextFloat(0, 0.2f));
                 }
 
-                int Spark = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Projectile.velocity * 40, Vector2.Zero, ModContent.ProjectileType<SkylightHitFlare>(), 0, 0);
+                int spark = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Projectile.velocity * 40, Vector2.Zero, ModContent.ProjectileType<SkylightHitFlare>(), 0, 0);
 
                 offset = new Vector2(-5, 0);
                 glowVal = 20;

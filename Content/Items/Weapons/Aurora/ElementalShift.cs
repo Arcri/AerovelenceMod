@@ -25,11 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
     public class ElementalShift : ModItem
     {
         bool tick = false;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Elemental Shift");
-            // Tooltip.SetDefault("");
-        }
+
         public override void SetDefaults()
         {
             Item.damage = 30;
@@ -49,6 +45,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Item.shoot = ModContent.ProjectileType<NewElementalShiftProj>();
         }
         public override bool AltFunctionUse(Player player) { return true; }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Ball Skill Strikes after bouncing off an enemy twice [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override bool CanUseItem(Player player)
         {
@@ -130,11 +135,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         int timer = 0;
         public int justHitCounter = 10; //10
+        int bouncedOffEnemyCount = 0;
 
-        public override bool? CanDamage()
-        {
-            return Projectile.velocity.Length() > 2;
-        }
+        public override bool? CanDamage() { return Projectile.velocity.Length() > 2; }
 
         public override void AI()
         {
@@ -144,7 +147,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             }
             else if (justBouncedTime < 10 && timer > 10)
             {
-                Projectile.timeLeft = 600;
+                Projectile.timeLeft = 400;
 
                 Projectile.velocity *= 1.02f;
 
@@ -160,6 +163,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                 Projectile.velocity *= 1.02f;
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            if (bouncedOffEnemyCount >= 2)
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 10, 0.3f, 0.15f);
 
             justHitCounter--;
             justBouncedTime++;
@@ -208,6 +214,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                     d.fadeIn = 1;
                     d.noLight = true;
                 }
+
+                bouncedOffEnemyCount++;
             }
         }
 

@@ -153,13 +153,14 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
     {
         public override bool AppliesToEntity(Item item, bool lateInstatiation)
         {
-            return item.type == ItemID.NanoBullet;
+            return false;
+            //return item.type == ItemID.NanoBullet;
         }
 
         public override void SetDefaults(Item item)
         {
-            item.StatsModifiedBy.Add(Mod);
-            item.shoot = ModContent.ProjectileType<NanoBullet>();
+            //item.StatsModifiedBy.Add(Mod);
+            //item.shoot = ModContent.ProjectileType<NanoBullet>();
         }
     }
 

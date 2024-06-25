@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿/*
+using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -108,79 +109,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
             //int bomb = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<CyverLaserBomb>(), 10, 0, Main.myPlayer);
             //Main.projectile[bomb].rotation = randomAngle;
-
-
-            /*
-			for (int i = 0; i < 1; i++)
-            {
-				//int a = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<HollowPulse>(), 0, 0, Main.myPlayer);
-				if (Main.projectile[a].ModProjectile is HollowPulse pulse)
-				{
-					pulse.color = Color.Gray * 0f;
-					pulse.oval = false;
-					pulse.size = 25f;
-				}
-			}
-			*/
-
-            //int b = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<RimeIceCube>(), 0, 0, Main.myPlayer);
-            /*
-			int c = Projectile.NewProjectile(null, player.Center + (player.direction * new Vector2(50,0)), Vector2.Zero, ModContent.ProjectileType<BigSoul>(), 10, 0, Main.myPlayer);
-			if (Main.projectile[c].ModProjectile is BigSoul soul)
-            {
-				soul.leftOrRight = (player.direction == 1 ? true : false);
-            }
-			*/
-
-            /*
-			for (int i = -2; i < 3; i++) // < 
-            {
-				int a = Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<DeepFreezeProj>(), 0, 0);
-				Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
-				if (Main.projectile[a].ModProjectile is DeepFreezeProj explo)
-				{
-					explo.size = 1.5f;
-					explo.multiplier = 1.25f;
-					//Color col = i >= 60 ? Color.Goldenrod : Color.OrangeRed;
-					//explo.color = col;
-					//explo.size = 0.65f;
-					//explo.colorIntensity = 0.7f; //0.5
-					//explo.rise = true;
-				}
-				Projectile.NewProjectile(null, position, velocity.RotatedBy(MathHelper.ToRadians(1.5f * i)) * 1.3f, ModContent.ProjectileType<AuroraBlast>(), damage, 0, Main.myPlayer);
-			}
-			*/
-
-
-
-            //Star Strike
-            /*
-			for (int i = 0; i < 5; i++)
-			{
-				Vector2 spawnPos = new Vector2(400, 0).RotatedBy(MathHelper.ToRadians(360 / 5) * i);
-				int index = NPC.NewNPC(source, (int)position.X, (int)position.Y, ModContent.NPCType<CyverBotOrbiter>(), player.whoAmI);
-				NPC laser = Main.npc[index];
-				laser.damage = 0;
-				if (laser.ModNPC is CyverBotOrbiter bot)
-				{
-					bot.State = (int)(fastThenShort ? CyverBot.Behavior.PrimeLaser : CyverBot.Behavior.PrimeLaserLong);
-					bot.GoalPoint = spawnPos;
-				}
-			}
-			*/
-
-            /*
-			for (int i = 0; i < 6; i++)
-            {
-				int crossBombIndex = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<CyverExplosionBall>(), damage / 4, 2, Main.myPlayer);
-				Projectile Bomb = Main.projectile[crossBombIndex];
-
-				if (Bomb.ModProjectile is CyverExplosionBall BombadelaCross)
-				{
-					BombadelaCross.outVector = new Vector2(0, 450).RotatedBy(MathHelper.ToRadians(60 * i));
-				}
-			}
-			*/
             return false;
 		}
 
@@ -370,27 +298,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 				Projectile.active = false;
 
 			mainTimer++;
-			/*
-			if (mainTimer <= 130 - Projectile.ai[1])
-			{
-				Projectile.penetrate = -1;
-				orbitTimer += 4;
-				//Vector2 orbitPos = Main.MouseWorld + new Vector2(50, 0).RotatedBy(MathHelper.ToRadians
-					//(orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));
-				Vector2 orbitPos = owner.Center + new Vector2(270, 0).RotatedBy(MathHelper.ToRadians(orbitTimer + (Projectile.ai[0] * (360 / Projectile.localAI[1])) + (4 * Projectile.ai[1])));
-				Projectile.velocity = (10 * Projectile.velocity + orbitPos - Projectile.Center) / 20f;
-			}
-			if (mainTimer >= 130 - Projectile.ai[1])
-			{
-				Projectile.penetrate = 1;
-				if (Projectile.localAI[0] == 0f)
-				{
-					Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.Zero) * 7f;
-					Projectile.localAI[0] = 1f;
-				}
-				Projectile.velocity *= 1.035f;
-			}
-			*/
+
 
 		}
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -762,3 +670,4 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 	}
 
 }
+*/

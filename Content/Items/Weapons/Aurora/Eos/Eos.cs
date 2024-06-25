@@ -47,6 +47,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             Item.shoot = ModContent.ProjectileType<EosSwing>();
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes when bashing [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             tick = !tick;
@@ -510,6 +519,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             return myCol;
         }
 
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            Player p = Main.player[Projectile.owner];
+            if (!hasBashed && p.timeSinceLastDashStarted < 30 && spin)
+                SkillStrikeUtil.setSkillStrike(Projectile, 5f, 1, 0.5f, 0f);
+        }
+
         bool hasBashed = false;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -614,12 +630,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
 
             #endregion;
-
-            //
-            return Easings.easeOutCirc(x);
-
-
-            //return base.getProgress(x);
         }
     }
 

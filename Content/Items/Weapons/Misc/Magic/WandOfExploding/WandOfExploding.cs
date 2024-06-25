@@ -52,6 +52,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             Item.noUseGraphic = true;
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes under 50% mana [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe().
@@ -155,7 +164,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
                 SoundEngine.PlaySound(style2, Projectile.Center);
 
                 Vector2 vel = new Vector2(17, 0).RotatedBy(direction.ToRotation());
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel.SafeNormalize(Vector2.UnitX) * OFFSET, vel, ModContent.ProjectileType<WandOfExplodingProj>(),
+                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel.SafeNormalize(Vector2.UnitX) * OFFSET, vel, ModContent.ProjectileType<WandOfExplodingProj>(),
                     Projectile.damage, 0, Main.myPlayer);
 
                 for (int fg = 0; fg < 5 + Main.rand.Next(2); fg++)
@@ -176,7 +185,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
                     sa.noGravity = true;
                 }
 
-                Player.CheckMana(Player.inventory[Player.selectedItem], pay: true);
+                if (!Player.CheckMana(Player.inventory[Player.selectedItem], pay: true))
+                    Projectile.active = false;
 
                 OFFSET -= 20;
             }
@@ -284,7 +294,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
                         distort.scale = 0.6f;
                     }
 
-                    Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.5f), 0, Projectile.owner);
+                    int explo = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.5f), 0, Projectile.owner);
+
+                    if (Main.player[Projectile.owner].statMana <= Main.player[Projectile.owner].statManaMax2 / 2f)
+                        SkillStrikeUtil.setSkillStrike(Main.projectile[explo], 1.3f, 100, 0.35f, 0f);
 
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 0.16f, Pitch = 0.5f };
                     SoundEngine.PlaySound(style, Projectile.Center);

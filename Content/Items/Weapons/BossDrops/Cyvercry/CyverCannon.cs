@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -420,17 +421,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             }
 
             target.immune[Projectile.owner] = 2; //Collision only lasts for 1 frame so it doesn't matter that it is this low 
-            /*
-            if (crit && Projectile.scale > 1)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    int p = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Main.player[Projectile.owner].Center, 
-                        LaserRotation.ToRotationVector2().RotatedBy(MathHelper.ToRadians(130 - (2 * (130 * i)))) * 4, 
-                        ModContent.ProjectileType<CannonSplit>(), (int)(Projectile.damage * 0.5), 0, Main.myPlayer);
-                }
-            }
-            */
+
         }
 
     }
@@ -510,15 +501,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             //int count = 0;
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
-            /*
-            foreach (Projectile proj in Main.projectile.Where(x => x.active && x.whoAmI != Projectile.whoAmI && x.type == Projectile.type))
-            {
-                count++;
-
-                if (count >= 5)
-                    proj.Kill();
-            }
-            */
             if (Projectile.alpha > 30)
             {
                 Projectile.alpha -= 15;
@@ -581,3 +563,4 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         }
     }
 }
+*/

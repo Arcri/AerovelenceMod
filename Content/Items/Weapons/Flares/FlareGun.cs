@@ -10,17 +10,14 @@ using Terraria.ModLoader;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using Terraria.Audio;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {
     public class FlareGun : ModItem
     {
         public int lockOutTimer;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Flare Gun");
-            // Tooltip.SetDefault("4% summon tag crit chance \n ");
-        }
+
         public override void SetDefaults()
         {
             Item.damage = 21;
@@ -45,9 +42,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.autoReuse = true;
             Item.noUseGraphic = true;
         }
-        public override Vector2? HoldoutOffset()
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            return new Vector2(-2, 0);
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at long range [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -73,7 +75,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             if (player.controlUseItem == true && player.ownedProjectileCounts[ModContent.ProjectileType<FlareGunHeldProjectile>()] >= 1 && player.channel == false)
             {
-                if (lockOutTimer < 5)
+                Main.NewText(player.heldProj);
+                //Projectile p = Main.projectile[player.heldProj];
+
+                if (lockOutTimer < 5) //5
                 {
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Menu_Close") with { Pitch = -1f, MaxInstances = 0, Volume = 1f };
 
@@ -90,8 +95,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public override bool CanUseItem(Player player)
         {
-            //Main.NewText(lockOutTimer);
-
             if (lockOutTimer > 0)
             {
                 return false;

@@ -13,6 +13,7 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 {
@@ -42,6 +43,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Item.noUseGraphic = true;
             Item.autoReuse = true;
         }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Shots from the portal Skill Strike [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe().
@@ -522,7 +533,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             if (Main.projectile[a].ModProjectile is CrystalGladePulse cgp)
                 cgp.rotDir = rotDir;
 
-            SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f);
+            SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 1, 0f, 0f);
 
             for (int i = 0; i < 6; i++)
             {

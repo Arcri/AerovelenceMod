@@ -18,6 +18,7 @@ using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 {
@@ -37,7 +38,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Item.reuseDelay = 10;
             Item.shootSpeed = 10f;
 
-
             Item.DamageType = DamageClass.Magic;
             Item.rare = ItemRarities.PrePlantPostMech;
             Item.useStyle = ItemUseStyleID.Shoot;
@@ -49,6 +49,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Item.noUseGraphic = true;
         }
         public override bool AltFunctionUse(Player player) => true;
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after firing for long enough [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
 
         public override void AddRecipes()
         {
@@ -95,7 +105,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             {
                 type = ModContent.ProjectileType<LazinatorWindUp>();
             }
-
 
             Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
             return false;
@@ -305,6 +314,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         
 
         bool firstFrame = true;
+        int shotCount = 0;
         public override void AI()
         {
             if (firstFrame)
@@ -331,6 +341,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                     if (Main.projectile[a].ModProjectile is LazinatorShot shot)
                         shot.endPoint = pos;
+
+                    if (shotCount > 20)
+                        SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f, 1, 0.5f, 0.15f);
 
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = .65f, PitchVariance = .2f, Volume = 0.3f };
                     SoundEngine.PlaySound(style, Main.player[Projectile.owner].Center);
@@ -360,6 +373,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                         Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = 0;
                         Projectile.active = false;
                     }
+
+                    shotCount++;
                 }
             }
 

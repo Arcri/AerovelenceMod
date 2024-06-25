@@ -11,6 +11,7 @@ using AerovelenceMod.Content.Projectiles.TempVFX;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Sky
 {
@@ -39,6 +40,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at close range [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -105,7 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             if (!stuckIn)
             {
                 //Home towards cursor 
-                if (timer < 70) 
+                if (timer < 70)
                 {
                     //Home a little stronger after half a second
                     float turnPower = 25f;
@@ -129,6 +139,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 Projectile.rotation = Projectile.velocity.ToRotation();
 
                 fadeAlpha = Math.Clamp(MathHelper.Lerp(fadeAlpha, 1.5f, 0.15f), 0f, 1f);
+
+                if (timer <= 10)
+                    SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 1, 0.25f, 0f);
+                else
+                    Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
             }
             else
             {

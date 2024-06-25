@@ -61,6 +61,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         }
 
         public override bool AltFunctionUse(Player player) => true;
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes marked enemies [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
 
         public override void AddRecipes()
         {
@@ -690,7 +698,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         {
             if (target.HasBuff(ModContent.BuffType<CerobaMark>())) {
 
-                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, impactVolume: 0.5f, impactScale: 0f);
+                SkillStrikeUtil.setSkillStrike(Projectile, 2f, impactVolume: 0.5f, impactScale: 0f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity, ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].scale = 0.75f;

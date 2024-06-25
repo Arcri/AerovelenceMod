@@ -38,6 +38,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAmmo = AmmoID.Bullet;
         }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Stars Skill Strike [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             Vector2 muzzleOffset = Vector2.Normalize(new Vector2(velocity.X, velocity.Y)) * 25f;
@@ -280,8 +289,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                 Vector2 outVec2 = (target.Center - p.Center).SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(-128f)) * 8f;
 
 
-                int marstar = Projectile.NewProjectile(Projectile.GetSource_FromAI(), p.Center, outVec, ModContent.ProjectileType<MarbleStar>(), (int)(Projectile.damage * 1.5f), 4, p.whoAmI);
-                int marstar2 = Projectile.NewProjectile(Projectile.GetSource_FromAI(), p.Center, outVec2, ModContent.ProjectileType<MarbleStar>(), (int)(Projectile.damage * 1.5f), 4, p.whoAmI);
+                int marstar = Projectile.NewProjectile(Projectile.GetSource_FromAI(), p.Center, outVec, ModContent.ProjectileType<MarbleStar>(), Projectile.damage, 4, p.whoAmI);
+                int marstar2 = Projectile.NewProjectile(Projectile.GetSource_FromAI(), p.Center, outVec2, ModContent.ProjectileType<MarbleStar>(), Projectile.damage, 4, p.whoAmI);
+
+                SkillStrikeUtil.setSkillStrike(Main.projectile[marstar], 1.5f);
+                SkillStrikeUtil.setSkillStrike(Main.projectile[marstar2], 1.5f);
 
                 //Star dust
                 for (int sd = 0; sd < 11; sd++)

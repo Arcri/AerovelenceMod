@@ -21,10 +21,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
     public class TheLaserPointer : ModItem
     {
-        
         public override void SetStaticDefaults()
         {
-            // Tooltip.SetDefault("Locks onto targets closest to the cursor\nIncreases in power the longer it is latched onto a target");
             Item.staff[Item.type] = true;
         }
         public override void SetDefaults()
@@ -49,6 +47,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noMelee = true;
             Item.autoReuse = true;
         }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe().
@@ -264,7 +272,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             }
 
             if (timeLockedOn > timeUntilSkillStrike)
-                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 10000, 0.5f, 0f);
             else
                 Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
 

@@ -17,6 +17,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
@@ -25,8 +26,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		public override void SetStaticDefaults()
 		{
             ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<AdamantitePulsar>();
-            // DisplayName.SetDefault("Titanium Rocket Launcher");
-            // Tooltip.SetDefault("Right click to shoot a larger rocket that tries to follow the mouse\nDoes not require ammo");
         }
 
 		public override void SetDefaults()
@@ -109,14 +108,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			/*
-			int itemID = ModContent.ItemType<GaussShotgun>();
 			TooltipLine line = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar  + "] Big Rocket Skill Strikes after a second [i:" + ItemID.FallenStar + "]")
 			{
 				OverrideColor = Color.Gold,
 			};
 			tooltips.Add(line);
-			*/
 		}
 
         public override void AddRecipes()
@@ -275,7 +271,56 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             }
         }
 
-		float colVal = 0f;
+        //Doing aoe on hit and on tile collide seperately so I can have the aoe ignore an enemy on direct hit
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            //AoE
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 100f)
+                {
+                    int Direction = 0;
+                    if (Projectile.Center.X - Main.npc[i].Center.X < 0)
+                        Direction = 1;
+                    else
+                        Direction = -1;
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = (int)(Projectile.damage * 0.5f * Main.rand.NextFloat(0.90f, 1.1f));
+                    myHit.Knockback = Projectile.knockBack * Main.npc[i].knockBackResist;
+                    myHit.HitDirection = Direction;
+
+                    Main.npc[i].StrikeNPC(myHit);
+
+                }
+            }
+            return base.OnTileCollide(oldVelocity);
+        }
+
+        public override void OnHitNPC(NPC target, HitInfo hit, int damageDone)
+        {
+            //AoE
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 75f && Main.npc[i] != target)
+                {
+                    int Direction = 0;
+                    if (Projectile.Center.X - Main.npc[i].Center.X < 0)
+                        Direction = 1;
+                    else
+                        Direction = -1;
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = (int)(Projectile.damage * 0.5f * Main.rand.NextFloat(0.90f, 1.1f));
+                    myHit.Knockback = Projectile.knockBack * Main.npc[i].knockBackResist;
+                    myHit.HitDirection = Direction;
+
+                    Main.npc[i].StrikeNPC(myHit);
+                }
+            }
+        }
+
+        float colVal = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
 			Main.spriteBatch.End();
@@ -408,9 +453,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
 				Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: new Color(255, 130, 0), Scale: Main.rand.NextFloat(1f, 1.4f) * 0.5f);
 				gd.alpha = 2;
-				//gd.fadeIn = Main.rand.NextFloat(5f, 10f) + 30;
-				//gd.alpha = 255;
-
 			}
 
 			for (int i = 0; i < 5; i++)
@@ -448,6 +490,55 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                 }
             }
 
+        }
+
+		//Doing aoe on hit and on tile collide seperately so I can have the aoe ignore an enemy on direct hit
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            //AoE
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f)
+                {
+                    int Direction = 0;
+                    if (Projectile.Center.X - Main.npc[i].Center.X < 0)
+                        Direction = 1;
+                    else
+                        Direction = -1;
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = (int)(Projectile.damage * 0.5f * Main.rand.NextFloat(0.90f, 1.1f));
+                    myHit.Knockback = Projectile.knockBack * Main.npc[i].knockBackResist;
+                    myHit.HitDirection = Direction;
+
+                    Main.npc[i].StrikeNPC(myHit);
+
+                }
+            }
+            return base.OnTileCollide(oldVelocity);
+        }
+
+        public override void OnHitNPC(NPC target, HitInfo hit, int damageDone)
+        {
+            //AoE
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f && Main.npc[i] != target)
+                {
+                    int Direction = 0;
+                    if (Projectile.Center.X - Main.npc[i].Center.X < 0)
+                        Direction = 1;
+                    else
+                        Direction = -1;
+
+                    HitInfo myHit = new HitInfo();
+                    myHit.Damage = (int)(Projectile.damage * 0.5f * Main.rand.NextFloat(0.90f, 1.1f));
+                    myHit.Knockback = Projectile.knockBack * Main.npc[i].knockBackResist;
+                    myHit.HitDirection = Direction;
+
+                    Main.npc[i].StrikeNPC(myHit);
+                }
+            }
         }
     }
 

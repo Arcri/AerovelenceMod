@@ -40,12 +40,12 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
                         behavior.secondOpacity = Math.Clamp(behavior.secondOpacity - 0.035f, 0, 1);
 
                     //if (dust.scale > 0.5f)
-                    dust.scale = Math.Clamp(MathHelper.Lerp(dust.scale, 0.25f, 0.15f), 0.5f, 0.75f);
+                    dust.scale = Math.Clamp(MathHelper.Lerp(dust.scale, 0.25f, 0.15f), 0.5f, 0.8f);
 
                     behavior.colorLerpValue = Math.Clamp(MathHelper.Lerp(behavior.colorLerpValue, -0.25f, 0.1f), 0f, 1f);
 
                     if (dust.alpha < 55)
-                        dust.fadeIn = Math.Clamp(dust.fadeIn + 0.15f, 1f, 1f);
+                        dust.fadeIn = Math.Clamp(dust.fadeIn + 0.15f, 0.1f, 1f);
 
                     if (behavior.isCrit && dust.alpha > 75)
                         dust.fadeIn = Math.Clamp(dust.fadeIn - 0.005f, 0, 1);
@@ -100,9 +100,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
                     }
 
-                    Color outerCol = Color.Lerp(new Color(255, 160, 0), Color.White, Easings.easeInQuad(behavior.colorLerpValue));
-
-                    //Main.spriteBatch.DrawString(FontAssets.DeathText.Value, behavior.damageNumber, drawPos, textCol * alpha, 0, origin, dust.scale, 0, 0);
+                    Color outerCol = Color.Lerp(new Color(255, 160, 0), Color.White, Easings.easeInQuad(behavior.colorLerpValue)) * 0.9f;
 
                     Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.DeathText.Value, behavior.damageNumber, drawPos.X, drawPos.Y, innerColor * alpha, outerCol * alpha, origin, dust.scale * 0.9f);
 

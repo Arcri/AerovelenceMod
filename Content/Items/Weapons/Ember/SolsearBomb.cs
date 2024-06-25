@@ -135,7 +135,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 if (Projectile.timeLeft == 20)
                     storedScale = globalScale;
                 float outProg = 1f - (Projectile.timeLeft / 20f);
-                globalScale = MathHelper.Lerp(storedScale, 0f, Easings.easeInBack(outProg));//Math.Clamp(MathHelper.Lerp(globalScale, -0.5f, 0.2f), 0f, 10f);
+                globalScale = MathHelper.Lerp(storedScale, 0f, Easings.easeInBack(outProg));
             }
 
             drawnScale = Math.Clamp(MathHelper.Lerp(drawnScale, 1.25f, 0.1f), 0f, 1f);
@@ -148,7 +148,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/bigCircle2").Value;
             Texture2D ball2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
-            Texture2D border = Mod.Assets.Request<Texture2D>("Assets/Orbs/zFadeCircle").Value; //zFadeCircle
+            Texture2D border = Mod.Assets.Request<Texture2D>("Assets/Orbs/zFadeCircle").Value;
             Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
 
             float drawScale = globalScale * 0.55f * drawnScale;
@@ -204,35 +204,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 				(int)(Projectile.damage * 3f * globalScale), 2f, Main.player[Projectile.owner].whoAmI);
 			(Main.projectile[explo].ModProjectile as SolsearBombExplosion).size = 0.35f * exploScale;
 
+            if (globalScale == 2f)
+                SkillStrikeUtil.setSkillStrike(Main.projectile[explo], 1.5f, 1000, 0f, 0f);
 
-			for (int i = 0; i < Main.maxNPCs; i++)
-			{
-				if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 170 * globalScale && false)
-				{
-					int Direction = 0;
-					if (Projectile.position.X - Main.npc[i].position.X < 0)
-						Direction = 1;
-					else
-						Direction = -1;
-
-					HitInfo myHit = new HitInfo();
-					myHit.Damage = Projectile.damage * 3;
-					myHit.Knockback = Projectile.knockBack;
-					myHit.HitDirection = Direction;
-
-					Main.npc[i].StrikeNPC(myHit);
-
-					ArmorShaderData thisDustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-					for (int j = 0; j < 0; j++)
-					{
-						Dust d = GlowDustHelper.DrawGlowDustPerfect(Main.npc[i].Center, ModContent.DustType<GlowCircleQuadStar>(), Vector2.One.RotatedByRandom(6) * Main.rand.NextFloat(1, 4),
-							Main.rand.NextBool() ? Color.OrangeRed : Color.Red, 0.65f, 0.4f, 0f, thisDustShader);
-						d.velocity *= 0.5f;
-
-					}
-
-				}
-			}
 
 			ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 			ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");

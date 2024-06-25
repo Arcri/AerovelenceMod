@@ -52,6 +52,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 }
             }
 
+            if (timer == 32)
+            {
+                goldPulseValue = 1f;
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 1, 0.75f);
+            }
+
+
             ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
             if (Projectile.velocity.X < 0)
             {
@@ -90,19 +97,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             
             Projectile.velocity.Y += 0.29f;
 
-            timer++;
+            goldPulseValue = Math.Clamp(MathHelper.Lerp(goldPulseValue, -0.25f, 0.02f), 0f, 0.5f);
             alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.5f, 0.1f), 0, 1);
+            timer++;
         }
 
+        float goldPulseValue = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
 
-            var softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), Color.Red * alpha, Projectile.rotation, softGlow.Size() / 2, 3.3f, SpriteEffects.None, 0f);
-            var star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
-            var star2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_05").Value;
+            Texture2D star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
+            Texture2D star2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_05").Value;
 
             Main.spriteBatch.Draw(star2, Projectile.Center - Main.screenPosition, star2.Frame(1, 1, 0, 0), Color.Red * 0.7f * alpha, randomRotation[1] + MathHelper.ToRadians(vortexRotsmall * -2), star2.Size() / 2, 0.20f, SpriteEffects.None, 0f);
 
@@ -124,13 +133,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             myEffect.CurrentTechnique.Passes[0].Apply();
 
             //Draw Flare Center
-            var FlareFlare = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/flare_01").Value;
-            Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red * alpha, (float)Math.PI, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
+            Texture2D FlareFlare = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/flare_01").Value;
+
+            Main.spriteBatch.Draw(FlareFlare, Projectile.Center - Main.screenPosition, FlareFlare.Frame(1, 1, 0, 0), Color.Red * alpha, MathF.PI, FlareFlare.Size() / 2, 0.35f * 0.5f, SpriteEffects.None, 0f);
 
 
             //Draw Swirls
-            var swirl = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_02").Value;
-            var swirl2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_03").Value;
+            Texture2D swirl = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_02").Value;
+            Texture2D swirl2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/twirl_03").Value;
 
             Main.spriteBatch.Draw(swirl, Projectile.Center - Main.screenPosition, swirl.Frame(1, 1, 0, 0), Color.Red * alpha, vortexRot, swirl.Size() / 2, 0.10f, SpriteEffects.None, 0f);
             

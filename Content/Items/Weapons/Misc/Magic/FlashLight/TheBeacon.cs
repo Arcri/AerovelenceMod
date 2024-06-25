@@ -16,6 +16,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.Graphics;
 using AerovelenceMod.Content.Projectiles.TempVFX;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
@@ -49,6 +50,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noMelee = true;
             Item.channel = true;
             Item.noUseGraphic = true;
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()
@@ -85,6 +95,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public Vector2 endPoint;
         public float LaserRotation = 0;
         public float laserWidth = 20;
+
+        int lockedOnTimer = 0;
+        int timeUntilSkillStrike = 140;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 6;
@@ -203,6 +216,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     tendrils.Clear();
 
                     laserWidth = 0;
+                    lockedOnTimer = 0;
                     laserTimer = 0;
                     timer = -1;
                     lockedOn = false;
@@ -282,6 +296,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                     {
                         player.CheckMana(player.inventory[player.selectedItem], pay: true);
                     }
+
+                    lockedOnTimer++;
                 }
 
             }
@@ -296,6 +312,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
                 lockedOn = false;
                 laserWidth = 0;
+                lockedOnTimer = 0;
                 laserTimer = 0;
             }
             #endregion
@@ -322,6 +339,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 tendrils.Clear();
                 Projectile.active = false;
             }
+
+
+            if (lockedOnTimer > timeUntilSkillStrike)
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 10000, 0.4f, 0f);
+            else
+                Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
 
             laserTimer++;
             timer++;
