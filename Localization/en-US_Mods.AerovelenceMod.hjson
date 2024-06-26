@@ -90,11 +90,6 @@ Items: {
 		Tooltip: This is a debug item
 	}
 
-	EvilLightbulb: {
-		DisplayName: Evil Lightbulb
-		Tooltip: ""
-	}
-
 	LaserTrapItem: {
 		DisplayName: Laser Trap Item
 		Tooltip: ""
@@ -122,26 +117,6 @@ Items: {
 			Attacking creates an energy ball that can be hit around
 			Right-Click to destroy the ball
 			'''
-	}
-
-	CyverCannon: {
-		DisplayName: Cyver Cannon
-		Tooltip: ""
-	}
-
-	CyverWhip: {
-		DisplayName: Cyver Whip
-		Tooltip: ""
-	}
-
-	DarknessDischarge: {
-		DisplayName: Darkness Discharge
-		Tooltip: ""
-	}
-
-	Oblivion: {
-		DisplayName: Oblivion
-		Tooltip: ""
 	}
 
 	BurningJealousy: {
@@ -174,11 +149,6 @@ Items: {
 			'''
 	}
 
-	FlareShark: {
-		DisplayName: Flare Shark
-		Tooltip: ""
-	}
-
 	DeepFreeze: {
 		DisplayName: Deep Freeze
 		Tooltip: "'Is it cold in here, or is it just me?'"
@@ -198,14 +168,13 @@ Items: {
 			'''
 	}
 
-	CrystalSpray: {
-		DisplayName: Crystal Spray
-		Tooltip: ""
-	}
-
 	CthulhusWrath: {
-		DisplayName: Kindling Wrath
-		Tooltip: ""
+		DisplayName: Kindling Wrath (Unfinished)
+		Tooltip:
+			'''
+			This weapon is buggy as hell, so it has been made unobtainable
+			It should hopefully return in a future patch
+			'''
 	}
 
 	TheBeacon: {
@@ -231,11 +200,6 @@ Items: {
 			'''
 	}
 
-	Iridian: {
-		DisplayName: Iridian
-		Tooltip: ""
-	}
-
 	WandOfExploding: {
 		DisplayName: Wand Of Exploding
 		Tooltip: Inflicts Mana Burn, causing enemies to leak stars that restore mana
@@ -243,16 +207,6 @@ Items: {
 
 	EntourageCrusher: {
 		DisplayName: Entourage Crusher
-		Tooltip: ""
-	}
-
-	FlailTest: {
-		DisplayName: Flail Test
-		Tooltip: ""
-	}
-
-	OzoneShredder: {
-		DisplayName: Ozone Shredder
 		Tooltip: ""
 	}
 
@@ -272,11 +226,6 @@ Items: {
 			Hold to charge, increasing damage and velocity
 			Embeds a spike into enemies at full charge
 			'''
-	}
-
-	GaussShotgun: {
-		DisplayName: Gauss Shotgun
-		Tooltip: ""
 	}
 
 	GraniteCannon: {
@@ -367,11 +316,6 @@ Items: {
 
 	GlowDustDye: {
 		DisplayName: Glow Dust Dye
-		Tooltip: ""
-	}
-
-	ThunderLance: {
-		DisplayName: Thunder Lance
 		Tooltip: ""
 	}
 

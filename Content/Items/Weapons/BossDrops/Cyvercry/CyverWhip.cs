@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿/*
+using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 {
+    
 	public class CyverWhip : ModItem
 	{
 		public override void SetStaticDefaults()
@@ -109,17 +111,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 if (Main.player[Projectile.owner].Distance(points[points.Count - 1]) > 50)
                 {
 
-                    /*
-					if (Timer % 2 != 0)
-                    {
-						ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
-						int d2 = GlowDustHelper.DrawGlowDust(points[points.Count - 1], Projectile.width / 2, Projectile.height / 2, ModContent.DustType<LineGlow>(),
-							Color.DeepPink, 0.2f, 0.4f, 0, dustShader2);
-						Main.dust[d2].velocity = (points[points.Count - 1] - Projectile.Center).SafeNormalize(Vector2.UnitX);
-						Main.dust[d2].noGravity = true;
-					}
-					*/
                     ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
 
 
@@ -404,15 +395,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                     AI_Timer = 0;
                 }
             }
-
-            /*Vector2 targetVel = Vector2.Normalize(movePos - Projectile.Center);
-			targetVel *= 4f;
-
-			float accX = 0.2f;
-
-			float accY = 0.1f;
-			Projectile.velocity.X += (Projectile.velocity.X < targetVel.X ? 1 : -1) * accX;
-			Projectile.velocity.Y += (Projectile.velocity.Y < targetVel.Y ? 1 : -1) * accY;*/
 
             if (++Projectile.frameCounter >= 5)
             {
@@ -804,6 +786,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         }
     }
-    */
+    
     #endregion
 }
+*/

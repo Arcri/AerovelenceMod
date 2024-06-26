@@ -364,27 +364,6 @@ namespace AerovelenceMod.Content.Items
             //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/JuniorShot") with { Pitch = .01f, PitchVariance = .55f, Volume = 0.3f };
             //SoundEngine.PlaySound(style, player.Center);
 
-            if (Main.rand.NextBool(3))
-            {
-                int b = Projectile.NewProjectile(null, position, velocity.RotatedByRandom(0.1f) * 10f, ModContent.ProjectileType<InkProjTest>(), 10, 0, player.whoAmI);
-
-                if (Main.projectile[b].ModProjectile is InkProjTest m)
-                {
-                    m.color = Color.Orange;
-                    m.overallSize = 0.15f;
-                    m.xScale = Main.rand.NextFloat(0.8f, 1.3f);
-                    m.yScale = Main.rand.NextFloat(0.9f, 1.2f);
-                }
-            }
-
-            if (Main.projectile[a].ModProjectile is InkProjTest i)
-            {
-                i.color = Color.Orange;
-                i.overallSize = 0.25f;
-                i.xScale = Main.rand.NextFloat(0.8f, 1.3f);
-                i.yScale = Main.rand.NextFloat(0.9f, 1.2f);
-            }
-
 
             //SoundStyle style = new SoundStyle("Terraria/Sounds/Item_100") with { Volume = .5f, Pitch = .73f, PitchVariance = .22f, };
             //SoundEngine.PlaySound(style);

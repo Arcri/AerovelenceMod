@@ -20,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
 
         public override void SetDefaults()
         {
-            Item.damage = 14;
+            Item.damage = 12;
             Item.knockBack = KnockbackTiers.ExtremelyWeak;
             Item.mana = 3;
             

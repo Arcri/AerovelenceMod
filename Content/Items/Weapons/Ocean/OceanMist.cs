@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
     {
         public override void SetDefaults()
         {
-            Item.damage = 8;
+            Item.damage = 7;
             Item.knockBack = KnockbackTiers.Weak;
             Item.mana = 9;
             Item.shootSpeed = 8f;

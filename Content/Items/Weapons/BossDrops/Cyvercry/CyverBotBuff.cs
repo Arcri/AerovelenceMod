@@ -23,13 +23,13 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
         public override void Update(Player player, ref int buffIndex)
         {
-            int projType = ModContent.ProjectileType<TrojanForceBot>();
-            if (player.ownedProjectileCounts[projType] < 1)
-            {
-                var source = Projectile.InheritSource(player);
-                var pos = player.Center;
-                Projectile.NewProjectile(source, pos, Vector2.Zero, projType, 100, player.HeldItem.knockBack, player.whoAmI);
-            }
+            //int projType = ModContent.ProjectileType<TrojanForceBot>();
+            //if (player.ownedProjectileCounts[projType] < 1)
+            //{
+            //    var source = Projectile.InheritSource(player);
+            //    var pos = player.Center;
+            //    Projectile.NewProjectile(source, pos, Vector2.Zero, projType, 100, player.HeldItem.knockBack, player.whoAmI);
+            //}
         }
     }
 }

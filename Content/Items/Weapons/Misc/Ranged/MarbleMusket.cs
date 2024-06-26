@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetDefaults()
         {
-            Item.damage = 12;
+            Item.damage = 18;
             Item.useTime = Item.useAnimation = 35;
             Item.shootSpeed = 16;
             Item.knockBack = 3;

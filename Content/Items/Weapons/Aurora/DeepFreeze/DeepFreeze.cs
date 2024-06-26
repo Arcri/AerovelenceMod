@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 
         public override void SetDefaults()
         {
-            Item.damage = 42;
+            Item.damage = 26;
             Item.knockBack = KnockbackTiers.VeryWeak;
             Item.mana = 4;
             Item.shootSpeed = 9f; //8f

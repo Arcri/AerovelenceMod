@@ -43,17 +43,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void AddRecipes()
         {
-            CreateRecipe().
-                AddIngredient(ItemID.PlatinumBar, 12).
-                AddIngredient(ItemID.Fireblossom, 2).
-                AddTile(TileID.Anvils).
-                Register();
+            //CreateRecipe().
+            //    AddIngredient(ItemID.PlatinumBar, 12).
+            //    AddIngredient(ItemID.Fireblossom, 2).
+            //    AddTile(TileID.Anvils).
+            //    Register();
 
-            CreateRecipe().
-                AddIngredient(ItemID.GoldBar, 12).
-                AddIngredient(ItemID.Fireblossom, 2).
-                AddTile(TileID.Anvils).
-                Register();
+            //CreateRecipe().
+            //    AddIngredient(ItemID.GoldBar, 12).
+            //    AddIngredient(ItemID.Fireblossom, 2).
+            //    AddTile(TileID.Anvils).
+            //    Register();
         }
 
         public override bool CanUseItem(Player player)

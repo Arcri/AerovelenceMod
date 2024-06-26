@@ -294,7 +294,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
                         distort.scale = 0.6f;
                     }
 
-                    int explo = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.5f), 0, Projectile.owner);
+                    int explo = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.25f), 0, Projectile.owner);
 
                     if (Main.player[Projectile.owner].statMana <= Main.player[Projectile.owner].statManaMax2 / 2f)
                         SkillStrikeUtil.setSkillStrike(Main.projectile[explo], 1.3f, 100, 0.35f, 0f);
