@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -113,3 +114,4 @@ namespace AerovelenceMod.Content.Items.Accessories.Boss
         }
     }
 }
+*/
