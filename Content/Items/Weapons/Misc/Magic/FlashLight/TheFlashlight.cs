@@ -61,7 +61,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
                 AddIngredient(ItemID.DemoniteBar, 10).
                 AddIngredient(ItemID.Topaz, 5).
                 AddIngredient(ItemID.Lens, 4).
-                AddTile(TileID.MythrilAnvil).
+                AddTile(TileID.Anvils).
                 Register();
         }
         public override bool CanUseItem(Player player)

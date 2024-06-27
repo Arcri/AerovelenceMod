@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override void SetDefaults()
         {
-            Item.damage = 68; 
+            Item.damage = 94;
             Item.knockBack = KnockbackTiers.Average;
 
             Item.width = 52;

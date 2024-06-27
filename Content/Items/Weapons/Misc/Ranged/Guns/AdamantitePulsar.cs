@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void SetDefaults()
         {
-            Item.damage = 95;
+            Item.damage = 66; 
             Item.knockBack = KnockbackTiers.Average;
             Item.DamageType = DamageClass.Ranged;
 
@@ -130,7 +130,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 {
                     position += muzzleOffset;
                 }
-                Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1.3f), knockback, Main.myPlayer);
+                Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1f), knockback, Main.myPlayer);
 
                 //lol
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = 0.2f, Volume = 0.2f }; 
@@ -377,7 +377,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     //float velRot = Angle + (Main.rand.NextFloat(1 - reticleProgress, (1 - reticleProgress) * -1) * 0.5f);
                     //Vector2 vel = new Vector2(2, 0).RotatedBy(velRot);
 
-                    int damage = (int)(Projectile.damage * (1f + reticleProgress));
+                    int damage = (int)(Projectile.damage * (1f + (2f * reticleProgress)));
 
                     int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + adjustedVel * 10, adjustedVel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), damage, Projectile.knockBack, Main.myPlayer);
 

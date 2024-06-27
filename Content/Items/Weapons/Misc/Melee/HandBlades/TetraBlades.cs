@@ -30,10 +30,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
 
         public override void SetDefaults()
         {
-            Item.damage = 50;
+            Item.damage = 53;
             Item.knockBack = KnockbackTiers.Weak;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 19;
+            Item.useAnimation = 19;
             Item.shootSpeed = 14f; //13f
 
             Item.width = 34;
@@ -57,7 +57,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
                 AddIngredient(ItemID.NeonTetra, 4).
                 AddIngredient(ItemID.SoulofLight, 4).
                 AddIngredient(ItemID.SoulofNight, 4).
-                AddTile(TileID.MythrilAnvil).
+                AddTile(TileID.Anvils).
                 Register();
         }
 
@@ -119,8 +119,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
                 {
                     Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0 };
                     doubleAttackCount = 10;
-                    Item.useTime = 20;
-                    Item.useAnimation = 20;
+                    Item.useTime = 18;
+                    Item.useAnimation = 18;
                 }
 
             } else
@@ -128,13 +128,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
                 Item.UseSound = SoundID.DD2_MonkStaffSwing with { Volume = 0f, Pitch = 0.8f, PitchVariance = 0.1f };
                 if (doubleAttackCount > 0)
                 {
-                    Item.useTime = 10;
-                    Item.useAnimation = 10;
+                    Item.useTime = 9;
+                    Item.useAnimation = 9;
                 }
                 else
                 {
-                    Item.useTime = 20;
-                    Item.useAnimation = 20;
+                    Item.useTime = 18;
+                    Item.useAnimation = 18;
                 }
             }
         }

@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
     {
         public override void SetDefaults()
         {
-            Item.damage = 95;
+            Item.damage = 77;
             Item.knockBack = 6f; //A bit above average
 
             Item.width = 78;
@@ -63,7 +63,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             if (player.altFunctionUse == 2)
             {
                 float ai0 = player.direction == 1 ? 0 : 1;
-                Projectile.NewProjectile(source, position, velocity.SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<ShotgunAxeMeleeProj>(), (int)(damage * 1.5f), (int)(knockback * 1.5f), player.whoAmI, ai0: ai0);
+                Projectile.NewProjectile(source, position, velocity.SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<ShotgunAxeMeleeProj>(), (int)(damage * 1.6f), (int)(knockback * 1.5f), player.whoAmI, ai0: ai0);
                 return false;
             }
 
@@ -96,10 +96,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<ShotgunAxeHeldProj>(), 0, 0, player.whoAmI);
 
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ShotgunAxeBullet>(), (int)(damage * 0.35f), 0, player.whoAmI);
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), (int)(damage * 0.35f), knockback, player.whoAmI);
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), (int)(damage * 0.35f), knockback, player.whoAmI);
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), (int)(damage * 0.35f), knockback, player.whoAmI);
+            int myDamage = (int)(damage * 0.35f);
+            int myKnockback = (int)(knockback * 0.35f);
+
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ShotgunAxeBullet>(), myDamage, myKnockback, player.whoAmI);
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), myDamage, myKnockback, player.whoAmI);
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), myDamage, myKnockback, player.whoAmI);
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.15f) * Main.rand.NextFloat(0.85f, 1f), ModContent.ProjectileType<ShotgunAxeBullet>(), myDamage, myKnockback, player.whoAmI);
 
             return false;
         }

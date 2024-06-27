@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
     {
         public override void SetDefaults()
         {
-            Item.damage = 42;
+            Item.damage = 31;
             Item.knockBack = 4f; //Weak-Average Knockback
             Item.mana = 5;
 
@@ -337,7 +337,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                     {
                         pos += muzzleOffset;
                     }
-                    int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), 30, 0, Main.player[Projectile.owner].whoAmI);
+                    int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), Projectile.damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
 
                     if (Main.projectile[a].ModProjectile is LazinatorShot shot)
                         shot.endPoint = pos;

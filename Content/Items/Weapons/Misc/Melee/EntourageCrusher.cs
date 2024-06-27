@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
         public override void SetDefaults()
         {
-            Item.damage = 38;
+            Item.damage = 54; //38
             Item.knockBack = 4f; //Slightly below average
 
             Item.width = 56;

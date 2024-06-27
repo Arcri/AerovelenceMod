@@ -43,6 +43,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Item.noUseGraphic = true;
         }
 
+        public override void AddRecipes()
+        {
+            CreateRecipe().
+                AddIngredient(ItemID.FlareGun).
+                AddIngredient(ItemID.DemoniteBar, 5).
+                AddTile(TileID.Anvils).
+                Register();
+        }
+
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at long range [i:" + ItemID.FallenStar + "]")
@@ -75,7 +84,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         {
             if (player.controlUseItem == true && player.ownedProjectileCounts[ModContent.ProjectileType<FlareGunHeldProjectile>()] >= 1 && player.channel == false)
             {
-                Main.NewText(player.heldProj);
                 //Projectile p = Main.projectile[player.heldProj];
 
                 if (lockOutTimer < 5) //5

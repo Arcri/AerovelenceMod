@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
     {
         public override void SetDefaults()
         {
-            Item.damage = 95;
+            Item.damage = 85;
             Item.knockBack = KnockbackTiers.Average;
 
             Item.width = 76;
@@ -61,7 +61,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         {
             if (player.altFunctionUse == 2)
             {
-                int a = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<SkylightAltHeldProjectile>(), damage, knockback, Main.myPlayer);
+                int newDamage = (int)(damage * 0.8f);
+                int a = Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<SkylightAltHeldProjectile>(), newDamage, knockback, Main.myPlayer);
             }
             else
             {

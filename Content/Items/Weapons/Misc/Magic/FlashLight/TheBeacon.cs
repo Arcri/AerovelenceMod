@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
         public override void SetDefaults()
         {
-            Item.damage = 80;
+            Item.damage = 72;
             Item.mana = 7;
             Item.width = 46;
             Item.height = 46;

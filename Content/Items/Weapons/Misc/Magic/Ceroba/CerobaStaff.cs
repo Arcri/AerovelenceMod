@@ -36,7 +36,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
     {
         public override void SetDefaults()
         {
-            Item.damage = 76;
+            Item.damage = 78;
             Item.knockBack = KnockbackTiers.Average;
             Item.mana = 12;
             Item.shootSpeed = 10;
@@ -698,7 +698,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         {
             if (target.HasBuff(ModContent.BuffType<CerobaMark>())) {
 
-                SkillStrikeUtil.setSkillStrike(Projectile, 2f, impactVolume: 0.5f, impactScale: 0f);
+                SkillStrikeUtil.setSkillStrike(Projectile, 1.75f, impactVolume: 0.5f, impactScale: 0f);
 
                 int a = Projectile.NewProjectile(null, Projectile.Center, Projectile.velocity, ModContent.ProjectileType<CerobaSkillStrikeFX>(), 0, 0, Main.myPlayer);
                 Main.projectile[a].scale = 0.75f;

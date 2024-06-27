@@ -76,7 +76,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
         {
             if (player.altFunctionUse != 2)
             {
-                damage = (int)damage / 2;
+                damage = (int)(damage * 0.5f);
             }
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -250,7 +250,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/Solsear").Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/SolesearGlowMask").Value;
 
             Vector2 position = (owner.Center + (currentDirection * 22)) - Main.screenPosition;

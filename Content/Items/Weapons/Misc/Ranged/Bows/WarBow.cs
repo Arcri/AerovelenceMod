@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 	{
 		public override void SetDefaults()
 		{
-			Item.damage = 26;
+			Item.damage = 14;
             Item.knockBack = 6f; //Above average
 
 			Item.width = 20;
@@ -491,8 +491,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 Projectile.tileCollide = false;
                 StickTimer += 1f;
 
-                // Hit every 22 ticks
-                bool hitEffect = StickTimer % 22f == 0f;
+                // Hit every 30 ticks
+                bool hitEffect = StickTimer % 35f == 0f;
 
                 int npcTarget = TargetWhoAmI;
                 if (StickTimer >= StickTime || npcTarget < 0 || npcTarget >= 200)

@@ -72,8 +72,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         public override void AddRecipes()
         {
             CreateRecipe().
-                AddIngredient(ItemID.FossilOre, 15).
                 AddIngredient(ItemID.HellstoneBar, 5).
+                AddIngredient(ItemID.FossilOre, 15).
                 AddTile(TileID.Anvils).
                 Register();
         }
@@ -115,9 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             Projectile.tileCollide = false;
         }
 
-
         public override bool? CanDamage() => false;
-    
         public override bool? CanCutTiles() => false;
 
         public int projToShootID = ProjectileID.WoodenArrowFriendly;
@@ -167,15 +165,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 {
                     float vel = MathHelper.Clamp(18f * percentDrawnBack, 3.5f, 18f);
 
+                    int damage = (Projectile.damage / 2) + (int)(Projectile.damage * percentDrawnBack * 1.25f);
                     float knockBack = 4 * percentDrawnBack;
                     if (timer > 55)
                     {
+                        damage = (int)(Projectile.damage / 2) + (int)(Projectile.damage * percentDrawnBack);
                         projToShootID = ModContent.ProjectileType<SaharaFireVortex>();
                         vel = 20;
                         knockBack = 0;
                     }
 
-                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, direction.SafeNormalize(Vector2.UnitX) * vel, projToShootID, Projectile.damage / 2 + (int)(Projectile.damage * percentDrawnBack), knockBack, Player.whoAmI);
+                    Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, direction.SafeNormalize(Vector2.UnitX) * vel, projToShootID, damage, knockBack, Player.whoAmI);
 
                     if (projToShootID != ProjectileType<SaharaFireVortex>())
                     {

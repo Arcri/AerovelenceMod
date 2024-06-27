@@ -55,7 +55,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		{
 			if (player.altFunctionUse == 2)
             {
-				damage *= 4;
+				damage = (int)(damage * 4.5f);
 				Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldLarge>(), damage, knockback, player.whoAmI);
 				return false;
 			}
@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 				SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { Volume = 0.2f, PitchVariance = 0.2f, Pitch = 0.2f, MaxInstances = -1 }, player.Center);
 				type = ModContent.ProjectileType<TitaniumMiniRocket>();
-				damage *= 2;
+				damage = (int)(damage * 1.75f);
 				velocity *= 0.2f;
 
 				Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldSmall>(), 0, 0, player.whoAmI);

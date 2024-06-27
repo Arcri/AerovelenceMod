@@ -60,7 +60,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
             tooltips.Add(SkillStrike);
         }
 
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_wind_attack_0") with { Volume = .36f, Pitch = -.84f, PitchVariance = .15f, MaxInstances = 0, };

@@ -282,7 +282,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
 			if (targetHitbox.Distance(Projectile.Center) < 40)
             {
-				Projectile.damage = (int)(baseDamage * 1.5f);
+				Projectile.damage = (int)(baseDamage * 1.35f);
 				//Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
             } else
             {
@@ -316,7 +316,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 			SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.53f, PitchVariance = 0.25f, MaxInstances = -1, Volume = 0.2f };
 			SoundEngine.PlaySound(style, target.Center);
 
-			target.immune[Projectile.owner] = 5; //20 
+			target.immune[Projectile.owner] = 7; //20 
 			hit.Damage = (int)hit.Damage / 4;
 		}
 

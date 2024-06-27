@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
     {
         public override void SetDefaults()
         {
-            Item.damage = 47;
+            Item.damage = 73;
             Item.knockBack = KnockbackTiers.Average;
             Item.mana = 9;
 
@@ -533,7 +533,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             if (Main.projectile[a].ModProjectile is CrystalGladePulse cgp)
                 cgp.rotDir = rotDir;
 
-            SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 1, 0f, 0f);
+            SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 1, 0.15f, 0f);
 
             for (int i = 0; i < 6; i++)
             {
