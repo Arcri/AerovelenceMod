@@ -7,6 +7,7 @@ namespace AerovelenceMod.Content.Projectiles
 	{
 		public override void AI(Projectile projectile)
 		{
+			/*
 			if (projectile.type >= 230 && projectile.type <= 235 && Main.player[projectile.owner].GetModPlayer<AeroPlayer>().UpgradedHooks)
 			{
 				if (projectile.type == 230)
@@ -34,6 +35,7 @@ namespace AerovelenceMod.Content.Projectiles
 					Lighting.AddLight(projectile.Center, 1, 1, 1);
 				}
 			}
+			*/
 		}
 	}
 }

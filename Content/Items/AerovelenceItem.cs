@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Items
         {
             get
             {
-                if (ModContent.TextureExists(base.Texture))
+                if (ModContent.HasAsset(base.Texture))
                     return base.Texture;
 
                 return AerovelenceMod.PLACEHOLDER_TEXTURE;
@@ -21,7 +21,7 @@ namespace AerovelenceMod.Content.Items
         public override void SetDefaults()
         {
             if (Autosize)
-                item.Autosize();
+                Item.Autosize();
 
             SafeSetDefaults();
         }

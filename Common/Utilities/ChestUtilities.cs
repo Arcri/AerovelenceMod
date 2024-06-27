@@ -129,7 +129,7 @@ namespace AerovelenceMod.Common.Utilities
 			for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
 			{
 				Chest chest = Main.chest[chestIndex];
-				if (chest != null && Main.tile[chest.x, chest.y].type == chestType)
+				if (chest != null && Main.tile[chest.x, chest.y].TileType == chestType)
 					PlaceChestItems(list, chest);
 			}
 		}
@@ -141,7 +141,7 @@ namespace AerovelenceMod.Common.Utilities
 			for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
 			{
 				Chest chest = Main.chest[chestIndex];
-				if (chest != null && Main.tile[chest.x, chest.y].type == chestType)
+				if (chest != null && Main.tile[chest.x, chest.y].TileType == chestType)
 					PlaceModChestItemsWCheck(list, chest, ref placeditems);
 			}
 		}
@@ -162,7 +162,7 @@ namespace AerovelenceMod.Common.Utilities
 			for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
 			{
 				Chest chest = Main.chest[chestIndex];
-				if (chest != null && Main.tile[chest.x, chest.y].type == TileID.Containers && Main.tile[chest.x, chest.y].frameX == chestFrame)
+				if (chest != null && Main.tile[chest.x, chest.y].TileType == TileID.Containers && Main.tile[chest.x, chest.y].TileFrameX == chestFrame)
 					PlaceChestItems(list, chest, index);
 			}
 		}
@@ -173,7 +173,7 @@ namespace AerovelenceMod.Common.Utilities
 			for (int chestIndex = 0; chestIndex < Main.chest.Length; chestIndex++)
 			{
 				Chest chest = Main.chest[chestIndex];
-				if (chest != null && Main.tile[chest.x, chest.y].type == TileID.Containers && Main.tile[chest.x, chest.y].frameX == chestFrame)
+				if (chest != null && Main.tile[chest.x, chest.y].TileType == TileID.Containers && Main.tile[chest.x, chest.y].TileFrameX == chestFrame)
 					PlaceChestItems(item.ToList(), chest, index);
 
 			}

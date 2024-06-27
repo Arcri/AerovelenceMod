@@ -1,6 +1,4 @@
 using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -35,6 +33,7 @@ namespace AerovelenceMod.Common.Globals.NPCs
 		}*/
         public override bool CheckDead(NPC npc)
         {
+			/*
 			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
 			{
 				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
@@ -43,13 +42,14 @@ namespace AerovelenceMod.Common.Globals.NPCs
 					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
 
 					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].active())
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("PhanticOreBlock"));
+                        if (Main.tile[EEXX, WHHYY].HasTile)
+                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("PhanticOreBlock").Type);
                 }
 
 				Main.NewText("Phantom stones formed in the caves!", 180, 60, 140);
 			}
-
+			*/
+			/*
 			if (npc.type == ModContent.NPCType<CrystalTumbler>() && !DownedWorld.DownedCrystalTumbler)
 			{
 				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
@@ -58,18 +58,19 @@ namespace AerovelenceMod.Common.Globals.NPCs
 					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
 
 					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].active())
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)mod.TileType("BurnshockOreBlock"));
+                        if (Main.tile[EEXX, WHHYY].HasTile)
+                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("BurnshockOreBlock").Type);
                 }
 
 				Main.NewText("Electric gemstones light the caverns!", 180, 60, 140);
 			}
-
+			*/
 			return true;
 		}
 
 		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
+			/*
 			if (SoulFire)
 			{
 				if (Main.rand.Next(4) < 3)
@@ -107,6 +108,7 @@ namespace AerovelenceMod.Common.Globals.NPCs
 
 				Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
 			}
+			*/
 		}
 	}
 }

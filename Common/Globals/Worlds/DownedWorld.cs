@@ -9,7 +9,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
     /// <summary>
     /// ModWorld responsible for holding "permanent" save data.
     /// </summary>
-	public class DownedWorld : ModWorld
+	public class DownedWorld : ModSystem
     {
 		public static bool DownedCrystalTumbler;
 		public static bool DownedRimegeist;
@@ -17,16 +17,16 @@ namespace AerovelenceMod.Common.Globals.Worlds
 		public static bool DownedCyvercry;
 		public static bool DownedTheFallen;
 
-        public override void Initialize()
+        /*public override void Initialize()
 		{
 			DownedCrystalTumbler = false;
 			DownedRimegeist = false;
 			DownedLightningMoth = false;
 			DownedCyvercry = false;
 			DownedTheFallen = false;
-		}
+		}*/
 
-		public override TagCompound Save()
+		/*public override TagCompound SaveWorldData()
 		{
 			List<string> downed = new List<string>();
 
@@ -49,9 +49,9 @@ namespace AerovelenceMod.Common.Globals.Worlds
 			{
                 {nameof(downed), downed}
 			};
-		}
+		}*/
 
-		public override void Load(TagCompound tag)
+		/*public override void Load(TagCompound tag)
 		{
 			IList<string> downed = tag.GetList<string>("downed");
 
@@ -60,7 +60,7 @@ namespace AerovelenceMod.Common.Globals.Worlds
 			DownedLightningMoth = downed.Contains("LightningMoth");
 			DownedCyvercry = downed.Contains("Cyvercry");
 			DownedTheFallen = downed.Contains("");
-		}
+		}*/
 
 		public override void NetSend(BinaryWriter writer)
         {

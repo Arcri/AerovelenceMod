@@ -1,17 +1,17 @@
-using AerovelenceMod.Content.Tiles.Ores;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
 {
-    public class IceWorldgen : ModWorld
+    public class IceWorldgen : ModSystem
     {
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             int genIndex;
 
@@ -33,13 +33,13 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
             {
                 for (int x = (int)(x2 - radius * xMultiplier); x <= x2 + radius * xMultiplier; x++)
                 {
-                    if (x > 1 && x < Main.maxTilesX && y > 1 && y < Main.maxTilesY && Framing.GetTileSafely(x, y).type != ModContent.TileType<SlateOreBlock>())
+                    if (x > 1 && x < Main.maxTilesX && y > 1 && y < Main.maxTilesY)
                     {
                         if (Vector2.Distance(new Vector2(x2, y2), new Vector2((x - x2) / xMultiplier + x2, (y - y2) / yMultiplier + y2)) < radius)
                         {
                             if (tile == -2)
                             {
-                                Framing.GetTileSafely(x, y).liquid = 255;
+                                Framing.GetTileSafely(x, y).LiquidAmount = 255;
                             }
                             else if (tile == -1)
                             {
@@ -48,9 +48,9 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                                 }
                                 else
                                 {
-                                    if (!Framing.GetTileSafely(x, y).active())
+                                    if (!Framing.GetTileSafely(x, y).HasTile)
                                     {
-                                        WorldGen.PlaceTile(x, y, Framing.GetTileSafely(x, y).type);
+                                        WorldGen.PlaceTile(x, y, Framing.GetTileSafely(x, y).TileType);
                                     }
                                 }
                             }
@@ -62,7 +62,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                                 }
                                 else
                                 {
-                                    if (Framing.GetTileSafely(x, y).active())
+                                    if (Framing.GetTileSafely(x, y).HasTile)
                                     {
                                         WorldGen.KillTile(x, y);
                                     }
@@ -74,12 +74,12 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                                 {
                                     if (wall == true)
                                     {
-                                        if (Framing.GetTileSafely(x, y).wall == 0)
+                                        if (Framing.GetTileSafely(x, y).WallType == 0)
                                         {
                                             WorldGen.PlaceWall(x, y, tile);
                                         }
                                     }
-                                    else if (!Framing.GetTileSafely(x, y).active())
+                                    else if (!Framing.GetTileSafely(x, y).HasTile)
                                     {
                                         WorldGen.PlaceTile(x, y, tile);
                                     }
@@ -88,14 +88,14 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                                 {
                                     if (wall == true)
                                     {
-                                        if (Framing.GetTileSafely(x, y).wall != 0)
+                                        if (Framing.GetTileSafely(x, y).WallType != 0)
                                         {
-                                            Framing.GetTileSafely(x, y).wall = (ushort)tile;
+                                            Framing.GetTileSafely(x, y).WallType = (ushort)tile;
                                         }
                                     }
-                                    else if (Framing.GetTileSafely(x, y).active())
+                                    else if (Framing.GetTileSafely(x, y).HasTile)
                                     {
-                                        Framing.GetTileSafely(x, y).type = (ushort)tile;
+                                        Framing.GetTileSafely(x, y).TileType = (ushort)tile;
                                     }
                                 }
                             }
@@ -105,7 +105,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
             }
         }
 
-        private void IceExtras(GenerationProgress progress)
+        private void IceExtras(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "Ice Spikes";
 
@@ -117,12 +117,12 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                 int structureY = 1;
                 bool valid = false;
 
-                while (!Framing.GetTileSafely(structureX, structureY).active())
+                while (!Framing.GetTileSafely(structureX, structureY).HasTile)
                 {
                     structureY++;
                 }
 
-                if (Framing.GetTileSafely(structureX, structureY).type == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).type == TileID.IceBlock)
+                if (Framing.GetTileSafely(structureX, structureY).TileType == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).TileType == TileID.IceBlock)
                 {
                     valid = true;
                 }
@@ -143,8 +143,8 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                         size = (int)size2;
                     }
 
-                    WorldGen.PlaceTile(x - 1, y + 1, ModContent.TileType<SlateOreBlock>());
-                    WorldGen.PlaceTile(x + 1, y + 1, ModContent.TileType<SlateOreBlock>());
+                    //WorldGen.PlaceTile(x - 1, y + 1, ModContent.TileType<SlateOreBlock>());
+                    //WorldGen.PlaceTile(x + 1, y + 1, ModContent.TileType<SlateOreBlock>());
 
                     structureCount--;
                 }
@@ -160,12 +160,12 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                 int structureY = 1;
                 bool valid = false;
 
-                while (!Framing.GetTileSafely(structureX, structureY).active())
+                while (!Framing.GetTileSafely(structureX, structureY).HasTile)
                 {
                     structureY++;
                 }
 
-                if (Framing.GetTileSafely(structureX, structureY).type == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).type == TileID.IceBlock)
+                if (Framing.GetTileSafely(structureX, structureY).TileType == TileID.SnowBlock || Framing.GetTileSafely(structureX, structureY).TileType == TileID.IceBlock)
                 {
                     valid = true;
                 }
@@ -201,16 +201,16 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                 }
             }
         }
-        private void IceExtras2(GenerationProgress progress)
+        private void IceExtras2(GenerationProgress progress, GameConfiguration configuration)
         {
             for (int y = 1; y < Main.maxTilesY; y++)
             {
                 for (int x = 1; x < Main.maxTilesX; x++)
                 {
-                    if (Framing.GetTileSafely(x, y).type == ModContent.TileType<SlateOreBlock>())
-                    {
-                        WorldGen.KillTile(x, y);
-                    }
+                    //if (Framing.GetTileSafely(x, y).TileType == ModContent.TileType<SlateOreBlock>())
+                    //{
+                      //  WorldGen.KillTile(x, y);
+                    //}
                 }
             }
         }

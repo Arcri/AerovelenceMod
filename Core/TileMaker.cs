@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -11,7 +12,7 @@ namespace AerovelenceMod.Core
         /// <summary>
         /// Make <paramref name="tilesToMergeWith"></paramref> null to not merge with any specific tile(s).
         /// </summary>
-        public static void SimpleFramedTile(this ModTile tile, int drop, int soundType, int dustType, Color mapColor, int minPick, 
+        public static void SimpleFramedTile(this ModTile tile, int drop, Terraria.Audio.SoundStyle hitSound, int DustType, Color mapColor, int MinPick, 
             string mapName = "", bool mergeDirt = false, bool stone = false, params int[] tilesToMergeWith)
         {
             Main.tileBlockLight[tile.Type] = true;
@@ -21,8 +22,8 @@ namespace AerovelenceMod.Core
             Main.tileMergeDirt[tile.Type] = mergeDirt;
             Main.tileStone[tile.Type] = stone;
 
-            ModTranslation name = tile.CreateMapEntryName();
-            name.SetDefault(mapName);
+            LocalizedText name = tile.CreateMapEntryName();
+            // name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
 
             if (tilesToMergeWith != null)
@@ -33,13 +34,13 @@ namespace AerovelenceMod.Core
                 }
             }
 
-            tile.drop = drop;
-            tile.soundType = soundType;
-            tile.dustType = dustType;
-            tile.minPick = minPick;
+            //tile.ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = drop;
+            tile.HitSound = hitSound;
+            tile.DustType = DustType;
+            tile.MinPick = MinPick;
         }
 
-        public static void SimpleFrameImportantTile(this ModTile tile, int width, int height, int soundType, int dustType, Color mapColor,
+        public static void SimpleFrameImportantTile(this ModTile tile, int width, int height, Terraria.Audio.SoundStyle hitSound, int DustType, Color mapColor,
             string mapName = "", bool solid = false, bool solidTop = true, AnchorData anchorBottom = default, AnchorData anchorTop = default)
         {
             Main.tileFrameImportant[tile.Type] = true;
@@ -70,21 +71,21 @@ namespace AerovelenceMod.Core
 
             TileObjectData.addTile(tile.Type);
 
-            ModTranslation name = tile.CreateMapEntryName();
-            name.SetDefault(mapName);
+            LocalizedText name = tile.CreateMapEntryName();
+            // name.SetDefault(mapName);
             tile.AddMapEntry(mapColor, name);
 
-            tile.soundType = soundType;
-            tile.dustType = dustType;
+            tile.HitSound = hitSound;
+            tile.DustType = DustType;
         }
 
-        public static void SimpleWall(this ModWall wall, int drop, int soundType, int dustType, Color mapColor, bool house = false)
+        public static void SimpleWall(this ModWall wall, int drop, Terraria.Audio.SoundStyle hitSound, int DustType, Color mapColor, bool house = false)
         {
             Main.wallHouse[wall.Type] = house;
 
-            wall.drop = drop;
-            wall.soundType = soundType;
-            wall.dustType = dustType;
+            //wall.ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = drop;
+            wall.HitSound = hitSound;
+            wall.DustType = DustType;
 
             wall.AddMapEntry(mapColor);
         }

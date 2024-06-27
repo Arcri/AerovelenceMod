@@ -4,4 +4,3 @@ version = 1.7.43.3
 homepage = https://discord.gg/QwqqZzc
 includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
-dllReferences = DiscordRPC

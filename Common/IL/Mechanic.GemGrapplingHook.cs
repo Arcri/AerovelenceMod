@@ -9,7 +9,7 @@ namespace AerovelenceMod.Common.IL
 	{
 		public static void Load()
 		{
-			global::IL.Terraria.Projectile.VanillaAI += VanillaAI_GrapplingHookRange;
+			global::Terraria.IL_Projectile.VanillaAI += VanillaAI_GrapplingHookRange;
 		}
         private static void VanillaAI_GrapplingHookRange(ILContext il)
         {
@@ -32,10 +32,10 @@ namespace AerovelenceMod.Common.IL
             {
                 AeroPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<AeroPlayer>();
 
-                if (modPlayer.UpgradedHooks)
-                {
-                    return (originalValue + 200);
-                }
+                //if (modPlayer.UpgradedHooks)
+                //{
+                    //return (originalValue + 200);
+                //}
 
                 return (originalValue);
             });

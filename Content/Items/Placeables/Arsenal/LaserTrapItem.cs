@@ -1,4 +1,3 @@
-using AerovelenceMod.Content.Tiles.Arsenal;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -6,22 +5,22 @@ namespace AerovelenceMod.Content.Items.Placeables.Arsenal
 {
     public class LaserTrapItem : AerovelenceItem
     {
-		public override void SetStaticDefaults() => DisplayName.SetDefault("Laser Trap");
+		//public override void SetStaticDefaults() => DisplayName.SetDefault("Laser Trap");
 
 
         public override void SetDefaults()
         {
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.consumable = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.consumable = true;
 
-            item.maxStack = 999;
-            item.useAnimation = 15;
-            item.useTime = 10;
+            Item.maxStack = 999;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
 
-            item.createTile = ModContent.TileType<LaserTrap>();
+            //Item.createTile = ModContent.TileType<LaserTrap>();
 
-            item.useStyle = ItemUseStyleID.SwingThrow;
+            Item.useStyle = ItemUseStyleID.Swing;
         }
     }
 }

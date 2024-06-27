@@ -10,7 +10,7 @@ namespace AerovelenceMod.Common.Utilities
         {
             SpriteEffects effects = npc.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 npc.Center - Main.screenPosition + new Vector2(0f, npc.gfxOffY),
@@ -29,10 +29,10 @@ namespace AerovelenceMod.Common.Utilities
             Vector2 drawPosition = new Vector2
             (
                 item.position.X - Main.screenPosition.X + item.width * 0.5f,
-                item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f + 2f
+                item.position.Y - Main.screenPosition.Y + item.height - texture.Height * 0.5f
             );
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 drawPosition,
@@ -42,7 +42,7 @@ namespace AerovelenceMod.Common.Utilities
                 texture.Size() / 2f,
                 scale,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
 
@@ -54,7 +54,7 @@ namespace AerovelenceMod.Common.Utilities
             if (Main.drawToScreen)
                 zero = Vector2.Zero;
 
-            int height = tile.frameY == 36 ? 18 : 16;
+            int height = tile.TileFrameY == 36 ? 18 : 16;
 
             Vector2 drawPosition = new Vector2
             (
@@ -62,17 +62,17 @@ namespace AerovelenceMod.Common.Utilities
                 j * 16 - (int)Main.screenPosition.Y
             ) + zero;
 
-            spriteBatch.Draw
+            Main.EntitySpriteDraw
             (
                 texture,
                 drawPosition,
-                new Rectangle(tile.frameX, tile.frameY, 16, height),
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, height),
                 Color.White,
                 0f,
                 Vector2.Zero,
                 1f,
                 SpriteEffects.None,
-                0f
+                0
             );
         }
     }

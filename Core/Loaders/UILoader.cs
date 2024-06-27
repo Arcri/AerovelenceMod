@@ -13,7 +13,7 @@ using AerovelenceMod.Core.Abstracts;
 
 namespace AerovelenceMod.Core.Loaders
 {
-    internal sealed class UILoader : ILoadable
+    /*internal sealed class UILoader : ILoadable
 	{
 		public float Priority => 1f;
 
@@ -72,5 +72,5 @@ namespace AerovelenceMod.Core.Loaders
 			UserInterfaces[index] = new UserInterface();
 			UserInterfaces[index].SetState(UIStates[index]);
 		}
-	}
+	}*/
 }

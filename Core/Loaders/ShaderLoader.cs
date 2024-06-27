@@ -17,8 +17,8 @@ using AerovelenceMod.Core.Abstracts;
 
 namespace AerovelenceMod.Core.Loaders
 {
-    internal sealed class ShaderLoader : ILoadable
-	{
+    internal sealed class ShaderLoader : Abstracts.ILoadable
+    {
 		public float Priority => 1f;
 
 
@@ -44,7 +44,7 @@ namespace AerovelenceMod.Core.Loaders
 
 		internal static void LoadShader(string shaderName, string shaderPath)
 		{
-			var shaderRef = new Ref<Effect>(AerovelenceMod.Instance.GetEffect(shaderPath));
+			var shaderRef = new Ref<Effect>(AerovelenceMod.Instance.Assets.Request<Effect>(shaderPath).Value);
 
 			if (AerovelenceMod.DEBUG)
 			{

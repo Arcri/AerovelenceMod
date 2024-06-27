@@ -1,0 +1,50 @@
+This shader is a bit strange. Basically if the alpha value of a color is greater than a threshold, it makes it brighterish. This
+additional brightness can also be sin waved.
+
+It effectively makes thing look more like a lightsaber, where the color doesn't come from the center but the edges
+
+DISCLAIMER: This shader does actually draw black background of textures. Ask me (Linty) if you need help converting 
+one to transparent. Also, this shader might take some finicking to make look right
+
+---------------------------
+Variables:
+uColor --> Changes the color. Some colors look better than others (try using Deep Pink instead of Pink, for example)
+uTime --> Input for a sinwave that changes the instentity of the brightening (use a timer but slow it down alot) 
+uOpacity --> The threshold for what gets brightened (alpha ranges from 0 to 1 btw)
+uSaturation --> Controls the intensity of the sin wave
+
+---------------------------
+Default Values: (These have to be manually put in)
+
+uColor --> (when would you not use a color man)
+
+uTime --> 0 (setting to a constant makes it so it doesn't do the wave) 
+- Alternatively --> MathHelper.Pi / 2 adds the maximum glow while 3 * MathHelper.Pi / 2 give the minimum
+
+uOpacity --> 0.4 (remember that lower = more brightness)
+
+uSaturation --> 1.2 
+
+---------------------------
+Example (lets say this is in the PreDraw of a projectile):
+
+
+//It is very important that you have a value for all four of these catagories, otherwise it will not work
+Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
+
+myEffect.Parameters["uColor"].SetValue(Color.DeepPink.ToVector3() * 2);
+myEffect.Parameters["uTime"].SetValue(timer  * 0.02f);
+myEffect.Parameters["uOpacity"].SetValue(0.4);
+myEffect.Parameters["uSaturation "].SetValue(1);
+
+Main.spriteBatch.End();
+Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
+(1. Note the myEffect in the second to last slot 2. You can keep the nulls they aren't just here for the sake of example)
+
+myEffect.CurrentTechnique.Passes[0].Apply();
+
+
+//DRAW SOMETHING (You could also possibly return true in PreDraw and then do the following in Post Draw)
+
+Main.spriteBatch.End();
+Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
