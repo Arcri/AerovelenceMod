@@ -19,6 +19,7 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 {
@@ -307,6 +308,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
             }
 
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 0.5f * alpha);
 
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
@@ -421,6 +423,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
                 Projectile.frameCounter = 0;
                 Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
             }
+
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 1f);
+
             timer++;
         }
         public override bool PreDraw(ref Color lightColor)

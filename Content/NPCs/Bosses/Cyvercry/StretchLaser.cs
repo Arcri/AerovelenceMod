@@ -312,7 +312,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override string Texture => "Terraria/Images/Projectile_0";
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Cyver Laser");
             ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         }
         public override void SetDefaults()
@@ -330,18 +329,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         }
         int timer = 0;
+        int shotTimer = 0;
         public int CyverIndex = 0;
+
+        bool isExpert = false;
+        bool isMaster = false;
         public override void AI()
         {
-            
+            isExpert = (Main.npc[CyverIndex].ModNPC as Cyvercry2).isExpert;
+            isMaster = (Main.npc[CyverIndex].ModNPC as Cyvercry2).isMaster;
+
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             Projectile.spriteDirection = Projectile.direction;
 
             if (timer < 20) //20
                 Projectile.velocity *= 1.088f;
 
-            //FTW | GFB timer % 5
-            if (timer > 9 && timer % 9 == 0) // > 10 % 10
+            int timeToStart = isMaster ? 5: 10;
+
+
+            int timerMod = (!isExpert && !isMaster) ? 12 : 9;
+            if (shotTimer > 0 && shotTimer % timerMod == 0) //10
             {
                 NPC cyver = Main.npc[CyverIndex];
                 int damage = (cyver.ModNPC as Cyvercry2).GetDamage("SplitLaserShard");
@@ -361,6 +369,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 }
             }
 
+            if (timer > timeToStart)
+                shotTimer++;
 
             if (timer % 2 == 0 && Main.rand.NextBool())
             {

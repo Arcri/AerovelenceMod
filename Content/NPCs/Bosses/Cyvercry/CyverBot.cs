@@ -75,12 +75,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (!shouldHide)
                 Main.EntitySpriteDraw(texture, NPC.Center - Main.screenPosition + new Vector2(0,4), NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0);
 
-
             Main.EntitySpriteDraw(eyeStar, NPC.Center - Main.screenPosition + (NPC.rotation.ToRotationVector2() * 22f * NPC.direction) + new Vector2(0, 4), null, Color.DeepPink with { A = 0 } * 1.75f, eyeStarRot, eyeStar.Size() / 2, justShotPower * 0.85f, SpriteEffects.None, 0f);
             Main.EntitySpriteDraw(eyeStar, NPC.Center - Main.screenPosition + (NPC.rotation.ToRotationVector2() * 22f * NPC.direction) + new Vector2(0, 4), null, Color.HotPink with { A = 0 } * 1.75f, eyeStarRot, eyeStar.Size() / 2, justShotPower * 0.6f, SpriteEffects.None, 0f);
-
-
         }
+
         public override void FindFrame(int frameHeight)
         {
             NPC.frameCounter++;
@@ -121,6 +119,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public bool isExpert = false;
         public bool isMaster = false;
         public bool isMasterPhase3 = false;
+
+        public float volumeMult = 1f;
 
         float justShotPower = 0f;
         float eyeStarRot = 0f;
@@ -228,11 +228,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     if (timer % 4 == 0)
                     {
-                        SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.075f, MaxInstances = -1 }; //1f
+                        SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = .75f, Volume = 0.075f * volumeMult, MaxInstances = -1 }; //1f
                         SoundEngine.PlaySound(stylec, NPC.Center);
-                        
-                        //justShotPower = 1.25f;
-                        //eyeStarRot = Main.rand.NextFloat(6.28f);
                     }
 
                     NPC cyver = Main.npc[CyverIndex];
@@ -264,15 +261,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     p.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                         rotPower: 0.05f, timeBeforeSlow: 0, postSlowPower: 0.94f, velToBeginShrink: 5f, fadePower: 0.93f, shouldFadeColor: false);
-
-
-                    ///ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-                    ///Vector2 vel = (NPC.rotation + MathHelper.Pi).ToRotationVector2();
-
-                    ///Dust p = GlowDustHelper.DrawGlowDustPerfect(NPC.Center + offset * 20, ModContent.DustType<GlowCircleQuadStar>(), vel.SafeNormalize(Vector2.UnitX) * 12f,
-                        ///Color.HotPink, 0.5f, 0.4f, 0f, dustShader);
-                    ///p.noLight = false;
-                    ///p.velocity *= 0.4f;
 
                     lineExtraPower = 1f;
                 }
@@ -644,7 +632,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             }
 
-            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_44") with { Pitch = 0f, PitchVariance = 0, MaxInstances = -1, Volume = 0.1f }; 
+            SoundStyle style = new SoundStyle("Terraria/Sounds/NPC_Killed_44") with { Pitch = 0f, PitchVariance = 0, MaxInstances = -1, Volume = 0.1f * volumeMult }; 
             SoundEngine.PlaySound(style, NPC.Center);
 
         }

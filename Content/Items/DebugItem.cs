@@ -63,18 +63,21 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            int primeLTG = Projectile.NewProjectile(null, position + new Vector2(0f, -300), Vector2.Zero, ModContent.ProjectileType<LowTierPrime>(), damage, 0, Main.myPlayer);
+
+
             //int tendril = Projectile.NewProjectile(null, position, velocity * 0f, ModContent.ProjectileType<TendrilTest>(), 10, 0, Main.myPlayer);
 
-            Dust text = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -3f), Scale: 0.5f);
+            //Dust text = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -3f), Scale: 0.5f);
 
-            text.velocity = new Vector2(0f, -10f);
-            text.scale = 1f;
+            //text.velocity = new Vector2(0f, -10f);
+            //text.scale = 1f;
 
-            SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
-            sstb.isCrit = false;
-            sstb.damageNumber = "47";
+            //SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
+            //sstb.isCrit = false;
+            //sstb.damageNumber = "47";
 
-            text.customData = sstb;
+            //text.customData = sstb;
 
             return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)

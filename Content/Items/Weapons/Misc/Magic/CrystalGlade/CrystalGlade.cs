@@ -251,6 +251,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
             Projectile.scale = Math.Clamp(MathHelper.Lerp(Projectile.scale, 2f, 0.04f), 0, 1);
 
+            Lighting.AddLight(Projectile.Center, Color.ForestGreen.ToVector3() * 0.65f);
+
             timer++;
         }
 
@@ -464,6 +466,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             glowRot += 0.08f * rotDir;
 
             scale = Math.Clamp(MathHelper.Lerp(scale, 1.5f, 0.06f), 0, 1);
+
+            Lighting.AddLight(Projectile.Center, Color.ForestGreen.ToVector3() * 0.75f);
 
             Projectile.scale = scale;
             timer++;

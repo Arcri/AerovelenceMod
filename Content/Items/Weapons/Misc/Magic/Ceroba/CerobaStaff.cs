@@ -498,7 +498,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
             #region myHoming
             
-            if (target != null && timer > 15 && timer < 120)
+            if (target != null && timer > 15 && timer < 130)
             {
                 float homingVal = Utils.GetLerpValue(0f, 1f, (timer - 10f) / 80f, true);
 
@@ -513,6 +513,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                     Projectile.velocity *= 0.97f;
             }
             
+            if (timer >= 130)
+            {
+                Projectile.timeLeft--;
+                float velLength = Projectile.velocity.Length();
+                if (velLength < 12)
+                    Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 12;
+            }
+
             #endregion
 
             #region Photonic
@@ -539,7 +547,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             pulseIntensity = Math.Clamp(MathHelper.Lerp(pulseIntensity, -0.25f, 0.03f), 0f, 2f);
             alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.25f, 0.06f), 0f, 1f);
 
-            Lighting.AddLight(Projectile.Center, Color.DeepPink.ToVector3() * 0.65f);
+            Lighting.AddLight(Projectile.Center, Color.DeepPink.ToVector3() * 0.8f);
 
             timer++;
         }
@@ -774,12 +782,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                     SoundStyle style = new SoundStyle("Terraria/Sounds/Item_68") with { Pitch = -.05f, PitchVariance = .15f, MaxInstances = -1, Volume = 0.5f }; 
                     SoundEngine.PlaySound(style, Projectile.Center);
 
-                    //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = 0f, PitchVariance = .15f, MaxInstances = -1, Volume = 0f}; 
-                    //SoundEngine.PlaySound(style2, Projectile.Center);
-
-                    //SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_phantom_phoenix_shot_2") with { Pitch = .65f, PitchVariance = .2f, MaxInstances = -1 }; 
-                    //SoundEngine.PlaySound(style3, Projectile.Center);
-
                     SoundStyle style4 = new SoundStyle("Terraria/Sounds/Custom/dd2_dark_mage_heal_impact_2") with { Pitch = .22f, PitchVariance = .19f, }; 
                     SoundEngine.PlaySound(style4, Projectile.Center);
 
@@ -850,6 +852,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
                         Projectile.active = false;
                 }
             }
+
+            Lighting.AddLight(Projectile.Center, Color.DeepPink.ToVector3() * 1.25f * alpha);
+
             timer++;
         }
 
