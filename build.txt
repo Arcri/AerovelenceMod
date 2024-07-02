@@ -1,6 +1,6 @@
 displayName = [c/00edff:Aerovelence Mod]
 author = Aerovelence Development Team
-version = 1.0
+version = 2.0
 homepage = https://discord.gg/QwqqZzc
 includePDB = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
