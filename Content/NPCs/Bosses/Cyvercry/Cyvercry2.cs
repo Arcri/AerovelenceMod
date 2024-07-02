@@ -109,13 +109,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         {
             NPC.lifeMax = (int)(NPC.lifeMax * 0.65f * balance * bossAdjustment); //0.75
             NPC.damage = (int)(NPC.damage * 0.75f);
-        } 
+        }
 
+        bool hasDoneFullCycle = false;
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             //Shhhh  | REMEMBER TO AXE THIS AFTER BULLET REWORK
             if (projectile.type == ProjectileID.ChlorophyteBullet)
-                projectile.damage = (int)(projectile.damage * 0.7f); 
+                modifiers.FinalDamage *= 0.7f;
+
+            if (hasDoneFullCycle)
+                modifiers.FinalDamage *= 1.33f; 
+
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -125,6 +130,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             DownedWorld.DownedCyvercry = true;
             if (Main.netMode == NetmodeID.Server)
                 NetMessage.SendData(MessageID.WorldData);
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Aurora.Eos.Eos>(), 1, 1, 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.BossDrops.Cyvercry.CyvercryIOU>(), 1, 1, 1));
+
         }
 
         #region Drawing
@@ -599,9 +611,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
-            //whatAttack = 24;
-
-
             if (firstFrame)
             {
                 firstFrame = false;
@@ -2609,7 +2618,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 myPlayer.eocDash = 0;
             }
 
-            float minusTime = isMaster ? 8 : (isExpert ? 5 : 2); //8 : 0
+            float minusTime = isMaster ? 7 : (isExpert ? 5 : 2); //8 : 0
 
             NPC.damage = 0;
             NPC.hide = false;
@@ -4417,7 +4426,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     if (i != 0)
                     {
-                        int cloneIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + goalLocation * 2, Vector2.Zero, ModContent.ProjectileType<ShadowClone>(), DamageValues["PinkCloneClone"], 2, Main.myPlayer);
+                        int cloneIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), myPlayer.Center + goalLocation * 2, Vector2.Zero, ModContent.ProjectileType<ShadowClone>(), GetDamage("PinkCloneClone"), 2, Main.myPlayer);
                         Projectile Clone = Main.projectile[cloneIndex];
 
                         if (Clone.ModProjectile is ShadowClone dashers)
@@ -4543,6 +4552,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 if (advancer == 4)
                 {
+                    hasDoneFullCycle = true;
                     SetNextAttack("Barrage");
                     timer = -1;
                     advancer = 0;
@@ -4598,7 +4608,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Main.projectile[FX].rotation = NPC.rotation;
             }
 
-            //Spawn Bots
+            //Spawn Bots  
             if (timer == startTime)
             {
                 bool randomDir = Main.rand.NextBool();
@@ -4728,6 +4738,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 lineBonusSpeed = 0f;
                 Common.Systems.FlashSystem.SetFlashEffect(2f, 20);
+                storedPlayerZoom = Main.GameZoomTarget;
 
                 myPlayer.GetModPlayer<AeroPlayer>().ScreenShakePower = 400;
 
@@ -4923,7 +4934,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             else
             {
-                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.05f), 1, 2);
+                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(storedPlayerZoom, 0.8f, 0.05f), 1, 2);
             }
 
             if (cutsceneDeathFinished)
@@ -4932,10 +4943,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
 
                 NPC.StrikeInstantKill();
-
-                //NPC.StrikeNPC(NPC.lifeMax, 0f, 0, false, noEffect: true);
                 spammingLaser = false;
-                Main.GameZoomTarget = 1;
+                Main.GameZoomTarget = storedPlayerZoom;
 
                 timer = 2;
             }
@@ -4944,6 +4953,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         Vector2 introCenter = Vector2.Zero;
+        float storedPlayerZoom = 1f;
         public void IntroAnimation(Player myPlayer)
         {
             int timeHelper = 10;
@@ -4953,6 +4963,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 introCenter = myPlayer.Center + new Vector2(-600, -200);
                 NPC.Center = new Vector2(-600, -1900) + myPlayer.Center;
 
+                storedPlayerZoom = Main.GameZoomTarget;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().ScreenGoalPos = introCenter;
             }
@@ -5091,12 +5102,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             if (timer >= 280 + timeHelper)
             {
-                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, 0.8f, 0.05f), 1, 2);
+                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, storedPlayerZoom, 0.05f), 1, 2);
             }
 
             if (timer == 330 + timeHelper)
             {
                 whatAttack = 1;
+                Main.GameZoomTarget = storedPlayerZoom;
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
                 timer = -1;

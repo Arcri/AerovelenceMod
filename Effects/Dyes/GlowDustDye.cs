@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -8,9 +9,10 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Effects.Dyes
 {
+
 	public class GlowDustDye : ModItem
 	{
-		//This is neccesary for the glow dust system to work
+		//This is neccesary for the old glow dust system to work
 		public override void SetStaticDefaults()
 		{
 			// Avoid loading assets on dedicated servers. They don't use graphics cards.

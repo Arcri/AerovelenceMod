@@ -165,7 +165,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     if (timer == 20)
                     {
-
                         advancer++;
                         timer = -1;
                     }
@@ -179,7 +178,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                     if (timer == 15)
                     {
-
                         advancer++;
                         storedCenter = myPlayer.Center;
                     }
@@ -189,7 +187,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 {
                     auraPosition = storedCenter;
 
-                    float progress = (advancer - 2) / 70f;
+                    float progress = (advancer - 2) / 75f; //70
                     float easingVal = MathF.Pow(progress, 2.2f);
 
                     float amountToRotatePosition = MathHelper.Lerp(0f, MathHelper.PiOver2 + 0.75f, easingVal) * (NPC.ai[1]);
@@ -270,7 +268,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     NPC.rotation = NPC.rotation + MathHelper.Pi;
                 }
 
-                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 300 : 85; //150
+                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 300 : 88; //85
 
                 if (Leader)
                 {

@@ -390,6 +390,11 @@ Items: {
 			Only usuable at night
 			'''
 	}
+
+	CyvercryIOU: {
+		DisplayName: Cyvercry I O U
+		Tooltip: ""
+	}
 }
 
 NPCs: {

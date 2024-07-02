@@ -1,39 +1,25 @@
-Aerovelence is a large content mod themed around space and the sky, with an interesting twist! Aerovelence has plenty of new content, new enemies to fight, and secrets to be uncovered.
-If there are any issues with the mod, join the Discord server linked at the bottom and report bugs in #bug-reports.
-THIS MOD IS IN DEVELOPMENT.
+Returning from the depths of 1.3 and in the process of being rebuilt from the ground up, Aerovelence is back!
 
+The mod currently features a couple dozen weapons, some adjusted Ice Biome generation andl as a Pre-Plantera boss fight!
 
-https://forums.terraria.org/index.php?threads/aerovelence.103492/ - Forums link!
+Check out our Discord here --> https://discord.gg/QwqqZzc
 
-This mod version fixes a lot of bugs as well as adding hardmode features to the Rock Collector.
+~~THIS MOD IS NOT MULTIPLAYER COMPATIBLE AND WILL NOT BE ANYTIME SOON~~
 
-Current rundown:
--372+ Items
--Large collection of new NPCs with fun and unique AI
--3 fun boss fights
--A brand new biome, the Crystal Caverns
--Legendary items that have a low drop rate from any boss, modded and vanilla alike!
+~CREDITS~
 
-If this mod seems interesting to you, join our Discord here: https://discord.gg/QwqqZzc
+Created and Owned by Arcri
 
-CREDITS
-
-Directed by Arcri
-
-MAJOR CONTRIBUTORS:
-- Vortex of Rainbows (Cyvercry Boss AI)
-- IDGCaptainRussia (Rimegeist Boss AI)
-- Wombat (Ice Generation)
-- Hamstar (Crystal Caverns Generation)
-- Eldrazi (Support with Tumbler AI)
-- Graydee (Shaders & Primitives)
+Directed by Linty
 
 Music by: A44 and iFlicky
 
-Code by: Yelloface, ExitiumTheCat, Stardust, Dominic Karma, RighteousRyan, Naka, TraoX, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, and Felipe350
+Other contributors on the 1.4.4 version of the mod: CraftyDWB, Stardust, Yelloface
 
-Sprites by: Arcri, Criitiical, SpicySpaceSnake, HondaCivicMoment, Blossom, Xinix, Stryke, TraoX, Orion, Naka, Seasalt, and Tiredghostdude
+Old Contributors/Developers (for the 1.3 version of the mod):
 
-Structures by: DarkArtist
-
-Lore and Storywriting by: Maker of Scratchock Live
+- Code: Vortex of Rainbows, IDGCaptainRussia, Graydee, Wombat, Yelloface, ExitiumTheCat, Stardust, Dominic Karma, RighteousRyan, Naka, 
+TraoX, FullOfXP, GabeHasWon, Hamstar, Just Req, Grrenix, Eldrazi, and Felipe350
+- Sprites: Arcri, Yelloface, Criitiical, SpicySpaceSnake, HondaCivicMoment, Blossom, Grass, Xinix, Stryke, TraoX, Orion, Naka, Seasalt, and Tiredghostdude
+- Structures: DarkArtist
+- Lore and Storywriting: Maker of Scratchblock Live

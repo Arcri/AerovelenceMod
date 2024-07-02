@@ -54,6 +54,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
                 OverrideColor = Color.Gold,
             };
             tooltips.Add(SkillStrike);
+
+            TooltipLine Warning = new(Mod, "Warning", "This item will be obtained a different way in the future, but I've decided to have Cyvercry drop it for " +
+                "now so he at least has some reward.")
+            {
+                OverrideColor = Color.Orange,
+            };
+            tooltips.Add(Warning);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

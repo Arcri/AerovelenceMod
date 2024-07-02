@@ -58,7 +58,6 @@ namespace AerovelenceMod.Common.Systems
             BehaviorToUse = Behavior.BasicFlash;
         }
 
-        /// <param name="position">The position in world co-ordinates.</param>
         /// <param name="intensity">How bright to make the flash.</param>
         /// <param name="lifetime">How long the effect should last.</param>
         /// <param name="whiteIntensity">How intense what white part of the flash should be.</param>
