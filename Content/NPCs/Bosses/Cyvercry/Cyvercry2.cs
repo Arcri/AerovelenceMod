@@ -4954,6 +4954,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
         Vector2 introCenter = Vector2.Zero;
         float storedPlayerZoom = 1f;
+        float otherStoredZoom = 1f;
         public void IntroAnimation(Player myPlayer)
         {
             int timeHelper = 10;
@@ -5096,13 +5097,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             }
             if (timer == 280 + timeHelper)
             {
+                otherStoredZoom = Main.GameZoomTarget;
                 myPlayer.GetModPlayer<ScreenPlayer>().lerpBackToPlayer = true;
                 myPlayer.GetModPlayer<ScreenPlayer>().cutscene = false;
             }
 
             if (timer >= 280 + timeHelper)
             {
-                Main.GameZoomTarget = Math.Clamp(MathHelper.Lerp(Main.GameZoomTarget, storedPlayerZoom, 0.05f), 1, 2);
+                float progress = Math.Clamp((timer - 279f) / 40f, 0, 1);
+                Main.GameZoomTarget = MathHelper.Lerp(otherStoredZoom, storedPlayerZoom, Easings.easeInQuart(progress));
             }
 
             if (timer == 330 + timeHelper)
