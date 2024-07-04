@@ -411,12 +411,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             {
                 int a = Dust.NewDust(Projectile.position, Projectile.width * 2, Projectile.height * 2, ModContent.DustType<GlowStrong>(), newColor: Color.DeepSkyBlue * 0.5f, Scale: Main.rand.NextFloat(0.25f, 0.5f));
                 Main.dust[a].velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * -Main.rand.NextFloat(2, 5);
-
-
-                //int d = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, ModContent.DustType<MuraLineDust>(), newColor: Color.DeepSkyBlue);
-                //Main.dust[d].velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * -Main.rand.NextFloat(2, 5);
-                //Main.dust[d].alpha = 10;
             }
+
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 0.5f * alpha);
 
             timer++;
         }
@@ -608,6 +605,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail2.TrailLogic();
 
             timer++;
+
+            Lighting.AddLight(Projectile.Center, Color.SkyBlue.ToVector3() * 1.25f);
+
         }
 
         public override bool PreDraw(ref Color lightColor)

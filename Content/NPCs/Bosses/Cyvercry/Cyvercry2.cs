@@ -611,6 +611,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         float squashPower = 0f;
         public override void AI()
         {
+
             if (firstFrame)
             {
                 firstFrame = false;
@@ -4504,7 +4505,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         for (int i = -10; i < 11; i++)
                         {
                             int a = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.rotation.ToRotationVector2().RotatedBy(0.3f * i) * -laserCircleSpeed, ModContent.ProjectileType<StretchLaser>(),
-                            DamageValues["PinkCloneLaser"], 2);
+                            GetDamage("PinkCloneLaser"), 2);
                             Main.projectile[a].timeLeft = 400;
                             if (Main.projectile[a].ModProjectile is StretchLaser laser)
                             {
@@ -4587,15 +4588,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         int newBotsReps = 0;
+        bool truePlusFalseX = Main.rand.NextBool();
         public void NewBots(Player myPlayer)
         {
             //Values
 
             int numberOfBots = isExpert ? 4 : 2;
-            float rotationSpeed = isMaster ? .028f : (isExpert ? .025f : .023f); //[.026 | .028 | .032 ] --> [.018 | .025 | .028 ]
+            float rotationSpeed = isMaster ? .018f : (isExpert ? .014f : .018f); //Yes classic is supposed to be higher than expert
 
             int totalReps = 5;
-            int timeBetweenWaves = isMaster ? 140 : 145; //180
+            int timeBetweenWaves = 155; //150
             int startTime = 30;
 
             //Have Cyver disappear 
@@ -4613,7 +4615,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             {
                 bool randomDir = Main.rand.NextBool();
 
-                float rotationOffset = numberOfBots > 0 ? Main.rand.NextFloat(6.28f) : 0;
+                float rotationOffset = 0;
+                if (isExpert || isMaster)
+                    rotationOffset = truePlusFalseX ? 0f : MathHelper.PiOver4;
+                else
+                    rotationOffset = Main.rand.NextFloat(6.28f);
+                
                 for (int i = 0; i < numberOfBots; i++)
                 {
                     //Assign where bots will start at
@@ -4642,6 +4649,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                             bot.volumeMult = 2f;
                     }
                 }
+                truePlusFalseX = !truePlusFalseX;
             }
 
 

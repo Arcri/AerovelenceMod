@@ -268,7 +268,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     NPC.rotation = NPC.rotation + MathHelper.Pi;
                 }
 
-                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 300 : 88; //85
+                int timeBeforeDeath = State == (int)Behavior.PrimeLaserLong ? 300 : 91; //88
 
                 if (Leader)
                 {

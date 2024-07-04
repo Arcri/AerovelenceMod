@@ -467,6 +467,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                     preSlowPower: 0.94f, postSlowPower: 0.90f, velToBeginShrink: 3f, fadePower: 0.89f, shouldFadeColor: false);
             }
 
+            Lighting.AddLight(Projectile.Center, Color.LightSkyBlue.ToVector3() * 0.5f);
+
             timer++;
         }
 

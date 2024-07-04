@@ -18,6 +18,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Projectiles.Other;
 using static Terraria.NPC;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
@@ -347,6 +348,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                     0, newColor: new Color(255, 95, 0), 0.2f + Main.rand.NextFloat(-0.05f, 0.05f));
                 d.scale *= Projectile.scale;
             }
+
+            float lightIntensity = 0.25f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI));
+            Lighting.AddLight(Projectile.Center, Color.OrangeRed.ToVector3() * lightIntensity);
 
             trailTimeCounter++;
             justHitTime--;

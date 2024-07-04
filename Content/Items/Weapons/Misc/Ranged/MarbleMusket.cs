@@ -488,6 +488,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             }
 
             overallAlpha = MathHelper.Clamp(MathHelper.Lerp(overallAlpha, 1.25f, 0.11f), 0f, 1f);
+            Lighting.AddLight(Projectile.Center, Color.Gold.ToVector3() * overallAlpha * 0.75f);
+
 
             timer++;
         }
