@@ -712,3 +712,5 @@ Configs: {
 		}
 	}
 }
+
+WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
