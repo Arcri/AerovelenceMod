@@ -22,20 +22,20 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
 			int worldSizeScale = Main.maxTilesY / 1200;
             int biomeWidth = 300 * worldSizeScale;
-			int surfaceHeight = 100 * worldSizeScale;
-			int undergroundHeight = 300 * worldSizeScale;
+			int surfaceHeight = 40 * worldSizeScale;
+			int undergroundHeight = 360 * worldSizeScale;
 			int biomeHeight = undergroundHeight + surfaceHeight;
 			Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
 			//origin.Y += surfaceHeight;
-			if (!origin.Equals(Point.Zero)) 
+			 if (!origin.Equals(Point.Zero)) 
 			{
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - surfaceHeight), new Shapes.Rectangle(biomeWidth, biomeHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()));
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear()); //Clear space above the biome
-				WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>())); //Biome surface 
+                //WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - surfaceHeight), new Shapes.Rectangle(biomeWidth, biomeHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()));
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear()); // Clear space above the biome
+				WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>())); // Biome surface 
 
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, undergroundHeight / 2), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>())); // Biome underground top half
 
-                WorldUtils.Gen(new Point(origin.X, origin.Y + undergroundHeight / 2), new Shapes.Mound(biomeWidth/2, undergroundHeight / 2), Actions.Chain(new GenAction[] //Biome underground
+                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight)), new Shapes.Mound(biomeWidth/2, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[] //Biome underground bottom half
 				{
 					new Modifiers.Flip(false, true),
 					new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()),
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 }
                 Console.WriteLine("Crystal Caverns generation process finished in " + attempts + " attempts.");
 				surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y - surfaceHeight, biomeWidth, biomeHeight), 0);
+                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
                 return surfacePoint;
             }
             Console.WriteLine("Could not find a suitable location to place the Crystal Caverns");
@@ -99,7 +99,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			{
 				Console.WriteLine("Falling back to a location overlapping with an evil biome to generate the Crystal Caverns");
                 surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y - surfaceHeight, biomeWidth, biomeHeight), 0);
+                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
             }
             return fallbackPoint;
 
@@ -148,7 +148,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			int xOffset = (int)(.5 * biomeWidth);
             Point leftPoint = new Point(surfacePoint.X - xOffset, (int)Main.worldSurface);
             Point rightPoint = new Point(surfacePoint.X + xOffset, (int)Main.worldSurface);
-            for (int attempts = 3; attempts < 12; attempts += 3) // This for loop is meant to solve corruption chasms dragging the average very far down
+            for (int attempts = 2; attempts < 6; attempts += 2) // This for loop is meant to solve corruption chasms dragging the average very far down
 			{
                 WorldUtils.Find(leftPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 50).Not()), out leftPoint);
                 leftPoint.Y += 50; // Adjust result to point to surface, not 50 tiles above 
@@ -161,8 +161,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 					break;
 				}
 
-                leftPoint = new Point(surfacePoint.X - xOffset + attempts, (int)Main.worldSurface);
-                rightPoint = new Point(surfacePoint.X + xOffset + attempts, (int)Main.worldSurface);
+                leftPoint = new Point(surfacePoint.X - xOffset + attempts, leftPoint.Y);
+                rightPoint = new Point(surfacePoint.X + xOffset + attempts, rightPoint.Y);
             }
             return (leftPoint.Y + rightPoint.Y) / 2;
         }

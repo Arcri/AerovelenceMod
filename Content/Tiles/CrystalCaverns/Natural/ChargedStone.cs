@@ -21,6 +21,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(089, 120, 179));
 			DustType = 59;
+            TileID.Sets.GeneralPlacementTiles[ModContent.TileType<ChargedStone>()] = false;
+            TileID.Sets.CanBeClearedDuringGeneration[ModContent.TileType<ChargedStone>()] = false;
             //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<ChargedStoneItem>();
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
