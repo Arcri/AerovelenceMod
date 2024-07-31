@@ -71,7 +71,7 @@ Items: {
 			'''
 			Not consumable
 			Summons Cyvercry
-			Only usuable at night
+			Only usable at night
 			'''
 	}
 
@@ -387,12 +387,22 @@ Items: {
 			Not consumable
 			Summons Cyvercry, but skips the intro animation
 			However, the music sync will no longer work
-			Only usuable at night
+			Only usable at night
 			'''
 	}
 
 	CyvercryIOU: {
 		DisplayName: Cyvercry I O U
+		Tooltip: ""
+	}
+
+	Exodious: {
+		DisplayName: Exodious
+		Tooltip: ""
+	}
+
+	BunnyCannon: {
+		DisplayName: Bunny Cannon
 		Tooltip: ""
 	}
 }
@@ -695,6 +705,11 @@ Projectiles: {
 	TendrilTest.DisplayName: Tendril Test
 	BeaconTendril.DisplayName: Beacon Tendril
 	PoundOfFeathersProj.DisplayName: Pound Of Feathers
+	ExodiousProjectile.DisplayName: Exodious Projectile
+	BunnyCannonHeldProj.DisplayName: Bunny Cannon Held Proj
+	BunnyCannonShot.DisplayName: Bunny Cannon Shot
+	TalonSlash.DisplayName: Talon Slash
+	CurvingFeather.DisplayName: Curving Feather
 }
 
 Configs: {

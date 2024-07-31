@@ -21,6 +21,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
     public partial class FeatheredFoe : ModNPC
     {
         Texture2D NPCTexture => (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "FeatheredFoe");
+        Texture2D BorderTexture => (Texture2D)ModContent.Request<Texture2D>(AssetDirectory + "FeatheredFoeBorder");
 
 
         public float overallAlpha = 1f;
@@ -34,6 +35,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
             Vector2 origin = NPCTexture.Size() / 2;
 
             Main.EntitySpriteDraw(NPCTexture, drawPos, null, drawColor * overallAlpha, NPC.rotation, origin, NPC.scale * overallScale, SpriteEffects.None);
+
+            for (int i = 0; i < 5; i++)
+            {
+                Color col = Color.DeepSkyBlue;
+                Main.EntitySpriteDraw(BorderTexture, drawPos + Main.rand.NextVector2Circular(3f, 3f), null, col with { A = 0 } * overallAlpha, NPC.rotation, origin, NPC.scale * overallScale, SpriteEffects.None);
+            }
+
 
             return false;
         }

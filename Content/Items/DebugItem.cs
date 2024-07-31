@@ -60,24 +60,61 @@ namespace AerovelenceMod.Content.Items
             Item.noUseGraphic = true;
         }
 
+        //int primeLTG = Projectile.NewProjectile(null, position + new Vector2(0f, -300), Vector2.Zero, ModContent.ProjectileType<LowTierPrime>(), damage, 0, Main.myPlayer);
+
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            int primeLTG = Projectile.NewProjectile(null, position + new Vector2(0f, -300), Vector2.Zero, ModContent.ProjectileType<LowTierPrime>(), damage, 0, Main.myPlayer);
 
+            /*
+            int[] orbitValues1 = { 20,  80, 140,
+                                  40,  100, 160,
+                                  60,  120, 180 };
 
-            //int tendril = Projectile.NewProjectile(null, position, velocity * 0f, ModContent.ProjectileType<TendrilTest>(), 10, 0, Main.myPlayer);
+            int[] orbitValues2 = { 20,  60, 40,
+                                  100,  40, 100,
+                                  60,  80, 80 };
 
-            //Dust text = Dust.NewDustPerfect(Main.MouseWorld, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -3f), Scale: 0.5f);
+            int[][] orbitValues = { orbitValues1, orbitValues2 };
 
-            //text.velocity = new Vector2(0f, -10f);
-            //text.scale = 1f;
+            int numberOfFeahters = 9;
+            for (int ab = 0; ab < 2; ab++)
+            {
+                for (int index = 1; index <= numberOfFeahters; index++)
+                {
+                    int orbfeather = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<OrbitingFeatherOld>(), damage, 0, Main.myPlayer);
 
-            //SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
-            //sstb.isCrit = false;
-            //sstb.damageNumber = "47";
+                    if (Main.projectile[orbfeather].ModProjectile is OrbitingFeatherOld of)
+                    {
+                        of.timeToOrbit = 60 + (orbitValues[ab][index - 1] * 2) + (180 * ab * 2);  //60 * index;
+                        of.orbitVector = new Vector2(355f - (100 * ab), 0f).RotatedBy(MathHelper.TwoPi * ((index - 1f) / numberOfFeahters));
+                        of.orbitVal = 355f - (100 * ab);
+                        of.rotSpeed = ab == 0 ? 1.85f : 1.5f;
+                    }
 
-            //text.customData = sstb;
+                }
+            }
+            
+            int barrier = Projectile.NewProjectile(null, player.Center + new Vector2(0f, -245f), Vector2.Zero, ModContent.ProjectileType<WindBarrierTest>(), 0, 0, Main.myPlayer);
+            */
+
+            
+            for (int iaa = -3; iaa < 4; iaa++)
+            {
+                Vector2 vel = velocity.ToRotation().ToRotationVector2().RotatedBy(iaa * MathHelper.PiOver4 * 1.25f) * -10f;
+
+                float curvePower = iaa * 0.009f; 
+
+                int curveFeather = Projectile.NewProjectile(null, Main.MouseWorld, vel, ModContent.ProjectileType<CurvingFeather>(), damage, 0, Main.myPlayer);
+
+                if (Main.projectile[curveFeather].ModProjectile is CurvingFeather cf)
+                {
+                    cf.curveValue = curvePower;
+                }
+
+            }
+            
+
 
             return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)

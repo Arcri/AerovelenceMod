@@ -151,7 +151,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
             trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/fireTrailGamma-export").Value;
             trail2.trailColor = Color.DeepSkyBlue;
             trail2.trailPointLimit = 300;
             trail2.trailWidth = 80;

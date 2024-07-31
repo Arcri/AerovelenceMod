@@ -600,7 +600,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         int advancer = 0;
         int totalTime = 0;
         float accelFloat = 0;
-
+         
         //Doing this and not Main.masterMode so I can override the difficulty for both testing and in a config
         public bool isExpert = true;
         public bool isMaster = true;
