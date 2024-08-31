@@ -386,6 +386,157 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
         }
     }
 
+    public class CurvingFeather : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+        int timer = 0;
+        public int advancer = 0;
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 10;
+            Projectile.ignoreWater = false;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 170;
+
+        }
+
+        public float accelTime = 15f;
+
+        float alpha = 0f;
+        float dashVal = 0f;
+        float pulseIntensity = 0f;
+
+        public float curveValue = 0f;
+
+        public override void AI()
+        {
+            if (timer == 0)
+            {
+                Projectile.ai[0] = Projectile.velocity.Length();
+                previousRotations = new List<float>();
+                previousPostions = new List<Vector2>();
+
+                //SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_ogre_spit") with { Pitch = 1f, PitchVariance = .33f, MaxInstances = -1 };
+                //SoundEngine.PlaySound(style, Projectile.Center);
+
+                //SoundStyle style3 = new SoundStyle("Terraria/Sounds/Custom/dd2_ballista_tower_shot_1") with { Pitch = .54f, PitchVariance = 0.2f, Volume = 0.3f, MaxInstances = -1 };
+                //SoundEngine.PlaySound(style3, Projectile.Center);
+
+                SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_42") with { Pitch = .2f, PitchVariance = .2f, Volume = 0.55f, MaxInstances = -1 };
+                SoundEngine.PlaySound(style2, Projectile.Center);
+
+                Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 1f;
+                Projectile.rotation = Projectile.velocity.ToRotation();
+
+                pulseIntensity = 1f;
+            }
+
+            if (timer > 0)
+            {
+                float prog = Math.Clamp(timer / accelTime, 0f, 1f);
+                dashVal = MathHelper.Lerp(0f, Projectile.ai[0], Easings.easeInExpo(prog));
+
+                //Projectile.velocity = Projectile.rotation.ToRotationVector2() * dashVal;
+
+                Projectile.rotation = Projectile.velocity.ToRotation();
+            }
+
+            int trailCount = 10;
+            previousRotations.Add(Projectile.rotation);
+            previousPostions.Add(Projectile.Center);
+
+            if (previousRotations.Count > trailCount)
+                previousRotations.RemoveAt(0);
+
+            if (previousPostions.Count > trailCount)
+                previousPostions.RemoveAt(0);
+
+
+            if (timer < 90)
+            {
+                Projectile.velocity = Projectile.velocity.RotatedBy(-curveValue);
+
+                if (timer < 50)
+                    Projectile.velocity *= 1.05f;
+            }
+
+
+            pulseIntensity = Math.Clamp(MathHelper.Lerp(pulseIntensity, -0.25f, 0.03f), 0f, 2f);
+            alpha = Math.Clamp(MathHelper.Lerp(alpha, 1.25f, 0.03f), 0f, 1f);
+
+            timer++;
+        }
+
+        public List<float> previousRotations;
+        public List<Vector2> previousPostions;
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (timer <= 0) return false;
+            Texture2D Feather = Mod.Assets.Request<Texture2D>("Content/Projectiles/TempVFX/Feather").Value;
+            Texture2D FeatherGray = Mod.Assets.Request<Texture2D>("Content/Projectiles/TempVFX/FeatherGray").Value;
+            Texture2D FeatherWhite = Mod.Assets.Request<Texture2D>("Content/Projectiles/TempVFX/FeatherWhite").Value;
+
+            #region after image
+            if (previousRotations != null && previousPostions != null)
+            {
+                for (int i = 0; i < previousRotations.Count; i++)
+                {
+                    float progress = (float)i / previousRotations.Count;
+
+                    float size = (0.75f + (progress * 0.25f)) * Projectile.scale;
+
+
+                    Color col = Color.Lerp(Color.Blue, Color.DeepSkyBlue, progress) * progress;
+
+                    float size2 = (1f + (progress * 0.25f)) * Projectile.scale;
+                    Main.EntitySpriteDraw(FeatherGray, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 0.55f * alpha,
+                            previousRotations[i], FeatherGray.Size() / 2f, size2, SpriteEffects.None);
+
+                    Vector2 vec2Scale = new Vector2(1.5f, 0.25f) * size;
+
+                    Main.EntitySpriteDraw(FeatherWhite, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 0.85f * alpha,
+                            previousRotations[i], FeatherGray.Size() / 2f, vec2Scale, SpriteEffects.None);
+                }
+
+            }
+            #endregion
+
+            Color outerCol = Color.Lerp(Color.DeepSkyBlue * 0.5f, Color.SkyBlue with { A = 0 } * 0.8f, pulseIntensity);
+            float scale = MathHelper.Lerp(1f, 1.25f, pulseIntensity);
+            for (int i = 0; i < 3; i++)
+            {
+                Main.EntitySpriteDraw(FeatherWhite, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f), null, outerCol * alpha, Projectile.rotation, Feather.Size() / 2f, Projectile.scale * 1.05f * scale, SpriteEffects.None);
+            }
+
+            Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, lightColor * alpha, Projectile.rotation, Feather.Size() / 2f, Projectile.scale, SpriteEffects.None);
+
+            Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.4f * alpha, Projectile.rotation, Feather.Size() / 2f, Projectile.scale * 1f, SpriteEffects.None);
+
+
+            return false;
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 randomStart = Main.rand.NextVector2Circular(1.5f, 1.5f) * 1f;
+                Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: new Color(40, 125, 255), Scale: Main.rand.NextFloat(0.35f, 0.45f));
+                dust.velocity += Projectile.velocity * 0.25f;
+
+                dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                    rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 8, postSlowPower: 0.92f, velToBeginShrink: 4f, fadePower: 0.88f, shouldFadeColor: false);
+            }
+
+            base.OnKill(timeLeft);
+        }
+    }
+
+
     public class StopAndStartFeather : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";

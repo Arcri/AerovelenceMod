@@ -27,11 +27,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
         {
             BasicAttack = 0,
             SwoopFeatherBehind = 1,
-            FiveSpread = 2,
+            FiveSpread = 2, 
             MartletOrbitFeather = 3,
             CircleBurstFeather = 4,
             SwirlFeather = 5,
-            CornerTravelShot = 6
+            CornerTravelShot = 6,
+            MeleeTalon = 7,
+            CircleDash = 8,
         }
 
         private FeatheredFoeState CurrentAttack
@@ -74,7 +76,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
                 NPC.TargetClosest();
             }
 
-            CurrentAttack = FeatheredFoeState.BasicAttack;
+            CurrentAttack = FeatheredFoeState.FiveSpread;
 
             switch (CurrentAttack)
             {
@@ -99,6 +101,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
                 case FeatheredFoeState.CornerTravelShot:
                     CornerTravelShot();
                     break;
+                //case FeatheredFoeState.MeleeTalon:
+
             }
 
             timer++;

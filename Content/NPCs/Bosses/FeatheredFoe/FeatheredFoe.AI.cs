@@ -85,46 +85,31 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
         Vector2 resultingVec = Vector2.Zero;
         public void FiveSpread()
         {
-            //Choose point oposite player
-            //
-            //
-
-            Vector2 toPlayer = (NPC.Center - player.Center).SafeNormalize(Vector2.UnitX);
-
-            BasicMovementVariant2(new Vector2(0f, -300f));
-
-            /*
             if (substate == 1) 
             {
                 if (timer == 0)
                 {
+                    fiveSpreadGoalVec = Main.rand.NextVector2CircularEdge(400, 400);
+
                     Vector2 toPlayer = (NPC.Center - player.Center).SafeNormalize(Vector2.UnitX);
 
-                    fiveSpreadStartVec = toPlayer;
 
                     float randAmount = Main.rand.NextFloat(-0.1f, 0.11f);
                     float rotAmount = ((MathHelper.Pi * 0.85f) + randAmount);// * (Main.rand.NextBool() ? 1f : -1f);
 
-                    fiveSpreadGoalVec = toPlayer.RotatedBy(rotAmount); //(toPlayer * -1f).RotatedByRandom(0.75f);
                 }
 
 
-                float easingProg = Utils.GetLerpValue(0f, 1f, timer / 70f, true);
+                float easingProg = Utils.GetLerpValue(0f, 1f, timer / 170f, true);
 
-                float functedEase = Easings.easeInOutHarsh(easingProg);
+                float functedEase = Math.Clamp(Easings.easeInOutHarsh(easingProg * 0.85f), 0f, 1f); 
 
-                
-                float dist = 425f;
+                Vector2 npcPosFromPlayer = Vector2.Lerp(NPC.Center, player.Center + fiveSpreadGoalVec, functedEase);
 
-                float currentVecAngle = fiveSpreadStartVec.ToRotation().AngleLerp(fiveSpreadGoalVec.ToRotation(), functedEase); 
-                    //MathHelper.Lerp(fiveSpreadStartVec.ToRotation(), fiveSpreadGoalVec.ToRotation(), Easings.easeInOutHarsh(easingProg));
-
-                Vector2 npcPosFromPlayer = currentVecAngle.ToRotationVector2() * dist;
-
-                NPC.Center = player.Center + npcPosFromPlayer;
+                NPC.Center = npcPosFromPlayer;
                 NPC.velocity = Vector2.Zero;
 
-                if (timer == 75)
+                if (timer == 275)
                 {
 
                     resultingVec = (NPC.Center - player.Center);
@@ -143,7 +128,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
                 }
 
             }
-            */
+            
         }
 
         public void MartletOrbitFeather()
@@ -166,6 +151,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 
         }
 
+        public void CircleDash() { }
+
+        #region MovementCode
         //Based off Emode Cryogen
         void BasicMovementVariant1(Vector2 goalPos, float accel = 0.03f, float maxSpeed = 15, float minSpeed = 5, float decel = 0.06f, float slowdown = 30)
         {
@@ -214,4 +202,5 @@ namespace AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe
 
         }
     }
+    #endregion
 }
