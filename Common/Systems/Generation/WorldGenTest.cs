@@ -8,6 +8,9 @@ using Terraria.WorldBuilding;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Terraria.Utilities;
 using static Terraria.WorldBuilding.Shapes;
+using ReLogic.Utilities;
+using System;
+using AerovelenceMod.Common.Systems.Generation.GenUtils;
 
 namespace AerovelenceMod.Common.Systems.Generation
 {
@@ -37,27 +40,29 @@ namespace AerovelenceMod.Common.Systems.Generation
             }));
             */
             // Code to test placed here:
+            Point origin = new Point(x, y);
+            Random rand = new Random();
+            Point temp = WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5).ToPoint();
 
-            WorldUtils.Gen(new Point(x, y), new Shapes.Rectangle(5, 5), Actions.Chain(new GenAction[]
-            {
-                new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()),
-            }));
+            //WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5);
+            //WorldGen.digTunnel(origin.X, origin.Y, -3, 0, 50, 5);
 
-            //WorldUtils.Gen(new Point(x, y), new Shapes.Mound(20, 40), Actions.Chain(new GenAction[]
-            //{
-            //    new Modifiers.Flip(false, true),
-            //    new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()),
-            //}));
-            //WorldUtils.Gen(new Point(x, y), new Shapes.Mound(20, 10), Actions.Chain(new GenAction[]
-            //{
+            //WorldUtils.Gen(origin, new AeroShapes.LightningBoltShape(350, 50, 3, 150, 30), new Actions.SetTile(TileID.Bubble));
 
-            //    new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()),
-            //}));
-            //WorldUtils.Gen(new Point(x, y+2), new Shapes.Mound(18, 37), Actions.Chain(new GenAction[]
-            //{
-            //    new Modifiers.Flip(false, true),
-            //    new Actions.PlaceWall(WallID.Stone)
-            //}));
+            /// Creates an opening similar to the surface caves
+            //WorldGen.CaveOpenater(origin.X, origin.Y);
+
+            /// Creates a medium-sized, blobby underground cave
+            //WorldGen.Caverer(origin.X, origin.Y);
+
+            /// Creates a long, winding cave, presumably used in vanilla at the end of CaveOpenater's generation 
+            //WorldGen.Cavinator(origin.X, origin.Y, 50);
+
+            /// Creates a corruption chasm, extends existing corruption caves
+            //WorldGen.ChasmRunner(origin.X, origin.Y, 50, true);
+
+            /// Creates a single, configurable tunnel in a straight line extending from the origin. The result will not be the same every time.
+            //WorldGen.digTunnel(origin.X, origin.Y, 1, 1, 50, 3);
         }
     }
 }

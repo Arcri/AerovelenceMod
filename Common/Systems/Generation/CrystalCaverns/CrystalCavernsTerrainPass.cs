@@ -5,12 +5,12 @@ using Terraria.WorldBuilding;
 using Terraria.IO;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
-using AerovelenceMod.Common.Systems.Generation.GenConditions;
 using System;
+using AerovelenceMod.Common.Systems.Generation.GenUtils;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
-	public class CrystalCavernsTerrainPass : GenPass
+    public class CrystalCavernsTerrainPass : GenPass
 	{
 		public CrystalCavernsTerrainPass(string name, float loadWeight) : base(name, loadWeight)
 		{
@@ -27,25 +27,39 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			int biomeHeight = undergroundHeight + surfaceHeight;
 			Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
 			//origin.Y += surfaceHeight;
-			 if (!origin.Equals(Point.Zero)) 
-			{
-                //WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - surfaceHeight), new Shapes.Rectangle(biomeWidth, biomeHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()));
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear()); // Clear space above the biome
-				WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>())); // Biome surface 
+			if (!origin.Equals(Point.Zero)) 
+            {
+            // BIOME SURFACE
 
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>())); // Biome underground top half
+                // Clear space above the biome
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear());
+                // Biome surface
+                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>())); 
 
-                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight)), new Shapes.Mound(biomeWidth/2, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[] //Biome underground bottom half
+            // BIOME UNDERGROUND
+
+                // Upper underground
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
+                // Lower underground
+                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight)), new Shapes.Mound(biomeWidth/2, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
 				{
 					new Modifiers.Flip(false, true),
 					new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()),
 				}));
-				WorldUtils.Gen(new Point(origin.X, origin.Y + 2), new Shapes.Mound(biomeWidth / 2 - 2, undergroundHeight - 3), Actions.Chain(new GenAction[] // Biome underground walls
+                
+                // Upper underground walls
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y + 2), new Shapes.Rectangle(biomeWidth - 2, (int)(.5 * undergroundHeight - 3)), new Actions.PlaceWall(WallID.Stone));
+                // Lower underground walls
+                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight) + 2), new Shapes.Mound(biomeWidth / 2 - 2, undergroundHeight - 3), Actions.Chain(new GenAction[]
 				{
-				new Modifiers.Flip(false, true),
-				new Actions.PlaceWall(WallID.Stone)
-				}));
-			}
+                    new Modifiers.Flip(false, true),
+                    new Actions.PlaceWall(WallID.Stone)
+                }));
+                
+                // Main lightning bolt cave
+                WorldUtils.Gen(new Point(origin.X, origin.Y - surfaceHeight), new AeroShapes.LightningBoltShape(350 * worldSizeScale, 45 * worldSizeScale, 3, 100 * worldSizeScale, 30), new Actions.ClearTile());
+
+            }
 		}
 
 		private Point determineOrigin(int biomeWidth, int undergroundHeight, int surfaceHeight, int biomeHeight)
@@ -76,15 +90,19 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 if (!flag)
                     continue;
 
-                // Check on the left side, center line, and right side of the biome
-                if (!checkPoint(-(int)(.5 * biomeWidth + 100), surfacePoint, undergroundHeight) || 
-					!checkPoint(0, surfacePoint, undergroundHeight) || 
-					!checkPoint((int)(.5 * biomeWidth) - 100, surfacePoint, undergroundHeight))
+                // Check on the left side, mid-left side, center line, mid-right side, and right side of the biome
+                if (!checkPoint(-(int)(.5 * biomeWidth), surfacePoint, undergroundHeight) ||
+                    !checkPoint(-(int)(.25 * biomeWidth), surfacePoint, undergroundHeight) ||
+                    !checkPoint(0, surfacePoint, undergroundHeight) ||
+                    !checkPoint((int)(.25 * biomeWidth), surfacePoint, undergroundHeight) ||
+                    !checkPoint((int)(.5 * biomeWidth), surfacePoint, undergroundHeight))
 					continue;
-				// Check on the left bound, center line, and right bound for suboptimal but acceptable results
+				// Check on the left bound, mid-left side, center line, mid-right side, and right bound for suboptimal but acceptable results
                 if (!checkPointFallback(-(int)(.5 * biomeWidth), surfacePoint) ||
-					!checkPointFallback(0, surfacePoint) ||
-					!checkPointFallback((int)(.5 * biomeWidth), surfacePoint))
+                    !checkPointFallback(-(int)(.25 * biomeWidth), surfacePoint) ||
+                    !checkPointFallback(0, surfacePoint) ||
+                    !checkPointFallback((int)(.25 * biomeWidth), surfacePoint) ||
+                    !checkPointFallback((int)(.5 * biomeWidth), surfacePoint))
                 {
                     fallbackPoint = surfacePoint;
                     continue;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria.WorldBuilding;
 
-namespace AerovelenceMod.Common.Systems.Generation.GenConditions
+namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 {
     public static class AeroConditions
     {
@@ -13,8 +13,8 @@ namespace AerovelenceMod.Common.Systems.Generation.GenConditions
         {
             protected override bool CheckValidity(int x, int y)
             {
-                if (GenBase._tiles[x, y].LiquidAmount > 0)
-                    return GenBase._tiles[x, y].LiquidType == 3;
+                if (_tiles[x, y].LiquidAmount > 0)
+                    return _tiles[x, y].LiquidType == 3;
 
                 return false;
             }
