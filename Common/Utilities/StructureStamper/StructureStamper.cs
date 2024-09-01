@@ -151,17 +151,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             Main.NewText($"Structure '{structureName}' saved to {path} with size {width}x{height}");
         }
 
-        public static (int width, int height) LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null)
+        public static (int width, int height) LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true)
         {
             string directoryPath = Path.Combine(Main.SavePath, "Mods", "AerovelenceMod", "Common", "Utilities", "StructureStamper", "Structures");
             string path = Path.Combine(directoryPath, $"{structureName}.bin");
 
             if (File.Exists(path))
             {
-                List<StructureData> structure = [];
+                List<StructureData> structure = new List<StructureData>();
 
-                int width = 0;
-                int height = 0;
+                int width, height;
 
                 using (FileStream fs = new(path, FileMode.Open))
                 using (BinaryReader reader = new(fs))
@@ -203,117 +202,120 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                 }
 
-                HashSet<Vector2> placedTiles = [];
-                List<Vector2> tilesToFrame = [];
-                int chestIndex = 0;
-
-                foreach (StructureData data in structure)
+                if (placeStructure)
                 {
-                    int x = (int)(startPosition.X + data.X);
-                    int y = (int)(startPosition.Y + data.Y);
-                    Vector2 tilePosition = new(x, y);
+                    HashSet<Vector2> placedTiles = new();
+                    List<Vector2> tilesToFrame = new();
+                    int chestIndex = 0;
 
-                    Tile tile = Main.tile[x, y];
-
-                    ushort tileType;
-                    ushort wallType;
-
-                    if (data.ModName == "Terraria")
+                    foreach (StructureData data in structure)
                     {
-                        tileType = Convert.ToUInt16(data.TileName);
-                    }
-                    else
-                    {
-                        Mod modTile = ModLoader.GetMod(data.ModName);
-                        tileType = (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
-                    }
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        Vector2 tilePosition = new(x, y);
 
-                    if (data.WallModName == "Terraria")
-                    {
-                        wallType = Convert.ToUInt16(data.WallName);
-                    }
-                    else
-                    {
-                        Mod modWall = ModLoader.GetMod(data.WallModName);
-                        wallType = (modWall?.Find<ModWall>(data.WallName)?.Type ?? 0);
-                    }
+                        Tile tile = Main.tile[x, y];
 
-                    tile.HasTile = data.IsActive;
-                    tile.TileType = tileType;
-                    tile.TileFrameX = data.TileFrameX;
-                    tile.TileFrameY = data.TileFrameY;
-                    tile.WallType = wallType;
-                    tile.LiquidType = data.LiquidType;
-                    tile.LiquidAmount = data.LiquidAmount;
-                    tile.IsHalfBlock = data.IsHalfBlock;
-                    tile.Slope = (SlopeType)data.Slope;
-                    tile.RedWire = data.HasRedWire;
-                    tile.BlueWire = data.HasBlueWire;
-                    tile.GreenWire = data.HasGreenWire;
-                    tile.YellowWire = data.HasYellowWire;
-                    tile.HasActuator = data.HasActuator;
-                    tile.IsActuated = data.IsActuated;
+                        ushort tileType;
+                        ushort wallType;
 
-                    placedTiles.Add(tilePosition);
-
-                    if (data.TileFrameImportant)
-                    {
-                        TileObjectData tileData = TileObjectData.GetTileData(tile.TileType, 0);
-
-                        if (tileData != null)
+                        if (data.ModName == "Terraria")
                         {
-                            int tileWidth = tileData.Width;
-                            int tileHeight = tileData.Height;
+                            tileType = Convert.ToUInt16(data.TileName);
+                        }
+                        else
+                        {
+                            Mod modTile = ModLoader.GetMod(data.ModName);
+                            tileType = (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
+                        }
 
-                            for (int dx = 0; dx < tileWidth; dx++)
+                        if (data.WallModName == "Terraria")
+                        {
+                            wallType = Convert.ToUInt16(data.WallName);
+                        }
+                        else
+                        {
+                            Mod modWall = ModLoader.GetMod(data.WallModName);
+                            wallType = (modWall?.Find<ModWall>(data.WallName)?.Type ?? 0);
+                        }
+
+                        tile.HasTile = data.IsActive;
+                        tile.TileType = tileType;
+                        tile.TileFrameX = data.TileFrameX;
+                        tile.TileFrameY = data.TileFrameY;
+                        tile.WallType = wallType;
+                        tile.LiquidType = data.LiquidType;
+                        tile.LiquidAmount = data.LiquidAmount;
+                        tile.IsHalfBlock = data.IsHalfBlock;
+                        tile.Slope = (SlopeType)data.Slope;
+                        tile.RedWire = data.HasRedWire;
+                        tile.BlueWire = data.HasBlueWire;
+                        tile.GreenWire = data.HasGreenWire;
+                        tile.YellowWire = data.HasYellowWire;
+                        tile.HasActuator = data.HasActuator;
+                        tile.IsActuated = data.IsActuated;
+
+                        placedTiles.Add(tilePosition);
+
+                        if (data.TileFrameImportant)
+                        {
+                            TileObjectData tileData = TileObjectData.GetTileData(tile.TileType, 0);
+
+                            if (tileData != null)
                             {
-                                for (int dy = 0; dy < tileHeight; dy++)
+                                int tileWidth = tileData.Width;
+                                int tileHeight = tileData.Height;
+
+                                for (int dx = 0; dx < tileWidth; dx++)
                                 {
-                                    Vector2 offsetPosition = new(x + dx, y + dy);
-                                    Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+                                    for (int dy = 0; dy < tileHeight; dy++)
+                                    {
+                                        Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
 
-                                    targetTile.HasTile = true;
-                                    targetTile.TileType = tileType;
-                                    targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
-                                    targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
+                                        targetTile.HasTile = true;
+                                        targetTile.TileType = tileType;
+                                        targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
+                                        targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
 
-                                    placedTiles.Add(offsetPosition);
-                                    tilesToFrame.Add(offsetPosition);
+                                        placedTiles.Add(offsetPosition);
+                                        tilesToFrame.Add(offsetPosition);
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                tilesToFrame.Add(tilePosition);
                             }
                         }
                         else
                         {
                             tilesToFrame.Add(tilePosition);
                         }
+
+                        if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                        {
+                            ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
+                            chestIndex++;
+                        }
                     }
-                    else
+
+                    foreach (Vector2 position in tilesToFrame)
                     {
-                        tilesToFrame.Add(tilePosition);
+                        int x = (int)position.X;
+                        int y = (int)position.Y;
+                        WorldGen.SquareTileFrame(x, y, true);
                     }
 
-                    if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                    foreach (StructureData data in structure)
                     {
-                        ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
-                        chestIndex++;
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        WorldGen.SquareWallFrame(x, y, true);
                     }
-                }
 
-                foreach (Vector2 position in tilesToFrame)
-                {
-                    int x = (int)position.X;
-                    int y = (int)position.Y;
-                    WorldGen.SquareTileFrame(x, y, true);
+                    Main.NewText($"Structure '{structureName}' loaded. Width: {width}, Height: {height}!");
                 }
-
-                foreach (StructureData data in structure)
-                {
-                    int x = (int)(startPosition.X + data.X);
-                    int y = (int)(startPosition.Y + data.Y);
-                    WorldGen.SquareWallFrame(x, y, true);
-                }
-
-                Main.NewText($"Structure '{structureName}' loaded. Width: {width}, Height: {height}!");
 
                 return (width, height);
             }

@@ -21,6 +21,7 @@ using Terraria.GameContent;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Items.Weapons.Starglass;
+using AerovelenceMod.Content.Biomes;
 
 namespace AerovelenceMod
 {
@@ -216,8 +217,9 @@ namespace AerovelenceMod
 			//StarglassParticleDetour.Load();
 			ModDetours.Load();
 
+            ModContent.GetInstance<CrystalCavernsBiome>();
 
-			if (!Main.dedServ)
+            if (!Main.dedServ)
 			{
 
 				string shaderName = "AerovelenceMod:DistortScreen";
@@ -367,6 +369,16 @@ namespace AerovelenceMod
 
         public override void AddRecipeGroups()/* tModPorter Note: Removed. Use ModSystem.AddRecipeGroups */
         {
+            {
+                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Iron Bars", new int[]
+                {
+                    ItemID.IronBar,
+                    ItemID.LeadBar
+                });
+                RecipeGroup.RegisterGroup("AerovelenceMod:IronBars", group);
+
+            }
+
             {
                 RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
                 {

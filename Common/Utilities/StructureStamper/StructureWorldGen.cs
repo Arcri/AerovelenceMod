@@ -31,14 +31,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             for (int i = 0; i < structureCount; i++)
             {
-                int x = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
-                int y = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - 200);
+                int centerX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
+                int centerY = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - 200);
+                var (width, height) = StructureStamper.LoadStructure(new Vector2(centerX, centerY), "test");
 
-                if (IsValidLocation(x, y))
-                {
-                    var (width, height) = StructureStamper.LoadStructure(new Vector2(x, y), "test");
-                    ApplyLootToAllChestsInStructure(new Vector2(x, y), width, height);
-                }
+                int startX = centerX - width / 2;
+                int startY = centerY - height / 2;
+
+                StructureStamper.LoadStructure(new Vector2(startX, startY), "test");
+
+                ApplyLootToAllChestsInStructure(new Vector2(startX, startY), width, height);
             }
         }
 

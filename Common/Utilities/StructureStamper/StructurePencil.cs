@@ -34,7 +34,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
             else
             {
-                StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+               // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
             }
 
             return true;
@@ -44,7 +44,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
         {
 
             //Example of a single chest in a structure (see the structure world gen for applying loot to every single chest otherwise it applies to the first chest
-            Vector2 startPosition = player.position.ToTileCoordinates().ToVector2();
+            Vector2 playerPosition = player.Center.ToTileCoordinates().ToVector2();
+            Vector2 startPosition = playerPosition;
 
             var chestConfig = new ChestConfiguration();
 
@@ -102,7 +103,9 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             #endregion
 
-            StructureStamper.LoadStructure(startPosition, "ggy", [chestConfig]);
+            var (width, height) = StructureStamper.LoadStructure(playerPosition, "test", [chestConfig], placeStructure: false);
+            Vector2 centeredPosition = playerPosition - new Vector2(width / 2, height / 2);
+            StructureStamper.LoadStructure(centeredPosition, "test", [chestConfig]);
         }
     }
 }
