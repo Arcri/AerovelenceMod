@@ -10,6 +10,11 @@ Biomes: {
 		DisplayName: Crystal Caverns Biome
 		TownNPCDialogueName: the Crystal Caverns Biome
 	}
+
+	CrystalCavernsUndergroundBiome: {
+		DisplayName: Crystal Caverns Underground Biome
+		TownNPCDialogueName: the Crystal Caverns Underground Biome
+	}
 }
 
 Buffs: {
@@ -102,6 +107,11 @@ Items: {
 
 	MilitaryMetalPlatformItem: {
 		DisplayName: Military Metal Platform Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodTableItem: {
+		DisplayName: Glimmerwood Table
 		Tooltip: ""
 	}
 
@@ -406,6 +416,186 @@ Items: {
 		Tooltip: ""
 	}
 
+	CrystallineFabricatorItem: {
+		DisplayName: Crystalline Fabricator Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodBathtubItem: {
+		DisplayName: Glimmerwood Bathtub Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodBedItem: {
+		DisplayName: Glimmerwood Bed Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodBookcaseItem: {
+		DisplayName: Glimmerwood Bookcase Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodCandleItem: {
+		DisplayName: Glimmerwood Candle Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodChairItem: {
+		DisplayName: Glimmerwood Chair Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodChandelierItem: {
+		DisplayName: Glimmerwood Chandelier Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodChestItem: {
+		DisplayName: Glimmerwood Chest Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodClockItem: {
+		DisplayName: Glimmerwood Clock Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodDoorItem: {
+		DisplayName: Glimmerwood Door Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodDresserItem: {
+		DisplayName: Glimmerwood Dresser Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodLampItem: {
+		DisplayName: Glimmerwood Lamp Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodPipeOrganItem: {
+		DisplayName: Glimmerwood Pipe Organ Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodPlatformItem: {
+		DisplayName: Glimmerwood Platform Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodSinkItem: {
+		DisplayName: Glimmerwood Sink Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodSofaItem: {
+		DisplayName: Glimmerwood Sofa Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodStoolItem: {
+		DisplayName: Glimmerwood Stool Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodToiletItem: {
+		DisplayName: Glimmerwood Toilet Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodTorchItem: {
+		DisplayName: Glimmerwood Torch Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodWorkbenchItem: {
+		DisplayName: Glimmerwood Workbench Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodItem: {
+		DisplayName: Glimmerwood Item
+		Tooltip: ""
+	}
+
+	FreshGlimmerwoodItem: {
+		DisplayName: Fresh Glimmerwood Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodBeamItem: {
+		DisplayName: Glimmerwood Beam Item
+		Tooltip: ""
+	}
+
+	CavernDirtWallItem: {
+		DisplayName: Cavern Dirt Wall Item
+		Tooltip: ""
+	}
+
+	CitadelBrickWallItem: {
+		DisplayName: Citadel Brick Wall Item
+		Tooltip: ""
+	}
+
+	ColumnWallItem: {
+		DisplayName: Column Wall Item
+		Tooltip: ""
+	}
+
+	CrystalGrassWallItem: {
+		DisplayName: Crystal Grass Wall Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodWallItem: {
+		DisplayName: Glimmerwood Wall Item
+		Tooltip: ""
+	}
+
+	CavernBrickItem: {
+		DisplayName: Cavern Brick Item
+		Tooltip: ""
+	}
+
+	ArenaCavernCrystalItem: {
+		DisplayName: Arena Cavern Crystal Item
+		Tooltip: ""
+	}
+
+	CavernStoneWallItem: {
+		DisplayName: Cavern Stone Wall Item
+		Tooltip: ""
+	}
+
+	CavernRopeItem: {
+		DisplayName: Cavern Rope Item
+		Tooltip: ""
+	}
+
+	CavernGatewayItem: {
+		DisplayName: Cavern Gateway Item
+		Tooltip: ""
+	}
+
+	CavernCrystalItem: {
+		DisplayName: Cavern Crystal Item
+		Tooltip: ""
+	}
+
+	LargeGeode: {
+		DisplayName: Large Geode
+		Tooltip: ""
+	}
+
+	StructureStamp: {
+		DisplayName: Structure Stamp
+		Tooltip: ""
+	}
+
 	StructurePencil: {
 		DisplayName: Structure Pencil
 		Tooltip: ""
@@ -423,6 +613,9 @@ NPCs: {
 	Cyvercry2.DisplayName: Cyvercry
 	MovingPlatform.DisplayName: Moving Platform
 	FeatheredFoe.DisplayName: Feathered Foe
+	CrystalTumbler.DisplayName: Crystal Tumbler
+	CrystalBomb.DisplayName: Crystal Bomb
+	HealerDrone.DisplayName: Healer Drone
 }
 
 Projectiles: {
@@ -720,6 +913,34 @@ Projectiles: {
 	BunnyCannonShot.DisplayName: Bunny Cannon Shot
 	TalonSlash.DisplayName: Talon Slash
 	CurvingFeather.DisplayName: Curving Feather
+	CrystalSpike.DisplayName: Crystal Spike
+	CrystalSpikeEffect.DisplayName: Crystal Spike Effect
+	Indicator.DisplayName: Indicator
+	WaterGeyserProjectile.DisplayName: Water Geyser Projectile
+	ElectricBolt.DisplayName: Electric Bolt
+	Stalactite.DisplayName: Stalactite
+	CrystalShard.DisplayName: Crystal Shard
+	TumblerOrb.DisplayName: Tumbler Orb
+	TumblerOrbArc.DisplayName: Tumbler Orb Arc
+	TumblerOrbVFX.DisplayName: Tumbler Orb V F X
+	ChargedStoneProjectile.DisplayName: Charged Stone Projectile
+	CrystalLoadedRockProjectile.DisplayName: Crystal Loaded Rock Projectile
+	RockProjectile.DisplayName: Rock Projectile
+	RegularRockProjectile.DisplayName: Regular Rock Projectile
+	TallCrystalSpike.DisplayName: Tall Crystal Spike
+	HugeLaserProjectile.DisplayName: Huge Laser Projectile
+	HugeLaserTelegraph.DisplayName: Huge Laser Telegraph
+	SmallTumblerOrbVFX.DisplayName: Small Tumbler Orb V F X
+	LightningLaser.DisplayName: Lightning Laser
+	SpiralProjectile.DisplayName: Spiral Projectile
+	OrbitingProjectile.DisplayName: Orbiting Projectile
+	ElectricBoltExplosion.DisplayName: Electric Bolt Explosion
+	EnchantedEye.DisplayName: Enchanted Eye
+	DashingEnchantedEye.DisplayName: Dashing Enchanted Eye
+	HomingSharpCrystalShard.DisplayName: Homing Sharp Crystal Shard
+	SharpCrystalShard.DisplayName: Sharp Crystal Shard
+	HealerBeam.DisplayName: Healer Beam
+	PlatformProjectile.DisplayName: Platform Projectile
 }
 
 Configs: {
@@ -739,3 +960,4 @@ Configs: {
 }
 
 WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
+Tiles.GlimmerwoodDresser.MapEntry: Glimmerwood Dresser

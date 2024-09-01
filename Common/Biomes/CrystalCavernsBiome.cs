@@ -11,7 +11,7 @@ namespace AerovelenceMod.Content.Biomes
 		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsBgStyle");
 		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
 
-		public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalCaverns");
+		public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalCaverns_Night");
 
 		public override string BestiaryIcon => base.BestiaryIcon;
 		public override string BackgroundPath => base.BackgroundPath;

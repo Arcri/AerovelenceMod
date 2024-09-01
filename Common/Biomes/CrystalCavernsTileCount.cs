@@ -15,16 +15,15 @@ namespace AerovelenceMod.Content.Biomes
 		public override void ResetNearbyTileEffects()
 		{
 			CavernTiles = 0;
-			CitadelTiles = 0;
 		}
 
 		public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
 		{
 			
 			CavernTiles = tileCounts[ModContent.TileType<CavernStone>()] +
-						  //tileCounts[ModContent.TileType<CrystalGrass>()] +
-						  //tileCounts[ModContent.TileType<CrystalDirt>()] +
-						  tileCounts[ModContent.TileType<ChargedStone>()];
+						  tileCounts[ModContent.TileType<CrystalGrass>()] +
+						  tileCounts[ModContent.TileType<CrystalDirt>()] +
+						  tileCounts[ModContent.TileType<CavernCrystal>()];
 			
 
 			//CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];

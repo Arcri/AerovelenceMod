@@ -1,11 +1,10 @@
-/*
-using AerovelenceMod.Content.Items.Placeables.CrystalCaverns;
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
+namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood
 {
     public class GlimmerwoodBeam : ModTile
     {
@@ -20,9 +19,19 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Tiles
             AddMapEntry(new Color(061, 079, 110));
 			DustType = 59;
 			HitSound = SoundID.Tink;
-            ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.GlimmerwoodBeam>();
+        }
 
+        public class GlimmerwoodBeamItem : ModItem
+        {
+            public override void SetStaticDefaults()
+            {
+
+            }
+
+            public override void SetDefaults()
+            {
+                CommonItemHelper.SetupPlaceableItem(this, 28, 14, 150, ModContent.TileType<GlimmerwoodBeam>());
+            }
         }
     }
 }
-*/
