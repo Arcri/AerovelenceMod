@@ -405,6 +405,16 @@ Items: {
 		DisplayName: Bunny Cannon
 		Tooltip: ""
 	}
+
+	StructurePencil: {
+		DisplayName: Structure Pencil
+		Tooltip: ""
+	}
+
+	StructureStampItem: {
+		DisplayName: Structure Stamp Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {

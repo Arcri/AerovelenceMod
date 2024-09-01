@@ -88,6 +88,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
         }
 
+        public Vector2? GetPoint1()
+        {
+            return Point1;    
+        }
+
+        public Vector2? GetPoint2()
+        {
+            return Point2;
+        }
+
         private void HandleTextInput()
         {
             if (Main.keyState.IsKeyDown(Keys.Back) && structureName.Length > 0)

@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -19,12 +20,12 @@ namespace AerovelenceMod.Content.Biomes
 
 		public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
 		{
-			/*
+			
 			CavernTiles = tileCounts[ModContent.TileType<CavernStone>()] +
-						  tileCounts[ModContent.TileType<CrystalGrass>()] +
-						  tileCounts[ModContent.TileType<CrystalDirt>()] +
-						  tileCounts[ModContent.TileType<CavernCrystal>()];
-			*/
+						  //tileCounts[ModContent.TileType<CrystalGrass>()] +
+						  //tileCounts[ModContent.TileType<CrystalDirt>()] +
+						  tileCounts[ModContent.TileType<ChargedStone>()];
+			
 
 			//CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];
 		}

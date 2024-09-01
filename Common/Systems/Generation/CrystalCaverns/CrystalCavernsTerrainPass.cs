@@ -7,6 +7,7 @@ using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
 using AerovelenceMod.Common.Systems.Generation.GenUtils;
+using AerovelenceMod.Common.Utilities.StructureStamper;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -21,9 +22,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
 
 			int worldSizeScale = Main.maxTilesY / 1200;
-            int biomeWidth = 300 * worldSizeScale;
-			int surfaceHeight = 40 * worldSizeScale;
-			int undergroundHeight = 360 * worldSizeScale;
+            int biomeWidth = 400 * worldSizeScale;
+			int surfaceHeight = 50 * worldSizeScale;
+			int undergroundHeight = 400 * worldSizeScale;
 			int biomeHeight = undergroundHeight + surfaceHeight;
 			Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
 			//origin.Y += surfaceHeight;
@@ -34,9 +35,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 // Clear space above the biome
                 WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear());
                 // Biome surface
-                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>())); 
+                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()));
+                // Biome surface walls
+                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2 - 1, surfaceHeight - 1), new Actions.PlaceWall(WallID.Stone));
 
-            // BIOME UNDERGROUND
+                // BIOME UNDERGROUND
 
                 // Upper underground
                 WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
@@ -48,17 +51,22 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 				}));
                 
                 // Upper underground walls
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y + 2), new Shapes.Rectangle(biomeWidth - 2, (int)(.5 * undergroundHeight - 3)), new Actions.PlaceWall(WallID.Stone));
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth - 1, (int)(.5 * undergroundHeight - 1)), new Actions.PlaceWall(WallID.Stone));
                 // Lower underground walls
-                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight) + 2), new Shapes.Mound(biomeWidth / 2 - 2, undergroundHeight - 3), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight) - 1), new Shapes.Mound(biomeWidth / 2 - 1, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
 				{
                     new Modifiers.Flip(false, true),
                     new Actions.PlaceWall(WallID.Stone)
                 }));
                 
                 // Main lightning bolt cave
-                WorldUtils.Gen(new Point(origin.X, origin.Y - surfaceHeight), new AeroShapes.LightningBoltShape(350 * worldSizeScale, 45 * worldSizeScale, 3, 100 * worldSizeScale, 30), new Actions.ClearTile());
+                WorldUtils.Gen(new Point(origin.X, origin.Y - surfaceHeight), new AeroShapes.LightningBoltShape(400 * worldSizeScale, 50 * (int)((worldSizeScale - 1) * 0.8 + 1), 2, 30), new Actions.ClearTile());
 
+                int tumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
+
+                Point tumblerTunnelEnd = WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5).ToPoint();
+                WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5);
+                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 120, tumblerTunnelEnd.Y - 46), "e");
             }
 		}
 

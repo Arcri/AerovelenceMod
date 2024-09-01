@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,15 +25,18 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public override bool CanUseItem(Player player)
         {
+            Vector2 MousePos = Main.MouseWorld.ToTileCoordinates().ToVector2();
             if (player.altFunctionUse == 2)
             {
                 StructureStamperSystem system = ModContent.GetInstance<StructureStamperSystem>();
-                system.SetPoint2(Main.MouseWorld.ToTileCoordinates().ToVector2());
+                system.SetPoint2(MousePos);
+                Dust.QuickBox(MousePos * 16, new Vector2(MousePos.X + 1, MousePos.Y + 1) * 16, 8, Color.CadetBlue, null);
             }
             else
             {
                 StructureStamperSystem system = ModContent.GetInstance<StructureStamperSystem>();
                 system.SetPoint1(Main.MouseWorld.ToTileCoordinates().ToVector2());
+                Dust.QuickBox(MousePos * 16, new Vector2(MousePos.X + 1, MousePos.Y + 1) * 16, 8, Color.OrangeRed, null);
             }
             return true;
         }

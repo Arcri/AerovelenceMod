@@ -26,9 +26,9 @@ namespace AerovelenceMod.Content.Biomes
 		{
 			bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().CavernTiles >= 100;
 
-			bool b2 = Math.Abs(player.position.ToTileCoordinates().X - Main.maxTilesX / 2) < Main.maxTilesX / 6;
-			bool b3 = player.ZoneSkyHeight || player.ZoneOverworldHeight;
-			return b1 && b2 && b3;
+			//bool b2 = Math.Abs(player.position.ToTileCoordinates().X - Main.maxTilesX / 2) < Main.maxTilesX / 6;
+			//bool b3 = player.ZoneSkyHeight || player.ZoneOverworldHeight;
+			return b1; //&& b2 && b3;
 		}
 	
 

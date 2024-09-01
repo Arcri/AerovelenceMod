@@ -11,6 +11,7 @@ using static Terraria.WorldBuilding.Shapes;
 using ReLogic.Utilities;
 using System;
 using AerovelenceMod.Common.Systems.Generation.GenUtils;
+using AerovelenceMod.Common.Utilities.StructureStamper;
 
 namespace AerovelenceMod.Common.Systems.Generation
 {
@@ -41,8 +42,9 @@ namespace AerovelenceMod.Common.Systems.Generation
             */
             // Code to test placed here:
             Point origin = new Point(x, y);
-            Random rand = new Random();
+            Random rand = new Random(); // Use WorldGen.genRand.Next() for actual world generation
             Point temp = WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5).ToPoint();
+            
 
             //WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5);
             //WorldGen.digTunnel(origin.X, origin.Y, -3, 0, 50, 5);

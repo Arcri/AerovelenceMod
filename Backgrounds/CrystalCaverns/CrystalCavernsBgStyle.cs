@@ -6,7 +6,6 @@ namespace AerovelenceMod.Backgrounds.CrystalCaverns
 {
 	public class CrystalCavernsBgStyle : ModSurfaceBackgroundStyle
 	{
-
 		public override void ModifyFarFades(float[] fades, float transitionSpeed)
 		{
 			for (int i = 0; i < fades.Length; i++)
@@ -33,21 +32,21 @@ namespace AerovelenceMod.Backgrounds.CrystalCaverns
 		public override int ChooseFarTexture()
 		{
 			if (Main.hardMode)
-				return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeFar");
-			return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceFar");
+				return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeFar");
+			return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceFar");
 		}
 		public override int ChooseMiddleTexture()
 		{
 			if (Main.hardMode)
-				return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeMid0");
-			return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceMid0");
+				return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeMid0");
+			return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceMid0");
 		}
 
 		public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
 		{
 			if (Main.hardMode)
-				return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeClose");
-			return BackgroundTextureLoader.GetBackgroundSlot("Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceClose");
+				return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgHardmodeClose");
+			return BackgroundTextureLoader.GetBackgroundSlot("AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsBgSurfaceClose");
 		}
 	}
 }

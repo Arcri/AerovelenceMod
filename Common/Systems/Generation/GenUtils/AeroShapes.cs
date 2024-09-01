@@ -2,6 +2,7 @@
 using Terraria.WorldBuilding;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
+using Terraria;
 
 namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 {
@@ -69,8 +70,6 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
                 int trend = 0;
 
-                Random rand = new Random();
-
                 for (int i = 0; i < _length; i++)
                 {
                     // Make the bolt less jagged at the end
@@ -81,22 +80,22 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                     int randResult;
                     if (origin.X - currentX >= _maxWidth)
                     {
-                        randResult = rand.Next(0, _jaggedness + 1);
+                        randResult = WorldGen.genRand.Next(1, _jaggedness + 1);
                         trend = Math.Sign(randResult);
                     }
-                    else if (origin.X - currentX <= -_maxWidth * 1.5)
+                    else if (origin.X - currentX <= -_maxWidth)
                     {
-                        randResult = rand.Next(-_jaggedness, 0);
+                        randResult = WorldGen.genRand.Next(-_jaggedness, 0);
                         trend = Math.Sign(randResult);
                     }
                     else {
-                        randResult = rand.Next(-_jaggedness, _jaggedness + 1);
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1);
                     }
-                        
-                    if (Math.Sign(randResult) != trend && i < _length * 0.95) 
-                        randResult = rand.Next(-_jaggedness, _jaggedness + 1); // Creates bias towards the direction it is already going in above the last X rows
+
+                    if (Math.Sign(randResult) != trend && i < _length * 0.95)
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1); // Creates more bias towards the direction it is already going in above the last X rows
                     if (Math.Sign(randResult) != trend && i < _length * 0.75)
-                        randResult = rand.Next(-_jaggedness, _jaggedness + 1); // Creates more bias towards the direction it is already going in above the last X rows
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1); // Creates more bias towards the direction it is already going in above the last X rows
                     trend = Math.Sign(randResult);
 
                     currentX += randResult;

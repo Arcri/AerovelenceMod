@@ -34,7 +34,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
             else
             {
-                StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+                StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "e");
             }
 
             return true;
