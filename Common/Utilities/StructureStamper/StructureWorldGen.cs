@@ -19,11 +19,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             int genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
             if (genIndex != -1)
             {
-                tasks.Insert(genIndex + 1, new PassLegacy("Generate Test Structure", GenerateStructure));
+                //tasks.Insert(genIndex + 1, new PassLegacy("Generate Test Structure", GenerateStructure));
             }
         }
 
-        private void GenerateStructure(GenerationProgress progress, GameConfiguration config)
+        /*private void GenerateStructure(GenerationProgress progress, GameConfiguration config)
         {
             progress.Message = "Generating Test Structure";
 
@@ -33,16 +33,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             {
                 int centerX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
                 int centerY = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - 200);
-                var (width, height) = StructureStamper.LoadStructure(new Vector2(centerX, centerY), "test");
+                //var (width, height) = StructureStamper.LoadStructure(new Vector2(centerX, centerY), "test");
 
                 int startX = centerX - width / 2;
                 int startY = centerY - height / 2;
 
-                StructureStamper.LoadStructure(new Vector2(startX, startY), "test");
+                //StructureStamper.LoadStructure(new Vector2(startX, startY), "test");
 
                 ApplyLootToAllChestsInStructure(new Vector2(startX, startY), width, height);
             }
-        }
+        }*/
 
         private static bool IsValidLocation(int x, int y)
         {
