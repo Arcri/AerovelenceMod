@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 
         public override float GetTorchLuck(Player player)
         {
-            return CommonTileHelper.GetTorchLuck(player, ModContent.GetInstance<CrystalCavernsBiome>(), 1f, -0.1f);
+            return CommonTileHelper.GetTorchLuck(player, ModContent.GetInstance<CrystalCavernsSurfaceBiome>(), 1f, -0.1f);
         }
     }
 }

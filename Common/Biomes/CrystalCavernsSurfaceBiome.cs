@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Biomes
 {
-	public class CrystalCavernsBiome : ModBiome
+	public class CrystalCavernsSurfaceBiome : ModBiome
 	{
-		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.Find<ModUndergroundBackgroundStyle>("AerovelenceMod/CrystalCavernsBgStyle");
+		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsSurfaceBgStyle");
 		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
 
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalCaverns");
+        public override int Music => Main.LocalPlayer.townNPCs >= 2 ? -1 : (Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFields") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFieldsNight"));
 
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh; //default behavior is BiomeLow.
 
@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.Biomes
 		public override bool IsBiomeActive(Player player)
 		{
 			bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().CavernTiles >= 100;
-			bool b2 = player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
+			bool b2 = player.ZoneSkyHeight || player.ZoneOverworldHeight;
 
 			return b1 && b2;
 		}

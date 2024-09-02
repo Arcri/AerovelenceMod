@@ -23,7 +23,8 @@ namespace AerovelenceMod.Content.Biomes
 			CavernTiles = tileCounts[ModContent.TileType<CavernStone>()] +
 						  tileCounts[ModContent.TileType<CrystalGrass>()] +
 						  tileCounts[ModContent.TileType<CrystalDirt>()] +
-						  tileCounts[ModContent.TileType<CavernCrystal>()];
+                          tileCounts[ModContent.TileType<ChargedStone>()] +
+                          tileCounts[ModContent.TileType<CavernCrystal>()];
 			
 
 			//CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];

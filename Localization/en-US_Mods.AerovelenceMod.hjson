@@ -15,6 +15,16 @@ Biomes: {
 		DisplayName: Crystal Caverns Underground Biome
 		TownNPCDialogueName: the Crystal Caverns Underground Biome
 	}
+
+	CrystalFieldsBiome: {
+		DisplayName: Crystal Fields Biome
+		TownNPCDialogueName: the Crystal Fields Biome
+	}
+
+	CrystalCavernsSurfaceBiome: {
+		DisplayName: Crystal Caverns Surface Biome
+		TownNPCDialogueName: the Crystal Caverns Surface Biome
+	}
 }
 
 Buffs: {

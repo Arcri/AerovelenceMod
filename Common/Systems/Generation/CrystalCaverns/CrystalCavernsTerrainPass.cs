@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using System;
 using AerovelenceMod.Common.Systems.Generation.GenUtils;
 using AerovelenceMod.Common.Utilities.StructureStamper;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
+using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -20,43 +22,49 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
-
-			int worldSizeScale = Main.maxTilesY / 1200;
+            int worldSizeScale = Main.maxTilesY / 1200;
+            
             int biomeWidth = 400 * worldSizeScale;
-			int surfaceHeight = 50 * worldSizeScale;
-			int undergroundHeight = 400 * worldSizeScale;
+			int surfaceHeight = 100 * worldSizeScale;
+			int undergroundHeight = 350 * worldSizeScale;
 			int biomeHeight = undergroundHeight + surfaceHeight;
-			Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
+
+            ushort surfaceTile = (ushort)ModContent.TileType<CrystalGrass>();
+            ushort surfaceWall = (ushort)ModContent.WallType<CavernDirtWall>();
+            ushort undergroundTile = (ushort)ModContent.TileType<CavernStone>();
+            ushort undergroundWall = (ushort)ModContent.WallType<CavernStoneWall>();
+
+            Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
 			//origin.Y += surfaceHeight;
 			if (!origin.Equals(Point.Zero)) 
             {
             // BIOME SURFACE
 
                 // Clear space above the biome
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear());
+                //WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y - 150), new Shapes.Rectangle(biomeWidth, 150), new Actions.Clear());
                 // Biome surface
-                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile((ushort)ModContent.TileType<CavernStone>()));
+                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), new Actions.SetTile(surfaceTile));
                 // Biome surface walls
-                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2 - 1, surfaceHeight - 1), new Actions.PlaceWall(WallID.Stone));
+                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2 - 1, surfaceHeight - 1), new Actions.PlaceWall(surfaceWall));
 
                 // BIOME UNDERGROUND
 
                 // Upper underground
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile(undergroundTile));
                 // Lower underground
                 WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight)), new Shapes.Mound(biomeWidth/2, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
 				{
 					new Modifiers.Flip(false, true),
-					new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()),
+					new Actions.SetTile(undergroundTile),
 				}));
                 
                 // Upper underground walls
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth - 1, (int)(.5 * undergroundHeight - 1)), new Actions.PlaceWall(WallID.Stone));
+                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth - 1, (int)(.5 * undergroundHeight - 1)), new Actions.PlaceWall(undergroundWall));
                 // Lower underground walls
                 WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight) - 1), new Shapes.Mound(biomeWidth / 2 - 1, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
 				{
                     new Modifiers.Flip(false, true),
-                    new Actions.PlaceWall(WallID.Stone)
+                    new Actions.PlaceWall(undergroundWall)
                 }));
                 
                 // Main lightning bolt cave
@@ -66,7 +74,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 Point tumblerTunnelEnd = WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5).ToPoint();
                 WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5);
-                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 120, tumblerTunnelEnd.Y - 46), "e");
+                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, tumblerTunnelEnd.Y - 46), "e");
             }
 		}
 
