@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -55,11 +56,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Tile tile = Framing.GetTileSafely(i, j);
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
             Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            /*if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
+            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
                 {
-                   // tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
+                    tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
                     tileAbove.HasTile = true;
                     tileAbove.TileFrameY = 0;
                     tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
@@ -82,7 +83,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                         NetMessage.SendTileSquare(-1, i, j + 1, 3, TileChangeType.None);
                     }
                 }
-            }*/
+            }
             int tileX, tileY;
             for (int y = -1; y <= 1; y++)
             {

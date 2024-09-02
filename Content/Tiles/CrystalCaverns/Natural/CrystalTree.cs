@@ -12,9 +12,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
     public class CrystalTree : ModTree
 	{
+        private Asset<Texture2D> texture;
+        private Asset<Texture2D> branchesTexture;
+        private Asset<Texture2D> topsTexture;
 
-		// This is a blind copy-paste from Vanilla's PurityPalmTree settings.
-		public override TreePaintingSettings TreeShaderSettings => new TreePaintingSettings
+        public override TreePaintingSettings TreeShaderSettings => new TreePaintingSettings
 		{
 			UseSpecialGroups = true,
 			SpecialGroupMinimalHueValue = 11f / 72f,
@@ -23,36 +25,17 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 			SpecialGroupMaximumSaturationValue = 1f
 		};
 
-		public override void SetStaticDefaults()
-		{
-			// Makes Example Tree grow on ExampleBlock
-			GrowsOnTileId = new int[1] { ModContent.TileType<CrystalGrass>() };
-		}
-
-        /*public override int SaplingGrowthType(ref int style)
-		{
-			style = 0;
-			return ModContent.TileType<CrystalSapling>();
-		}*/
+        public override void SetStaticDefaults()
+        {
+            GrowsOnTileId = [ModContent.TileType<CrystalGrass>()];
+            texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree");
+            branchesTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Branches");
+            topsTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Tops");
+        }
 
         public override void SetTreeFoliageSettings(Tile tile, ref int xoffset, ref int treeFrame, ref int floorY, ref int topTextureFrameWidth, ref int topTextureFrameHeight)
         {
-            // Example settings, modify these to fit your tree's appearance
-            xoffset = 5;
-            treeFrame = 0;
-            floorY = 0;
-            topTextureFrameWidth = 80;
-            topTextureFrameHeight = 100;
 
-            if (tile.TileType == ModContent.TileType<CrystalGrass>())
-            {
-                // Custom settings for your Crystal Tree
-                xoffset = 10;
-                treeFrame = 1;
-                floorY = 16;
-                topTextureFrameWidth = 50;
-                topTextureFrameHeight = 120;
-            }
         }
 
 
@@ -71,20 +54,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 			return ItemType <ShotgunAxe>();
 		}
 
-		public override Asset<Texture2D> GetTexture()
-		{
-			return ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree");
-		}
+        public override Asset<Texture2D> GetBranchTextures() => branchesTexture;
 
-		public override Asset<Texture2D> GetTopTextures()
-		{
-			return ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Tops");
-		}
+        // Top Textures
+        public override Asset<Texture2D> GetTopTextures() => topsTexture;
 
-		public override Asset<Texture2D> GetBranchTextures()
-		{
-			return ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Branches");
-		}
-	}
+        public override Asset<Texture2D> GetTexture()
+        {
+            return texture;
+        }
+    }
 }
-
