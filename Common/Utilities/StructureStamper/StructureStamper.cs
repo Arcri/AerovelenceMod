@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria.ObjectData;
 using System.Linq;
+using ReLogic.Content;
 
 namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
@@ -110,7 +111,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
         public static void SaveStructureToFile(List<StructureData> structure, string structureName, int width, int height)
         {
             string directoryPath = Path.Combine(Main.SavePath, "Mods", "AerovelenceMod", "Common", "Utilities", "StructureStamper", "Structures");
-            string path = Path.Combine(directoryPath, $"{structureName}.bin");
+            string path = Path.Combine(directoryPath, $"{structureName}.dat");
 
             Directory.CreateDirectory(directoryPath);
 
@@ -153,17 +154,19 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public static (int width, int height) LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true)
         {
-            string directoryPath = Path.Combine(Main.SavePath, "Mods", "AerovelenceMod", "Common", "Utilities", "StructureStamper", "Structures");
-            string path = Path.Combine(directoryPath, $"{structureName}.bin");
+            string assetPath = $"Common/Utilities/StructureStamper/Structures/{structureName}.dat";
+            int height = 0;
+            int width = 0;
 
-            if (File.Exists(path))
+            List<StructureData> structure = [];
+            Mod mod = ModLoader.GetMod("AerovelenceMod");
+
+            byte[] structureBytes = mod.GetFileBytes(assetPath);
+
+            try
             {
-                List<StructureData> structure = [];
-
-                int width, height;
-
-                using (FileStream fs = new(path, FileMode.Open))
-                using (BinaryReader reader = new(fs))
+                using (MemoryStream ms = new(structureBytes))
+                using (BinaryReader reader = new(ms))
                 {
                     int count = reader.ReadInt32();
                     width = reader.ReadInt32();
@@ -385,10 +388,10 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                 return (width, height);
             }
-            else
+
+            catch (Exception ex)
             {
-                Main.NewText($"What the hay structure file '{structureName}' was not found");
-                return (0, 0);
+                throw new FileNotFoundException($"Structure file {structureName}.dat could not be found or loaded.", ex);
             }
         }
 
