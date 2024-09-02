@@ -31,6 +31,8 @@ namespace AerovelenceMod.Common.Systems.Generation
         {
             Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
 
+            WorldUtils.Gen(new Point(x, y), new Shapes.Tail(8, new Vector2D(WorldGen.genRand.Next(-25, 25), WorldGen.genRand.Next(-25, 25))), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
+
             /* Useful methods here:
             WorldGen.TileRunner(x, y, WorldGen.genRand.Next(30, 40), WorldGen.genRand.Next(45, 50), ModContent.TileType<ChargedStone>());
             WorldUtils.Gen(new Point(x, y), new Shapes.Tail(8, new ReLogic.Utilities.Vector2D(WorldGen.genRand.Next(-25, 25), WorldGen.genRand.Next(-25, 25))), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
