@@ -158,7 +158,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             if (File.Exists(path))
             {
-                List<StructureData> structure = new List<StructureData>();
+                List<StructureData> structure = [];
 
                 int width, height;
 
@@ -204,8 +204,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                 if (placeStructure)
                 {
-                    HashSet<Vector2> placedTiles = new();
-                    List<Vector2> tilesToFrame = new();
+                    HashSet<Vector2> placedTiles = [];
+                    List<Vector2> tilesToFrame = [];
                     int chestIndex = 0;
 
                     foreach (StructureData data in structure)
@@ -216,8 +216,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                         Tile tile = Main.tile[x, y];
 
-                        ushort tileType;
                         ushort wallType;
+                        ushort tileType;
 
                         if (data.ModName == "Terraria")
                         {
@@ -239,21 +239,93 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             wallType = (modWall?.Find<ModWall>(data.WallName)?.Type ?? 0);
                         }
 
+                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        {
+                            continue;
+                        }
+
+                        tile.ClearTile();
+                        tile.WallType = 0;
+                        tile.LiquidAmount = 0;
+                        tile.LiquidType = 0;
+                        tile.Slope = 0;
+                        tile.IsHalfBlock = false;
+
+                        if (wallType != 0)
+                        {
+                            tile.WallType = wallType;
+                            tile.WallColor = data.WallColor;
+                            WorldGen.SquareWallFrame(x, y, true);
+                        }
+
+                        placedTiles.Add(tilePosition);
+                    }
+
+                    foreach (StructureData data in structure)
+                    {
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        Vector2 tilePosition = new(x, y);
+
+                        Tile tile = Main.tile[x, y];
+
+                        ushort tileType;
+
+                        if (data.ModName == "Terraria")
+                        {
+                            tileType = Convert.ToUInt16(data.TileName);
+                        }
+                        else
+                        {
+                            Mod modTile = ModLoader.GetMod(data.ModName);
+                            tileType = (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
+                        }
+
+                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        {
+                            continue;
+                        }
+
+                        if (data.TileFrameImportant)
+                        {
+                            TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);
+                            if (tileData != null)
+                            {
+                                int tileWidth = tileData.Width;
+                                int tileHeight = tileData.Height;
+
+                                for (int dx = 0; dx < tileWidth; dx++)
+                                {
+                                    for (int dy = 0; dy < tileHeight; dy++)
+                                    {
+                                        Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+
+                                        targetTile.WallType = 0;
+                                        targetTile.LiquidAmount = 0;
+                                        targetTile.LiquidType = 0;
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
+                                    }
+                                }
+                            }
+                        }
+
                         tile.HasTile = data.IsActive;
                         tile.TileType = tileType;
                         tile.TileFrameX = data.TileFrameX;
                         tile.TileFrameY = data.TileFrameY;
-                        tile.WallType = wallType;
                         tile.LiquidType = data.LiquidType;
                         tile.LiquidAmount = data.LiquidAmount;
                         tile.IsHalfBlock = data.IsHalfBlock;
-                        tile.Slope = (SlopeType)data.Slope;
+                        tile.Slope = 0;
                         tile.RedWire = data.HasRedWire;
                         tile.BlueWire = data.HasBlueWire;
                         tile.GreenWire = data.HasGreenWire;
                         tile.YellowWire = data.HasYellowWire;
                         tile.HasActuator = data.HasActuator;
                         tile.IsActuated = data.IsActuated;
+                        tile.TileColor = data.TileColor;
 
                         placedTiles.Add(tilePosition);
 
@@ -277,8 +349,9 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                                         targetTile.TileType = tileType;
                                         targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
                                         targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
 
-                                        placedTiles.Add(offsetPosition);
                                         tilesToFrame.Add(offsetPosition);
                                     }
                                 }
@@ -287,16 +360,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             {
                                 tilesToFrame.Add(tilePosition);
                             }
+
+                            if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                            {
+                                ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
+                                chestIndex++;
+                            }
                         }
                         else
                         {
                             tilesToFrame.Add(tilePosition);
-                        }
-
-                        if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
-                        {
-                            ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
-                            chestIndex++;
                         }
                     }
 
@@ -305,13 +378,6 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         int x = (int)position.X;
                         int y = (int)position.Y;
                         WorldGen.SquareTileFrame(x, y, true);
-                    }
-
-                    foreach (StructureData data in structure)
-                    {
-                        int x = (int)(startPosition.X + data.X);
-                        int y = (int)(startPosition.Y + data.Y);
-                        WorldGen.SquareWallFrame(x, y, true);
                     }
 
                     Main.NewText($"Structure '{structureName}' loaded. Width: {width}, Height: {height}!");
