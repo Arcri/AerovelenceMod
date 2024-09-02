@@ -103,9 +103,9 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             #endregion
 
-            var (width, height) = StructureStamper.LoadStructure(playerPosition, "test", [chestConfig], placeStructure: false);
+            var (width, height) = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
             Vector2 centeredPosition = playerPosition - new Vector2(width / 2, height / 2);
-            StructureStamper.LoadStructure(centeredPosition, "test", [chestConfig]);
+            StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
         }
     }
 }
