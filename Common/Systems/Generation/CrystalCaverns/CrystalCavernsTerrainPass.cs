@@ -49,10 +49,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 ShapeData surfaceMoundShapeData = new ShapeData();
                 ShapeData surfaceRectShapeData = new ShapeData();
                 ShapeData surfaceExposedShapeData = new ShapeData();
-                Point surfaceRectOrigin = new Point(origin.X - biomeWidth / 2, origin.Y - 60);
+                Point surfaceRectOrigin = new Point(origin.X - biomeWidth / 2, origin.Y - (int)(surfaceHeight * 1.5));
 
             // Surface conversion
-                WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(biomeWidth, 60), new Actions.Blank().Output(surfaceRectShapeData));
+                WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(biomeWidth, (int)(surfaceHeight * 1.5)), new Actions.Blank().Output(surfaceRectShapeData));
 
                 // Tile replacement
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
@@ -113,6 +113,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroConditions.NotTouchingAir(true),
                     new Actions.PlaceWall(dirtWall)
                 }));
+                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59),
+                    new Actions.PlaceWall(dirtWall)
+                }));
 
                 // Surface mound
                 WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), Actions.Chain(new GenAction[]
@@ -152,11 +157,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceExposedShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Offset(0, 2),
-                    new Modifiers.Dither(.980), // 1/50 chance
-                    new AeroActions.PlaceTail(crystalTile, 8, new Vector2D(0, -15), 2, 4, 4)
+                    new Modifiers.Dither(.9925), // 1/133.33 chance
+                    new AeroActions.PlaceTail(crystalTile, 8, new Vector2D(0, -20), 1, 7, 7)
                 }));
 
-                // BIOME UNDERGROUND
+            // BIOME UNDERGROUND
 
                 // Upper underground
                 WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile(stoneTile));
@@ -183,7 +188,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 Point tumblerTunnelEnd = WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5).ToPoint();
                 WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5);
-                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, tumblerTunnelEnd.Y - 46), "e");
+                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, tumblerTunnelEnd.Y - 46), "tumblerarena");
             }
 		}
 

@@ -31,7 +31,7 @@ namespace AerovelenceMod.Common.Systems.Generation
         {
             Dust.QuickBox(new Vector2(x, y) * 16, new Vector2(x + 1, y + 1) * 16, 2, Color.YellowGreen, null);
 
-            WorldUtils.Gen(new Point(x, y), new Shapes.Tail(8, new Vector2D(WorldGen.genRand.Next(-25, 25), WorldGen.genRand.Next(-25, 25))), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
+            WorldUtils.Gen(new Point(x, y), new Shapes.Tail(8, new Vector2D(WorldGen.genRand.Next(-25, 25), WorldGen.genRand.Next(-20, 20))), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
 
             /* Useful methods here:
             WorldGen.TileRunner(x, y, WorldGen.genRand.Next(30, 40), WorldGen.genRand.Next(45, 50), ModContent.TileType<ChargedStone>());
@@ -45,7 +45,6 @@ namespace AerovelenceMod.Common.Systems.Generation
             // Code to test placed here:
             Point origin = new Point(x, y);
             Random rand = new Random(); // Use WorldGen.genRand.Next() for actual world generation
-            Point temp = WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5).ToPoint();
             
 
             //WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5);
