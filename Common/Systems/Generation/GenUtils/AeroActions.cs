@@ -69,5 +69,81 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                 return UnitApply(origin, x, y, args);
             }
         }
+
+        public class NotTouchingAir : GenAction
+        {
+            private static readonly int[] DIRECTIONS = new int[16] {
+            0,
+            -1,
+            1,
+            0,
+            -1,
+            0,
+            0,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            1,
+            1
+            };
+            private bool _useDiagonals;
+
+            public NotTouchingAir(bool useDiagonals = false)
+            {
+                _useDiagonals = useDiagonals;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                int num = (_useDiagonals ? 16 : 8);
+                for (int i = 0; i < num; i += 2)
+                {
+                    if (!_tiles[x + DIRECTIONS[i], y + DIRECTIONS[i + 1]].HasTile)
+
+                        return Fail();
+                }
+                return UnitApply(origin, x, y, args);
+            }
+        }
+
+        public class SolidBelow : GenAction
+        {
+            private int _distance;
+
+            public SolidBelow(int distance)
+            {
+                _distance = distance;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                if (WorldUtils.Find(new Point(x, y), Searches.Chain(new Searches.Down(1), new Conditions.IsSolid().AreaAnd(1, _distance)), out Point _))
+                    return UnitApply(origin, x, y, args);
+                return Fail();
+            }
+        }
+
+        public class NotSolidAbove : GenAction
+        {
+            private int _distance;
+
+            public NotSolidAbove(int distance)
+            {
+                _distance = distance;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                if (!WorldUtils.Find(new Point(x, y - _distance), Searches.Chain(new Searches.Up(1), new Conditions.IsSolid().AreaOr(1, _distance)), out Point _))
+                {
+                    return UnitApply(origin, x, y, args);
+                }
+                return Fail();
+            }
+        }
     }
 }

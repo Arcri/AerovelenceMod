@@ -17,53 +17,110 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
-    public class CrystalCavernsTerrainPass : GenPass
-	{
-		public CrystalCavernsTerrainPass(string name, float loadWeight) : base(name, loadWeight)
+    public sealed class CrystalCavernsTerrainPass : GenPass
+    {
+        public int WorldSizeScale { get; private set; }
+        public int BiomeWidth { get; private set; }
+        public int SurfaceHeight { get; private set; }
+        public int UndergroundHeight { get; private set; }
+        public int BiomeHeight { get; private set; }
+
+        public ushort GrassTile { get; private set; }
+        public ushort DirtTile { get; private set; }
+        public ushort StoneTile { get; private set; }
+        public ushort SandTile { get; private set; }
+        public ushort CrystalTile { get; private set; }
+        public ushort DirtWall { get; private set; }
+        public ushort StoneWall { get; private set; }
+
+        public Point Origin { get; private set; }
+
+        private static CrystalCavernsTerrainPass _instance;
+        private static readonly object _lock = new object();
+
+        public static CrystalCavernsTerrainPass Instance()
+        {
+            if (_instance == null)
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new CrystalCavernsTerrainPass("Crystal Caverns Terrain", 100f);
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        public static CrystalCavernsTerrainPass Instance(string name, float loadWeight)
+        { 
+            if (_instance == null)
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new CrystalCavernsTerrainPass(name, loadWeight);
+                    }
+                }
+            }
+            return _instance;
+        }
+
+        private CrystalCavernsTerrainPass(string name, float loadWeight) : base(name, loadWeight)
 		{
-		}
+        }
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
-            int worldSizeScale = Main.maxTilesY / 1200;
+            progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
+
+            _instance.WorldSizeScale = Main.maxTilesY / 1200;
+
+            _instance.BiomeWidth = 400 * _instance.WorldSizeScale;
+            _instance.SurfaceHeight = 50 * _instance.WorldSizeScale;
+            _instance.UndergroundHeight = 400 * _instance.WorldSizeScale;
+            _instance.BiomeHeight = _instance.UndergroundHeight + _instance.SurfaceHeight;
             
-            int biomeWidth = 400 * worldSizeScale;
-			int surfaceHeight = 50 * worldSizeScale;
-			int undergroundHeight = 400 * worldSizeScale;
-			int biomeHeight = undergroundHeight + surfaceHeight;
+            GrassTile = (ushort)ModContent.TileType<CrystalGrass>();
+            DirtTile = (ushort)ModContent.TileType<CrystalDirt>();
+            StoneTile = (ushort)ModContent.TileType<CavernStone>();
+            SandTile = (ushort)ModContent.TileType<CavernSand>();
+            CrystalTile = (ushort)ModContent.TileType<CavernCrystal>();
+            DirtWall = (ushort)ModContent.WallType<CavernDirtWall>();
+            StoneWall = (ushort)ModContent.WallType<CavernStoneWall>();
 
-            ushort grassTile = (ushort)ModContent.TileType<CrystalGrass>();
-            ushort dirtTile = (ushort)ModContent.TileType<CrystalDirt>();
-            ushort stoneTile = (ushort)ModContent.TileType<CavernStone>();
-            ushort sandTile = (ushort)ModContent.TileType<CavernSand>();
-            ushort crystalTile = (ushort)ModContent.TileType<CavernCrystal>();
-            ushort dirtWall = (ushort)ModContent.WallType<CavernDirtWall>();
-            ushort stoneWall = (ushort)ModContent.WallType<CavernStoneWall>();
-
-            Point origin = determineOrigin(biomeWidth, undergroundHeight, surfaceHeight, biomeHeight); //center x, top of underground y
-			origin.Y += (int)(surfaceHeight * 0.7);
-			if (!origin.Equals(Point.Zero)) 
+            Origin = determineOrigin(BiomeWidth, UndergroundHeight, SurfaceHeight, BiomeHeight); //center x, top of underground y
+            if (!Origin.Equals(Point.Zero)) 
             {
-            // BIOME SURFACE
+                Origin = new Point(Origin.X, Origin.Y + (int)(SurfaceHeight * 0.7));
+                // BIOME SURFACE
                 ShapeData surfaceMoundShapeData = new ShapeData();
                 ShapeData surfaceRectShapeData = new ShapeData();
                 ShapeData surfaceExposedShapeData = new ShapeData();
-                Point surfaceRectOrigin = new Point(origin.X - biomeWidth / 2, origin.Y - (int)(surfaceHeight * 1.5));
+                ShapeData lightningBoltShapeData = new ShapeData();
+                ShapeData lightningBoltEdgeShapeData = new ShapeData();
+                Point surfaceRectOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y - (int)(SurfaceHeight * 1.75));
 
             // Surface conversion
-                WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(biomeWidth, (int)(surfaceHeight * 1.5)), new Actions.Blank().Output(surfaceRectShapeData));
+                WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 1.75)), new Actions.Blank().Output(surfaceRectShapeData));
 
                 // Tile replacement
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.OnlyTiles(TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
-                    new AeroActions.SwapSolidTileInclusive(sandTile)
+                    new Modifiers.OnlyTiles(TileID.LivingWood, TileID.LeafBlock),
+                    new Actions.Clear()
                 }));
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.SkipTiles(grassTile, dirtTile, stoneTile, sandTile),
-                    new AeroActions.SwapSolidTileInclusive(dirtTile)
+                    new Modifiers.OnlyTiles(TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
+                    new AeroActions.SwapSolidTileInclusive(SandTile)
+                }));
+                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.SkipTiles(GrassTile, DirtTile, StoneTile, SandTile),
+                    new AeroActions.SwapSolidTileInclusive(DirtTile)
                 }));
 
                 // Dithering
@@ -72,55 +129,59 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.Expand(3, 0),
                     new Modifiers.Dither(0.75),
                     new Modifiers.OnlyTiles(TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
-                    new Modifiers.SkipTiles(grassTile, dirtTile, stoneTile, sandTile),
-                    new AeroActions.SwapSolidTileInclusive(sandTile)
+                    new Modifiers.SkipTiles(GrassTile, DirtTile, StoneTile, SandTile),
+                    new AeroActions.SwapSolidTileInclusive(SandTile)
                 }));
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 0),
                     new Modifiers.Dither(0.75),
                     new Modifiers.OnlyTiles(TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
-                    new Modifiers.SkipTiles(grassTile, dirtTile, stoneTile, sandTile),
-                    new AeroActions.SwapSolidTileInclusive(sandTile),
+                    new Modifiers.SkipTiles(GrassTile, DirtTile, StoneTile, SandTile),
+                    new AeroActions.SwapSolidTileInclusive(SandTile),
                 }));
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(3, 0),
                     new Modifiers.Dither(0.75),
-                    new Modifiers.SkipTiles(grassTile, dirtTile, stoneTile, sandTile, TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
-                    new AeroActions.SwapSolidTileInclusive(dirtTile)
+                    new Modifiers.SkipTiles(GrassTile, DirtTile, StoneTile, SandTile, TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
+                    new AeroActions.SwapSolidTileInclusive(DirtTile)
                 }));
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 0),
                     new Modifiers.Dither(0.75),
-                    new Modifiers.SkipTiles(grassTile, dirtTile, stoneTile, sandTile, TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
-                    new AeroActions.SwapSolidTileInclusive(dirtTile),
+                    new Modifiers.SkipTiles(GrassTile, DirtTile, StoneTile, SandTile, TileID.Sand, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand),
+                    new AeroActions.SwapSolidTileInclusive(DirtTile),
                 }));
 
                 // Grass
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 0),
-                    new Modifiers.OnlyTiles(dirtTile),
+                    new Modifiers.OnlyTiles(DirtTile),
                     new Modifiers.IsTouchingAir(true),
-                    new AeroActions.SwapSolidTileInclusive(grassTile)
+                    new AeroActions.SwapSolidTileInclusive(GrassTile)
                 }));
 
                 // Walls
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
-                    new AeroConditions.NotTouchingAir(true),
-                    new Actions.PlaceWall(dirtWall)
-                }));
-                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59),
-                    new Actions.PlaceWall(dirtWall)
+                    new AeroActions.NotTouchingAir(true),
+                    new Actions.PlaceWall(DirtWall)
                 }));
 
+                // Moved to CrystalCavernsCaveFixPass
+                
+                /*WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59),
+                    new Actions.ClearWall(),
+                    new Actions.PlaceWall(DirtWall)
+                }));*/
+
                 // Surface mound
-                WorldUtils.Gen(origin, new Shapes.Mound(biomeWidth / 2, surfaceHeight), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(Origin, new Shapes.Mound(BiomeWidth / 2, SurfaceHeight), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Blotches(5, 1, 0.2),
                     new Modifiers.Blotches(4, 2, 0.3),
@@ -128,66 +189,99 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Actions.Blank().Output(surfaceMoundShapeData)
                 }));
 
-                WorldUtils.Gen(origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(Origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Actions.SetTile(dirtTile)
+                    new Actions.SetTile(DirtTile)
                 }));
 
-                WorldUtils.Gen(origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(Origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.OnlyTiles(dirtTile),
+                    new Modifiers.OnlyTiles(DirtTile),
                     new Modifiers.IsTouchingAir(true),
-                    new Actions.SetTile(grassTile)
+                    new Actions.SetTile(GrassTile)
                 }));
 
-                WorldUtils.Gen(origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(Origin, new ModShapes.All(surfaceMoundShapeData), Actions.Chain(new GenAction[]
                 {
-                    new AeroConditions.NotTouchingAir(true),
-                    new Actions.PlaceWall(dirtWall)
+                    new AeroActions.NotTouchingAir(true),
+                    new Actions.PlaceWall(DirtWall)
                 }));
 
-                // Crystal growths
+            // BIOME UNDERGROUND
+
+                // Upper underground
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), new Actions.SetTile(StoneTile));
+                // Lower underground
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth/2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+				{
+					new Modifiers.Flip(false, true),
+					new Actions.SetTile(StoneTile),
+				}));
+                
+                // Upper underground walls
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1)), new Actions.PlaceWall(StoneWall));
+                // Lower underground walls
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+				{
+                    new Modifiers.Flip(false, true),
+                    new Actions.PlaceWall(StoneWall)
+                }));
+
+                // Main lightning bolt cave
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new AeroShapes.LightningBoltShape(400 * WorldSizeScale, 60 * (int)((WorldSizeScale - 1) * 0.8 + 1), 2, 30), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.SkipTiles(CrystalTile),
+                    new Actions.ClearTile().Output(lightningBoltShapeData),
+                }));
+
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new ModShapes.All(lightningBoltShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Expand(3, 0),
+                    new Modifiers.OnlyTiles(DirtTile, StoneTile),
+                    new Modifiers.IsTouchingAir(true),
+                    new Modifiers.RectangleMask(-BiomeWidth / 2, BiomeWidth / 2, 5, (int)(SurfaceHeight * 1.75) + (int)(UndergroundHeight * 0.6)),
+                    new Modifiers.Blotches(3, 3, 0.035).Output(lightningBoltEdgeShapeData),
+                    new Modifiers.Blotches(4, 4, 0.015).Output(lightningBoltEdgeShapeData)
+
+                }));
+
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new ModShapes.All(lightningBoltShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Expand(3, 0),
+                    new Modifiers.OnlyTiles(DirtTile, StoneTile),
+                    new Modifiers.IsTouchingAir(true),
+                    new Modifiers.RectangleMask(-BiomeWidth / 2, BiomeWidth / 2, 5, (int)(SurfaceHeight * 1.75)),
+                    new Modifiers.Blotches(3, 3, 1),
+                    new Modifiers.NotInShape(lightningBoltShapeData),
+                    new Actions.SetTileKeepWall(StoneTile)
+                }));
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new ModShapes.All(lightningBoltEdgeShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Actions.SetTileKeepWall(StoneTile)
+                }));
+
+                // Surface crystal growths
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.OnlyTiles(grassTile, dirtTile, sandTile),
+                    new Modifiers.OnlyTiles(GrassTile, DirtTile, SandTile),
                     new Modifiers.IsTouchingAir(true),
+                    new AeroActions.SolidBelow(10),
+                    new AeroActions.NotSolidAbove(50),
                     new Actions.Blank().Output(surfaceExposedShapeData),
                 }));
 
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceExposedShapeData), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Offset(0, 2),
-                    new Modifiers.Dither(.9925), // 1/133.33 chance
-                    new AeroActions.PlaceTail(crystalTile, 8, new Vector2D(0, -20), 1, 7, 7)
+                    new Modifiers.Dither(.985), // 1/66.66 chance
+                    new Modifiers.OnlyTiles(GrassTile, DirtTile, SandTile),
+                    new AeroActions.PlaceTail(CrystalTile, 7, new Vector2D(0, -25), 1, 8, 5)
                 }));
-
-            // BIOME UNDERGROUND
-
-                // Upper underground
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth, (int)(.5 * undergroundHeight)), new Actions.SetTile(stoneTile));
-                // Lower underground
-                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight)), new Shapes.Mound(biomeWidth/2, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
-				{
-					new Modifiers.Flip(false, true),
-					new Actions.SetTile(stoneTile),
-				}));
-                
-                // Upper underground walls
-                WorldUtils.Gen(new Point(origin.X - biomeWidth / 2, origin.Y), new Shapes.Rectangle(biomeWidth - 1, (int)(.5 * undergroundHeight - 1)), new Actions.PlaceWall(stoneWall));
-                // Lower underground walls
-                WorldUtils.Gen(new Point(origin.X, origin.Y + (int)(.5 * undergroundHeight) - 1), new Shapes.Mound(biomeWidth / 2 - 1, (int)(.5 * undergroundHeight)), Actions.Chain(new GenAction[]
-				{
-                    new Modifiers.Flip(false, true),
-                    new Actions.PlaceWall(stoneWall)
-                }));
-                
-                // Main lightning bolt cave
-                WorldUtils.Gen(new Point(origin.X, origin.Y - (int)(surfaceHeight * 1.5)), new AeroShapes.LightningBoltShape(400 * worldSizeScale, 60 * (int)((worldSizeScale - 1) * 0.8 + 1), 2, 30), new Actions.ClearTile());
 
                 int tumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
 
-                Point tumblerTunnelEnd = WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5).ToPoint();
-                WorldGen.digTunnel(origin.X, origin.Y + undergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * worldSizeScale, 5);
+                Point tumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * WorldSizeScale, 5).ToPoint();
+                WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * WorldSizeScale, 5);
                 StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, tumblerTunnelEnd.Y - 46), "tumblerarena");
             }
 		}

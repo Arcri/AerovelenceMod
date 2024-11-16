@@ -16,11 +16,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
     {
         public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
-            int genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
+            /*int genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
             if (genIndex != -1)
             {
                 //tasks.Insert(genIndex + 1, new PassLegacy("Generate Test Structure", GenerateStructure));
-            }
+            }*/
         }
 
         /*private void GenerateStructure(GenerationProgress progress, GameConfiguration config)

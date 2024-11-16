@@ -10,7 +10,7 @@ namespace AerovelenceMod.Content.Biomes
 	public class CrystalCavernsBiome : ModBiome
 	{
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.Find<ModUndergroundBackgroundStyle>("AerovelenceMod/CrystalCavernsBgStyle");
-		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
+		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Mushroom;
 
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalCaverns");
 
@@ -35,8 +35,13 @@ namespace AerovelenceMod.Content.Biomes
 
 			return b1 && b2;
 		}
-	
-		public static int CavernTiles { get; private set; }
+
+        public override void SpecialVisuals(Player player, bool isActive)
+        {
+			
+        }
+
+        public static int CavernTiles { get; private set; }
 		public static int CitadelTiles { get; private set; }
 	}
 }

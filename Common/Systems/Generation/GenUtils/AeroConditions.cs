@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Systems.Generation.GenUtils
@@ -21,43 +22,18 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
             }
         }
 
-        public class NotTouchingAir : GenAction
+        public class IsNotSolid : GenCondition
         {
-            private static readonly int[] DIRECTIONS = new int[16] {
-            0,
-            -1,
-            1,
-            0,
-            -1,
-            0,
-            0,
-            1,
-            -1,
-            -1,
-            1,
-            -1,
-            -1,
-            1,
-            1,
-            1
-            };
-            private bool _useDiagonals;
-
-            public NotTouchingAir(bool useDiagonals = false)
+            protected override bool CheckValidity(int x, int y)
             {
-                _useDiagonals = useDiagonals;
-            }
 
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                int num = (_useDiagonals ? 16 : 8);
-                for (int i = 0; i < num; i += 2)
-                {
-                    if (!_tiles[x + DIRECTIONS[i], y + DIRECTIONS[i + 1]].HasTile)
+                if (!WorldGen.InWorld(x, y, 10))
+                    return false;
 
-                        return Fail();
-                }
-                return UnitApply(origin, x, y, args);
+                if (!_tiles[x, y].HasTile)
+                    return true;
+
+                return false;
             }
         }
     }

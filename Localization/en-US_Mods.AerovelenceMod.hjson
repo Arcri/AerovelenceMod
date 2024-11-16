@@ -969,5 +969,9 @@ Configs: {
 	}
 }
 
-WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
+WorldGen: {
+	CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
+	CrystalCavernsPolishMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsPolishMessage
+}
+
 Tiles.GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
