@@ -1,17 +1,19 @@
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture.Items;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 {
-    public class GlimmerwoodChest : ModTile
+    public class CavernChest : ModTile
     {
         public override void SetStaticDefaults()
         {
-            CommonTileHelper.SetupChest(this, DustID.BlueCrystalShard, ModContent.ItemType<GlimmerwoodChestItem>(), new Color(123, 123, 123), "Glimmerwood Chest");
+            CommonTileHelper.SetupChest(this, DustID.BlueCrystalShard, ModContent.ItemType<CavernChestItem>(), new Color(123, 123, 123), "Cavern Chest");
         }
 
         public override bool RightClick(int i, int j)
@@ -21,17 +23,17 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 
         public override void MouseOver(int i, int j)
         {
-            CommonTileHelper.HandleMouseOver(this, i, j, ModContent.ItemType<GlimmerwoodChestItem>(), ItemID.GoldenKey);
+            CommonTileHelper.HandleMouseOver(this, i, j, ModContent.ItemType<CavernChestItem>(), ItemID.GoldenKey);
         }
     }
 
-    public class GlimmerwoodChestItem : ModItem
+    public class CavernChestItem : ModItem
     {
         public override void SetStaticDefaults() { }
 
         public override void SetDefaults()
         {
-            CommonItemHelper.SetupPlaceableItem(this, 28, 14, 150, ModContent.TileType<GlimmerwoodChest>());
+            CommonItemHelper.SetupPlaceableItem(this, 28, 14, 150, ModContent.TileType<CavernChest>());
         }
 
         public override void AddRecipes()
