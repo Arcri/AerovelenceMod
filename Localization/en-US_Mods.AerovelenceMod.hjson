@@ -615,6 +615,26 @@ Items: {
 		DisplayName: Structure Stamp Item
 		Tooltip: ""
 	}
+
+	CavernChestItem: {
+		DisplayName: Cavern Chest Item
+		Tooltip: ""
+	}
+
+	CitadelChestItem: {
+		DisplayName: Citadel Chest Item
+		Tooltip: ""
+	}
+
+	CitadelChestKey: {
+		DisplayName: Citadel Chest Key
+		Tooltip: ""
+	}
+
+	CavernStoneColumnItem: {
+		DisplayName: Cavern Stone Column Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {

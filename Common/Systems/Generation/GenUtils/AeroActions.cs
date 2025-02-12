@@ -203,6 +203,55 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
             }
         }
 
+        public class IsTouchingWall : GenAction
+        {
+            private static readonly int[] DIRECTIONS = new int[16] {
+            0,
+            -1,
+            1,
+            0,
+            -1,
+            0,
+            0,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            1,
+            1
+        };
+            private bool _useDiagonals;
+            private ushort[] _wallIds;
+
+            public IsTouchingWall(bool useDiagonals, params ushort[] wallIds)
+            {
+                _useDiagonals = useDiagonals;
+                _wallIds = wallIds;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                int num = (_useDiagonals ? 16 : 8);
+                for (int i = 0; i < num; i += 2)
+                {
+                    Tile tile = _tiles[x + DIRECTIONS[i], y + DIRECTIONS[i + 1]];
+                    if (!tile.HasTile)
+                        continue;
+
+                    for (int j = 0; j < _wallIds.Length; j++)
+                    {
+                        if (tile.WallType == _wallIds[j])
+                            return UnitApply(origin, x, y, args);
+                    }
+                }
+
+                return Fail();
+            }
+        }
+
         public class SolidBelow : GenAction
         {
             private int _distance;
