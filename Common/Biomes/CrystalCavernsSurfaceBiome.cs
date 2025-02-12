@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using System;
+using System.Security.Policy;
 using Terraria;
 using Terraria.Graphics.Capture;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Biomes
@@ -23,6 +25,7 @@ namespace AerovelenceMod.Content.Biomes
         public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("Crystal Caverns Surface");
+
 		}
 
 		public override bool IsBiomeActive(Player player)
@@ -32,8 +35,24 @@ namespace AerovelenceMod.Content.Biomes
 
 			return b1 && b2;
 		}
-	
-		public static int CavernTiles { get; private set; }
+
+        public override void SpecialVisuals(Player player, bool isActive)
+        {
+			// Code 'tactically borrowed' from the below method
+			// layer.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalCavernsSurface", isActive);
+			string biomeName = "AerovelenceMod:CrystalCavernsSurface";
+			bool inZone = isActive;
+
+            if (SkyManager.Instance[biomeName] != null && inZone != SkyManager.Instance[biomeName].IsActive())
+            {
+                if (inZone)
+                    SkyManager.Instance.Activate(biomeName);
+                else
+                    SkyManager.Instance.Deactivate(biomeName);
+            }
+        }
+
+        public static int CavernTiles { get; private set; }
 		public static int CitadelTiles { get; private set; }
 	}
 }

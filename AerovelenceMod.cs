@@ -31,7 +31,6 @@ namespace AerovelenceMod
 
 		public static IDictionary<string, Effect> ShaderDict = new Dictionary<string, Effect>();
 
-
 		public const bool DEBUG = true;
 
 		internal static string PLACEHOLDER_TEXTURE = "AerovelenceMod/Blank";
@@ -265,6 +264,7 @@ namespace AerovelenceMod
                 new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
 
 			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
+			SkyManager.Instance["AerovelenceMod:CrystalCavernsSurface"] = new CrystalCavernsSky();
 
 			Overlays.Scene.Load();
 			Filters.Scene.Load();

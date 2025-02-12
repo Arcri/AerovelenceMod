@@ -125,9 +125,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            r = 0f;
-            g = 0.050f;
-            b = 0.200f;
+            r = 0.1f;
+            g = 0.00f;
+            b = 0.30f;
         }
     }
 }
