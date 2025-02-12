@@ -54,6 +54,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         private ushort[] ReplaceWithChargedTiles { get; set; }
 
         public Point Origin { get; private set; }
+        public Point TumblerTunnelEnd { get; private set; }
+        public int TumblerArenaPolarity { get; private set; }
 
         private static CrystalCavernsTerrainPass _instance;
         private static readonly object _lock = new object();
@@ -137,6 +139,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             if (!Origin.Equals(Point.Zero)) 
             {
                 Origin = new Point(Origin.X, Origin.Y + (int)(SurfaceHeight * 0.7));
+                TumblerTunnelEnd = Point.Zero;
+                TumblerArenaPolarity = 1;
                 // BIOME SURFACE
                 ShapeData surfaceMoundShapeData = new ShapeData();
                 ShapeData surfaceRectShapeData = new ShapeData();
@@ -615,11 +619,12 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroActions.PlaceTail(CrystalTile, 6, new Vector2D(0, -20), 0, 4, 3)
                 }));
 
-                int tumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
+                TumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
 
-                Point tumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * tumblerArenaPolarity, 0, 60 * WorldSizeScale, 5).ToPoint();
-                WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * tumblerArenaPolarity, 0, 60 * WorldSizeScale, 5);
-                StructureStamper.LoadStructure(new Vector2(tumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, tumblerTunnelEnd.Y - 46), "tumblerarena");
+                TumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * TumblerArenaPolarity, 0, 60 * WorldSizeScale, 5).ToPoint();
+                WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, 60 * WorldSizeScale, 5);
+                // Moved to CC Polish
+                //StructureStamper.LoadStructure(new Vector2(TumblerTunnelEnd.X - 60 + 60 * tumblerArenaPolarity, TumblerTunnelEnd.Y - 46), "tumblerarena");
             }
 		}
 

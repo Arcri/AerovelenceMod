@@ -28,10 +28,10 @@ namespace AerovelenceMod.Common.Systems.Generation
 			{
 				tasks.Insert(CCTerrainIndex + 1, CrystalCavernsTerrainPass.Instance("Crystal Caverns Terrain", 100f));
 			}
-			int CCCaveFixIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Grass Wall"));
-			if (CCCaveFixIndex != -1)
+			int CCPolishIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Grass Wall"));
+			if (CCPolishIndex != -1)
 			{
-				tasks.Insert(CCCaveFixIndex + 1, new CrystalCavernsPolish("Crystal Caverns Polish", 101f));
+				tasks.Insert(CCPolishIndex + 1, new CrystalCavernsPolish("Crystal Caverns Polish", 101f));
 			}
 		}
 	}

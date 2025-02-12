@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Systems.Generation.GenUtils;
+using AerovelenceMod.Common.Utilities.StructureStamper;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
@@ -47,7 +48,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59, WallID.SnowWallUnsafe, WallID.Sandstone, WallID.HardenedSand),
                 new Actions.PlaceWall(mainPass.DirtWall),
             }));
-            
+            StructureStamper.LoadStructure(new Vector2(mainPass.TumblerTunnelEnd.X - 60 + 60 * mainPass.TumblerArenaPolarity, mainPass.TumblerTunnelEnd.Y - 46), "tumblerarena");
         }
     }
 }
