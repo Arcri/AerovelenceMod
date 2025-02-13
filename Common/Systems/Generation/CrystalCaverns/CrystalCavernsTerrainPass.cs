@@ -128,9 +128,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             LivingWoodPlatformTile = TileID.Platforms;
             LivingWoodDoorTile = TileID.ClosedDoor;
 
-            ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand];
-            ReplaceWithSandTiles = [TileID.Sand, TileID.Sandstone];
-            ReplaceWithChargedTiles = [TileID.ClayBlock, TileID.Silt];
+            ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass];
+            ReplaceWithSandTiles = [SandTile, TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
+            ReplaceWithChargedTiles = [TileID.ClayBlock];
             LivingWoodTiles = [LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile];
             // Terrible array I need to fix but probably won't
             ReplaceWithDirtTiles = [TileID.ClayBlock, TileID.Silt, LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile, StoneTile, SandTile, ChargedTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
@@ -138,7 +138,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             Origin = determineOrigin(BiomeWidth, UndergroundHeight, SurfaceHeight, BiomeHeight); //center x, top of underground y
             if (!Origin.Equals(Point.Zero)) 
             {
-                Origin = new Point(Origin.X, Origin.Y + (int)(SurfaceHeight * 0.7));
+                Origin = new Point(Origin.X, Origin.Y + (int)(SurfaceHeight * (1.125 / (0.875 + 0.125 * WorldSizeScale))));
                 TumblerTunnelEnd = Point.Zero;
                 TumblerArenaPolarity = 1;
                 // BIOME SURFACE
@@ -291,7 +291,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59, WallID.SnowWallUnsafe, WallID.Sandstone, WallID.HardenedSand),
+                    new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59, WallID.SnowWallUnsafe, WallID.Sandstone, WallID.HardenedSand, WallID.CrimstoneUnsafe, WallID.EbonstoneUnsafe),
                     new Actions.PlaceWall(DirtWall)
                 }));
 
@@ -520,6 +520,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.Dither(0.95),
                     new Actions.PlaceWall(StoneWall)
                 }));
+
                 // Lower underground walls
                 ShapeData lowerUndergroundWallDitheringShapeData = new ShapeData();
                 WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
@@ -732,18 +733,18 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			int xOffset = (int)(.5 * biomeWidth);
             Point leftPoint = new Point(surfacePoint.X - xOffset, (int)Main.worldSurface);
             Point rightPoint = new Point(surfacePoint.X + xOffset, (int)Main.worldSurface);
-            for (int attempts = 2; attempts < 6; attempts += 2) // This for loop is meant to solve corruption chasms dragging the average very far down
+            for (int attempts = -4; attempts < 6; attempts += 2) // This for loop is meant to solve corruption chasms dragging the average very far down
 			{
-                WorldUtils.Find(leftPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 50).Not()), out leftPoint);
-                leftPoint.Y += 50; // Adjust result to point to surface, not 50 tiles above 
+                WorldUtils.Find(leftPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 25).Not()), out leftPoint);
+                leftPoint.Y += 25; // Adjust result to point to surface, not 50 tiles above 
 
-                WorldUtils.Find(rightPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 50).Not()), out rightPoint);
-                rightPoint.Y += 50; // Adjust result to point to surface, not 50 tiles above 
+                WorldUtils.Find(rightPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 25).Not()), out rightPoint);
+                rightPoint.Y += 25; // Adjust result to point to surface, not 50 tiles above 
 
-				if (leftPoint.Y < (int)Main.worldSurface && rightPoint.Y < (int)Main.worldSurface)
+/*				if (leftPoint.Y < (int)Main.worldSurface && rightPoint.Y < (int)Main.worldSurface)
 				{
 					break;
-				}
+				}*/
 
                 leftPoint = new Point(surfacePoint.X - xOffset + attempts, leftPoint.Y);
                 rightPoint = new Point(surfacePoint.X + xOffset + attempts, rightPoint.Y);
