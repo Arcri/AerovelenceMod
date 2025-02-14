@@ -18,9 +18,9 @@ namespace AerovelenceMod.Effects.Waters
 
         public override void LightColorMultiplier(ref float r, ref float g, ref float b)
         {
-            r = 1f;
-            g = 1f;
-            b = 1f; // acts weird above like 1.15
+            r = 1.0f;
+            g = 1.0f;
+            b = 1.0f; // acts weird above ~1.15
         }
 
         public override Color BiomeHairColor() => Color.Blue;

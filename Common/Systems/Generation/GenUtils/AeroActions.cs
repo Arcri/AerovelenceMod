@@ -119,6 +119,54 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
             }
         }
 
+        public class ClearBlobWall : GenAction
+        {
+            private readonly float _horizontalRadius;
+            private readonly float _verticalRadius;
+            private readonly float _horizontalVariance;
+            private readonly float _verticalVariance;
+
+            public ClearBlobWall(int radius)
+            {
+                _horizontalRadius = radius;
+                _verticalRadius = radius;
+                _horizontalVariance = 0;
+                _verticalVariance = 0;
+            }
+
+            public ClearBlobWall(int horizontalRadius, int verticalRadius)
+            {
+                _horizontalRadius = horizontalRadius;
+                _verticalRadius = verticalRadius;
+                _horizontalVariance = 0;
+                _verticalVariance = 0;
+            }
+
+            public ClearBlobWall(float horizontalRadius, float verticalRadius, float horizontalVariance, float verticalVariance)
+            {
+                _horizontalRadius = horizontalRadius;
+                _verticalRadius = verticalRadius;
+                _horizontalVariance = horizontalVariance;
+                _verticalVariance = verticalVariance;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                Tile tile = _tiles[x, y];
+
+                WorldUtils.Gen(new Point(x, y), new Shapes.Circle(
+                        (int)Math.Round(_horizontalRadius + WorldGen.genRand.NextFloat(-_horizontalVariance, _horizontalVariance + 1)),
+                        (int)Math.Round(_verticalRadius + WorldGen.genRand.NextFloat(-_verticalVariance, _verticalVariance + 1))),
+                    Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 3, _horizontalRadius + _horizontalVariance),
+                        new Actions.ClearWall()
+                    }));
+
+                return UnitApply(origin, x, y, args);
+            }
+        }
+
         public class NotTouchingAir : GenAction
         {
             private static readonly int[] DIRECTIONS = new int[16] {
@@ -264,6 +312,28 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
                 if (WorldUtils.Find(new Point(x, y), Searches.Chain(new Searches.Down(1), new Conditions.IsSolid().AreaAnd(1, _distance)), out Point _))
+                    return UnitApply(origin, x, y, args);
+                return Fail();
+            }
+        }
+
+        public class IsBelowSurface : GenAction
+        {
+            private int _yOffset;
+
+            public IsBelowSurface()
+            {
+                _yOffset = 0;
+            }
+
+            public IsBelowSurface(int yOffset)
+            {
+                _yOffset = yOffset;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                if (y + _yOffset > Main.worldSurface)
                     return UnitApply(origin, x, y, args);
                 return Fail();
             }

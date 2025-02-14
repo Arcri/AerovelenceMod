@@ -1,3 +1,4 @@
+using AerovelenceMod.Common.Systems;
 using Microsoft.Xna.Framework;
 using System;
 using System.Security.Policy;
@@ -9,9 +10,10 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Biomes
 {
-	public class CrystalCavernsSurfaceBiome : ModBiome
+    public class CrystalCavernsSurfaceBiome : ModBiome
 	{
-		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsSurfaceBgStyle");
+        public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("AerovelenceMod/CrystalCavernsWaterStyle");
+        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsSurfaceBgStyle");
 		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
 
         public override int Music => Main.LocalPlayer.townNPCs >= 2 ? -1 : (Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFields") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFieldsNight"));
@@ -25,7 +27,7 @@ namespace AerovelenceMod.Content.Biomes
 
         private bool FxActive = false;
         private float intensity = 0f;
-        private const float increment = 0.02f;
+        private const float increment = 0.04f;
 
         public override void SetStaticDefaults()
 		{
@@ -56,42 +58,13 @@ namespace AerovelenceMod.Content.Biomes
                     SkyManager.Instance.Deactivate(biomeName);
             }
 
-            // Glowy water
-            if (!isActive)
+            if (isActive)
             {
-                intensity -= increment;
+                WaterGlowManager.ActivateGlow(this);
             }
             else
             {
-                intensity += increment;
-            }
-            intensity = Math.Clamp(intensity, 0f, 1f);
-            if (intensity > 0f)
-            {
-                FxActive = true;
-            }
-            else
-            {
-                FxActive = false;
-            }
-
-            if (FxActive)
-            {
-                int startX = (int)(player.Center.X / 16f) - 75; // Adjust search radius as needed
-                int endX = startX + 150;
-                int startY = (int)(player.Center.Y / 16f) - 50;
-                int endY = startY + 100;
-
-                for (int x = startX; x < endX; x++)
-                {
-                    for (int y = startY; y < endY; y++)
-                    {
-                        if (WorldGen.InWorld(x, y) && Main.tile[x, y].LiquidAmount > 0 && Main.tile[x, y].LiquidType == LiquidID.Water) // Check if tile contains water
-                        {
-                            Lighting.AddLight(new Vector2(x * 16, y * 16), 0.0f, 0.4f * intensity, 0.8f * intensity); // Adjust RGB for glow color
-                        }
-                    }
-                }
+                WaterGlowManager.DeactivateGlow(this);
             }
         }
 

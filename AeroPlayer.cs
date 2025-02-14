@@ -12,10 +12,11 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
 using static Humanizer.In;
 using System;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 
 namespace AerovelenceMod
 {
-	public class AeroPlayer : ModPlayer
+    public class AeroPlayer : ModPlayer
 	{
 
 		public int PlatformTimer = 0;
@@ -39,7 +40,9 @@ namespace AerovelenceMod
 
 		public override void PreUpdate()
 		{
+			WaterGlowManager.UpdateWaterGlow();
 			PlatformTimer--;
+
 		}
 
 		#region Usestyle Code
