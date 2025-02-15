@@ -211,8 +211,9 @@ namespace AerovelenceMod
 		public static Effect TrailShaderPixelate;
 		public static Effect TrailShaderGradient;
 
+        public static Effect fadeShader;
 
-		public override void Load()
+        public override void Load()
 		{
 			//StarglassParticleDetour.Load();
 			ModDetours.Load();
@@ -304,19 +305,21 @@ namespace AerovelenceMod
 				TrailShaderPixelate = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderPixelate", AssetRequestMode.ImmediateLoad).Value;
 				TrailShaderGradient = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderGradient", AssetRequestMode.ImmediateLoad).Value;
 
+                fadeShader = Instance.Assets.Request<Effect>("Effects/FadeShader", AssetRequestMode.ImmediateLoad).Value;
 
-				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
-				//GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
-				//GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
+                //Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
+                //GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//putting this here just in case
-				//Filters.Scene.Load();
+                //Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
+                //GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//TrailShader = Assets.Request<Effect>("Effects/Trail");
+                //putting this here just in case
+                //Filters.Scene.Load();
 
-				Terraria.Graphics.Effects.On_FilterManager.EndCapture += FilterManager_EndCapture;
+                //TrailShader = Assets.Request<Effect>("Effects/Trail");
+
+                Terraria.Graphics.Effects.On_FilterManager.EndCapture += FilterManager_EndCapture;
 				CreateRender();
 
 			}

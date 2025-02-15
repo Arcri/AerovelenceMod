@@ -115,6 +115,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodTable: {
+		DisplayName: Glimmerwood Table
+		Tooltip: ""
+	}
+
 	AntiquePistol: {
 		DisplayName: Antique Pistol
 		Tooltip: This item is unobtainable as it does not meet my quality standards, but I decided to leave it in because I think it is still pretty neat.
@@ -426,13 +431,28 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodBathtub: {
+		DisplayName: Glimmerwood Bathtub
+		Tooltip: ""
+	}
+
 	GlimmerwoodBedItem: {
 		DisplayName: Glimmerwood Bed Item
 		Tooltip: ""
 	}
 
+	GlimmerwoodBed: {
+		DisplayName: Glimmerwood Bed
+		Tooltip: ""
+	}
+
 	GlimmerwoodBookcaseItem: {
 		DisplayName: Glimmerwood Bookcase Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodBookcase: {
+		DisplayName: Glimmerwood Bookcase
 		Tooltip: ""
 	}
 
@@ -446,6 +466,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodChair: {
+		DisplayName: Glimmerwood Chair
+		Tooltip: ""
+	}
+
 	GlimmerwoodChandelierItem: {
 		DisplayName: Glimmerwood Chandelier Item
 		Tooltip: ""
@@ -456,8 +481,18 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodChest: {
+		DisplayName: Glimmerwood Chest
+		Tooltip: ""
+	}
+
 	GlimmerwoodClockItem: {
 		DisplayName: Glimmerwood Clock Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodClock: {
+		DisplayName: Glimmerwood Clock
 		Tooltip: ""
 	}
 
@@ -466,8 +501,18 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodDoor: {
+		DisplayName: Glimmerwood Door
+		Tooltip: ""
+	}
+
 	GlimmerwoodDresserItem: {
 		DisplayName: Glimmerwood Dresser Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodDresser: {
+		DisplayName: Glimmerwood Dresser
 		Tooltip: ""
 	}
 
@@ -481,13 +526,28 @@ Items: {
 		Tooltip: ""
 	}
 
+	GlimmerwoodPipeOrgan: {
+		DisplayName: Glimmerwood Pipe Organ
+		Tooltip: ""
+	}
+
 	GlimmerwoodPlatformItem: {
 		DisplayName: Glimmerwood Platform Item
 		Tooltip: ""
 	}
 
+	GlimmerwoodPlatform: {
+		DisplayName: Glimmerwood Platform
+		Tooltip: ""
+	}
+
 	GlimmerwoodSinkItem: {
 		DisplayName: Glimmerwood Sink Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodSink: {
+		DisplayName: Glimmerwood Sink
 		Tooltip: ""
 	}
 
@@ -498,6 +558,11 @@ Items: {
 
 	GlimmerwoodStoolItem: {
 		DisplayName: Glimmerwood Stool Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodStool: {
+		DisplayName: Glimmerwood Stool
 		Tooltip: ""
 	}
 
@@ -513,6 +578,11 @@ Items: {
 
 	GlimmerwoodWorkbenchItem: {
 		DisplayName: Glimmerwood Workbench Item
+		Tooltip: ""
+	}
+
+	GlimmerwoodWorkbench: {
+		DisplayName: Glimmerwood Workbench
 		Tooltip: ""
 	}
 
@@ -603,6 +673,26 @@ Items: {
 
 	StructureStampItem: {
 		DisplayName: Structure Stamp Item
+		Tooltip: ""
+	}
+
+	CavernChestItem: {
+		DisplayName: Cavern Chest Item
+		Tooltip: ""
+	}
+
+	CitadelChestItem: {
+		DisplayName: Citadel Chest Item
+		Tooltip: ""
+	}
+
+	CitadelChestKey: {
+		DisplayName: Citadel Chest Key
+		Tooltip: ""
+	}
+
+	CavernStoneColumnItem: {
+		DisplayName: Cavern Stone Column Item
 		Tooltip: ""
 	}
 }
@@ -941,6 +1031,7 @@ Projectiles: {
 	SharpCrystalShard.DisplayName: Sharp Crystal Shard
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
+	GroundSpike.DisplayName: Ground Spike
 }
 
 Configs: {
@@ -960,4 +1051,8 @@ Configs: {
 }
 
 WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
-Tiles.GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
+
+Tiles: {
+	GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
+	GlimmerwoodDresserTile.MapEntry: Glimmerwood Dresser Tile
+}
