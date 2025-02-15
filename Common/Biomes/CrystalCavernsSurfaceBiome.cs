@@ -25,10 +25,6 @@ namespace AerovelenceMod.Content.Biomes
 		public override Color? BackgroundColor => base.BackgroundColor;
         public override string MapBackground => "AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsMapBg";
 
-        private bool FxActive = false;
-        private float intensity = 0f;
-        private const float increment = 0.04f;
-
         public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("Crystal Caverns Surface");
@@ -48,11 +44,10 @@ namespace AerovelenceMod.Content.Biomes
 			// Code 'tactically borrowed' from the below method
 			// layer.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalCavernsSurface", isActive);
 			string biomeName = "AerovelenceMod:CrystalCavernsSurface";
-			bool inZone = isActive;
 
-            if (SkyManager.Instance[biomeName] != null && inZone != SkyManager.Instance[biomeName].IsActive())
+            if (SkyManager.Instance[biomeName] != null && isActive != SkyManager.Instance[biomeName].IsActive())
             {
-                if (inZone)
+                if (isActive)
                     SkyManager.Instance.Activate(biomeName);
                 else
                     SkyManager.Instance.Deactivate(biomeName);

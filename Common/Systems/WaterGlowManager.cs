@@ -63,7 +63,7 @@ namespace AerovelenceMod.Common.Systems
                     {
                         if (WorldGen.InWorld(x, y) && Main.tile[x, y].LiquidAmount > 0 && Main.tile[x, y].LiquidType == LiquidID.Water) // Check if tile contains water
                         {
-                            Lighting.AddLight(new Vector2(x * 16, y * 16), 0.0f, 0.4f * _intensity, 0.8f * _intensity); // Adjust RGB for glow color
+                            Lighting.AddLight(new Vector2(x * 16, y * 16), 0.2f, 0.8f * _intensity, 0.8f * _intensity); // Adjust RGB for glow color
                         }
                     }
                 }

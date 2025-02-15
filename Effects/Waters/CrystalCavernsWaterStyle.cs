@@ -20,7 +20,7 @@ namespace AerovelenceMod.Effects.Waters
         {
             r = 1.0f;
             g = 1.0f;
-            b = 1.0f; // acts weird above ~1.15
+            b = 1.11f; // acts weird above ~1.15
         }
 
         public override Color BiomeHairColor() => Color.Blue;

@@ -265,8 +265,9 @@ namespace AerovelenceMod
 
 			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
 			SkyManager.Instance["AerovelenceMod:CrystalCavernsSurface"] = new CrystalCavernsSky();
+            SkyManager.Instance["AerovelenceMod:CrystalCaverns"] = new CrystalCavernsSky();
 
-			Overlays.Scene.Load();
+            Overlays.Scene.Load();
 			Filters.Scene.Load();
 
             if (Main.netMode != NetmodeID.Server)

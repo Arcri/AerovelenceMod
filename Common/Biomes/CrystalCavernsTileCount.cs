@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Biomes
 		}
 
 		public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
-		{
+		{ 
 			
 			CavernTiles = tileCounts[ModContent.TileType<CrystalGrass>()] +
 						  tileCounts[ModContent.TileType<CrystalDirt>()] +

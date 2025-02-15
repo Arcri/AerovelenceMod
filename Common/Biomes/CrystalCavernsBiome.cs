@@ -6,6 +6,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Capture;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -46,7 +47,19 @@ namespace AerovelenceMod.Content.Biomes
 
         public override void SpecialVisuals(Player player, bool isActive)
         {
-			if (isActive)
+            // Code 'tactically borrowed' from the below method
+            // layer.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalCavernsSurface", isActive);
+            string biomeName = "AerovelenceMod:CrystalCaverns";
+
+            if (SkyManager.Instance[biomeName] != null && isActive != SkyManager.Instance[biomeName].IsActive())
+            {
+                if (isActive)
+                    SkyManager.Instance.Activate(biomeName);
+                else
+                    SkyManager.Instance.Deactivate(biomeName);
+            }
+
+            if (isActive)
 			{
                 WaterGlowManager.ActivateGlow(this);
             }

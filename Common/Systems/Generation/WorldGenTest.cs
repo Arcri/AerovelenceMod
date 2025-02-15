@@ -47,12 +47,6 @@ namespace AerovelenceMod.Common.Systems.Generation
             Point origin = new Point(x, y);
             Random rand = new Random(); // Use WorldGen.genRand.Next() for actual world generation
 
-            WorldUtils.Gen(origin, new Shapes.Rectangle(1, 1), Actions.Chain(new GenAction[]
-            {
-                    new AeroActions.NotSolidAbove(10),
-                    new Actions.Blank()
-                }));
-
             //WorldGen.digTunnel(origin.X, origin.Y, 3, 0, 50, 5);
             //WorldGen.digTunnel(origin.X, origin.Y, -3, 0, 50, 5);
 

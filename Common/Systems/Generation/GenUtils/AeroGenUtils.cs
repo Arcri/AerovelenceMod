@@ -8,7 +8,7 @@ using static Terraria.Collision;
 
 namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 {
-    public static class AeroActions
+    public static class AeroGenUtils
     {
         public class SwapSolidTileInclusive : GenAction
         {
@@ -112,7 +112,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                     Actions.Chain(new GenAction[]
                     {
                         new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 2, _horizontalRadius + _horizontalVariance),
-                        new AeroActions.SwapSolidTileInclusive(_type)
+                        new AeroGenUtils.SwapSolidTileInclusive(_type)
                     }));
 
                 return UnitApply(origin, x, y, args);
@@ -159,6 +159,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                         (int)Math.Round(_verticalRadius + WorldGen.genRand.NextFloat(-_verticalVariance, _verticalVariance + 1))),
                     Actions.Chain(new GenAction[]
                     {
+                        // Slightly borked but who cares lol
                         new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 3, _horizontalRadius + _horizontalVariance),
                         new Actions.ClearWall()
                     }));
@@ -355,6 +356,18 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                     return UnitApply(origin, x, y, args);
                 }
                 return Fail();
+            }
+        }
+
+        public class ClearWallRunner : GenAction
+        {
+            public ClearWallRunner() { }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                WorldGen.MudWallRunner(x, y);
+
+                return UnitApply(origin, x, y, args);
             }
         }
     }
