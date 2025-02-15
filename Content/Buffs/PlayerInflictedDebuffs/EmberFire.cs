@@ -14,7 +14,6 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
 {
     public class EmberFire : ModBuff
     {
-        public int timer = 0;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Ember Fire"); // Buff display name
@@ -27,22 +26,9 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
-
-            if (timer % 3 == 0)
-            {
-                //int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleRise>(), new Color(255, 75, 50), 0.4f, 0.6f, 0f, dustShader);
-                //Main.dust[p].velocity *= 0.5f;
-            
-            }
-            else if (timer % 7 == 0) //else if is intentional
-            {
-                //int p = GlowDustHelper.DrawGlowDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowCircleRise>(), Color.Gray, 0.7f, 1f, 0f, dustShader);;
-                //Main.dust[p].velocity.X *= 0.2f;
-                //Main.dust[p].velocity.Y = Math.Abs(Main.dust[p].velocity.Y) * -1f;
-            }
+            //There were previously commented-out dust effects here, but removed since it's done in the GlobalNPC class below
+			//Check git history if these were important to you
             npc.GetGlobalNPC<EmberFireModNPC>().EmberFireDebuff = true;
-            timer++;
         }
     }
 

@@ -15,7 +15,6 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 {
     public class FlareFire : ModBuff
     {
-        public int timer = 0;
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;  // Is it a debuff?
@@ -26,7 +25,6 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.GetGlobalNPC<FlareFireModNPC>().FlareFireDebuff = true;
-            timer++;
         }
     }
 

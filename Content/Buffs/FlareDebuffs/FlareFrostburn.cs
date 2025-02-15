@@ -16,7 +16,6 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 {
     public class FlareFrostburn : ModBuff
     {
-        public int timer = 0;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Frost Fire"); // Buff display name
@@ -29,7 +28,6 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.GetGlobalNPC<FlareFrostburnModNPC>().DebuffActive = true;
-            timer++;
         }
     }
 

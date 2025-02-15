@@ -15,7 +15,6 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
 {
     public class ManaLeech : ModBuff
     {
-        public int timer = 0;
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Mana Leech"); // Buff display name
@@ -29,7 +28,6 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.GetGlobalNPC<ManaLeechModNPC>().ManaLeechDebuff = true;
-            timer++;
         }
     }
 
