@@ -2,46 +2,71 @@ using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace AerovelenceMod.Common.IL
 {
-	public static class GemGrapplingRange
+	//Change from static class to ILoadable just so load/unload is handled here
+	public class GemGrapplingRange : ILoadable
 	{
-		public static void Load()
+		public void Load(Mod mod)
 		{
-			global::Terraria.IL_Projectile.VanillaAI += VanillaAI_GrapplingHookRange;
+			IL_Projectile.AI_007_GrapplingHooks += IL_HookRange;
 		}
-        private static void VanillaAI_GrapplingHookRange(ILContext il)
-        {
-            var c = new ILCursor(il);
+		public void Unload()
+		{
+			IL_Projectile.AI_007_GrapplingHooks -= IL_HookRange;
+		}
 
-            if (!c.TryGotoNext(MoveType.After,
-                i => i.MatchStloc(127)))
-            {
-                return;
-            }
+		//==========
+		// REPLACE THIS WITH MODPLAYER THAT HAS ACCESSORY BOOL OR SOMETHING
+		private const bool ExtendGemHookRange = true;
+		//==========
 
-            // Load argument 0 on the stack, this is the current Projectile object.
-            c.Emit(OpCodes.Ldarg_0);
-            // Load the original calculated grappling hook range onto the stack.
-            c.Emit(OpCodes.Ldloc, 127);
 
-            // Insert a custom delegate, which accepts a Projectile and int as parameters,
-            // And returns an int as well.
-            c.EmitDelegate<Func<Projectile, int, int>>((projectile, originalValue) =>
-            {
-                AeroPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<AeroPlayer>();
+		private void IL_HookRange(ILContext context)
+		{
+			void Error(string message)
+			{
+				ModContent.GetInstance<AerovelenceMod>().Logger.Error(message);
+			}
 
-                //if (modPlayer.UpgradedHooks)
-                //{
-                    //return (originalValue + 200);
-                //}
+			try
+			{
+				ILCursor cursor = new ILCursor(context);
 
-                return (originalValue);
-            });
+				if (!cursor.TryGotoNext(MoveType.Before,
+					i => i.MatchLdloc(4), //num3 (Distance(owner, projectile))
+					i => i.MatchLdloc(21), //num8 (max Distance)
+					i => i.MatchConvR4(), //(float)num8
+					i => i.MatchBleUn(out ILLabel _))) //if(num3 < num8)..
+				{
+					Error($"Couldn't match IL Patch: {context.Method.Name} @ {cursor.Index}");
+					MonoModHooks.DumpIL(ModContent.GetInstance<AerovelenceMod>(), context);
+					return;
+				}
 
-            // Set the local variable number 127 (AKA the grappling hook range variable) to the value we just returned from the above Func/delegate ^
-            c.Emit(OpCodes.Stloc, 127);
-        }
-    }
+				cursor.Emit(OpCodes.Ldarg_0); //Projectile self
+				cursor.EmitDelegate((Projectile projectile) => {
+					//Replace with 'Main.player[projectile.owner].GetModPlayer<T>().upgradedHooks'
+					return ExtendGemHookRange;
+				});
+				ILLabel conditionalJump = cursor.MarkLabel();
+				cursor.Emit(OpCodes.Ldc_R4, 1.33f); //Push 1.33f to stack
+				cursor.Emit(OpCodes.Ldloc, 21); //num8
+				cursor.Emit(OpCodes.Conv_R4); //(float)num8
+				cursor.Emit(OpCodes.Mul); //num8 * 1.33f
+				cursor.Emit(OpCodes.Conv_I4); //(int)num8 * 1.33
+				cursor.Emit(OpCodes.Stloc, 21); //push result to stack
+				ILLabel orig_DistanceCheck = cursor.MarkLabel();
+				cursor.GotoLabel(conditionalJump);
+				cursor.EmitBrfalse(orig_DistanceCheck); //if(!ExtendHookRange)
+			}
+			catch (Exception x)
+			{
+				Error(x.Message);
+				return;
+			}
+		}
+	}
 }

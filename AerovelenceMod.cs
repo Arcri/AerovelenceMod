@@ -248,10 +248,7 @@ namespace AerovelenceMod
 				Filters.Scene["Shockwave"] = new Filter(new ScreenShaderData(new Ref<Effect>(ModContent.Request<Effect>("AerovelenceMod/Effects/Shockwave", AssetRequestMode.ImmediateLoad).Value), "Shockwave"), EffectPriority.VeryHigh);
 				Filters.Scene["Shockwave"].Load();
 				
-            }
-			GemGrapplingRange.Load();
-
-            
+            }            
 
 			Filters.Scene["AerovelenceMod:FoggyFields"] = 
                 new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.168f, 0.168f, 0.188f).UseOpacity(0.1f), EffectPriority.High);
