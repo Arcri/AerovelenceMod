@@ -32,12 +32,15 @@ namespace AerovelenceMod.Common.Utilities
         /// </summary>
         public static Vector2 Autosize(this Item item)
         {
-			if (!Terraria.GameContent.TextureAssets.Item[item.type].IsLoaded)
+			if (Terraria.GameContent.TextureAssets.Item[item.type]?.IsLoaded != true)
 				return Vector2.Zero;
 
-            Texture2D texture = Terraria.GameContent.TextureAssets.Item[item.type].Value;
+			Texture2D? texture = Terraria.GameContent.TextureAssets.Item[item.type]?.Value;
 
-            return item.Size = Main.itemAnimationsRegistered.Contains(item.type)
+			if (texture == null)
+				return Vector2.Zero;
+
+			return item.Size = Main.itemAnimationsRegistered.Contains(item.type)
                 ? new Vector2(texture.Width, texture.Height / Main.itemAnimations[item.type].FrameCount)
                 : texture.Size();
         }
