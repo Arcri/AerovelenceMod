@@ -17,31 +17,45 @@ namespace AerovelenceMod.Common.Utilities
 	{
         public static void setSkillStrike(Projectile projectile, float multiplier, int timesToStrike = 1, float impactVolume = 0f, float impactScale = 0f)
         {
-            Player player = Main.player[projectile.owner];
+			SkillStrikeGProj ssGlobProjectile;
+			if (!projectile.TryGetGlobalProjectile<SkillStrikeGProj>(out ssGlobProjectile))
+				return;
 
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().skillStrikeMultiplier;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().superCritMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().superCritMultiplier;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeAmount = timesToStrike;
+			//Player player = Main.player[projectile.owner];
+			SkillStrikePlayer ssPlayer;
+			if (!Main.player[projectile.owner].TryGetModPlayer<SkillStrikePlayer>(out ssPlayer))
+				return;
 
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactVolume = impactVolume;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = impactScale;
+			ssGlobProjectile.SkillStrike = true;
+			ssGlobProjectile.skillStrikeMultiplier = multiplier * ssPlayer.skillStrikeMultiplier;
+			ssGlobProjectile.superCritMultiplier = multiplier * ssPlayer.superCritMultiplier;
+			ssGlobProjectile.skillStrikeAmount = timesToStrike;
+
+			ssGlobProjectile.impactVolume = impactVolume;
+			ssGlobProjectile.impactScale = impactScale;
 
         }
 
         public static void setSkillStrikeWithImpactType(Projectile projectile, float multiplier, int timesToStrike = 1, 
             SkillStrikeImpactType impactType = SkillStrikeImpactType.Basic, float impactVolume = 0f, float impactScale = 0f)
         {
-            Player player = Main.player[projectile.owner];
+			SkillStrikeGProj ssGlobProjectile;
+			if (!projectile.TryGetGlobalProjectile<SkillStrikeGProj>(out ssGlobProjectile))
+				return;
 
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = true;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().skillStrikeMultiplier;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().superCritMultiplier = multiplier * player.GetModPlayer<SkillStrikePlayer>().superCritMultiplier;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().skillStrikeAmount = timesToStrike;
+			//Player player = Main.player[projectile.owner];
+			SkillStrikePlayer ssPlayer;
+			if (!Main.player[projectile.owner].TryGetModPlayer<SkillStrikePlayer>(out ssPlayer))
+				return;
 
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactType = impactType;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactVolume = impactVolume;
-            projectile.GetGlobalProjectile<SkillStrikeGProj>().impactScale = impactScale;
+			ssGlobProjectile.SkillStrike = true;
+			ssGlobProjectile.skillStrikeMultiplier = multiplier * ssPlayer.skillStrikeMultiplier;
+			ssGlobProjectile.superCritMultiplier = multiplier * ssPlayer.superCritMultiplier;
+			ssGlobProjectile.skillStrikeAmount = timesToStrike;
+
+			ssGlobProjectile.impactType = impactType;
+			ssGlobProjectile.impactVolume = impactVolume;
+			ssGlobProjectile.impactScale = impactScale;
 
         }
 
