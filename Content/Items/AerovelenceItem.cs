@@ -5,8 +5,6 @@ namespace AerovelenceMod.Content.Items
 {
     public abstract class AerovelenceItem : ModItem
     {
-        public bool Autosize;
-
         public override string Texture
         {
             get
@@ -18,14 +16,14 @@ namespace AerovelenceMod.Content.Items
             }
         }
 
-        public override void SetDefaults()
+        public sealed override void SetDefaults()
         {
-            if (Autosize)
-                Item.Autosize();
-
-            SafeSetDefaults();
+			bool shouldAutosize = true;
+            SafeSetDefaults(ref shouldAutosize);
+			if (shouldAutosize)
+				Item.Autosize();
         }
 
-        public virtual void SafeSetDefaults() { }
+        public virtual void SafeSetDefaults(ref bool autoSize) { }
     }
 }

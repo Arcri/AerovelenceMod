@@ -9,13 +9,10 @@ namespace AerovelenceMod.Content.Items.BossSummons
 {
 	public class ObsidianEye : AerovelenceItem
 	{
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Obsidian Eye");
-			// Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'\nNot consumable");
-		}
+		//DisplayName: "Obsidian Eye"
+		//Tooltip: "Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'"
 
-		public override void SetDefaults()
+		public override void SafeSetDefaults(ref bool autosize)
 		{
 			Item.consumable = false;
 
@@ -51,13 +48,10 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
     public class CyverSummonSkipIntro : AerovelenceItem
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Obsidian Eye");
-            // Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'\nNot consumable");
-        }
+		//DisplayName: "Obsidian Eye"
+		//Tooltip: "Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'"
 
-        public override void SetDefaults()
+        public override void SafeSetDefaults(ref bool autosize)
         {
             Item.consumable = false;
 
@@ -84,13 +78,10 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
     public class CyvercryThumbnailHelper : AerovelenceItem
     {
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Obsidian Eye");
-            // Tooltip.SetDefault("Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'\nNot consumable");
-        }
+		//DisplayName: "Obsidian Eye"
+		//Tooltip: "Summons Cyvercry\nOnly works at night\n'An ancient artifact, it has a subtle glow'"
 
-        public override void SetDefaults()
+        public override void SafeSetDefaults(ref bool autosize)
         {
             Item.consumable = false;
 
@@ -114,6 +105,4 @@ namespace AerovelenceMod.Content.Items.BossSummons
             return true;
         }
     }
-
-
 }
