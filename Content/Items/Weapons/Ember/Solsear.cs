@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             CreateRecipe().
                 AddIngredient(ItemID.HellstoneBar, 15).
                 AddIngredient(ItemID.SoulofLight, 7).
-                AddRecipeGroup("AerovelenceMod:MechSouls", 3).
+                AddRecipeGroup(Common.Systems.RecipeGroups.AnyMechSoul, 3).
                 AddTile(TileID.MythrilAnvil).
                 Register();
         }

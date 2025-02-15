@@ -96,7 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         {
             CreateRecipe()
                 .AddIngredient(ItemID.Marble, 25)
-                .AddRecipeGroup("AerovelenceMod:GoldOrPlatinum", 5)
+                .AddRecipeGroup(Common.Systems.RecipeGroups.AnyGoldBar, 5)
                 .AddIngredient(ItemID.FlintlockPistol, 1)
                 .AddTile(TileID.Anvils)
                 .Register();

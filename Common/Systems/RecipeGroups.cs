@@ -12,6 +12,10 @@ namespace AerovelenceMod.Common.Systems
 {
     public class RecipeGroups : ModSystem
     {
+		public const string AnyEvilBar = "AerovelenceMod:EvilBars";
+		public const string AnyGoldBar = "AerovelenceMod:GoldOrPlatinum";
+		public const string AnyMechSoul = "AerovelenceMod:MechSouls";
+
         //TODO add more groups
         public override void AddRecipeGroups()
         {
@@ -22,14 +26,14 @@ namespace AerovelenceMod.Common.Systems
                     ItemID.DemoniteBar,
                     ItemID.CrimtaneBar
             ]);
-            RecipeGroup.RegisterGroup("AerovelenceMod:EvilBars", group);
+            RecipeGroup.RegisterGroup(AnyEvilBar, group);
 
             group = new RecipeGroup(() => "Gold or Platinum",
             [
                     ItemID.GoldBar,
                     ItemID.PlatinumBar,
             ]);
-            RecipeGroup.RegisterGroup("AerovelenceMod:GoldOrPlatinum", group);
+            RecipeGroup.RegisterGroup(AnyGoldBar, group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Mech Souls",
             [
@@ -37,7 +41,7 @@ namespace AerovelenceMod.Common.Systems
                     ItemID.SoulofFright,
                     ItemID.SoulofMight,
             ]);
-            RecipeGroup.RegisterGroup("AerovelenceMod:MechSouls", group);
+            RecipeGroup.RegisterGroup(AnyMechSoul, group);
         }
     }
 }

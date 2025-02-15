@@ -101,7 +101,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             CreateRecipe().
                 AddIngredient(ItemID.MeteoriteBar, 7).
                 AddIngredient(ItemID.HellstoneBar, 7).
-                AddRecipeGroup("AerovelenceMod:EvilBars", 7).
+                AddRecipeGroup(Common.Systems.RecipeGroups.AnyEvilBar, 7).
                 AddTile(TileID.Anvils).
                 Register();
         }

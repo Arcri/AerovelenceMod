@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
         public override void AddRecipes()
         {
             CreateRecipe().
-                AddRecipeGroup("AerovelenceMod:EvilBars", 10).
+                AddRecipeGroup(Common.Systems.RecipeGroups.AnyEvilBar, 10).
                 AddIngredient(ItemID.Sapphire, 5).
                 AddIngredient(ItemID.ManaCrystal, 3).
                  AddTile(TileID.Anvils).
