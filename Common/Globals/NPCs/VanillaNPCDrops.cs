@@ -8,7 +8,8 @@ namespace AerovelenceMod.Common.Globals.NPCs
     /// <summary>
     /// GlobalNPC responsible for giving modded loot to vanilla NPCs
     /// </summary>
-	public class VanillaNPCDrops : GlobalNPC
+	[Autoload(false)] //Disable loading for this, doens't do anything yet
+	public abstract class VanillaNPCDrops : GlobalNPC
 	{
         public override void OnKill(NPC npc)
         {

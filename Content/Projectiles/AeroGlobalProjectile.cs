@@ -3,7 +3,8 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Projectiles
 {
-	public class AeroGlobalProjectile : GlobalProjectile
+	[Autoload(false)]
+	public abstract class AeroGlobalProjectile : GlobalProjectile
 	{
 		public override void AI(Projectile projectile)
 		{

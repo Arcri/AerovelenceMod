@@ -9,7 +9,8 @@ namespace AerovelenceMod.Common.Globals.Tiles
     /// <summary>
     /// GlobalTile responsible for giving modded drops to vanilla tiles
     /// </summary>
-    public class VanillaTileDrops : GlobalTile
+	[Autoload(false)] //Remove autoload until this actually does something
+    public abstract class VanillaTileDrops : GlobalTile
     {
         public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
