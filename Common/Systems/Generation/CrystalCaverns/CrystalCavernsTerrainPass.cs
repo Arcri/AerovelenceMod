@@ -21,6 +21,7 @@ using Terraria.ModLoader.IO;
 using Terraria.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using AerovelenceMod.Content.Tiles.Citadel;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -118,7 +119,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             SandTile = (ushort)ModContent.TileType<CavernSand>();
             CrystalTile = (ushort)ModContent.TileType<CavernCrystal>();
             ChargedTile = (ushort)ModContent.TileType<ChargedStone>();
-            BrickTile = (ushort)ModContent.TileType<CavernBrick>();
+            BrickTile = (ushort)ModContent.TileType<CitadelBrick>();
             // DirtWall = WallID.Granite; 
             DirtWall = (ushort)ModContent.WallType<CavernDirtWall>();
             StoneWall = (ushort)ModContent.WallType<CavernStoneWall>();
@@ -140,7 +141,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             ReplaceWithSandTiles = [SandTile, TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
             ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass];
             ReplaceWithBrickTiles = [TileID.SandstoneBrick];
-            ReplaceWithDirtTiles = [TileID.Silt, LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile, StoneTile, SandTile, ChargedTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
+            ReplaceWithDirtTiles = [TileID.Silt, StoneTile, SandTile, ChargedTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
 
             ReplaceWithBrickWalls = [WallID.SandstoneBrick];
 
@@ -445,14 +446,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.OnlyTiles(ReplaceWithSandTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(SandTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(3, 3),
                     new Modifiers.Dither(0.8),
                     new Modifiers.OnlyTiles(ReplaceWithSandTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(SandTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 5),
                     new Modifiers.Dither(0.95),
@@ -465,14 +466,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.OnlyTiles(ReplaceWithChargedTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(ChargedTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(3, 3),
                     new Modifiers.Dither(0.8),
                     new Modifiers.OnlyTiles(ReplaceWithChargedTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(ChargedTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 5),
                     new Modifiers.Dither(0.95),
@@ -485,14 +486,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.OnlyTiles(ReplaceWithBrickTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(BrickTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(3, 3),
                     new Modifiers.Dither(0.8),
                     new Modifiers.OnlyTiles(ReplaceWithBrickTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(BrickTile)
                 }));
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new ModShapes.All(upperUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 5),
                     new Modifiers.Dither(0.95),
@@ -704,7 +705,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 // Main lightning bolt cave
                 WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new AeroShapes.LightningBoltShape(550 * WorldSizeScale, 50 * (int)((WorldSizeScale - 1) * 0.8 + 1), 2, 30), Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.SkipTiles(CrystalTile),
+                    new Modifiers.SkipTiles(CrystalTile, TileID.LeafBlock, TileID.LivingWood),
                     new Actions.ClearTile().Output(lightningBoltShapeData),
                     // Don't ask me why but chaining a chain seems to allow layers in this case but only one layer
                     Actions.Chain(new GenAction[]
