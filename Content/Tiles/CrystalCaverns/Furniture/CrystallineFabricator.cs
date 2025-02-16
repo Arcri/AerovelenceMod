@@ -59,7 +59,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
             g = 0.75f;
             b = 1f;
         }
-
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Tile tile = Main.tile[i, j];

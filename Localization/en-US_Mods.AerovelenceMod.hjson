@@ -285,47 +285,47 @@ Items: {
 	}
 
 	CitadelBrickItem: {
-		DisplayName: Citadel Brick Item
+		DisplayName: Citadel Brick
 		Tooltip: ""
 	}
 
 	CitadelStoneItem: {
-		DisplayName: Citadel Stone Item
+		DisplayName: Citadel Stone
 		Tooltip: ""
 	}
 
 	RuinedCitadelBrickItem: {
-		DisplayName: Ruined Citadel Brick Item
+		DisplayName: Ruined Citadel Brick
 		Tooltip: ""
 	}
 
 	AncientChunkItem: {
-		DisplayName: Ancient Chunk Item
+		DisplayName: Ancient Chunk
 		Tooltip: ""
 	}
 
 	CavernSandItem: {
-		DisplayName: Cavern Sand Item
+		DisplayName: Cavern Sand
 		Tooltip: ""
 	}
 
 	CavernStoneItem: {
-		DisplayName: Cavern Stone Item
+		DisplayName: Cavern Stone
 		Tooltip: ""
 	}
 
 	ChargedStoneItem: {
-		DisplayName: Charged Stone Item
+		DisplayName: Charged Stone
 		Tooltip: ""
 	}
 
 	SmoothCavernStoneItem: {
-		DisplayName: Smooth Cavern Stone Item
+		DisplayName: Smooth Cavern Stone
 		Tooltip: ""
 	}
 
 	VoidArenaItem: {
-		DisplayName: Void Arena Item
+		DisplayName: Void Arena
 		Tooltip: ""
 	}
 
@@ -422,12 +422,12 @@ Items: {
 	}
 
 	CrystallineFabricatorItem: {
-		DisplayName: Crystalline Fabricator Item
+		DisplayName: Crystalline Fabricator
 		Tooltip: ""
 	}
 
 	GlimmerwoodBathtubItem: {
-		DisplayName: Glimmerwood Bathtub Item
+		DisplayName: Glimmerwood Bathtub
 		Tooltip: ""
 	}
 
@@ -437,7 +437,7 @@ Items: {
 	}
 
 	GlimmerwoodBedItem: {
-		DisplayName: Glimmerwood Bed Item
+		DisplayName: Glimmerwood Bed
 		Tooltip: ""
 	}
 
@@ -447,7 +447,7 @@ Items: {
 	}
 
 	GlimmerwoodBookcaseItem: {
-		DisplayName: Glimmerwood Bookcase Item
+		DisplayName: Glimmerwood Bookcase
 		Tooltip: ""
 	}
 
@@ -457,12 +457,12 @@ Items: {
 	}
 
 	GlimmerwoodCandleItem: {
-		DisplayName: Glimmerwood Candle Item
+		DisplayName: Glimmerwood Candle
 		Tooltip: ""
 	}
 
 	GlimmerwoodChairItem: {
-		DisplayName: Glimmerwood Chair Item
+		DisplayName: Glimmerwood Chair
 		Tooltip: ""
 	}
 
@@ -472,12 +472,12 @@ Items: {
 	}
 
 	GlimmerwoodChandelierItem: {
-		DisplayName: Glimmerwood Chandelier Item
+		DisplayName: Glimmerwood Chandelier
 		Tooltip: ""
 	}
 
 	GlimmerwoodChestItem: {
-		DisplayName: Glimmerwood Chest Item
+		DisplayName: Glimmerwood Chest
 		Tooltip: ""
 	}
 
@@ -487,7 +487,7 @@ Items: {
 	}
 
 	GlimmerwoodClockItem: {
-		DisplayName: Glimmerwood Clock Item
+		DisplayName: Glimmerwood Clock
 		Tooltip: ""
 	}
 
@@ -497,7 +497,7 @@ Items: {
 	}
 
 	GlimmerwoodDoorItem: {
-		DisplayName: Glimmerwood Door Item
+		DisplayName: Glimmerwood Door
 		Tooltip: ""
 	}
 
@@ -507,7 +507,7 @@ Items: {
 	}
 
 	GlimmerwoodDresserItem: {
-		DisplayName: Glimmerwood Dresser Item
+		DisplayName: Glimmerwood Dresser
 		Tooltip: ""
 	}
 
@@ -517,12 +517,12 @@ Items: {
 	}
 
 	GlimmerwoodLampItem: {
-		DisplayName: Glimmerwood Lamp Item
+		DisplayName: Glimmerwood Lamp
 		Tooltip: ""
 	}
 
 	GlimmerwoodPipeOrganItem: {
-		DisplayName: Glimmerwood Pipe Organ Item
+		DisplayName: Glimmerwood Pipe Organ
 		Tooltip: ""
 	}
 
@@ -532,7 +532,7 @@ Items: {
 	}
 
 	GlimmerwoodPlatformItem: {
-		DisplayName: Glimmerwood Platform Item
+		DisplayName: Glimmerwood Platform
 		Tooltip: ""
 	}
 
@@ -542,7 +542,7 @@ Items: {
 	}
 
 	GlimmerwoodSinkItem: {
-		DisplayName: Glimmerwood Sink Item
+		DisplayName: Glimmerwood Sink
 		Tooltip: ""
 	}
 
@@ -552,12 +552,12 @@ Items: {
 	}
 
 	GlimmerwoodSofaItem: {
-		DisplayName: Glimmerwood Sofa Item
+		DisplayName: Glimmerwood Sofa
 		Tooltip: ""
 	}
 
 	GlimmerwoodStoolItem: {
-		DisplayName: Glimmerwood Stool Item
+		DisplayName: Glimmerwood Stool
 		Tooltip: ""
 	}
 
@@ -567,17 +567,17 @@ Items: {
 	}
 
 	GlimmerwoodToiletItem: {
-		DisplayName: Glimmerwood Toilet Item
+		DisplayName: Glimmerwood Toilet
 		Tooltip: ""
 	}
 
 	GlimmerwoodTorchItem: {
-		DisplayName: Glimmerwood Torch Item
+		DisplayName: Glimmerwood Torch
 		Tooltip: ""
 	}
 
 	GlimmerwoodWorkbenchItem: {
-		DisplayName: Glimmerwood Workbench Item
+		DisplayName: Glimmerwood Workbench
 		Tooltip: ""
 	}
 
@@ -587,72 +587,72 @@ Items: {
 	}
 
 	GlimmerwoodItem: {
-		DisplayName: Glimmerwood Item
+		DisplayName: Glimmerwood
 		Tooltip: ""
 	}
 
 	FreshGlimmerwoodItem: {
-		DisplayName: Fresh Glimmerwood Item
+		DisplayName: Fresh Glimmerwood
 		Tooltip: ""
 	}
 
 	GlimmerwoodBeamItem: {
-		DisplayName: Glimmerwood Beam Item
+		DisplayName: Glimmerwood Beam
 		Tooltip: ""
 	}
 
 	CavernDirtWallItem: {
-		DisplayName: Cavern Dirt Wall Item
+		DisplayName: Cavern Dirt Wall
 		Tooltip: ""
 	}
 
 	CitadelBrickWallItem: {
-		DisplayName: Citadel Brick Wall Item
+		DisplayName: Citadel Brick Wall
 		Tooltip: ""
 	}
 
 	ColumnWallItem: {
-		DisplayName: Column Wall Item
+		DisplayName: Column Wall
 		Tooltip: ""
 	}
 
 	CrystalGrassWallItem: {
-		DisplayName: Crystal Grass Wall Item
+		DisplayName: Crystal Grass Wall
 		Tooltip: ""
 	}
 
 	GlimmerwoodWallItem: {
-		DisplayName: Glimmerwood Wall Item
+		DisplayName: Glimmerwood Wall
 		Tooltip: ""
 	}
 
 	CavernBrickItem: {
-		DisplayName: Cavern Brick Item
+		DisplayName: Cavern Brick
 		Tooltip: ""
 	}
 
 	ArenaCavernCrystalItem: {
-		DisplayName: Arena Cavern Crystal Item
+		DisplayName: Arena Cavern Crystal
 		Tooltip: ""
 	}
 
 	CavernStoneWallItem: {
-		DisplayName: Cavern Stone Wall Item
+		DisplayName: Cavern Stone Wall
 		Tooltip: ""
 	}
 
 	CavernRopeItem: {
-		DisplayName: Cavern Rope Item
+		DisplayName: Cavern Rope
 		Tooltip: ""
 	}
 
 	CavernGatewayItem: {
-		DisplayName: Cavern Gateway Item
+		DisplayName: Cavern Gateway
 		Tooltip: ""
 	}
 
 	CavernCrystalItem: {
-		DisplayName: Cavern Crystal Item
+		DisplayName: Cavern Crystal
 		Tooltip: ""
 	}
 
@@ -672,17 +672,17 @@ Items: {
 	}
 
 	StructureStampItem: {
-		DisplayName: Structure Stamp Item
+		DisplayName: Structure Stamp
 		Tooltip: ""
 	}
 
 	CavernChestItem: {
-		DisplayName: Cavern Chest Item
+		DisplayName: Cavern Chest
 		Tooltip: ""
 	}
 
 	CitadelChestItem: {
-		DisplayName: Citadel Chest Item
+		DisplayName: Citadel Chest
 		Tooltip: ""
 	}
 
@@ -692,7 +692,32 @@ Items: {
 	}
 
 	CavernStoneColumnItem: {
-		DisplayName: Cavern Stone Column Item
+		DisplayName: Cavern Stone Column
+		Tooltip: ""
+	}
+
+	GlimmerwoodCandelabraItem: {
+		DisplayName: Glimmerwood Candelabra
+		Tooltip: ""
+	}
+
+	GlimmerwoodLanternItem: {
+		DisplayName: Glimmerwood Lantern
+		Tooltip: ""
+	}
+
+	GlimmerwoodLeafItem: {
+		DisplayName: Glimmerwood Leaf
+		Tooltip: ""
+	}
+
+	CrystalDirtItem: {
+		DisplayName: Crystal Dirt
+		Tooltip: ""
+	}
+
+	LightningTrapItem: {
+		DisplayName: Lightning Trap
 		Tooltip: ""
 	}
 }
@@ -1032,6 +1057,8 @@ Projectiles: {
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
 	GroundSpike.DisplayName: Ground Spike
+	LightningBolt.DisplayName: Lightning Bolt
+	LightningProjectile.DisplayName: Lightning Projectile
 }
 
 Configs: {
@@ -1055,4 +1082,5 @@ WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalC
 Tiles: {
 	GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
 	GlimmerwoodDresserTile.MapEntry: Glimmerwood Dresser Tile
+	LightningTrapTile.MapEntry: Lightning Trap Tile
 }

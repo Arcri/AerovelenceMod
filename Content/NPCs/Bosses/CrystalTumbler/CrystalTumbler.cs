@@ -271,7 +271,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                                     int checkY = (int)(NPC.Bottom.Y / 16) + offset;
 
                                     Tile tileBelow = Framing.GetTileSafely(checkX, checkY);
-                                    if (tileBelow.HasTile && (tileBelow.TileType == ModContent.TileType<SmoothCavernStone>() || tileBelow.TileType == ModContent.TileType<CitadelBrick>() || tileBelow.TileType == ModContent.TileType<ChargedStone>()))
+                                    if (tileBelow.HasTile && (tileBelow.TileType == ModContent.TileType<SmoothCavernStoneTile>() || tileBelow.TileType == ModContent.TileType<CitadelBrickTile>() || tileBelow.TileType == ModContent.TileType<ChargedStoneTile>()))
                                     {
                                         SoundStyle stylea = new("AerovelenceMod/Sounds/Effects/CrystalSlam")
                                         {
@@ -989,7 +989,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 {
                     int checkY = (int)(NPC.Bottom.Y / 16) + offset;
                     Tile tileBelow = Framing.GetTileSafely(checkX, checkY);
-                    if (tileBelow.HasTile && (tileBelow.TileType == ModContent.TileType<SmoothCavernStone>() || tileBelow.TileType == ModContent.TileType<CitadelBrick>() || tileBelow.TileType == ModContent.TileType<ChargedStone>()))
+                    if (tileBelow.HasTile && (tileBelow.TileType == ModContent.TileType<SmoothCavernStoneTile>() || tileBelow.TileType == ModContent.TileType<CitadelBrickTile>() || tileBelow.TileType == ModContent.TileType<ChargedStoneTile>()))
                     {
                         NPC.velocity.Y = 0;
                         NPC.position.Y = checkY * 16 - NPC.height;
@@ -1940,9 +1940,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         int checkY = (int)(NPC.Bottom.Y / 16) + offset;
                         Tile tileBelow = Framing.GetTileSafely(checkX, checkY);
                         if (tileBelow.HasTile &&
-                            (tileBelow.TileType == ModContent.TileType<SmoothCavernStone>() ||
-                             tileBelow.TileType == ModContent.TileType<CitadelBrick>() ||
-                             tileBelow.TileType == ModContent.TileType<ChargedStone>()))
+                            (tileBelow.TileType == ModContent.TileType<SmoothCavernStoneTile>() ||
+                             tileBelow.TileType == ModContent.TileType<CitadelBrickTile>() ||
+                             tileBelow.TileType == ModContent.TileType<ChargedStoneTile>()))
                         {
                             NPC.velocity.Y = 0;
                             NPC.position.Y = checkY * 16 - NPC.height;
@@ -2228,7 +2228,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 int checkY = (int)(NPC.position.Y / 16) + offsetY;
                 Tile tile = Framing.GetTileSafely(checkX, checkY);
 
-                if (tile.HasTile && tile.TileType == ModContent.TileType<SmoothCavernStone>())
+                if (tile.HasTile && tile.TileType == ModContent.TileType<SmoothCavernStoneTile>())
                 {
                     lowestY = checkY;
                 }
@@ -2282,7 +2282,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 for (int y = (int)(NPC.position.Y - arenaHeight / 2); y < NPC.position.Y + arenaHeight / 2; y += 16)
                 {
                     Tile tile = Framing.GetTileSafely(x / 16, y / 16);
-                    if (tile.TileType == ModContent.TileType<CavernStone>() && IsExposed(tile))
+                    if (tile.TileType == ModContent.TileType<CavernStoneTile>() && IsExposed(tile))
                     {
                         Vector2 position = new(x, y);
                         if (!IsNearOtherPositions(position, validPositions))

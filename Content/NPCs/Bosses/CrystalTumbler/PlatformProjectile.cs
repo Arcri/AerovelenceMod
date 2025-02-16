@@ -81,10 +81,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private static bool CollidesWithCavernTile(Vector2 position)
         {
             Tile tile = Main.tile[(int)position.X / 16, (int)position.Y / 16];
-            return tile.HasTile && (tile.TileType == ModContent.TileType<CavernCrystal>() ||
-                                    tile.TileType == ModContent.TileType<SmoothCavernStone>() ||
-                                    tile.TileType == ModContent.TileType<CitadelBrick>() ||
-                                    tile.TileType == ModContent.TileType<ChargedStone>());
+            return tile.HasTile && (tile.TileType == ModContent.TileType<CavernCrystalTile>() ||
+                                    tile.TileType == ModContent.TileType<SmoothCavernStoneTile>() ||
+                                    tile.TileType == ModContent.TileType<CitadelBrickTile>() ||
+                                    tile.TileType == ModContent.TileType<ChargedStoneTile>());
         }
 
         private void DestroyAllPlatformProjectiles()

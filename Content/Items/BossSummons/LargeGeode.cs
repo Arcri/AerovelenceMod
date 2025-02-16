@@ -101,7 +101,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 for (int y = tileY - 7; y <= tileY + 7; y++)
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
-                    if (tile.HasTile && tile.TileType == ModContent.TileType<CavernGateway>())
+                    if (tile.HasTile && tile.TileType == ModContent.TileType<CavernGatewayTile>())
                     {
                         return true;
                     }
@@ -122,7 +122,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 for (int y = tileY - 7; y <= tileY + 7; y++)
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
-                    if (tile.HasTile && tile.TileType == ModContent.TileType<CavernGateway>())
+                    if (tile.HasTile && tile.TileType == ModContent.TileType<CavernGatewayTile>())
                     {
                         return new Vector2(x + 7.5f, y + 7.5f) * 16f;
                     }
@@ -185,7 +185,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 for (int y = (int)(center.Y / 16) - searchRadius; y <= (int)(center.Y / 16) + searchRadius; y++)
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
-                    if (tile.HasTile && tile.TileType == ModContent.TileType<ArenaCavernCrystal>())
+                    if (tile.HasTile && tile.TileType == ModContent.TileType<ArenaCavernCrystalTile>())
                     {
                         Point tilePos = new Point(x, y);
                         bool tooClose = false;
@@ -256,7 +256,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                     Tile adjacentTile = Framing.GetTileSafely(x + directionX, y);
 
                     if (tile.HasTile && tile.TileType == ModContent.TileType<GlimmerwoodPlatformTile>() &&
-                        adjacentTile.HasTile && adjacentTile.TileType == ModContent.TileType<SmoothCavernStone>())
+                        adjacentTile.HasTile && adjacentTile.TileType == ModContent.TileType<SmoothCavernStoneTile>())
                     {
                         baseLevelY = y;
                         return new Vector2(x * 16, y * 16);

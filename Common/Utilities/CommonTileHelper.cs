@@ -24,7 +24,6 @@ namespace AerovelenceMod.Common.Utilities
             Main.tileBlockLight[tile.Type] = true;
             Main.tileLighted[tile.Type] = true;
             Main.tileSolid[tile.Type] = true;
-
             Main.tileMergeDirt[tile.Type] = mergeDirt;
             Main.tileStone[tile.Type] = stone;
 
@@ -35,7 +34,6 @@ namespace AerovelenceMod.Common.Utilities
                     Main.tileMerge[tile.Type][i] = true;
                 }
             }
-
             tile.RegisterItemDrop(drop);
             tile.HitSound = soundType;
             tile.DustType = dustType;
@@ -49,32 +47,23 @@ namespace AerovelenceMod.Common.Utilities
             Main.tileBlockLight[tile.Type] = true;
             Main.tileLavaDeath[tile.Type] = true;
             Main.tileNoAttach[tile.Type] = true;
-
             Main.tileSolid[tile.Type] = solid;
             Main.tileSolidTop[tile.Type] = solidTop;
-
             TileObjectData.newTile.Width = width;
             TileObjectData.newTile.Height = height;
-
             TileObjectData.newTile.CoordinateHeights = new int[height];
             for (int i = 0; i < height; i++)
                 TileObjectData.newTile.CoordinateHeights[i] = 16;
-
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.Origin = new Point16(0, 0);
-
             TileObjectData.newTile.UsesCustomCanPlace = true;
-
             if (anchorBottom != default)
                 TileObjectData.newTile.AnchorBottom = anchorBottom;
             if (anchorTop != default)
                 TileObjectData.newTile.AnchorTop = anchorTop;
-
             TileObjectData.addTile(tile.Type);
-
             tile.AddMapEntry(mapColor);
-
             tile.HitSound = soundType;
             tile.DustType = dustType;
         }
@@ -82,10 +71,8 @@ namespace AerovelenceMod.Common.Utilities
         public static void SimpleWall(this ModWall wall, int drop, SoundStyle soundType, int dustType, Color mapColor, bool house = false)
         {
             Main.wallHouse[wall.Type] = house;
-
             wall.HitSound = soundType;
             wall.DustType = dustType;
-
             wall.AddMapEntry(mapColor);
         }
 
@@ -95,71 +82,18 @@ namespace AerovelenceMod.Common.Utilities
             TileObjectData.newTile.Width = width;
             TileObjectData.newTile.Height = height;
             TileObjectData.newTile.CoordinateHeights = coordinateHeights;
-
             if (placeLeft)
-            {
                 TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            }
-
             if (placeRight)
             {
                 TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
                 TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
                 TileObjectData.addAlternate(1);
             }
-
             TileObjectData.newTile.StyleWrapLimit = styleWrapLimit;
             TileObjectData.newTile.StyleMultiplier = styleMultiplier;
             TileObjectData.newTile.StyleHorizontal = styleHorizontal;
             TileObjectData.addTile(tile.Type);
-        }
-
-        public static void SetBasicTileProperties(ModTile modTile, bool hasOutlines = true, bool canBeSatOnForNPCs = false, bool canBeSatOnForPlayers = false, bool disableSmartCursor = true, bool isContainer = false)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            Main.tileWaterDeath[modTile.Type] = true;
-
-            if (hasOutlines)
-                TileID.Sets.HasOutlines[modTile.Type] = true;
-
-            if (canBeSatOnForNPCs)
-                TileID.Sets.CanBeSatOnForNPCs[modTile.Type] = true;
-
-            if (canBeSatOnForPlayers)
-                TileID.Sets.CanBeSatOnForPlayers[modTile.Type] = true;
-
-            if (disableSmartCursor)
-                TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-
-            if (isContainer)
-            {
-                Main.tileContainer[modTile.Type] = true;
-                TileID.Sets.IsAContainer[modTile.Type] = true;
-            }
-        }
-
-        public static void SetupChair(ModTile modTile, int dustType, int itemDropType, Color mapColor)
-        {
-            SetBasicTileProperties(modTile, hasOutlines: true, canBeSatOnForNPCs: true, canBeSatOnForPlayers: true);
-
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Chairs];
-
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Chair"));
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-            TileObjectData.addTile(modTile.Type);
         }
 
         public static void HandleDresserRightClick(int i, int j)
@@ -169,7 +103,6 @@ namespace AerovelenceMod.Common.Utilities
             left %= 3;
             left = i - left;
             int top = j - Main.tile[i, j].TileFrameY / 18;
-
             if (Main.tile[i, j].TileFrameY == 0)
             {
                 Main.CancelClothesWindow(true);
@@ -178,20 +111,17 @@ namespace AerovelenceMod.Common.Utilities
                 player.SetTalkNPC(-1);
                 Main.npcChatCornerItem = 0;
                 Main.npcChatText = "";
-
                 if (Main.editChest)
                 {
                     SoundEngine.PlaySound(SoundID.MenuTick);
                     Main.editChest = false;
                     Main.npcChatText = string.Empty;
                 }
-
                 if (player.editedChestName)
                 {
                     NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f);
                     player.editedChestName = false;
                 }
-
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     if (left == player.chestX && top == player.chestY && player.chest != -1)
@@ -248,166 +178,47 @@ namespace AerovelenceMod.Common.Utilities
             }
         }
 
-        public static void SetupDresser(ModTile modTile, int itemType, Color mapColor, int dustType = DustID.WoodFurniture)
-        {
-            Main.tileSolidTop[modTile.Type] = true;
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileTable[modTile.Type] = true;
-            Main.tileContainer[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.BasicDresser[modTile.Type] = true;
-            TileID.Sets.AvoidedByNPCs[modTile.Type] = true;
-            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
-            TileID.Sets.IsAContainer[modTile.Type] = true;
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Dressers];
-            modTile.AddMapEntry(mapColor, modTile.CreateMapEntryName(), MapDresserName);
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-            TileObjectData.newTile.AnchorInvalidTiles = [TileID.MagicalIceBlock, TileID.Boulder, TileID.BouncyBoulder, TileID.LifeCrystalBoulder, TileID.RollingCactus];
-            TileObjectData.newTile.LavaDeath = false;
-            TileObjectData.addTile(modTile.Type);
-            modTile.RegisterItemDrop(itemType);
-        }
-
         private static string MapDresserName(string name, int i, int j)
         {
             int left = i;
             int top = j;
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX % 36 != 0)
-            {
                 left--;
-            }
-
             if (tile.TileFrameY != 0)
-            {
                 top--;
-            }
-
             int chest = Chest.FindChest(left, top);
             if (chest < 0)
-            {
                 return Language.GetTextValue("LegacyDresserType.0");
-            }
-
             if (Main.chest[chest].name == "")
-            {
                 return name;
-            }
-
             return name + ": " + Main.chest[chest].name;
-        }
-
-
-
-
-        public static void SetupChest(ModTile modTile, int dustType, int itemDropType, Color mapColor, string chestName)
-        {
-            Main.tileSpelunker[modTile.Type] = true;
-            Main.tileContainer[modTile.Type] = true;
-            Main.tileShine2[modTile.Type] = true;
-            Main.tileShine[modTile.Type] = 1200;
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileOreFinderPriority[modTile.Type] = 500;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.BasicChest[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.AvoidedByNPCs[modTile.Type] = true;
-            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
-            TileID.Sets.IsAContainer[modTile.Type] = true;
-            TileID.Sets.FriendlyFairyCanLureTo[modTile.Type] = true;
-
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Containers];
-
-            modTile.AddMapEntry(mapColor, Language.GetText(chestName));
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-            TileObjectData.newTile.AnchorInvalidTiles =
-            [
-                TileID.MagicalIceBlock,
-                TileID.Boulder,
-                TileID.BouncyBoulder,
-                TileID.LifeCrystalBoulder,
-                TileID.RollingCactus
-            ];
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.LavaDeath = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.RegisterItemDrop(itemDropType);
-        }
-
-        public static void SetupClock(ModTile modTile, int dustType, Color mapColor, int itemDropType)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.Clock[modTile.Type] = true;
-
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.GrandfatherClocks];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
-            TileObjectData.newTile.Height = 5;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.RegisterItemDrop(itemDropType);
-            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.GrandfatherClock"));
         }
 
         public static bool HandleClockRightClick(int x, int y)
         {
             string period = "AM";
             double time = Main.time;
-
             if (!Main.dayTime)
-            {
                 time += 54000.0;
-            }
 
             time = (time / 86400.0) * 24.0;
             time = time - 7.5 - 12.0;
 
             if (time < 0.0)
-            {
                 time += 24.0;
-            }
 
             if (time >= 12.0)
-            {
                 period = "PM";
-            }
-
             int intTime = (int)time;
             double deltaTime = time - intTime;
             deltaTime = (int)(deltaTime * 60.0);
             string minutes = deltaTime < 10.0 ? "0" + deltaTime : deltaTime.ToString();
-
             if (intTime > 12)
-            {
                 intTime -= 12;
-            }
 
             if (intTime == 0)
-            {
                 intTime = 12;
-            }
-
             Main.NewText($"Time: {intTime}:{minutes} {period}", 255, 240, 20);
             return true;
         }
@@ -419,15 +230,9 @@ namespace AerovelenceMod.Common.Utilities
             int left = i;
             int top = j;
             if (tile.TileFrameX % 36 != 0)
-            {
                 left--;
-            }
-
             if (tile.TileFrameY != 0)
-            {
                 top--;
-            }
-
             player.CloseSign();
             player.SetTalkNPC(-1);
             Main.npcChatCornerItem = 0;
@@ -438,13 +243,11 @@ namespace AerovelenceMod.Common.Utilities
                 Main.editChest = false;
                 Main.npcChatText = string.Empty;
             }
-
             if (player.editedChestName)
             {
                 NetMessage.SendData(MessageID.SyncPlayerChest, -1, -1, NetworkText.FromLiteral(Main.chest[player.chest].name), player.chest, 1f);
                 player.editedChestName = false;
             }
-
             bool isLocked = Chest.IsLocked(left, top);
             if (Main.netMode == NetmodeID.MultiplayerClient && !isLocked)
             {
@@ -488,12 +291,10 @@ namespace AerovelenceMod.Common.Utilities
                             SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                             player.OpenChest(left, top, chest);
                         }
-
                         Recipe.FindRecipes();
                     }
                 }
             }
-
             return true;
         }
 
@@ -504,21 +305,15 @@ namespace AerovelenceMod.Common.Utilities
             int left = i;
             int top = j;
             if (tile.TileFrameX % 36 != 0)
-            {
                 left--;
-            }
 
             if (tile.TileFrameY != 0)
-            {
                 top--;
-            }
 
             int chest = Chest.FindChest(left, top);
             player.cursorItemIconID = -1;
             if (chest < 0)
-            {
                 player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
-            }
             else
             {
                 string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);
@@ -530,11 +325,9 @@ namespace AerovelenceMod.Common.Utilities
                     {
                         player.cursorItemIconID = keyItemId;
                     }
-
                     player.cursorItemIconText = "";
                 }
             }
-
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
         }
@@ -546,27 +339,18 @@ namespace AerovelenceMod.Common.Utilities
             int top = j;
             left -= tile.TileFrameX % 54 / 18;
             if (tile.TileFrameY % 36 != 0)
-            {
                 top--;
-            }
             int chestIndex = Chest.FindChest(left, top);
             player.cursorItemIconID = -1;
             if (chestIndex < 0)
-            {
                 player.cursorItemIconText = Language.GetTextValue("LegacyDresserType.0");
-            }
             else
             {
                 string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);
-
                 if (Main.chest[chestIndex].name != "")
-                {
                     player.cursorItemIconText = Main.chest[chestIndex].name;
-                }
                 else
-                {
                     player.cursorItemIconText = defaultName;
-                }
                 if (player.cursorItemIconText == defaultName)
                 {
                     player.cursorItemIconID = itemType;
@@ -591,45 +375,14 @@ namespace AerovelenceMod.Common.Utilities
         public static void ModifySittingTargetInfo(int i, int j, ref TileRestingInfo info, int nextStyleHeight)
         {
             Tile tile = Framing.GetTileSafely(i, j);
-
-            info.TargetDirection = -1;
-            if (tile.TileFrameX != 0)
-            {
-                info.TargetDirection = 1;
-            }
-
+            info.TargetDirection = tile.TileFrameX >= 18 ? 1 : -1;
             info.AnchorTilePosition.X = i;
             info.AnchorTilePosition.Y = j;
-
             if (tile.TileFrameY % nextStyleHeight == 0)
-            {
                 info.AnchorTilePosition.Y++;
-            }
         }
 
-        internal static void SetupCandle(ModTile modTile, Color mapColor, int itemDropID, int dustType, int offset = -4)
-        {
-            
 
-            Main.tileLighted[modTile.Type] = true;
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            Main.tileWaterDeath[modTile.Type] = false;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileObjectData.newTile.CopyFrom(TileObjectData.StyleOnTable1x1);
-            TileObjectData.newTile.CoordinateHeights = [20];
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.Allowed;
-            TileObjectData.newTile.LavaDeath = true;
-            TileObjectData.newTile.DrawYOffset = offset;
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-            modTile.DustType = dustType;
-            modTile.RegisterItemDrop(itemDropID);
-            modTile.AdjTiles = [TileID.Candles];
-            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.Candle"));
-        }
 
         public static void SetupCampfire(ModTile modTile, Color mapColor, int itemDropType, float lightR, float lightG, float lightB, string flameTexturePath, ref Asset<Texture2D> flameTexture)
         {
@@ -696,46 +449,9 @@ namespace AerovelenceMod.Common.Utilities
             }
         }
 
-        public static void SetupBookcase(ModTile modTile, Color mapColor, int itemDropType, int dustType = DustID.WoodFurniture)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
 
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Bookcases];
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
-            TileObjectData.newTile.Width = 3;
-            TileObjectData.newTile.Height = 4;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.addTile(modTile.Type);
 
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Bookcase"));
-
-            modTile.RegisterItemDrop(itemDropType);
-        }
-
-        public static void SetupBed(ModTile modTile, Color mapColor, int itemDropType, int dustType = DustID.WoodFurniture)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.CanBeSleptIn[modTile.Type] = true;
-            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
-            TileID.Sets.IsValidSpawnPoint[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Beds];
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, -2);
-            TileObjectData.addTile(modTile.Type);
-            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.Bed"));
-            modTile.RegisterItemDrop(itemDropType);
-        }
 
         public static bool HandleBedRightClick(int i, int j, int bedItemType)
         {
@@ -796,40 +512,429 @@ namespace AerovelenceMod.Common.Utilities
             info.VisualOffset.Y += 4f;
         }
 
-        public static void SetupBathtub(ModTile modTile, Color mapColor, int itemDropType, int dustType = DustID.WoodFurniture)
+        public static void SetupCommonProperties(ModTile modTile, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal, bool isChair)
         {
             Main.tileFrameImportant[modTile.Type] = true;
             Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-
+            Main.tileLavaDeath[modTile.Type] = lavaDeath;
+            Main.tileWaterDeath[modTile.Type] = waterDeath;
+            TileObjectData.newTile.LavaPlacement = lavaDeath ? LiquidPlacement.Allowed : LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.WaterPlacement = waterDeath ? LiquidPlacement.Allowed : LiquidPlacement.NotAllowed;
+            TileObjectData.newTile.StyleHorizontal = styleHorizontal;
             modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Bathtubs];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
-            TileObjectData.newTile.Width = 4;
-            TileObjectData.newTile.Height = 2;
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Bathtub"));
-
             modTile.RegisterItemDrop(itemDropType);
+
+            if(isChair)
+            {
+                TileID.Sets.CanBeSatOnForNPCs[modTile.Type] = true;
+                TileID.Sets.CanBeSatOnForPlayers[modTile.Type] = true;
+                TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+                TileID.Sets.HasOutlines[modTile.Type] = true;
+            }
+
+            TileObjectData.addTile(modTile.Type);
         }
 
-        public static void SetupLamp(ModTile modTile, Color mapColor, int itemDropType, float lightR, float lightG, float lightB, string flameTexturePath, ref Asset<Texture2D> flameTexture)
+        public static void SetupPlatform(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath)
         {
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
-            TileObjectData.newTile.WaterDeath = true;
-            TileObjectData.newTile.WaterPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.newTile.LavaPlacement = LiquidPlacement.NotAllowed;
-            TileObjectData.addTile(modTile.Type);
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Platform"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+            modTile.AdjTiles = [TileID.Platforms];
+            Main.tileLighted[modTile.Type] = true;
+            Main.tileSolidTop[modTile.Type] = true;
+            Main.tileSolid[modTile.Type] = true;
+            Main.tileNoAttach[modTile.Type] = true;
+            Main.tileTable[modTile.Type] = true;
+            TileID.Sets.Platforms[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CoordinateHeights = [16];
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 27;
+            TileObjectData.newTile.StyleWrapLimit = 27;
+            TileObjectData.newTile.UsesCustomCanPlace = false;
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal: false, isChair: false);
+        }
 
+        public static void SetupWorkbench(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.WorkBench"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+            modTile.AdjTiles = [TileID.WorkBenches];
+            Main.tileTable[modTile.Type] = true;
+            Main.tileSolidTop[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.IgnoredByNpcStepUp[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
+            TileObjectData.newTile.CoordinateHeights = [18];
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupCandle(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.Candle"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            modTile.AdjTiles = [TileID.Candles];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.StyleOnTable1x1);
+            TileObjectData.newTile.CoordinateHeights = [20];
+            TileObjectData.newTile.WaterPlacement = LiquidPlacement.Allowed;
+            TileObjectData.newTile.LavaDeath = true;
+            TileObjectData.newTile.StyleLineSkip = 2;
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupLantern(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(new Color(251, 235, 127), Language.GetText("MapObject.Lantern"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            modTile.AdjTiles = [TileID.HangingLanterns];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
+            TileObjectData.newTile.StyleLineSkip = 2;
+            TileObjectData.newTile.DrawYOffset = -2;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.Platform, TileObjectData.newTile.Width, 0);
+            TileObjectData.newAlternate.DrawYOffset = -10;
+            TileObjectData.addAlternate(0);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupLamp(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
             modTile.AddMapEntry(mapColor, Language.GetText("MapObject.FloorLamp"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            modTile.AdjTiles = [TileID.Lamps];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
+            TileObjectData.newTile.StyleLineSkip = 2;
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
 
-            modTile.RegisterItemDrop(itemDropType);
+        public static void SetupCandelabra(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(new Color(253, 221, 3), Language.GetText("MapObject.Candelabra"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            modTile.AdjTiles = [TileID.Candelabras];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.StyleLineSkip = 2;
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
 
-            flameTexture = ModContent.Request<Texture2D>(flameTexturePath);
+        public static void SetupChandelier(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Chandelier"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            modTile.AdjTiles = [TileID.Chandeliers];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.MultiTileSway[modTile.Type] = true;
+            TileObjectData.newTile.Width = 3;
+            TileObjectData.newTile.Height = 3;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.Origin = new Point16(1, 0);
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newTile.StyleLineSkip = 2;
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupChair(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Chair"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+            modTile.AdjTiles = [TileID.Chairs];
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.addAlternate(1);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: true);
+        }
+
+        public static void SetupToilet(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Toilet"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+            modTile.AdjTiles = [TileID.Chairs];
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.addAlternate(1);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: true);
+        }
+
+        public static void SetupSofa(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal, bool isBench)
+        {
+            modTile.AddMapEntry(mapColor, isBench ? Language.GetText("ItemName.Bench") : Language.GetText("ItemName.Sofa"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+            Main.tileLighted[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: true);
+        }
+
+
+        public static void SetupChest(ModTile modTile, Color mapColor, string chestName, int itemDropType, int dustType, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText(chestName));
+            modTile.AdjTiles = [TileID.Containers];
+            Main.tileSpelunker[modTile.Type] = true;
+            Main.tileContainer[modTile.Type] = true;
+            Main.tileShine2[modTile.Type] = true;
+            Main.tileShine[modTile.Type] = 1200;
+            Main.tileOreFinderPriority[modTile.Type] = 500;
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.BasicChest[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.AvoidedByNPCs[modTile.Type] = true;
+            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
+            TileID.Sets.IsAContainer[modTile.Type] = true;
+            TileID.Sets.FriendlyFairyCanLureTo[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.Origin = new Point16(0, 1);
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
+            TileObjectData.newTile.AnchorInvalidTiles = [TileID.MagicalIceBlock, TileID.Boulder, TileID.BouncyBoulder, TileID.LifeCrystalBoulder, TileID.RollingCactus];
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath: false, waterDeath: false, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupDresser(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, modTile.CreateMapEntryName(), MapDresserName);
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+            modTile.AdjTiles = [TileID.Dressers];
+            Main.tileSolidTop[modTile.Type] = true;
+            Main.tileTable[modTile.Type] = true;
+            Main.tileContainer[modTile.Type] = true;
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.BasicDresser[modTile.Type] = true;
+            TileID.Sets.AvoidedByNPCs[modTile.Type] = true;
+            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
+            TileID.Sets.IsAContainer[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+            TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
+            TileObjectData.newTile.AnchorInvalidTiles = [TileID.MagicalIceBlock, TileID.Boulder, TileID.BouncyBoulder, TileID.LifeCrystalBoulder, TileID.RollingCactus];
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupPiano(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Piano"));
+            modTile.AdjTiles = [TileID.Pianos];
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+            Main.tileTable[modTile.Type] = true;
+            Main.tileSolidTop[modTile.Type] = true;
+            Main.tileLighted[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupClock(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.GrandfatherClock"));
+            modTile.AdjTiles = [TileID.GrandfatherClocks];
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.Clock[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
+            TileObjectData.newTile.Height = 5;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupBed(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("ItemName.Bed"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+            modTile.AdjTiles = [TileID.Beds];
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.CanBeSleptIn[modTile.Type] = true;
+            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
+            TileID.Sets.IsValidSpawnPoint[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, -2);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupClosedDoor(ModTile modTile, int openDoorType, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Door"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+            modTile.AdjTiles = [TileID.ClosedDoor];
+            Main.tileBlockLight[modTile.Type] = true;
+            Main.tileSolid[modTile.Type] = true;
+            TileID.Sets.NotReallySolid[modTile.Type] = true;
+            TileID.Sets.DrawsWalls[modTile.Type] = true;
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.OpenDoorID[modTile.Type] = openDoorType;     
+            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.ClosedDoor, 0));
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupOpenDoor(ModTile modTile, int closedDoorType, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Door"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+            modTile.AdjTiles = [TileID.OpenDoor];
+            Main.tileSolid[modTile.Type] = false;
+            Main.tileNoSunLight[modTile.Type] = true;
+            TileID.Sets.HousingWalls[modTile.Type] = true;
+            TileID.Sets.HasOutlines[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.CloseDoorID[modTile.Type] = closedDoorType;
+            TileID.Sets.DrawTileInSolidLayer[modTile.Type] = true;
+            TileObjectData.newTile.Width = 2;
+            TileObjectData.newTile.Height = 3;
+            TileObjectData.newTile.Origin = new Point16(0, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 0);
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+            TileObjectData.newTile.LavaDeath = true;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Origin = new Point16(0, 1);
+            TileObjectData.addAlternate(0);
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Origin = new Point16(0, 2);
+            TileObjectData.addAlternate(0);
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Origin = new Point16(1, 0);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.addAlternate(1);
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Origin = new Point16(1, 1);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.addAlternate(1);
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Origin = new Point16(1, 2);
+            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.addAlternate(1);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupSink(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal, bool water = false, bool honey = false, bool lava = false)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Sink"));
+            modTile.AdjTiles = [TileID.Sinks];
+            Main.tileLighted[modTile.Type] = true;
+            TileID.Sets.CountsAsWaterSource[modTile.Type] = water;
+            TileID.Sets.CountsAsLavaSource[modTile.Type] = lava;
+            TileID.Sets.CountsAsHoneySource[modTile.Type] = honey;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupBookcase(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Bookcase"));
+            modTile.AdjTiles = [TileID.Bookcases];
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void SetupTable(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Table"));
+            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+            modTile.AdjTiles = [TileID.Tables];
+            Main.tileTable[modTile.Type] = true;
+            Main.tileSolidTop[modTile.Type] = true;
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.IgnoredByNpcStepUp[modTile.Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+
+        public static void SetupBathtub(ModTile modTile, Color mapColor, int itemType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Bathtub"));
+            modTile.AdjTiles = [TileID.Bathtubs];
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);
+            TileObjectData.newTile.CoordinateHeights = [16, 16];
+            SetupCommonProperties(modTile, itemType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void PlatformHangOffset(int i, int j, ref int offsetY)
+        {
+            Tile tile = Main.tile[i, j];
+            TileObjectData data = TileObjectData.GetTileData(tile);
+            int topLeftX = i - tile.TileFrameX / 18 % data.Width;
+            int topLeftY = j - tile.TileFrameY / 18 % data.Height;
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeftX, topLeftY))
+                offsetY -= 8;
+        }
+
+        public static void DrawChandelierSway(int i, int j, int width, int height, Asset<Texture2D> flameTexture, Color flameColor, float jitterMultX = 0.15f, float jitterMultY = 0.35f)
+        {
+            Tile tile = Main.tile[i, j];
+            if (!tile.HasTile) return;
+            float windCycle = (float)Math.Sin(i * 0.25 + j * 0.75 + Main.GameUpdateCount * 0.07f) * 1.2f;
+            float rotation = windCycle * 0.1f;
+            Vector2 screenPosition = Main.Camera.ScaledPosition;
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            for (int x = i; x < i + width; x++)
+            {
+                for (int y = j; y < j + height; y++)
+                {
+                    Tile currentTile = Main.tile[x, y];
+                    if (!currentTile.HasTile || currentTile.TileType != tile.TileType) continue;
+                    Texture2D tileTexture = Main.instance.TilesRenderer.GetTileDrawTexture(currentTile, x, y);
+                    Rectangle sourceRect = new(currentTile.TileFrameX, currentTile.TileFrameY, 16, 16);
+                    Vector2 drawPos = new Vector2(x * 16, y * 16) - screenPosition + new Vector2(8, 16);
+                    spriteBatch.Draw(tileTexture, drawPos, sourceRect, Lighting.GetColor(x, y), rotation, new Vector2(8, 16), 1f, SpriteEffects.None, 0f);
+                    if (flameTexture != null)
+                    {
+                        ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)y << 32 | (uint)x);
+                        for (int k = 0; k < 7; k++)
+                        {
+                            Vector2 jitter = new Vector2(
+                                Utils.RandomInt(ref randSeed, -10, 11) * jitterMultX,
+                                Utils.RandomInt(ref randSeed, -10, 1) * jitterMultY
+                            );
+                            spriteBatch.Draw(flameTexture.Value, drawPos + jitter, sourceRect, flameColor, rotation, new Vector2(8, 16), 1f, SpriteEffects.None, 0f);
+                        }
+                    }
+                }
+            }
         }
 
         public static void SetupTorchTile(ModTile modTile, string flameTexturePath, ref Asset<Texture2D> flameTexture, Color mapColor, int dustType, int[] adjTiles, int? waterDeathDustType = null)
@@ -962,7 +1067,7 @@ namespace AerovelenceMod.Common.Utilities
 
 
 
-        public static void HandleHitWire(int i, int j, int tileWidth, int tileHeight)
+        public static void HandleHitWire(int i, int j, int tileWidth, int tileHeight, bool isToilet = false)
         {
             Tile tile = Main.tile[i, j];
             if (!tile.HasTile) return;
@@ -987,6 +1092,11 @@ namespace AerovelenceMod.Common.Utilities
                 }
             }
 
+            if (isToilet && Wiring.CheckMech(originX, originY, 60))
+            {
+                Projectile.NewProjectile(Wiring.GetProjectileSource(originX, originY), originX * 16 + (tileWidth * 16 / 2), originY * 16 + 12, 0f, 0f, ProjectileID.ToiletEffect, 0, 0f, Main.myPlayer);
+            }
+
             if (Wiring.running)
             {
                 for (int x = originX; x < originX + tileWidth; x++)
@@ -994,138 +1104,13 @@ namespace AerovelenceMod.Common.Utilities
                     for (int y = originY; y < originY + tileHeight; y++)
                     {
                         Wiring.SkipWire(x, y);
+
                     }
                 }
             }
 
             NetMessage.SendTileSquare(-1, originX + tileWidth / 2, originY + tileHeight / 2, Math.Max(tileWidth, tileHeight));
         }
-
-        public static void SetupWorkbench(ModTile modTile, int itemDropType)
-        {
-            Main.tileTable[modTile.Type] = true;
-            Main.tileSolidTop[modTile.Type] = true;
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.IgnoredByNpcStepUp[modTile.Type] = true;
-
-            modTile.DustType = DustID.BlueCrystalShard;
-            modTile.AdjTiles = [TileID.WorkBenches];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-            TileObjectData.newTile.CoordinateHeights = [18];
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.RegisterItemDrop(itemDropType);
-
-            modTile.AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.WorkBench"));
-        }
-
-        public static void SetupChair(ModTile modTile)
-        {
-            SetBasicTileProperties(modTile, hasOutlines: true, canBeSatOnForNPCs: true, canBeSatOnForPlayers: true);
-
-            modTile.DustType = DustID.BlueCrystalShard;
-            modTile.AdjTiles = [TileID.Chairs];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Chair"));
-        }
-
-        public static void SetupTable(ModTile modTile, int itemDropType)
-        {
-            Main.tileTable[modTile.Type] = true;
-            Main.tileSolidTop[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            Main.tileFrameImportant[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.IgnoredByNpcStepUp[modTile.Type] = true;
-
-            modTile.DustType = DustID.BlueCrystalShard;
-            modTile.AdjTiles = [TileID.Tables];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.RegisterItemDrop(itemDropType);
-
-            modTile.AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Table"));
-        }
-
-        public static void SetupSofa(ModTile modTile, Color mapColor, int itemDropType, int dustType = DustID.WoodFurniture)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.CanBeSatOnForPlayers[modTile.Type] = true;
-
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Benches];
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.Width = 2;
-            TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 18];
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Sofa"));
-            modTile.RegisterItemDrop(itemDropType);
-        }
-
-        public static void SetupPlatform(ModTile modTile, Color mapColor, int itemDropType, int dustType = DustID.WoodFurniture, float lightR = 0f, float lightG = 0f, float lightB = 0f)
-        {
-            Main.tileLighted[modTile.Type] = true;
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileSolidTop[modTile.Type] = true;
-            Main.tileSolid[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileTable[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.Platforms[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Platforms];
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
-            TileObjectData.newTile.CoordinateHeights = [16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.StyleMultiplier = 27;
-            TileObjectData.newTile.StyleWrapLimit = 27;
-            TileObjectData.newTile.UsesCustomCanPlace = false;
-            TileObjectData.newTile.LavaDeath = true;
-            TileObjectData.addTile(modTile.Type);
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Platform"));
-            modTile.RegisterItemDrop(itemDropType);
-        }
-
 
 
         public static void SetupDecorativeMultiTile(ModTile modTile, string mapEntryKey, Color mapColor, int widthInTiles, int heightInTiles, int itemDropType, int dustType = DustID.Smoke)
@@ -1147,31 +1132,6 @@ namespace AerovelenceMod.Common.Utilities
             modTile.RegisterItemDrop(itemDropType);
         }
 
-
-        public static void SetupToilet(ModTile modTile)
-        {
-            TileID.Sets.CanBeSatOnForNPCs[modTile.Type] = true;
-            TileID.Sets.CanBeSatOnForPlayers[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-
-            modTile.DustType = DustID.BlueCrystalShard;
-            modTile.AdjTiles = [TileID.Toilets];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, 2);
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Toilet"));
-        }
-
         public static void HandleToiletInteraction(ModTile modTile, int i, int j, Player player)
         {
             if (player.IsWithinSnappngRangeToTile(i, j, PlayerSittingHelper.ChairSittingMaxDistance))
@@ -1179,126 +1139,6 @@ namespace AerovelenceMod.Common.Utilities
                 player.GamepadEnableGrappleCooldown();
                 player.sitting.SitDown(player, i, j);
             }
-        }
-
-        public static void HandleToiletHitWire(ModTile modTile, int i, int j)
-        {
-            Tile tile = Main.tile[i, j];
-            int spawnX = i;
-            int spawnY = j - (tile.TileFrameY % 40) / 18;
-
-            Wiring.SkipWire(spawnX, spawnY);
-            Wiring.SkipWire(spawnX, spawnY + 1);
-
-            if (Wiring.CheckMech(spawnX, spawnY, 60))
-            {
-                Projectile.NewProjectile(Wiring.GetProjectileSource(spawnX, spawnY), spawnX * 16 + 8, spawnY * 16 + 12, 0f, 0f, ProjectileID.ToiletEffect, 0, 0f, Main.myPlayer);
-            }
-        }
-
-        public static void SetupChandelier(ModTile modTile, Color mapColor, int itemType, int dustType)
-        {
-            modTile.RegisterItemDrop(itemType);
-
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileLighted[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            Main.tileWaterDeath[modTile.Type] = false;
-            TileObjectData.newTile.Width = 3;
-            TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.Origin = new Point16(1, 0);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newTile.LavaDeath = true;
-            TileObjectData.newTile.StyleLineSkip = 2;
-            TileObjectData.addTile(modTile.Type);
-
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Chandelier"));
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.Chandeliers];
-        }
-
-        public static void SetupClosedDoor(ModTile modTile, int openDoorType, int itemType, Color mapColor, int dustType = DustID.Stone)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileBlockLight[modTile.Type] = true;
-            Main.tileSolid[modTile.Type] = true;
-            Main.tileNoAttach[modTile.Type] = true;
-            Main.tileLavaDeath[modTile.Type] = true;
-            TileID.Sets.NotReallySolid[modTile.Type] = true;
-            TileID.Sets.DrawsWalls[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.OpenDoorID[modTile.Type] = openDoorType;
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.ClosedDoor];
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Door"));
-            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.ClosedDoor, 0));
-            TileObjectData.addTile(modTile.Type);
-        }
-
-        public static void SetupOpenDoor(ModTile modTile, int closedDoorType, int itemType, Color mapColor, int dustType = DustID.Stone)
-        {
-            Main.tileFrameImportant[modTile.Type] = true;
-            Main.tileSolid[modTile.Type] = false;
-            Main.tileLavaDeath[modTile.Type] = true;
-            Main.tileNoSunLight[modTile.Type] = true;
-            TileID.Sets.HousingWalls[modTile.Type] = true;
-            TileID.Sets.HasOutlines[modTile.Type] = true;
-            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
-            TileID.Sets.CloseDoorID[modTile.Type] = closedDoorType;
-            TileID.Sets.DrawTileInSolidLayer[modTile.Type] = true;
-
-            modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-            modTile.DustType = dustType;
-            modTile.AdjTiles = [TileID.OpenDoor];
-            modTile.RegisterItemDrop(itemType);
-            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Door"));
-            TileObjectData.newTile.Width = 2;
-            TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.Origin = new Point16(0, 0);
-            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 0);
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 0);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-            TileObjectData.newTile.LavaDeath = true;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Origin = new Point16(0, 1);
-            TileObjectData.addAlternate(0);
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Origin = new Point16(0, 2);
-            TileObjectData.addAlternate(0);
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Origin = new Point16(1, 0);
-            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.addAlternate(1);
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Origin = new Point16(1, 1);
-            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.addAlternate(1);
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Origin = new Point16(1, 2);
-            TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile, 1, 1);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.addAlternate(1);
-            TileObjectData.addTile(modTile.Type);
         }
 
         public static void HandleMouseOver(ModTile modTile, int i, int j, int itemType)

@@ -1,5 +1,6 @@
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -16,8 +17,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
         private Asset<Texture2D> branchesTexture;
         private Asset<Texture2D> topsTexture;
 
-        public override TreePaintingSettings TreeShaderSettings => new TreePaintingSettings
-		{
+        public override TreePaintingSettings TreeShaderSettings => new()
+        {
 			UseSpecialGroups = true,
 			SpecialGroupMinimalHueValue = 11f / 72f,
 			SpecialGroupMaximumHueValue = 0.25f,
@@ -27,7 +28,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 
         public override void SetStaticDefaults()
         {
-            GrowsOnTileId = [ModContent.TileType<CrystalGrass>()];
+            GrowsOnTileId = [ModContent.TileType<CrystalGrassTile>()];
             texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree");
             branchesTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Branches");
             topsTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Natural/CrystalTree_Tops");
@@ -51,7 +52,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 
         public override int DropWood()
 		{
-			return ItemType <ShotgunAxe>();
+			return ItemType <GlimmerwoodItem>();
 		}
 
         public override Asset<Texture2D> GetBranchTextures() => branchesTexture;
