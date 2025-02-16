@@ -9,13 +9,20 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
 using Terraria.Utilities;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
     public record AeroStructure(Vector2 StartPosition, int Width, int Height, string Name)
     {
+        public bool Protected { get; private set; } = false;
+
+        public static AeroStructure Empty { get; private set; } = new AeroStructure(Vector2.Zero, 0, 0, "");
+
         public AeroStructure ApplyItemConfigurationsToAll(UnifiedRandom random, List<PrimaryItemConfiguration> primaryItems, List<ItemConfiguration> secondaryItems)
         {
+            if (this == Empty) { return this; }
+
             var chestConfig = new ChestConfiguration();
 
             PrimaryItemConfiguration selectedPrimaryItem = null;
@@ -45,6 +52,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public AeroStructure ApplyChestConfigurationsToAll(ChestConfiguration chestConfig)
         {
+            if (this == Empty) { return this; }
+
             for (int x = (int)StartPosition.X; x < (int)StartPosition.X + Width; x++)
             {
                 for (int y = (int)StartPosition.Y; y < (int)StartPosition.Y + Height; y++)
@@ -57,6 +66,18 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 }
             }
 
+            return this;
+        }
+
+        public AeroStructure ProtectStructure(int padding = 0)
+        {
+            if (this == Empty) { return this; }
+
+            if (!Protected)
+            {
+                GenVars.structures.AddProtectedStructure(new Rectangle((int)StartPosition.X, (int)StartPosition.Y, Width, Height), padding);
+                Protected = true;
+            }
             return this;
         }
     }
