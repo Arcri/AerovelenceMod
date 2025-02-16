@@ -8,6 +8,7 @@ using System.IO;
 using Terraria.ObjectData;
 using System.Linq;
 using ReLogic.Content;
+using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 
 namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
@@ -152,7 +153,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             Main.NewText($"Structure '{structureName}' saved to {path} with size {width}x{height}");
         }
 
-        public static (int width, int height) LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true)
+        public static AeroStructure LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true)
         {
             string assetPath = $"Common/Utilities/StructureStamper/Structures/{structureName}.dat";
             int height = 0;
@@ -386,7 +387,253 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     Main.NewText($"Structure '{structureName}' loaded. Width: {width}, Height: {height}!");
                 }
 
-                return (width, height);
+                return new AeroStructure(startPosition, width, height, structureName);
+            }
+
+            catch (Exception ex)
+            {
+                throw new FileNotFoundException($"Structure file {structureName}.dat could not be found or loaded.", ex);
+            }
+        }
+
+        public static AeroStructure LoadStructure(AeroStructure aeroStructure, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true)
+        {
+            Vector2 startPosition = aeroStructure.StartPosition;
+            string structureName = aeroStructure.Name;
+
+            string assetPath = $"Common/Utilities/StructureStamper/Structures/{structureName}.dat";
+            int height = 0;
+            int width = 0;
+
+            List<StructureData> structure = [];
+            Mod mod = ModLoader.GetMod("AerovelenceMod");
+
+            byte[] structureBytes = mod.GetFileBytes(assetPath);
+
+            try
+            {
+                using (MemoryStream ms = new(structureBytes))
+                using (BinaryReader reader = new(ms))
+                {
+                    int count = reader.ReadInt32();
+                    width = reader.ReadInt32();
+                    height = reader.ReadInt32();
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        StructureData data = new()
+                        {
+                            X = reader.ReadInt32(),
+                            Y = reader.ReadInt32(),
+                            ModName = reader.ReadString(),
+                            TileName = reader.ReadString(),
+                            WallModName = reader.ReadString(),
+                            WallName = reader.ReadString(),
+                            TileFrameX = reader.ReadInt16(),
+                            TileFrameY = reader.ReadInt16(),
+                            LiquidType = reader.ReadByte(),
+                            LiquidAmount = reader.ReadByte(),
+                            IsHalfBlock = reader.ReadBoolean(),
+                            Slope = reader.ReadByte(),
+                            IsActive = reader.ReadBoolean(),
+                            TileFrameImportant = reader.ReadBoolean(),
+                            HasRedWire = reader.ReadBoolean(),
+                            HasBlueWire = reader.ReadBoolean(),
+                            HasGreenWire = reader.ReadBoolean(),
+                            HasYellowWire = reader.ReadBoolean(),
+                            HasActuator = reader.ReadBoolean(),
+                            IsActuated = reader.ReadBoolean(),
+                            TreeStyle = reader.ReadByte(),
+                            TileColor = reader.ReadByte(),
+                            WallColor = reader.ReadByte()
+                        };
+
+                        structure.Add(data);
+                    }
+                }
+
+                if (placeStructure)
+                {
+                    HashSet<Vector2> placedTiles = [];
+                    List<Vector2> tilesToFrame = [];
+                    int chestIndex = 0;
+
+                    foreach (StructureData data in structure)
+                    {
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        Vector2 tilePosition = new(x, y);
+
+                        Tile tile = Main.tile[x, y];
+
+                        ushort wallType;
+                        ushort tileType;
+
+                        if (data.ModName == "Terraria")
+                        {
+                            tileType = Convert.ToUInt16(data.TileName);
+                        }
+                        else
+                        {
+                            Mod modTile = ModLoader.GetMod(data.ModName);
+                            tileType = (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
+                        }
+
+                        if (data.WallModName == "Terraria")
+                        {
+                            wallType = Convert.ToUInt16(data.WallName);
+                        }
+                        else
+                        {
+                            Mod modWall = ModLoader.GetMod(data.WallModName);
+                            wallType = (modWall?.Find<ModWall>(data.WallName)?.Type ?? 0);
+                        }
+
+                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        {
+                            continue;
+                        }
+
+                        tile.ClearTile();
+                        tile.WallType = 0;
+                        tile.LiquidAmount = 0;
+                        tile.LiquidType = 0;
+                        tile.Slope = 0;
+                        tile.IsHalfBlock = false;
+
+                        if (wallType != 0)
+                        {
+                            tile.WallType = wallType;
+                            tile.WallColor = data.WallColor;
+                            WorldGen.SquareWallFrame(x, y, true);
+                        }
+
+                        placedTiles.Add(tilePosition);
+                    }
+
+                    foreach (StructureData data in structure)
+                    {
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        Vector2 tilePosition = new(x, y);
+
+                        Tile tile = Main.tile[x, y];
+
+                        ushort tileType;
+
+                        if (data.ModName == "Terraria")
+                        {
+                            tileType = Convert.ToUInt16(data.TileName);
+                        }
+                        else
+                        {
+                            Mod modTile = ModLoader.GetMod(data.ModName);
+                            tileType = (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
+                        }
+
+                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        {
+                            continue;
+                        }
+
+                        if (data.TileFrameImportant)
+                        {
+                            TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);
+                            if (tileData != null)
+                            {
+                                int tileWidth = tileData.Width;
+                                int tileHeight = tileData.Height;
+
+                                for (int dx = 0; dx < tileWidth; dx++)
+                                {
+                                    for (int dy = 0; dy < tileHeight; dy++)
+                                    {
+                                        Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+
+                                        targetTile.WallType = 0;
+                                        targetTile.LiquidAmount = 0;
+                                        targetTile.LiquidType = 0;
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        tile.HasTile = data.IsActive;
+                        tile.TileType = tileType;
+                        tile.TileFrameX = data.TileFrameX;
+                        tile.TileFrameY = data.TileFrameY;
+                        tile.LiquidType = data.LiquidType;
+                        tile.LiquidAmount = data.LiquidAmount;
+                        tile.IsHalfBlock = data.IsHalfBlock;
+                        tile.Slope = 0;
+                        tile.RedWire = data.HasRedWire;
+                        tile.BlueWire = data.HasBlueWire;
+                        tile.GreenWire = data.HasGreenWire;
+                        tile.YellowWire = data.HasYellowWire;
+                        tile.HasActuator = data.HasActuator;
+                        tile.IsActuated = data.IsActuated;
+                        tile.TileColor = data.TileColor;
+
+                        placedTiles.Add(tilePosition);
+
+                        if (data.TileFrameImportant)
+                        {
+                            TileObjectData tileData = TileObjectData.GetTileData(tile.TileType, 0);
+
+                            if (tileData != null)
+                            {
+                                int tileWidth = tileData.Width;
+                                int tileHeight = tileData.Height;
+
+                                for (int dx = 0; dx < tileWidth; dx++)
+                                {
+                                    for (int dy = 0; dy < tileHeight; dy++)
+                                    {
+                                        Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+
+                                        targetTile.HasTile = true;
+                                        targetTile.TileType = tileType;
+                                        targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
+                                        targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
+
+                                        tilesToFrame.Add(offsetPosition);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                tilesToFrame.Add(tilePosition);
+                            }
+
+                            if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                            {
+                                ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
+                                chestIndex++;
+                            }
+                        }
+                        else
+                        {
+                            tilesToFrame.Add(tilePosition);
+                        }
+                    }
+
+                    foreach (Vector2 position in tilesToFrame)
+                    {
+                        int x = (int)position.X;
+                        int y = (int)position.Y;
+                        WorldGen.SquareTileFrame(x, y, true);
+                    }
+
+                    Main.NewText($"Structure '{structureName}' loaded. Width: {width}, Height: {height}!");
+                }
+
+                return new AeroStructure(startPosition, width, height, structureName);
             }
 
             catch (Exception ex)
