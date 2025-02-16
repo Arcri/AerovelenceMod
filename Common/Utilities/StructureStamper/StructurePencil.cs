@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using Terraria.Utilities;
 
 namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
@@ -30,82 +31,72 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
         {
             if (player.altFunctionUse == 2)
             {
-                PlaceStructureWithChest(player);
+                UnifiedRandom rand = WorldGen.genRand;
+                List<PrimaryItemConfiguration> crystalShrinePrimary =
+[
+    new(ItemID.BandofRegeneration, 1, 1, 1f),
+                new(ItemID.MagicMirror, 1, 1, 1f),
+                new(ItemID.CloudinaBottle, 1, 1, 1f),
+                new(ItemID.HermesBoots, 1, 1, 1f),
+                new(ItemID.EnchantedBoomerang, 1, 1, 1f),
+                new(ItemID.ShoeSpikes, 1, 1, 1f),
+                new(ItemID.FlareGun, 1, 1, 1f),
+                new(ItemID.Extractinator, 1, 1, 1f),
+                new(ItemID.LavaCharm, 1, 1, 1f),
+                new(ItemID.LuckyHorseshoe, 1, 1, 1f),
+                new(ModContent.ItemType<Eos>(), 1, 1, 1f)
+];
+
+                List<ItemConfiguration> crystalShrineSecondary =
+                [
+                    new(ItemID.SuspiciousLookingEye, 1, 1),
+                new(ItemID.Dynamite, 1, 1),
+                new(ItemID.JestersArrow, 25, 50),
+                new([ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar], 3, 10),
+                new([ItemID.FlamingArrow, ItemID.ThrowingKnife], 25, 50),
+                new(ItemID.HealingPotion, 3, 5),
+                new(
+                [
+                    ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
+                    ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
+                    ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
+                ], 1, 2),
+                new(ItemID.RecallPotion, 1, 2),
+                new([ItemID.Torch, ItemID.Glowstick], 15, 29),
+                new(ItemID.GoldCoin, 1, 2)
+                ];
+
+                AeroStructure crystalShrine = PlaceStructureSafely(player, "crystalshrine", 20, 20, 5000).ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
             }
             else
             {
-               // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+                StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "crystalshrine");
             }
 
             return true;
         }
 
-        private static void PlaceStructureWithChest(Player player)
+        private AeroStructure PlaceStructureSafely(Player player, string name, int xMarginPercentage = 10, int yMarginPercentage = 10, int attempts = 5000)
         {
-
-            //Example of a single chest in a structure (see the structure world gen for applying loot to every single chest otherwise it applies to the first chest
+            AeroStructure structure = AeroStructure.Empty;
             Vector2 playerPosition = player.Center.ToTileCoordinates().ToVector2();
-            Vector2 startPosition = playerPosition;
-
-            var chestConfig = new ChestConfiguration();
-
-            #region primary items
-            List<PrimaryItemConfiguration> primaryItems =
-            [
-                new(ItemID.BandofRegeneration, 1, 1, 0.2f),
-                new(ItemID.MagicMirror, 1, 1, 0.2f),
-                new(ItemID.CloudinaBottle, 1, 1, 0.2f),
-                new(ItemID.HermesBoots, 1, 1, 0.2f),
-                new(ItemID.EnchantedBoomerang, 1, 1, 0.2f),
-                new(ItemID.ShoeSpikes, 1, 1, 0.2f),
-                new(ItemID.FlareGun, 1, 1, 0.2f),
-                new(ItemID.Extractinator, 1, 1, 0.2f),
-                new(ItemID.LavaCharm, 1, 1, 0.2f),
-                new(ItemID.LuckyHorseshoe, 1, 1, 0.2f),
-                new(ModContent.ItemType<Eos>(), 1, 1, 0.2f)
-            ];
-
-            PrimaryItemConfiguration selectedPrimaryItem = null;
-            foreach (var item in primaryItems)
+            for (int i = 0; i < attempts; i++)
             {
-                if (Main.rand.NextFloat() < item.Weight)
+                Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
+                structure = StructureStamper.LoadStructure(centeredPosition, name, placeStructure: false, checkIfProtected: false);
+                if (structure != AeroStructure.Empty)
                 {
-                    selectedPrimaryItem = item;
-                    break;
+                    centeredPosition = centeredPosition.MoveTowards(new Vector2(centeredPosition.X - structure.Width / 2, centeredPosition.Y - structure.Height / 2), float.MaxValue);
+                    structure = StructureStamper.LoadStructure(centeredPosition, name, placeStructure: false, checkIfProtected: false);
+                }
+                if (structure != AeroStructure.Empty)
+                {
+                    structure = StructureStamper.LoadStructure(centeredPosition, name, checkIfProtected: false);
+                    return structure;
                 }
             }
-
-            if (selectedPrimaryItem != null)
-            {
-                chestConfig.AddPrimaryItemConfiguration(selectedPrimaryItem);
-                if (selectedPrimaryItem.ItemTypeChoices.Contains(ItemID.FlareGun))
-                {
-                    chestConfig.AddPrimaryItemConfiguration(new PrimaryItemConfiguration(ItemID.Flare, 25, 50, 1f));
-                }
-            }
-            #endregion
-
-            #region common items
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.SuspiciousLookingEye, 1, 1));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.Dynamite, 1, 1));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.JestersArrow, 25, 50));
-            chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar], 3, 10));
-            chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.FlamingArrow, ItemID.ThrowingKnife], 25, 50));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.HealingPotion, 3, 5));
-            chestConfig.AddItemConfiguration(new ItemConfiguration([
-                ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
-                ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
-                ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
-            ], 1, 2));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.RecallPotion, 1, 2));
-            chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.Torch, ItemID.Glowstick], 15, 29));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.GoldCoin, 1, 2));
-
-            #endregion
-
-            AeroStructure structure = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
-            Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
-            StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
+            //Console.WriteLine("Failed to load structure " + name);
+            return structure;
         }
     }
 }
