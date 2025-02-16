@@ -79,7 +79,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             PrimaryItemConfiguration selectedPrimaryItem = null;
             foreach (var item in primaryItems)
             {
-                if (Main.rand.NextFloat() < item.Chance)
+                if (Main.rand.NextFloat() < item.Weight)
                 {
                     selectedPrimaryItem = item;
                     break;

@@ -29,7 +29,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                 foreach (var primaryConfig in chestConfig.PrimaryItems)
                 {
-                    if (Main.rand.NextFloat() < primaryConfig.Chance)
+                    if (Main.rand.NextFloat() < primaryConfig.Weight)
                     {
                         slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex);
                     }
@@ -81,18 +81,18 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
     [Serializable]
     public class PrimaryItemConfiguration : ItemConfiguration
     {
-        public float Chance { get; set; }
+        public float Weight { get; set; }
 
-        public PrimaryItemConfiguration(int itemType, int minStack, int maxStack, float chance)
+        public PrimaryItemConfiguration(int itemType, int minStack, int maxStack, float weight)
             : base(itemType, minStack, maxStack)
         {
-            Chance = chance;
+            Weight = weight;
         }
 
-        public PrimaryItemConfiguration(List<int> itemTypeChoices, int minStack, int maxStack, float chance)
+        public PrimaryItemConfiguration(List<int> itemTypeChoices, int minStack, int maxStack, float weight)
             : base(itemTypeChoices, minStack, maxStack)
         {
-            Chance = chance;
+            Weight = weight;
         }
     }
 

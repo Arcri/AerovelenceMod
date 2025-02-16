@@ -68,7 +68,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             PrimaryItemConfiguration selectedPrimaryItem = null;
             foreach (var item in primaryItems)
             {
-                if (Main.rand.NextFloat() < item.Chance)
+                if (Main.rand.NextFloat() < item.Weight)
                 {
                     selectedPrimaryItem = item;
                     break;
@@ -103,8 +103,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             #endregion
 
-            var (width, height) = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
-            Vector2 centeredPosition = playerPosition - new Vector2(width / 2, height / 2);
+            AeroStructure structure = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
+            Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
             StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
         }
     }
