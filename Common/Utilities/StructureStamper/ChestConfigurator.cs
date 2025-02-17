@@ -21,19 +21,35 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                     Tile tile = Main.tile[x, y];
                     if (!TileID.Sets.BasicChest[tile.TileType])
+                    {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"Tile at ({x}, {y}) is not a valid chest.");
                         return;
+                    }
 
                     int chestIndex = Chest.FindChest(x, y);
                     if (chestIndex == -1)
                     {
                         chestIndex = Chest.CreateChest(x, y);
                         if (chestIndex == -1 || chestIndex >= Main.chest.Length)
+                        {
+                            ModContent.GetInstance<AerovelenceMod>()?.Logger.Error($"Failed to create chest at ({x}, {y}).");
                             return;
+                        }
                     }
 
                     Chest chest = Main.chest[chestIndex];
-                    if (chest == null || chestConfig == null)
+                    if (chest == null)
+                    {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error($"Chest at ({x}, {y}) is null.");
                         return;
+                    }
+
+                    if (chest.item == null || chest.item.Length != 40)
+                    {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error($"Chest at ({x}, {y}) has an invalid item array.");
+                        return;
+                    }
+
                     for (int i = 0; i < chest.item.Length; i++)
                     {
                         if (chest.item[i] == null)
@@ -50,7 +66,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             if (slotIndex >= maxSlots) break;
                             if (primaryConfig != null && Main.rand.NextFloat() < primaryConfig.Weight)
                             {
-                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex);
+                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex, x, y);
                             }
                         }
                     }
@@ -61,10 +77,14 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             if (slotIndex >= maxSlots) break;
                             if (itemConfig != null)
                             {
-                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, itemConfig, slotIndex);
+                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, itemConfig, slotIndex, x, y);
                             }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    ModContent.GetInstance<AerovelenceMod>()?.Logger.Error($"Error applying chest configuration at ({x}, {y}): {ex.Message}");
                 }
                 finally
                 {
@@ -73,7 +93,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
         }
 
-        private static int PlaceItemInNextAvailableSlot(Item[] items, ItemConfiguration itemConfig, int startSlot)
+        private static int PlaceItemInNextAvailableSlot(Item[] items, ItemConfiguration itemConfig, int startSlot, int chestX, int chestY)
         {
             for (int i = startSlot; i < items.Length; i++)
             {
@@ -81,31 +101,34 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 {
                     if (itemConfig.ItemTypeChoices == null || itemConfig.ItemTypeChoices.Count == 0)
                     {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"ItemTypeChoices is null or empty for chest at ({chestX}, {chestY}).");
                         continue;
                     }
+
                     int itemType = itemConfig.ItemTypeChoices[Main.rand.Next(itemConfig.ItemTypeChoices.Count)];
+                    if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
+                    {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"Invalid itemType {itemType} for chest at ({chestX}, {chestY}).");
+                        continue;
+                    }
+
                     try
                     {
-                        int stackSize = Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1);
-
-                        if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
-                        {
-                            ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn(
-                                $"Skipping invalid itemType {itemType} at chest slot {i}."
-                            );
-                            return i + 1;
-                        }
-
                         items[i].SetDefaults(itemType);
+                        int maxStackForItem = items[i].maxStack;
+                        int stackSize = Math.Clamp(
+                            Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
+                            1,
+                            maxStackForItem
+                        );
+
                         items[i].stack = stackSize;
                         items[i].Prefix(-1);
                         return i + 1;
                     }
                     catch (Exception ex)
                     {
-                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error(
-                            $"Error setting item defaults for itemType {itemType}: {ex}"
-                        );
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error($"Error setting item in chest at ({chestX}, {chestY}): {ex.Message}");
                     }
                 }
             }
@@ -113,7 +136,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
         }
     }
 
-    [Serializable]
+        [Serializable]
     public class ChestConfiguration
     {
         public List<PrimaryItemConfiguration> PrimaryItems { get; set; } = new List<PrimaryItemConfiguration>();

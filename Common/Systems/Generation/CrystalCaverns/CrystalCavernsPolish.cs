@@ -153,120 +153,58 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     "tumblerarena"
                 ).ProtectStructure();
                 AeroStructure crystalShrine = PlaceStructureSafely("crystalshrine", 20, 20)
-                    .ProtectStructure();
-                InitializeChestsInStructure(crystalShrine);
-                crystalShrine.ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                const int BATCH_SIZE = 5;
-                const int TOTAL_BATCHES = 20;
-                for (int batch = 0; batch < TOTAL_BATCHES; batch++)
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+
+
+                const int TOTAL_SHRINES = 101;
+
+                for (int i = 0; i < TOTAL_SHRINES; i++)
                 {
-                    for (int i = 0; i < BATCH_SIZE; i++)
+                    progress.Set((float)i / TOTAL_SHRINES);
+
+                    try
                     {
-                        AeroStructure shrine = PlaceStructureSafely("crystalshrine", 20, 20);
-                        if (shrine != AeroStructure.Empty)
+                        Vector2 position = GetRandomUndergroundVector();
+                        AeroStructure checkStructure = StructureStamper.LoadStructure(
+                            position,
+                            "crystalshrine",
+                            placeStructure: false,
+                            checkIfProtected: true
+                        );
+
+                        if (checkStructure != AeroStructure.Empty)
                         {
-                            shrine.ProtectStructure();
-                            bool oldFrameSkip = WorldGen.noTileActions;
-                            WorldGen.noTileActions = true;
-                            try
+                            position = new Vector2(
+                                position.X - checkStructure.Width / 2,
+                                position.Y - checkStructure.Height / 2
+                            );
+                            AeroStructure shrine = StructureStamper.LoadStructure(
+                                position,
+                                "crystalshrine",
+                                placeStructure: true,
+                                checkIfProtected: true
+                            );
+
+                            if (shrine != AeroStructure.Empty)
                             {
-                                for (int x = (int)shrine.StartPosition.X; x < shrine.StartPosition.X + shrine.Width; x++)
-                                {
-                                    for (int y = (int)shrine.StartPosition.Y; y < shrine.StartPosition.Y + shrine.Height; y++)
-                                    {
-                                        Tile tile = Main.tile[x, y];
-                                        if (tile.HasTile && TileID.Sets.BasicChest[tile.TileType])
-                                        {
-                                            int chestIndex = Chest.FindChest(x, y);
-                                            if (chestIndex == -1)
-                                            {
-                                                chestIndex = Chest.CreateChest(x, y);
-                                                if (chestIndex != -1 && chestIndex < Main.chest.Length)
-                                                {
-                                                    Main.chest[chestIndex] = new Chest
-                                                    {
-                                                        x = x,
-                                                        y = y,
-                                                        item = new Item[40]
-                                                    };
-                                                    for (int slot = 0; slot < 40; slot++)
-                                                    {
-                                                        Main.chest[chestIndex].item[slot] = new Item();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                shrine.ProtectStructure();
                                 shrine.ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                            }
-                            finally
-                            {
-                                WorldGen.noTileActions = oldFrameSkip;
                             }
                         }
                     }
-                    progress.Set((float)batch / TOTAL_BATCHES);
-                }
-
-                foreach (var (Position, Primary, Secondary) in shrinesToProcess)
-                {
-                    try
+                    catch (Exception ex)
                     {
-                        AeroStructure shrine = new AeroStructure(Position, 20, 20, "crystalshrine");
-                        InitializeChestsInStructure(shrine);
-                        shrine.ApplyItemConfigurationsToAll(rand, Primary, Secondary);
-                    }
-                    catch
-                    {
-                        continue;
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error(
+                            $"Error placing shrine #{i}: {ex.Message}"
+                        );
                     }
                 }
             }
             finally
             {
-               WorldGen.noTileActions = oldNoTileActions;
+                WorldGen.noTileActions = oldNoTileActions;
             }
-        }
-
-        private void InitializeChestsInStructure(AeroStructure structure)
-        {
-            if (structure == AeroStructure.Empty)
-            {
-                ModContent.GetInstance<AerovelenceMod>()?.Logger.Info("Attempted to initialize chests in empty structure");
-                return;
-            }
-
-            int chestsFound = 0;
-            int chestsCreated = 0;
-
-            for (int x = (int)structure.StartPosition.X; x < structure.StartPosition.X + structure.Width; x++)
-            {
-                for (int y = (int)structure.StartPosition.Y; y < structure.StartPosition.Y + structure.Height; y++)
-                {
-                    if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
-                        continue;
-
-                    Tile tile = Main.tile[x, y];
-                    if (tile.HasTile && tile.TileType == TileID.Containers)
-                    {
-                        chestsFound++;
-                        int chestIndex = Chest.FindChest(x, y);
-                        if (chestIndex == -1)
-                        {
-                            chestIndex = Chest.CreateChest(x, y);
-                            if (chestIndex != -1)
-                                chestsCreated++;
-                            else
-                                ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"Failed to create chest at {x},{y}");
-                        }
-                    }
-                }
-            }
-
-            ModContent.GetInstance<AerovelenceMod>()?.Logger.Info(
-                $"Structure at {structure.StartPosition}: Found {chestsFound} chests, Created {chestsCreated} new chests"
-            );
         }
 
         private static bool isPlacingStructure = false;
