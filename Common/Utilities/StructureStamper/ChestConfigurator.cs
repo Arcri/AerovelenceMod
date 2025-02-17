@@ -8,36 +8,67 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
     public static class ChestConfigurator
     {
+
+        private static readonly object chestLock = new object();
+        private static bool isConfiguringChest = false;
         public static void ApplyConfiguration(int x, int y, ChestConfiguration chestConfig)
         {
-            int chestIndex = Chest.FindChest(x, y);
-            if (chestIndex == -1)
+            lock (chestLock)
             {
-                chestIndex = Chest.CreateChest(x, y);
-            }
-
-            if (chestIndex >= 0 && chestConfig != null && chestIndex < Main.chest.Length)
-            {
-                Chest chest = Main.chest[chestIndex];
-
-                for (int i = 0; i < chest.item.Length; i++)
+                try
                 {
-                    chest.item[i].TurnToAir();
-                }
+                    isConfiguringChest = true;
 
-                int slotIndex = 0;
+                    Tile tile = Main.tile[x, y];
+                    if (!TileID.Sets.BasicChest[tile.TileType])
+                        return;
 
-                foreach (var primaryConfig in chestConfig.PrimaryItems)
-                {
-                    if (Main.rand.NextFloat() < primaryConfig.Weight)
+                    int chestIndex = Chest.FindChest(x, y);
+                    if (chestIndex == -1)
                     {
-                        slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex);
+                        chestIndex = Chest.CreateChest(x, y);
+                        if (chestIndex == -1 || chestIndex >= Main.chest.Length)
+                            return;
+                    }
+
+                    Chest chest = Main.chest[chestIndex];
+                    if (chest == null || chestConfig == null)
+                        return;
+                    for (int i = 0; i < chest.item.Length; i++)
+                    {
+                        if (chest.item[i] == null)
+                            chest.item[i] = new Item();
+                        chest.item[i].TurnToAir();
+                    }
+
+                    int slotIndex = 0;
+                    int maxSlots = chest.item.Length;
+                    if (chestConfig.PrimaryItems != null)
+                    {
+                        foreach (var primaryConfig in chestConfig.PrimaryItems)
+                        {
+                            if (slotIndex >= maxSlots) break;
+                            if (primaryConfig != null && Main.rand.NextFloat() < primaryConfig.Weight)
+                            {
+                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex);
+                            }
+                        }
+                    }
+                    if (chestConfig.Items != null)
+                    {
+                        foreach (var itemConfig in chestConfig.Items)
+                        {
+                            if (slotIndex >= maxSlots) break;
+                            if (itemConfig != null)
+                            {
+                                slotIndex = PlaceItemInNextAvailableSlot(chest.item, itemConfig, slotIndex);
+                            }
+                        }
                     }
                 }
-
-                foreach (var itemConfig in chestConfig.Items)
+                finally
                 {
-                    slotIndex = PlaceItemInNextAvailableSlot(chest.item, itemConfig, slotIndex);
+                    isConfiguringChest = false;
                 }
             }
         }
@@ -48,13 +79,34 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             {
                 if (items[i].IsAir)
                 {
+                    if (itemConfig.ItemTypeChoices == null || itemConfig.ItemTypeChoices.Count == 0)
+                    {
+                        continue;
+                    }
                     int itemType = itemConfig.ItemTypeChoices[Main.rand.Next(itemConfig.ItemTypeChoices.Count)];
-                    int stackSize = Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1);
+                    try
+                    {
+                        int stackSize = Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1);
 
-                    items[i].SetDefaults(itemType);
-                    items[i].stack = stackSize;
-                    items[i].Prefix(-1);
-                    return i + 1;
+                        if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
+                        {
+                            ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn(
+                                $"Skipping invalid itemType {itemType} at chest slot {i}."
+                            );
+                            return i + 1;
+                        }
+
+                        items[i].SetDefaults(itemType);
+                        items[i].stack = stackSize;
+                        items[i].Prefix(-1);
+                        return i + 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error(
+                            $"Error setting item defaults for itemType {itemType}: {ex}"
+                        );
+                    }
                 }
             }
             return items.Length;
@@ -64,8 +116,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
     [Serializable]
     public class ChestConfiguration
     {
-        public List<PrimaryItemConfiguration> PrimaryItems { get; set; } = [];
-        public List<ItemConfiguration> Items { get; set; } = [];
+        public List<PrimaryItemConfiguration> PrimaryItems { get; set; } = new List<PrimaryItemConfiguration>();
+        public List<ItemConfiguration> Items { get; set; } = new List<ItemConfiguration>();
 
         public void AddPrimaryItemConfiguration(PrimaryItemConfiguration itemConfig)
         {
@@ -112,7 +164,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public ItemConfiguration(int itemType, int minStack, int maxStack)
         {
-            ItemTypeChoices = [itemType];
+            ItemTypeChoices = new List<int> { itemType };
             MinStack = minStack;
             MaxStack = maxStack;
         }

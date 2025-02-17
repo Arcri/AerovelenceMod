@@ -21,33 +21,56 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public AeroStructure ApplyItemConfigurationsToAll(UnifiedRandom random, List<PrimaryItemConfiguration> primaryItems, List<ItemConfiguration> secondaryItems)
         {
-            if (this == Empty) { return this; }
-
-            var chestConfig = new ChestConfiguration();
-
-            PrimaryItemConfiguration selectedPrimaryItem = null;
-            WeightedRandom<PrimaryItemConfiguration> weightTable = new WeightedRandom<PrimaryItemConfiguration>(random);
-            foreach (var item in primaryItems)
+            if (this == Empty)
+                return this;
+            HashSet<int> configuredChests = new HashSet<int>();
+            for (int x = (int)StartPosition.X; x < (int)StartPosition.X + Width; x++)
             {
-                weightTable.Add(item, (int)(item.Weight * 100));
+                for (int y = (int)StartPosition.Y; y < (int)StartPosition.Y + Height; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+                    if (tile != null && TileID.Sets.BasicChest[tile.TileType])
+                    {
+                        int chestIndex = Chest.FindChest(x, y);
+                        if (chestIndex == -1)
+                            continue;
+                        if (configuredChests.Contains(chestIndex))
+                            continue;
+                        var chestConfig = new ChestConfiguration();
+
+                        if (primaryItems != null && primaryItems.Count > 0)
+                        {
+                            var weightTable = new WeightedRandom<PrimaryItemConfiguration>(random);
+                            foreach (var item in primaryItems)
+                            {
+                                weightTable.Add(item, (int)(item.Weight * 100));
+                            }
+                            var selectedPrimaryItem = weightTable.Get();
+                            if (selectedPrimaryItem != null)
+                            {
+                                chestConfig.AddPrimaryItemConfiguration(selectedPrimaryItem);
+                                if (selectedPrimaryItem.ItemTypeChoices.Contains(ItemID.FlareGun))
+                                {
+                                    chestConfig.AddPrimaryItemConfiguration(
+                                        new PrimaryItemConfiguration(ItemID.Flare, 25, 50, 1f)
+                                    );
+                                }
+                            }
+                        }
+                        if (secondaryItems != null)
+                        {
+                            foreach (var item in secondaryItems)
+                            {
+                                chestConfig.AddItemConfiguration(item);
+                            }
+                        }
+                        ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
+                        configuredChests.Add(chestIndex);
+                    }
+                }
             }
 
-            Console.WriteLine(weightTable.elements.Count);
-
-            selectedPrimaryItem = weightTable.Get();
-            chestConfig.AddPrimaryItemConfiguration(selectedPrimaryItem);
-            
-            if (selectedPrimaryItem.ItemTypeChoices.Contains(ItemID.FlareGun))
-            {
-                chestConfig.AddPrimaryItemConfiguration(new PrimaryItemConfiguration(ItemID.Flare, 25, 50, 1f));
-            } 
-
-            foreach (var item in secondaryItems)
-            {
-                chestConfig.AddItemConfiguration(item);
-            }
-
-            return ApplyChestConfigurationsToAll(chestConfig);
+            return this;
         }
 
         public AeroStructure ApplyChestConfigurationsToAll(ChestConfiguration chestConfig)
