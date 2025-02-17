@@ -720,6 +720,11 @@ Items: {
 		DisplayName: Lightning Trap
 		Tooltip: ""
 	}
+
+	AmuletOfGlory: {
+		DisplayName: Amulet Of Glory
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -731,6 +736,28 @@ NPCs: {
 	CrystalTumbler.DisplayName: Crystal Tumbler
 	CrystalBomb.DisplayName: Crystal Bomb
 	HealerDrone.DisplayName: Healer Drone
+
+	RockCollector: {
+		DisplayName: Rock Collector
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I hate not having a home.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: I dislike how crowded I am.
+			HateCrowded: I hate how crowded I am.
+			LoveBiome: I love {BiomeName}.
+			LikeBiome: I like {BiomeName}.
+			DislikeBiome: I dislike {BiomeName}.
+			LoveNPC: I love {NPCName}.
+			LikeNPC: I like {NPCName}.
+			DislikeNPC: I dislike {NPCName}.
+			HateNPC: I hate {NPCName}.
+			LikeNPC_Princess: I like {NPCName}.
+			Princess_LovesNPC: I like {NPCName}.
+		}
+	}
 }
 
 Projectiles: {
@@ -1083,4 +1110,9 @@ Tiles: {
 	GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
 	GlimmerwoodDresserTile.MapEntry: Glimmerwood Dresser Tile
 	LightningTrapTile.MapEntry: Lightning Trap Tile
+}
+
+Emotes: {
+	CyvercryEmote.Command: cyvercryemote
+	RockCollectorEmote.Command: rockcollectoremote
 }
