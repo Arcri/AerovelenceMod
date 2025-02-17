@@ -326,9 +326,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                 }
             }
-            WorldGen.PlaceChest(x, y, tileType, false, style: 0);
-            int chestIndex = Chest.CreateChest(x, y);
-            if (chestIndex != -1 && chestIndex < Main.chest.Length)
+            int chestIndex = WorldGen.PlaceChest(x, y, tileType, false, style: 0);
+			if (chestIndex != -1 && chestIndex < Main.chest.Length)
             {
                 Main.chest[chestIndex] = new Chest
                 {
@@ -591,7 +590,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                     foreach (Vector2 position in tilesToFrame.Distinct())
                     {
-                        WorldGen.SquareTileFrame((int)position.X, (int)position.Y, true);
+						Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
                     }
                 }
 

@@ -29,13 +29,15 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 for (int y = (int)StartPosition.Y; y < (int)StartPosition.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (tile != null && TileID.Sets.BasicChest[tile.TileType])
+					//TileFrameX = 0 for left side of chests/interactable tiles
+                    if (tile != null && TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0)
                     {
                         int chestIndex = Chest.FindChest(x, y);
                         if (chestIndex == -1)
                             continue;
                         if (configuredChests.Contains(chestIndex))
                             continue;
+
                         var chestConfig = new ChestConfiguration();
 
                         if (primaryItems != null && primaryItems.Count > 0)
@@ -57,6 +59,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                                 }
                             }
                         }
+
                         if (secondaryItems != null)
                         {
                             foreach (var item in secondaryItems)
@@ -64,9 +67,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                                 chestConfig.AddItemConfiguration(item);
                             }
                         }
+
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
                         configuredChests.Add(chestIndex);
-                    }
+						y++; //Move down one additional step to ensure chest isn't counted twice
+					}
                 }
             }
 
@@ -82,10 +87,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 for (int y = (int)StartPosition.Y; y < (int)StartPosition.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (TileID.Sets.BasicChest[tile.TileType])
+                    if (TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0)
                     {
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
-                    }
+						y++; //Move down one additional step to ensure chest isn't counted twice
+					}
                 }
             }
 

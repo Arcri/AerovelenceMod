@@ -116,9 +116,10 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 for (int y = (int)startPosition.Y; y < (int)startPosition.Y + structureHeight; y++)
                 {
                     Tile tile = Main.tile[x, y];
-                    if (TileID.Sets.BasicChest[tile.TileType])
+                    if (TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0) //frameX will be 16 for right side
                     {
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
+						y++; //Move down one additional step to ensure chest isn't counted twice
                     }
                 }
             }

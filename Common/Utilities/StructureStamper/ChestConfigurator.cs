@@ -11,9 +11,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         private static readonly object chestLock = new object();
         private static bool isConfiguringChest = false;
-        public static void ApplyConfiguration(int x, int y, ChestConfiguration chestConfig)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="chestConfig"></param>
+		/// <remarks>ENSURE YOU HAVE TOP LEFT TILE OF CHEST</remarks>
+		public static void ApplyConfiguration(int x, int y, ChestConfiguration chestConfig)
         {
-            lock (chestLock)
+            lock (chestLock) //Not really sure lock is needed here, but I'm not inclined to believe it's harming anyone, so will not remove
             {
                 try
                 {
@@ -114,16 +121,12 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                     try
                     {
-                        items[i].SetDefaults(itemType);
-                        int maxStackForItem = items[i].maxStack;
                         int stackSize = Math.Clamp(
                             Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
                             1,
-                            maxStackForItem
-                        );
-
-                        items[i].stack = stackSize;
-                        items[i].Prefix(-1);
+							items[i].maxStack
+						);
+						items[i] = new Item(itemType, stackSize);
                         return i + 1;
                     }
                     catch (Exception ex)
