@@ -14,11 +14,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             MinPick = 40;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CavernCrystal").Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
-            //Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
-            Main.tileBlockLight[Type] = true;
+			Main.tileMerge[Type][ModContent.TileType<CrystalGrass>()] = true;
+			Main.tileMerge[Type][ModContent.TileType<CavernCrystal>()] = true;
+			Main.tileMerge[Type][ModContent.TileType<CavernStone>()] = true;
+			//Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
+			Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(115, 230, 250));
             DustType = 59;

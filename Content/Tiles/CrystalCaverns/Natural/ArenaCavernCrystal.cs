@@ -11,9 +11,10 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
         {
             MineResist = 2.5f;
             Main.tileSolid[Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CrystalGrass").Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CavernCrystal").Type] = true;
-            Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
+			
+            Main.tileMerge[Type][ModContent.TileType<CrystalGrass>()] = true;
+            Main.tileMerge[Type][ModContent.TileType<CavernCrystal>()] = true;
+            Main.tileMerge[Type][ModContent.TileType<CavernStone>()] = true;
           //  Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlendAll[Type] = true;
