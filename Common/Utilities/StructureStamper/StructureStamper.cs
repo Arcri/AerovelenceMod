@@ -160,7 +160,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             int height = 0;
             int width = 0;
 
-            List<StructureData> structure = new List<StructureData>();
+            List<StructureData> structure = [];
             Mod mod = ModLoader.GetMod("AerovelenceMod");
 
             byte[] structureBytes = mod.GetFileBytes(assetPath);
@@ -214,13 +214,10 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                 if (placeStructure)
                 {
-                    HashSet<Vector2> placedTiles = new HashSet<Vector2>();
-                    List<Vector2> tilesToFrame = new List<Vector2>();
-                    HashSet<Point> configuredChests = new HashSet<Point>();
+                    HashSet<Vector2> placedTiles = [];
+                    List<Vector2> tilesToFrame = [];
                     int chestIndex = 0;
 
-                    List<Point> chestPositions = new List<Point>();
-                    int chestConfigIndex = 0;
                     foreach (StructureData data in structure)
                     {
                         int x = (int)(startPosition.X + data.X);
@@ -273,6 +270,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                         placedTiles.Add(tilePosition);
                     }
+
                     foreach (StructureData data in structure)
                     {
                         int x = (int)(startPosition.X + data.X);
@@ -298,6 +296,31 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             continue;
                         }
 
+                        if (data.TileFrameImportant)
+                        {
+                            TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);
+                            if (tileData != null)
+                            {
+                                int tileWidth = tileData.Width;
+                                int tileHeight = tileData.Height;
+
+                                for (int dx = 0; dx < tileWidth; dx++)
+                                {
+                                    for (int dy = 0; dy < tileHeight; dy++)
+                                    {
+                                        Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+
+                                        targetTile.WallType = 0;
+                                        targetTile.LiquidAmount = 0;
+                                        targetTile.LiquidType = 0;
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
+                                    }
+                                }
+                            }
+                        }
+
                         tile.HasTile = data.IsActive;
                         tile.TileType = tileType;
                         tile.TileFrameX = data.TileFrameX;
@@ -314,15 +337,12 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         tile.IsActuated = data.IsActuated;
                         tile.TileColor = data.TileColor;
 
-                        if (TileID.Sets.BasicChest[tileType] && data.TileFrameX == 0 && data.TileFrameY == 0)
-                        {
-                            chestPositions.Add(new Point(x, y));
-                        }
-
                         placedTiles.Add(tilePosition);
+
                         if (data.TileFrameImportant)
                         {
                             TileObjectData tileData = TileObjectData.GetTileData(tile.TileType, 0);
+
                             if (tileData != null)
                             {
                                 int tileWidth = tileData.Width;
@@ -333,6 +353,15 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                                     for (int dy = 0; dy < tileHeight; dy++)
                                     {
                                         Vector2 offsetPosition = new(x + dx, y + dy);
+                                        Tile targetTile = Main.tile[(int)offsetPosition.X, (int)offsetPosition.Y];
+
+                                        targetTile.HasTile = true;
+                                        targetTile.TileType = tileType;
+                                        targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
+                                        targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
+                                        targetTile.Slope = 0;
+                                        targetTile.IsHalfBlock = false;
+
                                         tilesToFrame.Add(offsetPosition);
                                     }
                                 }
@@ -341,24 +370,19 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             {
                                 tilesToFrame.Add(tilePosition);
                             }
+
+                            if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                            {
+                                ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
+                                chestIndex++;
+                            }
                         }
                         else
                         {
                             tilesToFrame.Add(tilePosition);
                         }
-
-                        foreach (Point chestPos in chestPositions)
-                        {
-                            if (chestConfigs != null && chestConfigIndex < chestConfigs.Count)
-                            {
-                                if (chestIndex != -1)
-                                {
-                                    ChestConfigurator.ApplyConfiguration(chestPos.X, chestPos.Y, chestConfigs[chestConfigIndex]);
-                                    chestConfigIndex++;
-                                }
-                            }
-                        }
                     }
+
                     foreach (Vector2 position in tilesToFrame)
                     {
                         int x = (int)position.X;
@@ -371,6 +395,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                 return new AeroStructure(startPosition, width, height, structureName);
             }
+
             catch (Exception ex)
             {
                 throw new FileNotFoundException($"Structure file {structureName}.dat could not be found or loaded.", ex);
@@ -591,12 +616,19 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             {
                                 tilesToFrame.Add(tilePosition);
                             }
+
+                            if (TileID.Sets.BasicChest[tile.TileType] && chestConfigs != null && chestIndex < chestConfigs.Count)
+                            {
+                                ChestConfigurator.ApplyConfiguration(x, y, chestConfigs[chestIndex]);
+                                chestIndex++;
+                            }
                         }
                         else
                         {
                             tilesToFrame.Add(tilePosition);
                         }
                     }
+
                     foreach (Vector2 position in tilesToFrame)
                     {
                         int x = (int)position.X;
