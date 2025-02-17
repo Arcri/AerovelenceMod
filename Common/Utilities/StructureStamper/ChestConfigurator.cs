@@ -124,7 +124,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         int stackSize = Math.Clamp(
                             Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
                             1,
-							items[i].maxStack
+							ContentSamples.ItemsByType[itemType].maxStack
 						);
 						items[i] = new Item(itemType, stackSize);
                         return i + 1;

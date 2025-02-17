@@ -222,7 +222,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                                 {
                                     targetTile.WallType = wallType;
                                     targetTile.WallColor = data.WallColor;
-                                    WorldGen.SquareWallFrame(x + dx, y + dy, false);
+                                    //WorldGen.SquareWallFrame(x + dx, y + dy, false);
                                 }
 
                                 placedTiles.Add(offsetPosition);
@@ -275,7 +275,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             {
                 tile.WallType = wallType;
                 tile.WallColor = data.WallColor;
-                WorldGen.SquareWallFrame(x, y, false);
+                //WorldGen.SquareWallFrame(x, y, false);
             }
             tile.LiquidType = data.LiquidType;
             tile.LiquidAmount = data.LiquidAmount;
@@ -341,7 +341,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     Main.chest[chestIndex].item[slot] = new Item();
                 }
             }
-            for (int dx = 0; dx < tileData.Width; dx++)
+            /*for (int dx = 0; dx < tileData.Width; dx++)
             {
                 for (int dy = 0; dy < tileData.Height; dy++)
                 {
@@ -351,7 +351,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         WorldGen.SquareWallFrame(x + dx, y + dy, true);
                     }
                 }
-            }
+            }*/
         }
 
 
@@ -462,7 +462,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             Tile tile = Main.tile[x, y];
                             tile.WallType = wallType;
                             tile.WallColor = data.WallColor;
-                            WorldGen.SquareWallFrame(x, y, true);
+                            //WorldGen.SquareWallFrame(x, y, true);
                         }
                     }
 
@@ -697,7 +697,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                             Tile tile = Main.tile[x, y];
                             tile.WallType = wallType;
                             tile.WallColor = data.WallColor;
-                            WorldGen.SquareWallFrame(x, y, true);
+                            //WorldGen.SquareWallFrame(x, y, true);
                         }
                     }
 
@@ -825,8 +825,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                     foreach (Vector2 position in tilesToFrame.Distinct())
                     {
-                        WorldGen.SquareTileFrame((int)position.X, (int)position.Y, true);
-                    }
+						Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
+					}
                 }
 
                 return new AeroStructure(startPosition, width, height, structureName);
