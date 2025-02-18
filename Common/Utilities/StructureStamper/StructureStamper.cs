@@ -10,6 +10,7 @@ using System.Linq;
 using ReLogic.Content;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using Terraria.WorldBuilding;
+using AerovelenceMod.Common.Systems.Generation.GenUtils;
 
 namespace AerovelenceMod.Common.Utilities.StructureStamper
 {
@@ -164,7 +165,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
 
             Mod modTile = ModLoader.GetMod(data.ModName);
-            return (modTile?.Find<ModTile>(data.TileName)?.Type ?? 0);
+            return modTile?.Find<ModTile>(data.TileName)?.Type ?? 0;
         }
 
         private static void ProcessTile(Tile tile, StructureData data, int x, int y, HashSet<Vector2> placedTiles, List<Vector2> tilesToFrame)
@@ -327,7 +328,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                 }
             }
             int chestIndex = WorldGen.PlaceChest(x, y, tileType, false, style: 0);
-			if (chestIndex != -1 && chestIndex < Main.chest.Length)
+            if (chestIndex != -1 && chestIndex < Main.chest.Length)
             {
                 Main.chest[chestIndex] = new Chest
                 {
@@ -363,7 +364,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
 
             Mod modWall = ModLoader.GetMod(data.WallModName);
-            return (modWall?.Find<ModWall>(data.WallName)?.Type ?? 0);
+            return modWall?.Find<ModWall>(data.WallName)?.Type ?? 0;
         }
 
         public static AeroStructure LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true, bool checkIfProtected = false)
@@ -371,6 +372,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             string assetPath = $"Common/Utilities/StructureStamper/Structures/{structureName}.dat";
             int height = 0;
             int width = 0;
+            AeroStructure aeroStructure;
 
             List<StructureData> structure = [];
             Mod mod = ModLoader.GetMod("AerovelenceMod");
@@ -385,7 +387,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     int count = reader.ReadInt32();
                     width = reader.ReadInt32();
                     height = reader.ReadInt32();
-
+                    aeroStructure = new AeroStructure(startPosition, width, height, structureName);
                     for (int i = 0; i < count; i++)
                     {
                         StructureData data = new()
@@ -419,7 +421,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                 }
 
-                if (checkIfProtected && GenVars.structures.CanPlace(new Rectangle((int)startPosition.X, (int)startPosition.Y, width, height)))
+                if (checkIfProtected && !aeroStructure.CanPlace())
                 {
                     return AeroStructure.Empty;
                 }
@@ -590,11 +592,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                     foreach (Vector2 position in tilesToFrame.Distinct())
                     {
-						Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
+                        Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
                     }
                 }
 
-                return new AeroStructure(startPosition, width, height, structureName);
+                return aeroStructure;
             }
 
             catch (Exception ex)
@@ -825,8 +827,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     }
                     foreach (Vector2 position in tilesToFrame.Distinct())
                     {
-						Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
-					}
+                        Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
+                    }
                 }
 
                 return new AeroStructure(startPosition, width, height, structureName);

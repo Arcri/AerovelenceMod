@@ -34,7 +34,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             }
             else
             {
-               // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+                // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
             }
 
             return true;
@@ -103,9 +103,9 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             #endregion
 
-      //      AeroStructure structure = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
-        //   Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
-      //      StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
+            //      AeroStructure structure = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
+            //   Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
+            //      StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
         }
     }
 }

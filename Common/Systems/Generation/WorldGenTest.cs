@@ -11,10 +11,10 @@ using static Terraria.WorldBuilding.Shapes;
 using ReLogic.Utilities;
 using System;
 using AerovelenceMod.Common.Systems.Generation.GenUtils;
-using AerovelenceMod.Common.Utilities.StructureStamper;
 using static Terraria.Collision;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Utilities.StructureStamper;
 
 namespace AerovelenceMod.Common.Systems.Generation
 {

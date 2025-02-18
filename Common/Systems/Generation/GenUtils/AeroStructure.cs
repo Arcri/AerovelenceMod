@@ -10,26 +10,28 @@ using Terraria.ModLoader;
 using Terraria;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
+using AerovelenceMod.Common.Utilities.StructureStamper;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 {
     public record AeroStructure(Vector2 StartPosition, int Width, int Height, string Name)
     {
-        public bool Protected { get; private set; } = false;
-
         public static AeroStructure Empty { get; private set; } = new AeroStructure(Vector2.Zero, 0, 0, "");
+
+        public static List<AeroStructure> ProtectedStructures { get; private set; } = new List<AeroStructure>();
+        public bool Protected { get; private set; } = false;
 
         public AeroStructure ApplyItemConfigurationsToAll(UnifiedRandom random, List<PrimaryItemConfiguration> primaryItems, List<ItemConfiguration> secondaryItems)
         {
-            if (this == Empty)
-                return this;
+            if (this == Empty) { return this; }
+
             HashSet<int> configuredChests = new HashSet<int>();
             for (int x = (int)StartPosition.X; x < (int)StartPosition.X + Width; x++)
             {
                 for (int y = (int)StartPosition.Y; y < (int)StartPosition.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
-					//TileFrameX = 0 for left side of chests/interactable tiles
+                    //TileFrameX = 0 for left side of chests/interactable tiles
                     if (tile != null && TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0)
                     {
                         int chestIndex = Chest.FindChest(x, y);
@@ -70,8 +72,8 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
                         configuredChests.Add(chestIndex);
-						y++; //Move down one additional step to ensure chest isn't counted twice
-					}
+                        y++; // Move down one additional step to ensure chest isn't counted twice
+                    }
                 }
             }
 
@@ -90,24 +92,38 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     if (TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0)
                     {
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
-						y++; //Move down one additional step to ensure chest isn't counted twice
-					}
+                        y++; // Move down one additional step to ensure chest isn't counted twice
+                    }
                 }
             }
 
             return this;
         }
 
-        public AeroStructure ProtectStructure(int padding = 0)
+        public AeroStructure ProtectStructure()
         {
             if (this == Empty) { return this; }
 
             if (!Protected)
             {
-                GenVars.structures.AddProtectedStructure(new Rectangle((int)StartPosition.X, (int)StartPosition.Y, Width, Height), padding);
+                ProtectedStructures.Add(this);
                 Protected = true;
             }
             return this;
+        }
+
+        public bool CanPlace()
+        {
+            if (this == Empty) { return false; }
+
+            return !ProtectedStructures.Any(x => x.ToRectangle().Intersects(ToRectangle()));
+        }
+
+        public Rectangle ToRectangle()
+        {
+            if (this == Empty) { return Rectangle.Empty; }
+
+            return new Rectangle((int)StartPosition.X, (int)StartPosition.Y, Width, Height);
         }
     }
 }

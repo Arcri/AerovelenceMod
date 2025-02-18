@@ -11,14 +11,14 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         private static readonly object chestLock = new object();
         private static bool isConfiguringChest = false;
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="chestConfig"></param>
-		/// <remarks>ENSURE YOU HAVE TOP LEFT TILE OF CHEST</remarks>
-		public static void ApplyConfiguration(int x, int y, ChestConfiguration chestConfig)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="chestConfig"></param>
+        /// <remarks>ENSURE YOU HAVE TOP LEFT TILE OF CHEST</remarks>
+        public static void ApplyConfiguration(int x, int y, ChestConfiguration chestConfig)
         {
             lock (chestLock) //Not really sure lock is needed here, but I'm not inclined to believe it's harming anyone, so will not remove
             {
@@ -124,9 +124,9 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         int stackSize = Math.Clamp(
                             Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
                             1,
-							ContentSamples.ItemsByType[itemType].maxStack
-						);
-						items[i] = new Item(itemType, stackSize);
+                            ContentSamples.ItemsByType[itemType].maxStack
+                        );
+                        items[i] = new Item(itemType, stackSize);
                         return i + 1;
                     }
                     catch (Exception ex)
@@ -139,7 +139,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
         }
     }
 
-        [Serializable]
+    [Serializable]
     public class ChestConfiguration
     {
         public List<PrimaryItemConfiguration> PrimaryItems { get; set; } = new List<PrimaryItemConfiguration>();

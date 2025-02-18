@@ -119,7 +119,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     if (TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0) //frameX will be 16 for right side
                     {
                         ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
-						y++; //Move down one additional step to ensure chest isn't counted twice
+                        y++; //Move down one additional step to ensure chest isn't counted twice
                     }
                 }
             }

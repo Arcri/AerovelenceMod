@@ -7,7 +7,6 @@ using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
 using AerovelenceMod.Common.Systems.Generation.GenUtils;
-using AerovelenceMod.Common.Utilities.StructureStamper;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using Terraria.Graphics.Shaders;
@@ -57,6 +56,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         private ushort[] ReplaceWithSandTiles { get; set; }
         private ushort[] ReplaceWithChargedTiles { get; set; }
         private ushort[] ReplaceWithBrickTiles { get; set; }
+        private ushort[] ClearTiles {  get; set; }
 
         private ushort[] ReplaceWithBrickWalls { get; set; }
 
@@ -139,9 +139,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             ReplaceWithChargedTiles = [TileID.ClayBlock, TileID.Diamond, TileID.Ruby, TileID.Emerald, TileID.Sapphire, TileID.Topaz, TileID.Amethyst];
             ReplaceWithSandTiles = [SandTile, TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
-            ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass];
+            ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.Hive];
             ReplaceWithBrickTiles = [TileID.SandstoneBrick];
             ReplaceWithDirtTiles = [TileID.Silt, StoneTile, SandTile, ChargedTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
+            ClearTiles = [/*TileID.Larva*/];
 
             ReplaceWithBrickWalls = [WallID.SandstoneBrick];
 
@@ -221,6 +222,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     new Modifiers.OnlyTiles(ReplaceWithDirtTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(DirtTile)
+                }));
+                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.OnlyTiles(ClearTiles),
+                    new Actions.ClearTile()
                 }));
 
                 // Charged Stone dithering
@@ -500,6 +506,13 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.OnlyTiles(ReplaceWithBrickTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(BrickTile)
                 }));
+                // Clear other tiles
+                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.OnlyTiles(ClearTiles),
+                    new Actions.ClearTile()
+                }));
+
                 // Lower underground
                 ShapeData lowerUndergroundDitheringShapeData = new ShapeData();
                 WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
@@ -588,6 +601,13 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.Dither(0.85),
                     new Modifiers.OnlyTiles(ReplaceWithBrickTiles),
                     new AeroGenUtils.SwapSolidTileInclusive(BrickTile)
+                }));
+                // Clear other tiles
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Flip(false, true),
+                    new Modifiers.OnlyTiles(ClearTiles),
+                    new Actions.ClearTile()
                 }));
 
                 // Upper underground walls
@@ -815,7 +835,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 Console.WriteLine("Crystal Caverns generation process finished in " + attempts + " attempts.");
 				surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                //GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
                 return surfacePoint;
             }
             Console.WriteLine("Could not find a suitable location to place the Crystal Caverns");
@@ -823,14 +843,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 			{
 				Console.WriteLine("Falling back to a location overlapping with an evil biome to generate the Crystal Caverns");
                 surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                //GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
                 return fallbackPoint;
             }
             if (evilFallbackPoint != Point.Zero)
             {
                 Console.WriteLine("Falling back to a location overlapping with an evil biome and/or the jungle to generate the Crystal Caverns");
                 surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                //GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
             }
             return evilFallbackPoint;
         }

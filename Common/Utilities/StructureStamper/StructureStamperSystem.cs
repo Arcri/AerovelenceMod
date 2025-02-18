@@ -90,7 +90,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public Vector2? GetPoint1()
         {
-            return Point1;    
+            return Point1;
         }
 
         public Vector2? GetPoint2()

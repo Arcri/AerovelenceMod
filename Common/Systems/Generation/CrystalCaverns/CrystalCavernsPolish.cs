@@ -16,7 +16,6 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
-using static AerovelenceMod.Common.Utilities.StructureStamper.ChestConfigurator;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -155,6 +154,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 AeroStructure crystalShrine = PlaceStructureSafely("crystalshrine", 20, 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                AeroStructure crystalShrine2 = PlaceStructureSafely("crystalshrine", 20, 20)
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
 
 
                 const int TOTAL_SHRINES = 101;
@@ -163,41 +165,12 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     progress.Set((float)i / TOTAL_SHRINES);
 
-                    try
-                    {
-                        Vector2 position = GetRandomUndergroundVector();
-                        AeroStructure checkStructure = StructureStamper.LoadStructure(
-                            position,
-                            "crystalshrine",
-                            placeStructure: false,
-                            checkIfProtected: true
-                        );
+                    AeroStructure shrine = PlaceStructureSafely("crystalshrine", 20, 20);
 
-                        if (checkStructure != AeroStructure.Empty)
-                        {
-                            position = new Vector2(
-                                position.X - checkStructure.Width / 2,
-                                position.Y - checkStructure.Height / 2
-                            );
-                            AeroStructure shrine = StructureStamper.LoadStructure(
-                                position,
-                                "crystalshrine",
-                                placeStructure: true,
-                                checkIfProtected: true
-                            );
-
-                            if (shrine != AeroStructure.Empty)
-                            {
-                                shrine.ProtectStructure();
-                                shrine.ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
+                    if (shrine != AeroStructure.Empty)
                     {
-                        ModContent.GetInstance<AerovelenceMod>()?.Logger.Error(
-                            $"Error placing shrine #{i}: {ex.Message}"
-                        );
+                        shrine.ProtectStructure();
+                        shrine.ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
                     }
                 }
             }
@@ -207,51 +180,38 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
         }
 
-        private static bool isPlacingStructure = false;
-
         private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 10, int attempts = 5000)
         {
-            if (isPlacingStructure)
-                return AeroStructure.Empty;
-
-            isPlacingStructure = true;
-            try
+            for (int i = 0; i < attempts; i++)
             {
-                for (int i = 0; i < attempts; i++)
+                Vector2 randVector = GetRandomUndergroundVector(xMarginPercentage, yMarginPercentage);
+                AeroStructure checkStructure = StructureStamper.LoadStructure(
+                    randVector,
+                    name,
+                    placeStructure: false,
+                    checkIfProtected: true
+                );
+
+                if (checkStructure != AeroStructure.Empty)
                 {
-                    Vector2 randVector = GetRandomUndergroundVector();
-                    AeroStructure checkStructure = StructureStamper.LoadStructure(
+                    randVector = new Vector2(
+                        randVector.X - checkStructure.Width / 2,
+                        randVector.Y - checkStructure.Height / 2
+                    );
+                    AeroStructure structure = StructureStamper.LoadStructure(
                         randVector,
                         name,
-                        placeStructure: false,
+                        placeStructure: true,
                         checkIfProtected: true
                     );
 
-                    if (checkStructure != AeroStructure.Empty)
+                    if (structure != AeroStructure.Empty)
                     {
-                        randVector = new Vector2(
-                            randVector.X - checkStructure.Width / 2,
-                            randVector.Y - checkStructure.Height / 2
-                        );
-                        AeroStructure structure = StructureStamper.LoadStructure(
-                            randVector,
-                            name,
-                            placeStructure: true,
-                            checkIfProtected: true
-                        );
-
-                        if (structure != AeroStructure.Empty)
-                        {
-                            return structure;
-                        }
+                        return structure;
                     }
                 }
-                return AeroStructure.Empty;
             }
-            finally
-            {
-                isPlacingStructure = false;
-            }
+            return AeroStructure.Empty;
         }
 
         private Vector2 GetRandomUndergroundVector(int xMarginPercentage = 10, int yMarginPercentage = 10)
@@ -259,8 +219,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             CrystalCavernsTerrainPass mainPass = CrystalCavernsTerrainPass.Instance();
             UnifiedRandom rand = WorldGen.genRand;
             int x = mainPass.Origin.X - mainPass.BiomeWidth / 2 + (int)(rand.NextFloat(xMarginPercentage * 0.01f, 1 - xMarginPercentage * 0.01f) * mainPass.BiomeWidth);
-            int y = mainPass.Origin.Y + (int)(rand.NextFloat(yMarginPercentage * 0.01f, 1 - yMarginPercentage * 0.01f) * mainPass.BiomeHeight);
-            Console.WriteLine(x.ToString() + y.ToString());
+            int y = mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 0.75) + (int)(rand.NextFloat(yMarginPercentage * 0.01f, 1 - yMarginPercentage * 0.01f) * mainPass.BiomeHeight);
             return new Vector2(x, y);
         }
     }
