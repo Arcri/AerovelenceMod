@@ -25,6 +25,9 @@ using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Content.Items.Tools;
+using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
+using AerovelenceMod.Content.Items.Potions;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {
@@ -171,7 +174,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                 "Rockgomery",
                 "John Dygg",
                 "Stephing Stone",
-                "Geolbert",
+                "Geolbertina",
                 "Brock",
                 "Roark"
             ];
@@ -193,9 +196,15 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         public override string GetChat()
         {
             WeightedRandom<string> chat = new();
-            int partyGirl = NPC.FindFirstNPC(NPCID.PartyGirl);
-            if (partyGirl >= 0 && Main.rand.NextBool(4))
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.PartyGirlDialogue", Main.npc[partyGirl].GivenName));
+            int demolitionist = NPC.FindFirstNPC(NPCID.Demolitionist);
+            int angler = NPC.FindFirstNPC(NPCID.Angler);
+            int dryad = NPC.FindFirstNPC(NPCID.Dryad);
+            if (demolitionist >= 0 && Main.rand.NextBool(4))
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DemolitionistDialogue", Main.npc[demolitionist].GivenName));
+            if (angler >= 0 && Main.rand.NextBool(6))
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.AnglerDialogue", Main.npc[angler].GivenName));
+            if (dryad >= 0 && Main.rand.NextBool(6))
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DryadDialogue", Main.npc[dryad].GivenName));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue1"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue2"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue3"));
@@ -204,7 +213,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.RareDialogue"), 0.1);
             NumberOfTimesTalkedTo++;
             if (NumberOfTimesTalkedTo >= 10)
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.TalkALot"));
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.TalkALot", Main.npc[dryad].GivenName));
             string chosenChat = chat;
             if (chosenChat == Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue4"))
                 Main.npcChatCornerItem = ItemID.HiveBackpack;
@@ -296,19 +305,45 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                         Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemToReceive);
                     }
                 }
+                else
+                {
+                    shop = ShopName;
+                }
             }
         }
 
         public override void AddShops()
         {
             var npcShop = new NPCShop(Type, ShopName)
-                .Add<ShotgunAxe>()
+                .Add<SpeedstersPickaxe>()
+                .Add<ResonanceDrill>()
+                .Add<OpalOfCaVea>()
+                .Add<AmuletOfGlory>()
+                .Add<PlatinumHook>()
+                .Add<OnTheRocks>()
+
+
+                .Add(new Item(ItemID.Geode) { shopCustomPrice = Item.buyPrice(gold: 3) })
+
+                .Add(ItemID.CopperOre)
+                .Add(ItemID.TinOre)
+                .Add(ItemID.IronOre)
+                .Add(ItemID.LeadOre)
+
+                .Add(ItemID.SilverOre, Condition.DownedEowOrBoc)
+                .Add(ItemID.TungstenOre, Condition.DownedEowOrBoc)
+                .Add(ItemID.GoldOre, Condition.DownedEowOrBoc)
+                .Add(ItemID.PlatinumOre, Condition.DownedEowOrBoc)
+
+                .Add(ItemID.DemoniteOre, Condition.Hardmode)
+                .Add(ItemID.CrimtaneOre, Condition.Hardmode)
+                .Add(ItemID.Hellstone, Condition.Hardmode)
+
+                .Add(ItemID.ChlorophyteOre, Condition.DownedGolem)
+
                 .Add(new Item(ModContent.ItemType<ShotgunAxe>()) { shopCustomPrice = Item.buyPrice(copper: 15) })
-                .Add<ShotgunAxe>()
-                .Add<ShotgunAxe>()
-                .Add<ShotgunAxe>(Condition.MoonPhasesQuarter1)
-                .Add<ShotgunAxe>()
                 .Add<ShotgunAxe>(Condition.IsNpcShimmered);
+
             npcShop.Register();
         }
 

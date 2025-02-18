@@ -1,5 +1,4 @@
 using AerovelenceMod.Common.Utilities;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture.Items;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
@@ -10,10 +9,8 @@ using Microsoft.Xna.Framework;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
 using Terraria.Localization;
 using Microsoft.Xna.Framework.Graphics;
-using System.Text;
-using Terraria.GameContent.Drawing;
-using Terraria.ObjectData;
 using ReLogic.Content;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 {
@@ -211,6 +208,127 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 
     //Torch
     #region Torch
+    public class GlimmerwoodTorchTile : ModTile
+    {
+        private Asset<Texture2D> flameTexture;
+        public override void SetStaticDefaults()
+        {
+            flameTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/Tiles/CrystalCaverns/Furniture/GlimmerwoodTorchTile_Flame");
+            CommonTileHelper.SetupTorch(this, new Color(123, 123, 123), ModContent.ItemType<GlimmerwoodTorchItem>(), DustID.BlueCrystalShard, true, true, false);
+        }
+
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            Dust.NewDust(new Vector2(i, j) * 16f, 16, 16, DustID.GemSapphire, 0f, 0f, 1, new Color(190, 255, 60), 1f);
+            return false;
+        }
+
+        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
+
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = ModContent.ItemType<GlimmerwoodTorchItem>();
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (tile.TileFrameX < 66)
+            {
+                r = 0f;
+                g = b = 0.9f;
+            }
+        }
+
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
+        {
+            offsetY = 0;
+            if (WorldGen.SolidTile(i, j - 1))
+            {
+                offsetY = 2;
+                if (WorldGen.SolidTile(i - 1, j + 1) || WorldGen.SolidTile(i + 1, j + 1))
+                    offsetY = 4;
+            }
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch) => CommonTileHelper.HandleFlameDraw(Main.tile[i, j], i, j, spriteBatch, flameTexture);
+
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        {
+            if (Main.tile[i, j].TileFrameX < 66)
+                CommonTileHelper.HandleFlameDust(Main.rand.NextBool() ? 61 : 64, 5, i, j);
+        }
+
+        public override bool RightClick(int i, int j)
+        {
+            Tile tile = Main.tile[i, j];
+            if (tile != null && tile.HasTile)
+            {
+                WorldGen.KillTile(i, j);  // Simplified version, no need for the extra parameters
+                if (!tile.HasTile && Main.netMode != NetmodeID.SinglePlayer)
+                {
+                    NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, i, j);
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class GlimmerwoodTorchItem : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+            ItemID.Sets.Torches[Item.type] = true;
+            ItemID.Sets.SingleUseInGamepad[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ItemID.ShimmerTorch;
+        }
+
+        public override void SetDefaults()
+        {
+            Item.width = 14;
+            Item.height = 18;
+            Item.maxStack = 9999;
+            Item.holdStyle = 1;
+            Item.noWet = true;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<GlimmerwoodTorchTile>();
+            Item.flame = true;
+            Item.value = 500;
+        }
+
+        public override void HoldItem(Player player)
+        {
+            bool killTorch = Collision.DrownCollision(player.position, player.width, player.height, player.gravDir) || Item.wet;
+            Vector2 position = player.RotatedRelativePoint(new Vector2(player.itemLocation.X + 12f * player.direction + player.velocity.X, player.itemLocation.Y - 14f + player.velocity.Y), true);
+            if (!killTorch)
+                Lighting.AddLight(position, 0.9f, 1.2f, 0.3f);
+        }
+
+        public override void PostUpdate()
+        {
+            if (!Item.wet)
+                Lighting.AddLight((int)((Item.position.X + Item.width / 2) / 16f), (int)((Item.position.Y + Item.height / 2) / 16f), 0.5f, 0.75f, 1.2f);
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(3).
+            AddIngredient(ItemID.Torch, 3).
+            AddIngredient<CavernCrystalItem>().
+            Register();
+        }
+    }
     #endregion
 
     //Chair

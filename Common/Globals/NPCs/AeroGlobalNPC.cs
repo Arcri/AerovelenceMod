@@ -1,4 +1,6 @@
 using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Buffs;
+using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -21,16 +23,14 @@ namespace AerovelenceMod.Common.Globals.NPCs
 			CrystalKunai = false;
 		}
 
-		//Idk what I'm doing
-       /* public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        public override void OnHitByItem(NPC npc, Player player, Item item, NPC.HitInfo hit, int damageDone)
         {
-			Mod fargowiltas = ModLoader.GetMod("Fargowiltas");
-			if (fargowiltas != null)
-			{
-				shop.item[nextSlot].SetDefaults(fargowiltas.ItemType("LargeGeode"));
-				nextSlot++;
-			}
-		}*/
+            if (player != null && player.GetModPlayer<OpalOfCaVeaPlayer>().hasOpal)
+            {
+                player.AddBuff(ModContent.BuffType<Glory>(), 300);
+            }
+        }
+
         public override bool CheckDead(NPC npc)
         {
 			/*

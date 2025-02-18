@@ -17,6 +17,26 @@ Biomes: {
 	}
 }
 
+Dialogue: {
+	RockCollector: {
+		DemolitionistDialogue: e{0} just keeps going on and on and ON about blowing up the world. Please make it stop.
+		DryadDialogue: e{0} is a pillar of the world community. Without her, I don't know what we would do!
+		AnglerDialogue: Hate that angler guy. {0} really thinks fish rock. Pff.
+		TumblerNotDownedDialogue: I heard legends of an ancient living boulder in the Crystal Caverns. Do you think it's really real?
+		StandardDialogue1: Is that a new outfit? I dig it.
+		StandardDialogue2: Hooks? Pickaxes? Cool mining accessories? You want it? It's yours, my friend. As long as you have enough money.
+		StandardDialogue3: I heard in another world, gems weren't as useful! Can you believe that?!
+		StandardDialogue4: Nothing like kicking back on the Rocks. Always love a drink.
+		CommonDialogue: If you find any rare ore clusters, turn them into me for a reward!
+		RareDialogue: I wish the moths didn't take over so much of my home. They're such beautiful creatures.
+		TalkALot: I actually think I hear {0} calling my name! I have to go.
+		TurnInChunk1: Wow! That's a big one, you found this in the mines?!
+		TurnInChunk2: Amazing! I think I took you for... granite. Ha. Get it... granite. Here's your reward.
+		TurnInChunk3: You are a natural collector. I am shocked with the quality of this one.
+		TurnInSuperChunk: Goodness gracious! That's the biggest cluster I've ever seen! This will look good in my curio.
+	}
+}
+
 Buffs: {
 	FlareFire: {
 		DisplayName: Flare Fire
@@ -61,6 +81,11 @@ Buffs: {
 	FearsomeFoe: {
 		DisplayName: Fearsome Foe
 		Description: Drastically lowered enemy spawn rates
+	}
+
+	Glory: {
+		DisplayName: Glory
+		Description: Increased mining and movement speed
 	}
 }
 
@@ -723,6 +748,44 @@ Items: {
 
 	AmuletOfGlory: {
 		DisplayName: Amulet Of Glory
+		Tooltip:
+			'''
+			Hitting enemies increases your movement and mining speed
+			Enemies nearby chests will emit light
+			'''
+	}
+
+	OpalOfCaVea: {
+		DisplayName: Ca Vea's Opal
+		Tooltip:
+			'''
+			Glowing crystals grow on your back every 5 seconds, up to 3
+			Enemies take damage if all 3 crystals have spawned
+			'''
+	}
+
+	SpeedstersPickaxe: {
+		DisplayName: Speedsters Pickaxe
+		Tooltip: ""
+	}
+
+	PlatinumHook: {
+		DisplayName: Platinum Hook
+		Tooltip: ""
+	}
+
+	OnTheRocks: {
+		DisplayName: On The Rocks
+		Tooltip: ""
+	}
+
+	ResonanceDrill: {
+		DisplayName: Resonance Drill
+		Tooltip: ""
+	}
+
+	PouchOfRocks: {
+		DisplayName: Pouch Of Rocks
 		Tooltip: ""
 	}
 }
@@ -1086,6 +1149,12 @@ Projectiles: {
 	GroundSpike.DisplayName: Ground Spike
 	LightningBolt.DisplayName: Lightning Bolt
 	LightningProjectile.DisplayName: Lightning Projectile
+	ElectricPopEffect.DisplayName: Electric Pop Effect
+	EnemyTwinkleEffect.DisplayName: Enemy Twinkle Effect
+	PlayerGlowEffect.DisplayName: Player Glow Effect
+	EnemyGlowEffect.DisplayName: Enemy Glow Effect
+	ResonanceDrillProj.DisplayName: Resonance Drill Proj
+	PouchOfRocksProj.DisplayName: Pouch Of Rocks Proj
 }
 
 Configs: {
