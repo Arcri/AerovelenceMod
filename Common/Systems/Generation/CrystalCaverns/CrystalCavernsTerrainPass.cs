@@ -841,14 +841,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             Console.WriteLine("Could not find a suitable location to place the Crystal Caverns");
 			if (fallbackPoint != Point.Zero)
 			{
-				Console.WriteLine("Falling back to a location overlapping with an evil biome to generate the Crystal Caverns");
+				Console.WriteLine("Falling back to a location overlapping with evil to generate the Crystal Caverns");
                 surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
                 GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
                 return fallbackPoint;
             }
             if (evilFallbackPoint != Point.Zero)
             {
-                Console.WriteLine("Falling back to a location overlapping with an evil biome and/or the jungle to generate the Crystal Caverns");
+                Console.WriteLine("Falling back to a location overlapping with evil / jungle / ice to generate the Crystal Caverns");
                 surfacePoint.Y = determineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
                 GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
             }
@@ -898,7 +898,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TileID.PinkDungeonBrick,
                 TileID.LihzahrdBrick)), out Point _))
                 return false;
-			return true;
+            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroConditions.HasShimmer()), out Point _))
+                return false;
+            return true;
         }
 
         private bool checkPointEvilFallback(int xOffset, Point surfacePoint)
