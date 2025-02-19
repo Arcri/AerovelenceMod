@@ -18,7 +18,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
     {
         public static AeroStructure Empty { get; private set; } = new AeroStructure(Vector2.Zero, 0, 0, "");
 
-        public static List<AeroStructure> ProtectedStructures { get; private set; } = new List<AeroStructure>();
+        public static List<Rectangle> ProtectedStructures { get; private set; } = new List<Rectangle>();
         public bool Protected { get; private set; } = false;
 
         public AeroStructure ApplyItemConfigurationsToAll(UnifiedRandom random, List<PrimaryItemConfiguration> primaryItems, List<ItemConfiguration> secondaryItems)
@@ -106,7 +106,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
             if (!Protected)
             {
-                ProtectedStructures.Add(this);
+                ProtectedStructures.Add(ToRectangle());
                 Protected = true;
             }
             return this;
@@ -116,7 +116,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
         {
             if (this == Empty) { return false; }
 
-            return !ProtectedStructures.Any(x => x.ToRectangle().Intersects(ToRectangle()));
+            return !ProtectedStructures.Any(x => x.Intersects(ToRectangle()));
         }
 
         public Rectangle ToRectangle()
