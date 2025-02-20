@@ -766,12 +766,12 @@ Items: {
 
 	SpeedstersPickaxe: {
 		DisplayName: Speedsters Pickaxe
-		Tooltip: ""
+		Tooltip: Mining ramps up the speed of your pickaxe
 	}
 
 	PlatinumHook: {
 		DisplayName: Platinum Hook
-		Tooltip: ""
+		Tooltip: Extends all gem hooks and upgrades them to glow
 	}
 
 	OnTheRocks: {
@@ -781,11 +781,31 @@ Items: {
 
 	ResonanceDrill: {
 		DisplayName: Resonance Drill
-		Tooltip: ""
+		Tooltip: Mines connected ore, the more you mine the more effective
 	}
 
 	PouchOfRocks: {
-		DisplayName: Pouch Of Rocks
+		DisplayName: Pouch Of Magnets
+		Tooltip: Throws 2 magnetic stones which can collide and explode
+	}
+
+	TheItem: {
+		DisplayName: The Item
+		Tooltip: ""
+	}
+
+	CrackedCavernBrickItem: {
+		DisplayName: Cracked Cavern Brick Item
+		Tooltip: ""
+	}
+
+	CrystalGrowthRubbleItem: {
+		DisplayName: Crystal Growth Rubble Item
+		Tooltip: ""
+	}
+
+	CyvercryBossRelicItem: {
+		DisplayName: Cyvercry Boss Relic Item
 		Tooltip: ""
 	}
 }
@@ -821,6 +841,8 @@ NPCs: {
 			Princess_LovesNPC: I like {NPCName}.
 		}
 	}
+
+	CrystalTumbler2.DisplayName: Crystal Tumbler2
 }
 
 Projectiles: {
@@ -1122,6 +1144,7 @@ Projectiles: {
 	CrystalSpikeEffect.DisplayName: Crystal Spike Effect
 	Indicator.DisplayName: Indicator
 	WaterGeyserProjectile.DisplayName: Water Geyser Projectile
+	WaterGeyser.DisplayName: Water Geyser
 	ElectricBolt.DisplayName: Electric Bolt
 	Stalactite.DisplayName: Stalactite
 	CrystalShard.DisplayName: Crystal Shard
@@ -1155,6 +1178,26 @@ Projectiles: {
 	EnemyGlowEffect.DisplayName: Enemy Glow Effect
 	ResonanceDrillProj.DisplayName: Resonance Drill Proj
 	PouchOfRocksProj.DisplayName: Pouch Of Rocks Proj
+	AdamantiteDrillProj.DisplayName: Adamantite Drill Proj
+	ChlorophyteDrillProj.DisplayName: Chlorophyte Drill Proj
+	CobaltDrillProj.DisplayName: Cobalt Drill Proj
+	DraxProj.DisplayName: Drax Proj
+	MythrilDrillProj.DisplayName: Mythril Drill Proj
+	OrichalcumDrillProj.DisplayName: Orichalcum Drill Proj
+	PalladiumDrillProj.DisplayName: Palladium Drill Proj
+	TitaniumDrillProj.DisplayName: Titanium Drill Proj
+	NebulaDrillProj.DisplayName: Nebula Drill Proj
+	SolarFlareDrillProj.DisplayName: Solar Flare Drill Proj
+	StardustDrillProj.DisplayName: Stardust Drill Proj
+	VortexDrillProj.DisplayName: Vortex Drill Proj
+	PouchOfRocksFragment.DisplayName: Pouch Of Rocks Fragment
+	PouchOfRocksOrb.DisplayName: Pouch Of Rocks Orb
+	MagneticCollisionEffect.DisplayName: Magnetic Collision Effect
+	MagneticRock.DisplayName: Magnetic Rock
+	MagneticRockExplosion.DisplayName: Magnetic Rock Explosion
+	MagneticZap.DisplayName: Magnetic Zap
+	MagneticExplosion.DisplayName: Magnetic Explosion
+	MagneticOrb.DisplayName: Magnetic Orb
 }
 
 Configs: {

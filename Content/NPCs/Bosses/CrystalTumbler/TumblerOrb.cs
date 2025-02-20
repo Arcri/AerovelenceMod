@@ -49,11 +49,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Main.projectile[vfxIndex].ai[0] = Projectile.whoAmI;
                 hasSpawnedVFX = true;
             }
-            NPC parentNPC = Main.npc[(int)Projectile.ai[1]];
-            if (parentNPC.active && parentNPC.type == NPCType<CrystalTumbler>())
-                Projectile.Center = parentNPC.Center - new Vector2(0, 300);
-            else
-                Projectile.Kill();
             Projectile.frameCounter++;
             if (Projectile.frameCounter % 7 == 0)
             {
@@ -472,13 +467,13 @@ parentDied = true;
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.width = 16;
             Projectile.height = 16;
-            Projectile.timeLeft = 10000000;
+            Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
             Projectile.extraUpdates = 10;
             Projectile.scale = 1f;
 
-            Projectile.friendly = true;
-            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
 

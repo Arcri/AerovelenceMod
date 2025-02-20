@@ -28,6 +28,7 @@ using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Items.Tools;
 using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using AerovelenceMod.Content.Items.Potions;
+using AerovelenceMod.Content.Items.Tools.Drills;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {
@@ -199,26 +200,44 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             int demolitionist = NPC.FindFirstNPC(NPCID.Demolitionist);
             int angler = NPC.FindFirstNPC(NPCID.Angler);
             int dryad = NPC.FindFirstNPC(NPCID.Dryad);
+
             if (demolitionist >= 0 && Main.rand.NextBool(4))
                 chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DemolitionistDialogue", Main.npc[demolitionist].GivenName));
             if (angler >= 0 && Main.rand.NextBool(6))
                 chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.AnglerDialogue", Main.npc[angler].GivenName));
             if (dryad >= 0 && Main.rand.NextBool(6))
                 chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DryadDialogue", Main.npc[dryad].GivenName));
+
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue1"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue2"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue3"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue4"));
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.CommonDialogue"), 5.0);
             chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.RareDialogue"), 0.1);
+
             NumberOfTimesTalkedTo++;
-            if (NumberOfTimesTalkedTo >= 10)
+
+            if (NumberOfTimesTalkedTo >= 10 && dryad >= 0)
                 chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.TalkALot", Main.npc[dryad].GivenName));
-            string chosenChat = chat;
+
+            // Ensure chat isn't empty to prevent crashes
+            if (chat.elements.Count == 0)
+            {
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue1"));
+            }
+
+            string chosenChat = chat.Get();
+
+            // Ensure chosenChat isn't null or empty
+            if (string.IsNullOrEmpty(chosenChat))
+                chosenChat = Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue2");
+
             if (chosenChat == Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue4"))
                 Main.npcChatCornerItem = ItemID.HiveBackpack;
+
             return chosenChat;
         }
+
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
@@ -315,6 +334,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         public override void AddShops()
         {
             var npcShop = new NPCShop(Type, ShopName)
+                .Add<PouchOfRocks>()
                 .Add<SpeedstersPickaxe>()
                 .Add<ResonanceDrill>()
                 .Add<OpalOfCaVea>()

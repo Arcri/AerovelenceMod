@@ -8,6 +8,7 @@ using static Terraria.ID.ContentSamples.CreativeHelper;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
+    [LegacyName("CrystalGrass")]
     public class CrystalGrassTile : ModTile
     {
         public override void SetStaticDefaults()

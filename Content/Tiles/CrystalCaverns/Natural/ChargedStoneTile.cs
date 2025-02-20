@@ -5,8 +5,10 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
+    [LegacyName("ChargedStone")]
     public class ChargedStoneTile : ModTile
     {
+        
         public override void SetStaticDefaults()
         {
 			MineResist = 2.5f;

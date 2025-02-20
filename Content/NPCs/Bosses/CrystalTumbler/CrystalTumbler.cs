@@ -455,8 +455,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                 if (isSpinDashing)
                 {
-                    float targetRotation = dashDirectionRight ? 0f : (float)Math.PI;
-                    NPC.rotation = NPC.velocity.X;
+                    // Instead of setting rotation to NPC.velocity.X, set it based on the velocity vector.
+                    NPC.rotation = NPC.velocity.ToRotation();
+
                     if (currentDashSpeed < maxDashSpeed)
                     {
                         currentDashSpeed += dashAcceleration;
@@ -478,7 +479,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             EyeGlow = false;
                         }
                         Main.player[NPC.target].GetModPlayer<AeroPlayer>().ScreenShakePower = 30;
-                        SoundStyle stylea = new SoundStyle("AerovelenceMod/Sounds/Effects/HardRockSlam") with { Volume = .75f, Pitch = 1f, PitchVariance = 0f, };
+                        SoundStyle stylea = new SoundStyle("AerovelenceMod/Sounds/Effects/HardRockSlam")
+                        {
+                            Volume = .75f,
+                            Pitch = 1f,
+                            PitchVariance = 0f,
+                        };
                         SoundEngine.PlaySound(stylea, NPC.Center);
                         spinDash = false;
                     }
@@ -486,7 +492,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
         }
 
-        private bool isAttacking = false;
+
+        public static bool isAttacking = false;
         private int lastAttack = -1;
         private bool bombPhaseTriggered = false;
         private bool shouldPerformRollingSlam;
@@ -1395,14 +1402,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 {
                     Color col = i == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
 
-                    Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f) + new Vector2(0, 4), null, col * 1f, NPC.rotation, npcTexture.Size() / 2f, 1.1f, SpriteEffects.None, 0f);
+                    Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f) + new Vector2(0, 4), null, col * 1f, NPC.rotation, npcTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
                 }
                 Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, drawColor, NPC.rotation, npcTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
-                Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, Color.White with { A = 0 } * 0.25f, NPC.rotation, npcTexture.Size() / 2, 1.1f, SpriteEffects.None, 0f);
+                //Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, Color.White with { A = 0 } * 0.25f, NPC.rotation, npcTexture.Size() / 2, 1.1f, SpriteEffects.None, 0f);
             }
             else
             {
-                Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, drawColor, NPC.rotation, npcTexture.Size() / 2, 1.1f, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(npcTexture, NPC.Center - Main.screenPosition + new Vector2(0, 4), null, drawColor, NPC.rotation, npcTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
             }
             return false;
         }
@@ -1453,7 +1460,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 }
             }
             float glowIntensity = 0f;
-            if (isDashing || isSpinDashing || isDescending)
+            if (isAttacking && (isDashing || isSpinDashing || isDescending))
             {
                 glowIntensity = 1f;
             }
@@ -2246,6 +2253,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void PerformRockThrow()
         {
+            isAttacking = true;
             List<int> rockProjectiles = [];
             List<Vector2> rockPositions = FindRockPositions();
 

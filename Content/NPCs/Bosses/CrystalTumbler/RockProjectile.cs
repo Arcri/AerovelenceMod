@@ -98,6 +98,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     isntThrown = false;
 
                     SoundStyle stylea = new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { Volume = .46f, Pitch = 1f, PitchVariance = 0f, };
+
+                    CrystalTumbler.isAttacking = false;
                     SoundEngine.PlaySound(stylea, Projectile.Center);
                     Projectile.damage = 12;
                     if (Projectile.ai[1] == 2)

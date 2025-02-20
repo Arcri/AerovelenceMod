@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
 {
+    [LegacyName("SmoothCavernStone")]
     public class SmoothCavernStoneTile : ModTile
     {
         public override void SetStaticDefaults()

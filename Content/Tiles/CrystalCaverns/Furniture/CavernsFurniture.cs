@@ -16,6 +16,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
 {
     //Platform
     #region Platform
+    [LegacyName("GlimmerwoodPlatform")]
     public class GlimmerwoodPlatformTile : ModTile
     {
         public override void SetStaticDefaults() => CommonTileHelper.SetupPlatform(this, new Color(123, 123, 123), ModContent.ItemType<GlimmerwoodPlatformItem>(), DustID.BlueCrystalShard, false, false);
@@ -677,7 +678,5 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
         public override void SetDefaults() => CommonItemHelper.SetupPlaceableItem(this, 28, 14, 150, ModContent.TileType<GlimmerwoodBathtubTile>());
         public override void AddRecipes() => CreateRecipe().AddIngredient(ModContent.ItemType<GlimmerwoodItem>(), 8).AddTile(TileID.WorkBenches).Register();
     }
-
-    
     #endregion
 }

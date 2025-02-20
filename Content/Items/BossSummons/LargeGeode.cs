@@ -1,20 +1,31 @@
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using System;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
-using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Terraria.DataStructures;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
+    public static class ArenaData
+    {
+        public static Vector2 InnerArenaBoundaryLeft;
+        public static Vector2 InnerArenaBoundaryRight;
+        public static Vector2 OuterArenaBoundaryLeft;
+        public static Vector2 OuterArenaBoundaryRight;
+        public static Vector2 ArenaCenter;
+        public static int ArenaWidth;
+        public static int WaterLayer;
+        public static int ArenaY;
+    }
+
     public class LargeGeode : ModItem
     {
-
         private static List<Point> placedTiles = new List<Point>();
 
         public override void SetDefaults()
@@ -41,8 +52,8 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 }
             }
             return false;
-
         }
+
         public override bool CanUseItem(Player player)
         {
             if (IsNearCavernGateway(player) && !IsBossAlive())
@@ -64,20 +75,43 @@ namespace AerovelenceMod.Content.Items.BossSummons
 
         public static Vector2[] crystalPositions;
 
-
         public override bool? UseItem(Player player)
         {
             Vector2 centerOfArena = GetCenterOfArena(player);
             if (centerOfArena != Vector2.Zero)
             {
-                ArenaBoundaries.leftBoundary = FindArenaBoundary(centerOfArena, -1, out baseLevelY);
+                ArenaBoundaries.leftBoundary = FindArenaBoundary(centerOfArena, -1, out int baseLevelY);
                 ArenaBoundaries.rightBoundary = FindArenaBoundary(centerOfArena, 1, out baseLevelY);
                 SetupArenaBoundaries(centerOfArena);
+
+                ArenaData.OuterArenaBoundaryLeft = new Vector2(ArenaBoundaries.leftBoundary.X, ArenaBoundaries.leftBoundary.Y);
+                ArenaData.OuterArenaBoundaryRight = new Vector2(ArenaBoundaries.rightBoundary.X, ArenaBoundaries.rightBoundary.Y);
+                ArenaData.ArenaCenter = centerOfArena;
+                ArenaData.ArenaWidth = (int)Math.Abs(ArenaBoundaries.rightBoundary.X - ArenaBoundaries.leftBoundary.X);
+                ArenaData.ArenaY = ((int)(ArenaBoundaries.rightBoundary.Y / 16)) + 5;
+
+                ArenaData.InnerArenaBoundaryLeft = new Vector2(ArenaData.OuterArenaBoundaryLeft.X + 10 * 16, ArenaData.OuterArenaBoundaryLeft.Y);
+                ArenaData.InnerArenaBoundaryRight = new Vector2(ArenaData.OuterArenaBoundaryRight.X - 10 * 16, ArenaData.OuterArenaBoundaryRight.Y);
+
+                int startTileY = (int)(centerOfArena.Y / 16);
+                int waterTileY = startTileY;
+                for (int y = startTileY; y < Main.maxTilesY; y++)
+                {
+                    Tile tile = Framing.GetTileSafely((int)(centerOfArena.X / 16), y);
+                    if (tile.LiquidAmount > 0)
+                    {
+                        waterTileY = y;
+                        break;
+                    }
+                }
+                ArenaData.WaterLayer = waterTileY;
+
                 int baseLevelWorldY = baseLevelY * 16;
                 Vector2 baseLevelPosition = new Vector2(centerOfArena.X, baseLevelWorldY);
                 CreateDustTowardsLocation(centerOfArena, baseLevelPosition);
+
                 IEntitySource entitySource = player.GetSource_ItemUse(Item);
-                int npcID = ModContent.NPCType<CrystalTumbler>();
+                int npcID = ModContent.NPCType<CrystalTumbler2>();
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NPC.NewNPC(entitySource, (int)centerOfArena.X, baseLevelWorldY, npcID);
@@ -89,6 +123,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             }
             return true;
         }
+
 
         private bool IsNearCavernGateway(Player player)
         {
@@ -107,7 +142,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
                     }
                 }
             }
-
             return false;
         }
 
@@ -116,21 +150,52 @@ namespace AerovelenceMod.Content.Items.BossSummons
             var tileCoords = player.Center.ToTileCoordinates();
             int tileX = tileCoords.X;
             int tileY = tileCoords.Y;
+            int searchRadius = 7;
 
-            for (int x = tileX - 7; x <= tileX + 7; x++)
+            for (int x = tileX - searchRadius; x <= tileX + searchRadius; x++)
             {
-                for (int y = tileY - 7; y <= tileY + 7; y++)
+                for (int y = tileY - searchRadius; y <= tileY + searchRadius; y++)
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
                     if (tile.HasTile && tile.TileType == ModContent.TileType<CavernGatewayTile>())
                     {
-                        return new Vector2(x + 7.5f, y + 7.5f) * 16f;
+                        int bottomY = y;
+                        while (true)
+                        {
+                            Tile tileBelow = Framing.GetTileSafely(x, bottomY + 1);
+                            if (tileBelow.HasTile && tileBelow.TileType == ModContent.TileType<CavernGatewayTile>())
+                            {
+                                bottomY++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        int leftX = x;
+                        int rightX = x;
+                        while (true)
+                        {
+                            Tile tileRight = Framing.GetTileSafely(rightX + 1, y);
+                            if (tileRight.HasTile && tileRight.TileType == ModContent.TileType<CavernGatewayTile>())
+                            {
+                                rightX++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        float centerX = (leftX + rightX + 1) / 2f;
+                        float centerY = bottomY + 0.5f;
+                        return new Vector2(centerX, centerY) * 16f;
                     }
                 }
             }
-
             return Vector2.Zero;
         }
+
+
 
         private void SetupArenaBoundaries(Vector2 centerOfArena)
         {
@@ -157,7 +222,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
             placedTiles.Clear();
         }
 
-
         private Vector2[] FindNearestArenaCrystals(Vector2 center)
         {
             Vector2[] crystalPositions = new Vector2[3];
@@ -170,7 +234,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
                     foundPositions.Add(crystalPositions[i].ToTileCoordinates());
                 }
             }
-
             return crystalPositions;
         }
 
@@ -197,7 +260,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
                                 break;
                             }
                         }
-
                         if (!tooClose)
                         {
                             float distance = Vector2.Distance(center, tilePos.ToVector2() * 16f);
@@ -210,7 +272,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
                     }
                 }
             }
-
             return nearestCrystal;
         }
 
@@ -254,7 +315,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 {
                     Tile tile = Framing.GetTileSafely(x, y);
                     Tile adjacentTile = Framing.GetTileSafely(x + directionX, y);
-
                     if (tile.HasTile && tile.TileType == ModContent.TileType<GlimmerwoodPlatformTile>() &&
                         adjacentTile.HasTile && adjacentTile.TileType == ModContent.TileType<SmoothCavernStoneTile>())
                     {
@@ -266,7 +326,6 @@ namespace AerovelenceMod.Content.Items.BossSummons
             baseLevelY = playerTileY;
             return center;
         }
-
 
         private void CreateTemporaryArenaBorders(Vector2 leftBoundary, Vector2 rightBoundary)
         {

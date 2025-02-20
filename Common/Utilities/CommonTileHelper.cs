@@ -657,7 +657,7 @@ namespace AerovelenceMod.Common.Utilities
             TileObjectData.newTile.CopyFrom(TileObjectData.StyleTorch);
             TileObjectData.newTile.Width = 1;
             TileObjectData.newTile.Height = 1;
-            TileObjectData.newTile.CoordinateHeights = new[] { 16 };
+            TileObjectData.newTile.CoordinateHeights = [16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.StyleHorizontal = styleHorizontal;
@@ -667,7 +667,7 @@ namespace AerovelenceMod.Common.Utilities
             TileObjectData.newTile.LavaPlacement = lavaDeath ? LiquidPlacement.Allowed : LiquidPlacement.NotAllowed;
             TileObjectData.newTile.DrawYOffset = 0;
 
-            TileObjectData.addTile(modTile.Type);
+            
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.AnchorLeft = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Tree | AnchorType.AlternateTile, TileObjectData.newTile.Height, 0);
@@ -682,6 +682,8 @@ namespace AerovelenceMod.Common.Utilities
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.AnchorWall = true;
             TileObjectData.addAlternate(0);
+
+            TileObjectData.addTile(modTile.Type);
 
             modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Torch"));
             modTile.AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
@@ -959,6 +961,65 @@ namespace AerovelenceMod.Common.Utilities
             SetupCommonProperties(modTile, itemType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
         }
 
+        public static void SetupBossRelic(ModTile modTile, Color mapColor, int itemDropType, int dustType, bool lavaDeath, bool waterDeath, bool styleHorizontal)
+        {
+            modTile.AddMapEntry(mapColor, Language.GetText("MapObject.Relic"));
+            Main.tileShine[modTile.Type] = 400;
+            TileID.Sets.InteractibleByNPCs[modTile.Type] = true;
+
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.StyleWrapLimitVisualOverride = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.styleLineSkipVisualOverride = 0;
+
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+            TileObjectData.addAlternate(1);
+
+            TileObjectData.addTile(modTile.Type);
+            
+            SetupCommonProperties(modTile, itemDropType, dustType, lavaDeath, waterDeath, styleHorizontal, isChair: false);
+        }
+
+        public static void drawRelics(ModTile modTile, Texture2D texture, int frameWidth, int frameHeight, int horizontalFrames, int verticalFrames, int i, int j, SpriteBatch spriteBatch)
+        {
+            Vector2 offScreen = new(Main.offScreenRange);
+            if (Main.drawToScreen)
+                offScreen = Vector2.Zero;
+            Point p = new(i, j);
+            Tile tile = Main.tile[p.X, p.Y];
+            if (tile == null || !tile.HasTile)
+            {
+                return;
+            }
+            int frameY = tile.TileFrameX / frameWidth;
+            Rectangle frame = texture.Frame(horizontalFrames, verticalFrames, 0, frameY);
+
+            Vector2 origin = frame.Size() / 2f;
+            Vector2 worldPos = p.ToWorldCoordinates(24f, 64f);
+
+            Color color = Lighting.GetColor(p.X, p.Y);
+
+            bool direction = tile.TileFrameY / frameHeight != 0;
+            SpriteEffects effects = direction ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            const float TwoPi = (float)Math.PI * 2f;
+            float offset = (float)Math.Sin(Main.GlobalTimeWrappedHourly * TwoPi / 5f);
+            Vector2 drawPos = worldPos + offScreen - Main.screenPosition + new Vector2(0f, -40f) + new Vector2(0f, offset * 4f);
+            spriteBatch.Draw(texture, drawPos, frame, color, 0f, origin, 1f, effects, 0f);
+            float scale = (float)Math.Sin(Main.GlobalTimeWrappedHourly * TwoPi / 2f) * 0.3f + 0.7f;
+            Color effectColor = color;
+            effectColor.A = 0;
+            effectColor = effectColor * 0.1f * scale;
+            for (float num5 = 0f; num5 < 1f; num5 += 355f / (678f * (float)Math.PI))
+            {
+                spriteBatch.Draw(texture, drawPos + (TwoPi * num5).ToRotationVector2() * (6f + offset * 2f), frame, effectColor, 0f, origin, 1f, effects, 0f);
+            }
+        }
         public static void PlatformHangOffset(int i, int j, ref int offsetY)
         {
             Tile tile = Main.tile[i, j];

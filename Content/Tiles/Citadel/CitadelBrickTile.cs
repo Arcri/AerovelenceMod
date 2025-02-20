@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.Citadel
 {
+    [LegacyName("CitadelBrick")]
     public class CitadelBrickTile : ModTile
     {
         public override void SetStaticDefaults()

@@ -6,8 +6,10 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
+    [LegacyName("CavernStone")]
     public class CavernStoneTile : ModTile
     {
+
         public override void SetStaticDefaults()
         {
             MineResist = 2.5f;

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
+    [LegacyName("CavernCrystal")]
     public class CavernCrystalTile : ModTile
     {
         private readonly int oneHelixRevolutionInUpdateTicks = 30;

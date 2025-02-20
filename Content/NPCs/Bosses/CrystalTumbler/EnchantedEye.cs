@@ -32,6 +32,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.damage = 0;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            Projectile.alpha = 255;
 
             bloomTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/EnchantedEye_Glow_Bloom").Value;
 
@@ -71,6 +72,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void AI()
         {
+            Projectile.alpha -= 5;
             if (Projectile.ai[0] == 0f)
             {
                 Vector2 playerPosition = new(Projectile.ai[1], Projectile.ai[2]);

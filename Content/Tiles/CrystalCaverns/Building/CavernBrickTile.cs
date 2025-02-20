@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -5,6 +6,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
 {
+    [LegacyName("CavernBrick")]
     public class CavernBrickTile : ModTile
     {
         public override void SetStaticDefaults()
@@ -14,6 +16,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
+            Main.tileMerge[Type][ModContent.TileType<CrackedCavernBrickTile>()] = true;
             AddMapEntry(new Color(061, 079, 110));
 			DustType = 59;
 			HitSound = SoundID.Tink;

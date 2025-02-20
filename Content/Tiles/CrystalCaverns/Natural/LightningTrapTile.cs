@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 
         public override void SetStaticDefaults()
         {
-            Main.tileSolid[Type] = false;
+            Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
             Main.tileFrameImportant[Type] = true;
@@ -60,11 +60,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLighted[Type] = true;
             Main.tileWaterDeath[Type] = false;
             Main.tileLavaDeath[Type] = false;
-            Main.tileSpelunker[Type] = true;
             Main.tileShine2[Type] = true;
             Main.tileShine[Type] = 900;
-            Main.tileSolidTop[Type] = false;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
+            /*TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.WaterPlacement = LiquidPlacement.Allowed;
             TileObjectData.newTile.LavaPlacement = LiquidPlacement.Allowed;
@@ -85,7 +83,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 1, 0);
             TileObjectData.addAlternate(2);
 
-            TileObjectData.addTile(Type);
+            TileObjectData.addTile(Type);*/
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
 

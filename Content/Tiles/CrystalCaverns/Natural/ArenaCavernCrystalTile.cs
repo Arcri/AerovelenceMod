@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
+    [LegacyName("ArenaCavernCrystal")]
     public class ArenaCavernCrystalTile : ModTile
     {
         public override void SetStaticDefaults()
