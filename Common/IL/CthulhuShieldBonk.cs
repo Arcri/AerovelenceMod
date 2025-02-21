@@ -50,7 +50,7 @@ namespace AerovelenceMod.Common.IL
 			cursor.EmitLdarg(0); //Player
 			cursor.EmitLdloc(2); //Main.npc[i]
 			cursor.EmitDelegate((Player player, NPC npc) => { //bool A(Player, NPC)
-				if (npc.type == ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler>())
+				if (npc.type == ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler2>())
 					return false;
 				if (npc.type == Terraria.ID.NPCID.Deerclops)
 				{

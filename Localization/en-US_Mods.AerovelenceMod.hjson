@@ -843,6 +843,7 @@ NPCs: {
 	}
 
 	CrystalTumbler2.DisplayName: Crystal Tumbler2
+	MiniMoth.DisplayName: Mini Moth
 }
 
 Projectiles: {
@@ -1198,6 +1199,8 @@ Projectiles: {
 	MagneticZap.DisplayName: Magnetic Zap
 	MagneticExplosion.DisplayName: Magnetic Explosion
 	MagneticOrb.DisplayName: Magnetic Orb
+	LightningStar.DisplayName: Lightning Star
+	LightningProjectile2.DisplayName: Lightning Projectile2
 }
 
 Configs: {

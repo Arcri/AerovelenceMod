@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Terraria.ID;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Linq;
 using Terraria.Audio;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
@@ -14,15 +13,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private NPC owner;
         private float offsetX;
         private bool initialized = false;
-
+        private bool isntThrown = true;
+        private Vector2 startPos;
+        private Vector2 controlPoint;
+        private Vector2 targetPos;
+        private float bezierT = 0f;
+        private float rotationSpeed = 0f;
         private Color currentColor;
+        private Vector2 finalVelocity;
+        private bool bezierFinished = false;
 
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 3;
         }
-
-        bool isntThrown = true;
 
         public override void SetDefaults()
         {
@@ -62,7 +66,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (owner == null)
             {
                 owner = Main.npc[(int)Projectile.ai[0]];
-                if (owner == null || !owner.active || owner.type != ModContent.NPCType<CrystalTumbler>())
+                if (owner == null || !owner.active || owner.type != ModContent.NPCType<CrystalTumbler2>())
                 {
                     Projectile.Kill();
                     return false;
@@ -111,33 +115,75 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         ThrowAtPlayer(Main.player[owner.target]);
                     }
                 }
+                else
+                {
+                    MoveAlongBezierCurve();
+                }
             }
+
             if (Projectile.localAI[1] >= 300)
                 currentColor = Color.Lerp(currentColor, Color.Black, 0.05f);
+
             return false;
         }
 
         private void ThrowAtPlayer(Player player)
         {
-            Vector2 direction = player.Center - Projectile.Center;
-            direction.Normalize();
-            Projectile.velocity = direction * 10f;
-            Projectile.tileCollide = true;
-            Projectile.netUpdate = true;
+            startPos = Projectile.Center;
+            targetPos = player.Center;
+            controlPoint = (startPos + targetPos) / 2 + new Vector2(0, -140f);
+            bezierT = 0f;
+            bezierFinished = false;
+            rotationSpeed = Main.rand.NextFloat(0.02f, 0.05f) * (Main.rand.NextBool() ? 1 : -1);
         }
 
         private void ThrowAroundPlayer(Player player)
         {
             Vector2 offset = new(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
             offset.Normalize();
-            offset *= 100f;
+            offset *= 120f;
 
-            Vector2 throwPosition = player.Center + offset;
-            Vector2 direction = throwPosition - Projectile.Center;
-            direction.Normalize();
-            Projectile.velocity = direction * 10f;
-            Projectile.tileCollide = true;
-            Projectile.netUpdate = true;
+            startPos = Projectile.Center;
+            targetPos = player.Center + offset;
+            controlPoint = (startPos + targetPos) / 2 + new Vector2(0, -140f);
+            bezierT = 0f;
+            bezierFinished = false;
+            rotationSpeed = Main.rand.NextFloat(0.02f, 0.05f) * (Main.rand.NextBool() ? 1 : -1);
+        }
+
+        private void MoveAlongBezierCurve()
+        {
+            if (!bezierFinished)
+            {
+                bezierT += 0.02f;
+                if (bezierT >= 1f)
+                {
+                    bezierT = 1f;
+                    bezierFinished = true;
+
+                    finalVelocity = (targetPos - controlPoint).SafeNormalize(Vector2.Zero) * 8f;
+                    Projectile.tileCollide = true;
+                }
+
+                Vector2 previousPos = Projectile.Center;
+                Vector2 newPos = QuadraticBezier(startPos, controlPoint, targetPos, bezierT);
+                Projectile.Center = newPos;
+
+                Vector2 velocity = newPos - previousPos;
+                float swayFactor = MathHelper.Clamp(velocity.Length() * 0.02f, 0.02f, 0.1f);
+                Projectile.rotation += rotationSpeed * swayFactor;
+            }
+            else
+            {
+                Projectile.velocity = finalVelocity;
+                finalVelocity *= 1.02f;
+            }
+        }
+
+        private Vector2 QuadraticBezier(Vector2 p0, Vector2 p1, Vector2 p2, float t)
+        {
+            float u = 1f - t;
+            return (u * u * p0) + (2f * u * t * p1) + (t * t * p2);
         }
     }
 }

@@ -1,18 +1,12 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria.ID;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using System.Linq;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using AerovelenceMod.Content.Projectiles;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
-using AerovelenceMod.Content.Projectiles.Other;
-using Terraria.Audio;
-using Terraria.GameContent;
 using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
@@ -25,8 +19,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             Projectile.DamageType = DamageClass.Magic;
 
-            Projectile.width = 24;
-            Projectile.height = 16;
+            Projectile.width = 8;
+            Projectile.height = 8;
             Projectile.timeLeft = 200;
             Projectile.penetrate = -1;
 
@@ -57,28 +51,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             trailRot = Projectile.velocity.ToRotation();
             trailPos = Projectile.Center + Projectile.velocity;
             TrailLogic();
-            if (timer >= 20)
-            {
-                for (int i = 0; i < Main.maxProjectiles; i++)
-                {
-                    Projectile otherProj = Main.projectile[i];
-
-                    if (otherProj.whoAmI == Projectile.whoAmI)
-                        continue;
-
-                    if (otherProj.active && otherProj.type == ModContent.ProjectileType<SharpCrystalShard>())
-                    {
-                        Rectangle thisHitbox = Projectile.Hitbox;
-                        Rectangle otherHitbox = otherProj.Hitbox;
-                        if (thisHitbox.Intersects(otherHitbox))
-                        {
-                            Projectile.Kill();
-                            return;
-                        }
-                    }
-                }
-            }
-
         }
 
 
@@ -87,7 +59,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override bool PreDraw(ref Color lightColor)
         {
-            SpriteBatch spriteBatch = Main.spriteBatch;
             Texture2D projectileTexture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/SharpCrystalShard");
 
             if (timer != 0)
@@ -106,7 +77,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                     float scale = 2.05f;
 
-                    Main.EntitySpriteDraw(projectileTexture, previousPositions[i] - Main.screenPosition + new Vector2(0, 4), null, col with { A = 0 } * progress * 0.9f,
+                    Main.EntitySpriteDraw(projectileTexture, previousPositions[i] - Main.screenPosition, null, col with { A = 0 } * progress * 0.9f,
                         previousRotations[i], projectileTexture.Size() / 2f, scale, SpriteEffects.None);
                 }
             }
@@ -116,10 +87,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 Color col2 = i == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
 
-                Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f) + new Vector2(0, 4), null, col2 * 1f, Projectile.rotation, projectileTexture.Size() / 2f, 1.1f, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, col2 * 1f, Projectile.rotation, projectileTexture.Size() / 2f, 1.1f, SpriteEffects.None, 0f);
             }
-            Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition + new Vector2(0, 4), null, lightColor, Projectile.rotation, projectileTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition + new Vector2(0, 4), null, Color.White with { A = 0 } * 0.25f, Projectile.rotation, projectileTexture.Size() / 2, 1.1f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, projectileTexture.Size() / 2, 1f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(projectileTexture, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.25f, Projectile.rotation, projectileTexture.Size() / 2, 1.1f, SpriteEffects.None, 0f);
 
             return false;
         }

@@ -267,7 +267,7 @@ namespace AerovelenceMod
 
 			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
 
-			Overlays.Scene.Load();
+            Overlays.Scene.Load();
 			Filters.Scene.Load();
 
             if (Main.netMode != NetmodeID.Server)

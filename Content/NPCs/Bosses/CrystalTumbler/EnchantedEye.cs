@@ -7,6 +7,7 @@ using System;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Terraria.ID;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -25,7 +26,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             Projectile.width = 78;
             Projectile.height = 104;
-            Projectile.timeLeft = 150;
+            Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
             Projectile.friendly = false;
             Projectile.hostile = false;
@@ -49,11 +50,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Texture2D glowmaskTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/EnchantedEye_Glow").Value;
             Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
             Vector2 direction = new((float)Math.Cos(Projectile.rotation - MathHelper.PiOver2), (float)Math.Sin(Projectile.rotation - MathHelper.PiOver2));
-
+            Color fadeColor = Color.White * (1f - fadeOutTimer / 60f);
             DrawTelegraphLine(Main.spriteBatch, Projectile.Center, direction, lineTexture, Color.Blue, 0.1f, 100f);
 
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center + hiltOffset - Main.screenPosition, null, lightColor, Projectile.rotation, new Vector2(Projectile.width / 2, Projectile.height / 2), Projectile.scale, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(glowmaskTexture, Projectile.Center + crystalOffset - Main.screenPosition, null, Color.White, Projectile.rotation, new Vector2(glowmaskTexture.Width / 2, glowmaskTexture.Height / 2), Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center + hiltOffset - Main.screenPosition, null, fadeColor, Projectile.rotation, new Vector2(Projectile.width / 2, Projectile.height / 2), Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(glowmaskTexture, Projectile.Center + crystalOffset - Main.screenPosition, null, fadeColor, Projectile.rotation, new Vector2(glowmaskTexture.Width / 2, glowmaskTexture.Height / 2), Projectile.scale, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -70,41 +71,56 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             return false;
         }
 
+        private int fadeOutTimer = 0;
         public override void AI()
         {
-            Projectile.alpha -= 5;
+            Projectile.alpha = Math.Max(Projectile.alpha - 5, 0);
+
+            Vector2 targetCenter = new Vector2(Projectile.ai[1], Projectile.ai[2]);
+
             if (Projectile.ai[0] == 0f)
             {
-                Vector2 playerPosition = new(Projectile.ai[1], Projectile.ai[2]);
-                direction = Vector2.Normalize(playerPosition - Projectile.Center);
-                Projectile.rotation = direction.ToRotation() + MathHelper.PiOver2;
+                Vector2 startOffset = Projectile.Center - targetCenter;
+                Projectile.localAI[1] = startOffset.Length();
+                Projectile.localAI[2] = startOffset.ToRotation();
                 Projectile.ai[0] = 1f;
             }
-            int damage = 1;
-            if (Main.GameMode == 0)
-            {
-                damage = 2;
-            }
-            else if (Main.GameMode == 1)
-            {
-                damage = 3;
-            }
-            else if (Main.GameMode == 2)
-            {
-                damage = 4;
-            }
+            float orbitSpeed = 0.005f;
+            Projectile.localAI[2] += orbitSpeed;
+            float radius = Projectile.localAI[1];
+            float angle = Projectile.localAI[2];
+            Vector2 newOffset = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
+            Projectile.Center = targetCenter + newOffset;
+            Vector2 lookDirection = targetCenter - Projectile.Center;
+            Projectile.rotation = lookDirection.ToRotation() + MathHelper.PiOver2;
             shootTimer++;
             if (shootTimer >= 100 && !hasFired)
             {
                 shootTimer = 0;
                 bloomOpacity = 1f;
                 bloomScale = 1.5f;
+
                 hiltOffset = -direction * 15f;
                 crystalOffset = -direction * 5f;
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, direction * 10f, ModContent.ProjectileType<SharpCrystalShard>(), damage, Projectile.knockBack, Projectile.owner);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, lookDirection.SafeNormalize(Vector2.Zero) * 10f,
+                    ModContent.ProjectileType<SharpCrystalShard>(), 18, Projectile.knockBack, Projectile.owner);
+
                 hasFired = true;
+                fadeOutTimer = 0;
             }
 
+            if (hasFired)
+            {
+                fadeOutTimer++;
+                float fadeProgress = fadeOutTimer / 60f;
+                Projectile.alpha = (int)MathHelper.Lerp(0, 255, fadeProgress);
+                Projectile.Center += -direction * 2f;
+
+                if (fadeOutTimer >= 60)
+                {
+                    Projectile.Kill();
+                }
+            }
             if (bloomOpacity > 0f)
             {
                 bloomOpacity -= 0.05f;
@@ -113,6 +129,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             hiltOffset *= 0.95f;
             crystalOffset *= 0.95f;
         }
+
+
+
 
         float lineExtraPower = 0f;
 
