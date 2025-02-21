@@ -177,7 +177,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
             ushort tileType = GetTileType(data);
             ushort wallType = GetWallType(data);
-            if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+            if (tileType == ModContent.TileType<TheTile>())
                 return;
             ushort currentWallType = tile.WallType;
             byte currentWallColor = tile.WallColor;
@@ -482,7 +482,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         Tile tile = Main.tile[x, y];
                         ushort tileType = GetTileType(data);
 
-                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        if (tileType == ModContent.TileType<TheTile>())
                             continue;
 
                         tile.HasTile = data.IsActive;
@@ -511,7 +511,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                         int y = (int)(startPosition.Y + data.Y);
                         ushort tileType = GetTileType(data);
 
-                        if (tileType == TileID.LesionBlock && data.TileColor == PaintID.DeepRedPaint)
+                        if (tileType == ModContent.TileType<TheTile>())
                             continue;
 
                         TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);

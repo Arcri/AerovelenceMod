@@ -112,14 +112,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             _instance.UndergroundHeight = 400 * _instance.WorldSizeScale;
             _instance.BiomeHeight = _instance.UndergroundHeight + _instance.SurfaceHeight;
             
-            GrassTile = (ushort)ModContent.TileType<CrystalGrass>();
+            GrassTile = (ushort)ModContent.TileType<CrystalGrassTile>();
             // DirtTile = TileID.Granite; 
-            DirtTile = (ushort)ModContent.TileType<CrystalDirt>();
-            StoneTile = (ushort)ModContent.TileType<CavernStone>();
-            SandTile = (ushort)ModContent.TileType<CavernSand>();
-            CrystalTile = (ushort)ModContent.TileType<CavernCrystal>();
-            ChargedTile = (ushort)ModContent.TileType<ChargedStone>();
-            BrickTile = (ushort)ModContent.TileType<CitadelBrick>();
+            DirtTile = (ushort)ModContent.TileType<CrystalDirtTile>();
+            StoneTile = (ushort)ModContent.TileType<CavernStoneTile>();
+            SandTile = (ushort)ModContent.TileType<CavernSandTile>();
+            CrystalTile = (ushort)ModContent.TileType<CavernCrystalTile>();
+            ChargedTile = (ushort)ModContent.TileType<ChargedStoneTile>();
+            BrickTile = (ushort)ModContent.TileType<CitadelBrickTile>();
             // DirtWall = WallID.Granite; 
             DirtWall = (ushort)ModContent.WallType<CavernDirtWall>();
             StoneWall = (ushort)ModContent.WallType<CavernStoneWall>();

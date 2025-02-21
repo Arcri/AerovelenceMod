@@ -102,15 +102,18 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
         public AeroStructure ProtectStructure()
         {
-            if (this == Empty) { return this; }
+            if (this == Empty)
+                return this;
 
             if (!Protected)
             {
+                GenVars.structures.AddProtectedStructure(ToRectangle(), 0);
                 ProtectedStructures.Add(ToRectangle());
                 Protected = true;
             }
             return this;
         }
+
 
         public bool CanPlace()
         {

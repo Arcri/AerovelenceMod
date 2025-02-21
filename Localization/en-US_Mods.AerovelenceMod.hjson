@@ -635,6 +635,51 @@ Items: {
 		DisplayName: Cavern Stone Column Item
 		Tooltip: ""
 	}
+
+	CyvercryBossRelicItem: {
+		Tooltip: ""
+		DisplayName: Cyvercry Boss Relic Item
+	}
+
+	CrystalGrowthRubbleItem: {
+		Tooltip: ""
+		DisplayName: Crystal Growth Rubble Item
+	}
+
+	LightningTrapItem: {
+		Tooltip: ""
+		DisplayName: Lightning Trap Item
+	}
+
+	CrystalDirtItem: {
+		Tooltip: ""
+		DisplayName: Crystal Dirt Item
+	}
+
+	GlimmerwoodLeafItem: {
+		Tooltip: ""
+		DisplayName: Glimmerwood Leaf Item
+	}
+
+	GlimmerwoodLanternItem: {
+		Tooltip: ""
+		DisplayName: Glimmerwood Lantern Item
+	}
+
+	GlimmerwoodCandelabraItem: {
+		Tooltip: ""
+		DisplayName: Glimmerwood Candelabra Item
+	}
+
+	CrackedCavernBrickItem: {
+		Tooltip: ""
+		DisplayName: Cracked Cavern Brick Item
+	}
+
+	TheItem: {
+		Tooltip: ""
+		DisplayName: The Item
+	}
 }
 
 NPCs: {
@@ -971,6 +1016,7 @@ Projectiles: {
 	SharpCrystalShard.DisplayName: Sharp Crystal Shard
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
+	LightningProjectile.DisplayName: Lightning Projectile
 }
 
 Configs: {
@@ -994,4 +1040,8 @@ WorldGen: {
 	CrystalCavernsPolishMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsPolishMessage
 }
 
-Tiles.GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
+Tiles: {
+	GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
+	LightningTrapTile.MapEntry: Lightning Trap Tile
+	GlimmerwoodDresserTile.MapEntry: Glimmerwood Dresser Tile
+}

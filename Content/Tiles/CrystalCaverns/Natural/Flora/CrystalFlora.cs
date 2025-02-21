@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-            if (!tileBelow.HasTile || tileBelow.IsHalfBlock || TileID.Sets.Platforms[tileBelow.TileType] || tileBelow.TileType != ModContent.TileType<CrystalGrass>())
+            if (!tileBelow.HasTile || tileBelow.IsHalfBlock || TileID.Sets.Platforms[tileBelow.TileType] || tileBelow.TileType != ModContent.TileType<CrystalGrassTile>())
             {
                 WorldGen.KillTile(i, j);
             }

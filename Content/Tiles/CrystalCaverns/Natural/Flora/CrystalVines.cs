@@ -41,7 +41,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
                 type = tileAbove.TileType;
             }
 
-            if (type == ModContent.TileType<CrystalGrass>() || type == Type)
+            if (type == ModContent.TileType<CrystalGrassTile>() || type == Type)
             {
                 return true;
             }
@@ -64,7 +64,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
                     {
                         break;
                     }
-                    else if (!testTile.HasTile || testTile.TileType != ModContent.TileType<CrystalGrass>())
+                    else if (!testTile.HasTile || testTile.TileType != ModContent.TileType<CrystalGrassTile>())
                     {
                         yTest--;
                         continue;

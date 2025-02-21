@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
             [
                 TileID.Grass,
                 TileID.HallowedGrass,
-                ModContent.TileType<CrystalGrass>()
+                ModContent.TileType<CrystalGrassTile>()
             ];
             TileObjectData.newTile.AnchorAlternateTiles =
             [

@@ -151,10 +151,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     ),
                     "tumblerarena"
                 ).ProtectStructure();
-                AeroStructure crystalShrine = PlaceStructureSafely("crystalshrine", 20, 20)
+                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine", 20, 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure crystalShrine2 = PlaceStructureSafely("crystalshrine", 20, 20)
+                AeroStructure crystalShrine2 = PlaceStructureSafely("smallshrine", 20, 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
 
@@ -165,7 +165,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     progress.Set((float)i / TOTAL_SHRINES);
 
-                    AeroStructure shrine = PlaceStructureSafely("crystalshrine", 20, 20);
+                    AeroStructure shrine = PlaceStructureSafely("smallshrine", 20, 20);
 
                     if (shrine != AeroStructure.Empty)
                     {
