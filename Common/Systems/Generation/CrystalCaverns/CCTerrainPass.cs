@@ -24,7 +24,7 @@ using AerovelenceMod.Common.Utilities.Generation;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
-    public sealed class CrystalCavernsTerrainPass : GenPass
+    public sealed class CCTerrainPass : GenPass
     {
         public int WorldSizeScale { get; private set; }
         public int BiomeWidth { get; private set; }
@@ -64,10 +64,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         public Point TumblerTunnelEnd { get; private set; }
         public int TumblerArenaPolarity { get; private set; }
 
-        private static CrystalCavernsTerrainPass _instance;
+        private static CCTerrainPass _instance;
         private static readonly object _lock = new object();
 
-        public static CrystalCavernsTerrainPass Instance()
+        public static CCTerrainPass Instance()
         {
             if (_instance == null)
             {
@@ -75,14 +75,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     if (_instance == null)
                     {
-                        _instance = new CrystalCavernsTerrainPass("Crystal Caverns Terrain", 100f);
+                        _instance = new CCTerrainPass("Crystal Caverns Terrain", 100f);
                     }
                 }
             }
             return _instance;
         }
 
-        public static CrystalCavernsTerrainPass Instance(string name, float loadWeight)
+        public static CCTerrainPass Instance(string name, float loadWeight)
         { 
             if (_instance == null)
             {
@@ -90,14 +90,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     if (_instance == null)
                     {
-                        _instance = new CrystalCavernsTerrainPass(name, loadWeight);
+                        _instance = new CCTerrainPass(name, loadWeight);
                     }
                 }
             }
             return _instance;
         }
 
-        private CrystalCavernsTerrainPass(string name, float loadWeight) : base(name, loadWeight)
+        private CCTerrainPass(string name, float loadWeight) : base(name, loadWeight)
 		{
         }
 

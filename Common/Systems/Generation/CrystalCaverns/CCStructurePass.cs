@@ -1,5 +1,4 @@
 ﻿using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
@@ -19,9 +18,9 @@ using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
-    public class CrystalCavernsPolish : GenPass
+    public class CCStructurePass : GenPass
     {
-        public CrystalCavernsPolish(string name, double loadWeight) : base(name, loadWeight)
+        public CCStructurePass(string name, double loadWeight) : base(name, loadWeight)
         {
         }
 
@@ -32,7 +31,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             try
             {
                 progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
-                CrystalCavernsTerrainPass mainPass = CrystalCavernsTerrainPass.Instance();
+                CCTerrainPass mainPass = CCTerrainPass.Instance();
 
                 #region CC Gen Cleanup
                 Point surfaceRectOrigin = new(
@@ -216,7 +215,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
         private Vector2 GetRandomUndergroundVector(int xMarginPercentage = 10, int yMarginPercentage = 10)
         {
-            CrystalCavernsTerrainPass mainPass = CrystalCavernsTerrainPass.Instance();
+            CCTerrainPass mainPass = CCTerrainPass.Instance();
             UnifiedRandom rand = WorldGen.genRand;
             int x = mainPass.Origin.X - mainPass.BiomeWidth / 2 + (int)(rand.NextFloat(xMarginPercentage * 0.01f, 1 - xMarginPercentage * 0.01f) * mainPass.BiomeWidth);
             int y = mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 0.75) + (int)(rand.NextFloat(yMarginPercentage * 0.01f, 1 - yMarginPercentage * 0.01f) * mainPass.BiomeHeight);

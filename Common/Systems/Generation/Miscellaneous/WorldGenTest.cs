@@ -8,19 +8,19 @@ using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 
-namespace AerovelenceMod.Common.Systems.Generation
+namespace AerovelenceMod.Common.Systems.Generation.Miscellaneous
 {
     public class WorldGenTest : ModSystem
     {
-		public static bool JustPressed(Keys key)
-		{
-			return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
-		}
+        public static bool JustPressed(Keys key)
+        {
+            return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
+        }
 
-		public override void PostUpdateWorld()
-		{
-			if (JustPressed(Keys.RightAlt))
-				TestMethod((int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16);
+        public override void PostUpdateWorld()
+        {
+            if (JustPressed(Keys.RightAlt))
+                TestMethod((int)Main.MouseWorld.X / 16, (int)Main.MouseWorld.Y / 16);
         }
         private void TestMethod(int x, int y)
         {
@@ -28,7 +28,7 @@ namespace AerovelenceMod.Common.Systems.Generation
 
             //WorldUtils.Gen(new Point(x, y), new Shapes.Tail(8, new Vector2D(WorldGen.genRand.Next(-25, 25), WorldGen.genRand.Next(-20, 20))), new Actions.SetTile((ushort)ModContent.TileType<ChargedStone>()));
 
-            
+
             // Code to test placed here:
             Point origin = new Point(x, y);
             UnifiedRandom rand = new UnifiedRandom(); // Use WorldGen.genRand.Next() for actual world generation
@@ -68,8 +68,8 @@ namespace AerovelenceMod.Common.Systems.Generation
             ];
 
             StructureStamper.LoadStructure(new Vector2(x, y), "smallchestshrine").ApplyItemConfigurationsToAll(rand, primaryItems, secondaryItems);
-            
-            
+
+
             //StructureStamper.LoadStructure(new Vector2(x, y), "tumblerarena");
 
             //WorldUtils.Gen(origin, new AeroShapes.LightningBoltShape(350, 50, 3, 150, 30), new Actions.SetTile(TileID.Bubble));
