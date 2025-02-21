@@ -150,10 +150,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     ),
                     "tumblerarena"
                 ).ProtectStructure();
-                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine", 20, 20)
+                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine", 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure crystalShrine2 = PlaceStructureSafely("smallshrine", 20, 20)
+                AeroStructure crystalShrine2 = PlaceStructureSafely("smallshrine", 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
 
@@ -164,7 +164,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     progress.Set((float)i / TOTAL_SHRINES);
 
-                    AeroStructure shrine = PlaceStructureSafely("smallshrine", 20, 20);
+                    AeroStructure shrine = PlaceStructureSafely("smallshrine", 20);
 
                     if (shrine != AeroStructure.Empty)
                     {
@@ -179,11 +179,15 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
         }
 
-        private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 10, int attempts = 5000)
+        private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 0, int attempts = 5000)
         {
             for (int i = 0; i < attempts; i++)
             {
                 Vector2 randVector = GetRandomUndergroundVector(xMarginPercentage, yMarginPercentage);
+                if (randVector.Equals(Vector2.Zero))
+                {
+                    continue;
+                }
                 AeroStructure checkStructure = StructureStamper.LoadStructure(
                     randVector,
                     name,
@@ -213,13 +217,35 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             return AeroStructure.Empty;
         }
 
-        private Vector2 GetRandomUndergroundVector(int xMarginPercentage = 10, int yMarginPercentage = 10)
+        private Vector2 GetRandomUndergroundVector(int xMarginPercentage = 10, int yMarginPercentage = 0)
         {
-            CCTerrainPass mainPass = CCTerrainPass.Instance();
             UnifiedRandom rand = WorldGen.genRand;
-            int x = mainPass.Origin.X - mainPass.BiomeWidth / 2 + (int)(rand.NextFloat(xMarginPercentage * 0.01f, 1 - xMarginPercentage * 0.01f) * mainPass.BiomeWidth);
-            int y = mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 0.75) + (int)(rand.NextFloat(yMarginPercentage * 0.01f, 1 - yMarginPercentage * 0.01f) * mainPass.BiomeHeight);
-            return new Vector2(x, y);
+            CCTerrainPass mainPass = CCTerrainPass.Instance();
+            int width = mainPass.BiomeWidth;
+            int height = mainPass.BiomeHeight;
+            int surface = mainPass.SurfaceHeight;
+            Point origin = mainPass.Origin;
+            float xRand;
+            float yRand;
+            int sideOffset;
+            Vector2 tempPoint;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                xRand = rand.NextFloat(xMarginPercentage * 0.01f, 1.0f - xMarginPercentage * 0.01f);
+                yRand = rand.NextFloat(yMarginPercentage * 0.01f, 1.0f - yMarginPercentage * 0.01f);
+                sideOffset = rand.NextBool() ? origin.X - width / 2 : origin.X;
+
+                tempPoint = new Vector2(
+                    sideOffset + xRand * width / 2,
+                    origin.Y + yRand * (height - surface)
+                );
+                if (mainPass.LowerUnderground.Contains((int)tempPoint.X * 16, (int)tempPoint.Y * 16))
+                {
+                    return tempPoint;
+                }
+            }
+            return Vector2.Zero;
         }
     }
 }

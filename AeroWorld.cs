@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AerovelenceMod.Common.Globals.Worlds.WorldGeneration;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
