@@ -24,6 +24,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         {
         }
 
+        private List<Point> _validPoints;
+
         protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
         {
             bool oldNoTileActions = WorldGen.noTileActions;
@@ -39,7 +41,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 1.75)
                 );
                 ShapeData surfaceRectShapeData = new ShapeData();
-
+                InitializeValidPoints();
                 WorldUtils.Gen(
                     surfaceRectOrigin,
                     new Shapes.Rectangle(mainPass.BiomeWidth, (int)(mainPass.SurfaceHeight * 1.75)),
@@ -143,6 +145,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29),
                     new(ItemID.GoldCoin, 1, 2)
                 };
+
                 AeroStructure tumblerArena = StructureStamper.LoadStructure(
                     new Vector2(
                         mainPass.TumblerTunnelEnd.X - 60 + 60 * mainPass.TumblerArenaPolarity,
@@ -150,6 +153,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     ),
                     "tumblerarena"
                 ).ProtectStructure();
+
                 AeroStructure crystalShrine = PlaceStructureSafely("smallshrine", 20)
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
@@ -157,13 +161,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
 
-
                 const int TOTAL_SHRINES = 101;
-
                 for (int i = 0; i < TOTAL_SHRINES; i++)
                 {
                     progress.Set((float)i / TOTAL_SHRINES);
-
                     AeroStructure shrine = PlaceStructureSafely("smallshrine", 20);
 
                     if (shrine != AeroStructure.Empty)
@@ -179,73 +180,124 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
         }
 
-        private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 0, int attempts = 5000)
+        private void InitializeValidPoints()
         {
-            for (int i = 0; i < attempts; i++)
+            var mainPass = CCTerrainPass.Instance();
+            var logger = ModContent.GetInstance<AerovelenceMod>()?.Logger;
+            _validPoints = [];
+            Rectangle bounds = ShapeData.GetBounds(Point.Zero, mainPass.LowerUnderground);
+            logger?.Info($"Shape bounds- X={bounds.X}, Y={bounds.Y}, Width={bounds.Width}, Height={bounds.Height}");
+            int biomeCenterX = mainPass.Origin.X;
+            int biomeTop = mainPass.Origin.Y + mainPass.UndergroundHeight / 2;
+
+            logger?.Info($"Biome center- {biomeCenterX}, Top: {biomeTop}");
+            const int SAMPLING_INTERVAL = 2;
+            var rand = WorldGen.genRand;
+            int minY = int.MaxValue;
+            int maxY = int.MinValue;
+
+            for (int localY = 0; localY < bounds.Height; localY += SAMPLING_INTERVAL)
             {
-                Vector2 randVector = GetRandomUndergroundVector(xMarginPercentage, yMarginPercentage);
-                if (randVector.Equals(Vector2.Zero))
+                for (int localX = -bounds.Width / 2; localX < bounds.Width / 2; localX += SAMPLING_INTERVAL)
                 {
-                    continue;
-                }
-                AeroStructure checkStructure = StructureStamper.LoadStructure(
-                    randVector,
-                    name,
-                    placeStructure: false,
-                    checkIfProtected: true
-                );
+                    int testX = localX;
+                    int testY = bounds.Y + localY;
 
-                if (checkStructure != AeroStructure.Empty)
-                {
-                    randVector = new Vector2(
-                        randVector.X - checkStructure.Width / 2,
-                        randVector.Y - checkStructure.Height / 2
-                    );
-                    AeroStructure structure = StructureStamper.LoadStructure(
-                        randVector,
-                        name,
-                        placeStructure: true,
-                        checkIfProtected: true
-                    );
-
-                    if (structure != AeroStructure.Empty)
+                    if (mainPass.LowerUnderground.Contains(testX, testY))
                     {
-                        return structure;
+                        int worldY = biomeTop + localY;
+                        minY = Math.Min(minY, worldY);
+                        maxY = Math.Max(maxY, worldY);
                     }
                 }
             }
-            return AeroStructure.Empty;
-        }
 
-        private Vector2 GetRandomUndergroundVector(int xMarginPercentage = 10, int yMarginPercentage = 0)
-        {
-            UnifiedRandom rand = WorldGen.genRand;
-            CCTerrainPass mainPass = CCTerrainPass.Instance();
-            int width = mainPass.BiomeWidth;
-            int height = mainPass.BiomeHeight;
-            int surface = mainPass.SurfaceHeight;
-            Point origin = mainPass.Origin;
-            float xRand;
-            float yRand;
-            int sideOffset;
-            Vector2 tempPoint;
-
-            for (int i = 0; i < 1000; i++)
+            int heightRange = maxY - minY;
+            for (int localY = 0; localY < bounds.Height; localY += SAMPLING_INTERVAL)
             {
-                xRand = rand.NextFloat(xMarginPercentage * 0.01f, 1.0f - xMarginPercentage * 0.01f);
-                yRand = rand.NextFloat(yMarginPercentage * 0.01f, 1.0f - yMarginPercentage * 0.01f);
-                sideOffset = rand.NextBool() ? origin.X - width / 2 : origin.X;
-
-                tempPoint = new Vector2(
-                    sideOffset + xRand * width / 2,
-                    origin.Y + yRand * (height - surface)
-                );
-                if (mainPass.LowerUnderground.Contains((int)tempPoint.X * 16, (int)tempPoint.Y * 16))
+                for (int localX = -bounds.Width / 2; localX < bounds.Width / 2; localX += SAMPLING_INTERVAL)
                 {
-                    return tempPoint;
+                    int testX = localX;
+                    int testY = bounds.Y + localY;
+
+                    if (mainPass.LowerUnderground.Contains(testX, testY))
+                    {
+                        int worldX = biomeCenterX + localX;
+                        int worldY = biomeTop + localY;
+                        float heightPosition = (float)(worldY - minY) / heightRange;
+                        float probability = 0.5f + (float)Math.Sin(heightPosition * Math.PI) * 0.5f;
+
+                        if (rand.NextFloat() < probability)
+                        {
+                            _validPoints.Add(new Point(worldX, worldY));
+
+                            if (_validPoints.Count <= 5)
+                            {
+                                logger?.Info($"Valid point {_validPoints.Count}: Local({testX}, {testY}) -> World({worldX}, {worldY})");
+                            }
+                        }
+                    }
                 }
             }
-            return Vector2.Zero;
+
+            logger?.Info($"Total valid points found- {_validPoints.Count}");
+            if (_validPoints.Count > 0)
+            {
+                var xValues = _validPoints.Select(p => p.X).OrderBy(x => x).ToList();
+                var leftPoints = _validPoints.Count(p => p.X < biomeCenterX);
+                var rightPoints = _validPoints.Count(p => p.X >= biomeCenterX);
+
+                logger?.Info($"X-coordinate range- {xValues.First()} to {xValues.Last()}");
+                logger?.Info($"Points on left side- {leftPoints}");
+                logger?.Info($"Points on right side- {rightPoints}");
+            }
+        }
+
+        private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 0, int attempts = 50)
+        {
+            var logger = ModContent.GetInstance<AerovelenceMod>()?.Logger;
+
+            if (_validPoints == null || _validPoints.Count == 0)
+            {
+                logger?.Info("No valid points for structure placement");
+                return AeroStructure.Empty;
+            }
+
+            AeroStructure sizeCheck = StructureStamper.LoadStructure(Vector2.Zero, name, placeStructure: false, checkIfProtected: false);
+            if (sizeCheck == AeroStructure.Empty)
+                return AeroStructure.Empty;
+
+            int structureWidth = sizeCheck.Width;
+            int structureHeight = sizeCheck.Height;
+            HashSet<Point> triedPositions = [];
+            var rand = WorldGen.genRand;
+
+            for (int i = 0; i < attempts && triedPositions.Count < _validPoints.Count; i++)
+            {
+                Point randomPoint;
+                do
+                {
+                    randomPoint = _validPoints[rand.Next(_validPoints.Count)];
+                } while (triedPositions.Contains(randomPoint) && triedPositions.Count < _validPoints.Count);
+
+                triedPositions.Add(randomPoint);
+                Vector2 position = new( randomPoint.X - structureWidth / 2, randomPoint.Y - structureHeight / 2 );
+                AeroStructure structure = StructureStamper.LoadStructure(
+                    position,
+                    name,
+                    placeStructure: true,
+                    checkIfProtected: true
+                );
+
+                if (structure != AeroStructure.Empty)
+                {
+                    logger?.Info($"Successfully placed structure at ({position.X}, {position.Y}) on attempt {i + 1}");
+                    return structure;
+                }
+            }
+
+            logger?.Info($"Failed to place structure after {attempts} attempts");
+            return AeroStructure.Empty;
         }
     }
 }

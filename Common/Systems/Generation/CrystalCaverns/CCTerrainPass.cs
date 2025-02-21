@@ -778,10 +778,16 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5);
 
                 ShapeData lowerUndergroundShapeData = new ShapeData();
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
-                {
-                    new Actions.Blank().Output(lowerUndergroundShapeData)
-                }));
+                WorldUtils.Gen(
+                    new Point(Origin.X - BiomeWidth / 2, Origin.Y + (int)(.5 * UndergroundHeight)),
+                    new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)),
+                    Actions.Chain(
+                        new GenAction[] {
+            new Modifiers.Flip(false, true),
+            new Actions.Blank().Output(lowerUndergroundShapeData)
+                        }
+                    )
+                );
 
                 LowerUnderground = lowerUndergroundShapeData;
             }
