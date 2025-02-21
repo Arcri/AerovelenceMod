@@ -7,7 +7,7 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
-namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
+namespace AerovelenceMod.Common.Systems.Generation.Ice // MOD NAME HERE
 {
     public class IceWorldgen : ModSystem
     {
@@ -209,7 +209,7 @@ namespace AerovelenceMod.Common.Globals.Worlds // MOD NAME HERE
                 {
                     //if (Framing.GetTileSafely(x, y).TileType == ModContent.TileType<SlateOreBlock>())
                     //{
-                      //  WorldGen.KillTile(x, y);
+                    //  WorldGen.KillTile(x, y);
                     //}
                 }
             }
