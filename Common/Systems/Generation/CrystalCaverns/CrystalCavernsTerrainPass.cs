@@ -6,7 +6,6 @@ using Terraria.IO;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
-using AerovelenceMod.Common.Systems.Generation.GenUtils;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using Terraria.Graphics.Shaders;
@@ -21,6 +20,7 @@ using Terraria.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using AerovelenceMod.Content.Tiles.Citadel;
+using AerovelenceMod.Common.Utilities.Generation;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -723,7 +723,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 }));
 
                 // Main lightning bolt cave
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new AeroShapes.LightningBoltShape(550 * WorldSizeScale, 50 * (int)((WorldSizeScale - 1) * 0.8 + 1), 2, 30), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 1.75)), new AeroGenUtils.LightningBoltShape(550 * WorldSizeScale, 50 * (int)((WorldSizeScale - 1) * 0.8 + 1), 2, 30), Actions.Chain(new GenAction[]
                 {
                     new Modifiers.SkipTiles(CrystalTile, TileID.LeafBlock, TileID.LivingWood),
                     new Actions.ClearTile().Output(lightningBoltShapeData),
@@ -879,7 +879,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TileID.CorruptGrass,
                 TileID.CrimsonGrass)), out Point _))
                 return false;
-            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroConditions.HasShimmer()), out Point _))
+            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroGenUtils.HasShimmer()), out Point _))
                 return false;            
             return true;
         }
@@ -898,7 +898,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TileID.PinkDungeonBrick,
                 TileID.LihzahrdBrick)), out Point _))
                 return false;
-            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroConditions.HasShimmer()), out Point _))
+            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroGenUtils.HasShimmer()), out Point _))
                 return false;
             return true;
         }

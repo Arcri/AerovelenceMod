@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
     public class StructureStampItem : ModItem
     {

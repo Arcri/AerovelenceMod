@@ -1,6 +1,6 @@
 ﻿using AerovelenceMod.Common.Globals.Worlds;
-using AerovelenceMod.Common.Systems.Generation.GenUtils;
-using AerovelenceMod.Common.Utilities.StructureStamper;
+using AerovelenceMod.Common.Utilities.Generation;
+using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;

@@ -10,9 +10,9 @@ using Terraria.ModLoader;
 using Terraria;
 using Terraria.Utilities;
 using Terraria.WorldBuilding;
-using AerovelenceMod.Common.Utilities.StructureStamper;
+using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 
-namespace AerovelenceMod.Common.Systems.Generation.GenUtils
+namespace AerovelenceMod.Common.Utilities.Generation
 {
     public record AeroStructure(Vector2 StartPosition, int Width, int Height, string Name)
     {

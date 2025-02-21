@@ -6,10 +6,11 @@ using Terraria;
 using Terraria.WorldBuilding;
 using static Terraria.Collision;
 
-namespace AerovelenceMod.Common.Systems.Generation.GenUtils
+namespace AerovelenceMod.Common.Utilities.Generation
 {
     public static class AeroGenUtils
     {
+        #region GenActions
         public class SwapSolidTileInclusive : GenAction
         {
             private ushort _type;
@@ -112,7 +113,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                     Actions.Chain(new GenAction[]
                     {
                         new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 2, _horizontalRadius + _horizontalVariance),
-                        new AeroGenUtils.SwapSolidTileInclusive(_type)
+                        new SwapSolidTileInclusive(_type)
                     }));
 
                 return UnitApply(origin, x, y, args);
@@ -197,7 +198,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
-                int num = (_useDiagonals ? 16 : 8);
+                int num = _useDiagonals ? 16 : 8;
                 for (int i = 0; i < num; i += 2)
                 {
                     if (!_tiles[x + DIRECTIONS[i], y + DIRECTIONS[i + 1]].HasTile)
@@ -239,7 +240,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
-                int num = (_useDiagonals ? 16 : 8);
+                int num = _useDiagonals ? 16 : 8;
                 for (int i = 0; i < num; i += 2)
                 {
                     for (int j = 0; j < _tileIDs.Length; j++)
@@ -283,7 +284,7 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
 
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
-                int num = (_useDiagonals ? 16 : 8);
+                int num = _useDiagonals ? 16 : 8;
                 for (int i = 0; i < num; i += 2)
                 {
                     Tile tile = _tiles[x + DIRECTIONS[i], y + DIRECTIONS[i + 1]];
@@ -370,5 +371,126 @@ namespace AerovelenceMod.Common.Systems.Generation.GenUtils
                 return UnitApply(origin, x, y, args);
             }
         }
+        #endregion
+
+        #region GenShapes
+        public class LightningBoltShape : GenShape
+        {
+            private readonly int _length;
+            private readonly int _maxWidth;
+            private int _jaggedness; // Would be readonly but is modified to make the bolt less jagged at the end
+            private readonly int _jagReduction;
+
+            /// <summary>
+            /// Creates a downward trending lightning bolt.
+            /// </summary>
+            /// <param name="length">The length of the bolt.</param>
+            /// <param name="maxWidth">The initial width of the bolt.</param>
+            /// <param name="jaggedness">The maximum offset of each row of tiles from the previous row of tiles. Values below 5 are recommended.</param>
+            /// <param name="jagReduction">The y distance from the end of the bolt that the jaggedness will be reduced by 1. Values of 0 will do nothing.</param>
+            public LightningBoltShape(int length, int maxWidth, int jaggedness, int jagReduction)
+            {
+                _length = length;
+                _maxWidth = maxWidth;
+                _jaggedness = jaggedness;
+                _jagReduction = jagReduction;
+            }
+            /// <summary>
+            /// Creates a downward trending lightning bolt.
+            /// </summary>
+            /// <param name="length">The length of the bolt.</param>
+            /// <param name="maxWidth">The initial width of the bolt.</param>
+            /// <param name="jaggedness">The maximum offset of each row of tiles from the previous row of tiles. Values below 5 are recommended.</param>
+            public LightningBoltShape(int length, int maxWidth, int jaggedness)
+            {
+                _length = length;
+                _maxWidth = maxWidth;
+                _jaggedness = jaggedness;
+                _jagReduction = 0;
+            }
+
+            public override bool Perform(Point origin, GenAction action)
+            {
+                // Initialize the starting position and direction
+                int currentX = origin.X;
+                int currentY = origin.Y;
+
+                int trend = 0;
+
+                for (int i = 0; i < _length; i++)
+                {
+                    // Make the bolt less jagged at the end
+                    if (i == _length - _jagReduction && _jaggedness > 0)
+                        _jaggedness -= 1;
+
+                    // Randomly adjust the X position to create jaggedness as long as it is not too far from the origin
+                    int randResult;
+                    if (origin.X - currentX >= _maxWidth)
+                    {
+                        randResult = WorldGen.genRand.Next(1, _jaggedness + 1);
+                        trend = Math.Sign(randResult);
+                    }
+                    else if (origin.X - currentX <= -_maxWidth)
+                    {
+                        randResult = WorldGen.genRand.Next(-_jaggedness, 0);
+                        trend = Math.Sign(randResult);
+                    }
+                    else
+                    {
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1);
+                    }
+
+                    if (Math.Sign(randResult) != trend && i < _length * 0.90)
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1); // Creates more bias towards the direction it is already going in above the last X rows
+                    if (Math.Sign(randResult) != trend && i < _length * 0.70)
+                        randResult = WorldGen.genRand.NextBool().ToDirectionInt() * WorldGen.genRand.Next(1, _jaggedness + 1); // Creates more bias towards the direction it is already going in above the last X rows
+                    trend = Math.Sign(randResult);
+
+                    currentX += randResult;
+
+                    // Create a vertical segment of the bolt
+                    int width = _maxWidth - i * _maxWidth / _length; // Tapering effect
+
+                    for (int w = -width / 2; w <= width / 2; w++)
+                    {
+                        UnitApply(action, origin, currentX + w, currentY);
+                    }
+
+                    // Move downward
+                    currentY++;
+                }
+
+                return true;
+            }
+        }
+        #endregion
+
+        #region GenConditions
+        public class HasShimmer : GenCondition
+        {
+            protected override bool CheckValidity(int x, int y)
+            {
+                if (_tiles[x, y].LiquidAmount > 0)
+                    return _tiles[x, y].LiquidType == 3;
+
+                return false;
+            }
+        }
+
+        public class IsNotSolid : GenCondition
+        {
+            protected override bool CheckValidity(int x, int y)
+            {
+
+                if (!WorldGen.InWorld(x, y, 10))
+                    return false;
+
+                if (!_tiles[x, y].HasTile)
+                    return true;
+
+                return false;
+            }
+        }
+        #endregion
     }
 }

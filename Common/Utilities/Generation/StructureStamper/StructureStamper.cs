@@ -10,9 +10,8 @@ using System.Linq;
 using ReLogic.Content;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using Terraria.WorldBuilding;
-using AerovelenceMod.Common.Systems.Generation.GenUtils;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
     public class StructureStamper : ModSystem
     {
@@ -374,7 +373,7 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
 
         public static AeroStructure LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true, bool checkIfProtected = false)
         {
-            string assetPath = $"Common/Utilities/StructureStamper/Structures/{structureName}.dat";
+            string assetPath = $"Common/Utilities/Generation/StructureStamper/Structures/{structureName}.dat";
             int height = 0;
             int width = 0;
             AeroStructure aeroStructure;

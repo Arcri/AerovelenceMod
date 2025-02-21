@@ -3,64 +3,53 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Terraria.GameContent.Generation;
-using Terraria.IO;
-using Terraria.WorldBuilding;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
-using System.Linq;
-using System;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
-    public class StructureWorldGen : ModSystem
+    public class StructurePencil : ModItem
     {
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+
+        public override void SetDefaults()
         {
-            /*int genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
-            if (genIndex != -1)
-            {
-                //tasks.Insert(genIndex + 1, new PassLegacy("Generate Test Structure", GenerateStructure));
-            }*/
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 10;
+            Item.useAnimation = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.rare = ItemRarityID.Blue;
+            Item.UseSound = SoundID.Item1;
         }
 
-        /*private void GenerateStructure(GenerationProgress progress, GameConfiguration config)
+        public override bool AltFunctionUse(Player player)
         {
-            progress.Message = "Generating Test Structure";
-
-            int structureCount = Main.maxTilesX / 100;
-
-            for (int i = 0; i < structureCount; i++)
-            {
-                int centerX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
-                int centerY = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - 200);
-                //var (width, height) = StructureStamper.LoadStructure(new Vector2(centerX, centerY), "test");
-
-                int startX = centerX - width / 2;
-                int startY = centerY - height / 2;
-
-                //StructureStamper.LoadStructure(new Vector2(startX, startY), "test");
-
-                ApplyLootToAllChestsInStructure(new Vector2(startX, startY), width, height);
-            }
-        }*/
-
-        private static bool IsValidLocation(int x, int y)
-        {
-            for (int dx = -20; dx < 20; dx++)
-            {
-                for (int dy = -20; dy < 20; dy++)
-                {
-                    if (Main.tile[x + dx, y + dy].LiquidAmount > 0)
-                        return false;
-                }
-            }
             return true;
         }
 
-        private static void ApplyLootToAllChestsInStructure(Vector2 startPosition, int structureWidth, int structureHeight)
+        public override bool CanUseItem(Player player)
         {
+            if (player.altFunctionUse == 2)
+            {
+                PlaceStructureWithChest(player);
+            }
+            else
+            {
+                // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+            }
+
+            return true;
+        }
+
+        private static void PlaceStructureWithChest(Player player)
+        {
+
+            //Example of a single chest in a structure (see the structure world gen for applying loot to every single chest otherwise it applies to the first chest
+            Vector2 playerPosition = player.Center.ToTileCoordinates().ToVector2();
+            Vector2 startPosition = playerPosition;
+
             var chestConfig = new ChestConfiguration();
 
+            #region primary items
             List<PrimaryItemConfiguration> primaryItems =
             [
                 new(ItemID.BandofRegeneration, 1, 1, 0.2f),
@@ -94,15 +83,16 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
                     chestConfig.AddPrimaryItemConfiguration(new PrimaryItemConfiguration(ItemID.Flare, 25, 50, 1f));
                 }
             }
+            #endregion
 
+            #region common items
             chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.SuspiciousLookingEye, 1, 1));
             chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.Dynamite, 1, 1));
             chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.JestersArrow, 25, 50));
             chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar], 3, 10));
             chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.FlamingArrow, ItemID.ThrowingKnife], 25, 50));
             chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.HealingPotion, 3, 5));
-            chestConfig.AddItemConfiguration(new ItemConfiguration(
-            [
+            chestConfig.AddItemConfiguration(new ItemConfiguration([
                 ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
                 ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
                 ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
@@ -111,18 +101,11 @@ namespace AerovelenceMod.Common.Utilities.StructureStamper
             chestConfig.AddItemConfiguration(new ItemConfiguration([ItemID.Torch, ItemID.Glowstick], 15, 29));
             chestConfig.AddItemConfiguration(new ItemConfiguration(ItemID.GoldCoin, 1, 2));
 
-            for (int x = (int)startPosition.X; x < (int)startPosition.X + structureWidth; x++)
-            {
-                for (int y = (int)startPosition.Y; y < (int)startPosition.Y + structureHeight; y++)
-                {
-                    Tile tile = Main.tile[x, y];
-                    if (TileID.Sets.BasicChest[tile.TileType] && tile.TileFrameX == 0) //frameX will be 16 for right side
-                    {
-                        ChestConfigurator.ApplyConfiguration(x, y, chestConfig);
-                        y++; //Move down one additional step to ensure chest isn't counted twice
-                    }
-                }
-            }
+            #endregion
+
+            //      AeroStructure structure = StructureStamper.LoadStructure(playerPosition, "tumblerarena", [chestConfig], placeStructure: false);
+            //   Vector2 centeredPosition = playerPosition - new Vector2(structure.Width / 2, structure.Height / 2);
+            //      StructureStamper.LoadStructure(centeredPosition, "tumblerarena", [chestConfig]);
         }
     }
 }

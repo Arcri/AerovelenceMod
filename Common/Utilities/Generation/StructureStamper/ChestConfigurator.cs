@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 using System.Collections.Generic;
 using System;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
     public static class ChestConfigurator
     {

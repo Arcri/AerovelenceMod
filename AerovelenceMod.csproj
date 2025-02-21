@@ -5,4 +5,7 @@
     <AssemblyName>AerovelenceMod</AssemblyName>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Common\Systems\Generation\GenUtils\" />
+  </ItemGroup>
 </Project>

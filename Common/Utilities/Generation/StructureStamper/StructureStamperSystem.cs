@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.GameInput;
 using System;
 
-namespace AerovelenceMod.Common.Utilities.StructureStamper
+namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
     public class StructureStamperSystem : ModSystem
     {

@@ -3,18 +3,10 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Input;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
-using Terraria.WorldBuilding;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Terraria.Utilities;
-using static Terraria.WorldBuilding.Shapes;
-using ReLogic.Utilities;
-using System;
-using AerovelenceMod.Common.Systems.Generation.GenUtils;
-using static Terraria.Collision;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using System.Collections.Generic;
-using AerovelenceMod.Common.Utilities.StructureStamper;
+using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 
 namespace AerovelenceMod.Common.Systems.Generation
 {
