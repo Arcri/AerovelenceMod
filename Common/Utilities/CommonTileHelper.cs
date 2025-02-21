@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -16,10 +17,27 @@ using Terraria.ObjectData;
 
 namespace AerovelenceMod.Common.Utilities
 {
+
     public static class CommonTileHelper
     {
+        public static void SetMergeGroup(ModTile modTile, bool CrystalCaverns = false)
+        {
+            if (CrystalCaverns)
+            {
+                Main.tileMerge[modTile.Type][ModContent.TileType<CrystalGrassTile>()] = true;
+                Main.tileMerge[modTile.Type][ModContent.TileType<CavernCrystalTile>()] = true;
+                Main.tileMerge[modTile.Type][ModContent.TileType<CavernStoneTile>()] = true;
+            }
+        }
+
+        public static void SetTileProtection(ModTile tile)
+        {
+            TileID.Sets.GeneralPlacementTiles[tile.Type] = false;
+            TileID.Sets.CanBeClearedDuringGeneration[tile.Type] = false;
+        }
+
         public static void SimpleFramedTile(this ModTile tile, int drop, SoundStyle soundType, int dustType, int minPick,
-             bool mergeDirt = false, bool stone = false, params int[] tilesToMergeWith)
+                 bool mergeDirt = false, bool stone = false, params int[] tilesToMergeWith)
         {
             Main.tileBlockLight[tile.Type] = true;
             Main.tileLighted[tile.Type] = true;
@@ -78,6 +96,7 @@ namespace AerovelenceMod.Common.Utilities
 
         public static void SetupMultiTile(ModTile tile, int width, int height, int[] coordinateHeights, bool placeLeft = true, bool placeRight = true, int styleWrapLimit = 0, int styleMultiplier = 1, bool styleHorizontal = true)
         {
+            SetTileProtection(tile);
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2xX);
             TileObjectData.newTile.Width = width;
             TileObjectData.newTile.Height = height;
@@ -751,6 +770,7 @@ namespace AerovelenceMod.Common.Utilities
 
         public static void SetupChest(ModTile modTile, Color mapColor, string chestName, int itemDropType, int dustType, bool styleHorizontal)
         {
+            SetTileProtection(modTile);
             modTile.AddMapEntry(mapColor, Language.GetText(chestName));
             modTile.AdjTiles = [TileID.Containers];
             Main.tileSpelunker[modTile.Type] = true;

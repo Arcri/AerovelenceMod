@@ -1,3 +1,4 @@
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -8,24 +9,22 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
     [LegacyName("CavernCrystal")]
     public class CavernCrystalTile : ModTile
     {
-        private readonly int oneHelixRevolutionInUpdateTicks = 30;
         public override void SetStaticDefaults()
         {
             MineResist = 2.5f;
-            MinPick = 40;
+            MinPick = 55;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
-            Main.tileMerge[Type][ModContent.TileType<CrystalGrassTile>()] = true;
-            Main.tileMerge[Type][ModContent.TileType<CavernCrystalTile>()] = true;
-            Main.tileMerge[Type][ModContent.TileType<CavernStoneTile>()] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            AddMapEntry(new Color(115, 230, 250));
-            DustType = 59;
+            DustType = DustID.BlueFairy;
             HitSound = SoundID.Tink;
-           // ItemDrop = ModContent.ItemType<Items.Placeables.Blocks.CavernCrystal>();
+
+            CommonTileHelper.SetMergeGroup(this, CrystalCaverns: true);
+            CommonTileHelper.SetTileProtection(this);
+            AddMapEntry(new Color(115, 230, 250));
         }
-        
+
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0.0f;
@@ -38,18 +37,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
     {
         public override void SetDefaults()
         {
-            Item.width = 16;
-            Item.height = 16;
-            Item.maxStack = 999;
-            Item.useTurn = true;
-            Item.autoReuse = true;
-            Item.useAnimation = 15;
-            Item.useTime = 10;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.consumable = true;
-            Item.createTile = ModContent.TileType<CavernCrystalTile>();
-            Item.rare = ItemRarityID.White;
-            Item.value = 5;
+            Item.DefaultToPlaceableTile(ModContent.TileType<CavernCrystalTile>());
+            Item.rare = ItemRarities.EarlyPHM;
+            Item.value = Item.sellPrice(copper: 5);
         }
     }
 }

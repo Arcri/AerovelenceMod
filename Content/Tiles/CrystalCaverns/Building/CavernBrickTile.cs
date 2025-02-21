@@ -17,9 +17,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             Main.tileMerge[Type][ModContent.TileType<CrackedCavernBrickTile>()] = true;
-            AddMapEntry(new Color(061, 079, 110));
 			DustType = 59;
 			HitSound = SoundID.Tink;
+            AddMapEntry(new Color(069, 066, 088));
         }
     }
 
@@ -27,18 +27,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
     {
         public override void SetDefaults()
         {
-            Item.width = 16;
-            Item.height = 16;
-            Item.maxStack = 999;
-            Item.useTurn = true;
-            Item.autoReuse = true;
-            Item.useAnimation = 15;
-            Item.useTime = 10;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.consumable = true;
-            Item.createTile = ModContent.TileType<CavernBrickTile>();
-            Item.rare = ItemRarityID.White;
-            Item.value = 5;
+            Item.DefaultToPlaceableTile(ModContent.TileType<CavernBrickTile>());
         }
     }
 }

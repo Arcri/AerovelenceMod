@@ -16,6 +16,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLavaDeath[Type] = false;
             CommonTileHelper.SetupMultiTile(this, 15, 15, [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]);
             AddMapEntry(new Color(200, 200, 200));
+            CommonTileHelper.SetTileProtection(this);
         }
 
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY) => offsetY = 2;
