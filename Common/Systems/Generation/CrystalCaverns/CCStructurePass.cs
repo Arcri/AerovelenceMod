@@ -41,7 +41,6 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 1.75)
                 );
                 ShapeData surfaceRectShapeData = new ShapeData();
-                InitializeValidPoints();
                 WorldUtils.Gen(
                     surfaceRectOrigin,
                     new Shapes.Rectangle(mainPass.BiomeWidth, (int)(mainPass.SurfaceHeight * 1.75)),
@@ -111,6 +110,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 #endregion
 
                 UnifiedRandom rand = WorldGen.genRand;
+                InitializeValidPoints(mainPass.TotalUnderground);
                 List<(Vector2 Position, List<PrimaryItemConfiguration> Primary, List<ItemConfiguration> Secondary)> shrinesToProcess = new();
                 List<PrimaryItemConfiguration> crystalShrinePrimary = new()
                 {
@@ -154,25 +154,37 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     "tumblerarena"
                 ).ProtectStructure();
 
-                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine", 20)
+                AeroStructure ancientBridge = PlaceStructureSafely("ancientbridge")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure crystalShrine2 = PlaceStructureSafely("smallshrine", 20)
+                AeroStructure libraryDarkLeft = PlaceStructureSafely("librarydarkleft")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                AeroStructure libraryDarkRight = PlaceStructureSafely("librarydarkright")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                AeroStructure libraryLightLeft = PlaceStructureSafely("librarylightleft")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                AeroStructure libraryLightRight = PlaceStructureSafely("librarylightright")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
 
-                const int TOTAL_SHRINES = 101;
+                /*const int TOTAL_SHRINES = 101;
                 for (int i = 0; i < TOTAL_SHRINES; i++)
                 {
                     progress.Set((float)i / TOTAL_SHRINES);
-                    AeroStructure shrine = PlaceStructureSafely("smallshrine", 20);
+                    AeroStructure shrine = PlaceStructureSafely("smallshrine");
 
                     if (shrine != AeroStructure.Empty)
                     {
                         shrine.ProtectStructure();
                         shrine.ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
                     }
-                }
+                }*/
             }
             finally
             {
@@ -180,15 +192,15 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
         }
 
-        private void InitializeValidPoints()
+        private void InitializeValidPoints(ShapeData bounds)
         {
             var mainPass = CCTerrainPass.Instance();
             var logger = ModContent.GetInstance<AerovelenceMod>()?.Logger;
             _validPoints = [];
-            Rectangle bounds = ShapeData.GetBounds(Point.Zero, mainPass.LowerUnderground);
-            logger?.Info($"Shape bounds- X={bounds.X}, Y={bounds.Y}, Width={bounds.Width}, Height={bounds.Height}");
+            Rectangle boundRect = ShapeData.GetBounds(Point.Zero, bounds);
+            logger?.Info($"Shape bounds- X={boundRect.X}, Y={boundRect.Y}, Width={boundRect.Width}, Height={boundRect.Height}");
             int biomeCenterX = mainPass.Origin.X;
-            int biomeTop = mainPass.Origin.Y + mainPass.UndergroundHeight / 2;
+            int biomeTop = mainPass.Origin.Y;
 
             logger?.Info($"Biome center- {biomeCenterX}, Top: {biomeTop}");
             const int SAMPLING_INTERVAL = 2;
@@ -196,14 +208,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             int minY = int.MaxValue;
             int maxY = int.MinValue;
 
-            for (int localY = 0; localY < bounds.Height; localY += SAMPLING_INTERVAL)
+            for (int localY = 0; localY < boundRect.Height; localY += SAMPLING_INTERVAL)
             {
-                for (int localX = -bounds.Width / 2; localX < bounds.Width / 2; localX += SAMPLING_INTERVAL)
+                for (int localX = -boundRect.Width / 2; localX < boundRect.Width / 2; localX += SAMPLING_INTERVAL)
                 {
                     int testX = localX;
-                    int testY = bounds.Y + localY;
+                    int testY = boundRect.Y + localY;
 
-                    if (mainPass.LowerUnderground.Contains(testX, testY))
+                    if (bounds.Contains(testX, testY))
                     {
                         int worldY = biomeTop + localY;
                         minY = Math.Min(minY, worldY);
@@ -213,21 +225,21 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
 
             int heightRange = maxY - minY;
-            for (int localY = 0; localY < bounds.Height; localY += SAMPLING_INTERVAL)
+            for (int localY = 0; localY < boundRect.Height; localY += SAMPLING_INTERVAL)
             {
-                for (int localX = -bounds.Width / 2; localX < bounds.Width / 2; localX += SAMPLING_INTERVAL)
+                for (int localX = -boundRect.Width / 2; localX < boundRect.Width / 2; localX += SAMPLING_INTERVAL)
                 {
                     int testX = localX;
-                    int testY = bounds.Y + localY;
+                    int testY = boundRect.Y + localY;
 
-                    if (mainPass.LowerUnderground.Contains(testX, testY))
+                    if (bounds.Contains(testX, testY))
                     {
                         int worldX = biomeCenterX + localX;
                         int worldY = biomeTop + localY;
                         float heightPosition = (float)(worldY - minY) / heightRange;
                         float probability = 0.5f + (float)Math.Sin(heightPosition * Math.PI) * 0.5f;
 
-                        if (rand.NextFloat() < probability)
+                        if (rand.NextFloat() < probability && (localX + boundRect.Width / 2 < boundRect.Width * 0.4 || localX + boundRect.Width / 2 > boundRect.Width * 0.6))
                         {
                             _validPoints.Add(new Point(worldX, worldY));
 
@@ -253,7 +265,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
         }
 
-        private AeroStructure PlaceStructureSafely(string name, int xMarginPercentage = 10, int yMarginPercentage = 0, int attempts = 50)
+        private AeroStructure PlaceStructureSafely(string name, int attempts = 1000)
         {
             var logger = ModContent.GetInstance<AerovelenceMod>()?.Logger;
 

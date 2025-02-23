@@ -6,6 +6,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Common\Systems\Generation\GenUtils\" />
+    <AdditionalFiles Remove="Common\Systems\Generation\GenUtils\**" />
+    <Compile Remove="Common\Systems\Generation\GenUtils\**" />
+    <EmbeddedResource Remove="Common\Systems\Generation\GenUtils\**" />
+    <None Remove="Common\Systems\Generation\GenUtils\**" />
   </ItemGroup>
 </Project>

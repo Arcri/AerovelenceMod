@@ -64,6 +64,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         public Point TumblerTunnelEnd { get; private set; }
         public int TumblerArenaPolarity { get; private set; }
         public ShapeData LowerUnderground { get; private set; }
+        public ShapeData UpperUnderground { get; private set; }
+        public ShapeData TotalUnderground { get; private set; }
 
         private static CCTerrainPass _instance;
         private static readonly object _lock = new object();
@@ -777,19 +779,40 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5).ToPoint();
                 WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5);
 
+                ShapeData upperUndergroundShapeData = new ShapeData();
                 ShapeData lowerUndergroundShapeData = new ShapeData();
+                ShapeData totalUndergroundShapeData = new ShapeData();
+                // Must use same origin or total underground shape will not build correctly
                 WorldUtils.Gen(
-                    new Point(Origin.X - BiomeWidth / 2, Origin.Y + (int)(.5 * UndergroundHeight)),
-                    new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)),
+                    //new Point(Origin.X - BiomeWidth, Origin.Y),
+                    Origin,
+                    new Shapes.Rectangle(BiomeWidth, (int)(0.5 * UndergroundHeight)),
                     Actions.Chain(
-                        new GenAction[] {
-            new Modifiers.Flip(false, true),
-            new Actions.Blank().Output(lowerUndergroundShapeData)
+                        new GenAction[]
+                        {
+                            new Modifiers.Offset(-BiomeWidth / 2, 0),
+                            new Actions.Blank().Output(upperUndergroundShapeData),
+                            new Actions.Blank().Output(totalUndergroundShapeData),
                         }
                     )
                 );
-
+                WorldUtils.Gen(
+                    //new Point(Origin.X - BiomeWidth / 2, Origin.Y + (int)(.5 * UndergroundHeight)),
+                    Origin,
+                    new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)),
+                    Actions.Chain(
+                        new GenAction[]
+                        {
+                            new Modifiers.Offset(0, -(int)(0.5 * UndergroundHeight)), // Positive Y shifts upwards because of Modifiers.Flip()
+                            new Modifiers.Flip(false, true),
+                            new Actions.Blank().Output(lowerUndergroundShapeData),
+                            new Actions.Blank().Output(totalUndergroundShapeData),
+                        }
+                    )
+                );
+                UpperUnderground = upperUndergroundShapeData;
                 LowerUnderground = lowerUndergroundShapeData;
+                TotalUnderground = totalUndergroundShapeData;
             }
 		}
 
