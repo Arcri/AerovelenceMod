@@ -22,6 +22,8 @@ using System.Net;
 using Terraria.Graphics.Effects;
 using AerovelenceMod.Content.Projectiles;
 using static AerovelenceMod.Content.Projectiles.LightningUtility;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -66,14 +68,116 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private bool firstFrame = true;
 
+        private bool isInCombo = false;
+        private int currentComboIndex = 0;
+        private int currentComboStep = 0;
+
+        private int comboCycleIndex = -1;
+
+        private static readonly TumblerAttackState[][] combos =
+        {
+            new TumblerAttackState[]
+            {
+                TumblerAttackState.CrystalBarrage,
+                TumblerAttackState.RollToDash,
+                TumblerAttackState.DashOuterToOuter,
+                TumblerAttackState.RollToSideAndSlam,
+                TumblerAttackState.DashSideToSide,
+                TumblerAttackState.RollToSideAndSlam
+            },
+
+            new TumblerAttackState[]
+            {
+                TumblerAttackState.WaterLightning,
+                TumblerAttackState.RollToDash,
+                TumblerAttackState.DashOuterToOuter,
+                TumblerAttackState.Idle
+            },
+
+            new TumblerAttackState[]
+            {
+                TumblerAttackState.RollToSideAndSlam,
+                TumblerAttackState.CrystalBarrage,
+                TumblerAttackState.RollToSideAndSlam
+            }
+        };
+
+        private void StartCombo(int comboIndex)
+        {
+            comboIndex = Math.Clamp(comboIndex, 0, combos.Length - 1);
+
+            isInCombo = true;
+            currentComboIndex = comboIndex;
+            currentComboStep = 0;
+            currentAttack = combos[currentComboIndex][currentComboStep];
+            attackTimer = 0;
+
+            dashOuterPhase = 0;
+            dashOuterTimer = 0;
+            dashPlayerPhase = 0;
+            dashPlayerTimer = 0;
+            usePlayerDashThisTime = !usePlayerDashThisTime;
+            dashVariantIsPlayerTargeted = usePlayerDashThisTime;
+        }
+
+        private void OnAttackFinished()
+        {
+            StopAttackVFX();
+            Main.NewText("Attack finished");
+            attackTimer = 0;
+            idleTimer = 0;
+            SpawnedOrbs = false;
+            NPC.noTileCollide = false;
+            NPC.noGravity = false;
+
+            if (isInCombo)
+            {
+                currentComboStep++;
+                if (currentComboStep >= combos[currentComboIndex].Length)
+                {
+                    isInCombo = false;
+                    SelectNextAttack();
+                    return;
+                }
+                else
+                {
+                    currentAttack = combos[currentComboIndex][currentComboStep];
+                    attackTimer = 0;
+                }
+            }
+            else
+            {
+                SelectNextAttack();
+            }
+        }
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+        {
+            return doBossAttackVFX;
+        }
+
+
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (!doBossAttackVFX)
+            {
+                modifiers.FinalDamage = modifiers.FinalDamage * 0f;
+            }
+            else
+            {
+                modifiers.FinalDamage = modifiers.FinalDamage * 15f;
+            }
+        }
+
+
+
+
         public override void SetDefaults()
         {
-            NPC.damage = 0;
+            NPC.damage = 5;
             NPC.width = 120;
             NPC.height = 128;
-            NPC.lifeMax = 5500;
-            NPC.damage = 5;
-            NPC.defense = 20;
+            NPC.lifeMax = 3100;
+            NPC.defense = 13;
             NPC.boss = true;
             NPC.aiStyle = -1;
             NPC.noGravity = false;
@@ -127,6 +231,27 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             spriteBatch.Draw(lineTexture, start - Main.screenPosition, null, color * opacity * 1.7f, rotation, new Vector2(0, lineTexture.Height / 2), lineScale * 0.75f, SpriteEffects.None, 0f);
         }
 
+        private void TelegraphLightningDust(Vector2 start, Vector2 end, int segmentCount = 30, float maxDisplacement = 5f)
+        {
+            Vector2 direction = end - start;
+            float length = direction.Length();
+            if (length <= 0f)
+                return;
+            direction.Normalize();
+            Vector2 normal = new Vector2(-direction.Y, direction.X);
+            float segmentLength = length / (segmentCount - 1);
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                Vector2 pos = start + direction * segmentLength * i;
+                float displacement = (Main.rand.NextFloat() - 0.5f) * 2f * maxDisplacement;
+                pos += normal * displacement;
+                int dustIndex = Dust.NewDust(pos, 4, 4, DustID.Electric, 0f, 0f, 100, Color.Cyan, 1f);
+                Main.dust[dustIndex].noGravity = true;
+            }
+        }
+
+
         public override void AI()
         {
             if (firstFrame)
@@ -144,14 +269,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 }
                 else
                 {
+                    bool bossOnLeft = NPC.Center.X < ArenaData.ArenaCenter.X;
+
                     for (int i = 0; i < 10; i++)
                     {
-                        float xPosition = ArenaData.OuterArenaBoundaryLeft.X + i * (ArenaData.OuterArenaBoundaryRight.X - ArenaData.OuterArenaBoundaryLeft.X) / 9;
+                        float factor = (float)i / 9f;
+                        if (!bossOnLeft)
+                            factor = 1f - factor;
+                        float xPosition = MathHelper.Lerp(ArenaData.OuterArenaBoundaryLeft.X, ArenaData.OuterArenaBoundaryRight.X, factor);
                         float yPosition = NPC.Center.Y - 200;
                         lightningStrikePositions[i] = new Vector2(xPosition, yPosition);
-                        TelegraphDustLine(lightningStrikePositions[i], 400f);
+                        Vector2 telegraphStart = lightningStrikePositions[i];
+                        Vector2 telegraphEnd = telegraphStart + new Vector2(0, 500);
+                        TelegraphLightningDust(new Vector2(telegraphStart.X, telegraphStart.Y -500), telegraphEnd, segmentCount: 12, maxDisplacement: 5f);
                     }
-                    readyToSpawnTelegraphStrikes = true;
+                    //readyToSpawnTelegraphStrikes = true;
                     lightningStrikePositionsInitialized = true;
                 }
             }
@@ -161,26 +293,33 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (lightningStrikePositionsInitialized)
                 {
                     anotherTimer++;
-                    if (anotherTimer % 15 == 0 && lightningStrikeIndex < lightningStrikePositions.Length)
+                    if (anotherTimer > 60)
                     {
-                        Vector2 spawnPosition = lightningStrikePositions[lightningStrikeIndex];
-                        Vector2 spawnOffset = spawnPosition - new Vector2(0, 500f);
-                        Vector2 downwardVelocity = new(0, 15f);
+                        if (anotherTimer % 10 == 0 && lightningStrikeIndex < lightningStrikePositions.Length)
+                        {
+                            Vector2 spawnPosition = lightningStrikePositions[lightningStrikeIndex];
+                            Vector2 spawnOffset = spawnPosition - new Vector2(0, 500f);
+                            Vector2 downwardVelocity = new Vector2(0, 15f);
 
-                        Projectile.NewProjectile(spawnSource: NPC.GetSource_FromAI(), spawnOffset, downwardVelocity, ModContent.ProjectileType<LightningBolt>(), damage, 2, Main.myPlayer, ai0: 1);
+                            Projectile.NewProjectile(spawnSource: NPC.GetSource_FromAI(), spawnOffset, downwardVelocity,
+                                ModContent.ProjectileType<LightningBolt>(), damage, 2, Main.myPlayer, ai0: 1);
 
-                        lightningStrikeIndex++;
-                    }
+                            lightningStrikeIndex++;
+                        }
 
-                    if (lightningStrikeIndex >= lightningStrikePositions.Length)
-                    {
-                        lightningStrikePositionsInitialized = false;
-                        readyToSpawnTelegraphStrikes = false;
-                        doLightning = false;
-                        lightningStrikeIndex = 0;
+                        if (lightningStrikeIndex >= lightningStrikePositions.Length)
+                        {
+                            lightningStrikePositionsInitialized = false;
+                            //readyToSpawnTelegraphStrikes = false;
+                            doLightning = false;
+                            lightningStrikeIndex = 0;
+                            anotherTimer = 0;
+                        }
                     }
                 }
             }
+
+
             if (isExecutingWaterLightning)
             {
                 UpdateLightningWaterAttack();
@@ -254,19 +393,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                                                                Main.rand.NextFloat(-NPC.height / 2, NPC.height / 2));
                     Dust.NewDustPerfect(dustPos, DustID.Electric, new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)),
                                          0, Color.Cyan, 1f).noGravity = true;
-                }
-                if (idleTimer >= idleDuration)
-                {
-                    if (Math.Abs(NPC.Center.X - player.Center.X) > 300f)
-                    {
-                        float dashSpeedMultiplier = 2f;
-                        NPC.velocity.X = directionToPlayer.X * desiredSpeed * dashSpeedMultiplier;
-                    }
-                    else
-                    {
-                        NPC.velocity += new Vector2(directionToPlayer.X * 10, 0);
-                    }
-                    idleTimer = 0;
                 }
 
                 attackTimer++;
@@ -507,29 +633,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void SelectNextAttack()
         {
-            Main.NewText("Selecting next attack");
-            
-            int choice = Main.rand.Next(5);
-            if (choice == 0)
-                currentAttack = TumblerAttackState.CrystalBarrage;
-            else if (choice == 1)
-                currentAttack = TumblerAttackState.WaterLightning;
-            else if (choice == 2)
-                currentAttack = TumblerAttackState.RollToDash;
-            else if (choice == 3)
-                currentAttack = TumblerAttackState.RollToSideAndSlam;
-            else if (choice == 4)
-                currentAttack = TumblerAttackState.DashSideToSide;
-            else
-                currentAttack = TumblerAttackState.DashOuterToOuter;
-            attackTimer = 0;
-
-            if (currentAttack == TumblerAttackState.RollToDash)
-            {
-                rollDashPhase = 0;
-                rollDashTimer = 0;
-            }
+            comboCycleIndex++;
+            if (comboCycleIndex >= combos.Length)
+                comboCycleIndex = 0;
+            StartCombo(comboCycleIndex);
         }
+
+
 
         private void PerformRockThrow()
         {
@@ -540,7 +650,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 if (Main.projectile[i].active && Main.projectile[i].type == rockType && Main.projectile[i].ai[0] == NPC.whoAmI)
                 {
-                    ResetAttack();
+                    OnAttackFinished();
                     return;
                 }
             }
@@ -564,7 +674,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             if (attackTimer > 120)
             {
-                ResetAttack();
+                OnAttackFinished();
             }
         }
 
@@ -687,12 +797,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             if(attackTimer == 20)
             {
-                SpawnMoth();
+                //SpawnMoth();
             }
 
             if (attackTimer > 60)
             {
-                ResetAttack();
+                OnAttackFinished();
             }
         }
 
@@ -761,7 +871,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (waterLightningTimer > pending.Count * 30 + 30)
             {
                 isExecutingWaterLightning = false;
-                ResetAttack();
+                OnAttackFinished();
             }
         }
 
@@ -798,7 +908,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             if (attackTimer > 60)
             {
-                ResetAttack();
+                OnAttackFinished();
             }
         }
 
@@ -975,7 +1085,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                 case 3:
                     {
-                        ResetAttack();
+                        OnAttackFinished();
                         rollDashPhase = 0;
                         rollDashTimer = 0;
                         storedExtraSpin = 0f;
@@ -988,7 +1098,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private Vector2 rollSlamStartPos;
         private float initialRotation = 0f;
         private float targetRotation = 0f;
-        private int damage = 50;
+        private int damage = 10;
         private float rollSlamHorizontalDirection = 1f;
 
         private int mothSpawnTimer;
@@ -1063,7 +1173,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             NPC.velocity.Y = -15f;
                         }
                         rollSlamTimer++;
-                        NPC.rotation += rollSlamHorizontalDirection * Math.Abs(NPC.velocity.Y) * 0.01f;
+                        NPC.rotation += rollSlamHorizontalDirection * 2;
 
                         if (NPC.velocity.Y > 0)
                         {
@@ -1076,19 +1186,36 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             {
                                 int checkY = (int)(NPC.Bottom.Y / 16) + offset;
                                 Tile tileBelow = Framing.GetTileSafely(checkX, checkY);
-                                if (tileBelow.HasTile &&
-                                   (tileBelow.TileType == ModContent.TileType<SmoothCavernStoneTile>() ||
-                                    tileBelow.TileType == ModContent.TileType<CitadelBrickTile>() ||
-                                    tileBelow.TileType == ModContent.TileType<ChargedStoneTile>()))
+
+                                bool nearLeftBoundary = NPC.Center.X / 16 <= ArenaData.OuterArenaBoundaryLeft.X + 10;
+                                bool nearRightBoundary = NPC.Center.X / 16 >= ArenaData.OuterArenaBoundaryRight.X - 10;
+
+                                if (tileBelow.HasTile)
                                 {
-                                    groundFound = true;
-                                    NPC.velocity.Y = 0;
-                                    NPC.position.Y = checkY * 16 - NPC.height;
-                                    NPC.noTileCollide = false;
-                                    NPC.noGravity = false;
-                                    break;
+                                    if (tileBelow.TileType == ModContent.TileType<SmoothCavernStoneTile>() ||
+                                        tileBelow.TileType == ModContent.TileType<CitadelBrickTile>() ||
+                                        tileBelow.TileType == ModContent.TileType<ChargedStoneTile>())
+                                    {
+                                        groundFound = true;
+                                        NPC.velocity.Y = 0;
+                                        NPC.position.Y = checkY * 16 - NPC.height;
+                                        NPC.noTileCollide = false;
+                                        NPC.noGravity = false;
+                                        break;
+                                    }
+                                    else if ((nearLeftBoundary || nearRightBoundary) &&
+                                             tileBelow.TileType == ModContent.TileType<GlimmerwoodPlatformTile>())
+                                    {
+                                        groundFound = true;
+                                        NPC.velocity.Y = 0;
+                                        NPC.position.Y = checkY * 16 - NPC.height;
+                                        NPC.noTileCollide = false;
+                                        NPC.noGravity = false;
+                                        break;
+                                    }
                                 }
                             }
+
 
                             if (groundFound)
                             {
@@ -1147,7 +1274,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                         if (mothSpawnTimer >= mothSpawnInterval)
                         {
-                            SpawnMoth();
+                            //SpawnMoth();
                             mothSpawnTimer = 0;
                         }
                         else
@@ -1210,7 +1337,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                                 PitchVariance = 0f,
                             };
                             SoundEngine.PlaySound(style, NPC.Center);
-                            ResetAttack();
+                            OnAttackFinished();
                             //PerformRockThrow();
                             rollSlamPhase = 0;
                             rollSlamTimer = 0;
@@ -1220,7 +1347,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             rollSlamTimer++;
                             if (rollSlamTimer > 30)
                             {
-                                ResetAttack();
+                                OnAttackFinished();
                                 rollSlamPhase = 0;
                                 rollSlamTimer = 0;
                             }
@@ -1512,6 +1639,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         }
                         StartAttackVFX();
                         doLightning = true;
+                        KickRocks();
                         float finalDashSpeed = (dashSideIteration >= 1) ? 20f : 16f;
                         NPC.velocity = new Vector2(dashSideDirection * finalDashSpeed, 0f);
 
@@ -1519,8 +1647,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         {
                             Vector2 laserSpawn = NPC.Center + new Vector2(0, -32);
                             Projectile.NewProjectile(NPC.GetSource_FromThis(), laserSpawn, Vector2.Zero,
-                                ModContent.ProjectileType<LightningStar>(), NPC.damage / 2, 0f, Main.myPlayer);
-                            SpawnMoth();
+                                ModContent.ProjectileType<Stalactite>(), NPC.damage / 2, 0f, Main.myPlayer);
+                            //SpawnMoth();
                         }
 
                         float outerTarget = (dashSideDirection > 0)
@@ -1557,7 +1685,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             dashSideTimer = 0;
                             dashSideIteration = 0;
                             NPC.velocity = Vector2.Zero;
-                            ResetAttack();
+                            OnAttackFinished();
                         }
                         if (dashSideTimer == 1)
                         {
@@ -1648,95 +1776,204 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private int dashOuterIteration = 0;
         private int maxDashIterations = 3;
         private float dashOuterDirection = 0f;
+        private bool usePlayerDashThisTime = false;
+        private bool dashVariantIsPlayerTargeted = false;
+
+        private int dashPlayerPhase = 0;
+        private int dashPlayerTimer = 0;
+        private Vector2 playerDashTarget = Vector2.Zero;
 
         private void DashOuterToOuterSequence(Player player)
         {
-            StartAttackVFX();
-            Main.NewText("Dash outer to outer");
-            switch (dashOuterPhase)
+            if (!dashVariantIsPlayerTargeted)
             {
-                case 0:
-                    {
-                        dashOuterDirection = (NPC.Center.X < ArenaData.ArenaCenter.X) ? 1f : -1f;
-                        float targetSpinRate = 1.2f;
-                        float spinIncrement = targetSpinRate / 300f;
-                        storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
-                        SpawnOrbProjectiles();
-                        NPC.rotation += dashOuterDirection * storedExtraSpin;
-                        dashOuterTimer++;
-                        if (dashOuterTimer >= 60)
+                StartAttackVFX();
+                Main.NewText("Dash outer to outer (Original)");
+                switch (dashOuterPhase)
+                {
+                    case 0:
                         {
-                            preStunRotation = NPC.rotation;
-                            dashOuterPhase = 1;
-                            dashOuterTimer = 0;
-                            storedExtraSpin = 0f;
+                            dashOuterDirection = (NPC.Center.X < ArenaData.ArenaCenter.X) ? 1f : -1f;
+                            float targetSpinRate = 1.2f;
+                            float spinIncrement = targetSpinRate / 300f;
+                            storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                            SpawnOrbProjectiles();
+                            NPC.rotation += dashOuterDirection * storedExtraSpin;
+                            dashOuterTimer++;
+                            if (dashOuterTimer >= 60)
+                            {
+                                preStunRotation = NPC.rotation;
+                                dashOuterPhase = 1;
+                                dashOuterTimer = 0;
+                                storedExtraSpin = 0f;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case 1:
-                    {
-                        isDashing = true;
-                        float dashSpeed = 20f;
-                        if (dashOuterTimer % 10 == 0 && NPC.velocity.Y == 0)
+                    case 1:
                         {
-                            NPC.velocity.Y -= Main.rand.NextFloat(3, 5);
+                            isDashing = true;
+                            float dashSpeed = 20f;
+                            if (dashOuterTimer % 10 == 0 && NPC.velocity.Y == 0)
+                            {
+                                NPC.velocity.Y -= Main.rand.NextFloat(3, 5);
+                            }
+                            NPC.velocity.X = dashOuterDirection * dashSpeed;
+                            KickRocks();
+                            dashOuterTimer++;
+
+                            float outerTarget = (dashOuterDirection > 0)
+                                ? ArenaData.OuterArenaBoundaryRight.X
+                                : ArenaData.OuterArenaBoundaryLeft.X;
+                            bool reachedBoundary = (dashOuterDirection > 0 && NPC.Center.X >= outerTarget - 5 * 16f) ||
+                                                   (dashOuterDirection < 0 && NPC.Center.X <= outerTarget + 5 * 16f);
+                            if (reachedBoundary || dashOuterTimer >= 120)
+                            {
+                                NPC.velocity = Vector2.Zero;
+                                dashOuterPhase = 2;
+                                dashOuterTimer = 0;
+                                preStunRotation = NPC.rotation;
+                                isDashing = false;
+                            }
                         }
-                        NPC.velocity.X = dashOuterDirection * dashSpeed;
+                        break;
 
-                        dashOuterTimer++;
-
-                        float outerTarget = (dashOuterDirection > 0)
-                            ? ArenaData.OuterArenaBoundaryRight.X
-                            : ArenaData.OuterArenaBoundaryLeft.X;
-                        bool reachedBoundary = (dashOuterDirection > 0 && NPC.Center.X >= outerTarget - 5 * 16f) ||
-                                               (dashOuterDirection < 0 && NPC.Center.X <= outerTarget + 5 * 16f);
-                        if (reachedBoundary || dashOuterTimer >= 120)
+                    case 2:
                         {
-                            NPC.velocity = Vector2.Zero;
-                            dashOuterPhase = 2;
-                            dashOuterTimer = 0;
-                            preStunRotation = NPC.rotation;
-                            isDashing = false;
+                            dashOuterTimer++;
+                            float rockAmplitude = MathHelper.Lerp(0.1f, 0f, dashOuterTimer / 30f);
+                            NPC.rotation = preStunRotation + (float)Math.Sin(dashOuterTimer * 0.2f) * rockAmplitude;
+                            if (dashOuterTimer >= 30)
+                            {
+                                dashOuterPhase = 3;
+                                dashOuterTimer = 0;
+                            }
+                            if (dashOuterTimer == 1)
+                            {
+                                PerformWallSlam(NPC.Center, 15);
+                            }
+                            StopAttackVFX();
                         }
-                    }
-                    break;
+                        break;
 
-                case 2:
-                    {
-                        dashOuterTimer++;
-                        float rockAmplitude = MathHelper.Lerp(0.1f, 0f, dashOuterTimer / 30f);
-                        NPC.rotation = preStunRotation + (float)Math.Sin(dashOuterTimer * 0.2f) * rockAmplitude;
-                        if (dashOuterTimer >= 30)
+                    case 3:
                         {
-                            dashOuterPhase = 3;
-                            dashOuterTimer = 0;
-                        }
-                        if (dashOuterTimer == 1)
-                        {
-                            PerformWallSlam(NPC.Center, 15);
-                        }
-                        StopAttackVFX();
-                    }
-                    break;
-
-                case 3:
-                    {
-                        dashOuterDirection = -dashOuterDirection;
-                        dashOuterPhase = 0;
-                        dashOuterTimer = 0;
-                        dashOuterIteration++;
-                        if (dashOuterIteration >= maxDashIterations)
-                        {
+                            doLightning = true;
+                            dashOuterDirection = -dashOuterDirection;
                             dashOuterPhase = 0;
                             dashOuterTimer = 0;
-                            dashOuterIteration = 0;
-                            ResetAttack();
+                            dashOuterIteration++;
+                            if (dashOuterIteration >= maxDashIterations)
+                            {
+                                dashOuterPhase = 0;
+                                dashOuterTimer = 0;
+                                dashOuterIteration = 0;
+                                dashVariantIsPlayerTargeted = false;
+                                OnAttackFinished();
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
+            }
+            else 
+            {
+                StartAttackVFX();
+                Main.NewText("Dash outer to outer (Player-Targeted)");
+                switch (dashPlayerPhase)
+                {
+                    case 0:
+                        {
+                            if (dashPlayerTimer == 0)
+                            {
+                                playerDashTarget = player.Center;
+                                dashSideDirection = (playerDashTarget.X > NPC.Center.X) ? 1f : -1f;
+                            }
+                            float targetSpinRate = 1.2f;
+                            float spinIncrement = targetSpinRate / 300f;
+                            storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                            SpawnOrbProjectiles();
+                            NPC.rotation += dashSideDirection * storedExtraSpin;
+                            dashPlayerTimer++;
+                            if (dashPlayerTimer >= 60)
+                            {
+                                preStunRotation = NPC.rotation;
+                                dashPlayerPhase = 1;
+                                dashPlayerTimer = 0;
+                                storedExtraSpin = 0f;
+                            }
+                        }
+                        break;
+                    case 1:
+                        {
+                            isDashing = true;
+                            float dashSpeed = 20f;
+                            Vector2 toTarget = playerDashTarget - NPC.Center;
+                            float distance = toTarget.Length();
+                            if (distance > 0)
+                            {
+                                Vector2 dashDirection = toTarget / distance;
+                                NPC.velocity += Vector2.Lerp(NPC.velocity, dashDirection * dashSpeed, 0.1f);
+                            }
+                            dashPlayerTimer++;
+                            if (distance < 10f || dashPlayerTimer >= 5)
+                            {
+                                NPC.velocity = Vector2.Zero;
+                                NPC.noGravity = false;
+                                NPC.noTileCollide = false;
+                                dashPlayerPhase = 2;
+                                dashPlayerTimer = 0;
+                                preStunRotation = NPC.rotation;
+                                isDashing = false;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            dashPlayerTimer++;
+                            float rockAmplitude = MathHelper.Lerp(0.1f, 0f, dashPlayerTimer / 30f);
+                            NPC.rotation = preStunRotation + (float)Math.Sin(dashPlayerTimer * 0.2f) * rockAmplitude;
+                            if (dashPlayerTimer >= 30)
+                            {
+                                dashPlayerPhase = 3;
+                                dashPlayerTimer = 0;
+                            }
+                            if (dashPlayerTimer == 1)
+                            {
+                                PerformWallSlam(NPC.Center, 15);
+                            }
+                            StopAttackVFX();
+                        }
+                        break;
+                    case 3:
+                        {
+                            dashVariantIsPlayerTargeted = false;
+                            dashPlayerPhase = 0;
+                            dashPlayerTimer = 0;
+                            OnAttackFinished();
+                        }
+                        break;
+                }
             }
         }
+
+        private int kickRocksTimer = 0;
+
+        private void KickRocks()
+        {
+            kickRocksTimer++;
+            if (kickRocksTimer >= 10)
+            {
+                kickRocksTimer = 0;
+                Vector2 spawnPos = NPC.Bottom;
+                Vector2 kickDirection = new Vector2(-dashSideDirection * 0.5f, -1f);
+                kickDirection.Normalize();
+                float kickSpeed = Main.rand.Next(8);
+                Vector2 velocity = kickDirection * kickSpeed;
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, velocity,
+                    ModContent.ProjectileType<RockShard>(), NPC.damage / 2, 0f, Main.myPlayer);
+            }
+        }
+
 
         private void SpawnStalactiteProjectiles()
         {
@@ -1771,7 +2008,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             StopAttackVFX();
             Main.NewText("Reset attack");
-            currentAttack = TumblerAttackState.Idle;
+            OnAttackFinished();
             attackTimer = 0;
             SpawnedOrbs = false;
         }
@@ -1815,7 +2052,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             if (++rockingTimer >= 600)
             {
-                ResetAttack();
+                OnAttackFinished();
                 rockingTimer = 0;
             }
         }
@@ -1978,7 +2215,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     }
                     if (arenaElectrocutionTimer >= 60)
                     {
-                        ResetAttack();
+                        OnAttackFinished();
+                        crystalElectrocutePhaseActive = false;
+
                         arenaElectrocutionPhase = 0;
                         arenaElectrocutionTimer = 0;
                     }
@@ -2062,7 +2301,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.timeLeft = 60;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            Projectile.damage = 10;
         }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            Rectangle lightningHitbox = new(
+                (int)(Projectile.Center.X - Projectile.width / 2f),
+                (int)(Projectile.Center.Y),
+                Projectile.width,
+                760
+            );
+
+            return lightningHitbox.Intersects(targetHitbox);
+        }
+
 
         public override void AI()
         {

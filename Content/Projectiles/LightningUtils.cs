@@ -46,8 +46,8 @@ namespace AerovelenceMod.Content.Projectiles
                 switch (Style)
                 {
                     case LightningStyle.Jagged:
-                        DisplacementIntensity = 1.5f;
-                        NoiseFrequency = 5f;
+                        DisplacementIntensity = 0.5f;
+                        NoiseFrequency = 10f;
                         break;
                     case LightningStyle.Smooth:
                         DisplacementIntensity = 0.5f;
@@ -131,7 +131,6 @@ namespace AerovelenceMod.Content.Projectiles
             SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
-
         /// <summary>
         /// Updates the main segments of the bolt with noise and random displacement. Also calls branch creation logic.
         /// </summary>
@@ -145,11 +144,13 @@ namespace AerovelenceMod.Content.Projectiles
                 float centerEmphasis = (float)Math.Exp(-(Math.Pow(i - data.MaxSegments / 2f, 2) / (2 * Math.Pow(data.MaxSegments / 4f, 2)))) * 0.7f;
 
                 float noiseFactor = data.NoiseFrequency * (Main.rand.NextFloat() - 0.5f) * 2f;
+                float roughnessMultiplier = 1.5f;
                 float noise = (
                     Math.Sign(Math.Sin(time * 0.8f + i * noiseFactor)) * 1.2f
                     + Math.Sign(Math.Cos(time * 0.5f + i * 0.7f)) * 1.0f
                     + (Math.Sin(time * 1.2f + i * 0.2f) > 0 ? 1 : -1) * globalIntensity * 1.8f
-                ) * centerEmphasis;
+                ) * centerEmphasis * roughnessMultiplier;
+
 
                 float finalAmplitude = Math.Min(5f, data.DistanceToTarget * 0.06f);
                 data.SegmentOffsets[i] = noise * finalAmplitude * data.DisplacementIntensity;

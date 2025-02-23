@@ -1201,6 +1201,7 @@ Projectiles: {
 	MagneticOrb.DisplayName: Magnetic Orb
 	LightningStar.DisplayName: Lightning Star
 	LightningProjectile2.DisplayName: Lightning Projectile2
+	RockShard.DisplayName: Rock Shard
 }
 
 Configs: {
