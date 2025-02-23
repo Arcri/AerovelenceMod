@@ -141,13 +141,13 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             LivingWoodDoorTile = TileID.ClosedDoor;
 
             ReplaceWithChargedTiles = [TileID.ClayBlock, TileID.Diamond, TileID.Ruby, TileID.Emerald, TileID.Sapphire, TileID.Topaz, TileID.Amethyst];
-            ReplaceWithSandTiles = [SandTile, TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
+            ReplaceWithSandTiles = [TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
             ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.Hive];
             ReplaceWithBrickTiles = [TileID.SandstoneBrick];
-            ReplaceWithDirtTiles = [TileID.Silt, StoneTile, SandTile, ChargedTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
+            ReplaceWithDirtTiles = [StoneTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
             ClearTiles = [/*TileID.Larva*/];
 
-            ReplaceWithBrickWalls = [WallID.SandstoneBrick];
+            ReplaceWithBrickWalls = [WallID.SandstoneBrick, BrickWall];
 
             LivingWoodTiles = [LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile];
             // Terrible array I need to fix but probably won't
@@ -324,8 +324,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 // Walls
                 WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                 {
+                    new Modifiers.OnlyWalls(ReplaceWithBrickWalls),
+                    new Actions.PlaceWall(BrickWall)
+                }));
+                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                {
                     new AeroGenUtils.NotTouchingAir(true),
                     new Modifiers.SkipTiles(LivingLeafTile, LivingWoodTile, TileID.SmallPiles, TileID.LargePiles, TileID.LargePiles2),
+                    new Modifiers.SkipWalls(ReplaceWithBrickWalls),
                     new AeroGenUtils.NotTouchingTiles(true, LivingLeafTile, LivingWoodTile, TileID.SmallPiles, TileID.LargePiles, TileID.LargePiles2),
                     new Actions.PlaceWall(DirtWall)
                 }));
@@ -334,6 +340,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     new AeroGenUtils.IsBelowSurface(5),
                     new Modifiers.SkipTiles(LivingLeafTile, LivingWoodTile, TileID.SmallPiles, TileID.LargePiles, TileID.LargePiles2),
+                    new Modifiers.SkipWalls(ReplaceWithBrickWalls),
                     new AeroGenUtils.NotTouchingTiles(true, LivingLeafTile, LivingWoodTile, TileID.SmallPiles, TileID.LargePiles, TileID.LargePiles2),
                     new Actions.PlaceWall(DirtWall)
                 }));
@@ -342,11 +349,6 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 {
                     new Modifiers.OnlyWalls(WallID.DirtUnsafe, WallID.FlowerUnsafe, WallID.GrassUnsafe, 59, WallID.SnowWallUnsafe, WallID.Sandstone, WallID.HardenedSand, WallID.CrimstoneUnsafe, WallID.EbonstoneUnsafe),
                     new Actions.PlaceWall(DirtWall)
-                }));
-                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.OnlyWalls(ReplaceWithBrickWalls),
-                    new Actions.PlaceWall(BrickWall)
                 }));
 
                 // Surface to underground dithering

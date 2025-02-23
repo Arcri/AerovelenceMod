@@ -146,7 +146,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new(ItemID.GoldCoin, 1, 2)
                 };
 
-                AeroStructure tumblerArena = StructureStamper.LoadStructure(
+                StructureStamper.LoadStructure(
                     new Vector2(
                         mainPass.TumblerTunnelEnd.X - 60 + 60 * mainPass.TumblerArenaPolarity,
                         mainPass.TumblerTunnelEnd.Y - 46
@@ -154,24 +154,54 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     "tumblerarena"
                 ).ProtectStructure();
 
-                AeroStructure ancientBridge = PlaceStructureSafely("ancientbridge")
+                PlaceStructureSafely("ancientbridge")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure libraryDarkLeft = PlaceStructureSafely("librarydarkleft")
+                PlaceStructureSafely("librarydarkleft")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure libraryDarkRight = PlaceStructureSafely("librarydarkright")
+                PlaceStructureSafely("librarydarkright")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure libraryLightLeft = PlaceStructureSafely("librarylightleft")
+                PlaceStructureSafely("librarylightleft")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure libraryLightRight = PlaceStructureSafely("librarylightright")
+                PlaceStructureSafely("librarylightright")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                AeroStructure crystalShrine = PlaceStructureSafely("smallshrine")
+                PlaceStructureSafely("smallshrine")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                if (mainPass.WorldSizeScale > 1.2f) // Medium or large world, 1.2f instead of 1f so floating point math doesn't screw it up
+                {
+                    PlaceStructureSafely("librarydarkleft")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarydarkright")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarylightleft")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarylightright")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                }
+                if (mainPass.WorldSizeScale > 1.7f) // Large world, otherwise same as last if statement
+                {
+                    PlaceStructureSafely("librarydarkleft")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarydarkright")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarylightleft")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    PlaceStructureSafely("librarylightright")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                }
 
                 /*const int TOTAL_SHRINES = 101;
                 for (int i = 0; i < TOTAL_SHRINES; i++)
@@ -198,11 +228,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             var logger = ModContent.GetInstance<AerovelenceMod>()?.Logger;
             _validPoints = [];
             Rectangle boundRect = ShapeData.GetBounds(Point.Zero, bounds);
-            logger?.Info($"Shape bounds- X={boundRect.X}, Y={boundRect.Y}, Width={boundRect.Width}, Height={boundRect.Height}");
+            //logger?.Info($"Shape bounds- X={boundRect.X}, Y={boundRect.Y}, Width={boundRect.Width}, Height={boundRect.Height}");
             int biomeCenterX = mainPass.Origin.X;
             int biomeTop = mainPass.Origin.Y;
 
-            logger?.Info($"Biome center- {biomeCenterX}, Top: {biomeTop}");
+            //logger?.Info($"Biome center- {biomeCenterX}, Top: {biomeTop}");
             const int SAMPLING_INTERVAL = 2;
             var rand = WorldGen.genRand;
             int minY = int.MaxValue;
@@ -239,29 +269,31 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         float heightPosition = (float)(worldY - minY) / heightRange;
                         float probability = 0.5f + (float)Math.Sin(heightPosition * Math.PI) * 0.5f;
 
-                        if (rand.NextFloat() < probability && (localX + boundRect.Width / 2 < boundRect.Width * 0.4 || localX + boundRect.Width / 2 > boundRect.Width * 0.6))
+                        if (rand.NextFloat() < probability 
+                            && (localX + boundRect.Width / 2 < boundRect.Width * (0.30 + mainPass.WorldSizeScale / 20) 
+                            || localX + boundRect.Width / 2 > boundRect.Width * (0.70 - mainPass.WorldSizeScale / 20)))
                         {
                             _validPoints.Add(new Point(worldX, worldY));
 
-                            if (_validPoints.Count <= 5)
+                            /*if (_validPoints.Count <= 5)
                             {
                                 logger?.Info($"Valid point {_validPoints.Count}: Local({testX}, {testY}) -> World({worldX}, {worldY})");
-                            }
+                            }*/
                         }
                     }
                 }
             }
 
-            logger?.Info($"Total valid points found- {_validPoints.Count}");
+            //logger?.Info($"Total valid points found- {_validPoints.Count}");
             if (_validPoints.Count > 0)
             {
                 var xValues = _validPoints.Select(p => p.X).OrderBy(x => x).ToList();
                 var leftPoints = _validPoints.Count(p => p.X < biomeCenterX);
                 var rightPoints = _validPoints.Count(p => p.X >= biomeCenterX);
 
-                logger?.Info($"X-coordinate range- {xValues.First()} to {xValues.Last()}");
-                logger?.Info($"Points on left side- {leftPoints}");
-                logger?.Info($"Points on right side- {rightPoints}");
+                //logger?.Info($"X-coordinate range- {xValues.First()} to {xValues.Last()}");
+                //logger?.Info($"Points on left side- {leftPoints}");
+                //logger?.Info($"Points on right side- {rightPoints}");
             }
         }
 
@@ -271,7 +303,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             if (_validPoints == null || _validPoints.Count == 0)
             {
-                logger?.Info("No valid points for structure placement");
+                //logger?.Info("No valid points for structure placement");
                 return AeroStructure.Empty;
             }
 
@@ -303,12 +335,12 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 if (structure != AeroStructure.Empty)
                 {
-                    logger?.Info($"Successfully placed structure at ({position.X}, {position.Y}) on attempt {i + 1}");
+                    //logger?.Info($"Successfully placed structure at ({position.X}, {position.Y}) on attempt {i + 1}");
                     return structure;
                 }
             }
 
-            logger?.Info($"Failed to place structure after {attempts} attempts");
+            //logger?.Info($"Failed to place structure after {attempts} attempts");
             return AeroStructure.Empty;
         }
     }
