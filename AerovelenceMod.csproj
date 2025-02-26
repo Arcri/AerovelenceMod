@@ -11,4 +11,7 @@
     <EmbeddedResource Remove="Common\Systems\Generation\GenUtils\**" />
     <None Remove="Common\Systems\Generation\GenUtils\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Items\Weapons\Caverns\CrystalCrescent\CrystalCrescent.png" />
+  </ItemGroup>
 </Project>
