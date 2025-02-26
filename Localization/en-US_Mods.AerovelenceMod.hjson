@@ -808,6 +808,16 @@ Items: {
 		DisplayName: Cyvercry Boss Relic Item
 		Tooltip: ""
 	}
+
+	CrystalCorn: {
+		DisplayName: Crystal Corn
+		Tooltip: ""
+	}
+
+	H2OCaliber: {
+		DisplayName: H2 O Caliber
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1202,6 +1212,8 @@ Projectiles: {
 	LightningStar.DisplayName: Lightning Star
 	LightningProjectile2.DisplayName: Lightning Projectile2
 	RockShard.DisplayName: Rock Shard
+	H2OCaliberHeldProjectile.DisplayName: H2 O Caliber Held Projectile
+	H2OBubble.DisplayName: H2 O Bubble
 }
 
 Configs: {
