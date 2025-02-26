@@ -73,19 +73,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             float shaFast = 120;
             float eaaFast = 0.065f;
             int ftssFast = 0;
-            float taeFast = 0;
+            int taeFast = 0;
             float spFast = 0.05f;
 
             float shaMedium = 190;
             float eaaMedium = 0.015f;
             int ftssMedium = 3;
-            float taeMedium = 0;
+            int taeMedium = 0;
             float spMedium = 0.01f;
 
             float shaLong = 360 + 180;
             float eaaLong = 0.01f;
             int ftssLong = 10;
-            float taeLong = 7;
+            int taeLong = 7;
             float spLong = 0.01f;
 
             Main.projectile[p].localNPCHitCooldown = -1;

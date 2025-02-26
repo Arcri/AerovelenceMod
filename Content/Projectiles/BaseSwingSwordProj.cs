@@ -1,22 +1,18 @@
-using Microsoft.Xna.Framework;
 using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.ItemDropRules;
-using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 using System.Collections.Generic;
-using Terraria.Graphics;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ID;
+using Terraria.Audio;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AerovelenceMod.Content.Projectiles
 {
 	public abstract class BaseSwingSwordProj : ModProjectile
 	{
-
         #region variables
-
         // ------ Things you probably want to change ------
 
         //The angle of Half the swing arc (IN DEGREES)
@@ -38,7 +34,7 @@ namespace AerovelenceMod.Content.Projectiles
         public float easingAdditionAmount = 0.01f;
 
         //Adds a delay to the projectile dying after the swing is done
-        public float timeAfterEnd = 4;
+        public int timeAfterEnd = 4;
 
         public float progressToKill = 0.99f;
 
@@ -63,7 +59,7 @@ namespace AerovelenceMod.Content.Projectiles
         public int storedDirection;
 
         //Can't decrement timeAfterEnd because we are constantly setting it in the projectile, so we use this to store the value 
-        private float storedTimeAfterEnd = 4;
+        private int storedTimeAfterEnd = 4;
 
         //For hitlag
         public int justHitTime = 0;
@@ -74,46 +70,35 @@ namespace AerovelenceMod.Content.Projectiles
             Player player = Main.player[Projectile.owner];
             player.heldProj = Projectile.whoAmI;
 
-            float angleToProj = 0;
-            if (Projectile.owner == Main.myPlayer)
-            {
-                angleToProj = (Projectile.Center - (player.MountedCenter)).ToRotation();
-            }
+            float angleToProj = (Projectile.Center - player.MountedCenter).ToRotation();
 
-            //Store player direction
-            if (firstFrame)
+			//Store player direction
+			if (firstFrame)
                 storedDirection = player.direction;
 
             //Make sure itemRotation is right
             float itemrotate = storedDirection < 0 ? MathHelper.Pi : 0;
-
             if (player.direction != storedDirection)
                 itemrotate += MathHelper.Pi;
-
-            player.itemRotation = angleToProj + itemrotate;
-            player.itemRotation = MathHelper.WrapAngle(player.itemRotation);
+            player.itemRotation = MathHelper.WrapAngle(angleToProj + itemrotate);
 
             //Composite arms
-            Vector2 frontHandPos = Main.GetPlayerArmPosition(Projectile);
-            Vector2 positionToGet = (frontHandPos + currentAngle.ToRotationVector2() * 100);
-
-            //player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, currentAngle - MathHelper.PiOver2);
-            player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - player.Center).ToRotation() + MathHelper.PiOver2 + MathHelper.Pi);
+            player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - player.MountedCenter).ToRotation() + (MathHelper.Pi + MathHelper.PiOver2));
             
 
             //Delete proj if it shouldn't be there
             if (!player.active || player.dead || player.CCed || player.noItems || player.frozen)
             {
-                Projectile.active = false;
+				Projectile.Kill();
             }
         }
 
         public void StandardSwingUpdate()
         {
+			if (Projectile.owner != Main.myPlayer) return;
             Player player = Main.player[Projectile.owner];
 
-
-            //This is were we set the beggining and ending angle of the sword 
+            //This is were we set the beginning and ending angle of the sword 
             if (firstFrame)
             {
                 //For drawing correctly
@@ -122,56 +107,39 @@ namespace AerovelenceMod.Content.Projectiles
                 storedTimeAfterEnd = timeAfterEnd;
                 easingProgress = startingProgress;
 
-                //No getting the mouse Direction via Main.mouse world did not work
-                Vector2 mouseDir = Projectile.velocity.SafeNormalize(Vector2.UnitX);
-
-                //I don't know why this is called sus but this is the angle we will compare the mouseDir to 
-                Vector2 sus1 = new Vector2(-10, 0).SafeNormalize(Vector2.UnitX);
-
-                //Yes I did have to normalize it again (i don't fuckin know why but it is needed)
-                Vector2 sus2 = mouseDir.SafeNormalize(Vector2.UnitX);
-
-                startingAngle = sus1.AngleTo(sus2) * 2; //psure the * 2 is from double normalization
+				Vector2 mouseDir = player.DirectionTo(Main.MouseWorld);
+                startingAngle = (-Vector2.UnitX).AngleTo(mouseDir) * 2;
                 originalAngle = startingAngle;
 
-                //Fixes bug 
-                if (startingAngle == 0 && Projectile.spriteDirection == -1)
+                //Adjust projectile rotation for swing direction
+                if (storedDirection == -1)
                 {
                     startingAngle += MathHelper.Pi;
                     originalAngle = startingAngle;
                 }
 
-                //we set Projectile.ai[0] in the wep. This is so the sword alternates direction
-                if (Projectile.ai[0] == 1)
-                {
-                    startingAngle = startingAngle - MathHelper.ToRadians(-SwingHalfAngle);
-                }
-                else
-                {
-                    startingAngle = startingAngle + MathHelper.ToRadians(-SwingHalfAngle);
-                }
+				//we set Projectile.ai[0] in the weapon. This is so the sword alternates direction
+				//Change Projectile.ai[0] to be -1 or +1 to make this simpler
+				startingAngle -= (Projectile.ai[0] * 2 - 1) * MathHelper.ToRadians(-SwingHalfAngle);
 
                 currentAngle = startingAngle;
                 firstFrame = false;
-
             }
 
 
-            if (timer >= frameToStartSwing && justHitTime <= 0)
+
+            if (timer >= frameToStartSwing && justHitTime < 1)
             {
-                if (Projectile.ai[0] == 1)
-                    currentAngle = startingAngle - MathHelper.ToRadians((SwingHalfAngle * 2) * getProgress(easingProgress));
-                else
-                    currentAngle = startingAngle + MathHelper.ToRadians((SwingHalfAngle * 2) * getProgress(easingProgress));
+				//Change Projectile.ai[0] to be -1 or +1 to make this simpler
+				currentAngle = startingAngle - ((Projectile.ai[0] * 2 - 1) * MathHelper.ToRadians(SwingHalfAngle * 2 * getProgress(easingProgress)));
 
                 float meleeSpeed = useMeleeSpeed ? Main.player[Projectile.owner].GetTotalAttackSpeed(DamageClass.Melee) : 1f;
-
                 easingProgress = Math.Clamp(easingProgress + easingAdditionAmount * meleeSpeed, 0.01f, 1f);
             }
 
             Projectile.rotation = currentAngle + MathHelper.PiOver4;
 
-            Projectile.Center = (currentAngle.ToRotationVector2() * offset) + player.RotatedRelativePoint(player.MountedCenter);// + new Vector2(-5 * player.direction,-2.5f);
+			Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) + (currentAngle.ToRotationVector2() * offset);
             player.itemTime = 10;
             player.itemAnimation = 10;
 
@@ -182,23 +150,15 @@ namespace AerovelenceMod.Content.Projectiles
             
             if (getProgress(easingProgress) >= progressToKill)
             {
-                if (storedTimeAfterEnd <= 0)
+                if (storedTimeAfterEnd < 1)
                 {
                     player.itemTime = 0;
                     player.itemAnimation = 0;
-                    Projectile.active = false;
+					Projectile.Kill();
+					return;
                 }
                 storedTimeAfterEnd--;
-
             }
-            //Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.PortalBoltTrail);
-            //d.noGravity = true;
-
-        }
-
-        public void BaseDrawing()
-        {
-
         }
 
         //input will be from 0-1
@@ -210,18 +170,14 @@ namespace AerovelenceMod.Content.Projectiles
 
             //easeInOutExpo
             if (x <= 0.5f)
-            {
-                toReturn = (float)(Math.Pow(2, (16 * x) - 8)) / 2;
-            }
+                toReturn = (float)Math.Pow(2, (16 * x) - 8) * 0.5f;
             else if (x > 0.5)
-            {
-                toReturn = (float)(2 - ((Math.Pow(2, (-16 * x) + 8)))) / 2;
-            }
+                toReturn = (float)(2 - Math.Pow(2, (-16 * x) + 8)) * 0.5f;
 
             //post 0.5
-            if (x == 0)
+            if (x <= 0)
                 toReturn = 0;
-            if (x == 1)
+            if (x >= 1)
                 toReturn = 1;
 
             return toReturn;
