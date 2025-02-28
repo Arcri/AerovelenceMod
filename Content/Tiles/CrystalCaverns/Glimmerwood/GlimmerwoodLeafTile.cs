@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(061, 079, 110));
 			DustType = 59;
-			HitSound = SoundID.Tink;
+			HitSound = SoundID.Grass;
         }
     }
 

@@ -1,4 +1,5 @@
 "Keybinds.Armor Set Bonus.DisplayName": Armor Set Bonus
+UI.SmallWorldWarning: "[c/FF0000:⚠ SMALL WORLDS ARE NOT SUPPORTED BY AEROVELENCE! ⚠]"
 
 Biomes: {
 	ZonePlayer: {
@@ -818,6 +819,16 @@ Items: {
 		DisplayName: H2 O Caliber
 		Tooltip: ""
 	}
+
+	CrystalTumblerRelicItem: {
+		DisplayName: Crystal Tumbler Relic Item
+		Tooltip: ""
+	}
+
+	CyvercryRelicItem: {
+		DisplayName: Cyvercry Relic Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -854,6 +865,11 @@ NPCs: {
 
 	CrystalTumbler2.DisplayName: Crystal Tumbler2
 	MiniMoth.DisplayName: Mini Moth
+	CaveSlime.DisplayName: Cave Slime
+	CrystalSlime.DisplayName: Crystal Slime
+	TumblerockMedium.DisplayName: Tumblerock Medium
+	TumblerockSmall.DisplayName: Tumblerock Small
+	Sapper.DisplayName: Sapper
 }
 
 Projectiles: {
@@ -1214,6 +1230,7 @@ Projectiles: {
 	RockShard.DisplayName: Rock Shard
 	H2OCaliberHeldProjectile.DisplayName: H2 O Caliber Held Projectile
 	H2OBubble.DisplayName: H2 O Bubble
+	SapperGasCloud.DisplayName: Sapper Gas Cloud
 }
 
 Configs: {

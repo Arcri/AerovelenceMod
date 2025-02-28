@@ -1007,7 +1007,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             if (lightningData == null || !lightningData.Initialized)
             {
                 FindTargetPosition();
-                lightningData = new LightningUtility.LightningData(Projectile);
+                lightningData = new LightningData(Projectile, LightningStyle.Smooth);
                 LightningUtility.InitializeBetweenPoints(
                     lightningData,
                     Projectile.Center,
