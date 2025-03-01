@@ -1,7 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AerovelenceMod.Content.Biomes;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -10,7 +14,16 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         private int frameVariant;
         private bool initializedFrames = false;
 
-        public override void SetStaticDefaults() => Main.npcFrameCount[Type] = 2;
+        public override void SetStaticDefaults()
+        {
+            Main.npcFrameCount[Type] = 2;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
+            {
+                Position = new Vector2(0f, 8f),
+                PortraitPositionXOverride = 0f
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
+        }
         public override void SetDefaults()
         {
             NPC.width = 26;
@@ -31,6 +44,23 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath44;
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                new FlavorTextBestiaryInfoElement("These smaller tumblers come in many different shapes and sizes. They are able to grow to massive sizes, and have magnetic properties.")
+            });
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+            {
+                return SpawnCondition.OverworldNightMonster.Chance;
+            }
+            return 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -85,6 +115,23 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath44;
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                new FlavorTextBestiaryInfoElement("These smaller tumblers come in many different shapes and sizes. They are able to grow to massive sizes, and have magnetic properties.")
+            });
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+            {
+                return SpawnCondition.OverworldNightMonster.Chance * 0.9f;
+            }
+            return 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)

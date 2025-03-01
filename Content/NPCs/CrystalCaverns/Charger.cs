@@ -1,20 +1,30 @@
+using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 
-namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
+namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
-    public class MiniMoth : ModNPC
+    public class Charger : ModNPC
     {
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 10;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
+            {
+                Position = new Vector2(0f, 8f),
+                PortraitPositionXOverride = 0f
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void SetDefaults()
@@ -31,7 +41,26 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             NPC.aiStyle = -1;
             NPC.damage = 5;
             AIType = -1;
+
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type };
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                new FlavorTextBestiaryInfoElement("A smaller, younger version of the lightning moth variety. Really enjoys blue light, which is abundant in its environment.")
+            });
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) && !Main.dayTime)
+            {
+                return SpawnCondition.OverworldNightMonster.Chance;
+            }
+            return 0f;
+        }
+
 
         private int frame;
 
@@ -141,7 +170,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/CrystalTumbler/MiniMoth").Value;
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/CrystalCaverns/Charger_Glow").Value;
 
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
@@ -179,16 +208,16 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
-            Texture2D texture2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/CrystalTumbler/MiniMoth").Value;
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             Vector2 drawPosition = NPC.Center - Main.screenPosition + new Vector2(0f, NPC.gfxOffY);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             spriteBatch.Draw(texture, drawPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
-            spriteBatch.Draw(texture2, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
+            
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
         }
     }
 }

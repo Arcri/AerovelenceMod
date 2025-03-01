@@ -16,6 +16,11 @@ Biomes: {
 		DisplayName: Crystal Caverns Underground Biome
 		TownNPCDialogueName: the Crystal Caverns Underground Biome
 	}
+
+	CrystalFieldsBiome: {
+		DisplayName: Crystal Fields Biome
+		TownNPCDialogueName: the Crystal Fields Biome
+	}
 }
 
 Dialogue: {
@@ -829,6 +834,11 @@ Items: {
 		DisplayName: Cyvercry Relic Item
 		Tooltip: ""
 	}
+
+	CrystalGrassDevItem: {
+		DisplayName: Crystal Grass Dev Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -870,6 +880,12 @@ NPCs: {
 	TumblerockMedium.DisplayName: Tumblerock Medium
 	TumblerockSmall.DisplayName: Tumblerock Small
 	Sapper.DisplayName: Sapper
+	Condurtle.DisplayName: Condurtle
+	Charger.DisplayName: Charger
+	Commander.DisplayName: Commander
+	CrystalBat.DisplayName: Crystal Bat
+	ElectricTetra.DisplayName: Electric Tetra
+	Lumurker.DisplayName: Lumurker
 }
 
 Projectiles: {
@@ -1231,6 +1247,10 @@ Projectiles: {
 	H2OCaliberHeldProjectile.DisplayName: H2 O Caliber Held Projectile
 	H2OBubble.DisplayName: H2 O Bubble
 	SapperGasCloud.DisplayName: Sapper Gas Cloud
+	Conductor.DisplayName: Conductor
+	Pylon.DisplayName: Pylon
+	CondurtleConductor.DisplayName: Condurtle Conductor
+	CondurtlePylon.DisplayName: Condurtle Pylon
 }
 
 Configs: {

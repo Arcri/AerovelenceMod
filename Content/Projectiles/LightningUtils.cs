@@ -37,10 +37,37 @@ namespace AerovelenceMod.Content.Projectiles
             public float NoiseFrequency = 0.5f;
 
             public Projectile Projectile;
+            public NPC Npc;
 
             public LightningData(Projectile projectile, LightningStyle style = LightningStyle.Default)
             {
                 Projectile = projectile;
+                Style = style;
+
+                switch (Style)
+                {
+                    case LightningStyle.Jagged:
+                        DisplacementIntensity = 0.5f;
+                        NoiseFrequency = 10f;
+                        break;
+                    case LightningStyle.Smooth:
+                        DisplacementIntensity = 0.5f;
+                        NoiseFrequency = 0.3f;
+                        break;
+                    case LightningStyle.Chaotic:
+                        DisplacementIntensity = 3.5f;
+                        NoiseFrequency = 1.8f;
+                        break;
+                    default:
+                        DisplacementIntensity = 1.0f;
+                        NoiseFrequency = 0.5f;
+                        break;
+                }
+            }
+
+            public LightningData(NPC npc, LightningStyle style = LightningStyle.Default)
+            {
+                Npc = npc;
                 Style = style;
 
                 switch (Style)
@@ -88,7 +115,7 @@ namespace AerovelenceMod.Content.Projectiles
         /// <summary>
         /// Initializes the main lightning bolt based on the projectile's position and velocity.
         /// </summary>
-        public static void Initialize(LightningData data)
+        public static void InitializeProjectiles(LightningData data)
         {
             data.SegmentPositions = new Vector2[data.MaxSegments];
             data.SegmentOffsets = new float[data.MaxSegments];
@@ -102,6 +129,28 @@ namespace AerovelenceMod.Content.Projectiles
             for (int i = 0; i < data.MaxSegments; i++)
             {
                 data.SegmentPositions[i] = data.Projectile.Center + direction * (segmentLength * i);
+                data.SegmentOffsets[i] = 0f;
+            }
+            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
+        }
+
+        /// <summary>
+        /// Initializes the main lightning bolt based on the NPC's position and velocity.
+        /// </summary>
+        public static void InitializeNPCs(LightningData data)
+        {
+            data.SegmentPositions = new Vector2[data.MaxSegments];
+            data.SegmentOffsets = new float[data.MaxSegments];
+            data.Branches = [];
+
+            Vector2 direction = data.TargetPosition - data.Npc.Center;
+            data.DistanceToTarget = direction.Length();
+            float segmentLength = data.DistanceToTarget / (data.MaxSegments - 1);
+            direction.Normalize();
+
+            for (int i = 0; i < data.MaxSegments; i++)
+            {
+                data.SegmentPositions[i] = data.Npc.Center + direction * (segmentLength * i);
                 data.SegmentOffsets[i] = 0f;
             }
             SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });

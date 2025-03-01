@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
+﻿using AerovelenceMod.Content.Biomes;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -7,6 +8,7 @@ using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -62,14 +64,32 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.behindTiles = true;
             // Banner = Item.NPCtoBanner(NPCID.Sapper);
             // BannerItem = Item.BannerToItem(Banner);
+
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            bestiaryEntry.Info.AddRange([BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.UndergroundSnow, //need to replace with CC
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 new FlavorTextBestiaryInfoElement("A flower-like creature that sways with the currents of the Crystal Caverns. Its benign appearance belies its aggressive nature.")
-            ]);
+            });
         }
+
+
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+            {
+                if (!WorldGen.SolidTile(spawnInfo.SpawnTileX, spawnInfo.SpawnTileY - 1))
+                {
+                    return 0f;
+                }
+                return SpawnCondition.OverworldNightMonster.Chance;
+            }
+            return 0f;
+        }
+
 
         public override void AI()
         {

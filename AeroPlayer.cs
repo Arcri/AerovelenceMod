@@ -37,13 +37,15 @@ namespace AerovelenceMod
 			}
 		}
 
-		public override void PreUpdate()
-		{
-			PlatformTimer--;
-		}
+        public override void PreUpdate()
+        {
+            WaterGlowManager.UpdateWaterGlow();
+            PlatformTimer--;
 
-		#region Usestyle Code
-		public object useStyleData;
+        }
+
+        #region Usestyle Code
+        public object useStyleData;
 		public int useStyleInt;
 
 		public int fireballFrame;

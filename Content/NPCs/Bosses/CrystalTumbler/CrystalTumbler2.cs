@@ -24,6 +24,7 @@ using AerovelenceMod.Content.Projectiles;
 using static AerovelenceMod.Content.Projectiles.LightningUtility;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using AerovelenceMod.Content.NPCs.CrystalCaverns;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -1361,7 +1362,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.NewText("Spawn Moth");
 
             int moth = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y,
-                ModContent.NPCType<MiniMoth>());
+                ModContent.NPCType<Charger>());
         }
         private void TriggerBoundarySlamEffects()
         {
