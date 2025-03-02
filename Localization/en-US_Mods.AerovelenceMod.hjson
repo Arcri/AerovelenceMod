@@ -93,6 +93,21 @@ Buffs: {
 		DisplayName: Glory
 		Description: Increased mining and movement speed
 	}
+
+	SpecterWoundedDebuff: {
+		DisplayName: Specter Wounded Debuff
+		Description: Mods.AerovelenceMod.Buffs.SpecterWoundedDebuff.Description
+	}
+
+	PhanticWhipDebuff: {
+		DisplayName: Phantic Whip Debuff
+		Description: Mods.AerovelenceMod.Buffs.PhanticWhipDebuff.Description
+	}
+
+	RedShadeCurse: {
+		DisplayName: Red Shade Curse
+		Description: Mods.AerovelenceMod.Buffs.RedShadeCurse.Description
+	}
 }
 
 Items: {
@@ -839,6 +854,101 @@ Items: {
 		DisplayName: Crystal Grass Dev Item
 		Tooltip: ""
 	}
+
+	SlateChestplate: {
+		DisplayName: Slate Chestplate
+		Tooltip: ""
+	}
+
+	SlateHelmet: {
+		DisplayName: Slate Helmet
+		Tooltip: ""
+	}
+
+	SlateLeggings: {
+		DisplayName: Slate Leggings
+		Tooltip: ""
+	}
+
+	PhanticChestplate: {
+		DisplayName: Phantic Chestplate
+		Tooltip: ""
+	}
+
+	PhanticGreaves: {
+		DisplayName: Phantic Greaves
+		Tooltip: ""
+	}
+
+	PhanticHat: {
+		DisplayName: Phantic Hat
+		Tooltip: ""
+	}
+
+	PhanticHelmet: {
+		DisplayName: Phantic Helmet
+		Tooltip: ""
+	}
+
+	PhanticHood: {
+		DisplayName: Phantic Hood
+		Tooltip: ""
+	}
+
+	PhanticMask: {
+		DisplayName: Phantic Mask
+		Tooltip: ""
+	}
+
+	Soulerang: {
+		DisplayName: Soulerang
+		Tooltip: ""
+	}
+
+	Specter: {
+		DisplayName: Specter
+		Tooltip: ""
+	}
+
+	PhanticWhip: {
+		DisplayName: Phantic Whip
+		Tooltip: ""
+	}
+
+	PhanticAxe: {
+		DisplayName: Phantic Axe
+		Tooltip: ""
+	}
+
+	PhanticPickaxe: {
+		DisplayName: Phantic Pickaxe
+		Tooltip: ""
+	}
+
+	RedShade: {
+		DisplayName: Red Shade
+		Tooltip: ""
+	}
+
+	PhanticBar: {
+		DisplayName: Phantic Bar
+		Tooltip: ""
+	}
+
+	PhanticOre: {
+		DisplayName: Phantic Ore
+		Tooltip: ""
+	}
+
+	PhanticSword: {
+		DisplayName: Phantic Sword
+		Tooltip: ""
+	}
+
+	CrimtaneStaff: {
+		DisplayName: Crimtane Staff
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1251,6 +1361,15 @@ Projectiles: {
 	Pylon.DisplayName: Pylon
 	CondurtleConductor.DisplayName: Condurtle Conductor
 	CondurtlePylon.DisplayName: Condurtle Pylon
+	SoulerangProjectile.DisplayName: Soulerang Projectile
+	SpecterStabProjectile.DisplayName: Specter Stab Projectile
+	SpecterSwingProjectile.DisplayName: Specter Swing Projectile
+	PhanticSoulProjectile.DisplayName: Phantic Soul Projectile
+	PhanticWhipProjectile.DisplayName: Phantic Whip Projectile
+	MiniRedShadeSoul.DisplayName: Mini Red Shade Soul
+	RedShadeSoul.DisplayName: Red Shade Soul
+	BloodDamageZone.DisplayName: Blood Damage Zone
+	CrimtaneStaffProjectile.DisplayName: Crimtane Staff Projectile
 }
 
 Configs: {
