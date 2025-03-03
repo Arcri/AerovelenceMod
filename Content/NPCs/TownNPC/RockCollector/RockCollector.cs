@@ -361,8 +361,10 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 
                 .Add(ItemID.ChlorophyteOre, Condition.DownedGolem)
 
-                .Add(new Item(ModContent.ItemType<ShotgunAxe>()) { shopCustomPrice = Item.buyPrice(copper: 15) })
-                .Add<ShotgunAxe>(Condition.IsNpcShimmered);
+                .Add(new Item(ModContent.ItemType<ElectricBlueSolution>()), Condition.DownedMechBossAny);
+
+                //.Add(new Item(ModContent.ItemType<ShotgunAxe>()) { shopCustomPrice = Item.buyPrice(copper: 15) })
+                //.Add<ShotgunAxe>(Condition.IsNpcShimmered);
 
             npcShop.Register();
         }

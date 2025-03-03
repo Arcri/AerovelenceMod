@@ -48,7 +48,9 @@ namespace AerovelenceMod
 		//Mod Support
 		public bool FargosModMutant;
 
-		internal static AerovelenceMod Instance { get; set; }
+        public const string AssetPath = $"{nameof(AerovelenceMod)}/Assets/";
+
+        internal static AerovelenceMod Instance { get; set; }
         public AerovelenceMod()
         {
             Instance = this;

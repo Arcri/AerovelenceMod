@@ -974,6 +974,11 @@ Items: {
 		DisplayName: Light Of The Ancients
 		Tooltip: ""
 	}
+
+	ElectricBlueSolution: {
+		DisplayName: Electric Blue Solution
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1403,6 +1408,7 @@ Projectiles: {
 	DynamiteExplosion.DisplayName: Dynamite Explosion
 	LightOfTheAncientsBullet.DisplayName: Light Of The Ancients Bullet
 	LightOfTheAncientsProjectile.DisplayName: Light Of The Ancients Projectile
+	ElectricBlueSolutionProjectile.DisplayName: Electric Blue Solution Projectile
 }
 
 Configs: {
