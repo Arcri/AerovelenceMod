@@ -1,4 +1,4 @@
-using AerovelenceMod.Common.Globals.SkillStrikes;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;

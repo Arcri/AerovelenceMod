@@ -108,6 +108,11 @@ Buffs: {
 		DisplayName: Red Shade Curse
 		Description: Mods.AerovelenceMod.Buffs.RedShadeCurse.Description
 	}
+
+	NerveFlagellatorDebuff: {
+		DisplayName: Nerve Flagellator Debuff
+		Description: Mods.AerovelenceMod.Buffs.NerveFlagellatorDebuff.Description
+	}
 }
 
 Items: {
@@ -949,6 +954,26 @@ Items: {
 		DisplayName: Crimtane Staff
 		Tooltip: ""
 	}
+
+	NerveFlagellator: {
+		DisplayName: Nerve Flagellator
+		Tooltip: ""
+	}
+
+	MeteorCrossbow: {
+		DisplayName: Meteor Crossbow
+		Tooltip: ""
+	}
+
+	ExtinguishedDynamite: {
+		DisplayName: Extinguished Dynamite
+		Tooltip: ""
+	}
+
+	LightOfTheAncients: {
+		DisplayName: Light Of The Ancients
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1370,6 +1395,14 @@ Projectiles: {
 	RedShadeSoul.DisplayName: Red Shade Soul
 	BloodDamageZone.DisplayName: Blood Damage Zone
 	CrimtaneStaffProjectile.DisplayName: Crimtane Staff Projectile
+	NerveCreeper.DisplayName: Nerve Creeper
+	NerveFlagellatorProjectile.DisplayName: Nerve Flagellator Projectile
+	MeteorArrow.DisplayName: Meteor Arrow
+	HeldMeteorCrossbow.DisplayName: Held Meteor Crossbow
+	MeteorCrossbowHeld.DisplayName: Meteor Crossbow Held
+	DynamiteExplosion.DisplayName: Dynamite Explosion
+	LightOfTheAncientsBullet.DisplayName: Light Of The Ancients Bullet
+	LightOfTheAncientsProjectile.DisplayName: Light Of The Ancients Projectile
 }
 
 Configs: {
