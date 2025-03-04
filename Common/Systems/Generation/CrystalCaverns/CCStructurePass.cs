@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
@@ -146,6 +147,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new(ItemID.GoldCoin, 1, 2)
                 };
 
+                WorldGen.noTileActions = false;
+
                 StructureStamper.LoadStructure(
                     new Vector2(
                         mainPass.TumblerTunnelEnd.X - 60 + 60 * mainPass.TumblerArenaPolarity,
@@ -203,6 +206,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
                 }
 
+                PlaceRandomCaveHouses();
+
                 /*const int TOTAL_SHRINES = 101;
                 for (int i = 0; i < TOTAL_SHRINES; i++)
                 {
@@ -219,6 +224,22 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             finally
             {
                 WorldGen.noTileActions = oldNoTileActions;
+            }
+        }
+
+        private void PlaceRandomCaveHouses()
+        {
+            if (_validPoints == null || _validPoints.Count == 0)
+                return;
+
+            int houseCount = WorldGen.genRand.Next(5, 11);
+            for (int i = 0; i < houseCount; i++)
+            {
+                if (_validPoints.Count == 0) break;
+                int pickIndex = WorldGen.genRand.Next(_validPoints.Count);
+                Point chosen = _validPoints[pickIndex];
+                _validPoints.RemoveAt(pickIndex);
+                HouseGenerator.GenerateCaveHouse(chosen.X, chosen.Y);
             }
         }
 
@@ -310,7 +331,6 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             AeroStructure sizeCheck = StructureStamper.LoadStructure(Vector2.Zero, name, placeStructure: false, checkIfProtected: false);
             if (sizeCheck == AeroStructure.Empty)
                 return AeroStructure.Empty;
-
             int structureWidth = sizeCheck.Width;
             int structureHeight = sizeCheck.Height;
             HashSet<Point> triedPositions = [];
@@ -326,6 +346,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 triedPositions.Add(randomPoint);
                 Vector2 position = new( randomPoint.X - structureWidth / 2, randomPoint.Y - structureHeight / 2 );
+
+                WorldGen.noTileActions = false;
+
+
                 AeroStructure structure = StructureStamper.LoadStructure(
                     position,
                     name,

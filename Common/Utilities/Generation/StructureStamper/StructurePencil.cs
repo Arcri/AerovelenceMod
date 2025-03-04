@@ -30,11 +30,22 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
         {
             if (player.altFunctionUse == 2)
             {
-                PlaceStructureWithChest(player);
+                //PlaceStructureWithChest(player);
             }
             else
             {
-                // StructureStamper.LoadStructure(player.position.ToTileCoordinates().ToVector2(), "test");
+                AeroStructure structure = StructureStamper.LoadStructure(Vector2.Zero, "librarylightright", placeStructure: false, checkIfProtected: false);
+                if (structure != AeroStructure.Empty)
+                {
+                    Vector2 position = player.position.ToTileCoordinates().ToVector2();
+                    position.X -= structure.Width / 2;
+                    position.Y -= structure.Height / 2;
+                    structure = StructureStamper.LoadStructure(position, "librarylightright", placeStructure: true, checkIfProtected: true);
+                    if (structure != AeroStructure.Empty)
+                    {
+                        structure.ProtectStructure();
+                    }
+                }
             }
 
             return true;

@@ -62,6 +62,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLavaDeath[Type] = false;
             Main.tileShine2[Type] = true;
             Main.tileShine[Type] = 900;
+
             /*TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.WaterPlacement = LiquidPlacement.Allowed;

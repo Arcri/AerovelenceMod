@@ -685,6 +685,11 @@ Items: {
 		DisplayName: Crystal Crescent
 		Tooltip: ""
 	}
+
+	GlimmerwoodPlankedWallItem: {
+		DisplayName: Glimmerwood Planked Wall Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
