@@ -34,14 +34,14 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
             int maxX = (int)MathHelper.Max(point1.X, point2.X);
             int maxY = (int)MathHelper.Max(point1.Y, point2.Y);
 
-            List<StructureData> structure = [];
-            HashSet<Vector2> processedTiles = [];
+            List<StructureData> structure = new List<StructureData>();
+            HashSet<Vector2> processedTiles = new HashSet<Vector2>();
 
             for (int x = minX; x <= maxX; x++)
             {
                 for (int y = minY; y <= maxY; y++)
                 {
-                    Vector2 tilePosition = new(x, y);
+                    Vector2 tilePosition = new Vector2(x, y);
 
                     if (processedTiles.Contains(tilePosition))
                         continue;
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                     ModTile modTile = TileLoader.GetTile(tile.TileType);
                     ModWall modWall = WallLoader.GetWall(tile.WallType);
 
-                    StructureData data = new()
+                    StructureData data = new StructureData
                     {
                         X = x - minX,
                         Y = y - minY,
@@ -99,7 +99,6 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         {
                             processedTiles.Add(tilePosition);
                         }
-
                     }
                     else
                     {
@@ -118,8 +117,8 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 
             Directory.CreateDirectory(directoryPath);
 
-            using (FileStream fs = new(path, FileMode.Create))
-            using (BinaryWriter writer = new(fs))
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            using (BinaryWriter writer = new BinaryWriter(fs))
             {
                 writer.Write(structure.Count);
                 writer.Write(width);
@@ -155,222 +154,6 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
             Main.NewText($"Structure '{structureName}' saved to {path} with size {width}x{height}");
         }
 
-
-        private static ushort GetTileType(StructureData data)
-        {
-            if (data.ModName == "Terraria")
-            {
-                return Convert.ToUInt16(data.TileName);
-            }
-
-            Mod modTile = ModLoader.GetMod(data.ModName);
-            return modTile?.Find<ModTile>(data.TileName)?.Type ?? 0;
-        }
-
-        private static void ProcessTile(Tile tile, StructureData data, int x, int y, HashSet<Vector2> placedTiles, List<Vector2> tilesToFrame)
-        {
-            Vector2 tilePosition = new(x, y);
-
-            if (placedTiles.Contains(tilePosition))
-                return;
-
-            ushort tileType = GetTileType(data);
-            ushort wallType = GetWallType(data);
-            if (tileType == ModContent.TileType<TheTile>())
-                return;
-            ushort currentWallType = tile.WallType;
-            byte currentWallColor = tile.WallColor;
-
-            if (data.TileFrameImportant)
-            {
-                TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);
-                if (tileData != null)
-                {
-                    for (int dx = 0; dx < tileData.Width; dx++)
-                    {
-                        for (int dy = 0; dy < tileData.Height; dy++)
-                        {
-                            Tile targetTile = Main.tile[x + dx, y + dy];
-                            ushort targetCurrentWall = targetTile.WallType;
-                            byte targetCurrentWallColor = targetTile.WallColor;
-                            targetTile.ClearTile();
-                            if (wallType == 0)
-                            {
-                                targetTile.WallType = targetCurrentWall;
-                                targetTile.WallColor = targetCurrentWallColor;
-                            }
-                        }
-                    }
-                    int frameX = data.TileFrameX % (tileData.Width * 18);
-                    int frameY = data.TileFrameY % (tileData.Height * 18);
-                    if (frameX == 0 && frameY == 0)
-                    {
-                        for (int dx = 0; dx < tileData.Width; dx++)
-                        {
-                            for (int dy = 0; dy < tileData.Height; dy++)
-                            {
-                                Vector2 offsetPosition = new(x + dx, y + dy);
-                                Tile targetTile = Main.tile[x + dx, y + dy];
-
-                                targetTile.HasTile = true;
-                                targetTile.TileType = tileType;
-                                targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
-                                targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
-                                targetTile.Slope = SlopeType.Solid;
-                                targetTile.IsHalfBlock = false;
-                                if (wallType != 0)
-                                {
-                                    targetTile.WallType = wallType;
-                                    targetTile.WallColor = data.WallColor;
-                                    //WorldGen.SquareWallFrame(x + dx, y + dy, false);
-                                }
-
-                                placedTiles.Add(offsetPosition);
-                                tilesToFrame.Add(offsetPosition);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    tile.ClearTile();
-                    if (wallType == 0)
-                    {
-                        tile.WallType = currentWallType;
-                        tile.WallColor = currentWallColor;
-                    }
-
-                    tile.HasTile = data.IsActive;
-                    tile.TileType = tileType;
-                    tile.TileFrameX = data.TileFrameX;
-                    tile.TileFrameY = data.TileFrameY;
-                    tile.Slope = SlopeType.Solid;
-                    tile.IsHalfBlock = false;
-
-                    placedTiles.Add(tilePosition);
-                    tilesToFrame.Add(tilePosition);
-                }
-            }
-            else
-            {
-                tile.ClearTile();
-                if (wallType == 0)
-                {
-                    tile.WallType = currentWallType;
-                    tile.WallColor = currentWallColor;
-                }
-
-                tile.HasTile = data.IsActive;
-                tile.TileType = tileType;
-                tile.TileFrameX = data.TileFrameX;
-                tile.TileFrameY = data.TileFrameY;
-                tile.Slope = (SlopeType)data.Slope;
-                tile.IsHalfBlock = data.IsHalfBlock;
-
-                placedTiles.Add(tilePosition);
-                tilesToFrame.Add(tilePosition);
-            }
-
-            if (wallType != 0)
-            {
-                tile.WallType = wallType;
-                tile.WallColor = data.WallColor;
-                //WorldGen.SquareWallFrame(x, y, false);
-            }
-            tile.LiquidType = data.LiquidType;
-            tile.LiquidAmount = data.LiquidAmount;
-            tile.RedWire = data.HasRedWire;
-            tile.BlueWire = data.HasBlueWire;
-            tile.GreenWire = data.HasGreenWire;
-            tile.YellowWire = data.HasYellowWire;
-            tile.HasActuator = data.HasActuator;
-            tile.IsActuated = data.IsActuated;
-            tile.TileColor = data.TileColor;
-        }
-
-
-
-        private static void ProcessChestTile(int x, int y, StructureData data)
-        {
-            ushort tileType = GetTileType(data);
-            if (!TileID.Sets.BasicChest[tileType]) return;
-
-            TileObjectData tileData = TileObjectData.GetTileData(tileType, 0);
-            if (tileData == null) return;
-            ushort wallType = GetWallType(data);
-            Dictionary<Point, (ushort type, byte color)> existingWalls = new();
-            for (int dx = 0; dx < tileData.Width; dx++)
-            {
-                for (int dy = 0; dy < tileData.Height; dy++)
-                {
-                    Tile tile = Main.tile[x + dx, y + dy];
-                    existingWalls[new Point(dx, dy)] = (tile.WallType, tile.WallColor);
-                }
-            }
-            for (int dx = 0; dx < tileData.Width; dx++)
-            {
-                for (int dy = 0; dy < tileData.Height; dy++)
-                {
-                    Tile tile = Main.tile[x + dx, y + dy];
-                    tile.ClearTile();
-                    if (wallType != 0)
-                    {
-                        tile.WallType = wallType;
-                        tile.WallColor = data.WallColor;
-                    }
-                    else
-                    {
-                        var (type, color) = existingWalls[new Point(dx, dy)];
-                        tile.WallType = type;
-                        tile.WallColor = color;
-                    }
-                }
-            }
-            int chestIndex = WorldGen.PlaceChest(x, y, tileType, false, style: 0);
-            if (chestIndex != -1 && chestIndex < Main.chest.Length)
-            {
-                Main.chest[chestIndex] = new Chest
-                {
-                    x = x,
-                    y = y,
-                    item = new Item[40]
-                };
-
-                for (int slot = 0; slot < 40; slot++)
-                {
-                    Main.chest[chestIndex].item[slot] = new Item();
-                }
-            }
-            /*for (int dx = 0; dx < tileData.Width; dx++)
-            {
-                for (int dy = 0; dy < tileData.Height; dy++)
-                {
-                    WorldGen.TileFrame(x + dx, y + dy, false, false);
-                    if (wallType != 0)
-                    {
-                        WorldGen.SquareWallFrame(x + dx, y + dy, true);
-                    }
-                }
-            }*/
-        }
-
-
-        private static ushort GetWallType(StructureData data)
-        {
-            if (data.WallModName == "Terraria")
-            {
-                return Convert.ToUInt16(data.WallName);
-            }
-
-            Mod modWall = ModLoader.GetMod(data.WallModName);
-            return modWall?.Find<ModWall>(data.WallName)?.Type ?? 0;
-        }
-
-        public static AeroStructure LoadStructure(AeroStructure aeroStructure, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true, bool checkIfProtected = false)
-        {
-            return LoadStructure(aeroStructure.StartPosition, aeroStructure.Name, chestConfigs, placeStructure, checkIfProtected);
-        }
-
         public static AeroStructure LoadStructure(Vector2 startPosition, string structureName, List<ChestConfiguration> chestConfigs = null, bool placeStructure = true, bool checkIfProtected = false)
         {
             string assetPath = $"Common/Utilities/Generation/StructureStamper/Structures/{structureName}.dat";
@@ -378,15 +161,15 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
             int width = 0;
             AeroStructure aeroStructure;
 
-            List<StructureData> structure = [];
+            List<StructureData> structure = new List<StructureData>();
             Mod mod = ModLoader.GetMod("AerovelenceMod");
 
             byte[] structureBytes = mod.GetFileBytes(assetPath);
 
             try
             {
-                using (MemoryStream ms = new(structureBytes))
-                using (BinaryReader reader = new(ms))
+                using (MemoryStream ms = new MemoryStream(structureBytes))
+                using (BinaryReader reader = new BinaryReader(ms))
                 {
                     int count = reader.ReadInt32();
                     width = reader.ReadInt32();
@@ -394,7 +177,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                     aeroStructure = new AeroStructure(startPosition, width, height, structureName);
                     for (int i = 0; i < count; i++)
                     {
-                        StructureData data = new()
+                        StructureData data = new StructureData
                         {
                             X = reader.ReadInt32(),
                             Y = reader.ReadInt32(),
@@ -424,7 +207,6 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         structure.Add(data);
                     }
                 }
-
                 if (checkIfProtected && !aeroStructure.CanPlace())
                 {
                     return AeroStructure.Empty;
@@ -432,62 +214,51 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 
                 if (placeStructure)
                 {
-                    HashSet<Vector2> placedTiles = [];
-                    List<Vector2> tilesToFrame = [];
-                    List<StructureData> multiTiles = [];
-                    List<StructureData> normalTiles = [];
-                    List<StructureData> wallData = [];
-
-                    //tile sorting by type
+                    HashSet<Vector2> placedTiles = new HashSet<Vector2>();
+                    List<Vector2> tilesToFrame = new List<Vector2>();
+                    List<StructureData> multiTiles = new List<StructureData>();
+                    List<StructureData> normalTiles = new List<StructureData>();
+                    List<StructureData> wallData = new List<StructureData>();
                     foreach (StructureData data in structure)
                     {
-                        if (data.WallModName != "Terraria" || Convert.ToUInt16(data.WallName) != 0)
-                        {
-                            wallData.Add(data);
-                        }
+                        wallData.Add(data);
 
                         if (data.TileFrameImportant)
-                        {
                             multiTiles.Add(data);
-                        }
                         else
-                        {
                             normalTiles.Add(data);
-                        }
                     }
-
-                    //walls !!!
                     foreach (StructureData data in wallData)
                     {
-                        int x = (int)(startPosition.X + data.X);
-                        int y = (int)(startPosition.Y + data.Y);
+                        if (GetTileType(data) == ModContent.TileType<TheTile>())
+                            continue;
 
-                        ushort wallType = GetWallType(data);
-                        if (wallType != 0)
-                        {
-                            Tile tile = Main.tile[x, y];
-                            tile.WallType = wallType;
-                            tile.WallColor = data.WallColor;
-                            //WorldGen.SquareWallFrame(x, y, true);
-                        }
-                    }
-
-                    //normal tiles
-                    foreach (StructureData data in normalTiles)
-                    {
                         int x = (int)(startPosition.X + data.X);
                         int y = (int)(startPosition.Y + data.Y);
 
                         Tile tile = Main.tile[x, y];
-                        ushort tileType = GetTileType(data);
-
-                        if (tileType == ModContent.TileType<TheTile>())
+                        if (tile == null) continue;
+                        ushort wallType = GetWallType(data);
+                        tile.WallType = wallType;
+                        tile.WallColor = data.WallColor;
+                    }
+                    foreach (StructureData data in normalTiles)
+                    {
+                        int x = (int)(startPosition.X + data.X);
+                        int y = (int)(startPosition.Y + data.Y);
+                        if (GetTileType(data) == ModContent.TileType<TheTile>())
                             continue;
 
-                        tile.HasTile = data.IsActive;
-                        tile.TileType = tileType;
-                        tile.TileFrameX = data.TileFrameX;
-                        tile.TileFrameY = data.TileFrameY;
+                        Tile tile = Main.tile[x, y];
+                        tile.ClearTile();
+                        if (data.IsActive)
+                        {
+                            ushort tileType = GetTileType(data);
+                            tile.HasTile = true;
+                            tile.TileType = tileType;
+                            tile.TileFrameX = data.TileFrameX;
+                            tile.TileFrameY = data.TileFrameY;
+                        }
                         tile.LiquidType = data.LiquidType;
                         tile.LiquidAmount = data.LiquidAmount;
                         tile.IsHalfBlock = data.IsHalfBlock;
@@ -502,14 +273,11 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 
                         tilesToFrame.Add(new Vector2(x, y));
                     }
-
-                    //multitiles
                     foreach (StructureData data in multiTiles)
                     {
                         int x = (int)(startPosition.X + data.X);
                         int y = (int)(startPosition.Y + data.Y);
                         ushort tileType = GetTileType(data);
-
                         if (tileType == ModContent.TileType<TheTile>())
                             continue;
 
@@ -518,63 +286,53 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         {
                             int frameX = data.TileFrameX % (tileData.Width * 18);
                             int frameY = data.TileFrameY % (tileData.Height * 18);
-
                             if (frameX == 0 && frameY == 0)
                             {
-                                if (TileID.Sets.BasicChest[tileType])
+                                for (int dx = 0; dx < tileData.Width; dx++)
                                 {
-                                    for (int dx = 0; dx < tileData.Width; dx++)
+                                    for (int dy = 0; dy < tileData.Height; dy++)
                                     {
-                                        for (int dy = 0; dy < tileData.Height; dy++)
+                                        Tile targetTile = Main.tile[x + dx, y + dy];
+                                        targetTile.ClearTile();
+
+                                        if (data.IsActive)
                                         {
-                                            Tile targetTile = Main.tile[x + dx, y + dy];
-                                            ushort existingWall = targetTile.WallType;
-                                            byte existingWallColor = targetTile.WallColor;
-                                            targetTile.TileType = 0;
-                                            targetTile.TileFrameX = 0;
-                                            targetTile.TileFrameY = 0;
-                                            targetTile.HasTile = false;
-                                            targetTile.IsHalfBlock = false;
-                                            targetTile.Slope = SlopeType.Solid;
-                                            targetTile.WallType = existingWall;
-                                            targetTile.WallColor = existingWallColor;
                                             targetTile.HasTile = true;
                                             targetTile.TileType = tileType;
                                             targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
                                             targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
-
-                                            tilesToFrame.Add(new Vector2(x + dx, y + dy));
                                         }
-                                    }
-                                    int chestIndex = Chest.CreateChest(x, y);
-                                    if (chestIndex == -1)
-                                    {
-                                        continue;
+                                        targetTile.WallType = GetWallType(data);
+                                        targetTile.WallColor = data.WallColor;
+                                        targetTile.LiquidType = data.LiquidType;
+                                        targetTile.LiquidAmount = data.LiquidAmount;
+                                        targetTile.RedWire = data.HasRedWire;
+                                        targetTile.BlueWire = data.HasBlueWire;
+                                        targetTile.GreenWire = data.HasGreenWire;
+                                        targetTile.YellowWire = data.HasYellowWire;
+                                        targetTile.HasActuator = data.HasActuator;
+                                        targetTile.IsActuated = data.IsActuated;
+                                        targetTile.TileColor = data.TileColor;
+                                        targetTile.IsHalfBlock = data.IsHalfBlock;
+                                        targetTile.Slope = (SlopeType)data.Slope;
+
+                                        tilesToFrame.Add(new Vector2(x + dx, y + dy));
                                     }
                                 }
-                                else
+                                if (TileID.Sets.BasicChest[tileType])
                                 {
-                                    for (int dx = 0; dx < tileData.Width; dx++)
+                                    int chestIndex = Chest.CreateChest(x, y);
+                                    if (chestIndex != -1 && chestIndex < Main.chest.Length)
                                     {
-                                        for (int dy = 0; dy < tileData.Height; dy++)
+                                        Main.chest[chestIndex] = new Chest
                                         {
-                                            Tile targetTile = Main.tile[x + dx, y + dy];
-                                            ushort existingWall = targetTile.WallType;
-                                            byte existingWallColor = targetTile.WallColor;
-                                            targetTile.TileType = 0;
-                                            targetTile.TileFrameX = 0;
-                                            targetTile.TileFrameY = 0;
-                                            targetTile.HasTile = false;
-                                            targetTile.IsHalfBlock = false;
-                                            targetTile.Slope = SlopeType.Solid;
-                                            targetTile.WallType = existingWall;
-                                            targetTile.WallColor = existingWallColor;
-                                            targetTile.HasTile = true;
-                                            targetTile.TileType = tileType;
-                                            targetTile.TileFrameX = (short)(data.TileFrameX + dx * 18);
-                                            targetTile.TileFrameY = (short)(data.TileFrameY + dy * 18);
-
-                                            tilesToFrame.Add(new Vector2(x + dx, y + dy));
+                                            x = x,
+                                            y = y,
+                                            item = new Item[40]
+                                        };
+                                        for (int slot = 0; slot < 40; slot++)
+                                        {
+                                            Main.chest[chestIndex].item[slot] = new Item();
                                         }
                                     }
                                 }
@@ -583,30 +341,94 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         else
                         {
                             Tile tile = Main.tile[x, y];
-                            tile.HasTile = false;
-                            tile.HasTile = true;
-                            tile.TileType = tileType;
-                            tile.TileFrameX = data.TileFrameX;
-                            tile.TileFrameY = data.TileFrameY;
-                            tile.Slope = SlopeType.Solid;
-                            tile.IsHalfBlock = false;
+                            tile.ClearTile();
+
+                            if (data.IsActive)
+                            {
+                                tile.HasTile = true;
+                                tile.TileType = tileType;
+                                tile.TileFrameX = data.TileFrameX;
+                                tile.TileFrameY = data.TileFrameY;
+                            }
+                            tile.WallType = GetWallType(data);
+                            tile.WallColor = data.WallColor;
+                            tile.LiquidType = data.LiquidType;
+                            tile.LiquidAmount = data.LiquidAmount;
+                            tile.RedWire = data.HasRedWire;
+                            tile.BlueWire = data.HasBlueWire;
+                            tile.GreenWire = data.HasGreenWire;
+                            tile.YellowWire = data.HasYellowWire;
+                            tile.HasActuator = data.HasActuator;
+                            tile.IsActuated = data.IsActuated;
+                            tile.TileColor = data.TileColor;
+                            tile.IsHalfBlock = data.IsHalfBlock;
+                            tile.Slope = (SlopeType)data.Slope;
 
                             tilesToFrame.Add(new Vector2(x, y));
                         }
                     }
-                    foreach (Vector2 position in tilesToFrame.Distinct())
+                    foreach (Vector2 pos in tilesToFrame.Distinct())
                     {
-                        Framing.GetTileSafely((int)position.X, (int)position.Y).Clear(Terraria.DataStructures.TileDataType.Slope);
+                        WorldGen.SquareTileFrame((int)pos.X, (int)pos.Y);
                     }
                 }
 
+                int placedLeft = (int)startPosition.X;
+                int placedTop = (int)startPosition.Y;
+                int placedRight = placedLeft + width;
+                int placedBottom = placedTop + height;
+
+                int totalWiresRed = 0;
+                int totalWiresGreen = 0;
+                int totalWiresBlue = 0;
+                int totalWiresYellow = 0;
+
+                for (int ix = placedLeft; ix < placedRight; ix++)
+                {
+                    for (int iy = placedTop; iy < placedBottom; iy++)
+                    {
+                        Tile t = Main.tile[ix, iy];
+                        if (t == null) continue;
+
+                        if (t.RedWire) totalWiresRed++;
+                        if (t.GreenWire) totalWiresGreen++;
+                        if (t.BlueWire) totalWiresBlue++;
+                        if (t.YellowWire) totalWiresYellow++;
+                    }
+                }
+                string wireMessage = $"DEBUG: Placed structure '{structureName}' => " +
+                    $"Red:{totalWiresRed} Green:{totalWiresGreen} Blue:{totalWiresBlue} Yellow:{totalWiresYellow}";
+                ModContent.GetInstance<AerovelenceMod>()?.Logger.Info(wireMessage);
+
                 return aeroStructure;
             }
-
             catch (Exception ex)
             {
                 throw new FileNotFoundException($"Structure file {structureName}.dat could not be found or loaded.", ex);
             }
+        }
+
+
+        private static ushort GetTileType(StructureData data)
+        {
+            if (data.ModName == "Terraria")
+            {
+                return Convert.ToUInt16(data.TileName);
+            }
+
+            Mod modTile = ModLoader.GetMod(data.ModName);
+            return modTile?.Find<ModTile>(data.TileName)?.Type ?? 0;
+        }
+
+        private static ushort GetWallType(StructureData data)
+        {
+            if (data.WallModName == "Terraria")
+            {
+                return Convert.ToUInt16(data.WallName);
+            }
+
+            Mod modWall = ModLoader.GetMod(data.WallModName);
+            return modWall?.Find<ModWall>(data.WallName)?.Type ?? 0;
         }
 
         [Serializable]
