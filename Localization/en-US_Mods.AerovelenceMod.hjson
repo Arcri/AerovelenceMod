@@ -1023,6 +1023,8 @@ Projectiles: {
 	PlatformProjectile.DisplayName: Platform Projectile
 	LightningProjectile.DisplayName: Lightning Projectile
 	CrystalCrescentProj.DisplayName: Crystal Crescent Proj
+	CrystalCrescentSwingProj.DisplayName: Crystal Crescent Swing Proj
+	CrystalCrescentThrowProj.DisplayName: Crystal Crescent Throw Proj
 }
 
 Configs: {
