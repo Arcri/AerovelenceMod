@@ -102,17 +102,22 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 initialVelocity = Projectile.velocity;
             }
 
+            returnVelocity = Vector2.Normalize(Projectile.DirectionTo(player.position));
+
             if (timer >= rebound)
+            {
+                Projectile.velocity = returnVelocity * 3;
+            } 
+            else
+            {
+                Projectile.velocity = (initialVelocity * ((rebound - timer) / rebound) + returnVelocity * (timer / rebound)) * 3;
+            }
+
+            if (Vector2.Distance(Projectile.position, player.position) < 10 && timer > rebound / 2)
             {
                 Projectile.active = false;
                 return;
             }
-
-            returnVelocity = Vector2.Normalize(Projectile.DirectionTo(player.position));
-
-            float initialVelocityMod = (rebound - timer) / rebound;
-
-            Projectile.velocity = (initialVelocity * ((rebound - timer) / rebound) + returnVelocity * (timer / rebound)) * 3;
 
             timer++;
         }
