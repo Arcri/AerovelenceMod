@@ -979,6 +979,11 @@ Items: {
 		DisplayName: Electric Blue Solution
 		Tooltip: ""
 	}
+
+	DarkCrystalStaff: {
+		DisplayName: Dark Crystal Staff
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1409,6 +1414,12 @@ Projectiles: {
 	LightOfTheAncientsBullet.DisplayName: Light Of The Ancients Bullet
 	LightOfTheAncientsProjectile.DisplayName: Light Of The Ancients Projectile
 	ElectricBlueSolutionProjectile.DisplayName: Electric Blue Solution Projectile
+	ElectricSpikes.DisplayName: Electric Spikes
+	ElectricSpikeField.DisplayName: Electric Spike Field
+	LightningStrike.DisplayName: Lightning Strike
+	SmokeProjectile.DisplayName: Smoke Projectile
+	LightningTelegraphProjectile.DisplayName: Lightning Telegraph Projectile
+	TelegraphX.DisplayName: Telegraph X
 }
 
 Configs: {

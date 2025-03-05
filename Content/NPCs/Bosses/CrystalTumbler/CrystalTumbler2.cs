@@ -25,6 +25,12 @@ using static AerovelenceMod.Content.Projectiles.LightningUtility;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using AerovelenceMod.Content.NPCs.CrystalCaverns;
+using Terraria.Graphics.Shaders;
+using Terraria.GameContent;
+using Microsoft.CodeAnalysis.Text;
+using AerovelenceMod.Common;
+using System.Collections;
+using Terraria.DataStructures;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -89,9 +95,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             new TumblerAttackState[]
             {
-                TumblerAttackState.WaterLightning,
                 TumblerAttackState.RollToDash,
-                TumblerAttackState.DashOuterToOuter,
+                TumblerAttackState.DashSideToSide,
                 TumblerAttackState.Idle
             },
 
@@ -99,7 +104,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 TumblerAttackState.RollToSideAndSlam,
                 TumblerAttackState.CrystalBarrage,
-                TumblerAttackState.RollToSideAndSlam
+                TumblerAttackState.DashSideToSide
             }
         };
 
@@ -217,7 +222,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private bool isDashing = false;
 
         private bool lightningStrikePositionsInitialized = false;
-        private Vector2[] lightningStrikePositions = new Vector2[10];
+        private Vector2[] lightningStrikePositions = new Vector2[5];
         private int lightningStrikeIndex = 0;
         private int anotherTimer = 0;
         private bool readyToSpawnTelegraphStrikes = false;
@@ -252,12 +257,130 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
         }
 
+        public bool doWaterRocks = false;
+        int waterRockTimer = 0;
+        public bool waterPositionsInitialized = false;
+
+        private bool positionsInitialized = false;
+        private Vector2[] lightningPositions;
+        private int lightningCount;
+        private float spacing;
+        private float randomOffset;
+        private Vector2 innerArenaLeft;
+        private Vector2 innerArenaRight;
+        private int waterLayerTile;
+
+        private bool isPlatformDisableActive = false;
+        private int platformDisableState = 0;
+        private int platformDisableTimer = 0;
+
+        private Vector2 chosenPlatformCenter;
+        private Vector2 chosenPlatformCenterOffset;
+        private float chosenPlatformWidthPixels;
+
+        private int LightningTelegraphTime = 200;
+
+        private int autoTriggerTimer = 0;
 
         public override void AI()
         {
             if (firstFrame)
             {
                 firstFrame = false;
+
+
+            }
+            autoTriggerTimer++;
+            if (autoTriggerTimer >= 500)
+            {
+                autoTriggerTimer = 0;
+                DisableRandomPlatform();
+            }
+
+            if (isPlatformDisableActive)
+            {
+                platformDisableTimer++;
+                switch (platformDisableState)
+                {
+                    case 0:
+                        if (platformDisableTimer >= 90)
+                        {
+                            bool pickLeftSide = Main.rand.NextBool();
+                            float offsetX = Main.rand.NextFloat(300f, 500f) * (pickLeftSide ? -1f : 1f);
+                            Vector2 startPos = new Vector2(chosenPlatformCenter.X + offsetX, chosenPlatformCenter.Y - 600f);
+                            LightningManager.StrikeLightning(startPos, new Vector2(chosenPlatformCenter.X + 8, chosenPlatformCenter.Y), LightningTelegraphTime);
+                            platformDisableState = 1;
+                            platformDisableTimer = 0;
+                        }
+                        break;
+
+                    case 1:
+                        if (platformDisableTimer >= LightningTelegraphTime / 2)
+                        {
+                            SpawnElectricFieldOnPlatform(chosenPlatformCenter, chosenPlatformWidthPixels);
+                            isPlatformDisableActive = false;
+                            platformDisableState = 0;
+                            platformDisableTimer = 0;
+                        }
+                        break;
+                }
+            }
+
+            if (doWaterRocks)
+            {
+                Main.NewText("doWaterRocks is TRUE!");
+                waterRockTimer++;
+                if (!positionsInitialized)
+                {
+                    Main.NewText("First frame: Initializing positions...");
+
+                    waterPositionsInitialized = true;
+                    positionsInitialized = true; 
+
+                    lightningCount = Main.rand.Next(4, 7);
+                    innerArenaLeft = ArenaData.InnerArenaBoundaryLeft;
+                    innerArenaRight = ArenaData.InnerArenaBoundaryRight;
+                    waterLayerTile = ArenaData.WaterLayer;
+
+                    float arenaWidth = innerArenaRight.X - innerArenaLeft.X;
+                    spacing = arenaWidth / lightningCount;
+                    randomOffset = Main.rand.NextFloat(0, spacing);
+
+                    lightningPositions = new Vector2[lightningCount];
+                    for (int i = 0; i < lightningCount; i++)
+                    {
+                        float lightningX = innerArenaLeft.X + randomOffset + (i * spacing);
+                        lightningPositions[i] = new Vector2(lightningX, waterLayerTile * 16);
+                        Main.NewText($"Position {i}: X={lightningX}, Y={waterLayerTile * 16}");
+                    }
+                }
+
+                if (positionsInitialized && lightningPositions != null)
+                {
+                    for (int i = 0; i < lightningPositions.Length; i++)
+                    {
+                        Vector2 lightningSpawnPosition = lightningPositions[i];
+                        if (waterRockTimer % 10 == 0)
+                            TelegraphDustLine(lightningSpawnPosition, 500f, 0f);
+                        if (waterRockTimer % 30 == 0)
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, Vector2.Zero, ModContent.ProjectileType<LightningStar>(), NPC.damage / 4, 0f, Main.myPlayer);
+                        if (waterRockTimer == 120)
+                        {
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, Vector2.Zero, ModContent.ProjectileType<LightningStar>(), NPC.damage / 4, 0f, Main.myPlayer);
+                            Vector2 orbVelocity = new(0, Main.rand.NextFloat(-20f, -22f));
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, orbVelocity, ModContent.ProjectileType<MagneticOrb>(), NPC.damage / 4, 0f, Main.myPlayer);
+                        }
+                    }
+                }
+
+                if (waterRockTimer >= 120)
+                {
+                    Main.NewText("Resetting Water Rock Timer...");
+                    waterRockTimer = 0;
+                    doWaterRocks = false;
+                    positionsInitialized = false;
+                    waterPositionsInitialized = false;
+                }
             }
 
             lineExtraPower = Math.Clamp(MathHelper.Lerp(lineExtraPower, -0.25f, 0.1f), 0f, 1f);
@@ -282,7 +405,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         lightningStrikePositions[i] = new Vector2(xPosition, yPosition);
                         Vector2 telegraphStart = lightningStrikePositions[i];
                         Vector2 telegraphEnd = telegraphStart + new Vector2(0, 500);
-                        TelegraphLightningDust(new Vector2(telegraphStart.X, telegraphStart.Y -500), telegraphEnd, segmentCount: 12, maxDisplacement: 5f);
+                        TelegraphLightningDust(new Vector2(telegraphStart.X, telegraphStart.Y - 500), telegraphEnd, segmentCount: 12, maxDisplacement: 5f);
                     }
                     //readyToSpawnTelegraphStrikes = true;
                     lightningStrikePositionsInitialized = true;
@@ -372,6 +495,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             Player player = Main.player[NPC.target];
 
+            
+
             player.AddBuff(ModContent.BuffType<FearsomeFoe>(), 1);
 
             UpdatePhase();
@@ -382,7 +507,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             if (currentAttack == TumblerAttackState.Idle)
             {
-                Main.NewText("Idle");
+                //Main.NewText("Idle");
                 Vector2 directionToPlayer = (player.Center - NPC.Center).SafeNormalize(Vector2.Zero);
                 float desiredSpeed = MathHelper.Lerp(3f, 6f, healthFactor);
                 float acceleration = 0.1f;
@@ -405,7 +530,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             else if (currentAttack == TumblerAttackState.RockingBackAndForth)
             {
-                Main.NewText("Rocking");
+                //Main.NewText("Rocking");
                 bool useMagnetRocks = false;
                 bool useArenaCrystalZappers = false;
                 bool usePhase3 = false;
@@ -425,30 +550,30 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             else if (currentAttack == TumblerAttackState.RollToDash)
             {
-                
-                Main.NewText("Roll to dash");
+
+                //Main.NewText("Roll to dash");
                 RollToDashAttack();
             }
             else if (currentAttack == TumblerAttackState.RollToSideAndSlam)
             {
-                Main.NewText("Roll to side");
+                //Main.NewText("Roll to side");
                 RollToSideAndSlamAttack(player);
             }
             else if (currentAttack == TumblerAttackState.DashOuterToOuter)
             {
-                
-                Main.NewText("Dash Outer to Outer");
+
+                //Main.NewText("Dash Outer to Outer");
                 DashOuterToOuterSequence(player);
             }
             if (currentAttack == TumblerAttackState.DashSideToSide)
             {
-                Main.NewText("dash side to side");
+                //Main.NewText("dash side to side");
                 DashSideToSideSequence(Main.player[NPC.target]);
             }
             if (currentAttack == TumblerAttackState.WaterLightning)
             {
 
-                Main.NewText("Water lightning");
+                //Main.NewText("Water lightning");
                 WaterLightningAttack();
             }
             else
@@ -459,7 +584,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 switch (currentAttack)
                 {
                     case TumblerAttackState.CrystalBarrage:
-                        Main.NewText("Crystal Barrage");
+                        //Main.NewText("Crystal Barrage");
                         NPC.velocity.X = MathHelper.Lerp(NPC.velocity.X, -directionToPlayer.X * desiredSpeed, acceleration);
                         CrystalBarrageAttack();
                         break;
@@ -467,7 +592,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         if (!crystalElectrocutePhaseActive)
                         {
                             StartArenaCrystalElectrocution();
-                            Main.NewText("Electric phase");
+                            //Main.NewText("Electric phase");
                         }
                         ArenaCrystalElectrocutionSequence(player);
                         break;
@@ -529,8 +654,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             return false;
         }
 
+
+        int funTimer = 0;
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            funTimer++;
             Texture2D texture = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/CrystalTumbler/Glowmask").Value;
             Texture2D laserTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RotatingThing").Value;
             Texture2D gradientTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/EosGrad").Value;
@@ -553,7 +681,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             Texture2D Bloommy = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/Bloommy");
-            
+
             Main.EntitySpriteDraw(Bloommy, drawPosition, NPC.frame, Color.White * glowIntensity, NPC.rotation, NPC.frame.Size() / 2f, 1f, SpriteEffects.None, 0);
             SpriteEffects flipEffect = (dashSideDirection == 1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -644,7 +772,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void PerformRockThrow()
         {
-            Main.NewText("Performing rock throw");
+            //Main.NewText("Performing rock throw");
             attackTimer++;
             int rockType = ModContent.ProjectileType<RockProjectile>();
             for (int i = 0; i < Main.maxProjectiles; i++)
@@ -683,7 +811,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void SpawnCrystalSpikeWall(Vector2 position)
         {
-            Main.NewText("Spawn Wall");
+            //Main.NewText("Spawn Wall");
             int spikeCount = 10;
             float radius = 64f;
 
@@ -701,7 +829,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private void PerformWallSlam(Vector2 position, int screenShakePower)
         {
             StopAttackVFX();
-            Main.NewText("Performing rock slam");
+            //Main.NewText("Performing rock slam");
 
             SoundStyle style = new("AerovelenceMod/Sounds/Effects/HardRockSlam")
             {
@@ -737,7 +865,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void SpawnRadialProjectiles()
         {
-            Main.NewText("Spawning radial projectiles");
+            //Main.NewText("Spawning radial projectiles");
 
             Vector2 playerPosition = Main.player[NPC.target].Center;
             float spawnDistance = 200f;
@@ -789,14 +917,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private void CrystalBarrageAttack()
         {
             StartAttackVFX();
-            Main.NewText("Crystal Barrage");
+            //Main.NewText("Crystal Barrage");
             attackTimer++;
             if (attackTimer == 10)
             {
-                SpawnRadialProjectiles();
+                //SpawnRadialProjectiles();
             }
 
-            if(attackTimer == 20)
+            if (attackTimer == 20)
             {
                 //SpawnMoth();
             }
@@ -814,39 +942,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void UpdateLightningWaterAttack()
         {
-            Main.NewText("Water Lightning");
+            //Main.NewText("Water Lightning");
             waterLightningTimer++;
 
             if (waterLightningTimer == 0)
             {
-                pending.Clear();
-                Vector2 innerArenaLeft = ArenaData.InnerArenaBoundaryLeft;
-                Vector2 innerArenaRight = ArenaData.InnerArenaBoundaryRight;
-                int waterLayerTile = ArenaData.WaterLayer;
 
-                int lightningCount = Main.rand.Next(8, 11);
-                float arenaWidth = innerArenaRight.X - innerArenaLeft.X;
-                float spacing = arenaWidth / lightningCount;
-                float randomOffset = Main.rand.NextFloat(0, spacing);
-                pending = [];
-                if (spawnFromLeft)
-                {
-                    for (int i = 0; i < lightningCount; i++)
-                    {
-                        float lightningX = innerArenaLeft.X + randomOffset + (i * spacing);
-                        pending.Add(new Vector2(lightningX, waterLayerTile * 16));
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < lightningCount; i++)
-                    {
-                        float lightningX = innerArenaRight.X - randomOffset - (i * spacing);
-                        pending.Add(new Vector2(lightningX, waterLayerTile * 16));
-                    }
-                }
-
-                spawnFromLeft = !spawnFromLeft;
             }
 
             if (waterLightningTimer < pending.Count * 30)
@@ -854,20 +955,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 int currentStrikeIndex = waterLightningTimer / 30;
                 if (currentStrikeIndex < pending.Count)
                 {
-                    TelegraphDustLine(pending[currentStrikeIndex], 150f);
+                    TelegraphDustLine(pending[currentStrikeIndex], 150f, 0);
                 }
             }
             if (waterLightningTimer == pending.Count * 30)
             {
-                foreach (Vector2 position in pending)
-                {
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), position, Vector2.Zero,
-                        ModContent.ProjectileType<LightningHitFX>(), NPC.damage / 4, 0f, Main.myPlayer);
-                }
-                pending.Clear();
-            }
 
-            waterLightningTimer++;
+            }
 
             if (waterLightningTimer > pending.Count * 30 + 30)
             {
@@ -878,33 +972,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void WaterLightningAttack()
         {
-            Main.NewText("Water Lightning");
+            //Main.NewText("Water Lightning");
             attackTimer++;
 
             if (attackTimer == 20)
             {
-                Vector2 innerArenaLeft = ArenaData.InnerArenaBoundaryLeft;
-                Vector2 innerArenaRight = ArenaData.InnerArenaBoundaryRight;
-                int waterLayerTile = ArenaData.WaterLayer;
 
-                int lightningCount = Main.rand.Next(8, 11);
-                float arenaWidth = innerArenaRight.X - innerArenaLeft.X;
-                float spacing = arenaWidth / lightningCount;
-                float randomOffset = Main.rand.NextFloat(0, spacing);
-
-                for (int i = 0; i < lightningCount; i++)
-                {
-                    float lightningX = innerArenaLeft.X + randomOffset + (i * spacing);
-                    Vector2 lightningSpawnPosition = new Vector2(lightningX, waterLayerTile * 16);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, Vector2.Zero,
-                        ModContent.ProjectileType<LightningHitFX>(), NPC.damage / 4, 0f, Main.myPlayer);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, Vector2.Zero,
-                        ModContent.ProjectileType<LightningStar>(), NPC.damage / 4, 0f, Main.myPlayer);
-                    Vector2 orbVelocity = new(0, -20f);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, orbVelocity, ModContent.ProjectileType<MagneticOrb>(), NPC.damage / 4, 0f, Main.myPlayer);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), lightningSpawnPosition, new Vector2(0, 1f), ModContent.ProjectileType<LightningStar>(), NPC.damage / 4, 0f, Main.myPlayer);
-                    TelegraphDustLine(lightningSpawnPosition, 144f);
-                }
             }
 
             if (attackTimer > 60)
@@ -933,19 +1006,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
         }
 
-        private void TelegraphDustLine(Vector2 position, float lineHeight)
+        private void TelegraphDustLine(Vector2 position, float lineHeight, float angle)
         {
-            int dustCount = 1;
+            int dustCount = Math.Max(1, (int)(lineHeight / 24));
+
             for (int i = 0; i < dustCount; i++)
             {
-                float yOffset = Main.rand.NextFloat(0, lineHeight);
-                Vector2 dustPosition = position - new Vector2(0, yOffset);
+                float yOffset = (i / (float)(dustCount - 1)) * lineHeight;
+                Vector2 offsetDirection = new Vector2(0, -yOffset).RotatedBy(angle);
+                Vector2 dustPosition = position + offsetDirection;
 
-                int dust = Dust.NewDust(dustPosition, 4, 4, DustID.GemSapphire, 0f, -0.5f, 100, default, 1.2f);
+                int dust = Dust.NewDust(dustPosition, 4, 4, DustID.BlueCrystalShard, 0f, -0.5f, 100, default, 1.2f);
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.2f;
             }
         }
+
+
 
 
         private float chosenDashDirection = 0f;
@@ -955,7 +1032,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void RollToDashAttack()
         {
-            Main.NewText("Roll To Dash, Phase: " + rollDashPhase);
+            //Main.NewText("Roll To Dash, Phase: " + rollDashPhase);
             switch (rollDashPhase)
             {
                 case 0:
@@ -1111,7 +1188,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void RollToSideAndSlamAttack(Player player)
         {
-            Main.NewText("Roll to Side and Slam");
+            //Main.NewText("Roll to Side and Slam");
             switch (rollSlamPhase)
             {
                 case 0:
@@ -1127,7 +1204,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         {
                             NPC.velocity.X += accel * Math.Sign(distance);
                             NPC.velocity.X = MathHelper.Clamp(NPC.velocity.X, -desiredSpeed, desiredSpeed);
-                            
+
                         }
                         else
                         {
@@ -1323,7 +1400,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                         if (groundFound)
                         {
-                            doLightning = true;
                             Vector2 leftSpawnPosition = new Vector2(NPC.position.X - 40, NPC.position.Y + NPC.height - 20);
                             Vector2 rightSpawnPosition = new Vector2(NPC.position.X + NPC.width + 40, NPC.position.Y + NPC.height - 20);
                             Projectile.NewProjectile(NPC.GetSource_FromThis(), leftSpawnPosition, Vector2.Zero,
@@ -1338,6 +1414,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                                 PitchVariance = 0f,
                             };
                             SoundEngine.PlaySound(style, NPC.Center);
+                            doWaterRocks = true;
                             OnAttackFinished();
                             //PerformRockThrow();
                             rollSlamPhase = 0;
@@ -1359,14 +1436,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         }
         private void SpawnMoth()
         {
-            Main.NewText("Spawn Moth");
+            //Main.NewText("Spawn Moth");
 
             int moth = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Center.Y,
                 ModContent.NPCType<Charger>());
         }
         private void TriggerBoundarySlamEffects()
         {
-            Main.NewText("Trigger Boundary Slam");
+            //Main.NewText("Trigger Boundary Slam");
             Main.player[NPC.target].GetModPlayer<AeroPlayer>().ScreenShakePower = 30;
             SoundStyle style = new("AerovelenceMod/Sounds/Effects/CrystalSlam")
             {
@@ -1391,7 +1468,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void DashSideToSideSequence(Player player)
         {
-            Main.NewText("Dash side to side");
+            //Main.NewText("Dash side to side");
             switch (dashSidePhase)
             {
                 case 0:
@@ -1440,13 +1517,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             shouldPerformJump = !shouldPerformJump;
                             if (shouldPerformJump)
                             {
-                                Main.NewText("Switching to Phase 8");
+                                //Main.NewText("Switching to Phase 8");
                                 dashSidePhase = 8;
                                 SetupBezierJump();
                             }
                             else
                             {
-                                Main.NewText("Switching to Phase 2");
+                                //Main.NewText("Switching to Phase 2");
                                 dashSidePhase = 2;
                                 isDashing = false;
                             }
@@ -1639,7 +1716,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             dashSideLaserInterval = (int)(Main.rand.NextFloat(minInterval, maxInterval) * 60f);
                         }
                         StartAttackVFX();
-                        doLightning = true;
                         KickRocks();
                         float finalDashSpeed = (dashSideIteration >= 1) ? 20f : 16f;
                         NPC.velocity = new Vector2(dashSideDirection * finalDashSpeed, 0f);
@@ -1876,7 +1952,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         break;
                 }
             }
-            else 
+            else
             {
                 StartAttackVFX();
                 Main.NewText("Dash outer to outer (Player-Targeted)");
@@ -1972,6 +2048,76 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Vector2 velocity = kickDirection * kickSpeed;
                 Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, velocity,
                     ModContent.ProjectileType<RockShard>(), NPC.damage / 2, 0f, Main.myPlayer);
+            }
+        }
+
+        private int lastDisabledPlatformIndex = -1;
+        private bool lastDisabledSide = false;
+
+        private void DisableRandomPlatform()
+        {
+            if (isPlatformDisableActive)
+                return;
+
+            isPlatformDisableActive = true;
+            platformDisableState = 0;
+            platformDisableTimer = 0;
+
+            int[] leftPlatforms = { 1, 2, 3 }; 
+            int[] rightPlatforms = { 4, 5, 6 };
+
+            int[] validPlatforms = lastDisabledSide ? leftPlatforms : rightPlatforms;
+            int randomPlatformIndex;
+            do
+            {
+                randomPlatformIndex = validPlatforms[Main.rand.Next(validPlatforms.Length)];
+            }
+            while (randomPlatformIndex == lastDisabledPlatformIndex);
+
+            lastDisabledPlatformIndex = randomPlatformIndex;
+            lastDisabledSide = !lastDisabledSide;
+            chosenPlatformCenter = LargeGeode.GetPlatformCenter(randomPlatformIndex);
+            float platformWidthTiles = LargeGeode.GetPlatformWidth(randomPlatformIndex);
+            chosenPlatformWidthPixels = platformWidthTiles * 16f;
+            /*if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                IEntitySource source = NPC.GetSource_FromAI();
+                int projIndex = Projectile.NewProjectile(source, new Vector2(chosenPlatformCenter.X + 8, chosenPlatformCenter.Y - 16), Vector2.Zero, ModContent.ProjectileType<TelegraphX>(), 0, 0f, Main.myPlayer);
+                if (Main.netMode == NetmodeID.Server)
+                    NetMessage.SendData(MessageID.SyncProjectile, number: projIndex);
+            }*/
+        }
+
+        private void SpawnElectricFieldOnPlatform(Vector2 platformCenter, float widthPixels)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            IEntitySource source = NPC.GetSource_FromAI();
+
+            float halfWidth = widthPixels / 2f;
+            Vector2 leftEdgePos = new(platformCenter.X - (halfWidth - 16), platformCenter.Y - 2);
+
+            int projIndex = Projectile.NewProjectile(
+                source,
+                new Vector2(leftEdgePos.X - 20, leftEdgePos.Y),
+                Vector2.Zero,
+                ModContent.ProjectileType<ElectricSpikeField>(),
+                50,
+                0f,
+                Main.myPlayer
+            );
+
+            if (Main.netMode == NetmodeID.Server)
+                NetMessage.SendData(MessageID.SyncProjectile, number: projIndex);
+
+            if (projIndex >= 0 && projIndex < Main.maxProjectiles &&
+                Main.projectile[projIndex].ModProjectile is ElectricSpikeField field)
+            {
+                field.SetWidth(widthPixels);
+                Main.projectile[projIndex].position =
+                    platformCenter - new Vector2(field.Projectile.width / 2f - 8,
+                                                 field.Projectile.height / 2f + 10);
             }
         }
 
@@ -2322,10 +2468,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             if (lightningData == null || !lightningData.Initialized)
             {
-                lightningData = new LightningData(Projectile, LightningStyle.Jagged);
+                lightningData = new LightningData(Projectile, LightningStyle.Static);
                 Vector2 startPos = Projectile.Center;
                 Vector2 endPos = Projectile.Center + new Vector2(0f, 760f);
-                LightningUtility.InitializeBetweenPoints(lightningData, startPos, endPos, LightningStyle.Jagged);
+                LightningUtility.InitializeBetweenPoints(lightningData, startPos, endPos, LightningStyle.Static);
             }
             LightningUtility.UpdateSegments(lightningData);
             LightningUtility.UpdateBranches(lightningData);
@@ -2419,13 +2565,271 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.spriteBatch.Draw(glowTex, pos, glowTex.Frame(1, 1, 0, 0), Color.Blue * 0.3f * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), glowTex.Size() / 2, 0.2f, SpriteEffects.None, 0);
 
             Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Blue * 2f * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), spotTex.Size() / 2, 1.2f, SpriteEffects.None, 0);
-            Main.spriteBatch.Draw(spotTex, pos , spotTex.Frame(1, 1, 0, 0), Color.Aqua * 1.5f * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.75f, SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Aqua * 1.5f * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.75f, SpriteEffects.None, 0);
 
             Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.Blue * 2f * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(-1 * timer * 0.3f), spotTex.Size() / 2, 0.75f, SpriteEffects.None, 0);
             Main.spriteBatch.Draw(spotTex, pos, spotTex.Frame(1, 1, 0, 0), Color.White * starAlpha * ((255 - Projectile.alpha) / 255f), Projectile.rotation + MathHelper.ToRadians(timer * 0.15f), spotTex.Size() / 2, 0.4f, SpriteEffects.None, 0);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+    }
+    public class ElectricSpikeField : ModProjectile
+    {
+        private float fieldWidth = 0f;
+        private int tileCount = 0;
+
+        private int animFrame = 0;
+        private int animFrameCounter = 0;
+        private int maxAnimFrames = 3;
+        private int animFrameSpeed = 6;
+
+        private int cellWidth = 16;
+        private int cellHeight = 24;
+        private int cellPadding = 2;
+
+        public override void SetDefaults()
+        {
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 600;
+            Projectile.hide = true;
+            Projectile.penetrate = -1;
+        }
+
+        public void SetWidth(float width)
+        {
+            fieldWidth = width;
+            tileCount = (int)(fieldWidth / cellWidth);
+            if (tileCount < 2)
+                tileCount = 2;
+            Projectile.width = tileCount * cellWidth;
+            Projectile.height = cellHeight;
+        }
+
+        public override void AI()
+        {
+            animFrameCounter++;
+            if (animFrameCounter >= animFrameSpeed)
+            {
+                animFrameCounter = 0;
+                animFrame = (animFrame + 1) % maxAnimFrames;
+            }
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            behindNPCs.Add(index);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
+            Vector2 drawPos = Projectile.position - Main.screenPosition;
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            DrawSmoothGlowStrip(0.9f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+
+            for (int i = 0; i < tileCount; i++)
+            {
+                int col = 1;
+                if (i == 0)
+                    col = 0;
+                else if (i == tileCount - 1)
+                    col = 3;
+                else
+                    col = (i % 2 == 0) ? 1 : 2;
+                int row = animFrame;
+                Rectangle sourceRect = new(
+                    col * (cellWidth + cellPadding),
+                    row * (cellHeight + cellPadding), cellWidth, cellHeight);
+                for (int t = 0; t < 8; t++)
+                {
+                    Color color = t == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
+                    Main.spriteBatch.Draw(mainTexture, drawPos + Main.rand.NextVector2Circular(0, 5f), sourceRect, color * 0.3f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
+                }
+
+                Main.spriteBatch.Draw(mainTexture, drawPos, sourceRect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.9f);
+
+                drawPos.X += cellWidth;
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            GenerateGlowDust();
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+
+        private void DrawSmoothGlowStrip(float layerDepth = 0f)
+        {
+            Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrailSlice").Value;
+            Rectangle glowSourceRect = new Rectangle(0, 0, 1, 100);
+            float scaleY = Projectile.height / 50f;
+            int fadeRange = 6;
+            float time = Main.GameUpdateCount * 0.04f;
+
+            Color[] gradientColors =
+            [
+                Color.Aqua,
+                Color.Blue,
+                Color.SkyBlue,
+                Color.MediumPurple,
+                Color.RoyalBlue
+            ];
+
+            for (int i = 0; i < Projectile.width; i++)
+            {
+                float position = (i / (float)Projectile.width) + time;
+                position %= 1f;
+                float scaledPos = position * gradientColors.Length;
+                int colorIndex1 = (int)scaledPos % gradientColors.Length;
+                int colorIndex2 = (colorIndex1 + 1) % gradientColors.Length;
+                float lerpFactor = scaledPos - (int)scaledPos;
+                Color baseColor = Color.Lerp(gradientColors[colorIndex1], gradientColors[colorIndex2], lerpFactor);
+                float brightness = 0.8f + 0.2f * (float)Math.Sin(time * 2f + i * 0.05f);
+                baseColor = baseColor * brightness;
+                float fadeFactor = 1f;
+                if (i < fadeRange)
+                    fadeFactor = i / (float)fadeRange;
+                else if (i > Projectile.width - fadeRange)
+                    fadeFactor = (Projectile.width - i) / (float)fadeRange;
+                Color finalColor = baseColor * fadeFactor;
+                Vector2 pos = new(Projectile.position.X + i, Projectile.position.Y - 24);
+                Main.spriteBatch.Draw(glowTexture, pos - Main.screenPosition, glowSourceRect, finalColor, 0f, Vector2.Zero, new Vector2(1f, scaleY), SpriteEffects.None, layerDepth);
+            }
+        }
+
+        private void GenerateGlowDust()
+        {
+            int dustCount = 2;
+            for (int j = 0; j < dustCount; j++)
+            {
+                float randX = Main.rand.NextFloat(Projectile.width);
+                Vector2 dustPos = new Vector2(Projectile.position.X + randX, (Projectile.position.Y + Projectile.height) - 2);
+                Dust gd = Dust.NewDustPerfect(dustPos, ModContent.DustType<GlowPixelCross>(), new Vector2(0f, -Main.rand.NextFloat(1f, 2f)), newColor: Color.Aqua, Scale: Main.rand.NextFloat(0.2f, 0.4f));
+                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5, preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+            }
+        }
+    }
+
+    public class TelegraphX : ModProjectile
+    {
+        public override string Texture => "AerovelenceMod/Assets/Telegraph/X";
+
+        private float flashAlpha = 1f;
+        private float scaleSineTimer = 0f;
+        private float baseScale = 1f;
+        private float scaleAmplitude = 0.2f;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 58;
+            Projectile.height = 58;
+            Projectile.friendly = false;
+            Projectile.hostile = false;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 405;
+            Projectile.alpha = 0;
+            Projectile.aiStyle = -1;
+        }
+
+        public override void AI()
+        {
+            Main.NewText(Projectile.timeLeft);
+
+            if (flashAlpha > 0f)
+            {
+                flashAlpha -= 0.1f;
+                if (flashAlpha < 0f)
+                    flashAlpha = 0f;
+            }
+            scaleSineTimer += 0.1f; 
+            float sineValue = (float)Math.Sin(scaleSineTimer);
+            Projectile.scale = baseScale + scaleAmplitude * sineValue;
+        }
+
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.End();
+
+            Main.spriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.Additive,
+                Main.DefaultSamplerState,
+                DepthStencilState.None,
+                RasterizerState.CullCounterClockwise,
+                null,
+                Main.GameViewMatrix.TransformationMatrix
+            );
+
+            Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Telegraph/X_Glow").Value;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Vector2 origin = glowTexture.Size() / 2f;
+            float scale = Projectile.scale;
+            Color glowColor = Color.Cyan * (0.5f + 0.5f * flashAlpha);
+
+            Main.spriteBatch.Draw(
+                glowTexture,
+                drawPosition,
+                null,
+                glowColor,
+                Projectile.rotation,
+                origin,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            Main.spriteBatch.End();
+
+            Main.spriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.AlphaBlend,
+                Main.DefaultSamplerState,
+                DepthStencilState.None,
+                RasterizerState.CullCounterClockwise,
+                null,
+                Main.GameViewMatrix.TransformationMatrix
+            );
+            return true;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D xTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Telegraph/X").Value;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+            Vector2 origin = xTexture.Size() / 2f;
+            float overallAlpha = 1f;
+
+            Color xColor = Color.White * overallAlpha * (1f + flashAlpha * 0.5f);
+
+            float scale = Projectile.scale;
+            Main.spriteBatch.Draw(
+                xTexture,
+                drawPos,
+                null,
+                xColor,
+                Projectile.rotation,
+                origin,
+                scale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 }
