@@ -8,7 +8,6 @@ using Terraria.ModLoader;
 using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles;
 using System;
-using System.Threading;
 
 namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 {
@@ -66,11 +65,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
     public class CrystalCrescentThrowProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
+        //public override string Texture => "AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent";
+
+        BaseTrailInfo relativeTrail = new BaseTrailInfo();
+        BaseTrailInfo counterrelativeTrail = new BaseTrailInfo();
 
         private static Vector2 initialVelocity;
         private static Vector2 returnVelocity;
 
-        private const float rebound = 240;
+        private float rebound = 90;
 
         private int timer = 0;
 
@@ -78,7 +81,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         {
             Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = Projectile.height = 60;
+            Projectile.width = Projectile.height = 0;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = -1;
@@ -88,12 +91,40 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
+            Projectile.light = 0.75f;
             // Projectile.extraUpdates = 7;
         }
 
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
+
+            Vector2 otherOffset = new Vector2(Projectile.spriteDirection > 0 ? 4 : 0, Projectile.spriteDirection > 0 ? -8 : -12);
+            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+            relativeTrail.trailColor = Color.MidnightBlue;
+            relativeTrail.trailPointLimit = 75;
+            relativeTrail.trailWidth = 30;
+            relativeTrail.trailMaxLength = 100;
+            relativeTrail.timesToDraw = 3;
+            relativeTrail.relativeToPlayer = true;
+            relativeTrail.myPlayer = Main.player[Projectile.owner];
+            relativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
+
+            relativeTrail.trailPos = Projectile.position + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center;
+
+            counterrelativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+            counterrelativeTrail.trailColor = Color.SteelBlue;
+            counterrelativeTrail.trailPointLimit = 75;
+            counterrelativeTrail.trailWidth = 30;
+            counterrelativeTrail.trailMaxLength = 100;
+            counterrelativeTrail.timesToDraw = 3;
+            counterrelativeTrail.relativeToPlayer = true;
+            counterrelativeTrail.myPlayer = Main.player[Projectile.owner];
+            counterrelativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
+
+            counterrelativeTrail.trailPos = (Projectile.position - Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center);
 
             if (timer == 0)
             {
@@ -102,24 +133,66 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 initialVelocity = Projectile.velocity;
             }
 
+            Projectile.rotation += 0.1f;
+
             returnVelocity = Vector2.Normalize(Projectile.DirectionTo(player.position));
 
             if (timer >= rebound)
             {
-                Projectile.velocity = returnVelocity * 3;
+                Projectile.velocity = returnVelocity * 18;
             } 
             else
             {
-                Projectile.velocity = (initialVelocity * ((rebound - timer) / rebound) + returnVelocity * (timer / rebound)) * 3;
+                Projectile.velocity = (initialVelocity * ((rebound - timer) / rebound) + returnVelocity * (timer / rebound)) * 18;
             }
 
-            if (Vector2.Distance(Projectile.position, player.position) < 10 && timer > rebound / 2)
+            if (Vector2.Distance(Projectile.position, player.position) < 3 * 16 && timer > rebound / 2)
             {
                 Projectile.active = false;
                 return;
             }
 
+            relativeTrail.TrailLogic();
+            counterrelativeTrail.TrailLogic();
+
             timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            relativeTrail.TrailDrawing(Main.spriteBatch);
+            counterrelativeTrail.TrailDrawing(Main.spriteBatch);
+
+            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent");
+
+            Vector2 origin;
+            float rotationOffset;
+            SpriteEffects effects;
+
+            if (Projectile.ai[0] != 1)
+            {
+                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
+                rotationOffset = 0;
+                effects = SpriteEffects.None;
+            }
+            else
+            {
+                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
+                //rotationOffset = MathHelper.ToRadians(90f);
+                //effects = SpriteEffects.FlipHorizontally;
+                rotationOffset = 0;
+                effects = SpriteEffects.None;
+            }
+
+            Vector2 armPosition = Main.player[Projectile.owner].GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, 0);
+
+            //Sprite is 64x64 so -0 to "make it square", dont know about the x tbh
+            Vector2 otherOffset = new Vector2(Projectile.spriteDirection > 0 ? 4 : 0, Projectile.spriteDirection > 0 ? -8 : -12);
+            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+
+            Main.spriteBatch.Draw(Blade, Projectile.position - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale , effects, 0f);
+
+            return false;
         }
     }
 
@@ -142,6 +215,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
             Projectile.extraUpdates = 7;
+            Projectile.light = 0.75f;
         }
 
         bool playedSound = false;
