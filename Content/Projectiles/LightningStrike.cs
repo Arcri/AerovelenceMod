@@ -58,7 +58,9 @@ namespace AerovelenceMod.Content.Projectiles
             {
                 lightningData = new LightningUtility.LightningData(Projectile)
                 {
-                    MaxSegments = 12,
+                    MaxSegments = 60,
+                    DisplacementIntensity = 2f,
+                    NoiseFrequency = 2,
                     TargetPosition = TargetPosition
                 };
                 LightningUtility.InitializeBetweenPoints(lightningData, Projectile.Center, TargetPosition, LightningUtility.LightningStyle.Static);
@@ -132,6 +134,8 @@ namespace AerovelenceMod.Content.Projectiles
     {
         private float flare10Rotation = 0f;
         private float fadeAlpha = 1f;
+        private float glowScale = 0f;
+        private bool isInFinalPhase = false;
 
         private float telegraphTime = 100;
         private bool firstFrame = false;
@@ -156,7 +160,7 @@ namespace AerovelenceMod.Content.Projectiles
             {
                 if (player != null && player.active)
                 {
-                    player.GetModPlayer<AeroPlayer>().ScreenShakePower = 15;
+                    player.GetModPlayer<AeroPlayer>().ScreenShakePower = 5;
                 }
             }
 
@@ -183,13 +187,11 @@ namespace AerovelenceMod.Content.Projectiles
                 int goreType = Main.rand.Next(61, 64);
                 Gore.NewGorePerfect(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X - 10, Projectile.Center.Y), new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-0.3f, 0.3f)), goreType);
             }
-
-
         }
 
         public override void AI()
         {
-            if(!firstFrame)
+            if (!firstFrame)
             {
                 telegraphTime = Projectile.ai[0];
                 Projectile.timeLeft = (int)telegraphTime;
@@ -198,12 +200,30 @@ namespace AerovelenceMod.Content.Projectiles
 
             if (Main.rand.NextBool(3))
             {
-                float speed = Main.rand.NextFloat(1f, 2.5f);
+                float speed = Main.rand.NextFloat(3f, 4.5f);
                 Vector2 velocity = Main.rand.NextVector2Circular(speed, speed);
-                Dust dust = Dust.NewDustDirect(Projectile.Center, 0, 0, DustID.BlueTorch, velocity.X, velocity.Y);
+                Dust dust = Dust.NewDustDirect(new Vector2(Projectile.Center.X - 6, Projectile.Center.Y), 0, 0, DustID.BlueTorch, velocity.X, velocity.Y);
                 dust.noGravity = true;
                 dust.scale = 1.0f;
             }
+
+            if (Projectile.timeLeft <= 90)
+            {
+                isInFinalPhase = true;
+
+                if (Main.rand.NextBool(3))
+                {
+                    float speed = Main.rand.NextFloat(3f, 4.5f);
+                    Vector2 velocity = Main.rand.NextVector2Circular(speed, speed);
+                    Dust dust = Dust.NewDustDirect(new Vector2(Projectile.Center.X - 6, Projectile.Center.Y), 0, 0, DustID.Electric, velocity.X, velocity.Y);
+                    dust.noGravity = true;
+                    dust.scale = 1.0f;
+                }
+                float progress = 1f - (float)Projectile.timeLeft / 90f;
+                float oscillation = 0.5f + 0.5f * (float)Math.Sin(progress * 6f);
+                glowScale = 0.5f + 2.5f * progress * (0.7f + 0.3f * oscillation);
+            }
+
             if (Projectile.timeLeft <= 10)
             {
                 float progress = (float)Projectile.timeLeft / 10f;
@@ -222,10 +242,48 @@ namespace AerovelenceMod.Content.Projectiles
             var oldState = spriteBatch.GraphicsDevice.BlendState;
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            if (isInFinalPhase)
+            {
+                DrawGlowEffect(spriteBatch);
+            }
+
             DrawFlaresAndArcs(spriteBatch);
+
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
+        }
+
+        private void DrawGlowEffect(SpriteBatch spriteBatch)
+        {
+            Vector2 center = Projectile.Center - Main.screenPosition;
+            Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Glow").Value;
+
+            Color whiteGlowColor = Color.White * fadeAlpha * 0.9f;
+            spriteBatch.Draw(
+                glowTexture,
+                center,
+                null,
+                whiteGlowColor,
+                0f,
+                glowTexture.Size() * 0.5f,
+                glowScale * 0.8f,
+                SpriteEffects.None,
+                0f
+            );
+
+            Color blueGlowColor = new Color(0, 191, 255) * fadeAlpha * 0.9f;
+            spriteBatch.Draw(
+                glowTexture,
+                center,
+                null,
+                blueGlowColor,
+                0f,
+                glowTexture.Size() * 0.5f,
+                glowScale,
+                SpriteEffects.None,
+                0f
+            );
         }
 
         private void DrawFlaresAndArcs(SpriteBatch spriteBatch)
@@ -233,8 +291,8 @@ namespace AerovelenceMod.Content.Projectiles
             Vector2 center = Projectile.Center - Main.screenPosition;
             Texture2D flare3 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_3").Value;
             float pulseSpeed = 0.4f;
-            float scaleBase = 0.1f;
-            float scaleRange = 0.2f;
+            float scaleBase = 0.03f;
+            float scaleRange = 0.15f;
             float scale = scaleBase + scaleRange * (0.5f + 0.5f * (float)Math.Sin(Main.GameUpdateCount * pulseSpeed));
             Color flare3Color = Color.Lerp(Color.Aqua, Color.White, 0.3f) * fadeAlpha;
             spriteBatch.Draw(
@@ -245,6 +303,19 @@ namespace AerovelenceMod.Content.Projectiles
                 0f,
                 flare3.Size() * 0.5f,
                 scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+            spriteBatch.Draw(
+                star,
+                center,
+                null,
+                flare3Color,
+                0f,
+                star.Size() * 0.5f,
+                scale * 2,
                 SpriteEffects.None,
                 0f
             );
@@ -279,7 +350,6 @@ namespace AerovelenceMod.Content.Projectiles
 
             Color arcColor = Color.Cyan * 0.8f * fadeAlpha;
 
-            // Slight thickness
             float thickness = 2f;
 
             spriteBatch.Draw(

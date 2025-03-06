@@ -984,6 +984,11 @@ Items: {
 		DisplayName: Dark Crystal Staff
 		Tooltip: ""
 	}
+
+	CrystalStompers: {
+		DisplayName: Crystal Stompers
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1031,6 +1036,7 @@ NPCs: {
 	CrystalBat.DisplayName: Crystal Bat
 	ElectricTetra.DisplayName: Electric Tetra
 	Lumurker.DisplayName: Lumurker
+	Bomber.DisplayName: Bomber
 }
 
 Projectiles: {
@@ -1420,6 +1426,9 @@ Projectiles: {
 	SmokeProjectile.DisplayName: Smoke Projectile
 	LightningTelegraphProjectile.DisplayName: Lightning Telegraph Projectile
 	TelegraphX.DisplayName: Telegraph X
+	TumbleBomb.DisplayName: Tumble Bomb
+	EnergyAbsorptionOrb.DisplayName: Energy Absorption Orb
+	LightningOrbStar.DisplayName: Lightning Orb Star
 }
 
 Configs: {

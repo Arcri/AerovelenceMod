@@ -1,7 +1,9 @@
 using AerovelenceMod.Content.Items.BossSummons;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -71,6 +73,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Main.dust[dust].velocity *= 0.2f;
                 Main.dust[dust].noGravity = true;
             }
+
+            if (Projectile.velocity.Y > 0)
+            {
+
+            }
+                Main.NewText("fringus");
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Color col = i == 0 ? Color.SkyBlue with { A = 0 } : Color.DeepSkyBlue with { A = 0 };
+
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(3f, 3f), null, col * 1f, Projectile.rotation, TextureAssets.Projectile[Projectile.type].Size() / 2, Projectile.scale * 1.1f, SpriteEffects.None, 0f);
+            }
+            return true;
         }
     }
 

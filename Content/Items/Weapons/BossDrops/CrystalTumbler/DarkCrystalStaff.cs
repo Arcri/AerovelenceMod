@@ -1,24 +1,17 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Content.Dusts.GlowDusts;
-using Terraria.Audio;
-using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Projectiles;
-using System;
-using System.Collections.Generic;
 
 
 namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
 {
     public class DarkCrystalStaff : ModItem
     {
+
         public override void SetDefaults()
         {
             Item.damage = 50;
@@ -27,7 +20,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             Item.height = 40;
             Item.useTime = 20;
             Item.useAnimation = 20;
-            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 5;
             Item.value = Item.buyPrice(0, 5, 0, 0);
             Item.rare = ItemRarities.LatePHM;
@@ -51,10 +44,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
 
             if (targetTile.HasValue)
             {
-                Vector2 start = new Vector2(targetTile.Value.X, targetTile.Value.Y - 500);
                 Vector2 end = targetTile.Value;
-
-                LightningManager.StrikeLightning(start, end, damage, knockBack, 200);
+                bool pickLeftSide = Main.rand.NextBool();
+                float offsetX = Main.rand.NextFloat(10f, 100f) * (pickLeftSide ? -1f : 1f);
+                Vector2 start = new Vector2(targetTile.Value.X + offsetX, targetTile.Value.Y - 800);
+                LightningManager.StrikeLightning(start, end, damage, knockBack, 30);
             }
 
             return false;
