@@ -1,6 +1,8 @@
 using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Items.Armor.Msc;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -110,5 +112,13 @@ namespace AerovelenceMod.Common.Globals.NPCs
 			}
 			*/
 		}
-	}
+
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            if (npc.type == NPCID.BlueJellyfish || npc.type == NPCID.PinkJellyfish || npc.type == NPCID.GreenJellyfish)
+			{
+				npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<JellyfishHat>(), 10));
+			}
+        }
+    }
 }

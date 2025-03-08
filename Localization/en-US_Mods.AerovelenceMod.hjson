@@ -625,6 +625,11 @@ Items: {
 		DisplayName: Cavern Stone Column Item
 		Tooltip: ""
 	}
+
+	JellyfishHat: {
+		DisplayName: Jellyfish Hat
+		Tooltip: Periodically generates an electric field around the user
+	}
 }
 
 NPCs: {
@@ -961,6 +966,7 @@ Projectiles: {
 	SharpCrystalShard.DisplayName: Sharp Crystal Shard
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
+	JellyfishAuraProjectile.DisplayName: Jellyfish Aura Projectile
 }
 
 Configs: {

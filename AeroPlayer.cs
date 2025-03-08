@@ -42,8 +42,8 @@ namespace AerovelenceMod
 			PlatformTimer--;
 		}
 
-		#region Usestyle Code
-		public object useStyleData;
+        #region Usestyle Code
+        public object useStyleData;
 		public int useStyleInt;
 
 		public int fireballFrame;
