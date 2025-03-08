@@ -1429,6 +1429,8 @@ Projectiles: {
 	TumbleBomb.DisplayName: Tumble Bomb
 	EnergyAbsorptionOrb.DisplayName: Energy Absorption Orb
 	LightningOrbStar.DisplayName: Lightning Orb Star
+	CrystalCastle.DisplayName: Crystal Castle
+	LightningTelegraphGlow.DisplayName: Lightning Telegraph Glow
 }
 
 Configs: {

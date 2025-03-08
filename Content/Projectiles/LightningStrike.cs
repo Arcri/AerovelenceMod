@@ -40,6 +40,7 @@ namespace AerovelenceMod.Content.Projectiles
             {
                 TargetPosition = new Vector2(Projectile.ai[0], Projectile.ai[1]);
                 TelegraphTime = Projectile.ai[2];
+                Main.NewText(TelegraphTime);
 
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), TargetPosition, Vector2.Zero, ModContent.ProjectileType<LightningTelegraphProjectile>(), 0, 0, Projectile.owner, TelegraphTime);
 
@@ -123,7 +124,7 @@ namespace AerovelenceMod.Content.Projectiles
             if (projectileIndex < Main.maxProjectiles && Main.projectile[projectileIndex].active)
             {
                 Projectile lightningProj = Main.projectile[projectileIndex];
-                //Main.NewText($"Lightning Strike AI Values: {lightningProj.ai[0]}, {lightningProj.ai[1]}, {lightningProj.ai[2]}");
+                Main.NewText($"Lightning Strike AI Values: {lightningProj.ai[0]}, {lightningProj.ai[1]}, {lightningProj.ai[2]}");
             }
         }
 

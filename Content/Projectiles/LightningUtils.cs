@@ -261,7 +261,7 @@ namespace AerovelenceMod.Content.Projectiles
                 if (Main.rand.NextBool(2))
                 {
                     int segment = Main.rand.Next(data.MaxSegments / 4, (data.MaxSegments * 3) / 4);
-                    float displacementAmount = Main.rand.NextFloat(-30f, 30f);
+                    float displacementAmount = Main.rand.NextFloat(-70f, 70f);
                     float horizontalBias = Main.rand.NextFloat(15f, 25f) * (Main.rand.NextBool() ? 1 : -1);
 
                     Vector2 normal = (data.SegmentPositions[segment + 1] - data.SegmentPositions[segment - 1])
