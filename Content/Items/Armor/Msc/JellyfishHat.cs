@@ -33,6 +33,18 @@ namespace AerovelenceMod.Content.Items.Armor.Msc
                 .AddRecipeGroup(RecipeGroupID.IronBar, 4)
                 .AddTile(TileID.Anvils)
                 .Register();
+
+            CreateRecipe()
+                .AddIngredient(ItemID.PinkJellyfish)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 4)
+                .AddTile(TileID.Anvils)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient(ItemID.GreenJellyfish)
+                .AddRecipeGroup(RecipeGroupID.IronBar, 4)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 
@@ -51,6 +63,8 @@ namespace AerovelenceMod.Content.Items.Armor.Msc
             Projectile.height = 58;
             Projectile.timeLeft = 200;
             Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 10;
         }
 
         public override void SetStaticDefaults()
