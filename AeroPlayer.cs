@@ -12,10 +12,17 @@ using ReLogic.Content;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic;
 using static Humanizer.In;
 using System;
+using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
+using Humanizer;
+using Terraria.ModLoader.IO;
+using Microsoft.Build.Execution;
+using Steamworks;
 
 namespace AerovelenceMod
 {
-	public class AeroPlayer : ModPlayer
+
+    public class AeroPlayer : ModPlayer
 	{
 
 		public int PlatformTimer = 0;

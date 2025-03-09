@@ -5,6 +5,4 @@
     <AssemblyName>AerovelenceMod</AssemblyName>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-  </ItemGroup>
 </Project>
