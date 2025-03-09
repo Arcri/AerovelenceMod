@@ -160,31 +160,32 @@ namespace AerovelenceMod.Content.Tiles.Relics
                 );
             }
         }
-   
-    public class CyvercryBossRelic : BaseBossRelic
-    {
-        public override string RelicTextureName => "AerovelenceMod/Content/Tiles/Relics/CyvercryBossRelic";
 
-        public override void SetStaticDefaults() => base.SetStaticDefaults();
-    }
-
-    public class CrystalTumblerRelicItem : ModItem
-    {
-        public override void SetDefaults()
+        public class CyvercryBossRelic : BossRelics
         {
-            Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
-            Item.placeStyle = 0;
-            Item.createTile = ModContent.TileType<BossRelics>();
+            public override string RelicTextureName => "AerovelenceMod/Content/Tiles/Relics/CyvercryBossRelic";
+
+            public override void SetStaticDefaults() => base.SetStaticDefaults();
         }
-    }
 
-    public class CyvercryRelicItem : ModItem
-    {
-        public override void SetDefaults()
+        public class CrystalTumblerRelicItem : ModItem
         {
-            Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
-            Item.placeStyle = 1;
-            Item.createTile = ModContent.TileType<BossRelics>();
+            public override void SetDefaults()
+            {
+                Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
+                Item.placeStyle = 0;
+                Item.createTile = ModContent.TileType<BossRelics>();
+            }
+        }
+
+        public class CyvercryRelicItem : ModItem
+        {
+            public override void SetDefaults()
+            {
+                Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
+                Item.placeStyle = 1;
+                Item.createTile = ModContent.TileType<BossRelics>();
+            }
         }
     }
 }

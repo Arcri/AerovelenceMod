@@ -6,12 +6,8 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Building
 {
-<<<<<<<< HEAD:Content/Tiles/CrystalCaverns/Glimmerwood/GlimmerwoodLeafTile.cs
-    public class GlimmerwoodLeafTile : ModTile
-========
     [LegacyName("CavernBrick")]
     public class CavernBrickTile : ModTile
->>>>>>>> Arcri-Branch-NonBiomeCC:Content/Tiles/CrystalCaverns/Building/CavernBrickTile.cs
     {
         public override void SetStaticDefaults()
         {

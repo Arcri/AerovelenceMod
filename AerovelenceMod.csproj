@@ -14,4 +14,7 @@
   <ItemGroup>
     <None Remove="Content\Items\Weapons\Caverns\CrystalCrescent\CrystalCrescent.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Projectiles\CrystalCaverns\" />
+  </ItemGroup>
 </Project>

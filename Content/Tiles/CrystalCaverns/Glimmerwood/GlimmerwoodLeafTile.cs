@@ -1,3 +1,4 @@
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -6,12 +7,7 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood
 {
-<<<<<<<< HEAD:Content/Tiles/CrystalCaverns/Glimmerwood/GlimmerwoodLeafTile.cs
     public class GlimmerwoodLeafTile : ModTile
-========
-    [LegacyName("CavernBrick")]
-    public class CavernBrickTile : ModTile
->>>>>>>> Arcri-Branch-NonBiomeCC:Content/Tiles/CrystalCaverns/Building/CavernBrickTile.cs
     {
         public override void SetStaticDefaults()
         {
@@ -39,11 +35,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood
             Item.useTime = 10;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.consumable = true;
-<<<<<<<< HEAD:Content/Tiles/CrystalCaverns/Glimmerwood/GlimmerwoodLeafTile.cs
             Item.createTile = ModContent.TileType<GlimmerwoodLeafTile>();
-========
-            Item.createTile = ModContent.TileType<CavernBrickTile>();
->>>>>>>> Arcri-Branch-NonBiomeCC:Content/Tiles/CrystalCaverns/Building/CavernBrickTile.cs
             Item.rare = ItemRarityID.White;
             Item.value = 5;
         }

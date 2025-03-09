@@ -1,5 +1,5 @@
 using AerovelenceMod.Content.Biomes;
-using AerovelenceMod.Content.Projectiles.CrystalCaverns;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

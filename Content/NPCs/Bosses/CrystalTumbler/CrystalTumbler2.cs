@@ -16,7 +16,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Buffs;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles;
-using static AerovelenceMod.Content.Projectiles.LightningUtility;
+using static AerovelenceMod.Content.Projectiles.LightningUtils;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using AerovelenceMod.Content.NPCs.CrystalCaverns;
 using Terraria.DataStructures;
@@ -4099,11 +4099,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 lightningData = new LightningData(Projectile, LightningStyle.Static);
                 Vector2 startPos = Projectile.Center;
                 Vector2 endPos = Projectile.Center + new Vector2(0f, 760f);
-                LightningUtility.InitializeBetweenPoints(lightningData, startPos, endPos, LightningStyle.Static);
+                LightningUtils.InitializeBetweenPoints(lightningData, startPos, endPos, LightningStyle.Static);
             }
-            LightningUtility.UpdateSegments(lightningData);
-            LightningUtility.UpdateBranches(lightningData);
-            LightningUtility.SpawnDust(lightningData);
+            LightningUtils.UpdateSegments(lightningData);
+            LightningUtils.UpdateBranches(lightningData);
+            LightningUtils.SpawnDust(lightningData);
             if (Projectile.timeLeft < 10)
                 lightningData.Alpha *= 0.7f;
         }
@@ -4112,7 +4112,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             if (lightningData == null || !lightningData.Initialized)
                 return false;
-            LightningUtility.DrawLightning(lightningData, Main.spriteBatch);
+            LightningUtils.DrawLightning(lightningData, Main.spriteBatch);
             return false;
         }
     }
