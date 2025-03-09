@@ -21,11 +21,6 @@ namespace AerovelenceMod.Content.Items.Armor.Msc
             Item.defense = 3;
         }
 
-        public override void SetStaticDefaults()
-        {
-            ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
-        }
-
         public override void AddRecipes()
         {
             CreateRecipe()
