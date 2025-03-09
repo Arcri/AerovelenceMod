@@ -253,7 +253,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-                Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlashTiny");
+                Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTexturesOLD/pixelKennySlashTiny");
                 Vector2 pos = Main.player[Projectile.owner].Center - Main.screenPosition + new Vector2(5f + 10f * (float)Math.Sin(MathHelper.Pi * getProgress(easingProgress)), 0).RotatedBy(originalAngle);
 
                 Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.DeepPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f), SpriteEffects.None, 0f);
