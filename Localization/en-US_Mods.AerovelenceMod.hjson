@@ -1004,6 +1004,26 @@ Items: {
 		DisplayName: Glimmerwood Planked Wall Item
 		Tooltip: ""
 	}
+
+	CyverCannon: {
+		DisplayName: Cyver Cannon
+		Tooltip: ""
+	}
+
+	Oblivion: {
+		DisplayName: Oblivion
+		Tooltip: ""
+	}
+
+	ThunderLance: {
+		DisplayName: Thunder Lance
+		Tooltip: ""
+	}
+
+	FlailTest: {
+		DisplayName: Flail Test
+		Tooltip: ""
+	}
 }
 
 NPCs: {
