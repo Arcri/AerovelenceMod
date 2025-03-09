@@ -65,14 +65,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             if (attackCount % 2 == 0)
             {
                 p = Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<CrystalCrescentThrowProj>(), damage, knockback, player.whoAmI, 0, tick ? -1 : 1);
-            } 
+            }
             else
             {
                 tick = !tick;
                 p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, tick ? 1 : 0);
             }
 
-            
+
             return false;
         }
 
@@ -149,16 +149,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             if (lightningData == null || !lightningData.Initialized)
             {
                 lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
-                lightningData.NoiseFrequency = 0f;
+                lightningData.NoiseFrequency = 3f;
+                lightningData.CoreColorOverride = Color.Indigo;
+                lightningData.MidColorOverride = Color.Purple;
+                lightningData.OuterColorOverride = Color.Pink;
+                lightningData.FlashColorOverride = Color.Yellow;
+
+                lightningData.GlowIntensity = 0.6f;
             }
 
-            if (Projectile.ai[0] % 2 == 0)
-            {
-                LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, player.Center);
-                LightningUtils.UpdateSegments(lightningData);
-                LightningUtils.UpdateBranches(lightningData);
-                LightningUtils.SpawnDust(lightningData);
-            }
+            LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, player.Center);
+            LightningUtils.UpdateSegments(lightningData);
+            LightningUtils.UpdateBranches(lightningData);
+            LightningUtils.SpawnDust(lightningData);
 
             if (Projectile.ai[0] == 0f)
             {
@@ -171,19 +174,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             }
 
             Projectile.rotation += 0.3f * Projectile.ai[1];
-              
-            returnVelocity = Vector2.Normalize(Projectile.Center.DirectionTo(player.position));
 
-            lightningData.Alpha *= 0.7f;
+            returnVelocity = Vector2.Normalize(Projectile.Center.DirectionTo(player.position));
 
             if (Projectile.ai[0] >= ReboundTicks)
             {
                 Projectile.velocity = returnVelocity * VelocityMult;
-            } 
+            }
             else
             {
                 Projectile.velocity = (initialVelocity * ((ReboundTicks - Projectile.ai[0]) / ReboundTicks) + returnVelocity * (Projectile.ai[0] / ReboundTicks)) * VelocityMult;
-                
+
             }
 
             if (Vector2.Distance(Projectile.Center, player.Center) < 2 * 16 && Projectile.ai[0] > ReboundTicks / 2)
@@ -248,7 +249,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         BaseTrailInfo counterrelativeTrail = new BaseTrailInfo();
 
         public override void AI()
-        { 
+        {
             SwingHalfAngle = 190; // 190
             easingAdditionAmount = 0.02f / Projectile.extraUpdates; //0.015f
             offset = 50;

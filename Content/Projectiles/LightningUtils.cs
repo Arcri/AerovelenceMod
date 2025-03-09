@@ -44,6 +44,17 @@ namespace AerovelenceMod.Content.Projectiles
             public int StaticTimer = 0;
             public int StaticMaxTime = 60;
 
+            //color support
+            public Color? CoreColorOverride;
+            public Color? MidColorOverride;
+            public Color? OuterColorOverride;
+            public Color? DistColorOverride;
+            public Color? FlashColorOverride;
+
+            //glow stuff
+            public float GlowIntensity = 0.4f;
+            public float GlowScale = 0.15f;
+
             public LightningData(Projectile projectile, LightningStyle style = LightningStyle.Default)
             {
                 Projectile = projectile;
@@ -174,26 +185,28 @@ namespace AerovelenceMod.Content.Projectiles
         public static void InitializeBetweenPoints(LightningData data, Vector2 startPos, Vector2 endPos, LightningStyle style = LightningStyle.Default)
         {
             data.Style = style;
-            data.Branches = new List<Branch>();
 
-            data.SegmentPositions = new Vector2[data.MaxSegments];
-            data.SegmentOffsets = new float[data.MaxSegments];
+            //only create brand-new arrays and branch list if we haven't done so yet
+            if (!data.Initialized)
+            {
+                data.Branches = new List<Branch>();
+                data.SegmentPositions = new Vector2[data.MaxSegments];
+                data.SegmentOffsets = new float[data.MaxSegments];
+                data.Initialized = true;
+            }
 
+            //now this recalcs base segment positions each frame so they follow startPos -> endPos, but do NOT re-new data.Branches
             Vector2 direction = endPos - startPos;
             data.DistanceToTarget = direction.Length();
-
             float segmentLength = data.DistanceToTarget / (data.MaxSegments - 1);
             direction.Normalize();
 
             for (int i = 0; i < data.MaxSegments; i++)
             {
                 data.SegmentPositions[i] = startPos + direction * (segmentLength * i);
-                data.SegmentOffsets[i] = 0f;
             }
-
-            data.Initialized = true;
-            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
+
 
         /// <summary>
         /// Updates the main segments of the bolt with noise and random displacement. Also calls branch creation logic.
@@ -483,10 +496,15 @@ namespace AerovelenceMod.Content.Projectiles
 
                 float energyPulse = (float)Math.Sin(Main.GameUpdateCount * 0.2f) * 0.3f + 0.7f;
 
-                Color coreColor = Color.Yellow * data.Alpha * energyPulse;
+                /*Color coreColor = Color.Yellow * data.Alpha * energyPulse;
                 Color midColor = new Color(150, 220, 255) * (data.Alpha * 0.5f * energyPulse);
                 Color outerColor = new Color(100, 180, 255) * (data.Alpha * 0.3f * energyPulse);
-                Color distColor = new Color(200, 230, 255) * (data.Alpha * 0.2f);
+                Color distColor = new Color(200, 230, 255) * (data.Alpha * 0.2f);*/
+                Color coreColor = (data.CoreColorOverride ?? Color.Yellow) * data.Alpha * 0.8f;
+                Color midColor = (data.MidColorOverride ?? new Color(150, 220, 255)) * (data.Alpha * 0.5f * 0.8f);
+                Color outerColor = (data.OuterColorOverride ?? new Color(100, 180, 255)) * (data.Alpha * 0.3f * 0.8f);
+                Color distColor = (data.DistColorOverride ?? new Color(200, 230, 255)) * (data.Alpha * 0.2f * 0.8f);
+                Color flashColor = data.FlashColorOverride ?? Color.Aqua;
 
                 for (int i = 0; i < data.MaxSegments - 1; i++)
                 {
@@ -503,7 +521,7 @@ namespace AerovelenceMod.Content.Projectiles
                             lineTexture,
                             start,
                             sourceRect,
-                            Color.Aqua * flashIntensity,
+                            flashColor * flashIntensity,
                             rotation,
                             new Vector2(0, 0.5f),
                             new Vector2(distance, 3f),
@@ -565,42 +583,40 @@ namespace AerovelenceMod.Content.Projectiles
                         0
                     );
                 }
+                Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/feather_circle").Value;
+                Vector2 origin = new Vector2(glowTexture.Width / 2f, glowTexture.Height / 2f);
 
-                Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrailSlice").Value;
-                for (int i = 0; i < data.MaxSegments - 1; i++)
+                for (int i = 0; i < data.MaxSegments; i++)
                 {
-                    Vector2 start = (data.SegmentPositions[i] - Main.screenPosition) / 2;
-                    Vector2 end = (data.SegmentPositions[i + 1] - Main.screenPosition) / 2;
-                    Vector2 direction = end - start;
-                    float distance = direction.Length();
-                    float rotation = direction.ToRotation();
-
-                    float glowWidth = 0.4f * (1f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.1f);
-                    Color trailColor = outerColor;
+                    Vector2 position = (data.SegmentPositions[i] - Main.screenPosition) / 2;
+                    Color trailColor = outerColor * data.GlowIntensity * 0.7f;
 
                     for (int g = 0; g < 2; g++)
                     {
                         float offsetAngle = g * MathHelper.PiOver2;
-                        Vector2 offset = new(
+                        Vector2 offset = new Vector2(
                             (float)Math.Cos(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f,
                             (float)Math.Sin(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f
                         );
 
                         spriteBatch.Draw(
                             glowTexture,
-                            start + offset,
+                            position + offset,
                             null,
                             trailColor * (1f - g * 0.3f),
-                            rotation,
-                            new Vector2(0, glowTexture.Height / 2f),
-                            new Vector2(distance / (glowTexture.Width / 1f), glowWidth * (1f - g * 0.2f)),
+                            0f,
+                            origin,
+                            data.GlowScale,
                             SpriteEffects.None,
-                            0
+                            0f
                         );
                     }
                 }
 
-                //Impact spark at the start & end
+
+
+
+                //impact spark at the start & end
                 DrawImpactPoint(data.SegmentPositions[0], 4f, data, spriteBatch);
                 DrawImpactPoint(data.SegmentPositions[data.MaxSegments - 1], 4f, data, spriteBatch);
 
@@ -609,33 +625,26 @@ namespace AerovelenceMod.Content.Projectiles
                 {
                     for (int i = 0; i < data.MaxSegments - 1; i++)
                     {
-                        Vector2 start = (data.SegmentPositions[i] - Main.screenPosition) / 2;
-                        Vector2 end = (data.SegmentPositions[i + 1] - Main.screenPosition) / 2;
-                        Vector2 direction = end - start;
-                        float distance = direction.Length();
-                        float rotation = direction.ToRotation();
-
-                        float glowWidth = 0.1f * (1f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.1f);
-                        Color trailColor = outerColor;
-
+                        Vector2 position = (data.SegmentPositions[i] - Main.screenPosition) / 2;
+                        Color trailColor = outerColor * data.GlowIntensity;
                         for (int g = 0; g < 2; g++)
                         {
                             float offsetAngle = g * MathHelper.PiOver2;
-                            Vector2 offset = new(
+                            Vector2 offset = new Vector2(
                                 (float)Math.Cos(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f,
                                 (float)Math.Sin(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f
                             );
 
                             spriteBatch.Draw(
                                 glowTexture,
-                                start + offset,
+                                position + offset,
                                 null,
                                 trailColor * (1f - g * 0.3f),
-                                rotation,
-                                new Vector2(0, glowTexture.Height / 2f),
-                                new Vector2(distance / (glowTexture.Width / 1f), glowWidth * (1f - g * 0.2f)),
+                                0f,
+                                origin,
+                                data.GlowScale,
                                 SpriteEffects.None,
-                                0
+                                0f
                             );
                         }
                     }
@@ -653,7 +662,7 @@ namespace AerovelenceMod.Content.Projectiles
                                 lineTexture,
                                 start,
                                 sourceRect,
-                                Color.Aqua * flashIntensity * branch.Alpha,
+                                flashColor * flashIntensity * branch.Alpha,
                                 rotation,
                                 new Vector2(0, 0.5f),
                                 new Vector2(distance, 3f),
@@ -670,7 +679,7 @@ namespace AerovelenceMod.Content.Projectiles
                                 lineTexture,
                                 start,
                                 sourceRect,
-                                Color.Aqua * flashIntensity,
+                                flashColor * flashIntensity,
                                 rotation,
                                 new Vector2(0, 0.5f),
                                 new Vector2(distance, 3f),
@@ -732,34 +741,35 @@ namespace AerovelenceMod.Content.Projectiles
                             0
                         );
 
+                        Vector2 lastPosition = (data.SegmentPositions[data.MaxSegments - 1] - Main.screenPosition) / 2;
+                        Color lastTrailColor = outerColor * data.GlowIntensity;
+
+
                         for (int g = 0; g < 2; g++)
                         {
                             float offsetAngle = g * MathHelper.PiOver2;
-                            Vector2 offset = new(
+                            Vector2 offset = new Vector2(
                                 (float)Math.Cos(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f,
                                 (float)Math.Sin(offsetAngle + Main.GameUpdateCount * 0.05f) * 0.5f
                             );
 
-                            float glowWidth = 0.3f * (1f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.1f);
-                            Color trailColor = outerColor;
-
                             spriteBatch.Draw(
                                 glowTexture,
-                                start + offset,
+                                lastPosition + offset,
                                 null,
-                                trailColor * (1f - g * 0.3f),
-                                rotation,
-                                new Vector2(0, glowTexture.Height / 2f),
-                                new Vector2(distance / (glowTexture.Width / 1f), glowWidth * (1f - g * 0.2f)),
+                                lastTrailColor * (1f - g * 0.3f),
+                                0f,
+                                origin,
+                                data.GlowScale,
                                 SpriteEffects.None,
-                                0
+                                0f
                             );
                         }
                     }
                 }
             }, PixellationSystem.RenderType.Additive);
         }
-        
+
 
         private static void DrawImpactPoint(Vector2 position, float size, LightningData data, SpriteBatch spriteBatch)
         {
