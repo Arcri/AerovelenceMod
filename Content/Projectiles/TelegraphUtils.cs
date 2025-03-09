@@ -106,8 +106,8 @@ namespace AerovelenceMod.Content.Projectiles
         /// <param name="spriteBatch">The SpriteBatch instance used for drawing.</param>
         public static void DrawAllTelegraphs(SpriteBatch spriteBatch)
         {
-            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
-            Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/AnotherLineGlow").Value;
+            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
+            Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/AnotherLineGlow").Value;
 
             foreach (var telegraph in activeTelegraphs.Values)
             {

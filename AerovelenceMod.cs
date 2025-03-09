@@ -295,17 +295,7 @@ namespace AerovelenceMod
 				Ref<Effect> DistortMiscRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DistortMisc", AssetRequestMode.ImmediateLoad).Value);
 				GameShaders.Misc["DistortMisc"] = new MiscShaderData(DistortMiscRef, "DistortPass");
 
-				Ref<Effect> BasicTrailRef = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/IchorMissileExhaust", AssetRequestMode.ImmediateLoad).Value);
-				GameShaders.Misc["IchorMissileExhaust"] = new MiscShaderData(BasicTrailRef, "ShaderPass");
-
-				//Ref<Effect> BasicTrailRef2 = new Ref<Effect>(Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value);
-				//GameShaders.Misc["BasicTrailShader"] = new MiscShaderData(BasicTrailRef2, "DefaultPass");
-				
-				//Ref<Effect> DistortionRef = new Ref<Effect>(Assets.Request<Effect>("Effects/Distortion", AssetRequestMode.ImmediateLoad).Value);
-				//Filters.Scene["AerovelenceMod:Distortion"] = new Filter(new ScreenShaderData("DistortionPulsePass"), EffectPriority.VeryHigh);
-
 				BasicTrailShader = Instance.Assets.Request<Effect>("Effects/TrailShaders/BasicTrailShader", AssetRequestMode.ImmediateLoad).Value;
-				TrailShaderPixelate = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderPixelate", AssetRequestMode.ImmediateLoad).Value;
 				TrailShaderGradient = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderGradient", AssetRequestMode.ImmediateLoad).Value;
 
                 fadeShader = Instance.Assets.Request<Effect>("Effects/FadeShader", AssetRequestMode.ImmediateLoad).Value;
@@ -337,8 +327,7 @@ namespace AerovelenceMod
 
 			LoadDetours();
 
-
-
+			
         }
 
         public static bool shouldHide = false;

@@ -1479,7 +1479,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/whiteFireEye").Value;
                 Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/spiky_20fade").Value;
-                Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/pixelKennySlash").Value;
+                Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/Slash/pixelKennySlash").Value;
                 Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
                 Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
                 myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/Noise_1").Value);
@@ -1508,7 +1508,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             }
-            Texture2D lineTexture2 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
+            Texture2D lineTexture2 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
             float telegraphLength2 = 500f;
             for (int i = telegraphLines.Count - 1; i >= 0; i--)
             {
@@ -1525,7 +1525,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (isTelegraphing)
             {
                 int numberOfLines = 8;
-                Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
+                Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
                 float telegraphLength = 200f;
                 for (int i = 0; i < numberOfLines; i++)
                 {
@@ -1540,7 +1540,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             if (readyToSpawnTelegraphStrikes)
             {
-                Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
+                Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
                 Color telegraphColor = Color.Blue;
                 float telegraphLength = 500f;
                 foreach (var position in lightningStrikePositions)
@@ -1552,7 +1552,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             if (EyeGlow)
             {
-                Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
+                Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
                 Vector2 eyeStarDrawPos = NPC.Center - Main.screenPosition;
                 float eyeStarRotation = NPC.rotation;
                 float eyeStarValue = 0.5f;

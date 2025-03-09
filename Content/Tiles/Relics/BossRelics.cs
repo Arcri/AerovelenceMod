@@ -3,9 +3,7 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using Terraria;
 using Terraria.ModLoader;
-using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
-using Humanizer;
 using Terraria.ID;
 using System.Collections.Generic;
 using Terraria.Enums;
@@ -161,31 +159,26 @@ namespace AerovelenceMod.Content.Tiles.Relics
             }
         }
 
-        public class CyvercryBossRelic : BossRelics
-        {
-            public override string RelicTextureName => "AerovelenceMod/Content/Tiles/Relics/CyvercryBossRelic";
 
-            public override void SetStaticDefaults() => base.SetStaticDefaults();
+    }
+
+    public class CrystalTumblerRelicItem : ModItem
+    {
+        public override void SetDefaults()
+        {
+            Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
+            Item.placeStyle = 0;
+            Item.createTile = ModContent.TileType<BossRelics>();
         }
+    }
 
-        public class CrystalTumblerRelicItem : ModItem
+    public class CyvercryRelicItem : ModItem
+    {
+        public override void SetDefaults()
         {
-            public override void SetDefaults()
-            {
-                Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
-                Item.placeStyle = 0;
-                Item.createTile = ModContent.TileType<BossRelics>();
-            }
-        }
-
-        public class CyvercryRelicItem : ModItem
-        {
-            public override void SetDefaults()
-            {
-                Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
-                Item.placeStyle = 1;
-                Item.createTile = ModContent.TileType<BossRelics>();
-            }
+            Item.CloneDefaults(ItemID.KingSlimeMasterTrophy);
+            Item.placeStyle = 1;
+            Item.createTile = ModContent.TileType<BossRelics>();
         }
     }
 }

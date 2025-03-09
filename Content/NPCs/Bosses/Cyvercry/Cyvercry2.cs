@@ -140,8 +140,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         }
 
         #region Drawing
-        public List<Vector2> previousPositions;
-        public List<float> previousRotations;
+        public List<Vector2> previousPositions = new List<Vector2>();
+        public List<float> previousRotations = new List<float>();
 
 
         bool hideRegreGlow = false;
@@ -169,7 +169,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             //TODO make this run only when needed
             Vector2 from = NPC.Center + new Vector2(-98, 0).RotatedBy(NPC.rotation);
-            Texture2D Ball = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_4");
+            Texture2D Ball = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_4");
             Texture2D Ball2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
 
             Main.EntitySpriteDraw(Ball2, from - Main.screenPosition, Ball2.Frame(), Color.DeepPink * 1.5f, NPC.rotation - ((float)Main.timeForVisualEffects * 0.045f), Ball2.Frame().Size() / 2f, (ballScale / 130) * 0.11f, SpriteEffects.None, 0);
@@ -283,7 +283,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 Vector2 random2 = new Vector2(Main.rand.Next(-1, 2), Main.rand.Next(-1, 2));
 
 
-                Texture2D pixelStar = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+                Texture2D pixelStar = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
                 Vector2 scale1 = new Vector2(0.9f, 0.9f);
                 Vector2 scale2 = new Vector2(2.2f, 1.3f);
 
@@ -301,7 +301,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
                 if (phase3PulseColor == Color.White)
                 {
-                    Texture2D glowStrong = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
+                    Texture2D glowStrong = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
                     spriteBatch.Draw(glowStrong, NPC.Center - Main.screenPosition + new Vector2(-70, 0).RotatedBy(NPC.rotation), glowStrong.Frame(1, 1, 0, 0), Color.HotPink * phase3PulseValue, NPC.rotation + MathHelper.PiOver4, glowStrong.Size() / 2, 1.25f, SpriteEffects.None, 0);
                     spriteBatch.Draw(glowStrong, NPC.Center - Main.screenPosition + new Vector2(-70, 0).RotatedBy(NPC.rotation), glowStrong.Frame(1, 1, 0, 0), Color.HotPink * phase3PulseValue, NPC.rotation + MathHelper.PiOver4, glowStrong.Size() / 2, 1f, SpriteEffects.None, 0);
 
@@ -318,7 +318,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //spriteBatch.Draw(glowStrong, NPC.Center - Main.screenPosition + new Vector2(-70, 0).RotatedBy(NPC.rotation), glowStrong.Frame(1, 1, 0, 0), Color.HotPink * phase3PulseValue, NPC.rotation, glowStrong.Size() / 2, new Vector2(2.2f, 1.3f) * 0.06f, SpriteEffects.None, 0);
 
             //Eye Star
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
             Vector2 eyeStarDrawPos = NPC.Center - Main.screenPosition + new Vector2(-70, 0).RotatedBy(NPC.rotation);
             for (int al = 0; al < 2; al++)
             {
@@ -353,7 +353,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (DrawDeathOrb)
             {
                 Texture2D starTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/scorch_01").Value;
-                Texture2D starTex2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+                Texture2D starTex2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -697,7 +697,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 case -4:
                     SitStill(myPlayer);
                     break;
-
                 case 1:
                     IdleLaser(myPlayer);
                     break;

@@ -476,7 +476,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                     );
                 }
 
-                Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrailSlice").Value;
+                Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Clear/GlowTrailSlice").Value;
                 for (int i = 0; i < MAX_SEGMENTS - 1; i++)
                 {
                     Vector2 start = (segmentPositions[i] - Main.screenPosition) / 2;
@@ -510,7 +510,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
                     float time = Main.GameUpdateCount * 0.1f;
                     float pulseSize = 1f + (float)Math.Sin(time) * 0.2f;
 
-                    Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+                    Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/CrispStarPMA").Value;
 
                     //rotating pixels
                     for (int i = 0; i < 4; i++)
@@ -675,7 +675,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Mod.Assets.Request<Texture2D>("Assets/HitAnims/BlueFlareDarkGlowPMA").Value;
+            Texture2D texture = Mod.Assets.Request<Texture2D>("Assets/Anim/BlueFlareDarkGlowPMA").Value;
             int frameHeight = texture.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
             Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);

@@ -106,13 +106,13 @@ namespace AerovelenceMod
                     KWGlow = ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/KWWhiteGlow");
 
                 if (Line == null)
-                    Line = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray");
+                    Line = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray");
 
                 if (Glow == null)
                     Glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/impact_2fade2");
 
                 if (Glow2 == null)
-                    Glow2 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+                    Glow2 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
 
 				if (drawInfo.shadow != 0f)
 					return;

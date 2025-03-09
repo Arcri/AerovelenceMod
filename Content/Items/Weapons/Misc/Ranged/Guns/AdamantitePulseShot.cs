@@ -89,7 +89,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             if (timer == 0)
                 return false;
 
-            var softGlow = Mod.Assets.Request<Texture2D>("Assets/DiamondGlow").Value;
+            var softGlow = Mod.Assets.Request<Texture2D>("Assets/Pixel/DiamondGlow").Value;
             var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
 
             Vector2 vscale = new Vector2(0.5f, Projectile.velocity.Length() * 0.15f) * Projectile.ai[0];

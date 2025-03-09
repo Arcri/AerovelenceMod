@@ -299,7 +299,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
         public void spearTop()
         {
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceTipGlow");
-            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1");
+            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_1");
             Texture2D Tip = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceTip");
 
             Vector2 tipGlowOffset = new Vector2(0, 10f).RotatedBy(Projectile.rotation);

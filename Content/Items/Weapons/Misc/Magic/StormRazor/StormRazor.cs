@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -114,7 +113,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.StormRazor
             //flare 1
 
 
-            Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/ElectricRadialEffect").Value;
+            Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Flare/ElectricRadialEffect").Value;
 
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
@@ -163,4 +162,3 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.StormRazor
 
 
 }
-*/

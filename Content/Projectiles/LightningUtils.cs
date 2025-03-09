@@ -803,7 +803,7 @@ namespace AerovelenceMod.Content.Projectiles
             }
 
             //2) Star overlay
-            Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/CrispStarPMA").Value;
 
             Color color1 = Color.Lerp(
                 new Color(0, 236, 255),

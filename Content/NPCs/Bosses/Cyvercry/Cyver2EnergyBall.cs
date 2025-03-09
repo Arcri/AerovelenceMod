@@ -208,8 +208,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             trail2.TrailDrawing(Main.spriteBatch);
 
             /*
-            Texture2D spike = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Spike").Value;
-            Texture2D star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D spike = Mod.Assets.Request<Texture2D>("Assets/Flare/Spike").Value;
+            Texture2D star = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
 
             float spikeRot = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             Vector2 spikeScale = new Vector2(0.85f, 1f) * 0.35f;
@@ -226,13 +226,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             float scale = 2f;
             float rot = (float)Main.timeForVisualEffects * 0.2f;
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
-            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
+            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
 
-            //Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            //Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
 
-            Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
-            Texture2D glow4 = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
+            Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_12").Value;
+            Texture2D glow4 = Mod.Assets.Request<Texture2D>("Assets/Pixel/TerraOrbC").Value;
 
             //Main.spriteBatch.Draw(glow4, Projectile.Center - Main.screenPosition, null, Color.DeepPink with { A = 0 } * 0.35f, Projectile.velocity.ToRotation() + rot, glow4.Size() / 2, 0.3f * scale, SpriteEffects.None, 0f);
             //Main.spriteBatch.Draw(glow4, Projectile.Center - Main.screenPosition, null, Color.DeepPink with { A = 0 } * 0.35f, Projectile.velocity.ToRotation() + rot + MathHelper.ToRadians(120), glow4.Size() / 2, 0.3f * scale, SpriteEffects.None, 0f);

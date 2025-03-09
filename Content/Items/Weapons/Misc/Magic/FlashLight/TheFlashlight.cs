@@ -368,9 +368,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             //Flares
 
-            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_01").Value;
-            Texture2D flare2 = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStar").Value;
-            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/TrailImages/PartiGlow").Value;
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/Flare/star_01").Value;
+            Texture2D flare2 = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStar").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/Pixel/PartiGlow").Value;
 
             Vector2 startDrawPoint = Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * 23) - Main.screenPosition;
             float sinScale = laserWidth < 1f ? 0f : MathF.Sin((float)Main.timeForVisualEffects * 0.06f) * 0.025f;

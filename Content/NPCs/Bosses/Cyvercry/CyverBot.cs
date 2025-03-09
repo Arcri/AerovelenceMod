@@ -68,7 +68,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
-            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
 
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -447,9 +447,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
             Texture2D spiralTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
             Texture2D glorbTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
-            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Twinkle");
+            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Twinkle");
 
-            Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray");
+            Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray");
             Vector2 lineScale = new Vector2(3f, 0.2f + (lineExtraPower * 0.1f)) * 1.5f;
 
             float add = NPC.spriteDirection == 1 ? 0f : MathHelper.Pi;

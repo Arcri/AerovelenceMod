@@ -274,9 +274,9 @@ parentDied = true;
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
             Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/spiky_20fade").Value;
-            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
@@ -398,9 +398,9 @@ parentDied = true;
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
             Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/spiky_20fade").Value;
-            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
@@ -608,7 +608,7 @@ parentDied = true;
         public override void PostDraw(Color lightColor)
         {
             Vector2 laserEndPos = initialPosition + (Vector2.UnitX.RotatedBy(LaserRotation) * laserLength) - Main.screenPosition;
-            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Flare/CrispStarPMA").Value;
             Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
             Color adjustedColor = Color.Black * 0.5f * starAlpha * ((255 - Projectile.alpha) / 255f);
 

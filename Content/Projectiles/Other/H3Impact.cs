@@ -74,7 +74,7 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public override bool PreDraw(ref Color lightColor)
 		{
 			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/H3Impact").Value;
-			Texture2D Tex3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_5").Value;
+			Texture2D Tex3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_5").Value;
 
 			Vector2 scale = new Vector2(xScale * size, yScale * size);
 

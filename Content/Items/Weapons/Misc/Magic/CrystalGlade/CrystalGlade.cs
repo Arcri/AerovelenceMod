@@ -397,8 +397,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 
             //B: Flare = spotlight_8 | caus = Noise_1 | Grad = orangeGrad | Noise = Swirl | 0.3, 1, 0.8, 0.06, 0, time * 0.01, alpha * 2.6 | drawn twice
 
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
-            //Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/DrawnStar").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
+            //Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/DrawnStar").Value;
 
 
             if (myEffect == null)
@@ -478,7 +478,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
         float glowRot = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Base = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/GlowStar");
+            Texture2D Base = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/GlowStar");
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
 
             Vector2 pos = Projectile.Center - Main.screenPosition;

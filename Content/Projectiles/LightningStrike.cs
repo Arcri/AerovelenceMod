@@ -62,7 +62,9 @@ namespace AerovelenceMod.Content.Projectiles
                     MaxSegments = 60,
                     DisplacementIntensity = 2f,
                     NoiseFrequency = 2,
-                    TargetPosition = TargetPosition
+                    TargetPosition = TargetPosition,
+                    GlowScale = 0.09f,
+                    GlowIntensity = 0.5f
                 };
                 LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, TargetPosition, LightningUtils.LightningStyle.Static);
             }
@@ -290,7 +292,7 @@ namespace AerovelenceMod.Content.Projectiles
         private void DrawFlaresAndArcs(SpriteBatch spriteBatch)
         {
             Vector2 center = Projectile.Center - Main.screenPosition;
-            Texture2D flare3 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_3").Value;
+            Texture2D flare3 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_3").Value;
             float pulseSpeed = 0.4f;
             float scaleBase = 0.03f;
             float scaleRange = 0.15f;
@@ -308,7 +310,7 @@ namespace AerovelenceMod.Content.Projectiles
                 0f
             );
 
-            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/CrispStarPMA").Value;
             spriteBatch.Draw(
                 star,
                 center,
@@ -323,7 +325,7 @@ namespace AerovelenceMod.Content.Projectiles
 
             spriteBatch.Draw(flare3, center, null, Color.White, 0f, flare3.Size() * 0.5f, scale, SpriteEffects.None, 0f);
 
-            Texture2D flare10 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_10").Value;
+            Texture2D flare10 = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_10").Value;
             if (Main.GameUpdateCount % 10 == 0)
             {
                 flare10Rotation = Main.rand.NextFloat(MathHelper.TwoPi);

@@ -474,17 +474,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
+            Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
 
             Main.spriteBatch.Draw(LaserTextureBlack, targetSmaller, null, new Color(255, 185, 0) with { A = 0 } * 0.2f, laserDrawRot, origin2, 0, 0);
 
 
             //Flares
-
-            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_01").Value;
-            Texture2D flare2 = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStar").Value;
-            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/TrailImages/PartiGlow").Value;
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/Flare/star_01").Value;
+            Texture2D flare2 = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStar").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/Pixel/PartiGlow").Value;
 
             float sinScale = laserWidth < 1f ? 0f : MathF.Sin((float)Main.timeForVisualEffects * 0.06f) * 0.025f;
 
@@ -498,9 +497,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             #endregion
 
-            //Reset again cause arm glow thing that hasn't been fixed for like a year
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
             return false;
         }
@@ -710,10 +706,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         Effect myEffect = null;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/spark_07_Black").Value;
-            Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Extra_196_Black").Value;
+            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/Trails/spark_07_Black").Value;
+            Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Trails/Extra_196_Black").Value;
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStar").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Pixel/VanillaStar").Value;
             if (myEffect == null)
                 myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 

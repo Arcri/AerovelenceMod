@@ -383,8 +383,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             #endregion
 
             Texture2D LaserTexture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/FlashLight/FlashLightBeam").Value;
-            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
-            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_12").Value;
 
             Vector2 origin2 = new Vector2(0, LaserTexture.Height / 2);
 
@@ -580,8 +580,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-            Texture2D line = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
-            Texture2D orb = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
+            Texture2D line = Mod.Assets.Request<Texture2D>("Assets/Pixel/Nightglow").Value;
+            Texture2D orb = Mod.Assets.Request<Texture2D>("Assets/Orbs/Glorb").Value;
 
             Vector2 vec2Scale = new Vector2(1f, 1f - Projectile.velocity.Length() * 0.1f) * Projectile.scale;
             Vector2 vec2ScaleLine = new Vector2(1f - Projectile.velocity.Length() * 0.1f, 1f) * Projectile.scale;
@@ -594,7 +594,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.rotation, texture.Size() / 2, vec2Scale, SpriteEffects.None, 0.0f);
 
-            Main.spriteBatch.Draw(orb, Projectile.Center - Main.screenPosition, null, Color.Red with { A = 0 } * 0.75f, Projectile.rotation, orb.Size() / 2, vec2ScaleOrb, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(orb, Projectile.Center - Main.screenPosition, null, Color.Red with { A = 0 } * 0.5f, Projectile.rotation, orb.Size() / 2, vec2ScaleOrb, SpriteEffects.None, 0.0f);
 
 
             return false;

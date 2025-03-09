@@ -283,7 +283,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
                 if (i == list.Count - 2 && Timer > 10)
                 {
-                    Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+                    Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
                     Main.EntitySpriteDraw(Star, pos - Main.screenPosition, Star.Frame(1, 1, 0, 0), Color.DeepPink with { A = 0 } * 1.75f, rotation, Star.Size() / 2, scale * 1f, SpriteEffects.None, 0f);
                     Main.EntitySpriteDraw(Star, pos - Main.screenPosition, Star.Frame(1, 1, 0, 0), Color.HotPink with { A = 0 } * 1.75f, rotation, Star.Size() / 2, scale * 0.75f, SpriteEffects.None, 0f);
                 }
@@ -611,7 +611,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override void PostDraw(Color lightColor)
         {
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
-            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
 
             int frameHeight = texture.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
@@ -676,7 +676,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/GlowmaskBot");
-            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+            Texture2D eyeStar = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
 
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 

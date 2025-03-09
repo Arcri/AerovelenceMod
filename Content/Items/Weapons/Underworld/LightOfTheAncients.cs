@@ -726,7 +726,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
         {
             TrailDrawing();
 
-            Texture2D tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
+            Texture2D tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Nightglow").Value;
             Vector2 scale = new Vector2(Projectile.scale * 1.8f, Projectile.scale) * 0.5f;
 
             Color col = justHit ? Color.White : Color.Orange;

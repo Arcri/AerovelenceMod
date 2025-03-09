@@ -13,6 +13,7 @@ using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using AerovelenceMod.Content.Projectiles;
 using System;
 using System.Collections.Generic;
+using AerovelenceMod.Common;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 {
@@ -349,7 +350,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             if (width < 0.15)
                 width = 0;
 
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
+            trail1.trailTexture = CommonTextures.Extra_196_Black.Value;
             trail1.trailPointLimit = 800;
             trail1.trailWidth = (int)(50 * width * 1.5f);
             trail1.trailMaxLength = 300;
@@ -374,7 +375,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             trail1.TrailLogic();
 
             //Trail2
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/PixelTrail").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Clear/PixelTrail").Value;
             trail2.trailColor = Color.White * width;
             trail2.trailPointLimit = 800;
             trail2.trailWidth = (int)(8);
@@ -470,7 +471,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             if (false && getProgress(easingProgress) >= 0.4f && getProgress(easingProgress) <= 0.8f)
             {
 
-                Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/GlowStarPMA");
+                Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/GlowStarPMA");
                 Color colToUse = Color.White * 1f;
                 colToUse.A = 0;
                 Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition + new Vector2(35f * (1f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f)), 0).RotatedBy(currentAngle),
@@ -673,7 +674,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
         {
 
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value;
+            trail1.trailTexture = CommonTextures.FlamesTextureButBlack.Value;
             trail1.trailColor = Color.White * 0.4f;
             trail1.trailPointLimit = 300;
             trail1.trailWidth = (int)(10 * scale);
@@ -688,7 +689,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/GlowTrail").Value;
+            trail2.trailTexture = CommonTextures.GlowTrail.Value;
             trail2.trailPointLimit = 300;
             trail2.trailWidth = (int)(15 * scale);
             trail2.trailMaxLength = 400;
@@ -707,18 +708,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
             Projectile.velocity = Projectile.velocity.RotatedBy(0.01f * (rotDir ? 1f : -1f));
 
-            /*
-            if (timer % 8 == 0 && Main.rand.NextBool(2))
-            {
-                int a = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<GlowStrong>(), Scale: Main.rand.NextFloat(0.1f, 0.15f));
-                Main.dust[a].velocity *= 0.75f;
-                Main.dust[a].velocity += Projectile.velocity * 0.2f;
 
-                Main.dust[a].color = getEosColor(Main.rand.NextFloat(0.0f, 1.0f));
-                Main.dust[a].alpha = 2;
-
-            }
-            */
             if (timer > 40)
             {
                 scale = Math.Clamp(MathHelper.Lerp(scale, -0.5f, 0.07f), 0, 1);
@@ -734,26 +724,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override bool PreDraw(ref Color lightColor)
         {
-
             trail1.trailTime = (float)Main.timeForVisualEffects * 0.01f;
             trail2.gradientTime = (float)Main.timeForVisualEffects * 0.02f;
             trail2.trailTime = (float)Main.timeForVisualEffects * 0.03f;
 
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
-
-            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/bigCircle2").Value;
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //Main.spriteBatch.Draw(Ball, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, Ball.Size() / 2, Projectile.scale * 0.1f, SpriteEffects.None, 0f);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-
 
             return false;
         }
@@ -841,7 +817,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             }
 
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value;
+            trail1.trailTexture = CommonTextures.FlamesTextureButBlack.Value;
             trail1.trailColor = Color.White * 0.8f;
             trail1.trailPointLimit = 300;
             trail1.trailWidth = (int)(30 * scale * 1);
@@ -856,7 +832,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             //trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail7").Value;
+            trail2.trailTexture = CommonTextures.Trail7.Value;
             trail2.trailPointLimit = 300;
             trail2.trailWidth = (int)(45 * scale * 0.5f);
             trail2.trailMaxLength = 400 * 2;
@@ -907,7 +883,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             else
             {
                 scale = Math.Clamp(MathHelper.Lerp(scale, 1.25f, 0.02f), 0, 1);
-
             }
 
             timer++;
@@ -915,7 +890,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override bool PreDraw(ref Color lightColor)
         {
-
             trail1.trailTime = (float)Main.timeForVisualEffects * 0.01f;
             trail2.gradientTime = (float)Main.timeForVisualEffects * 0.02f;
             trail2.trailTime = (float)Main.timeForVisualEffects * 0.03f;
@@ -923,10 +897,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/RainbowRod").Value;
+            Texture2D Star = CommonTextures.RainbowRod.Value;
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
             Vector2 scale2 = new Vector2(1f, 0.5f) * scale;
             Vector2 pos = Projectile.Center - Main.screenPosition - Projectile.velocity * 1f;
@@ -938,14 +912,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             Vector2 v = new Vector2(1.5f * (scale * 2), 0);
 
 
-            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot), null, Color.Aqua, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + MathHelper.PiOver2), null, Color.LightBlue, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + MathHelper.Pi), null, Color.MediumPurple, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + -MathHelper.PiOver2), null, Color.Orange, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot), null, Color.Aqua with { A = 0 }, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + MathHelper.PiOver2), null, Color.LightBlue with { A = 0 }, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + MathHelper.Pi), null, Color.MediumPurple with { A = 0 }, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Star, pos + v.RotatedBy(rot + -MathHelper.PiOver2), null, Color.Orange with { A = 0 }, srot, Star.Size() / 2, scale2, SpriteEffects.None, 0f);
 
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
 
 
@@ -1022,7 +996,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
@@ -1049,6 +1023,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
 
     //Unused but pretty cool ill use it for the staff or something 
+    /*
     public class EosDart : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -1084,16 +1059,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
                 previousPositions = new List<Vector2>();
                 //Projectile.scale = 0.75f;
             }
-
-            //NOPE TOO LAGGY CUZ EXTRA UPDATES
-            /*
-            var target = Projectile.FindTargetWithLineOfSight(240f);
-            if (target != -1)
-            {
-                Projectile.velocity = Vector2.Normalize(Vector2.Lerp(Projectile.velocity,
-                    Vector2.Normalize(Main.npc[target].Center - Projectile.Center) * Projectile.velocity.Length(), 0.05f)) * Projectile.velocity.Length();
-            }
-            */
 
             if (timer % 2 == 0)
             {
@@ -1201,10 +1166,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/TrailImages/BusterGlow").Value;
-            Texture2D SwingStandard = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TestTex").Value;
+            Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/Pixel/BusterGlow").Value;
+            Texture2D SwingStandard = Mod.Assets.Request<Texture2D>("Assets/Pixel/TestTex").Value;
 
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
 
             Vector2 scale = new Vector2(0.35f * alpha, 1f) * Projectile.scale;
             Vector2 scale2 = new Vector2(0.15f * alpha, 1f) * Projectile.scale;
@@ -1280,5 +1245,5 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
         }
 
     }
-
+    */
 }

@@ -167,11 +167,11 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 	public class GlowStarSharp : ModDust
 	{
-		public override string Texture => "AerovelenceMod/Assets/TrailImages/CrispStarPMA";
+		public override string Texture => "AerovelenceMod/Assets/Pixel/CrispStarPMA";
 		private Texture2D circleGlow;
 
 
-		public override void Load() => circleGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/PartiGlowPMA");
+		public override void Load() => circleGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/PartiGlowPMA");
 
 		public override void Unload() => circleGlow = null;
 
@@ -269,7 +269,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 					if (behavior.DrawOrb)
                     {
 						//todo not this
-						Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/PartiGlowPMA");
+						Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/PartiGlowPMA");
 
 						Color orbCol = behavior.OrbBlack ? Black : dust.color with { A = 0 };
 						Main.spriteBatch.Draw(Core, dust.position - Main.screenPosition, null, orbCol * 0.07f * behavior.OrbIntensity, dust.rotation, new Vector2(60f, 60f), dust.scale * 2f, SpriteEffects.None, 0f);
