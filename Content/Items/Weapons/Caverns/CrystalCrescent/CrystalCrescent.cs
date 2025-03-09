@@ -8,6 +8,8 @@ using Terraria.ModLoader;
 using Terraria.Audio;
 using AerovelenceMod.Content.Projectiles;
 using System;
+using AerovelenceMod.Common.Globals.SkillStrikes;
+using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 {
@@ -32,7 +34,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
-            Item.rare = ItemRarityID.Master;
+            Item.rare = ItemRarityID.Green;
             Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.channel = true;
@@ -41,18 +43,32 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Item.shoot = ModContent.ProjectileType<CrystalCrescentSwingProj>();
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes while in hand [i:" + ItemID.FallenStar + "]")
+            {
+                OverrideColor = Color.Gold,
+            };
+            tooltips.Add(SkillStrike);
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            return player.ownedProjectileCounts[ModContent.ProjectileType<CrystalCrescentThrowProj>()] < 1;
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             attackCount++;
-            tick = !tick;
             int p;
 
-            if (attackCount % 3 == 0)
+            if (attackCount % 2 == 0)
             {
-                p = Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<CrystalCrescentThrowProj>(), damage, knockback, player.whoAmI, tick ? 1 : 0);
+                p = Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<CrystalCrescentThrowProj>(), damage, knockback, player.whoAmI, 0, tick ? -1 : 1);
             } 
             else
             {
+                tick = !tick;
                 p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, tick ? 1 : 0);
             }
 
@@ -64,43 +80,43 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
     public class CrystalCrescentThrowProj : ModProjectile
     {
+        private float VelocityMult = 18;
+        private float ReboundTicks = 60;
+
         public override string Texture => "Terraria/Images/Projectile_0";
+
         //public override string Texture => "AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent";
 
         BaseTrailInfo relativeTrail = new BaseTrailInfo();
         BaseTrailInfo counterrelativeTrail = new BaseTrailInfo();
 
-        private static Vector2 initialVelocity;
-        private static Vector2 returnVelocity;
+        private LightningUtils.LightningData lightningData;
 
-        private float rebound = 90;
-
-        private int timer = 0;
+        private Vector2 initialVelocity;
+        private Vector2 returnVelocity;
 
         public override void SetDefaults()
         {
             Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = Projectile.height = 0;
+            Projectile.width = Projectile.height = 78;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.usesLocalNPCImmunity = true;
+            Projectile.usesLocalNPCImmunity = false;
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
             Projectile.light = 0.75f;
-            // Projectile.extraUpdates = 7;
         }
 
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
 
-            Vector2 otherOffset = new Vector2(Projectile.spriteDirection > 0 ? 4 : 0, Projectile.spriteDirection > 0 ? -8 : -12);
-            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
+            #region Trails
 
             relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
             relativeTrail.trailColor = Color.MidnightBlue;
@@ -112,7 +128,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             relativeTrail.myPlayer = Main.player[Projectile.owner];
             relativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
 
-            relativeTrail.trailPos = Projectile.position + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center;
+            relativeTrail.trailPos = Projectile.Center + Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center;
 
             counterrelativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
             counterrelativeTrail.trailColor = Color.SteelBlue;
@@ -124,73 +140,82 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             counterrelativeTrail.myPlayer = Main.player[Projectile.owner];
             counterrelativeTrail.trailRot = Projectile.rotation + MathHelper.PiOver4;
 
-            counterrelativeTrail.trailPos = (Projectile.position - Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center);
+            counterrelativeTrail.trailPos = (Projectile.Center - Projectile.rotation.ToRotationVector2().RotatedBy(-1f) * (60) - Main.player[Projectile.owner].Center);
 
-            if (timer == 0)
+            relativeTrail.TrailLogic();
+            counterrelativeTrail.TrailLogic();
+            #endregion
+
+            if (lightningData == null || !lightningData.Initialized)
             {
-                Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
-                Projectile.velocity = Vector2.Normalize(player.DirectionTo(Main.MouseWorld));
-                initialVelocity = Projectile.velocity;
+                lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
+                lightningData.NoiseFrequency = 0f;
             }
 
-            Projectile.rotation += 0.1f;
-
-            returnVelocity = Vector2.Normalize(Projectile.DirectionTo(player.position));
-
-            if (timer >= rebound)
+            if (Projectile.ai[0] % 2 == 0)
             {
-                Projectile.velocity = returnVelocity * 18;
+                LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, player.Center);
+                LightningUtils.UpdateSegments(lightningData);
+                LightningUtils.UpdateBranches(lightningData);
+                LightningUtils.SpawnDust(lightningData);
+            }
+
+            if (Projectile.ai[0] == 0f)
+            {
+                Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
+                Projectile.velocity = Vector2.Normalize(player.Center.DirectionTo(Main.MouseWorld)) + player.velocity / VelocityMult;
+                initialVelocity = Projectile.velocity;
+
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.3f, PitchVariance = .4f, Volume = 0.20f };
+                SoundEngine.PlaySound(style, Projectile.Center);
+            }
+
+            Projectile.rotation += 0.3f * Projectile.ai[1];
+              
+            returnVelocity = Vector2.Normalize(Projectile.Center.DirectionTo(player.position));
+
+            lightningData.Alpha *= 0.7f;
+
+            if (Projectile.ai[0] >= ReboundTicks)
+            {
+                Projectile.velocity = returnVelocity * VelocityMult;
             } 
             else
             {
-                Projectile.velocity = (initialVelocity * ((rebound - timer) / rebound) + returnVelocity * (timer / rebound)) * 18;
+                Projectile.velocity = (initialVelocity * ((ReboundTicks - Projectile.ai[0]) / ReboundTicks) + returnVelocity * (Projectile.ai[0] / ReboundTicks)) * VelocityMult;
+                
             }
 
-            if (Vector2.Distance(Projectile.position, player.position) < 3 * 16 && timer > rebound / 2)
+            if (Vector2.Distance(Projectile.Center, player.Center) < 2 * 16 && Projectile.ai[0] > ReboundTicks / 2)
             {
                 Projectile.active = false;
                 return;
             }
 
-            relativeTrail.TrailLogic();
-            counterrelativeTrail.TrailLogic();
+            Projectile.ai[0]++;
+        }
 
-            timer++;
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.immune[Main.player[Projectile.owner].whoAmI] = 10;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (lightningData != null && lightningData.Initialized)
+            {
+                LightningUtils.DrawLightning(lightningData, Main.spriteBatch);
+            }
+
             relativeTrail.TrailDrawing(Main.spriteBatch);
             counterrelativeTrail.TrailDrawing(Main.spriteBatch);
 
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent");
 
-            Vector2 origin;
-            float rotationOffset;
-            SpriteEffects effects;
+            Vector2 origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
+            float rotationOffset = 0;
 
-            if (Projectile.ai[0] != 1)
-            {
-                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
-                rotationOffset = 0;
-                effects = SpriteEffects.None;
-            }
-            else
-            {
-                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
-                //rotationOffset = MathHelper.ToRadians(90f);
-                //effects = SpriteEffects.FlipHorizontally;
-                rotationOffset = 0;
-                effects = SpriteEffects.None;
-            }
-
-            Vector2 armPosition = Main.player[Projectile.owner].GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, 0);
-
-            //Sprite is 64x64 so -0 to "make it square", dont know about the x tbh
-            Vector2 otherOffset = new Vector2(Projectile.spriteDirection > 0 ? 4 : 0, Projectile.spriteDirection > 0 ? -8 : -12);
-            Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
-
-            Main.spriteBatch.Draw(Blade, Projectile.position - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale , effects, 0f);
+            Main.spriteBatch.Draw(Blade, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale, SpriteEffects.None, 0f);
 
             return false;
         }
@@ -210,7 +235,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Projectile.penetrate = -1;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
-            Projectile.usesLocalNPCImmunity = true;
+            Projectile.usesLocalNPCImmunity = false;
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
@@ -227,9 +252,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             SwingHalfAngle = 190; // 190
             easingAdditionAmount = 0.02f / Projectile.extraUpdates; //0.015f
             offset = 50;
-            frameToStartSwing = 3;
-            timeAfterEnd = 6;
-            startingProgress = 0.02f;
+            frameToStartSwing = 0;
+            timeAfterEnd = 0;
+            startingProgress = 0.1f;
+            progressToKill = 0.9f;
 
             StandardSwingUpdate();
             StandardHeldProjCode();
@@ -274,6 +300,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 relativeTrail.TrailLogic();
                 counterrelativeTrail.TrailLogic();
             }
+
+            SkillStrikeUtil.setSkillStrike(Projectile, 2f, 10000, 1f, 0f);
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.immune[Main.player[Projectile.owner].whoAmI] = 10;
         }
 
         public override bool PreDraw(ref Color lightColor)
