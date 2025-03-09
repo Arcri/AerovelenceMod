@@ -7,13 +7,19 @@ using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Biomes
 {
-    public class CrystalFieldsBiome : ModBiome
+    public class CrystalCavernsSurfaceBiome : ModBiome
     {
         public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("AerovelenceMod/CrystalCavernsWaterStyle");
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsSurfaceBgStyle");
         public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
 
-        public override int Music => Main.LocalPlayer.townNPCs >= 2 ? -1 : (Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFields") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFieldsNight"));
+        public override int Music => Main.LocalPlayer.townNPCs >= 2 
+            ? -1 
+            : (Main.raining 
+                ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalRain") 
+                : (Main.dayTime 
+                    ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFields") 
+                    : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFieldsNight")));
 
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh; //default behavior is BiomeLow.
 

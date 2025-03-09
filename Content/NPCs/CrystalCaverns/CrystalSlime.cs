@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath44;
 
-            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type };
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsSurfaceBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -50,7 +50,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()))
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()))
             {
                 return SpawnCondition.OverworldNightMonster.Chance * 0.3f;
             }

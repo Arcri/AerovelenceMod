@@ -44,7 +44,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath44;
-            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsSurfaceBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -56,7 +56,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
                 return SpawnCondition.OverworldNightMonster.Chance;
             }
@@ -115,7 +115,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath44;
-            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsSurfaceBiome>().Type, ModContent.GetInstance<CrystalCavernsBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -127,7 +127,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
                 return SpawnCondition.OverworldNightMonster.Chance * 0.9f;
             }

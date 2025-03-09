@@ -216,7 +216,7 @@ namespace AerovelenceMod
 			//StarglassParticleDetour.Load();
 			ModDetours.Load();
 
-            ModContent.GetInstance<CrystalFieldsBiome>();
+            ModContent.GetInstance<CrystalCavernsSurfaceBiome>();
 
             if (!Main.dedServ)
 			{

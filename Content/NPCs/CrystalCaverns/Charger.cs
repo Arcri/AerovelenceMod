@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.damage = 5;
             AIType = -1;
 
-            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalFieldsBiome>().Type };
+            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsSurfaceBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -54,7 +54,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalFieldsBiome>()) && !Main.dayTime)
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) && !Main.dayTime)
             {
                 return SpawnCondition.OverworldNightMonster.Chance;
             }

@@ -1045,6 +1045,7 @@ Projectiles: {
 	SapperGasCloud.DisplayName: Sapper Gas Cloud
 	LightningStrike.DisplayName: Lightning Strike
 	LightningTelegraphProjectile.DisplayName: Lightning Telegraph Projectile
+	LightningProjectile2.DisplayName: Lightning Projectile2
 }
 
 Configs: {
