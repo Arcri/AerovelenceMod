@@ -989,6 +989,11 @@ Items: {
 		DisplayName: Crystal Stompers
 		Tooltip: ""
 	}
+
+	Marionette: {
+		DisplayName: Marionette
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1431,6 +1436,7 @@ Projectiles: {
 	LightningOrbStar.DisplayName: Lightning Orb Star
 	CrystalCastle.DisplayName: Crystal Castle
 	LightningTelegraphGlow.DisplayName: Lightning Telegraph Glow
+	MarionetteProj.DisplayName: Marionette Proj
 }
 
 Configs: {
