@@ -150,10 +150,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             {
                 lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
                 lightningData.NoiseFrequency = 3f;
-                lightningData.CoreColorOverride = Color.Indigo;
+                lightningData.CoreColorOverride = Color.Purple;
                 lightningData.MidColorOverride = Color.Purple;
-                lightningData.OuterColorOverride = Color.Pink;
-                lightningData.FlashColorOverride = Color.Yellow;
+                lightningData.OuterColorOverride = Color.Purple;
+                lightningData.FlashColorOverride = Color.Purple;
 
                 lightningData.GlowIntensity = 0.6f;
             }
