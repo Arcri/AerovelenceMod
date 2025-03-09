@@ -634,7 +634,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
             float healthFactor = 1f - (NPC.life / (float)NPC.lifeMax);
             NPC.rotation += rotationPer * (1f + healthFactor * 0.5f);
-            float rotationFactor = 1.7f + healthFactor * 2f;
+            //float rotationFactor = 1.7f + healthFactor * 2f;
             //NPC.rotation += NPC.velocity.X / NPC.width * rotationFactor;
 
             if (currentAttack == TumblerAttackState.Idle)
@@ -795,7 +795,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private void ExecutePhase2Transition()
         {
             phase2TransitionTimer++;
-            float progress = (float)phase2TransitionTimer / PHASE2_TRANSITION_DURATION;
+            float progress = (float)phase2TransitionTimer / phase2TransitionLength;
             float halfwayPoint = 0.5f;
             if (progress < 0.2f)
             {
@@ -820,7 +820,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 StartEye();
             }
-            if (phase2TransitionTimer >= PHASE2_TRANSITION_DURATION)
+            if (phase2TransitionTimer >= phase2TransitionLength)
             {
                 CompletePhase2Transition();
             }
@@ -1473,7 +1473,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private bool isInPhase2Transition = false;
         private int phase2TransitionTimer = 0;
-        private const int PHASE2_TRANSITION_DURATION = 1000;
+        private int phase2TransitionLength = 500;
         private bool phase2TransitionComplete = false;
         private bool shouldStartPhase2Transition = false;
         private bool eyeActive = true;
@@ -2943,6 +2943,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             Main.NewText("Crystal Dash: Crystals fully grown");
                             crystalDashPhase = 1;
                             crystalDashTimer = 0;
+                            storedExtraSpin = 0f;
                             NPC.velocity = Vector2.Zero;
                             bool attackLeftFirst = Math.Abs(NPC.Center.X - leftCrystalPosition.X) >
                                                  Math.Abs(NPC.Center.X - rightCrystalPosition.X);
@@ -2961,8 +2962,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             isSpinningUp = true;
                             StartAttackVFX();
                         }
-                        crystalRotationSpeed = Math.Min(crystalRotationSpeed + 0.02f, 1.0f);
-                        NPC.rotation += crystalDashDirection * crystalRotationSpeed;
+                        //crystalRotationSpeed = Math.Min(crystalRotationSpeed + 0.020f, 1.0f);
+                        float targetSpinRate = 1.2f;
+                        float spinIncrement = targetSpinRate / 300f;
+                        storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                        NPC.rotation += crystalDashDirection * storedExtraSpin;
                         for (int i = 0; i < 3; i++)
                         {
                             Vector2 dustPos = NPC.Center + Main.rand.NextVector2Circular(NPC.width / 2, NPC.height / 2);
@@ -3009,8 +3013,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         Vector2 targetCrystal = GetCurrentCrystalPosition(crystalDashDirection < 0);
                         Vector2 dashDir = new Vector2(targetCrystal.X - NPC.Center.X, 0).SafeNormalize(Vector2.UnitX);
                         crystalDashSpeed = Math.Min(crystalDashSpeed + 0.5f, 25f);
-                        NPC.velocity = dashDir * crystalDashSpeed;
-                        NPC.rotation += crystalDashDirection * Math.Max(crystalRotationSpeed, 0.5f);
+                        NPC.velocity = dashDir * 15;
+                        float radius = NPC.width / 2f;
+                        float rotationPer = NPC.velocity.X / radius;
+
+
+
+                        float healthFactor = 1f - (NPC.life / (float)NPC.lifeMax);
+                        //NPC.rotation += rotationPer * (1f + healthFactor * 0.5f);
+
                         float distToTarget = Math.Abs(NPC.Center.X - targetCrystal.X);
                         if (distToTarget < 50f)
                         {
@@ -3123,8 +3134,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             isSpinningUp = true;
                             StartAttackVFX();
                         }
-                        crystalRotationSpeed = Math.Min(crystalRotationSpeed + 0.02f, 1.0f);
-                        NPC.rotation += crystalDashDirection * crystalRotationSpeed;
+                        //crystalRotationSpeed = Math.Min(crystalRotationSpeed + 0.02f, 1.0f);
+                        //NPC.rotation += crystalDashDirection * crystalRotationSpeed;
+                        float targetSpinRate = 1.2f;
+                        float spinIncrement = targetSpinRate / 300f;
+                        storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                        NPC.rotation += crystalDashDirection * storedExtraSpin;
                         for (int i = 0; i < 3; i++)
                         {
                             Vector2 dustPos = NPC.Center + Main.rand.NextVector2Circular(NPC.width / 2, NPC.height / 2);
@@ -3158,6 +3173,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             crystalDashPhase = 6;
                             crystalDashTimer = 0;
                             crystalDashSpeed = 0f;
+                            storedExtraSpin = 0;
                             isDashing = true;
                             Main.NewText("dashing to second crystal");
                         }
@@ -3171,8 +3187,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         Vector2 targetCrystal = GetCurrentCrystalPosition(crystalDashDirection < 0);
                         Vector2 dashDir = new Vector2(targetCrystal.X - NPC.Center.X, 0).SafeNormalize(Vector2.UnitX);
                         crystalDashSpeed = Math.Min(crystalDashSpeed + 0.5f, 25f);
-                        NPC.velocity = dashDir * crystalDashSpeed;
-                        NPC.rotation += crystalDashDirection * Math.Max(crystalRotationSpeed, 0.5f);
+                        NPC.velocity = dashDir * 15;
+                        float radius = NPC.width / 2f;
+                        float rotationPer = NPC.velocity.X / radius;
+
+
+
+                        float healthFactor = 1f - (NPC.life / (float)NPC.lifeMax);
+                        //NPC.rotation += rotationPer * (1f + healthFactor * 0.5f);
                         float distToTarget = Math.Abs(NPC.Center.X - targetCrystal.X);
                         if (distToTarget < 50f)
                         {
@@ -3241,8 +3263,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                                 }
                                 if (1 > 0f)
                                 {
-                                    SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_lightning_aura_zap") with { Pitch = .2f, PitchVariance = .15f, MaxInstances = -1, Volume = 0.4f * 1 };
-                                    SoundEngine.PlaySound(style2, NPC.Center);
+                                    //SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_lightning_aura_zap") with { Pitch = .2f, PitchVariance = .15f, MaxInstances = -1, Volume = 0.4f * 1 };
+                                   // SoundEngine.PlaySound(style2, NPC.Center);
                                 }
 
                             }
@@ -3267,13 +3289,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                             crystalRotationSpeed = 0.2f;
                         }
 
-                        crystalRotationSpeed = Math.Max(crystalRotationSpeed - 0.01f, 0.1f);
-                        NPC.rotation += crystalDashDirection * crystalRotationSpeed;
+                        //crystalRotationSpeed = Math.Max(crystalRotationSpeed - 0.01f, 0.1f);
+                        //NPC.rotation += crystalDashDirection * crystalRotationSpeed;
+                        float targetSpinRate = 1.2f;
+                        float spinIncrement = targetSpinRate / 300f;
+                        storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                        NPC.rotation += crystalDashDirection * storedExtraSpin;
 
                         if (crystalDashTimer >= 10)
                         {
                             crystalDashPhase = 8;
                             crystalDashTimer = 0;
+                            storedExtraSpin = 0;
                             Vector2 directionToWall = new(crystalDashDirection, 0);
                             NPC.velocity = directionToWall * 8f;
                             Main.NewText("Moving to wall after second crystal impact");
@@ -3521,156 +3548,91 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private int dashDir = 0;
         private bool dashActive = false;
 
-        private void SingleDashAttack(Player player) //@TODO because he just kinda stops sometimes and doesnt roll
+        private Vector2 dashStartPos;
+        private Vector2 dashTargetPos;
+        private float initialRotationS;
+        private float savedRotation;
+        private int stunTimer;
+
+        private void SingleDashAttack(Player player)
         {
-            if (dashTimer % 10 == 0)
-            {
-                Main.NewText($"Current velocity: X={NPC.velocity.X}, Phase={dashPhase}, Timer={dashTimer}");
-            }
+            float healthFactor = (float)NPC.life / NPC.lifeMax;
 
             switch (dashPhase)
             {
-                case 0: //setup
-                    {
-                        if (dashTimer == 0)
-                        {
-                            NPC.velocity = Vector2.Zero;
-                            dashActive = false;
-                            dashDir = player.Center.X > NPC.Center.X ? 1 : -1;
 
-                            Main.NewText($"Dash setup - Direction: {(dashDir > 0 ? "Right" : "Left")}");
-                        }
-                        NPC.rotation += 0.15f;
-                        if (dashTimer > 30)
+                    case 0:
+                    {
+                        dashOuterDirection = (NPC.Center.X < ArenaData.ArenaCenter.X) ? 1f : -1f;
+                        float targetSpinRate = 1.2f;
+                        float spinIncrement = targetSpinRate / 300f;
+                        storedExtraSpin = Math.Min(storedExtraSpin + spinIncrement, targetSpinRate);
+                        SpawnOrbProjectiles();
+                        NPC.rotation += dashOuterDirection * storedExtraSpin;
+                        if (dashOuterTimer <= 0)
                         {
+                            NPC.velocity.Y = -4f;
+                            int telegraphID = TelegraphUtility.DrawTelegraph(() => NPC.Center, 500f, new Vector2(dashOuterDirection, 0), 1f, 0f, false, false, null, Color.Blue, true, false, 60f);
+                        }
+
+                        dashOuterTimer++;
+                        if (dashOuterTimer >= 60)
+                        {
+                            preStunRotation = NPC.rotation;
                             dashPhase = 1;
-                            dashTimer = 0;
-                            Main.NewText("Moving to telegraph phase");
+                            dashOuterTimer = 0;
+                            storedExtraSpin = 0f;
                         }
-
-                        dashTimer++;
                     }
                     break;
 
-                case 1: //telegraph
+                case 1:
                     {
-                        if (dashTimer == 0)
+                        isDashing = true;
+                        float dashSpeed = 20f;
+                        if (dashOuterTimer % 10 == 0 && NPC.velocity.Y == 0)
                         {
-                            Vector2 telegraphDir = new Vector2(dashDir, 0);
-
-                            TelegraphUtility.DrawTelegraph(
-                                () => NPC.Center,
-                                1000f,
-                                telegraphDir,
-                                1f,
-                                0f,
-                                false,
-                                false,
-                                null,
-                                Color.DeepSkyBlue,
-                                true,
-                                false,
-                                30f
-                            );
-
-                            Main.NewText("Telegraph created");
+                            NPC.velocity.Y -= Main.rand.NextFloat(3, 5);
                         }
+                        NPC.velocity.X = dashOuterDirection * dashSpeed;
+                        //KickRocks();
+                        dashOuterTimer++;
 
-                        NPC.rotation += 0.28f;
-
-                        if (dashTimer > 45)
-                        {
-                            dashPhase = 2;
-                            dashTimer = 0;
-                            dashActive = true;
-                            NPC.velocity.X = dashDir * 20f;
-                            Main.NewText($"DASH START - Set velocity to: {NPC.velocity.X}");
-                            isDashing = true;
-                        }
-
-                        dashTimer++;
-                    }
-                    break;
-
-                case 2: //active Dash
-                    {
-                        NPC.velocity.X = dashDir * 20f;
-
-                        if (dashTimer % 5 == 0)
-                        {
-                            Main.NewText($"DASHING - Current X velocity: {NPC.velocity.X}");
-                        }
-                        NPC.rotation += 0.15f;
-                        if (dashTimer % 3 == 0)
-                        {
-                            Vector2 dustPos = NPC.Center - new Vector2(dashDir * 15, 0);
-                            Dust dust = Dust.NewDustDirect(dustPos, 8, 8, DustID.Electric, 0, 0, 100, Color.Cyan, 1.5f);
-                            dust.noGravity = true;
-                        }
-                        bool hitBoundary = false;
-                        if (dashDir > 0 && NPC.Center.X > ArenaData.OuterArenaBoundaryRight.X - 80)
-                        {
-                            hitBoundary = true;
-                            Main.NewText("Hit RIGHT boundary");
-                        }
-                        else if (dashDir < 0 && NPC.Center.X < ArenaData.OuterArenaBoundaryLeft.X + 80)
-                        {
-                            hitBoundary = true;
-                            Main.NewText("Hit LEFT boundary");
-                        }
-                        if (hitBoundary || dashTimer > 180)
-                        {
-                            dashPhase = 3;
-                            dashTimer = 0;
-                            dashActive = false;
-                            isDashing = false;
-                            NPC.velocity.X *= 0.5f;
-                            if (hitBoundary)
-                            {
-                                Main.player[NPC.target].GetModPlayer<AeroPlayer>().ScreenShakePower = 15;
-                                SoundEngine.PlaySound(SoundID.Item70, NPC.position);
-                                for (int i = 0; i < 20; i++)
-                                {
-                                    Vector2 dustVel = new Vector2(-dashDir * Main.rand.NextFloat(2f, 8f), Main.rand.NextFloat(-5f, 5f));
-                                    Dust dust = Dust.NewDustDirect(NPC.Center, 10, 10, DustID.BlueCrystalShard, dustVel.X, dustVel.Y);
-                                    dust.noGravity = true;
-                                    dust.scale = 1.5f;
-                                }
-                            }
-                        }
-
-                        dashTimer++;
-                    }
-                    break;
-
-                case 3: //cleanup
-                    {
-                        NPC.velocity.X *= 0.9f;
-                        NPC.rotation *= 0.95f;
-
-                        if (Math.Abs(NPC.velocity.X) < 0.5f || dashTimer > 60)
+                        float outerTarget = (dashOuterDirection > 0)
+                            ? ArenaData.OuterArenaBoundaryRight.X
+                            : ArenaData.OuterArenaBoundaryLeft.X;
+                        bool reachedBoundary = (dashOuterDirection > 0 && NPC.Center.X >= outerTarget - 5 * 16f) ||
+                                               (dashOuterDirection < 0 && NPC.Center.X <= outerTarget + 5 * 16f);
+                        if (reachedBoundary || dashOuterTimer >= 120)
                         {
                             NPC.velocity = Vector2.Zero;
-                            dashPhase = 0;
-                            dashTimer = 0;
-                            dashActive = false;
-                            dashDir = 0;
-
-                            Main.NewText("Dash attack completed");
-                            OnAttackFinished();
+                            dashPhase = 2;
+                            dashOuterTimer = 0;
+                            preStunRotation = NPC.rotation;
+                            isDashing = false;
                         }
+                    }
+                    break;
 
-                        dashTimer++;
+                case 2:
+                    {
+                        dashOuterTimer++;
+                        float rockAmplitude = MathHelper.Lerp(0.1f, 0f, dashOuterTimer / 30f);
+                        NPC.rotation = preStunRotation + (float)Math.Sin(dashOuterTimer * 0.2f) * rockAmplitude;
+                        if (dashOuterTimer >= 30)
+                        {
+                            SelectNextAttack();
+                            dashOuterTimer = 0;
+                        }
+                        if (dashOuterTimer == 1)
+                        {
+                            PerformWallSlam(NPC.Center, 15);
+                        }
+                        StopAttackVFX();
                     }
                     break;
             }
-
-            //extra safety which will prob be removed when this attack works
-            if (dashActive && dashPhase == 2)
-                NPC.velocity.X = dashDir * 20f;
         }
-
-
 
         private int kickRocksTimer = 0;
 
