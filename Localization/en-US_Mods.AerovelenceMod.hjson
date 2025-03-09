@@ -1,4 +1,5 @@
 "Keybinds.Armor Set Bonus.DisplayName": Armor Set Bonus
+UI.SmallWorldWarning: "[c/FF0000:⚠ SMALL WORLDS ARE NOT SUPPORTED BY AEROVELENCE! ⚠]"
 
 Biomes: {
 	ZonePlayer: {
@@ -15,11 +16,27 @@ Biomes: {
 		DisplayName: Crystal Caverns Underground Biome
 		TownNPCDialogueName: the Crystal Caverns Underground Biome
 	}
+}
 
-	CrystalFieldsBiome: {
-		DisplayName: Crystal Fields Biome
-		TownNPCDialogueName: the Crystal Fields Biome
+Dialogue: {
+	RockCollector: {
+		DemolitionistDialogue: e{0} just keeps going on and on and ON about blowing up the world. Please make it stop.
+		DryadDialogue: e{0} is a pillar of the world community. Without her, I don't know what we would do!
+		AnglerDialogue: Hate that angler guy. {0} really thinks fish rock. Pff.
+		TumblerNotDownedDialogue: I heard legends of an ancient living boulder in the Crystal Caverns. Do you think it's really real?
+		StandardDialogue1: Is that a new outfit? I dig it.
+		StandardDialogue2: Hooks? Pickaxes? Cool mining accessories? You want it? It's yours, my friend. As long as you have enough money.
+		StandardDialogue3: I heard in another world, gems weren't as useful! Can you believe that?!
+		StandardDialogue4: Nothing like kicking back on the Rocks. Always love a drink.
+		CommonDialogue: If you find any rare ore clusters, turn them into me for a reward!
+		RareDialogue: I wish the moths didn't take over so much of my home. They're such beautiful creatures.
+		TalkALot: I actually think I hear {0} calling my name! I have to go.
+		TurnInChunk1: Wow! That's a big one, you found this in the mines?!
+		TurnInChunk2: Amazing! I think I took you for... granite. Ha. Get it... granite. Here's your reward.
+		TurnInChunk3: You are a natural collector. I am shocked with the quality of this one.
+		TurnInSuperChunk: Goodness gracious! That's the biggest cluster I've ever seen! This will look good in my curio.
 	}
+}
 
 	CrystalCavernsSurfaceBiome: {
 		DisplayName: Crystal Caverns Surface Biome
@@ -72,6 +89,31 @@ Buffs: {
 		DisplayName: Fearsome Foe
 		Description: Drastically lowered enemy spawn rates
 	}
+
+	Glory: {
+		DisplayName: Glory
+		Description: Increased mining and movement speed
+	}
+
+	SpecterWoundedDebuff: {
+		DisplayName: Specter Wounded Debuff
+		Description: Mods.AerovelenceMod.Buffs.SpecterWoundedDebuff.Description
+	}
+
+	PhanticWhipDebuff: {
+		DisplayName: Phantic Whip Debuff
+		Description: Mods.AerovelenceMod.Buffs.PhanticWhipDebuff.Description
+	}
+
+	RedShadeCurse: {
+		DisplayName: Red Shade Curse
+		Description: Mods.AerovelenceMod.Buffs.RedShadeCurse.Description
+	}
+
+	NerveFlagellatorDebuff: {
+		DisplayName: Nerve Flagellator Debuff
+		Description: Mods.AerovelenceMod.Buffs.NerveFlagellatorDebuff.Description
+	}
 }
 
 Items: {
@@ -121,6 +163,11 @@ Items: {
 	}
 
 	GlimmerwoodTableItem: {
+		DisplayName: Glimmerwood Table
+		Tooltip: ""
+	}
+
+	GlimmerwoodTable: {
 		DisplayName: Glimmerwood Table
 		Tooltip: ""
 	}
@@ -290,47 +337,47 @@ Items: {
 	}
 
 	CitadelBrickItem: {
-		DisplayName: Citadel Brick Item
+		DisplayName: Citadel Brick
 		Tooltip: ""
 	}
 
 	CitadelStoneItem: {
-		DisplayName: Citadel Stone Item
+		DisplayName: Citadel Stone
 		Tooltip: ""
 	}
 
 	RuinedCitadelBrickItem: {
-		DisplayName: Ruined Citadel Brick Item
+		DisplayName: Ruined Citadel Brick
 		Tooltip: ""
 	}
 
 	AncientChunkItem: {
-		DisplayName: Ancient Chunk Item
+		DisplayName: Ancient Chunk
 		Tooltip: ""
 	}
 
 	CavernSandItem: {
-		DisplayName: Cavern Sand Item
+		DisplayName: Cavern Sand
 		Tooltip: ""
 	}
 
 	CavernStoneItem: {
-		DisplayName: Cavern Stone Item
+		DisplayName: Cavern Stone
 		Tooltip: ""
 	}
 
 	ChargedStoneItem: {
-		DisplayName: Charged Stone Item
+		DisplayName: Charged Stone
 		Tooltip: ""
 	}
 
 	SmoothCavernStoneItem: {
-		DisplayName: Smooth Cavern Stone Item
+		DisplayName: Smooth Cavern Stone
 		Tooltip: ""
 	}
 
 	VoidArenaItem: {
-		DisplayName: Void Arena Item
+		DisplayName: Void Arena
 		Tooltip: ""
 	}
 
@@ -427,172 +474,237 @@ Items: {
 	}
 
 	CrystallineFabricatorItem: {
-		DisplayName: Crystalline Fabricator Item
+		DisplayName: Crystalline Fabricator
 		Tooltip: ""
 	}
 
 	GlimmerwoodBathtubItem: {
-		DisplayName: Glimmerwood Bathtub Item
+		DisplayName: Glimmerwood Bathtub
+		Tooltip: ""
+	}
+
+	GlimmerwoodBathtub: {
+		DisplayName: Glimmerwood Bathtub
 		Tooltip: ""
 	}
 
 	GlimmerwoodBedItem: {
-		DisplayName: Glimmerwood Bed Item
+		DisplayName: Glimmerwood Bed
+		Tooltip: ""
+	}
+
+	GlimmerwoodBed: {
+		DisplayName: Glimmerwood Bed
 		Tooltip: ""
 	}
 
 	GlimmerwoodBookcaseItem: {
-		DisplayName: Glimmerwood Bookcase Item
+		DisplayName: Glimmerwood Bookcase
+		Tooltip: ""
+	}
+
+	GlimmerwoodBookcase: {
+		DisplayName: Glimmerwood Bookcase
 		Tooltip: ""
 	}
 
 	GlimmerwoodCandleItem: {
-		DisplayName: Glimmerwood Candle Item
+		DisplayName: Glimmerwood Candle
 		Tooltip: ""
 	}
 
 	GlimmerwoodChairItem: {
-		DisplayName: Glimmerwood Chair Item
+		DisplayName: Glimmerwood Chair
+		Tooltip: ""
+	}
+
+	GlimmerwoodChair: {
+		DisplayName: Glimmerwood Chair
 		Tooltip: ""
 	}
 
 	GlimmerwoodChandelierItem: {
-		DisplayName: Glimmerwood Chandelier Item
+		DisplayName: Glimmerwood Chandelier
 		Tooltip: ""
 	}
 
 	GlimmerwoodChestItem: {
-		DisplayName: Glimmerwood Chest Item
+		DisplayName: Glimmerwood Chest
+		Tooltip: ""
+	}
+
+	GlimmerwoodChest: {
+		DisplayName: Glimmerwood Chest
 		Tooltip: ""
 	}
 
 	GlimmerwoodClockItem: {
-		DisplayName: Glimmerwood Clock Item
+		DisplayName: Glimmerwood Clock
+		Tooltip: ""
+	}
+
+	GlimmerwoodClock: {
+		DisplayName: Glimmerwood Clock
 		Tooltip: ""
 	}
 
 	GlimmerwoodDoorItem: {
-		DisplayName: Glimmerwood Door Item
+		DisplayName: Glimmerwood Door
+		Tooltip: ""
+	}
+
+	GlimmerwoodDoor: {
+		DisplayName: Glimmerwood Door
 		Tooltip: ""
 	}
 
 	GlimmerwoodDresserItem: {
-		DisplayName: Glimmerwood Dresser Item
+		DisplayName: Glimmerwood Dresser
+		Tooltip: ""
+	}
+
+	GlimmerwoodDresser: {
+		DisplayName: Glimmerwood Dresser
 		Tooltip: ""
 	}
 
 	GlimmerwoodLampItem: {
-		DisplayName: Glimmerwood Lamp Item
+		DisplayName: Glimmerwood Lamp
 		Tooltip: ""
 	}
 
 	GlimmerwoodPipeOrganItem: {
-		DisplayName: Glimmerwood Pipe Organ Item
+		DisplayName: Glimmerwood Pipe Organ
+		Tooltip: ""
+	}
+
+	GlimmerwoodPipeOrgan: {
+		DisplayName: Glimmerwood Pipe Organ
 		Tooltip: ""
 	}
 
 	GlimmerwoodPlatformItem: {
-		DisplayName: Glimmerwood Platform Item
+		DisplayName: Glimmerwood Platform
+		Tooltip: ""
+	}
+
+	GlimmerwoodPlatform: {
+		DisplayName: Glimmerwood Platform
 		Tooltip: ""
 	}
 
 	GlimmerwoodSinkItem: {
-		DisplayName: Glimmerwood Sink Item
+		DisplayName: Glimmerwood Sink
+		Tooltip: ""
+	}
+
+	GlimmerwoodSink: {
+		DisplayName: Glimmerwood Sink
 		Tooltip: ""
 	}
 
 	GlimmerwoodSofaItem: {
-		DisplayName: Glimmerwood Sofa Item
+		DisplayName: Glimmerwood Sofa
 		Tooltip: ""
 	}
 
 	GlimmerwoodStoolItem: {
-		DisplayName: Glimmerwood Stool Item
+		DisplayName: Glimmerwood Stool
+		Tooltip: ""
+	}
+
+	GlimmerwoodStool: {
+		DisplayName: Glimmerwood Stool
 		Tooltip: ""
 	}
 
 	GlimmerwoodToiletItem: {
-		DisplayName: Glimmerwood Toilet Item
+		DisplayName: Glimmerwood Toilet
 		Tooltip: ""
 	}
 
 	GlimmerwoodTorchItem: {
-		DisplayName: Glimmerwood Torch Item
+		DisplayName: Glimmerwood Torch
 		Tooltip: ""
 	}
 
 	GlimmerwoodWorkbenchItem: {
-		DisplayName: Glimmerwood Workbench Item
+		DisplayName: Glimmerwood Workbench
+		Tooltip: ""
+	}
+
+	GlimmerwoodWorkbench: {
+		DisplayName: Glimmerwood Workbench
 		Tooltip: ""
 	}
 
 	GlimmerwoodItem: {
-		DisplayName: Glimmerwood Item
+		DisplayName: Glimmerwood
 		Tooltip: ""
 	}
 
 	FreshGlimmerwoodItem: {
-		DisplayName: Fresh Glimmerwood Item
+		DisplayName: Fresh Glimmerwood
 		Tooltip: ""
 	}
 
 	GlimmerwoodBeamItem: {
-		DisplayName: Glimmerwood Beam Item
+		DisplayName: Glimmerwood Beam
 		Tooltip: ""
 	}
 
 	CavernDirtWallItem: {
-		DisplayName: Cavern Dirt Wall Item
+		DisplayName: Cavern Dirt Wall
 		Tooltip: ""
 	}
 
 	CitadelBrickWallItem: {
-		DisplayName: Citadel Brick Wall Item
+		DisplayName: Citadel Brick Wall
 		Tooltip: ""
 	}
 
 	ColumnWallItem: {
-		DisplayName: Column Wall Item
+		DisplayName: Column Wall
 		Tooltip: ""
 	}
 
 	CrystalGrassWallItem: {
-		DisplayName: Crystal Grass Wall Item
+		DisplayName: Crystal Grass Wall
 		Tooltip: ""
 	}
 
 	GlimmerwoodWallItem: {
-		DisplayName: Glimmerwood Wall Item
+		DisplayName: Glimmerwood Wall
 		Tooltip: ""
 	}
 
 	CavernBrickItem: {
-		DisplayName: Cavern Brick Item
+		DisplayName: Cavern Brick
 		Tooltip: ""
 	}
 
 	ArenaCavernCrystalItem: {
-		DisplayName: Arena Cavern Crystal Item
+		DisplayName: Arena Cavern Crystal
 		Tooltip: ""
 	}
 
 	CavernStoneWallItem: {
-		DisplayName: Cavern Stone Wall Item
+		DisplayName: Cavern Stone Wall
 		Tooltip: ""
 	}
 
 	CavernRopeItem: {
-		DisplayName: Cavern Rope Item
+		DisplayName: Cavern Rope
 		Tooltip: ""
 	}
 
 	CavernGatewayItem: {
-		DisplayName: Cavern Gateway Item
+		DisplayName: Cavern Gateway
 		Tooltip: ""
 	}
 
 	CavernCrystalItem: {
-		DisplayName: Cavern Crystal Item
+		DisplayName: Cavern Crystal
 		Tooltip: ""
 	}
 
@@ -612,7 +724,270 @@ Items: {
 	}
 
 	StructureStampItem: {
-		DisplayName: Structure Stamp Item
+		DisplayName: Structure Stamp
+		Tooltip: ""
+	}
+
+	CavernChestItem: {
+		DisplayName: Cavern Chest
+		Tooltip: ""
+	}
+
+	CitadelChestItem: {
+		DisplayName: Citadel Chest
+		Tooltip: ""
+	}
+
+	CitadelChestKey: {
+		DisplayName: Citadel Chest Key
+		Tooltip: ""
+	}
+
+	CavernStoneColumnItem: {
+		DisplayName: Cavern Stone Column
+		Tooltip: ""
+	}
+
+	GlimmerwoodCandelabraItem: {
+		DisplayName: Glimmerwood Candelabra
+		Tooltip: ""
+	}
+
+	GlimmerwoodLanternItem: {
+		DisplayName: Glimmerwood Lantern
+		Tooltip: ""
+	}
+
+	GlimmerwoodLeafItem: {
+		DisplayName: Glimmerwood Leaf
+		Tooltip: ""
+	}
+
+	CrystalDirtItem: {
+		DisplayName: Crystal Dirt
+		Tooltip: ""
+	}
+
+	LightningTrapItem: {
+		DisplayName: Lightning Trap
+		Tooltip: ""
+	}
+
+	AmuletOfGlory: {
+		DisplayName: Amulet Of Glory
+		Tooltip:
+			'''
+			Hitting enemies increases your movement and mining speed
+			Enemies nearby chests will emit light
+			'''
+	}
+
+	OpalOfCaVea: {
+		DisplayName: Ca Vea's Opal
+		Tooltip:
+			'''
+			Glowing crystals grow on your back every 5 seconds, up to 3
+			Enemies take damage if all 3 crystals have spawned
+			'''
+	}
+
+	SpeedstersPickaxe: {
+		DisplayName: Speedsters Pickaxe
+		Tooltip: Mining ramps up the speed of your pickaxe
+	}
+
+	PlatinumHook: {
+		DisplayName: Platinum Hook
+		Tooltip: Extends all gem hooks and upgrades them to glow
+	}
+
+	OnTheRocks: {
+		DisplayName: On The Rocks
+		Tooltip: ""
+	}
+
+	ResonanceDrill: {
+		DisplayName: Resonance Drill
+		Tooltip: Mines connected ore, the more you mine the more effective
+	}
+
+	PouchOfRocks: {
+		DisplayName: Pouch Of Magnets
+		Tooltip: Throws 2 magnetic stones which can collide and explode
+	}
+
+	TheItem: {
+		DisplayName: The Item
+		Tooltip: ""
+	}
+
+	CrackedCavernBrickItem: {
+		DisplayName: Cracked Cavern Brick Item
+		Tooltip: ""
+	}
+
+	CrystalGrowthRubbleItem: {
+		DisplayName: Crystal Growth Rubble Item
+		Tooltip: ""
+	}
+
+	CyvercryBossRelicItem: {
+		DisplayName: Cyvercry Boss Relic Item
+		Tooltip: ""
+	}
+
+	CrystalCorn: {
+		DisplayName: Crystal Corn
+		Tooltip: ""
+	}
+
+	H2OCaliber: {
+		DisplayName: H2 O Caliber
+		Tooltip: ""
+	}
+
+	CrystalTumblerRelicItem: {
+		DisplayName: Crystal Tumbler Relic Item
+		Tooltip: ""
+	}
+
+	CyvercryRelicItem: {
+		DisplayName: Cyvercry Relic Item
+		Tooltip: ""
+	}
+
+	CrystalGrassDevItem: {
+		DisplayName: Crystal Grass Dev Item
+		Tooltip: ""
+	}
+
+	SlateChestplate: {
+		DisplayName: Slate Chestplate
+		Tooltip: ""
+	}
+
+	SlateHelmet: {
+		DisplayName: Slate Helmet
+		Tooltip: ""
+	}
+
+	SlateLeggings: {
+		DisplayName: Slate Leggings
+		Tooltip: ""
+	}
+
+	PhanticChestplate: {
+		DisplayName: Phantic Chestplate
+		Tooltip: ""
+	}
+
+	PhanticGreaves: {
+		DisplayName: Phantic Greaves
+		Tooltip: ""
+	}
+
+	PhanticHat: {
+		DisplayName: Phantic Hat
+		Tooltip: ""
+	}
+
+	PhanticHelmet: {
+		DisplayName: Phantic Helmet
+		Tooltip: ""
+	}
+
+	PhanticHood: {
+		DisplayName: Phantic Hood
+		Tooltip: ""
+	}
+
+	PhanticMask: {
+		DisplayName: Phantic Mask
+		Tooltip: ""
+	}
+
+	Soulerang: {
+		DisplayName: Soulerang
+		Tooltip: ""
+	}
+
+	Specter: {
+		DisplayName: Specter
+		Tooltip: ""
+	}
+
+	PhanticWhip: {
+		DisplayName: Phantic Whip
+		Tooltip: ""
+	}
+
+	PhanticAxe: {
+		DisplayName: Phantic Axe
+		Tooltip: ""
+	}
+
+	PhanticPickaxe: {
+		DisplayName: Phantic Pickaxe
+		Tooltip: ""
+	}
+
+	RedShade: {
+		DisplayName: Red Shade
+		Tooltip: ""
+	}
+
+	PhanticBar: {
+		DisplayName: Phantic Bar
+		Tooltip: ""
+	}
+
+	PhanticOre: {
+		DisplayName: Phantic Ore
+		Tooltip: ""
+	}
+
+	PhanticSword: {
+		DisplayName: Phantic Sword
+		Tooltip: ""
+	}
+
+	CrimtaneStaff: {
+		DisplayName: Crimtane Staff
+		Tooltip: ""
+	}
+
+	NerveFlagellator: {
+		DisplayName: Nerve Flagellator
+		Tooltip: ""
+	}
+
+	MeteorCrossbow: {
+		DisplayName: Meteor Crossbow
+		Tooltip: ""
+	}
+
+	ExtinguishedDynamite: {
+		DisplayName: Extinguished Dynamite
+		Tooltip: ""
+	}
+
+	LightOfTheAncients: {
+		DisplayName: Light Of The Ancients
+		Tooltip: ""
+	}
+
+	ElectricBlueSolution: {
+		DisplayName: Electric Blue Solution
+		Tooltip: ""
+	}
+
+	DarkCrystalStaff: {
+		DisplayName: Dark Crystal Staff
+		Tooltip: ""
+	}
+
+	CrystalStompers: {
+		DisplayName: Crystal Stompers
 		Tooltip: ""
 	}
 
@@ -701,16 +1076,43 @@ NPCs: {
 	CrystalTumbler.DisplayName: Crystal Tumbler
 	CrystalBomb.DisplayName: Crystal Bomb
 	HealerDrone.DisplayName: Healer Drone
+
+	RockCollector: {
+		DisplayName: Rock Collector
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I hate not having a home.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: I dislike how crowded I am.
+			HateCrowded: I hate how crowded I am.
+			LoveBiome: I love {BiomeName}.
+			LikeBiome: I like {BiomeName}.
+			DislikeBiome: I dislike {BiomeName}.
+			LoveNPC: I love {NPCName}.
+			LikeNPC: I like {NPCName}.
+			DislikeNPC: I dislike {NPCName}.
+			HateNPC: I hate {NPCName}.
+			LikeNPC_Princess: I like {NPCName}.
+			Princess_LovesNPC: I like {NPCName}.
+		}
+	}
+
+	CrystalTumbler2.DisplayName: Crystal Tumbler2
+	MiniMoth.DisplayName: Mini Moth
 	CaveSlime.DisplayName: Cave Slime
-	Charger.DisplayName: Charger
-	Commander.DisplayName: Commander
-	Condurtle.DisplayName: Condurtle
-	CrystalBat.DisplayName: Crystal Bat
 	CrystalSlime.DisplayName: Crystal Slime
-	ElectricTetra.DisplayName: Electric Tetra
-	Sapper.DisplayName: Sapper
 	TumblerockMedium.DisplayName: Tumblerock Medium
 	TumblerockSmall.DisplayName: Tumblerock Small
+	Sapper.DisplayName: Sapper
+	Condurtle.DisplayName: Condurtle
+	Charger.DisplayName: Charger
+	Commander.DisplayName: Commander
+	CrystalBat.DisplayName: Crystal Bat
+	ElectricTetra.DisplayName: Electric Tetra
+	Lumurker.DisplayName: Lumurker
+	Bomber.DisplayName: Bomber
 }
 
 Projectiles: {
@@ -1012,6 +1414,7 @@ Projectiles: {
 	CrystalSpikeEffect.DisplayName: Crystal Spike Effect
 	Indicator.DisplayName: Indicator
 	WaterGeyserProjectile.DisplayName: Water Geyser Projectile
+	WaterGeyser.DisplayName: Water Geyser
 	ElectricBolt.DisplayName: Electric Bolt
 	Stalactite.DisplayName: Stalactite
 	CrystalShard.DisplayName: Crystal Shard
@@ -1036,16 +1439,74 @@ Projectiles: {
 	SharpCrystalShard.DisplayName: Sharp Crystal Shard
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
+	GroundSpike.DisplayName: Ground Spike
+	LightningBolt.DisplayName: Lightning Bolt
 	LightningProjectile.DisplayName: Lightning Projectile
-	CrystalCrescentProj.DisplayName: Crystal Crescent Proj
-	CrystalCrescentSwingProj.DisplayName: Crystal Crescent Swing Proj
-	CrystalCrescentThrowProj.DisplayName: Crystal Crescent Throw Proj
+	ElectricPopEffect.DisplayName: Electric Pop Effect
+	EnemyTwinkleEffect.DisplayName: Enemy Twinkle Effect
+	PlayerGlowEffect.DisplayName: Player Glow Effect
+	EnemyGlowEffect.DisplayName: Enemy Glow Effect
+	ResonanceDrillProj.DisplayName: Resonance Drill Proj
+	PouchOfRocksProj.DisplayName: Pouch Of Rocks Proj
+	AdamantiteDrillProj.DisplayName: Adamantite Drill Proj
+	ChlorophyteDrillProj.DisplayName: Chlorophyte Drill Proj
+	CobaltDrillProj.DisplayName: Cobalt Drill Proj
+	DraxProj.DisplayName: Drax Proj
+	MythrilDrillProj.DisplayName: Mythril Drill Proj
+	OrichalcumDrillProj.DisplayName: Orichalcum Drill Proj
+	PalladiumDrillProj.DisplayName: Palladium Drill Proj
+	TitaniumDrillProj.DisplayName: Titanium Drill Proj
+	NebulaDrillProj.DisplayName: Nebula Drill Proj
+	SolarFlareDrillProj.DisplayName: Solar Flare Drill Proj
+	StardustDrillProj.DisplayName: Stardust Drill Proj
+	VortexDrillProj.DisplayName: Vortex Drill Proj
+	PouchOfRocksFragment.DisplayName: Pouch Of Rocks Fragment
+	PouchOfRocksOrb.DisplayName: Pouch Of Rocks Orb
+	MagneticCollisionEffect.DisplayName: Magnetic Collision Effect
+	MagneticRock.DisplayName: Magnetic Rock
+	MagneticRockExplosion.DisplayName: Magnetic Rock Explosion
+	MagneticZap.DisplayName: Magnetic Zap
+	MagneticExplosion.DisplayName: Magnetic Explosion
+	MagneticOrb.DisplayName: Magnetic Orb
+	LightningStar.DisplayName: Lightning Star
+	LightningProjectile2.DisplayName: Lightning Projectile2
+	RockShard.DisplayName: Rock Shard
+	H2OCaliberHeldProjectile.DisplayName: H2 O Caliber Held Projectile
+	H2OBubble.DisplayName: H2 O Bubble
+	SapperGasCloud.DisplayName: Sapper Gas Cloud
+	Conductor.DisplayName: Conductor
+	Pylon.DisplayName: Pylon
 	CondurtleConductor.DisplayName: Condurtle Conductor
 	CondurtlePylon.DisplayName: Condurtle Pylon
-	SapperGasCloud.DisplayName: Sapper Gas Cloud
+	SoulerangProjectile.DisplayName: Soulerang Projectile
+	SpecterStabProjectile.DisplayName: Specter Stab Projectile
+	SpecterSwingProjectile.DisplayName: Specter Swing Projectile
+	PhanticSoulProjectile.DisplayName: Phantic Soul Projectile
+	PhanticWhipProjectile.DisplayName: Phantic Whip Projectile
+	MiniRedShadeSoul.DisplayName: Mini Red Shade Soul
+	RedShadeSoul.DisplayName: Red Shade Soul
+	BloodDamageZone.DisplayName: Blood Damage Zone
+	CrimtaneStaffProjectile.DisplayName: Crimtane Staff Projectile
+	NerveCreeper.DisplayName: Nerve Creeper
+	NerveFlagellatorProjectile.DisplayName: Nerve Flagellator Projectile
+	MeteorArrow.DisplayName: Meteor Arrow
+	HeldMeteorCrossbow.DisplayName: Held Meteor Crossbow
+	MeteorCrossbowHeld.DisplayName: Meteor Crossbow Held
+	DynamiteExplosion.DisplayName: Dynamite Explosion
+	LightOfTheAncientsBullet.DisplayName: Light Of The Ancients Bullet
+	LightOfTheAncientsProjectile.DisplayName: Light Of The Ancients Projectile
+	ElectricBlueSolutionProjectile.DisplayName: Electric Blue Solution Projectile
+	ElectricSpikes.DisplayName: Electric Spikes
+	ElectricSpikeField.DisplayName: Electric Spike Field
 	LightningStrike.DisplayName: Lightning Strike
+	SmokeProjectile.DisplayName: Smoke Projectile
 	LightningTelegraphProjectile.DisplayName: Lightning Telegraph Projectile
-	LightningProjectile2.DisplayName: Lightning Projectile2
+	TelegraphX.DisplayName: Telegraph X
+	TumbleBomb.DisplayName: Tumble Bomb
+	EnergyAbsorptionOrb.DisplayName: Energy Absorption Orb
+	LightningOrbStar.DisplayName: Lightning Orb Star
+	CrystalCastle.DisplayName: Crystal Castle
+	LightningTelegraphGlow.DisplayName: Lightning Telegraph Glow
 }
 
 Configs: {
@@ -1069,8 +1530,15 @@ WorldGen: {
 	CrystalCavernsPolishMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsPolishMessage
 }
 
+WorldGen.CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
+
 Tiles: {
 	GlimmerwoodDresser.MapEntry: Glimmerwood Dresser
-	LightningTrapTile.MapEntry: Lightning Trap Tile
 	GlimmerwoodDresserTile.MapEntry: Glimmerwood Dresser Tile
+	LightningTrapTile.MapEntry: Lightning Trap Tile
+}
+
+Emotes: {
+	CyvercryEmote.Command: cyvercryemote
+	RockCollectorEmote.Command: rockcollectoremote
 }

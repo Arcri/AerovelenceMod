@@ -341,7 +341,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             isFixed = false;
         }
     }
-
+    
     public class SapperGasCloud : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";

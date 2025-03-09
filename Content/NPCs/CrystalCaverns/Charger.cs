@@ -195,7 +195,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                 spriteBatch.Draw(texture, trailPosition, NPC.frame, drawColor * opacity, NPC.oldRot[i], NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
             }
 
-
+            
 
             spriteBatch.Draw(texture, drawPosition, NPC.frame, Color.Wheat, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
 
@@ -214,7 +214,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             spriteBatch.Draw(texture, drawPosition, NPC.frame, Color.White, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
-
+            
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPosition, NPC.frame, drawColor, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);

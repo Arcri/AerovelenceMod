@@ -9,12 +9,16 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
     [LegacyName("CavernCrystal")]
     public class CavernCrystalTile : ModTile
     {
+        private readonly int oneHelixRevolutionInUpdateTicks = 30;
         public override void SetStaticDefaults()
         {
             MineResist = 2.5f;
             MinPick = 55;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
+            Main.tileMerge[Type][ModContent.TileType<CrystalGrassTile>()] = true;
+            Main.tileMerge[Type][ModContent.TileType<CavernCrystalTile>()] = true;
+            Main.tileMerge[Type][ModContent.TileType<CavernStoneTile>()] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             DustType = DustID.BlueFairy;
@@ -24,7 +28,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             CommonTileHelper.SetTileProtection(this);
             AddMapEntry(new Color(115, 230, 250));
         }
-
+        
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0.0f;

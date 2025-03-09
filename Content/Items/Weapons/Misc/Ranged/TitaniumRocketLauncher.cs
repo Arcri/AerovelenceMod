@@ -1,4 +1,4 @@
-using AerovelenceMod.Common.Globals.SkillStrikes;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
@@ -277,7 +277,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             //AoE
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 100f)
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 100f)
                 {
                     int Direction = 0;
                     if (Projectile.Center.X - Main.npc[i].Center.X < 0)
@@ -302,7 +302,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             //AoE
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 75f && Main.npc[i] != target)
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 75f && Main.npc[i] != target)
                 {
                     int Direction = 0;
                     if (Projectile.Center.X - Main.npc[i].Center.X < 0)
@@ -498,7 +498,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             //AoE
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f)
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f)
                 {
                     int Direction = 0;
                     if (Projectile.Center.X - Main.npc[i].Center.X < 0)
@@ -523,7 +523,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             //AoE
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f && Main.npc[i] != target)
+                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && !Main.npc[i].friendly && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 50f && Main.npc[i] != target)
                 {
                     int Direction = 0;
                     if (Projectile.Center.X - Main.npc[i].Center.X < 0)

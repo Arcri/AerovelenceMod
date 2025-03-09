@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     {
         public override void SetDefaults()
         {
-            Item.damage = 18;
+            Item.damage = 15;
             Item.useTime = Item.useAnimation = 35;
             Item.shootSpeed = 16;
             Item.knockBack = 3;
@@ -281,7 +281,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             hasHitNPCThisFrame = true;
 
             // 3 Hits in a row, spawn the star and do highest pitch sound
-            if (p.GetModPlayer<MarbleMusketPlayer>().consecutiveHits == 2)
+            if (p.GetModPlayer<MarbleMusketPlayer>().consecutiveHits == 3)
             {
                 //Spawn star
                 float rotAmount = Main.rand.NextBool() ? MathHelper.ToRadians(132f) : MathHelper.ToRadians(-130f);

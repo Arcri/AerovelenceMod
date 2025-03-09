@@ -47,7 +47,9 @@ namespace AerovelenceMod
 		//Mod Support
 		public bool FargosModMutant;
 
-		internal static AerovelenceMod Instance { get; set; }
+        public const string AssetPath = $"{nameof(AerovelenceMod)}/Assets/";
+
+        internal static AerovelenceMod Instance { get; set; }
         public AerovelenceMod()
         {
             Instance = this;
@@ -210,8 +212,9 @@ namespace AerovelenceMod
 		public static Effect TrailShaderPixelate;
 		public static Effect TrailShaderGradient;
 
+        public static Effect fadeShader;
 
-		public override void Load()
+        public override void Load()
 		{
 			//StarglassParticleDetour.Load();
 			ModDetours.Load();
@@ -264,8 +267,6 @@ namespace AerovelenceMod
                 new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
 
 			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
-			SkyManager.Instance["AerovelenceMod:CrystalCavernsSurface"] = new CrystalCavernsSky();
-            SkyManager.Instance["AerovelenceMod:CrystalCaverns"] = new CrystalCavernsSky();
 
             Overlays.Scene.Load();
 			Filters.Scene.Load();
@@ -305,19 +306,21 @@ namespace AerovelenceMod
 				TrailShaderPixelate = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderPixelate", AssetRequestMode.ImmediateLoad).Value;
 				TrailShaderGradient = Instance.Assets.Request<Effect>("Effects/TrailShaders/TrailShaderGradient", AssetRequestMode.ImmediateLoad).Value;
 
+                fadeShader = Instance.Assets.Request<Effect>("Effects/FadeShader", AssetRequestMode.ImmediateLoad).Value;
 
-				//Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
-				//GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
-				//GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
+                //Ref<Effect> DarkBeamRef = new Ref<Effect>(Assets.Request<Effect>("Effects/DarkBeam", AssetRequestMode.ImmediateLoad).Value);
+                //GameShaders.Misc["DarkBeam"] = new MiscShaderData(DarkBeamRef, "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//putting this here just in case
-				//Filters.Scene.Load();
+                //Ref<Effect> RimeLaserRef = new Ref<Effect>(Assets.Request<Effect>("Effects/RimeLaser", AssetRequestMode.ImmediateLoad).Value);
+                //GameShaders.Misc["RimeLaser"] = new MiscShaderData(RimeLaserRef,  "Aura");//.UseImage0("Images/Misc/Perlin");
 
-				//TrailShader = Assets.Request<Effect>("Effects/Trail");
+                //putting this here just in case
+                //Filters.Scene.Load();
 
-				Terraria.Graphics.Effects.On_FilterManager.EndCapture += FilterManager_EndCapture;
+                //TrailShader = Assets.Request<Effect>("Effects/Trail");
+
+                Terraria.Graphics.Effects.On_FilterManager.EndCapture += FilterManager_EndCapture;
 				CreateRender();
 
 			}

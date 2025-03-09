@@ -759,7 +759,7 @@ namespace AerovelenceMod.Content.Projectiles
                 }
             }, PixellationSystem.RenderType.Additive);
         }
-
+        
 
         private static void DrawImpactPoint(Vector2 position, float size, LightningData data, SpriteBatch spriteBatch)
         {

@@ -701,7 +701,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                 if (pylonID == -1 || !Main.projectile[pylonID].active)
                     return;
                 conduitToPylonLightning = new LightningData(Projectile, LightningStyle.Default);
-                InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningStyle.Default);
+               InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningStyle.Default);
                 SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.2f });
                 pylonLightningActive = true;
             }

@@ -9,15 +9,15 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
     {
         public override void SetStaticDefaults()
         {
-            MineResist = 1f;
-            MinPick = 10;
+			MineResist = 1f;
+			MinPick = 10;
             Main.tileSolid[Type] = false;
             Main.tileMergeDirt[Type] = false;
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = false;
-            AddMapEntry(new Color(213, 0, 255));
-            DustType = 59;
-            HitSound = SoundID.Dig;
+			AddMapEntry(new Color(213, 0, 255));
+			DustType = 59;
+			HitSound = SoundID.Dig;
         }
     }
 
