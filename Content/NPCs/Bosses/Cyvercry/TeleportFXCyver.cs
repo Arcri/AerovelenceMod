@@ -147,7 +147,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             foreach (StarParticle star in stars)
             {
-				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value, blue ? Color.SkyBlue : Color.HotPink);
+				star.DrawStar(Main.spriteBatch, Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value, blue ? Color.SkyBlue : Color.HotPink);
             }
 
 			if (blue)
@@ -281,9 +281,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		Effect myEffect = null;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/spotlight_8").Value;
-			Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
-			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+			Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/spotlight_8").Value;
+			Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
+			Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_16").Value;
 
 
 			if (myEffect == null)
@@ -413,9 +413,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 		Effect myEffect = null;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			String toAsset = (pixel ? "Assets/ImpactTextures/Royal_Resonance" : "Content/NPCs/Bosses/Cyvercry/Textures/circle_02");
+			String toAsset = (pixel ? "Assets/Flare/Royal_Resonance" : "Content/NPCs/Bosses/Cyvercry/Textures/circle_02");
 
-			if (special) toAsset = "Assets/TrailImages/RainbowRod";//"Assets/Orbs/ElectricPopC";
+			if (special) toAsset = "Assets/Pixel/RainbowRod";//"Assets/Orbs/ElectricPopC";
 
 			Texture2D Flare = Mod.Assets.Request<Texture2D>(toAsset).Value;
 

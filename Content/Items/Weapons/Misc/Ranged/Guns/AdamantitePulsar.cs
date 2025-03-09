@@ -511,7 +511,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             #region Arc
             /*
-            Texture2D Arc = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Medusa_Gray").Value;
+            Texture2D Arc = Mod.Assets.Request<Texture2D>("Assets/Pixel/Medusa_Gray").Value;
             float opacity = Math.Clamp(reticleProgress * 1f, 0, 1) * 0.5f;
             Vector2 scale = new Vector2(2f, 4f - (3.2f * reticleProgress));
             Vector2 arcPos = Projectile.Center + Angle.ToRotationVector2() * 20f - Main.screenPosition;

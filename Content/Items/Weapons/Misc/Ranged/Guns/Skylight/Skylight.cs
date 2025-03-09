@@ -303,11 +303,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-                //Reset twice because tmod 1.4.4 is broke
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
+                Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
             }
 
             return false;
@@ -369,7 +365,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Trail5Loop").Value;
             trail2.trailColor = Color.DeepSkyBlue * alpha;
             trail2.trailPointLimit = 300;
             trail2.trailWidth = (int)(40 * scale);
@@ -424,7 +420,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail2.TrailDrawing(Main.spriteBatch);
 
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
-            Texture2D DiamondGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/DiamondGlow");
+            Texture2D DiamondGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/DiamondGlowPMA");
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
@@ -448,9 +444,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-
-
+            Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
 
             return false;
         }
@@ -571,7 +565,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         {
 
             //Trail1 Info Dump
-            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/FlamesTextureButBlack").Value;
+            trail1.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/FlamesTextureButBlack").Value;
             trail1.trailColor = Color.White * 0.7f;
             trail1.trailPointLimit = 300;
             trail1.trailWidth = 22 * 2;
@@ -586,7 +580,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             trail1.TrailLogic();
 
             //Trail2 Info Dump
-            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5Loop").Value;
+            trail2.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Trail5Loop").Value;
             trail2.trailColor = Color.DeepSkyBlue;
             trail2.trailPointLimit = 300;
             trail2.trailWidth = 80 * 2;
@@ -801,11 +795,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
 
             Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/spiky_20fade").Value;
 
-            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
 
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
@@ -851,6 +845,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
+
             return false;
         }
     }
@@ -980,7 +976,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/Guns/Skylight/SkylightWhite");
             Texture2D GlowFuzz = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/Guns/Skylight/SkylightWhiteGlow");
 
-            Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray");
+            Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray");
             Vector2 lineScale = new Vector2(8f, 0.3f + (glowVal * 0.05f));
 
             SpriteEffects fx = Main.player[Projectile.owner].direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
@@ -1023,14 +1019,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-                //Reset twice because tmod 1.4.4 is broke
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
 
             }
-
-
 
             return false;
         }

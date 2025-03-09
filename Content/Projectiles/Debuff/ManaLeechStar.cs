@@ -97,7 +97,7 @@ namespace AerovelenceMod.Content.Projectiles
 
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Twinkle");
+			Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Twinkle");
 
 			Color colToUse = new Color(30, 150, 255); //Color.DodgerBlue;
 			colToUse.A = 0;

@@ -116,7 +116,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
 
             //Eye
-            Texture2D eyeTex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/PartiGlow").Value;
+            Texture2D eyeTex = Mod.Assets.Request<Texture2D>("Assets/Pixel/PartiGlow").Value;
 
             Vector2 leftEyePos = TopVector2 + (new Vector2(-144, -310) / 4) * Projectile.scale; 
             Vector2 rightEyePos = TopVector2 + (new Vector2(144, -310) / 4) * Projectile.scale;

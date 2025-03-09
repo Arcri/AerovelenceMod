@@ -222,7 +222,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Main.spriteBatch.Draw(Weapon, Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY), null, lightColor, Projectile.rotation, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
 
             //MuzzleFlash
-            Texture2D Flash = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/CrispStar");
+            Texture2D Flash = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/CrispStar");
 
             Vector2 offset = new Vector2(Weapon.Width / 1.25f * Player.direction, (-Weapon.Height / 2)).RotatedBy(Projectile.rotation) * Player.direction;
             Vector2 offsetOffset = new Vector2(-22,8 * Player.direction).RotatedBy(Projectile.rotation) + new Vector2(0f, Player.gfxOffY);
@@ -294,7 +294,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             if (!justHit)
             {
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-                trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/spark_07_Black").Value;
+                trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/spark_07_Black").Value;
                 trailColor = new Color(255, 10, 10);
                 trailTime = timer * 0.02f;
 
@@ -344,7 +344,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         {
             TrailDrawing();
 
-            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Nightglow").Value;
             Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
             Color col = justHit ? Color.White : Color.Red;
@@ -721,7 +721,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public override bool PreDraw(ref Color lightColor)
         {
 
-            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/BloodHit").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Anim/BloodHit").Value;
             Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/SoftGlow64").Value;
 
             int frameHeight = Tex.Height / Main.projFrames[Projectile.type];

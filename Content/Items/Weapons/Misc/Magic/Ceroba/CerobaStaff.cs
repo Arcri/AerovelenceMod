@@ -326,9 +326,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D White = Mod.Assets.Request<Texture2D>(path + "CerobaStaffWhiteBell").Value;
             Texture2D Glowmask = Mod.Assets.Request<Texture2D>(path + "CerobaStaffGlowMask").Value;
 
-            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
-            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraSwingD").Value;
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/Slash/TerraOrbC").Value;
+            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/Slash/TerraSwingD").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
 
 
             Player player = Main.player[Projectile.owner];
@@ -564,14 +564,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
         public override bool PreDraw(ref Color lightColor)
         {
             if (timer <= 0) return false;
-            Texture2D FireBall = Mod.Assets.Request<Texture2D>("Assets/TrailImages/FireBallBlur").Value;
-            Texture2D FireBallPixel = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Extra_91").Value;
+            Texture2D FireBall = Mod.Assets.Request<Texture2D>("Assets/Pixel/FireBallBlur").Value;
+            Texture2D FireBallPixel = Mod.Assets.Request<Texture2D>("Assets/Pixel/Extra_91").Value;
 
-            //Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
-
-
-            Texture2D Buster = Mod.Assets.Request<Texture2D>("Assets/TrailImages/BusterGlow").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle128PMA").Value;
 
             Vector2 off = (Projectile.rotation).ToRotationVector2() * 10f * Projectile.scale;
@@ -1004,7 +1000,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D White = Mod.Assets.Request<Texture2D>(path + "CerobaStaffWhiteBell").Value;
             Texture2D Glowmask = Mod.Assets.Request<Texture2D>(path + "CerobaStaffGlowMask").Value;
 
-            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
+            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/Pixel/TerraOrbC").Value;
 
             Player player = Main.player[Projectile.owner];
             Vector2 origin = Staff.Size() / 2;
@@ -1101,7 +1097,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Spike = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+            Texture2D Spike = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
 
             Vector2 origin = new Vector2(Spike.Width / 2f, Spike.Height / 2f);
             Vector2 scale2 = new Vector2(1f, 0.5f) * Projectile.scale * 1.5f * scale;
@@ -1271,10 +1267,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
             Texture2D White = Mod.Assets.Request<Texture2D>(path + "CerobaStaffWhiteBell").Value;
             Texture2D Glowmask = Mod.Assets.Request<Texture2D>(path + "CerobaStaffGlowMask").Value;
 
-            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraOrbC").Value;
-            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TerraSwingD").Value;
+            Texture2D Swirl = Mod.Assets.Request<Texture2D>("Assets/Slash/TerraOrbC").Value;
+            Texture2D SwirlD = Mod.Assets.Request<Texture2D>("Assets/Slash/TerraSwingD").Value;
 
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
 
             Player player = Main.player[Projectile.owner];
             Vector2 origin = Staff.Size() / 2;

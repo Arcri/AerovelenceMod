@@ -977,7 +977,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Rimegeist
         {
             // Vector2 drawOrigin = new Vector2((Texture2D)TextureAssets.Projectile[projectile.type].Width, (Texture2D)TextureAssets.Projectile[projectile.type].Height);
             //Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
-            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Projectile_540").Value;
+            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/Pixel/Projectile_540").Value;
 
             Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
 

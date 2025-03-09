@@ -105,13 +105,13 @@ namespace AerovelenceMod.Content.Items
 		//public List<Projectile> InkProj = new List<Projectile>();
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
 			Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
             //Contenders:
-            //TrailImages/Starlight/EnergyTex/tri * -10
-            //TrailImages/Starlight/196_Black/tri
-            //TrailImages/Starlight/EnergyTex
+            //Pixel/Starlight/EnergyTex/tri * -10
+            //Pixel/Starlight/196_Black/tri
+            //Pixel/Starlight/EnergyTex
 
             Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);

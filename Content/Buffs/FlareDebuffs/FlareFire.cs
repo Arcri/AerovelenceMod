@@ -25,6 +25,7 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
+            //While the npc has this debuff, activate the FlareFireModNPC class
             npc.GetGlobalNPC<FlareFireModNPC>().FlareFireDebuff = true;
             timer++;
         }

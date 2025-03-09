@@ -205,7 +205,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/MarbleMusket").Value;
-            Texture2D TextureGlowLayer = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/MarbleMuskeGlowLayer").Value;
+            Texture2D TextureGlowLayer = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/MarbleMusketGlowLayer").Value;
 
             Texture2D MuzzleFlash = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/WhitePixelMuzzleFlash").Value;
             Texture2D MuzzleFlashGlow = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/WhitePixelMuzzleFlashGlow").Value;
@@ -365,8 +365,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         public float starRot = Main.rand.NextFloat(6.28f);
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D line = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
-            Texture2D star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Flare").Value;
+            Texture2D line = Mod.Assets.Request<Texture2D>("Assets/Pixel/Nightglow").Value;
+            Texture2D star = Mod.Assets.Request<Texture2D>("Assets/Pixel/Flare").Value;
 
             Vector2 vec2ScaleLine = new Vector2(0.75f, 1f) * Projectile.scale * 1f;
 
@@ -502,9 +502,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStar").Value;
-            Texture2D StarBlack = Mod.Assets.Request<Texture2D>("Assets/TrailImages/VanillaStarBlackBG").Value;
-            Texture2D Line = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Nightglow").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Pixel/VanillaStar").Value;
+            Texture2D StarBlack = Mod.Assets.Request<Texture2D>("Assets/Pixel/VanillaStarBlackBG").Value;
+            Texture2D Line = Mod.Assets.Request<Texture2D>("Assets/Pixel/Nightglow").Value;
 
             //Nightglow
             Vector2 drawPos = Projectile.Center - Main.screenPosition;

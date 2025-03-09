@@ -306,7 +306,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Texture2D circle2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/circle_05");
             Texture2D Line = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/Medusa_Gray");
 
-            Texture2D star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1");
+            Texture2D star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_1");
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);

@@ -228,7 +228,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 endPoint = LaserRotation.ToRotationVector2() * 2000f;
 
                 //Star
-                Texture2D star = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+                Texture2D star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
                 Main.spriteBatch.Draw(star, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24 - Main.screenPosition, null, Color.HotPink with { A = 0 }, LaserRotation, star.Size() / 2f, (50f * Projectile.scale - additional) * 0.01f, 0, 0);
                 Main.spriteBatch.Draw(star, Projectile.Center + Vector2.UnitX.RotatedBy(LaserRotation) * 24 - Main.screenPosition, null, Color.White with { A = 0 }, LaserRotation, star.Size() / 2f, (50f * Projectile.scale - additional) * 0.005f, 0, 0);
 

@@ -48,7 +48,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D glowmaskTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/EnchantedEye_Glow").Value;
-            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
+            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
             Vector2 direction = new((float)Math.Cos(Projectile.rotation - MathHelper.PiOver2), (float)Math.Sin(Projectile.rotation - MathHelper.PiOver2));
             Color fadeColor = Color.White * (1f - fadeOutTimer / 60f);
             DrawTelegraphLine(Main.spriteBatch, Projectile.Center, direction, lineTexture, Color.Blue, 0.1f, 100f);
@@ -191,7 +191,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D glowmaskTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/EnchantedEye_Glow").Value;
-            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Medusa_Gray").Value;
+            Texture2D lineTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Medusa_Gray").Value;
 
             Vector2 direction = new((float)Math.Cos(Projectile.rotation - MathHelper.PiOver2), (float)Math.Sin(Projectile.rotation - MathHelper.PiOver2));
             DrawTelegraphLine(Main.spriteBatch, Projectile.Center, direction, lineTexture, Color.Blue, 0.1f, 200f);

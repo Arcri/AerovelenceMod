@@ -49,7 +49,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 initialPosition = Projectile.Center;
                 smokeTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Smoke/smoke_01").Value;
-                slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlash").Value;
+                slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/pixelKennySlash").Value;
             }
             if (Projectile.position.Y <= initialPosition.Y - stopHeight || timer >= ascendTime)
             {

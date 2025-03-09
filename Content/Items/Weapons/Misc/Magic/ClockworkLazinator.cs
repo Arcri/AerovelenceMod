@@ -196,7 +196,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             if (timer > 0)
             {
-                var texBeam = Mod.Assets.Request<Texture2D>("Assets/ThinLineGlowClear").Value;
+                var texBeam = Mod.Assets.Request<Texture2D>("Assets/Trails/Clear/ThinLineGlowClear").Value;
 
                 Vector2 origin2 = new Vector2(0, texBeam.Height / 2f);
 
@@ -212,7 +212,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
                 Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Rotation, origin2, v2Scale, 0, 0);
 
 
-                Texture2D circle = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStarPMA").Value;
+                Texture2D circle = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
 
                 Vector2 offset = new Vector2(0f, (0.5f * Projectile.height) * -Main.player[Projectile.owner].direction).RotatedBy(Rotation - MathHelper.Pi) * Projectile.scale;
 

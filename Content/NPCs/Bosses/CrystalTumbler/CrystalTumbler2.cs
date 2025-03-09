@@ -1200,7 +1200,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 spriteBatch.Draw(eyeTexture, drawPosition, null, Color.White * eyeAlpha, NPC.rotation, eyeTexture.Size() / 2, 1f, SpriteEffects.None, 0);
                 if (eyeGlowAlpha > 0f)
                 {
-                    Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
+                    Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
                     Vector2 eyeStarDrawPos = NPC.Center - Main.screenPosition;
                     float eyeStarRotation = NPC.rotation;
                     float eyeStarValue = 0.5f;
@@ -1221,7 +1221,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/whiteFireEye").Value;
                 Texture2D Flare2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/spiky_20fade").Value;
-                Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/pixelKennySlash").Value;
+                Texture2D Flare3 = Mod.Assets.Request<Texture2D>("Assets/Flare/pixelKennySlash").Value;
                 Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
 
@@ -4217,7 +4217,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         }
         public override void PostDraw(Color lightColor)
         {
-            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Flare/CrispStarPMA").Value;
             Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
             Color adjustedColor = Color.Black * 0.5f * starAlpha * ((255 - Projectile.alpha) / 255f);
             Vector2 pos = Projectile.Center - Main.screenPosition;
@@ -4699,7 +4699,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.spriteBatch.Draw(glowTexture, drawPosition, null, orbColor * 0.1f * orbAlpha, Projectile.rotation, glowTexture.Size() / 2, 0.3f * scaleMultiplier, SpriteEffects.None, 0f);
             float scale = 0.2f * scaleMultiplier * (1f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f) * 0.1f);
             Main.spriteBatch.Draw(texture, drawPosition, null, Color.White * 0.7f * orbAlpha, -Projectile.rotation * 0.2f, origin, scale * 0.6f, SpriteEffects.None, 0f);
-            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Flare/CrispStarPMA").Value;
             Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
             Color adjustedColor = Color.Black * 0.5f * orbAlpha * ((255 - Projectile.alpha) / 255f);
             Vector2 pos = Projectile.Center - Main.screenPosition;
@@ -4892,7 +4892,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Texture2D glowTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Glow").Value;
-            Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/CrispStarPMA").Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Vector2 origin = texture.Size() / 2f;
             float pulseScale = 1f + 0.2f * (float)Math.Sin(Main.GlobalTimeWrappedHourly * 6.2f * pulseRate);

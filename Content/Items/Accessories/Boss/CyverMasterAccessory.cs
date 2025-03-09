@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Accessories.Boss
         public override bool PreDraw(ref Color lightColor)
         {
 			Texture2D Spike = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/MuzzleFlashes/muzzle_flash_13pixel");
-            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1");
+            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_1");
 
             Vector2 drawPos = Projectile.Center - Main.screenPosition;
             Vector2 spikeOrigin = new Vector2(0, Spike.Height / 2);

@@ -299,7 +299,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 Main.spriteBatch.Draw(arrowTexture, pos2 + chargeOffset, null, skillCritWindow >= 0 ? Color.Gold with { A = 0 } * 0.25f : Color.White * 0f, direction.ToRotation() - MathHelper.PiOver2 + 3.14f, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
             }
 
-            Texture2D shineTexture = Mod.Assets.Request<Texture2D>("Assets/TrailImages/CrispStar").Value;
+            Texture2D shineTexture = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStar").Value;
 
             Vector2 arrowTipPos = pos2 + chargeOffset + new Vector2(0, 10).RotatedBy(direction.ToRotation() - MathHelper.PiOver2);
 
@@ -408,7 +408,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
            
             Vector2 scale = new Vector2(0.25f, 0.65f) * projectile.scale;
             
-            Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Flare").Value;
+            Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Flare").Value;
             Main.EntitySpriteDraw(glow, projectile.Center - Main.screenPosition, null, sparkColor with { A = 0 } * 0.25f, projectile.rotation, glow.Size() / 2, scale, SpriteEffects.None);
             Main.EntitySpriteDraw(glow, projectile.Center - Main.screenPosition, null, sparkColor with { A = 0 } * 0.75f, projectile.rotation, glow.Size() / 2, scale * 0.75f, SpriteEffects.None);
 

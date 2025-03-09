@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-/*
+
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -127,7 +127,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             //ThinGlowLine
             //2 draws | timer * 0.005 | White | 120 30 800 |
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ThinGlowLine").Value;
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/ThinGlowLine").Value;
             trailColor = Color.White;
             trailTime = timer * 0.005f;
             timesToDraw = 2;
@@ -204,4 +204,3 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
         }
     }
 }
-*/
