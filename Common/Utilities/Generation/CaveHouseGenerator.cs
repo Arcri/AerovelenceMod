@@ -20,7 +20,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
 {
     public class CaveHousePlayer : ModPlayer
     {
-        public static bool JustPressed(Keys key)
+        /*public static bool JustPressed(Keys key)
         {
             return Main.keyState.IsKeyDown(key) && !Main.oldKeyState.IsKeyDown(key);
         }
@@ -32,7 +32,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
                 int tileY = (int)(Player.position.Y / 16f);
                 HouseGenerator.GenerateCaveHouse(tileX, tileY);
             }
-        }
+        }*/
     }
 
     public static class HouseGenerator
