@@ -40,7 +40,9 @@ namespace AerovelenceMod
 
 		public override void PreUpdate()
 		{
+			WaterGlowManager.UpdateWaterGlow();
 			PlatformTimer--;
+
 		}
 
         #region Usestyle Code

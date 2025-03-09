@@ -267,6 +267,8 @@ namespace AerovelenceMod
                 new Filter(new DarkNightScreenShaderData("FilterBloodMoon").UseColor(0.0f, 0.2f, 0.2f), EffectPriority.Medium);
 
 			SkyManager.Instance["AerovelenceMod:Cyvercry2"] = new CyverSky();
+			SkyManager.Instance["AerovelenceMod:CrystalCavernsSurface"] = new CrystalCavernsSky();
+            SkyManager.Instance["AerovelenceMod:CrystalCaverns"] = new CrystalCavernsSky();
 
             Overlays.Scene.Load();
 			Filters.Scene.Load();
