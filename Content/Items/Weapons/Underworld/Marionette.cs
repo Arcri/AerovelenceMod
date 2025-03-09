@@ -57,10 +57,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
         bool rotStop = false;
         int rememberDir;
         #endregion
-
-        Vector2 verlet1EndPos = Vector2.Zero;
-        float verlet1Acc = 0f;
-
         public override void AI()
         {
             Player p = Main.player[Projectile.owner];
@@ -91,13 +87,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
             #region swingPhysics
             Vector2 dir = (Main.MouseWorld - barLoc).SafeNormalize(Vector2.Zero);
 
-            if (Vector2.Distance(barLoc, Main.MouseWorld) > 150)
+            if (Vector2.Distance(barLoc, Main.MouseWorld) > 100)
             {
                 barSpeed = 50f;
             }
             else
-                barSpeed = 20f;
-
+                barSpeed = 10f;
 
             if (Vector2.Distance(barLoc, Main.MouseWorld) > 15)
             {
@@ -139,7 +134,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
                         if (barsRot > 0f)
                         {
                             accBack -= accActualBack;
-                            if (accActualBack > 0.0015f)
+                            if (accActualBack > 0.0009f)
                             {
                                 accActualBack -= 0.00001f;
                             }
@@ -157,7 +152,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
                         if (barsRot < 0f)
                         {
                             accBack -= accActualBack;
-                            if (accActualBack > 0.0015f)
+                            if (accActualBack > 0.0009f)
                             {
                                 accActualBack -= 0.00001f;
                             }
@@ -193,8 +188,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            
+
         }
+
+        Vector2[] verletEndPos = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
+        Vector2[] verletSpeed = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
         public override bool PreDraw(ref Color lightColor)
         {
@@ -205,17 +203,45 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
 
             Vector2 barsLoc = new Vector2(Main.MouseWorld.X, Main.MouseWorld.Y + 16) - Main.screenPosition;
 
-            Vector2 verlet1Pos = new Vector2(barsLoc.X - 28, (barsLoc.Y + barsRot) - 6);
-            verlet1Pos.Y += -40 * barsRot;
-            Vector2 actualVerlet1EndPos = new Vector2(verlet1Pos.X, verlet1Pos.Y + 300);
-            if (verlet1EndPos == Vector2.Zero)
-                verlet1EndPos = actualVerlet1EndPos;
+            Vector2 verletPos = new Vector2(barsLoc.X - 25, (barsLoc.Y + barsRot) - 6);
+            verletPos.Y += -40 * barsRot;
+            for (int i = 0; i < 4; i++)
+            {
 
-            Vector2 direction = (actualVerlet1EndPos - verlet1EndPos).SafeNormalize(Vector2.Zero);
-            Vector2 projVelocity = direction * 5f;
-            verlet1EndPos += projVelocity;
+                if (i == 1)
+                {
+                    verletPos = new Vector2(barsLoc.X + 25, (barsLoc.Y + barsRot) - 6);
+                    verletPos.Y += 40 * barsRot;
+                }
+                else if (i == 2)
+                {
+                    verletPos = new Vector2(barsLoc.X - 30, (barsLoc.Y + barsRot) + 12);
+                    verletPos.Y += -20 * barsRot;
+                }
+                else if (i == 3)
+                {
+                    verletPos = new Vector2(barsLoc.X + 30, (barsLoc.Y + barsRot) + 12);
+                    verletPos.Y += 20 * barsRot;
+                }
 
-            DrawVerlet(verlet1Pos, verlet1EndPos);
+
+                Vector2 actualVerletEndPos = new Vector2(verletPos.X, verletPos.Y + 300);
+                if (verletEndPos[i] == Vector2.Zero)
+                    verletEndPos[i] = verletPos;
+
+                Vector2 direction = (actualVerletEndPos - verletEndPos[i]).SafeNormalize(Vector2.Zero);
+                verletSpeed[i] += direction / 10;
+                verletSpeed[i] *= 0.99f;
+
+                float maxSpeed = 10f;
+                if (verletSpeed[i].LengthSquared() > maxSpeed * maxSpeed)
+                {
+                    verletSpeed[i] = verletSpeed[i].SafeNormalize(Vector2.Zero) * maxSpeed;
+                }
+
+                verletEndPos[i] += verletSpeed[i];
+                DrawVerlet(verletPos, verletEndPos[i]);
+            }
 
             tex = ModContent.Request<Texture2D>(Mod.Name + "/Content/Items/Weapons/Underworld/MarionetteBar").Value;
             sourceRect = new Rectangle(0, 0, tex.Width, tex.Height);
