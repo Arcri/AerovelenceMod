@@ -323,12 +323,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         float colVal = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+			//Main.spriteBatch.End();
+			//Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 			Color trailCol = Color.Lerp(Color.White, Color.Orange, colVal);
 
-			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Starlight");
+			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Starlight");
 			Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
 			SpriteEffects effects = (Projectile.spriteDirection == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 			for (int k = 0; k < Projectile.oldPos.Length - 1; k++)
@@ -337,10 +337,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				Vector2 scale = new Vector2(floatScale * (i == 0 ? 0.6f : 1f), floatScale * 0.75f);
 
 				Vector2 drawPos = Projectile.oldPos[k] + new Vector2(Projectile.width, Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
-				Main.spriteBatch.Draw(texture, drawPos, null, trailCol, Projectile.oldRot[k], drawOrigin, scale, effects, 0f);
+				Main.spriteBatch.Draw(texture, drawPos, null, trailCol with { A = 0 }, Projectile.oldRot[k], drawOrigin, scale, effects, 0f);
 			}
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+			//Main.spriteBatch.End();
+			//Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 			Texture2D projTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/TitaniumRocket");
 
@@ -413,7 +413,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Starlight");
+			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Starlight");
 			Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
 			for (int k = 0; k < Projectile.oldPos.Length - 5; k++) // 12 20
 			{

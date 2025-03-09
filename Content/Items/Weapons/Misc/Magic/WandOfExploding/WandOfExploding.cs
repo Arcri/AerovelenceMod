@@ -321,7 +321,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             }
             timer++;
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/LintyTrail").Value;
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/LintyTrail").Value;
             trailColor = Color.DodgerBlue * alpha;
             trailTime = timer * 0.05f;
 
@@ -344,7 +344,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
             Texture2D Proj = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/ExplodingBolt").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/ExplodingBoltGlowMask").Value;
-            Texture2D Glorb = Mod.Assets.Request<Texture2D>("Assets/HitAnims/GlorbPMA3").Value;
+            Texture2D Glorb = Mod.Assets.Request<Texture2D>("Assets/Orbs/SoftGlow").Value;
 
 
             int frameHeight = Proj.Height / Main.projFrames[Projectile.type];
@@ -430,7 +430,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Explo = Mod.Assets.Request<Texture2D>("Assets/HitAnims/BlueFlareDarkGlowPMA").Value;
+            Texture2D Explo = Mod.Assets.Request<Texture2D>("Assets/Anim/BlueFlareDarkGlowPMA").Value;
 
             int frameHeight = Explo.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;

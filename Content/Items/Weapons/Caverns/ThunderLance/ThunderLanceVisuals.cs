@@ -249,7 +249,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Pupil = Mod.Assets.Request<Texture2D>("Assets/Noise/CoolNoise").Value;
-            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/ElectricRadialEffect").Value;
+            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Flare/ElectricRadialEffect").Value;
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
 

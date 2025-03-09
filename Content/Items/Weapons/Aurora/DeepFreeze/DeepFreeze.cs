@@ -15,6 +15,7 @@ using Terraria.Audio;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 {
@@ -241,18 +242,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
             Player Player = Main.player[Projectile.owner];
 
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-            Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/DeepFreeze_Glow").Value;
-            Texture2D orb = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/spiky_10").Value;
-            Texture2D orb2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D orb = CommonTextures.feather_circle128PMA.Value;
+
+            //Texture2D orb = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Ember/spiky_10").Value;
+            Texture2D orb2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
 
 
-            Texture2D eyeOrb = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_3").Value;
+            Texture2D eyeOrb = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_3").Value;
 
 
             Texture2D eye = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/eyeGlow").Value;
-            Texture2D band1 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band1").Value;
-            Texture2D band2 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band2").Value;
-            Texture2D band3 = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/band3").Value;
+            Texture2D bars = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Aurora/DeepFreeze/DeepFreezeBars").Value;
 
 
             Vector2 origin = texture.Size() / 2f;
@@ -273,28 +273,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
             Vector2 eyeStarScale = new Vector2(0.15f, 1f);
             Vector2 eyePos = new Vector2(23f * Player.direction, -9f).RotatedBy(rotDirection + extraRot) + position;
 
-            float sinScale = (float)Math.Sin((float)timer * 0.06f) * 0.02f;
+            float sinScale = (float)Math.Sin((float)timer * 0.08f) * 0.02f;
 
             //MouthOrb
-            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.3f, rotDirection - (timer * 0.1f * Player.direction), orb.Size() / 2, 0.17f + sinScale, effects, 0.0f);
-            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction), orb.Size() / 2, 0.15f + sinScale, effects, 0.0f);
-            Main.spriteBatch.Draw(orb2, orbPosition, null, Color.White, rotDirection + (timer * 0.01f * Player.direction), orb2.Size() / 2, 0.15f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 0.6f, rotDirection - (timer * 0.1f * Player.direction), orb.Size() / 2, 0.30f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb, orbPosition, null, eyeCol * 1f, rotDirection + (timer * 0.05f * Player.direction), orb.Size() / 2, 0.25f + sinScale, effects, 0.0f);
+            Main.spriteBatch.Draw(orb2, orbPosition, null, eyeCol, rotDirection + (timer * 0.04f * Player.direction), orb2.Size() / 2, 0.15f + sinScale, effects, 0.0f);
 
 
             //EyeOrb
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.4f * eyeStarScale, effects, 0.0f);
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.3f * eyeStarScale, effects, 0.0f);
-            Main.EntitySpriteDraw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection + (timer * 0.01f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.2f * eyeStarScale, effects, 0.0f);
+            //Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.1f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.4f * eyeStarScale, effects, 0.0f);
+            //Main.EntitySpriteDraw(eyeOrb, eyePos, null, eyeCol * 0.5f, rotDirection + (timer * 0.05f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.3f * eyeStarScale, effects, 0.0f);
+            //Main.EntitySpriteDraw(eyeOrb, eyePos, null, Color.White * 0.5f, rotDirection + (timer * 0.01f * Player.direction) + extraRot, eyeOrb.Size() / 2, 0.2f * eyeStarScale, effects, 0.0f);
 
             //ExtraEye
             for (int i = 0; i < 3; i++)
             {
                 Main.EntitySpriteDraw(eye, position + Main.rand.NextVector2Circular(4, 4), null, bandColors[i] * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
 
-                Main.EntitySpriteDraw(band1, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
-                Main.EntitySpriteDraw(band2, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
-                Main.EntitySpriteDraw(band3, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
-
+                Main.EntitySpriteDraw(bars, position + Main.rand.NextVector2Circular(2, 2), null, eyeCol * 0.6f, rotDirection + extraRot, origin, Projectile.scale, effects, 0.0f);
             }
 
             Main.spriteBatch.End();

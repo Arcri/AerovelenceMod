@@ -84,7 +84,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Starglass
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_12").Value;
+            Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_12").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
             float scaley = 0.5f;
@@ -349,7 +349,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Starglass
 
         public int timer;
 
-        public Texture2D Texture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/GlowStar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        public Texture2D Texture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/GlowStar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
         public StarglassParticle(Vector2 Center, Vector2 Velocity, float scale, Color color, float alpha)
         {

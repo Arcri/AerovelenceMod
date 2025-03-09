@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void SetStaticDefaults()
         {
-            slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlash").Value;
+            slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlash").Value;
         }
         public override void SetDefaults()
         {
@@ -132,7 +132,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, originalBlendState, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             float slashScale = 0.2f + (float)Math.Sin(timer * 0.013f) * 0.1f;
             Vector2 drawPosition = targetPoint - Main.screenPosition;
-            slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlash").Value;
+            slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlash").Value;
             Main.spriteBatch.Draw(slashTexture, drawPosition, null, Color.AliceBlue * 0.8f, 0f, slashTexture.Size() / 2, slashScale, SpriteEffects.None, 0f);
 
             PixellationSystem.QueuePixelationAction(() =>
@@ -140,7 +140,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 SpriteBatch spriteBatch = Main.spriteBatch;
                 Rectangle sourceRect = new(0, 0, 1, 1);
                 Texture2D pixel = TextureAssets.MagicPixel.Value;
-                slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlash").Value;
+                slashTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlash").Value;
                 for (int i = 0; i < MAX_SEGMENTS - 1; i++)
                 {
                     Vector2 start = (segmentPositions[i] - Main.screenPosition) / 2;

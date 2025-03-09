@@ -177,8 +177,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-            var spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_21").Value;
-            var spotTex2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            var spotTex = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_21").Value;
+            var spotTex2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
 
             Texture2D glowTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Textures/GlowLine1Half");
 
@@ -418,7 +418,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             
             Texture2D Glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Glorb").Value;
 
-            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/flare_1").Value;
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/flare_1").Value;
             Vector2 starPos = startingPos - Main.screenPosition + (LaserRotation.ToRotationVector2() * 20);
             Main.spriteBatch.Draw(star, starPos, star.Frame(1, 1, 0, 0), new Color(0, 0, 0, 255), Projectile.rotation, star.Size() / 2, pulseScale * 0.75f, SpriteEffects.None, 0f);
 

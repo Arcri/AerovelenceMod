@@ -70,12 +70,12 @@ namespace AerovelenceMod.Content.Projectiles.Other
 		public override bool PreDraw(ref Color lightColor)
 		{
 			
-			Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_01").Value;
-			Texture2D Pixel = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStarPMA").Value;
+			Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/Flare/star_01").Value;
+			Texture2D Pixel = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStarPMA").Value;
 
-			Texture2D Line = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+			Texture2D Line = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
 			Texture2D GlowAlt = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
-			Texture2D GlowAltAlt = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_2").Value;
+			Texture2D GlowAltAlt = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_2").Value;
 
 			//C
 			/*

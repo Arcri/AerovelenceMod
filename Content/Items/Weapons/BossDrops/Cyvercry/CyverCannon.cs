@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -563,4 +563,3 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         }
     }
 }
-*/

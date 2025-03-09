@@ -146,10 +146,10 @@ namespace AerovelenceMod.Content.Skies
 
                         Color colToUse = Color.Lerp(Color.DeepSkyBlue, Color.DeepPink, bgLines[i].Y / Main.screenHeight);
 
-                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/TrailImages/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/Pixel/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                             new Vector2(bgLines[i].X, bgLines[i].Y), null, colToUse with { A = 0 } * bonusIntensity * intensity * 2f * lineAlpha, 0, new Vector2(36, 36), new Vector2(width2, 0.10f), SpriteEffects.None, 0f );
 
-                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/TrailImages/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                        spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/Pixel/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                             new Vector2(bgLines[i].X, bgLines[i].Y), null, Color.White with { A = 0 } * bonusIntensity * intensity * lineAlpha, 0, new Vector2(36, 36), new Vector2(width2, 0.10f + (2f * bgLineBoost)) * 0.5f, SpriteEffects.None, 0f);
                     }
                 }

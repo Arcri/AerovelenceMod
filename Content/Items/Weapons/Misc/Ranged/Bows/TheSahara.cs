@@ -336,7 +336,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             //Star shine
             if (Player.channel && timer > 55)
             {
-                Texture2D shineTexture = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+                Texture2D shineTexture = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
                 Main.spriteBatch.Draw(shineTexture, pos + direction * 9, null, new Color(200, 100, 20, 0) * 1f, starRotation + MathHelper.PiOver2, shineTexture.Size() / 2, Projectile.scale * 0.6f * starScale, SpriteEffects.None, 0.0f);
                 Main.spriteBatch.Draw(shineTexture, pos + direction * 9, null, new Color(200, 100, 20, 0) * 1f, starRotation, shineTexture.Size() / 2, Projectile.scale * 0.6f * starScale, SpriteEffects.None, 0.0f);
             }
@@ -533,7 +533,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/Royal_Resonance").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Flare/Royal_Resonance").Value;
 
             
             Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, Tex.Frame(1,1,0,0), new Color(255, 130, 0) with { A = 0 } * opacity, Projectile.rotation, Tex.Size() / 2, Projectile.scale * 1.5f, SpriteEffects.None, 0f);
@@ -589,7 +589,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         public override void PostAI(Projectile projectile)
         {
             if (!trailActive) return;
-            fireTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Extra_196_Black").Value;
+            fireTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Extra_196_Black").Value;
             fireTrail.trailColor = new Color(255, 100, 5);
             fireTrail.trailPointLimit = (int)(120 * projectile.scale);
             fireTrail.trailWidth = (int)(20 * projectile.scale);
@@ -656,7 +656,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
 
 
-            Texture2D spike = ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/DiamondGlowPMA").Value;
+            Texture2D spike = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/DiamondGlowPMA").Value;
             Main.EntitySpriteDraw(spike, projectile.Center - Main.screenPosition + projectile.velocity.SafeNormalize(Vector2.UnitX) * -2f, null, Color.Orange with { A = 0 }, projectile.rotation, spike.Size() / 2, projectile.scale * scale, SpriteEffects.None);
             Main.EntitySpriteDraw(spike, projectile.Center - Main.screenPosition + projectile.velocity.SafeNormalize(Vector2.UnitX) * -2f, null, Color.White with { A = 0 }, projectile.rotation, spike.Size() / 2, projectile.scale * 0.5f * scale, SpriteEffects.None);
             

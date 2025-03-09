@@ -852,7 +852,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                     float time = Main.GameUpdateCount * 0.1f;
                     float pulseSize = 1f + (float)Math.Sin(time) * 0.2f;
 
-                    Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/CrispStarPMA").Value;
+                    Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/CrispStarPMA").Value;
 
                     //rotating pixels
                     for (int i = 0; i < 4; i++)

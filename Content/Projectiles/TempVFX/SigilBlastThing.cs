@@ -65,7 +65,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D MagicCircle = Mod.Assets.Request<Texture2D>("Assets/Orbs/whiteFireEyeA").Value;
-            Texture2D ExtraGlow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+            Texture2D ExtraGlow = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
 
             float sin1 = MathF.Sin((float)Main.timeForVisualEffects * 0.04f);
             float sin2 = MathF.Cos((float)Main.timeForVisualEffects * 0.06f);
@@ -208,8 +208,8 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
-            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
+            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
 
             float rot = (float)Main.timeForVisualEffects * 0.1f;
 
@@ -279,9 +279,9 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/FireBallShader", AssetRequestMode.ImmediateLoad).Value;
 
-            myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/tstar").Value);
+            myEffect.Parameters["caustics"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/tstar").Value);
             myEffect.Parameters["distort"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/noise").Value);
-            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/fireStar2").Value);
+            myEffect.Parameters["gradient"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/fireStar2").Value);
             myEffect.Parameters["uTime"].SetValue(timer * 0.08f);
 
             Main.spriteBatch.End();

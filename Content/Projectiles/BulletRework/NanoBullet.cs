@@ -123,7 +123,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
 		//public List<Projectile> InkProj = new List<Projectile>();
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+			Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
 			Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
             Main.spriteBatch.End();
@@ -205,7 +205,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
             Texture2D Border = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorder").Value;
             Texture2D BorderGlow = Mod.Assets.Request<Texture2D>("Content/Projectiles/BulletRework/NanoBorderGlow").Value;
 
-            //Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Twinkle").Value;
+            //Texture2D Ball = Mod.Assets.Request<Texture2D>("Assets/Pixel/Twinkle").Value;
 
 
 

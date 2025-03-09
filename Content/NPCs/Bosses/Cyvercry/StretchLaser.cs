@@ -73,9 +73,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Vector2 vscale3 = new Vector2(0.4f, Projectile.velocity.Length() * 0.3f) * Projectile.ai[0] * 0.95f;
 
             //Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/DiamondGlow").Value;
-            Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/TrailImages/DiamondGlowPMA").Value;
+            Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/Pixel/DiamondGlowPMA").Value;
             //Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
-            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/GlowDartBlack").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Flare/GlowDartBlack").Value;
 
 
             Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), Color.Black * 0.25f, Projectile.rotation, softGlow.Size() / 2, vscale3 * 0.85f, SpriteEffects.None, 0f);
@@ -278,8 +278,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Draw(LaserTexture, target3, null, Color.DeepPink * 0.25f, LaserRotation, origin2, 0, 0);
 
             //Flares
-            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
-            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+            Texture2D flare1 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
+            Texture2D flare12 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_16").Value;
 
             Main.spriteBatch.Draw(flare12, Projectile.Center - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.HotPink, timer * 0.08f, flare12.Size() / 2, 0.4f * laserWidth * 0.02f, SpriteEffects.None, 0.0f);
             Main.spriteBatch.Draw(flare12, Projectile.Center - Main.screenPosition, flare12.Frame(1, 1, 0, 0), Color.Pink, timer * -0.05f, flare12.Size() / 2, 0.3f * laserWidth * 0.02f, SpriteEffects.None, 0.0f);
@@ -539,7 +539,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/circle_053").Value;
             Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/muzzle_flash_12").Value;
-            Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/spotlight_8").Value;
+            Texture2D glow3 = Mod.Assets.Request<Texture2D>("Assets/Flare/spotlight_8").Value;
             Texture2D glow4 = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/EasyLightray").Value;
 
             float ySinVal = (float)Math.Sin(Main.timeForVisualEffects * 0.22f) * 0.15f;
@@ -584,7 +584,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation + MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation - MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
 
-            Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/KennySlashHalfBig").Value;
+            Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/Slash/KennySlashHalfBig").Value;
             float slashOpacity = MathF.Pow(MathF.Sin(MathF.PI * progress), 2);
             Vector2 slashScale = new Vector2(1f, 2f) * 1.5f * slashOpacity * 0.75f;
             Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * (130f * 0.75f), null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);
@@ -604,14 +604,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-            
-            
-
-
-            //pixelKennySlashBlack
-
-            //draw
-
+            Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //<- Fixes bleed through problem (shit like RainbowRod disappearing)
 
             return false;
         }

@@ -250,7 +250,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 		float starAlpha = 0f;
 		public override void PostDraw(Color lightColor)
         {
-            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/CrispStarPMA").Value;
+            Texture2D spotTex = Mod.Assets.Request<Texture2D>("Assets/Flare/CrispStarPMA").Value;
 			Texture2D glowTex = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
             Vector2 thisPos = Projectile.Center - Main.screenPosition;
 

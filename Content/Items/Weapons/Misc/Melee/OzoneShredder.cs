@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,16 +14,16 @@ using System.Collections.ObjectModel;
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 {
     
-    /*
+    
     public class OzoneShredder : ModItem
     {
         bool tick = false;
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Ozone Shredder");
-             Tooltip.SetDefault("Hit enemies while dashing to bash off of them" +
-                "\n'Sever the Skyline!'"); 
-        }
+        //public override void SetStaticDefaults()
+        //{
+        //    // DisplayName.SetDefault("Ozone Shredder");
+        //     Tooltip.SetDefault("Hit enemies while dashing to bash off of them" +
+        //        "\n'Sever the Skyline!'"); 
+        //}
         public override void SetDefaults()
         {
             Item.knockBack = 10f;
@@ -51,5 +52,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 
     }
 
-    */
+    
 }
+*/

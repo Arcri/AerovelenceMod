@@ -335,7 +335,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             if (getProgress(easingProgress) >= 0.3f && getProgress(easingProgress) <= 0.7f)
             {
 
-                Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/CrispStarPMA");
+                Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/CrispStarPMA");
                 Color colToUse = Color.Purple;
                 colToUse.A = 0;
                 Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition + new Vector2(25f * (1f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f)), 0).RotatedBy(currentAngle),

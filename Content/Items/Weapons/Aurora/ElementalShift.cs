@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis;
 using Terraria.Map;
 using System.IO;
 using Terraria.Graphics.Effects;
+using AerovelenceMod.Common;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora
 {
@@ -239,8 +240,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture2D = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Projectile_540").Value;
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Orbs/SoftGlow").Value;
+            Texture2D texture2D = CommonTextures.Projectile_540.Value;
+            Texture2D glow = CommonTextures.SoftGlow.Value;
             Vector2 origin = new Vector2(texture2D.Width / 2, texture2D.Height / 2);
 
             Vector2 scaleVec2 = new Vector2(Projectile.velocity.Length() * 0.05f + 1f, 1f - Projectile.velocity.Length() * 0.03f);
@@ -257,7 +258,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                 {
                     Main.EntitySpriteDraw(texture2D, drawPos + new Vector2(Projectile.width / 2, Projectile.height / 2), null, color with { A = 0 } * 0.8f, Projectile.rotation, origin, scale, SpriteEffects.None, 0);
                     Main.EntitySpriteDraw(texture2D, drawPos + new Vector2(Projectile.width / 2, Projectile.height / 2), null, Color.White.MultiplyRGBA(color * 0.5f) with { A = 0 }, Projectile.rotation, origin, scale * 0.6f, SpriteEffects.None, 0);
-
                 }
             }
             return false;
@@ -343,7 +343,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
         {
             if (timer == 0) return false;
 
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/TrailImages/GlowStar").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/GlowStar").Value;
             Texture2D Glow = Mod.Assets.Request<Texture2D>("Assets/GlorbStrong").Value;
             Texture2D OuterGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
 
@@ -548,7 +548,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Texture2D Sword = (Texture2D)ModContent.Request<Texture2D>(path + "ElementalShift");
             Texture2D Glowmask = (Texture2D)ModContent.Request<Texture2D>(path + "ElementalShiftGlowmask");
             Texture2D White = (Texture2D)ModContent.Request<Texture2D>(path + "ElementalShiftGlow");
-            Texture2D SwingTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/halfSwingGlowBlack");
+            Texture2D SwingTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/HalfSwingGlowBlack");
 
             Vector2 origin;
             Vector2 glowOrigin;
@@ -575,9 +575,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Vector2 otherOffset = new Vector2(Projectile.spriteDirection > 0 ? 8 : 0, Projectile.spriteDirection > 0 ? -8 : -12).RotatedBy(currentAngle);
 
             Vector2 gfxOffset = new Vector2(0, -Main.player[Projectile.owner].gfxOffY);
-            float intensity = (float)Math.Sin(getProgress(easingProgress) * Math.PI);
-            Color AfterImageCol = Color.Lerp(Color.Purple, Color.MediumPurple, justHitVFXPower) with { A = 0 } * 0.5f;
-
 
             #region after image
             if (previousRotations != null && false)
@@ -657,20 +654,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
                 spawnPos = Main.player[Projectile.owner].Center + currentAngle.ToRotationVector2() * 60;
             }
             Projectile.NewProjectile(null, spawnPos, Vector2.Zero, ModContent.ProjectileType<ElementalShiftImpact>(), 0, 0f);
-
-            /*
-            for (int i = 0; i < 6 + Main.rand.Next(0, 5) + (skillStrike ? 3 : 0); i++)
-            {
-                Dust d = Dust.NewDustPerfect(target.Center, ModContent.DustType<GlowStarSharp>(), newColor: Color.Purple, Scale: 0.4f + Main.rand.NextFloat(-0.2f, 0.2f));
-                d.velocity = orthToSwing * Main.rand.NextFloat(1f, skillStrike ? 4.5f : 3.5f);
-                d.velocity = d.velocity.RotatedBy(Main.rand.NextFloat(-2.05f, 2.05f));
-
-                StarDustDrawInfo info = new StarDustDrawInfo(true, false, true, true, false, 1f);
-                d.customData = AssignBehavior_GSSBase(rotPower: 0.04f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.8f, shouldFadeColor: false, sdci: info);
-
-            }
-            */
-
+ 
             for (int i = 0; i < 5; i++)
             {
                 Dust d = Dust.NewDustPerfect(target.Center, ModContent.DustType<RoaParticle>(), newColor: FetchRainbow(100), Scale: 0.55f + Main.rand.NextFloat(-0.2f, 0.2f));

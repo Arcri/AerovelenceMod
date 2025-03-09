@@ -321,7 +321,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
                 trailCol = Color.Lerp(Color.OrangeRed * 1.2f, Color.OrangeRed * 0.3f, (getProgress(easingProgress) - 0.87f) / 0.13f);
             }
             
-            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trail5").Value;
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Trail5").Value; //Trail5!!!
             relativeTrail.trailColor = trailCol;
             relativeTrail.trailPointLimit = 800;
             relativeTrail.trailWidth = (int)(30 * (mytrailWidth / 28));
@@ -368,9 +368,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/BurningJealousyGlow");
             Texture2D GlowWhole2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/BurningJealousyBackGlow2");
             Texture2D GlowEdge = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ember/BGEdgeGlow");
-            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Flare");
+            Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Flare");
 
-            Texture2D Wave = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTextures/pixelKennySlashBlack");
+            Texture2D Wave = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlashBlack");
 
             Vector2 origin;
             float rotationOffset;

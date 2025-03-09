@@ -409,7 +409,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/Twinkle");
+            Texture2D Core = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Twinkle");
 
             for (int i = 0; i < 2; i++)
             {

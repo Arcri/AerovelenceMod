@@ -107,7 +107,7 @@ namespace AerovelenceMod.Content.Projectiles.BulletRework
         public float widthIntensity = 0;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+            Texture2D Tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
             Vector2 scale = new Vector2(Projectile.scale * 2, Projectile.scale) * 0.5f;
 
             //Main.spriteBatch.End();

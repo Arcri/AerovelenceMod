@@ -149,7 +149,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Texture2D ball2 = Mod.Assets.Request<Texture2D>("Assets/Orbs/feather_circle").Value;
 
             Texture2D border = Mod.Assets.Request<Texture2D>("Assets/Orbs/zFadeCircle").Value;
-            Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/star_07").Value;
+            Texture2D starB = Mod.Assets.Request<Texture2D>("Assets/Flare/star_07").Value;
 
             float drawScale = globalScale * 0.55f * drawnScale;
 

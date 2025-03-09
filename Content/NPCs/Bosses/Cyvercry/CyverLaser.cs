@@ -69,7 +69,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             if (timer == 0)
                 return false;
 
-            var Tex = Mod.Assets.Request<Texture2D>("Assets/TrailImages/Starlight").Value;
+            var Tex = Mod.Assets.Request<Texture2D>("Assets/Pixel/Starlight").Value;
             var Tex2 = Mod.Assets.Request<Texture2D>("Content/NPCs/Bosses/Cyvercry/CyverLaserPMA").Value;
 
             float colorIntensity = (damageDelay >= 0 ? 0.25f : 1f);

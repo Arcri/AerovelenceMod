@@ -387,7 +387,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
             if (player.HeldItem.type != ModContent.ItemType<TetraBlades>()) { Projectile.active = false; return false; }
 
 
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_1").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_1").Value;
 
             Vector2 vec2Scale = new Vector2(scale, scale) * 0.35f;
 

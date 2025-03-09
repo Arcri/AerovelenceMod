@@ -523,7 +523,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 			trail1.TrailDrawing(Main.spriteBatch);
 			trail2.TrailDrawing(Main.spriteBatch);
 
-			Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+			Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
 			float rot = (float)Main.timeForVisualEffects * 0.1f;
 
 
@@ -638,8 +638,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 		public override bool PreDraw(ref Color lightColor)
 		{
 
-			Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
-			Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+			Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
+			Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
 
 			float rot = (float)Main.timeForVisualEffects * 0.1f;
 

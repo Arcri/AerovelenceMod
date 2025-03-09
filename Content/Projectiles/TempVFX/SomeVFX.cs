@@ -76,7 +76,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
             //B: Flare = spotlight_8 | caus = Noise_1 | Grad = orangeGrad | Noise = Swirl | 0.3, 1, 0.8, 0.06, 0, time * 0.01, alpha * 2.6 | drawn twice
 
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/DrawnStar").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/DrawnStar").Value;
 
 
             if (myEffect == null)
@@ -160,7 +160,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/RainbowRod");
+            Texture2D glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/RainbowRod");
             Texture2D glow2 = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/DiamondGlow");
 
             Vector2 scalee = new Vector2(1, 0.5f) * Projectile.scale * 1.5f;
@@ -315,7 +315,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             Texture2D Diamond = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Projectiles/TempVFX/StretchDiamondEdit");
             Texture2D White = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Projectiles/TempVFX/StretchDiamondWhite");
             Texture2D Orb = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/impact_2fade2");
-            Texture2D specil = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/TrailImages/TestTex");
+            Texture2D specil = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/TestTex");
 
             Color backCol = Color.Lerp(Color.White, Color.Crimson, initalProgress);
 
@@ -398,9 +398,9 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         Effect myEffect = null;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/spotlight_8").Value;
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
-            Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Flare/spotlight_8").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
+            Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_16").Value;
 
 
             if (myEffect == null)
@@ -508,8 +508,8 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Orbs/whiteFireEyeArc45").Value;
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
-            Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_16").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
+            Texture2D Star2 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_16").Value;
 
             float rot1 = (float)Main.timeForVisualEffects * 0.0f;
             float rot2 = (float)Main.timeForVisualEffects * 0.0f;
@@ -651,11 +651,11 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             if (previousRotations == null)
                 return false;
             
-            //Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/SwordSwipeA").Value;
-            Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/TrailImages/BusterGlow").Value;
+            //Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/Flare/SwordSwipeA").Value;
+            Texture2D Swing = Mod.Assets.Request<Texture2D>("Assets/Pixel/BusterGlow").Value;
 
-            //Texture2D SwingStandard = Mod.Assets.Request<Texture2D>("Assets/TrailImages/TestTex").Value;
-            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/flare_4").Value;
+            //Texture2D SwingStandard = Mod.Assets.Request<Texture2D>("Assets/Pixel/TestTex").Value;
+            Texture2D Star = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4").Value;
 
             Vector2 scale = new Vector2(0.35f * alpha, 1f) * Projectile.scale;
             Vector2 scale2 = new Vector2(0.15f * alpha, 1f) * Projectile.scale;
@@ -919,7 +919,7 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
             trail1.TrailDrawing(Main.spriteBatch);
             trail2.TrailDrawing(Main.spriteBatch);
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
             float rot = (float)Main.timeForVisualEffects * 0.1f;
 
 
@@ -1041,8 +1041,8 @@ namespace AerovelenceMod.Content.Projectiles.TempVFX
         public override bool PreDraw(ref Color lightColor)
         {
 
-            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/FireSpike").Value;
-            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/bright_star").Value;
+            Texture2D glow = Mod.Assets.Request<Texture2D>("Assets/Flare/FireSpike").Value;
+            Texture2D glow2 = Mod.Assets.Request<Texture2D>("Assets/Flare/bright_star").Value;
 
             float rot = (float)Main.timeForVisualEffects * 0.1f;
 

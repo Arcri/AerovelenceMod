@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -16,7 +17,7 @@ using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
 {
-    /*
+    
     public class OzoneShredderHeldProj : ModProjectile
     {
         public override bool ShouldUpdatePosition() => true;
@@ -214,9 +215,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
 
-            
-            #endregion
-
             return false;
         }
 
@@ -358,5 +356,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee
             return false;
         }
     }
-    */
+    
 }
+*/
