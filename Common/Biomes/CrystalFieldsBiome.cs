@@ -1,49 +1,46 @@
-using AerovelenceMod.Common.Systems;
-using Microsoft.Xna.Framework;
-using System;
-using System.Security.Policy;
-using Terraria;
 using Terraria.Graphics.Capture;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria;
+using Microsoft.Xna.Framework;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Biomes
 {
-    public class CrystalCavernsSurfaceBiome : ModBiome
-	{
+    public class CrystalFieldsBiome : ModBiome
+    {
         public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("AerovelenceMod/CrystalCavernsWaterStyle");
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("AerovelenceMod/CrystalCavernsSurfaceBgStyle");
-		public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
+        public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Crimson;
 
         public override int Music => Main.LocalPlayer.townNPCs >= 2 ? -1 : (Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFields") : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalFieldsNight"));
 
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeHigh; //default behavior is BiomeLow.
 
         public override string BestiaryIcon => base.BestiaryIcon;
-		public override string BackgroundPath => base.BackgroundPath;
-		public override Color? BackgroundColor => base.BackgroundColor;
+        public override string BackgroundPath => base.BackgroundPath;
+        public override Color? BackgroundColor => base.BackgroundColor;
         public override string MapBackground => "AerovelenceMod/Backgrounds/CrystalCaverns/CrystalCavernsMapBg";
 
         public override void SetStaticDefaults()
-		{
-			//DisplayName.SetDefault("Crystal Caverns Surface");
+        {
+            //DisplayName.SetDefault("Crystal Caverns Surface");
 
-		}
+        }
 
-		public override bool IsBiomeActive(Player player)
-		{
-			bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().CavernTiles >= 100;
-			bool b2 = player.ZoneSkyHeight || player.ZoneOverworldHeight;
+        public override bool IsBiomeActive(Player player)
+        {
+            bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().FieldsTiles >= 100;
+            bool b2 = player.ZoneSkyHeight || player.ZoneOverworldHeight;
 
-			return b1 && b2;
-		}
+            return b1 && b2;
+        }
 
         public override void SpecialVisuals(Player player, bool isActive)
         {
-			// Code 'tactically borrowed' from the below method
-			// layer.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalCavernsSurface", isActive);
-			string biomeName = "AerovelenceMod:CrystalCavernsSurface";
+            // Code 'tactically borrowed' from the below method
+            // layer.ManageSpecialBiomeVisuals("AerovelenceMod:CrystalCavernsSurface", isActive);
+            string biomeName = "AerovelenceMod:CrystalCavernsSurface";
 
             if (SkyManager.Instance[biomeName] != null && isActive != SkyManager.Instance[biomeName].IsActive())
             {
@@ -62,8 +59,5 @@ namespace AerovelenceMod.Content.Biomes
                 WaterGlowManager.DeactivateGlow(this);
             }
         }
-
-        public static int CavernTiles { get; private set; }
-		public static int CitadelTiles { get; private set; }
-	}
+    }
 }

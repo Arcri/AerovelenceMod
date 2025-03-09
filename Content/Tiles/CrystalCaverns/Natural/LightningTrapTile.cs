@@ -1,5 +1,6 @@
 using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using static AerovelenceMod.Content.Projectiles.LightningUtility;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
@@ -62,7 +64,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLavaDeath[Type] = false;
             Main.tileShine2[Type] = true;
             Main.tileShine[Type] = 900;
-
             /*TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.WaterPlacement = LiquidPlacement.Allowed;
@@ -425,7 +426,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                 Wiring.GetProjectileSource(i, j),
                 new Vector2(i * 16 + 8, j * 16 + 8),
                 velocity,
-                ModContent.ProjectileType<LightningProjectile>(),
+                ModContent.ProjectileType<LightningProjectile2>(),
                 50,
                 2f,
                 Main.myPlayer
@@ -654,7 +655,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             for (int i = 1; i < MAX_SEGMENTS - 1; i++)
             {
                 float centerEmphasis = (float)Math.Exp(-(Math.Pow(i - MAX_SEGMENTS / 2f, 2) / (2 * Math.Pow(MAX_SEGMENTS / 4f, 2)))) * 0.7f;
-                float noise = (float)( Math.Sign(Math.Sin(time * 0.8f + i * 0.5f)) * 1.2f + Math.Sign(Math.Cos(time * 0.5f + i * 0.7f)) * 1.0f + (Math.Sin(time * 1.2f + i * 0.2f) > 0 ? 1 : -1) * globalIntensity * 1.8f) * centerEmphasis;
+                float noise = (float)(Math.Sign(Math.Sin(time * 0.8f + i * 0.5f)) * 1.2f + Math.Sign(Math.Cos(time * 0.5f + i * 0.7f)) * 1.0f + (Math.Sin(time * 1.2f + i * 0.2f) > 0 ? 1 : -1) * globalIntensity * 1.8f) * centerEmphasis;
                 if (Main.rand.NextBool(30) && i > MAX_SEGMENTS / 4 && i < MAX_SEGMENTS * 3 / 4)
                 {
                     noise += Main.rand.NextFloat(-1f, 1f) * centerEmphasis;
@@ -953,6 +954,79 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                     }
                 }
             }, PixellationSystem.RenderType.Additive);
+            return false;
+        }
+
+        private void FindTargetPosition()
+        {
+            Point tileCoords = Projectile.Center.ToTileCoordinates();
+            Vector2 direction = Projectile.velocity;
+            direction.Normalize();
+
+            for (int distance = 1; distance <= 10; distance++)
+            {
+                int checkX = tileCoords.X + (int)(direction.X * distance);
+                int checkY = tileCoords.Y + (int)(direction.Y * distance);
+
+                if (!WorldGen.InWorld(checkX, checkY)) break;
+
+                Tile checkTile = Main.tile[checkX, checkY];
+                if (checkTile.TileType == ModContent.TileType<LightningTrapTile>())
+                {
+                    targetPosition = new Vector2(checkX * 16 + 8, checkY * 16 + 8);
+                    return;
+                }
+            }
+            targetPosition = Projectile.Center + direction * 160;
+        }
+    }
+
+    public class LightningProjectile2 : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        private LightningData lightningData;
+
+        private Vector2 targetPosition;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 30;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.light = 0.8f;
+        }
+
+        public override void AI()
+        {
+            if (lightningData == null || !lightningData.Initialized)
+            {
+                FindTargetPosition();
+                lightningData = new LightningData(Projectile, LightningStyle.Smooth);
+                LightningUtility.InitializeBetweenPoints(
+                    lightningData,
+                    Projectile.Center,
+                    targetPosition
+                );
+            }
+            LightningUtility.UpdateSegments(lightningData);
+            LightningUtility.UpdateBranches(lightningData);
+            LightningUtility.SpawnDust(lightningData);
+            if (Projectile.timeLeft < 10)
+                lightningData.Alpha *= 0.7f;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (lightningData == null || !lightningData.Initialized)
+                return false;
+
+            LightningUtility.DrawLightning(lightningData, Main.spriteBatch);
             return false;
         }
 

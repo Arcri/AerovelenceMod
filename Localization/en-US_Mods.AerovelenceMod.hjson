@@ -701,6 +701,16 @@ NPCs: {
 	CrystalTumbler.DisplayName: Crystal Tumbler
 	CrystalBomb.DisplayName: Crystal Bomb
 	HealerDrone.DisplayName: Healer Drone
+	CaveSlime.DisplayName: Cave Slime
+	Charger.DisplayName: Charger
+	Commander.DisplayName: Commander
+	Condurtle.DisplayName: Condurtle
+	CrystalBat.DisplayName: Crystal Bat
+	CrystalSlime.DisplayName: Crystal Slime
+	ElectricTetra.DisplayName: Electric Tetra
+	Sapper.DisplayName: Sapper
+	TumblerockMedium.DisplayName: Tumblerock Medium
+	TumblerockSmall.DisplayName: Tumblerock Small
 }
 
 Projectiles: {
@@ -1030,6 +1040,11 @@ Projectiles: {
 	CrystalCrescentProj.DisplayName: Crystal Crescent Proj
 	CrystalCrescentSwingProj.DisplayName: Crystal Crescent Swing Proj
 	CrystalCrescentThrowProj.DisplayName: Crystal Crescent Throw Proj
+	CondurtleConductor.DisplayName: Condurtle Conductor
+	CondurtlePylon.DisplayName: Condurtle Pylon
+	SapperGasCloud.DisplayName: Sapper Gas Cloud
+	LightningStrike.DisplayName: Lightning Strike
+	LightningTelegraphProjectile.DisplayName: Lightning Telegraph Projectile
 }
 
 Configs: {
