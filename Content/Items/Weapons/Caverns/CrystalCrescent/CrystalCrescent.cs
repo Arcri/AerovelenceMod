@@ -81,7 +81,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
     public class CrystalCrescentThrowProj : ModProjectile
     {
         private float VelocityMult = 18;
-        private float ReboundTicks = 60;
+        private float ReboundTicks = 75;
 
         public override string Texture => "Terraria/Images/Projectile_0";
 
@@ -150,10 +150,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             {
                 lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
                 lightningData.NoiseFrequency = 3f;
-                lightningData.CoreColorOverride = Color.Purple;
-                lightningData.MidColorOverride = Color.Purple;
-                lightningData.OuterColorOverride = Color.Purple;
-                lightningData.FlashColorOverride = Color.Purple;
+                lightningData.CoreColorOverride = Color.BlueViolet;
+                lightningData.MidColorOverride = Color.BlueViolet;
+                lightningData.OuterColorOverride = Color.BlueViolet;
+                lightningData.FlashColorOverride = Color.BlueViolet;
 
                 lightningData.GlowIntensity = 0.6f;
             }
@@ -166,7 +166,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             if (Projectile.ai[0] == 0f)
             {
                 Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
-                Projectile.velocity = Vector2.Normalize(player.Center.DirectionTo(Main.MouseWorld)) + player.velocity / VelocityMult;
+                Projectile.velocity = Vector2.Normalize(player.Center.DirectionTo(Main.MouseWorld)) + player.velocity / VelocityMult / 2;
                 initialVelocity = Projectile.velocity;
 
                 SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.3f, PitchVariance = .4f, Volume = 0.20f };
