@@ -62,7 +62,9 @@ namespace AerovelenceMod.Content.Projectiles
                     MaxSegments = 60,
                     DisplacementIntensity = 2f,
                     NoiseFrequency = 2,
-                    TargetPosition = TargetPosition
+                    TargetPosition = TargetPosition,
+                    GlowScale = 0.09f,
+                    GlowIntensity = 0.5f
                 };
                 LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, TargetPosition, LightningUtils.LightningStyle.Static);
             }
