@@ -14,7 +14,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using static AerovelenceMod.Content.Projectiles.LightningUtility;
+using static AerovelenceMod.Content.Projectiles.LightningUtils;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
 {
@@ -1008,15 +1008,15 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             {
                 FindTargetPosition();
                 lightningData = new LightningData(Projectile, LightningStyle.Smooth);
-                LightningUtility.InitializeBetweenPoints(
+                LightningUtils.InitializeBetweenPoints(
                     lightningData,
                     Projectile.Center,
                     targetPosition
                 );
             }
-            LightningUtility.UpdateSegments(lightningData);
-            LightningUtility.UpdateBranches(lightningData);
-            LightningUtility.SpawnDust(lightningData);
+            LightningUtils.UpdateSegments(lightningData);
+            LightningUtils.UpdateBranches(lightningData);
+            LightningUtils.SpawnDust(lightningData);
             if (Projectile.timeLeft < 10)
                 lightningData.Alpha *= 0.7f;
         }
@@ -1026,7 +1026,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             if (lightningData == null || !lightningData.Initialized)
                 return false;
 
-            LightningUtility.DrawLightning(lightningData, Main.spriteBatch);
+            LightningUtils.DrawLightning(lightningData, Main.spriteBatch);
             return false;
         }
 

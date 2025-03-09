@@ -10,7 +10,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using static AerovelenceMod.Content.Projectiles.LightningUtility;
+using static AerovelenceMod.Content.Projectiles.LightningUtils;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -741,17 +741,17 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if (shellToConduitLightning != null && lightningTimer < SHELL_LIGHTNING_DURATION)
             {
-                LightningUtility.InitializeBetweenPoints(
+                LightningUtils.InitializeBetweenPoints(
                     shellToConduitLightning,
                     turtleShellPosition,
                     Projectile.Center,
-                    LightningUtility.LightningStyle.Jagged
+                    LightningUtils.LightningStyle.Jagged
                 );
 
-                LightningUtility.UpdateSegments(shellToConduitLightning);
-                LightningUtility.UpdateBranches(shellToConduitLightning);
+                LightningUtils.UpdateSegments(shellToConduitLightning);
+                LightningUtils.UpdateBranches(shellToConduitLightning);
                 if (Main.rand.NextBool(3))
-                    LightningUtility.SpawnDust(shellToConduitLightning);
+                    LightningUtils.SpawnDust(shellToConduitLightning);
                 if (lightningTimer > SHELL_LIGHTNING_DURATION - 10)
                 {
                     shellToConduitLightning.Alpha *= 0.9f;
@@ -764,11 +764,11 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
                 if (pylonLightningTime >= 0 && pylonLightningTime < PYLON_LIGHTNING_DURATION)
                 {
-                    LightningUtility.InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningUtility.LightningStyle.Default);
-                    LightningUtility.UpdateSegments(conduitToPylonLightning);
-                    LightningUtility.UpdateBranches(conduitToPylonLightning);
+                    LightningUtils.InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningUtils.LightningStyle.Default);
+                    LightningUtils.UpdateSegments(conduitToPylonLightning);
+                    LightningUtils.UpdateBranches(conduitToPylonLightning);
                     if (Main.rand.NextBool(2))
-                        LightningUtility.SpawnDust(conduitToPylonLightning);
+                        LightningUtils.SpawnDust(conduitToPylonLightning);
                     if (pylonLightningTime > PYLON_LIGHTNING_DURATION - 10)
                         conduitToPylonLightning.Alpha *= 0.9f;
                 }
@@ -778,12 +778,12 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         public override bool PreDraw(ref Color lightColor)
         {
             if (shellToConduitLightning != null && shellToConduitLightning.Initialized && lightningTimer < SHELL_LIGHTNING_DURATION)
-                LightningUtility.DrawLightning(shellToConduitLightning, Main.spriteBatch);
+                LightningUtils.DrawLightning(shellToConduitLightning, Main.spriteBatch);
             if (conduitToPylonLightning != null && conduitToPylonLightning.Initialized && pylonLightningActive)
             {
                 int pylonLightningTime = lightningTimer - (SHELL_LIGHTNING_DURATION + PYLON_LIGHTNING_DELAY);
                 if (pylonLightningTime >= 0 && pylonLightningTime < PYLON_LIGHTNING_DURATION)
-                    LightningUtility.DrawLightning(conduitToPylonLightning, Main.spriteBatch);
+                    LightningUtils.DrawLightning(conduitToPylonLightning, Main.spriteBatch);
             }
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 drawPos = Projectile.Center - Main.screenPosition;

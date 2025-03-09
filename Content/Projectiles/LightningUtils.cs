@@ -12,7 +12,7 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.Projectiles
 {
-    public static class LightningUtility
+    public static class LightningUtils
     {
         /// <summary>
         /// Data structure holding all key fields for the lightning system.
@@ -146,7 +146,7 @@ namespace AerovelenceMod.Content.Projectiles
                 data.SegmentPositions[i] = data.Projectile.Center + direction * (segmentLength * i);
                 data.SegmentOffsets[i] = 0f;
             }
-            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
+            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace AerovelenceMod.Content.Projectiles
                 data.SegmentPositions[i] = data.Npc.Center + direction * (segmentLength * i);
                 data.SegmentOffsets[i] = 0f;
             }
-            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
+            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
         public static void InitializeBetweenPoints(LightningData data, Vector2 startPos, Vector2 endPos, LightningStyle style = LightningStyle.Default)
@@ -192,7 +192,7 @@ namespace AerovelenceMod.Content.Projectiles
             }
 
             data.Initialized = true;
-            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
+            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
         /// <summary>

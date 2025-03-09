@@ -15,7 +15,7 @@ namespace AerovelenceMod.Content.Projectiles
         public Vector2 TargetPosition;
         private bool struck = false;
         private float TelegraphTime;
-        private LightningUtility.LightningData lightningData;
+        private LightningUtils.LightningData lightningData;
 
         private int DrawTimer = 0;
 
@@ -57,20 +57,20 @@ namespace AerovelenceMod.Content.Projectiles
 
             if (lightningData == null)
             {
-                lightningData = new LightningUtility.LightningData(Projectile)
+                lightningData = new LightningUtils.LightningData(Projectile)
                 {
                     MaxSegments = 60,
                     DisplacementIntensity = 2f,
                     NoiseFrequency = 2,
                     TargetPosition = TargetPosition
                 };
-                LightningUtility.InitializeBetweenPoints(lightningData, Projectile.Center, TargetPosition, LightningUtility.LightningStyle.Static);
+                LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, TargetPosition, LightningUtils.LightningStyle.Static);
             }
             else if (struck)
             {
-                LightningUtility.UpdateSegments(lightningData);
-                LightningUtility.UpdateBranches(lightningData);
-                LightningUtility.SpawnDust(lightningData);
+                LightningUtils.UpdateSegments(lightningData);
+                LightningUtils.UpdateBranches(lightningData);
+                LightningUtils.SpawnDust(lightningData);
             }
         }
 
@@ -89,7 +89,7 @@ namespace AerovelenceMod.Content.Projectiles
 
             if (struck)
             {
-                LightningUtility.DrawLightning(lightningData, Main.spriteBatch);
+                LightningUtils.DrawLightning(lightningData, Main.spriteBatch);
             }
             return false;
         }
