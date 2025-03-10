@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.Projectiles
             //Delete proj if it shouldn't be there
             if (!player.active || player.dead || player.CCed || player.noItems || player.frozen)
             {
-                Projectile.active = false;
+                Projectile.Kill();
             }
         }
 
@@ -186,7 +186,7 @@ namespace AerovelenceMod.Content.Projectiles
                 {
                     player.itemTime = 0;
                     player.itemAnimation = 0;
-                    Projectile.active = false;
+                    Projectile.Kill();
                 }
                 storedTimeAfterEnd--;
 

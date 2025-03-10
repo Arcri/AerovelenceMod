@@ -152,25 +152,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
                 lightningData.NoiseFrequency = 3f;
 
-                Color color = Color.MidnightBlue;
-
-                lightningData.CoreColorOverride = color;
-                lightningData.MidColorOverride = color;
-                lightningData.OuterColorOverride = color;
-                lightningData.FlashColorOverride = color;
-                lightningData.DistColorOverride = color;
+                lightningData.CoreColorOverride = Color.White;
+                lightningData.MidColorOverride = Color.SteelBlue;
+                lightningData.OuterColorOverride = Color.MidnightBlue;
+                lightningData.FlashColorOverride = Color.Black;
+                lightningData.DistColorOverride = Color.White;
 
                 lightningData.GlowIntensity = 1f;
                 lightningData.GlowScale = 0.15f;
-            }
-
-            if (Projectile.position.Distance(player.Center) < 5*16)
-            {
-                lightningData.Alpha = 0f;
-            }
-            else
-            {
-                lightningData.Alpha = 1f;
             }
 
             LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, player.Center);
@@ -260,6 +249,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         }
 
         bool playedSound = false;
+        bool tick;
         BaseTrailInfo relativeTrail = new BaseTrailInfo();
         BaseTrailInfo counterrelativeTrail = new BaseTrailInfo();
 
@@ -285,9 +275,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             float intensity = (float)Math.Sin(getProgress(easingProgress) * Math.PI);
 
+            if (Projectile.ai[0] == 1)
+            {
+                tick = true;
+            }
+            else
+            {
+                tick = false;
+            }
 
-            //Trail
-            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+                //Trail
+                relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
             relativeTrail.trailColor = Color.MidnightBlue;
             relativeTrail.trailPointLimit = 75;
             relativeTrail.trailWidth = 20;
@@ -323,6 +321,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Main.player[Projectile.owner].whoAmI] = 10;
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            Player player = Main.player[Projectile.owner];
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.position, Vector2.Zero, ModContent.ProjectileType<CrystalCrescentThrowProj>(), Projectile.damage, Projectile.knockBack, player.whoAmI, 0, tick ? -1 : 1);
+
         }
 
         public override bool PreDraw(ref Color lightColor)
