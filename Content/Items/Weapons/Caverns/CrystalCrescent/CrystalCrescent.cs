@@ -21,18 +21,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         bool tick = false;
         public static int attackCount = 0;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Example Swing Sword");
-            // Tooltip.SetDefault("Debug/Example Item");
-        }
         public override void SetDefaults()
         {
             Item.knockBack = 2f;
             Item.crit = 2;
-            Item.damage = 18;
-            Item.useAnimation = 10;
-            Item.useTime = 10;
+            Item.damage = 12;
+            Item.useAnimation = 20;
+            Item.useTime = 20;
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
@@ -56,24 +51,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
         public override bool CanUseItem(Player player)
         {
-            return player.ownedProjectileCounts[ModContent.ProjectileType<CrystalCrescentThrowProj>()] < 1;
+            int count = player.ownedProjectileCounts[ModContent.ProjectileType<CrystalCrescentThrowProj>()];
+            return count < 1;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             attackCount++;
             int p;
-
-            if (attackCount % 2 == 0)
-            {
-                p = Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<CrystalCrescentThrowProj>(), damage, knockback, player.whoAmI, 0, tick ? -1 : 1);
-            }
-            else
-            {
-                tick = !tick;
-                p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, tick ? 1 : 0);
-            }
-
+            tick = !tick;
+            p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, tick ? 1 : 0);
             return false;
         }
 
@@ -284,8 +271,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 tick = false;
             }
 
-                //Trail
-                relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
+            //Trail
+            relativeTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/RealLightningBloom").Value;
             relativeTrail.trailColor = Color.MidnightBlue;
             relativeTrail.trailPointLimit = 75;
             relativeTrail.trailWidth = 20;
@@ -326,7 +313,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         public override void OnKill(int timeLeft)
         {
             Player player = Main.player[Projectile.owner];
-            Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.position, Vector2.Zero, ModContent.ProjectileType<CrystalCrescentThrowProj>(), Projectile.damage, Projectile.knockBack, player.whoAmI, 0, tick ? -1 : 1);
+            Projectile.NewProjectile(Projectile.GetSource_FromThis(), player.Center, Vector2.Zero, ModContent.ProjectileType<CrystalCrescentThrowProj>(), Projectile.damage, Projectile.knockBack, player.whoAmI, 0, tick ? -1 : 1);
 
         }
 
