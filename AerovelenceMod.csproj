@@ -6,6 +6,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Items\Weapons\Crimson\Marionette.png" />
+    <None Remove="Content\Items\Weapons\Crimson\MarionetteBar.png" />
+    <None Remove="Content\Items\Weapons\Crimson\MarionetteStringless.png" />
     <None Remove="Content\Items\Weapons\Underworld\Marionette.png" />
     <None Remove="Content\Items\Weapons\Underworld\MarionetteBar.png" />
   </ItemGroup>
