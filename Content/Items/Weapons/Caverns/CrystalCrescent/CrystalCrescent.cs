@@ -10,6 +10,8 @@ using AerovelenceMod.Content.Projectiles;
 using System;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
+using Mono.Cecil;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 {
@@ -72,7 +74,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 p = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, tick ? 1 : 0);
             }
 
-
             return false;
         }
 
@@ -80,8 +81,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
     public class CrystalCrescentThrowProj : ModProjectile
     {
-        private float VelocityMult = 18;
-        private float ReboundTicks = 75;
+        private float VelocityMult = 24;
+        private float ReboundTicks = 60;
 
         public override string Texture => "Terraria/Images/Projectile_0";
 
@@ -150,12 +151,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             {
                 lightningData = new LightningUtils.LightningData(Projectile, LightningUtils.LightningStyle.Default);
                 lightningData.NoiseFrequency = 3f;
-                lightningData.CoreColorOverride = Color.BlueViolet;
-                lightningData.MidColorOverride = Color.BlueViolet;
-                lightningData.OuterColorOverride = Color.BlueViolet;
-                lightningData.FlashColorOverride = Color.BlueViolet;
 
-                lightningData.GlowIntensity = 0.6f;
+                Color color = Color.MidnightBlue;
+
+                lightningData.CoreColorOverride = color;
+                lightningData.MidColorOverride = color;
+                lightningData.OuterColorOverride = color;
+                lightningData.FlashColorOverride = color;
+                lightningData.DistColorOverride = color;
+
+                lightningData.GlowIntensity = 1f;
+                lightningData.GlowScale = 0.15f;
+            }
+
+            if (Projectile.position.Distance(player.Center) < 5*16)
+            {
+                lightningData.Alpha = 0f;
+            }
+            else
+            {
+                lightningData.Alpha = 1f;
             }
 
             LightningUtils.InitializeBetweenPoints(lightningData, Projectile.Center, player.Center);
@@ -317,24 +332,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent");
 
-            Vector2 origin;
-            float rotationOffset;
-            SpriteEffects effects;
-
-            if (Projectile.ai[0] != 1)
-            {
-                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
-                rotationOffset = 0;
-                effects = SpriteEffects.None;
-            }
-            else
-            {
-                origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
-                //rotationOffset = MathHelper.ToRadians(90f);
-                //effects = SpriteEffects.FlipHorizontally;
-                rotationOffset = 0;
-                effects = SpriteEffects.None;
-            }
+            Vector2 origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
+            float rotationOffset = 0;
 
             Vector2 armPosition = Main.player[Projectile.owner].GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, currentAngle);
 
@@ -344,7 +343,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             float intensity = (float)Math.Sin(getProgress(easingProgress) * Math.PI);
 
-            Main.spriteBatch.Draw(Blade, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + intensity * 0.5f, effects, 0f);
+            Main.spriteBatch.Draw(Blade, armPosition - Main.screenPosition + otherOffset - gfxOffset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + intensity * 0.5f, SpriteEffects.None, 0f);
 
             return false;
         }
