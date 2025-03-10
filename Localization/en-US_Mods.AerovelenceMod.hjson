@@ -1024,6 +1024,21 @@ Items: {
 		DisplayName: Flail Test
 		Tooltip: ""
 	}
+
+	WinWinFibber: {
+		DisplayName: Win Win Fibber
+		Tooltip: ""
+	}
+
+	RedundantFibber: {
+		DisplayName: Redundant Fibber
+		Tooltip: ""
+	}
+
+	TheInfinity: {
+		DisplayName: The Infinity
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1468,6 +1483,13 @@ Projectiles: {
 	LightningTelegraphGlow.DisplayName: Lightning Telegraph Glow
 	CrystalCrescentSwingProj.DisplayName: Crystal Crescent Swing Proj
 	CrystalCrescentThrowProj.DisplayName: Crystal Crescent Throw Proj
+	WinWinFibberHeldProj.DisplayName: Win Win Fibber Held Proj
+	FibberBullet.DisplayName: Fibber Bullet
+	FibberRicochetController.DisplayName: Fibber Ricochet Controller
+	RedundantFibberHeldProj.DisplayName: Redundant Fibber Held Proj
+	InfinityBullet.DisplayName: Infinity Bullet
+	InfinityHeldProj.DisplayName: Infinity Held Proj
+	TheInfinityHeldProj.DisplayName: The Infinity Held Proj
 }
 
 Configs: {
