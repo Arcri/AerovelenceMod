@@ -12,6 +12,8 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using Mono.Cecil;
 using static System.Net.Mime.MediaTypeNames;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 
 namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 {
@@ -160,8 +162,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 Projectile.velocity = Vector2.Normalize(player.Center.DirectionTo(Main.MouseWorld)) + player.velocity / VelocityMult / 2;
                 initialVelocity = Projectile.velocity;
 
-                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.3f, PitchVariance = .4f, Volume = 0.20f };
-                SoundEngine.PlaySound(style, Projectile.Center);
+                //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.3f, PitchVariance = .4f, Volume = 0.20f };
+                //SoundEngine.PlaySound(style, Projectile.Center);
             }
 
             Projectile.rotation += 0.3f * Projectile.ai[1];
@@ -190,6 +192,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Main.player[Projectile.owner].whoAmI] = 10;
+            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.35f, Pitch = 0.3f, PitchVariance = 0.4f});
+            SoundEngine.PlaySound(SoundID.Shatter with { Volume = 0.25f, Pitch = -0.15f, PitchVariance = 0.4f});
+
+            float currentShakePower = Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower;
+            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = currentShakePower > 1 ? Math.Clamp(currentShakePower, 3, 8) : 8;
+
+            for (int i = 0; i < 3 + Main.rand.Next(0, 2); i++)
+            {
+
+                Dust d = Dust.NewDustPerfect(target.Center, ModContent.DustType<GlowStarSharp>(), newColor: Color.MidnightBlue, Scale: 0.4f + Main.rand.NextFloat(-0.2f, 0.2f));
+                d.velocity = Projectile.velocity * Main.rand.NextFloat(1f, 3.5f) / 4;
+                d.velocity = d.velocity.RotatedBy(Main.rand.NextFloat(-2.05f, 2.05f));
+
+                StarDustDrawInfo info = new StarDustDrawInfo(true, false, true, true, false, 1f);
+                d.customData = AssignBehavior_GSSBase(rotPower: 0.04f, timeBeforeSlow: 5, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.8f, shouldFadeColor: false, sdci: info);
+
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+
+                Dust d = Dust.NewDustPerfect(target.Center, ModContent.DustType<RoaParticle>(), newColor: Color.SteelBlue, Scale: 0.55f + Main.rand.NextFloat(-0.2f, 0.2f));
+                d.velocity = Projectile.velocity * Main.rand.NextFloat(1f, 5f) / 4;
+                d.velocity = d.velocity.RotatedBy(Main.rand.NextFloat(-1.05f, 1.05f));
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -255,7 +282,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             if (getProgress(easingProgress) >= 0.3f && !playedSound)
             {
-                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Sharp_M_a") with { Pitch = -.62f, PitchVariance = .3f, Volume = 0.20f };
+                //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Sword_Sharp_M_a") with { Pitch = -.62f, PitchVariance = .3f, Volume = 0.20f };
+                SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.4f, PitchVariance = .4f, Volume = 0.20f };
                 SoundEngine.PlaySound(style, Projectile.Center);
                 playedSound = true;
             }
