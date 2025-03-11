@@ -1,6 +1,7 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Projectiles.Other;
 using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Basic.Reference.Assemblies.Net80;
@@ -51,6 +54,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Projectile.tileCollide = false;
             Projectile.DamageType = DamageClass.Summon;
             Projectile.hide = true;
+            Projectile.extraUpdates = 0; //used to be three, trying to update strings more frequently than the bars but failing :broken_heart:
         }
 
         #region swingPhysicVars
@@ -94,29 +98,45 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Projectile.Center = ArmPosition;
             Vector2 projPos = Projectile.Center += Projectile.velocity * 15;
 
+            #region function
             for (int i = 0; i < 4; i++)
             {
                 for (int n = 0; n < Main.maxNPCs; n++)
                 {
-                    if (verletAttack[i] == 0 && verletStretch[i] == 0 && Vector2.Distance(Main.npc[n].Center, verletEndPos[i] + Main.screenPosition) < 30)
+                    if (!Main.npc[n].boss)
                     {
-                        int freeToStick = 0;
-                        for (int ii = 0; ii < 4; ii++)
+                        if (verletAttack[i] == 0 && verletStretch[i] <= 0 && Vector2.Distance(Main.npc[n].Center, verletEndPos[i] + Main.screenPosition) < 30)
                         {
-                            if (verletStickedTo[ii] != Main.npc[n]) //only one string per enemy
+                            int freeToStick = 0;
+                            for (int ii = 0; ii < 4; ii++)
                             {
-                                freeToStick++;
+                                if (verletStickedTo[ii] != Main.npc[n]) //only one string per enemy
+                                {
+                                    freeToStick++;
+                                }
                             }
-                            else if (verletStickedTo[ii] == Main.npc[n] && Main.npc[n].boss) //multiple allowed on bosses
+
+                            if (freeToStick == 4)
                             {
-                                freeToStick++;
+                                verletAttack[i] = 1;
+                                verletStickedTo[i] = Main.npc[n];
                             }
                         }
+                    }
+                    else
+                    {
+                        NPC npc = Main.npc[n];
+                        Rectangle npcRect = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width - 20, Main.npc[n].height - 20);
+                        Rectangle verletTouchRect = new Rectangle((int)(verletEndPos[i].X + Main.screenPosition.X), (int)(verletEndPos[i].Y + Main.screenPosition.Y), 5, 5);
 
-                        if (freeToStick == 4)
+                        if (verletAttack[i] == 0 && verletStretch[i] <= 0 && verletTouchRect.Intersects(npcRect))
                         {
                             verletAttack[i] = 1;
                             verletStickedTo[i] = Main.npc[n];
+                            int x = (int)(verletEndPos[i].X + Main.screenPosition.X) - (int)npc.position.X;
+                            int y = (int)(verletEndPos[i].Y + Main.screenPosition.Y) - (int)npc.position.Y;
+                            verletBossGrabRand[i].X = x + Main.rand.Next(-20, 20);
+                            verletBossGrabRand[i].Y = y + Main.rand.Next(-20, 20);
                         }
                     }
                 }
@@ -161,7 +181,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                         if (!skillStrike)
                         {
                             hit.HideCombatText = false;
-                            verletStickedTo[i].StrikeNPC(hit);
                         }
                         else
                         {
@@ -186,6 +205,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                             text.customData = sstb;
                         }
+                        verletStickedTo[i].StrikeNPC(hit);
                         //is there custom behaviour for super crits?
 
                     }
@@ -200,10 +220,16 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                         ResetValues(i);
                     }
 
-                    if (verletChoke[i] < 300)
+                    if (verletChoke[i] < 360)
                     {
                         verletChoke[i]++;
-                        //implement color
+                        if (verletChoke[i] > 200)
+                        {
+                            if (verletTargetLerp[i] < 1f)
+                                verletTargetLerp[i] += 0.0035f;
+                            verletStickedTo[i].GetGlobalNPC<ColorNPC>().col = Color.Lerp(Color.White, Color.Red, verletTargetLerp[i]);
+                            verletStickedTo[i].GetGlobalNPC<ColorNPC>().settingColor = 2;
+                        }
                     }
                     else
                     {
@@ -212,6 +238,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 }
             }
 
+            #endregion
+
+            var plr = p.GetModPlayer<DrawBehindPlayer>();
+            plr.DrawVerlet = true;
 
             #region swingPhysics
             Vector2 dir = (Main.MouseWorld - barLoc).SafeNormalize(Vector2.Zero);
@@ -244,7 +274,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                 barLoc += dir * 10f;
 
-                int maxDist = 150;
+                int maxDist = 75;
                 if (Vector2.Distance(barLoc, Main.MouseWorld) > maxDist)
                 {
                     dir = (barLoc - Main.MouseWorld).SafeNormalize(Vector2.Zero);
@@ -266,7 +296,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                         if (barsRot > 0f)
                         {
                             accBack -= accActualBack;
-                            if (accActualBack > 0.0009f)
+                            if (accActualBack > 0.0015f)
                             {
                                 accActualBack -= 0.00001f;
                             }
@@ -284,7 +314,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                         if (barsRot < 0f)
                         {
                             accBack -= accActualBack;
-                            if (accActualBack > 0.0009f)
+                            if (accActualBack > 0.0015f)
                             {
                                 accActualBack -= 0.00001f;
                             }
@@ -320,18 +350,26 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
         public override void Kill(int timeLeft)
         {
+            Player p = Main.player[Projectile.owner];
+            var plr = p.GetModPlayer<DrawBehindPlayer>();
+            plr.DrawVerlet = false;
+            plr.pixelSource.Clear();
+            plr.col.Clear();
+            plr.lerp.Clear();
             for (int i = 0; i < 4; i++)
             {
-                ResetValues(i);
+                plr.pointCollection[i] = new List<Vector2>();
             }
         }
 
         Vector2[] verletEndPos = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         Vector2[] verletSpeed = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
+        Vector2[] verletBossGrabRand = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         NPC[] verletStickedTo = { null, null, null, null };
         int[] verletAttack = { 0, 0, 0, 0 };
         int[] verletHitCD = { 0, 0, 0, 0 };
         int[] verletChoke = { 0, 0, 0, 0 };
+        float[] verletTargetLerp = { 0, 0, 0, 0 };
         int[] verletStretch = { 0, 0, 0, 0 };
 
         #region PreDraw
@@ -404,18 +442,28 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 {
                     if (verletStretch[i] > 0)
                     {
-                        DrawVerlet(verletPos, verletEndPos[i], Color.White, (float)verletStretch[i] / 500);
+                        DrawVerlet(verletPos, verletEndPos[i], Color.White, i, (float)verletStretch[i] / 500, p: Main.player[Projectile.owner]);
                     }
                     else
                     {
-                        DrawVerlet(verletPos, verletEndPos[i], Color.White, 0f);
+                        DrawVerlet(verletPos, verletEndPos[i], Color.White, i, p: Main.player[Projectile.owner]);
                     }
                 }
                 else if (verletAttack[i] == 1)
                 {
                     float dist = Vector2.Distance(Main.MouseWorld, verletStickedTo[i].Center);
 
-                    DrawVerlet(verletPos, (verletStickedTo[i].Center - Main.screenPosition), Color.White, (dist / 150000) * dist);
+                    Vector2 stickLoc = new Vector2(verletStickedTo[i].Center.X, verletStickedTo[i].Center.Y);
+                    if (!verletStickedTo[i].boss)
+                    {
+                        stickLoc.Y -= verletStickedTo[i].height / 3;
+                    }
+                    else
+                    {
+                        stickLoc = new Vector2(verletStickedTo[i].position.X + verletBossGrabRand[i].X, verletStickedTo[i].position.Y + verletBossGrabRand[i].Y);
+                    }
+
+                    DrawVerlet(verletPos, (stickLoc - Main.screenPosition), Color.White, i, (dist / 150000) * dist, verletChoke[i], p: Main.player[Projectile.owner]);
                     verletEndPos[i] = (verletStickedTo[i].Center - Main.screenPosition);
                     verletStretch[i] = (int)(maxDist * 1.75f);
                 }
@@ -433,7 +481,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
         #region DrawVerlet
 
-        public void DrawVerlet(Vector2 verletPos1, Vector2 verletPos2, Color col, float lerp = 0f)
+        public void DrawVerlet(Vector2 verletPos1, Vector2 verletPos2, Color col, int index, float lerp = 0f, int verletChoke = 0, Player p = null)
         {
             Rectangle pixelSource = new Rectangle(0, 0, 2, 2);
 
@@ -451,12 +499,40 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
             List<Vector2> points = new List<Vector2>();
             points.Add(verletPos1);
-
             #region MiddlePoints (done manually so it looks nice)
-            Vector2 middlePoint = verletPos1 + dir * (calcDist * 0.15f);
-            middlePoint.Y += 16;
 
-            middlePoint = verletPos1 + dir * (calcDist * 0.25f);
+            Vector2 middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.15f, 16, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.25f, 24, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.35f, 30, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.45f, 35, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.5f, 35, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.65f, 35, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.75f, 32, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.85f, 24, verletChoke);
+            points.Add(middlePoint);
+            middlePoint = CreateMiddlePoint(verletPos1, dir, calcDist, 0.95f, 8, verletChoke);
+            points.Add(middlePoint);
+            #endregion
+            points.Add(verletPos2);
+
+
+
+            var plr = p.GetModPlayer<DrawBehindPlayer>();
+            plr.pixelSource.Insert(index, pixelSource);
+            plr.pointCollection[index] = points;
+            plr.col.Insert(index, col);
+            plr.lerp.Insert(index, lerp);
+
+            #region archived points
+
+            /*middlePoint = verletPos1 + dir * (calcDist * 0.25f);
             middlePoint.Y += 24;
             points.Add(middlePoint);
 
@@ -486,15 +562,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
             middlePoint = verletPos1 + dir * (calcDist * 0.95f);
             middlePoint.Y += 8;
-            points.Add(middlePoint);
-            #endregion
+            points.Add(middlePoint);*/
 
-            points.Add(verletPos2);
-
-            Color colA = Color.Crimson;
-            Color colB = Color.Lerp(Color.Crimson, Color.White, 0.4f);
-            float gradLerp = 0f;
-            for (int s = 0; s < points.Count - 1; s++)
+            /*for (int s = 0; s < points.Count - 1; s++)
             {
 
                 float progress = 0f;
@@ -507,7 +577,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                     Vector2 endPos = points[s + 1];
                     Vector2 direction = (endPos - startPos).SafeNormalize(Vector2.Zero);
                     Vector2 progPoint = startPos + direction * progress;
-                    Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, progPoint, pixelSource, accCol, 0f, pixelSource.Size() / 2, 1f, SpriteEffects.None);
+
+                    var plr = p.GetModPlayer<DrawBehindPlayer>();
+                    plr.progPoint = progPoint;
+                    plr.pixelSource = pixelSource;
+                    plr.accCol = accCol;
+                    //Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, progPoint, pixelSource, accCol, 0f, pixelSource.Size() / 2, 1f, SpriteEffects.None);
+
+
                     if (Vector2.Distance(progPoint, endPos) < 1)
                     {
                         break;
@@ -515,17 +592,147 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                     progress += 1f;
                 }
 
+            }*/
+            #endregion
+        }
+
+
+        public Vector2 CreateMiddlePoint(Vector2 verletPos1, Vector2 dir, float calcDist, float pointPos, int pointYOffset, int verletChoke)
+        {
+            int shake = 0;
+            if (verletChoke > 250)
+            {
+                int rand = 0;
+                for (int i = 0; i < verletChoke - 250; i++)
+                {
+                    if (i % 15 == 0)
+                    {
+                        rand += 3;
+                    }
+                }
+                shake = Main.rand.Next(rand);
             }
 
-        }
-        #endregion
+            Vector2 middlePoint = verletPos1 + dir * (calcDist * pointPos);
+            middlePoint.Y += pointYOffset + shake;
+            return middlePoint;
 
-        public void ResetValues(int i)
+        }
+       #endregion
+
+        public void ResetValues(int i, int delay = 60)
         {
+            verletBossGrabRand[i] = Vector2.Zero;
+            verletTargetLerp[i] = 0f;
             verletChoke[i] = 0;
             verletAttack[i] = 0;
             verletStickedTo[i] = null;
             //adding line breaking vfx
         }
     }
+
+    #region Draw Strings behind npcs
+    public class DrawBehindNPC : ModSystem
+    {
+        public override void Load()
+        {
+            Terraria.On_Main.DrawNPCs += On_Main_DrawNPCs; ;
+        }
+
+        private void On_Main_DrawNPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin((SpriteSortMode)0, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, (Effect)null, Main.Transform);
+
+            for (int players = 0; players < Main.maxPlayers; players++)
+            {
+                var p = Main.player[players];
+                if (p.active)
+                {
+                    var plr = p.GetModPlayer<DrawBehindPlayer>();
+                    if (plr.DrawVerlet)
+                    {
+                        for (int pp = 0; pp < plr.pointCollection.Length; pp++)
+                        {
+                            var points = plr.pointCollection[pp];
+                            Color colA = Color.DarkRed;
+                            Color colB = Color.Lerp(Color.Crimson, Color.White, 0.25f);
+                            float gladLerp = 0f;
+                            for (int s = 0; s < points.Count - 1; s++)
+                            {
+                                float progress = 0f;
+                                gladLerp += 0.1f;
+                                for (int i = 0; i < 5000; i++)
+                                {
+                                    Color gradColor = Color.Lerp(colA, colB, gladLerp);
+                                    Color accCol = Color.Lerp(gradColor, plr.col[pp], plr.lerp[pp]);
+                                    Vector2 startPos = points[s];
+                                    Vector2 endPos = points[s + 1];
+                                    Vector2 direction = (endPos - startPos).SafeNormalize(Vector2.Zero);
+                                    Vector2 progPoint = startPos + direction * progress;
+
+                                    Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, progPoint, plr.pixelSource[pp], accCol, 0f, plr.pixelSource[pp].Size() / 2, 1f, SpriteEffects.None);
+
+
+                                    if (Vector2.Distance(progPoint, endPos) < 1)
+                                    {
+                                        break;
+                                    }
+                                    progress += 1f;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            orig(self, behindTiles);
+        }
+    }
+
+
+    public class DrawBehindPlayer : ModPlayer
+    {
+        public bool DrawVerlet;
+
+        public List<Rectangle> pixelSource = new List<Rectangle>();
+        public List<Vector2>[] pointCollection = { new List<Vector2>(), new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };
+        public List<Color> col = new List<Color>();
+        public List<float> lerp = new List<float>();
+
+        public override void ResetEffects()
+        {
+            DrawVerlet = false;
+        }
+    }
+    #endregion
+
+    #region CoolColorDown
+
+    public class ColorNPC : GlobalNPC
+    {
+        public override bool InstancePerEntity => true;
+        float lerp = 0f;
+        public Color col;
+        public int settingColor;
+
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (--settingColor > 0)
+            {
+                lerp = 1f;
+                drawColor = col;
+            }
+            else
+            {
+                if (lerp > 0f)
+                {
+                    lerp -= 0.01f;
+                    drawColor = Color.Lerp(Color.White, col, lerp);
+                }
+            }
+        }
+    }
+    #endregion
 }
