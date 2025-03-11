@@ -248,7 +248,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         {
             Projectile.timeLeft = 10000;
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = Projectile.height = 6;
+            Projectile.width = Projectile.height = 40;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.penetrate = -1;
