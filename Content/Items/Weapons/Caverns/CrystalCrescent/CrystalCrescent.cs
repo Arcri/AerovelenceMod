@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
         public override void SetDefaults()
         {
-            Item.knockBack = 2f;
+            Item.knockBack = 6f;
             Item.crit = 2;
             Item.damage = 12;
             Item.useAnimation = 20;
@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         private LightningUtils.LightningData lightningData;
 
         private Vector2 initialVelocity;
-        private Vector2 returnVelocity;
+        private Vector2 returnVelocity = Vector2.Zero;
 
         public override void SetDefaults()
         {
@@ -99,7 +99,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
-            Projectile.light = 0.75f;
         }
 
         public override void AI()
@@ -156,19 +155,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             LightningUtils.UpdateBranches(lightningData);
             LightningUtils.SpawnDust(lightningData);
 
+            Lighting.AddLight(Projectile.Center, Color.MidnightBlue.MultiplyRGB(new Color(1f, 1f, 1f)).ToVector3());
+
             if (Projectile.ai[0] == 0f)
             {
                 Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
                 Projectile.velocity = Vector2.Normalize(player.Center.DirectionTo(Main.MouseWorld)) + player.velocity / VelocityMult / 2;
                 initialVelocity = Projectile.velocity;
-
-                //SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/GGS/Swing_Slash_Heavy_S_a") with { Pitch = -0.3f, PitchVariance = .4f, Volume = 0.20f };
-                //SoundEngine.PlaySound(style, Projectile.Center);
+            }
+            else
+            {
+                returnVelocity = Vector2.Normalize(Projectile.Center.DirectionTo(player.Center));
             }
 
             Projectile.rotation += 0.3f * Projectile.ai[1];
-
-            returnVelocity = Vector2.Normalize(Projectile.Center.DirectionTo(player.position));
 
             if (Projectile.ai[0] >= ReboundTicks)
             {
@@ -180,9 +180,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             }
 
-            if (Vector2.Distance(Projectile.Center, player.Center) < 2 * 16 && Projectile.ai[0] > ReboundTicks / 2)
+            if (Vector2.Distance(Projectile.Center, player.Center) < 2.5f * 16 && Projectile.ai[0] > ReboundTicks / 2)
             {
-                Projectile.active = false;
+                Projectile.Kill();
                 return;
             }
 
@@ -192,8 +192,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Main.player[Projectile.owner].whoAmI] = 10;
-            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.35f, Pitch = 0.3f, PitchVariance = 0.4f});
-            SoundEngine.PlaySound(SoundID.Shatter with { Volume = 0.25f, Pitch = -0.15f, PitchVariance = 0.4f});
+            SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.2f, Pitch = 0.1f, PitchVariance = 0.4f});
+            SoundEngine.PlaySound(SoundID.Shatter with { Volume = 0.20f, Pitch = -0.25f, PitchVariance = 0.4f});
 
             float currentShakePower = Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower;
             Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = currentShakePower > 1 ? Math.Clamp(currentShakePower, 3, 8) : 8;
@@ -210,7 +210,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
 
                 Dust d = Dust.NewDustPerfect(target.Center, ModContent.DustType<RoaParticle>(), newColor: Color.SteelBlue, Scale: 0.55f + Main.rand.NextFloat(-0.2f, 0.2f));
@@ -259,7 +259,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
             Projectile.extraUpdates = 7;
-            Projectile.light = 0.75f;
         }
 
         bool playedSound = false;
@@ -287,6 +286,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
                 SoundEngine.PlaySound(style, Projectile.Center);
                 playedSound = true;
             }
+
+            Lighting.AddLight(Projectile.Center, Color.MidnightBlue.MultiplyRGB(new Color(2f, 2f, 2f)).ToVector3());
 
             float intensity = (float)Math.Sin(getProgress(easingProgress) * Math.PI);
 
@@ -336,6 +337,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.immune[Main.player[Projectile.owner].whoAmI] = 10;
+
+            float currentShakePower = Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower;
+            Main.player[Projectile.owner].GetModPlayer<AeroPlayer>().ScreenShakePower = currentShakePower > 1 ? Math.Clamp(currentShakePower, 12, 24) : 24;
         }
 
         public override void OnKill(int timeLeft)
