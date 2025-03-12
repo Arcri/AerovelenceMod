@@ -978,6 +978,86 @@ Items: {
 			es-ES: "[i:75] Golpe de Habilidad de Contraataque [i:75]"
 		}
 	}
+
+	AdultJellyBanner: {
+		DisplayName: Adult Jelly Banner
+		Tooltip: ""
+	}
+
+	BabyJellyBanner: {
+		DisplayName: Baby Jelly Banner
+		Tooltip: ""
+	}
+
+	CaveSlimeBanner: {
+		DisplayName: Cave Slime Banner
+		Tooltip: ""
+	}
+
+	ChargerBanner: {
+		DisplayName: Charger Banner
+		Tooltip: ""
+	}
+
+	CommanderBanner: {
+		DisplayName: Commander Banner
+		Tooltip: ""
+	}
+
+	CondurtleBanner: {
+		DisplayName: Condurtle Banner
+		Tooltip: ""
+	}
+
+	CrystalBatBanner: {
+		DisplayName: Crystal Bat Banner
+		Tooltip: ""
+	}
+
+	CrystalSlimeBanner: {
+		DisplayName: Crystal Slime Banner
+		Tooltip: ""
+	}
+
+	CrystalWormBanner: {
+		DisplayName: Crystal Worm Banner
+		Tooltip: ""
+	}
+
+	DredgerBanner: {
+		DisplayName: Dredger Banner
+		Tooltip: ""
+	}
+
+	ElectricTetraBanner: {
+		DisplayName: Electric Tetra Banner
+		Tooltip: ""
+	}
+
+	LumurkerBanner: {
+		DisplayName: Lumurker Banner
+		Tooltip: ""
+	}
+
+	MiniTumblerBanner: {
+		DisplayName: Mini Tumbler Banner
+		Tooltip: ""
+	}
+
+	SapperBanner: {
+		DisplayName: Sapper Banner
+		Tooltip: ""
+	}
+
+	SlateDemonBanner: {
+		DisplayName: Slate Demon Banner
+		Tooltip: ""
+	}
+
+	SlateRollerBanner: {
+		DisplayName: Slate Roller Banner
+		Tooltip: ""
+	}
 }
 
 NPCs: {
