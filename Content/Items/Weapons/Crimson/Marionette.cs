@@ -146,6 +146,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                 if (verletAttack[i] == 1)
                 {
+                    if (verletStickedTo[i] != null && verletStickedTo[i].dontTakeDamage)
+                    {
+                        ResetValues(i);
+                        continue;
+                    }
+
                     //verletEndPos[i] = verletStickedTo[i].Center - Main.screenPosition;
 
                     if (verletStickedTo[i].dontTakeDamage)
