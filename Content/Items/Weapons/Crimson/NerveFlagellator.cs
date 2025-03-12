@@ -1,4 +1,4 @@
-using Terraria.ID;
+﻿using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,11 +10,29 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Crimson
 {
-    public class NerveFlagellator : ModItem
+    public class NerveFlagellator : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("NerveFlagellator", "Attacks with multiple nerve tendrils\nMarked enemies may spawn a friendly nerve creeper when hit")
+            .AddName(Language.Default, "Nerve Flagellator").AddTooltip(Language.Default, "Attacks with multiple nerve tendrils\nMarked enemies may spawn a friendly nerve creeper when hit")
+            .AddSkillStrike(Language.Default, "The small nerve tendrils Skill Strike")
+
+            .AddName(Language.Spanish, "Flagelador Nervioso").AddTooltip(Language.Spanish, "Ataca con múltiples zarcillos nerviosos\nLos enemigos marcados pueden generar un rastreador nervioso amistoso al ser golpeados").AddSkillStrike(Language.Spanish, "Los pequeños zarcillos nerviosos realizan Golpes de Habilidad")
+            .AddName(Language.French, "Flagellateur Nerveux").AddTooltip(Language.French, "Attaque avec plusieurs vrilles nerveuses\nLes ennemis marqués peuvent invoquer un rampant nerveux allié lorsqu'ils sont touchés").AddSkillStrike(Language.French, "Les petites vrilles nerveuses déclenchent des Coups de Compétence")
+            .AddName(Language.German, "Nervenpeitscher").AddTooltip(Language.German, "Greift mit mehreren Nervenranken an\nMarkierte Feinde können einen freundlichen Nervenkreischer beschwören, wenn sie getroffen werden").AddSkillStrike(Language.German, "Die kleinen Nervenranken führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Flagellatore Nervoso").AddTooltip(Language.Italian, "Attacca con più viticci nervosi\nI nemici marchiati possono evocare un rampicante nervoso amichevole quando colpiti").AddSkillStrike(Language.Italian, "I piccoli viticci nervosi eseguono Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Bicz Nerwowy").AddTooltip(Language.Polish, "Atakuje wieloma nerwowymi mackami\nOznaczeni wrogowie mogą przywołać przyjaznego nerwowego pełzacza po trafieniu").AddSkillStrike(Language.Polish, "Małe nerwowe macki wykonują Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Flagelador Nervoso").AddTooltip(Language.PortugueseBrazil, "Ataca com vários tentáculos nervosos\nInimigos marcados podem invocar um rastejador nervoso aliado ao serem atingidos").AddSkillStrike(Language.PortugueseBrazil, "Os pequenos tentáculos nervosos realizam Golpes de Habilidade")
+            .AddName(Language.Russian, "Нервный Флагеллятор").AddTooltip(Language.Russian, "Атакует несколькими нервными щупальцами\nПомеченные враги могут призвать дружелюбного нервного ползучего при попадании").AddSkillStrike(Language.Russian, "Маленькие нервные щупальца активируют Навык Удара");
+            //.AddName(Language.ChineseTraditional, "神經鞭笞者").AddTooltip(Language.ChineseTraditional, "使用多條神經觸鬚攻擊\n被標記的敵人被擊中時可能會生成友好的神經爬行者").AddSkillStrike(Language.ChineseTraditional, "小型神經觸鬚會發動技能打擊")
+            //.AddName(Language.ChineseSimplified, "神经鞭笞者").AddTooltip(Language.ChineseSimplified, "使用多条神经触须攻击\n被标记的敌人被击中时可能会生成友好的神经爬行者").AddSkillStrike(Language.ChineseSimplified, "小型神经触须会发动技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.DefaultToWhip(ModContent.ProjectileType<NerveFlagellatorProjectile>(), 50, 2f, 4f);
@@ -25,15 +43,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Item.useTime = 32;
             Item.useAnimation = 32;
             Item.channel = false;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at close range [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool MeleePrefix() => true;

@@ -19,11 +19,30 @@ using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 {
-    public class ClockworkLazinator : ModItem
+    public class ClockworkLazinator : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("ClockworkLazinator", "Right-Click to wind up the weapon, increasing how long it fires for\nCaps out at 4 winds")
+            .AddName(Language.Default, "Clockwork Lazinator")
+            .AddTooltip(Language.Default, "Right-Click to wind up the weapon, increasing how long it fires for\nCaps out at 4 winds")
+            .AddSkillStrike(Language.Default, "Skill Strikes after firing for long enough")
+
+            .AddName(Language.Spanish, "Lazinador Mecánico").AddTooltip(Language.Spanish, "Haz clic derecho para dar cuerda al arma, aumentando su duración de disparo\nSe detiene en 4 vueltas").AddSkillStrike(Language.Spanish, "Golpes de Habilidad después de disparar por suficiente tiempo")
+            .AddName(Language.French, "Lazinator à Engrenages").AddTooltip(Language.French, "Clic droit pour remonter l'arme, augmentant la durée du tir\nSe limite à 4 remontées").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après un tir prolongé")
+            .AddName(Language.German, "Uhrwerk-Lazinator").AddTooltip(Language.German, "Rechtsklick, um die Waffe aufzuziehen und die Feuerrate zu verlängern\nBegrenzt auf 4 Aufzüge").AddSkillStrike(Language.German, "Fähigkeitsschläge treten nach längerem Feuern auf")
+            .AddName(Language.Italian, "Lazinator a Ingranaggi").AddTooltip(Language.Italian, "Tasto destro per caricare l'arma, aumentando la durata del fuoco\nSi ferma a 4 cariche").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano dopo aver sparato abbastanza a lungo")
+            //.AddName(Language.Polish, "Mechaniczny Lazinator").AddTooltip(Language.Polish, "Prawy przycisk, aby nakręcić broń, zwiększając czas strzału\nMaksymalnie 4 nakręcenia").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po wystarczająco długim strzelaniu")
+            //.AddName(Language.PortugueseBrazil, "Lazinator Mecânico").AddTooltip(Language.PortugueseBrazil, "Botão direito para dar corda na arma, aumentando o tempo de disparo\nLimite de 4 giros").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem após disparar por tempo suficiente")
+            .AddName(Language.Russian, "Часовой Лазинатор").AddTooltip(Language.Russian, "ПКМ, чтобы заводить оружие, увеличивая время стрельбы\nМаксимум 4 завода").AddSkillStrike(Language.Russian, "Навык Удара активируется после достаточного времени стрельбы");
+            //.AddName(Language.ChineseTraditional, "發條雷射器").AddTooltip(Language.ChineseTraditional, "右鍵為武器上發條，提高射擊時間\n最多可上發條 4 次").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在射擊足夠長時間後")
+            //.AddName(Language.ChineseSimplified, "发条激光器").AddTooltip(Language.ChineseSimplified, "右键为武器上发条，提高射击时间\n最多可上发条 4 次").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在射击足够长时间后");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 31;
@@ -49,16 +68,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Item.noUseGraphic = true;
         }
         public override bool AltFunctionUse(Player player) => true;
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after firing for long enough [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
-
 
         public override void AddRecipes()
         {

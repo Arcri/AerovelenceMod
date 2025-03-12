@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -12,11 +12,30 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using System.Linq;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
-    public class MarbleMusket : ModItem 
+    public class MarbleMusket : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("MarbleMusket", "Converts bullets into special gravity-affected projectiles\nHitting 3 consecutive shots releases homing stars")
+            .AddName(Language.Default, "Marble Musket")
+            .AddTooltip(Language.Default, "Converts bullets into special gravity-affected projectiles\nHitting 3 consecutive shots releases homing stars")
+            .AddSkillStrike(Language.Default, "The Stars Skill Strike")
+
+            .AddName(Language.Spanish, "Mosquete de Mármol").AddTooltip(Language.Spanish, "Convierte las balas en proyectiles especiales afectados por la gravedad\nAcierta 3 disparos consecutivos para liberar estrellas guiadas").AddSkillStrike(Language.Spanish, "Las Estrellas realizan Golpes de Habilidad")
+            .AddName(Language.French, "Mousquet en Marbre").AddTooltip(Language.French, "Convertit les balles en projectiles spéciaux affectés par la gravité\nToucher 3 tirs consécutifs libère des étoiles à tête chercheuse").AddSkillStrike(Language.French, "Les Étoiles déclenchent des Coups de Compétence")
+            .AddName(Language.German, "Marmormusketen").AddTooltip(Language.German, "Verwandelt Kugeln in spezielle, schwerkraftbetroffene Projektile\n3 aufeinanderfolgende Treffer setzen zielsuchende Sterne frei").AddSkillStrike(Language.German, "Die Sterne führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Moschetto di Marmo").AddTooltip(Language.Italian, "Converte i proiettili in speciali proiettili influenzati dalla gravità\nColpisci 3 volte di fila per rilasciare stelle a ricerca").AddSkillStrike(Language.Italian, "Le Stelle eseguono Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Marmurowy Muszkiet").AddTooltip(Language.Polish, "Konwertuje pociski w specjalne pociski podlegające grawitacji\n3 trafienia z rzędu uwalniają samonaprowadzające się gwiazdy").AddSkillStrike(Language.Polish, "Gwiazdy wykonują Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Mosquete de Mármore").AddTooltip(Language.PortugueseBrazil, "Converte balas em projéteis especiais afetados pela gravidade\nAcertar 3 tiros consecutivos libera estrelas teleguiadas").AddSkillStrike(Language.PortugueseBrazil, "As Estrelas realizam Golpes de Habilidade")
+            .AddName(Language.Russian, "Мраморный Мушкет").AddTooltip(Language.Russian, "Преобразует пули в особые, подверженные гравитации снаряды\nПопадание 3 раз подряд выпускает самонаводящиеся звезды").AddSkillStrike(Language.Russian, "Звезды активируют Навык Удара");
+            //.AddName(Language.ChineseTraditional, "大理石火槍").AddTooltip(Language.ChineseTraditional, "將子彈轉換為受重力影響的特殊投射物\n連續命中 3 次會釋放追蹤星星").AddSkillStrike(Language.ChineseTraditional, "星星觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "大理石火枪").AddTooltip(Language.ChineseSimplified, "将子弹转换为受重力影响的特殊投射物\n连续命中 3 次会释放追踪星星").AddSkillStrike(Language.ChineseSimplified, "星星触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 15;
@@ -37,14 +56,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAmmo = AmmoID.Bullet;
-        }
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Stars Skill Strike [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

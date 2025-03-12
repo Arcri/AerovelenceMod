@@ -13,18 +13,27 @@ using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
-    public class Solsear : ModItem
+    public class Solsear : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Solsear");
-            /* Tooltip.SetDefault("'With great firepower comes great irresponsibility'\n" +
-                "Right-click to shoot an exploding magma flare\n" +
-                "Aim the tip of the laser into the flare to increase its size\n" +
-                "The tip of the laser also deals more damage"); */
+            this.ModifyLocalization("Solsear", "Fires a continuous laser that deals more damage at the tip\nRight-Click to fire a bomb\nAim the tip of the laser into the bomb to increase its damage and size\n'With great firepower comes great irresponsibility'")
+            .AddName(Language.Default, "Solsear").AddTooltip(Language.Default, "Fires a continuous laser that deals more damage at the tip\nRight-Click to fire a bomb\nAim the tip of the laser into the bomb to increase its damage and size\n'With great firepower comes great irresponsibility'")
+            .AddSkillStrike(Language.Default, "Bomb Skill Strikes at maximum size")
+
+            .AddName(Language.Spanish, "Abrasolador").AddTooltip(Language.Spanish, "Dispara un láser continuo que hace más daño en la punta\nHaz clic derecho para disparar una bomba\nApunta la punta del láser a la bomba para aumentar su daño y tamaño\n'Con un gran poder de fuego viene una gran irresponsabilidad'").AddSkillStrike(Language.Spanish, "Las Bombas realizan Golpes de Habilidad en su tamaño máximo")
+            .AddName(Language.French, "Solbrûlure").AddTooltip(Language.French, "Tire un laser continu qui inflige plus de dégâts à son extrémité\nClic droit pour tirer une bombe\nVisez la pointe du laser dans la bombe pour augmenter ses dégâts et sa taille\n'Un grand pouvoir de feu implique une grande irresponsabilité'").AddSkillStrike(Language.French, "Les Bombes déclenchent des Coups de Compétence à leur taille maximale")
+            .AddName(Language.German, "Sonnensengen").AddTooltip(Language.German, "Feuert einen kontinuierlichen Laser, der an der Spitze mehr Schaden verursacht\nRechtsklick zum Abfeuern einer Bombe\nRichte die Spitze des Lasers auf die Bombe, um deren Schaden und Größe zu erhöhen\n'Mit großer Feuerkraft kommt große Verantwortungslosigkeit'").AddSkillStrike(Language.German, "Bomben führen Fähigkeitsschläge bei maximaler Größe aus")
+            .AddName(Language.Italian, "Scottasole").AddTooltip(Language.Italian, "Spara un laser continuo che infligge più danni alla punta\nTasto destro per sparare una bomba\nMira la punta del laser sulla bomba per aumentarne il danno e la dimensione\n'Con grande potenza di fuoco viene grande irresponsabilità'").AddSkillStrike(Language.Italian, "Le Bombe eseguono Colpi dell'Abilità alla massima dimensione")
+            //.AddName(Language.Polish, "Słoneczny Przypał").AddTooltip(Language.Polish, "Strzela ciągłym laserem, który zadaje większe obrażenia na końcu\nPrawy przycisk, aby wystrzelić bombę\nSkieruj koniec lasera na bombę, aby zwiększyć jej obrażenia i rozmiar\n'Z wielką siłą ognia przychodzi wielka nieodpowiedzialność'").AddSkillStrike(Language.Polish, "Bomby wykonują Ciosy Umiejętności na maksymalnym rozmiarze")
+            //.AddName(Language.PortugueseBrazil, "Sol Ardente").AddTooltip(Language.PortugueseBrazil, "Dispara um laser contínuo que causa mais dano na ponta\nBotão direito para disparar uma bomba\nAponte a ponta do laser para a bomba para aumentar seu dano e tamanho\n'Com grande poder de fogo vem grande irresponsabilidade'").AddSkillStrike(Language.PortugueseBrazil, "As Bombas realizam Golpes de Habilidade no tamanho máximo")
+            .AddName(Language.Russian, "Солнцежог").AddTooltip(Language.Russian, "Стреляет непрерывным лазером, который наносит больше урона на кончике\nПКМ, чтобы выстрелить бомбой\nНаправьте кончик лазера на бомбу, чтобы увеличить её урон и размер\n'С великой огневой мощью приходит великая безответственность'").AddSkillStrike(Language.Russian, "Бомбы активируют Навык Удара при максимальном размере");
+            //.AddName(Language.ChineseTraditional, "日灼").AddTooltip(Language.ChineseTraditional, "發射持續的雷射，末端傷害更高\n右鍵發射炸彈\n將雷射尖端對準炸彈可增加其傷害和大小\n'強大火力帶來極大不負責任'").AddSkillStrike(Language.ChineseTraditional, "炸彈在最大尺寸時觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "日灼").AddTooltip(Language.ChineseSimplified, "发射持续的激光，末端伤害更高\n右键发射炸弹\n将激光尖端对准炸弹可增加其伤害和大小\n'强大火力带来极大不负责任'").AddSkillStrike(Language.ChineseSimplified, "炸弹在最大尺寸时触发技能打击");
         }
 
 
@@ -49,18 +58,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Item.noUseGraphic = true;
             Item.channel = true;
             Item.noMelee = true;
-
         }
+
         public override bool AltFunctionUse(Player player) => true;
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Bomb Skill Strikes at maximum size [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override void AddRecipes()
         {

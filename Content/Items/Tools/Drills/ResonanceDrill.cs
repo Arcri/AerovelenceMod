@@ -11,12 +11,29 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using ReLogic.Utilities;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Tools.Drills
 {
-    public class ResonanceDrill : ModItem
+    public class ResonanceDrill : TranslatableModItem
     {
-        public override void SetStaticDefaults() => Item.staff[Item.type] = true;
+        public override void SetStaticDefaults()
+        {
+            Item.staff[Item.type] = true;
+
+            this.ModifyLocalization("ResonanceDrill", "Mines connected ore, the more you mine the more effective")
+            .AddName(Language.Default, "Resonance Drill").AddTooltip(Language.Default, "Mines connected ore, the more you mine the more effective")
+            .AddName(Language.Spanish, "Taladro de Resonancia").AddTooltip(Language.Spanish, "Extrae minerales conectados, cuanto más minas, más efectivo")
+            .AddName(Language.French, "Perceuse de Résonance").AddTooltip(Language.French, "Mine les minerais connectés, plus vous minez, plus c'est efficace")
+            .AddName(Language.German, "Resonanzbohrer").AddTooltip(Language.German, "Gräbt verbundene Erze, je mehr du abbaust, desto effektiver")
+            .AddName(Language.Italian, "Trapano a Risonanza").AddTooltip(Language.Italian, "Estrae minerali connessi, più ne estrai, più è efficace")
+            .AddName(Language.Polish, "Wiertło Rezonansowe").AddTooltip(Language.Polish, "Wydobywa połączone rudy, im więcej kopiesz, tym jest skuteczniejsze")
+            .AddName(Language.PortugueseBrazil, "Broca de Ressonância").AddTooltip(Language.PortugueseBrazil, "Minera minérios conectados, quanto mais você minera, mais eficaz")
+            .AddName(Language.Russian, "Резонансный Бур").AddTooltip(Language.Russian, "Добывает связанные руды, чем больше копаешь, тем эффективнее")
+            .AddName(Language.ChineseTraditional, "共振鑽機").AddTooltip(Language.ChineseTraditional, "挖掘相連的礦石，挖得越多效果越好")
+            .AddName(Language.ChineseSimplified, "共振钻机").AddTooltip(Language.ChineseSimplified, "挖掘相连的矿石，挖得越多效果越好");
+
+        }
 
         public override void SetDefaults()
         {

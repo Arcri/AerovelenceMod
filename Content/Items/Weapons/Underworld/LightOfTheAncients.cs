@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Sets.Phantic;
@@ -19,12 +20,26 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Underworld
 {
-    public class LightOfTheAncients : ModItem
+    public class LightOfTheAncients : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
             Item.staff[Type] = true;
+            this.ModifyLocalization("LightOfTheAncients", "Fires small, fast hellfire bullets\nHas a visible overheating gauge above the player that fills as you fire\nThe gun becomes more powerful as it heats up, but if you keep firing it will need to cool down")
+            .AddName(Language.Default, "Light of the Ancients")
+            .AddTooltip(Language.Default, "Fires small, fast hellfire bullets\nHas a visible overheating gauge above the player that fills as you fire\nThe gun becomes more powerful as it heats up, but if you keep firing it will need to cool down")
+            .AddSkillStrike(Language.Default, "Skill Strikes just as it's about to overheat")
+
+            .AddName(Language.Spanish, "Luz de los Antiguos").AddTooltip(Language.Spanish, "Dispara balas infernales pequeñas y rápidas\nTiene un indicador de sobrecalentamiento visible sobre el jugador que se llena mientras disparas\nEl arma se vuelve más poderosa a medida que se calienta, pero si sigues disparando, necesitará enfriarse").AddSkillStrike(Language.Spanish, "Realiza Golpes de Habilidad justo antes de sobrecalentarse")
+            .AddName(Language.French, "Lumière des Anciens").AddTooltip(Language.French, "Tire de petites balles infernales rapides\nPossède une jauge de surchauffe visible au-dessus du joueur qui se remplit au fur et à mesure que vous tirez\nL'arme devient plus puissante en chauffant, mais si vous continuez à tirer, elle devra refroidir").AddSkillStrike(Language.French, "Déclenche un Coup de Compétence juste avant la surchauffe")
+            .AddName(Language.German, "Licht der Uralten").AddTooltip(Language.German, "Feuert kleine, schnelle Höllenfeuer-Kugeln ab\nHat eine sichtbare Überhitzungsanzeige über dem Spieler, die sich beim Feuern füllt\nDie Waffe wird stärker, wenn sie sich aufheizt, aber wenn du weiterfeuerst, muss sie abkühlen").AddSkillStrike(Language.German, "Führt einen Fähigkeitsschlag aus, kurz bevor es überhitzt")
+            .AddName(Language.Italian, "Luce degli Antichi").AddTooltip(Language.Italian, "Spara piccole e rapide proiettili infernali\nHa un indicatore di surriscaldamento visibile sopra il giocatore che si riempie mentre spari\nL'arma diventa più potente man mano che si scalda, ma se continui a sparare dovrà raffreddarsi").AddSkillStrike(Language.Italian, "Esegue un Colpo dell'Abilità proprio prima del surriscaldamento")
+            .AddName(Language.Polish, "Światło Pradawnych").AddTooltip(Language.Polish, "Wystrzeliwuje małe, szybkie piekielne pociski\nPosiada widoczny wskaźnik przegrzania nad graczem, który napełnia się podczas strzelania\nBroń staje się potężniejsza, gdy się nagrzewa, ale jeśli będziesz strzelać dalej, będzie musiała się schłodzić").AddSkillStrike(Language.Polish, "Cios Umiejętności wykonany tuż przed przegrzaniem")
+            .AddName(Language.PortugueseBrazil, "Luz dos Ancestrais").AddTooltip(Language.PortugueseBrazil, "Dispara pequenas e rápidas balas infernais\nPossui um medidor de superaquecimento visível acima do jogador que se enche enquanto você atira\nA arma se torna mais poderosa conforme aquece, mas se continuar disparando precisará esfriar").AddSkillStrike(Language.PortugueseBrazil, "Realiza um Golpe de Habilidade pouco antes de superaquecer")
+            .AddName(Language.Russian, "Свет Древних").AddTooltip(Language.Russian, "Выпускает небольшие, быстрые адские пули\nНад игроком отображается шкала перегрева, заполняющаяся при стрельбе\nОружие становится мощнее при нагреве, но если продолжить стрельбу, ему потребуется остывание").AddSkillStrike(Language.Russian, "Навык Удара активируется прямо перед перегревом")
+            .AddName(Language.ChineseTraditional, "古代之光").AddTooltip(Language.ChineseTraditional, "發射小而快速的地獄火子彈\n玩家頭頂會顯示可見的過熱量表，隨射擊逐漸填滿\n武器加熱時威力提升，但若持續射擊則需冷卻").AddSkillStrike(Language.ChineseTraditional, "即將過熱時觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "古代之光").AddTooltip(Language.ChineseSimplified, "发射小而快速的地狱火子弹\n玩家头顶会显示可见的过热量表，随射击逐渐填满\n武器加热时威力提升，但若持续射击则需冷却").AddSkillStrike(Language.ChineseSimplified, "即将过热时触发技能打击");
         }
 
         public override void SetDefaults()
@@ -45,15 +60,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Underworld
             Item.rare = ItemRarityID.Pink;
             Item.shoot = ModContent.ProjectileType<LightOfTheAncientsProjectile>();
             Item.shootSpeed = 16f;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes just as it's about to overheat [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void HoldItem(Player player)

@@ -1,4 +1,4 @@
-using AerovelenceMod.Common.Globals.SkillStrikes;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles;
@@ -14,12 +14,31 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 {
-	public class WarBow : ModItem
+	public class WarBow : TranslatableModItem
 	{
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("WarBow", "Hold to charge, increasing damage and velocity\nEmbeds a spike into enemies at full charge")
+            .AddName(Language.Default, "War Bow")
+            .AddTooltip(Language.Default, "Hold to charge, increasing damage and velocity\nEmbeds a spike into enemies at full charge")
+            .AddSkillStrike(Language.Default, "Skill Strikes by releasing with perfect timing")
+
+            .AddName(Language.Spanish, "Arco de Guerra").AddTooltip(Language.Spanish, "Mantén presionado para cargar, aumentando el daño y la velocidad\nIncrusta una espina en los enemigos con la carga completa").AddSkillStrike(Language.Spanish, "Golpes de Habilidad al soltar con un tiempo perfecto")
+            .AddName(Language.French, "Arc de Guerre").AddTooltip(Language.French, "Maintenez pour charger, augmentant les dégâts et la vitesse\nIncruste un pic dans les ennemis à pleine charge").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent en relâchant avec un timing parfait")
+            .AddName(Language.German, "Kriegsbogen").AddTooltip(Language.German, "Halte gedrückt, um aufzuladen, wodurch Schaden und Geschwindigkeit steigen\nBetreibt bei voller Ladung eine Spitze in Feinde").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, wenn mit perfektem Timing losgelassen wird")
+            .AddName(Language.Italian, "Arco da Guerra").AddTooltip(Language.Italian, "Tieni premuto per caricare, aumentando danni e velocità\nIncorpora una punta nei nemici a carica completa").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano rilasciando con tempismo perfetto")
+            //.AddName(Language.Polish, "Łuk Wojenny").AddTooltip(Language.Polish, "Przytrzymaj, aby ładować, zwiększając obrażenia i prędkość\nPrzy pełnym naładowaniu wbija kolec w wrogów").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po wypuszczeniu w idealnym momencie")
+            //.AddName(Language.PortugueseBrazil, "Arco de Guerra").AddTooltip(Language.PortugueseBrazil, "Segure para carregar, aumentando o dano e a velocidade\nCrava um espinho nos inimigos com carga máxima").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem ao soltar com um tempo perfeito")
+            .AddName(Language.Russian, "Боевой Лук").AddTooltip(Language.Russian, "Удерживайте, чтобы зарядить, увеличивая урон и скорость\nПри полной зарядке вонзает шип во врагов").AddSkillStrike(Language.Russian, "Навык Удара активируется при отпускании с идеальным таймингом");
+            //.AddName(Language.ChineseTraditional, "戰弓").AddTooltip(Language.ChineseTraditional, "按住蓄力，增加傷害和速度\n滿蓄力時嵌入尖刺到敵人身上").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在完美時機釋放時")
+            //.AddName(Language.ChineseSimplified, "战弓").AddTooltip(Language.ChineseSimplified, "按住蓄力，增加伤害和速度\n满蓄力时嵌入尖刺到敌人身上").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在完美时机释放时");
+        }
+
+        public override void SetDefaults()
 		{
 			Item.damage = 14;
             Item.knockBack = 6f; //Above average
@@ -42,15 +61,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 			Item.noUseGraphic = true;
             Item.autoReuse = true;
             Item.noMelee = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

@@ -13,11 +13,30 @@ using System.Linq;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
-    public class H2OCaliber : ModItem
+    public class H2OCaliber : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("H2OCaliber", "Fires bubbles which can merge")
+            .AddName(Language.Default, "H2O Caliber")
+            .AddTooltip(Language.Default, "Fires bubbles which can merge")
+            .AddSkillStrike(Language.Default, "Fully merged bubbles Skill Strike")
+
+            .AddName(Language.Spanish, "Calibre H2O").AddTooltip(Language.Spanish, "Dispara burbujas que pueden fusionarse").AddSkillStrike(Language.Spanish, "Las burbujas completamente fusionadas realizan Golpes de Habilidad")
+            .AddName(Language.French, "Calibre H2O").AddTooltip(Language.French, "Tire des bulles qui peuvent fusionner").AddSkillStrike(Language.French, "Les bulles totalement fusionnées déclenchent un Coup de Compétence")
+            .AddName(Language.German, "H2O-Kaliber").AddTooltip(Language.German, "Feuert Blasen ab, die sich verbinden können").AddSkillStrike(Language.German, "Vollständig verschmolzene Blasen führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Calibro H2O").AddTooltip(Language.Italian, "Spara bolle che possono fondersi").AddSkillStrike(Language.Italian, "Le bolle completamente fuse eseguono un Colpo dell'Abilità")
+            .AddName(Language.Polish, "Kaliber H2O").AddTooltip(Language.Polish, "Wystrzeliwuje bąbelki, które mogą się połączyć").AddSkillStrike(Language.Polish, "Całkowicie połączone bąbelki wykonują Cios Umiejętności")
+            .AddName(Language.PortugueseBrazil, "Calibre H2O").AddTooltip(Language.PortugueseBrazil, "Dispara bolhas que podem se fundir").AddSkillStrike(Language.PortugueseBrazil, "As bolhas completamente fundidas realizam um Golpe de Habilidade")
+            .AddName(Language.Russian, "H2O Калибр").AddTooltip(Language.Russian, "Выпускает пузырьки, которые могут сливаться").AddSkillStrike(Language.Russian, "Полностью слияние пузырьков активирует Навык Удара")
+            .AddName(Language.ChineseTraditional, "H2O 口徑").AddTooltip(Language.ChineseTraditional, "發射可以融合的氣泡").AddSkillStrike(Language.ChineseTraditional, "完全融合的氣泡觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "H2O 口径").AddTooltip(Language.ChineseSimplified, "发射可以融合的气泡").AddSkillStrike(Language.ChineseSimplified, "完全融合的气泡触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 12;
@@ -40,14 +59,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAmmo = AmmoID.Bullet;
-        }
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The biggest bubble skill strikes [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

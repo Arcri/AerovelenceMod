@@ -16,15 +16,28 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora.DeepFreeze
 {
-    public class DeepFreeze : ModItem
+    public class DeepFreeze : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Deep Freeze");
-            // Tooltip.SetDefault("'Is it cold in here, or is it just me?'");
+            this.ModifyLocalization("DeepFreeze", "'Is it cold in here, or is it just me?'")
+            .AddName(Language.Default, "Deep Freeze")
+            .AddTooltip(Language.Default, "'Is it cold in here, or is it just me?'")
+            .AddSkillStrike(Language.Default, "Skill Strikes under 25% mana")
+
+            .AddName(Language.Spanish, "Congelación Profunda").AddTooltip(Language.Spanish, "'¿Hace frío aquí, o soy solo yo?'").AddSkillStrike(Language.Spanish, "Golpes de Habilidad ocurren por debajo del 25% de maná")
+            .AddName(Language.French, "Gel Profond").AddTooltip(Language.French, "'Fait-il froid ici, ou est-ce juste moi ?'").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent sous 25% de mana")
+            .AddName(Language.German, "Tiefgefroren").AddTooltip(Language.German, "'Ist es hier kalt, oder liegt es nur an mir?'").AddSkillStrike(Language.German, "Fähigkeitsschläge treten bei unter 25% Mana auf")
+            .AddName(Language.Italian, "Congelamento Profondo").AddTooltip(Language.Italian, "'Fa freddo qui, o sono solo io?'").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano sotto il 25% di mana")
+            //.AddName(Language.Polish, "Głęboka Zmarzlina").AddTooltip(Language.Polish, "'Czy tu jest zimno, czy to tylko ja?'").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują poniżej 25% many")
+            //.AddName(Language.PortugueseBrazil, "Congelamento Profundo").AddTooltip(Language.PortugueseBrazil, "'Está frio aqui, ou sou só eu?'").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem abaixo de 25% de mana")
+            .AddName(Language.Russian, "Глубокая Заморозка").AddTooltip(Language.Russian, "'Здесь холодно, или это только мне так кажется?'").AddSkillStrike(Language.Russian, "Навык Удара активируется при мане ниже 25%");
+            //.AddName(Language.ChineseTraditional, "極寒凍結").AddTooltip(Language.ChineseTraditional, "'這裡很冷，還是只有我覺得？'").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在法力低於 25% 時")
+            //.AddName(Language.ChineseSimplified, "极寒冻结").AddTooltip(Language.ChineseSimplified, "'这里很冷，还是只有我觉得？'").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在法力低于 25% 时");
         }
 
         public override void SetDefaults()

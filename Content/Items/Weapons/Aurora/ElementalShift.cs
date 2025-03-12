@@ -20,12 +20,31 @@ using Terraria.Map;
 using System.IO;
 using Terraria.Graphics.Effects;
 using AerovelenceMod.Common;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora
 {
-    public class ElementalShift : ModItem
+    public class ElementalShift : TranslatableModItem
     {
         bool tick = false;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("ElementalShift", "Attacking creates an energy ball that can be hit around\nRight-Click to destroy the ball")
+            .AddName(Language.Default, "Elemental Shift")
+            .AddTooltip(Language.Default, "Attacking creates an energy ball that can be hit around\nRight-Click to destroy the ball")
+            .AddSkillStrike(Language.Default, "Ball Skill Strikes after bouncing off an enemy twice")
+
+            .AddName(Language.Spanish, "Cambio Elemental").AddTooltip(Language.Spanish, "Atacar genera una bola de energía que puede ser golpeada\nHaz clic derecho para destruir la bola").AddSkillStrike(Language.Spanish, "Los Golpes de Habilidad ocurren después de que la bola rebote dos veces en un enemigo")
+            .AddName(Language.French, "Changement Élémentaire").AddTooltip(Language.French, "Attaquer crée une boule d'énergie qui peut être frappée\nClic droit pour détruire la boule").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après que la boule rebondisse deux fois sur un ennemi")
+            .AddName(Language.German, "Elementarverschiebung").AddTooltip(Language.German, "Angriffe erzeugen eine Energiekugel, die herumgeschlagen werden kann\nRechtsklick zum Zerstören der Kugel").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, nachdem die Kugel zweimal von einem Feind abprallt")
+            .AddName(Language.Italian, "Cambio Elementale").AddTooltip(Language.Italian, "Attaccare crea una sfera di energia che può essere colpita\nTasto destro per distruggere la sfera").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità avvengono dopo che la sfera rimbalza due volte su un nemico")
+            //.AddName(Language.Polish, "Przesunięcie Żywiołów").AddTooltip(Language.Polish, "Atakowanie tworzy kulę energii, którą można odbijać\nPrawy przycisk, aby ją zniszczyć").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po odbiciu się kuli dwa razy od wroga")
+            //.AddName(Language.PortugueseBrazil, "Mudança Elemental").AddTooltip(Language.PortugueseBrazil, "Atacar cria uma bola de energia que pode ser rebatida\nBotão direito para destruí-la").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem depois que a bola ricocheteia duas vezes em um inimigo")
+            .AddName(Language.Russian, "Смена Стихий").AddTooltip(Language.Russian, "Атаки создают энергетический шар, который можно отбивать\nПКМ, чтобы уничтожить шар").AddSkillStrike(Language.Russian, "Навык Удара активируется после двух отскоков шара от врага");
+            //.AddName(Language.ChineseTraditional, "元素轉移").AddTooltip(Language.ChineseTraditional, "攻擊時生成一個可擊打的能量球\n右鍵點擊可摧毀能量球").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在能量球兩次彈開敵人後")
+            //.AddName(Language.ChineseSimplified, "元素转移").AddTooltip(Language.ChineseSimplified, "攻击时生成一个可击打的能量球\n右键点击可摧毁能量球").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在能量球两次弹开敌人后");
+        }
 
         public override void SetDefaults()
         {
@@ -46,15 +65,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora
             Item.shoot = ModContent.ProjectileType<NewElementalShiftProj>();
         }
         public override bool AltFunctionUse(Player player) { return true; }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Ball Skill Strikes after bouncing off an enemy twice [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override bool CanUseItem(Player player)
         {

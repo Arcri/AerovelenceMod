@@ -1,27 +1,39 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using Terraria.Audio;
-using Terraria.GameContent;
-using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
-using AerovelenceMod.Content.Projectiles;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
-using System.Runtime.InteropServices;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
-    public class GraniteCannon : ModItem
+    public class GraniteCannon : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("GraniteCannon", "Converts bullets into granite chunks\nIf two chunks collide midair, they break into homing energy cores")
+            .AddName(Language.Default, "Granite Cannon")
+            .AddTooltip(Language.Default, "Converts bullets into granite chunks\nIf two chunks collide midair, they break into homing energy cores")
+            .AddSkillStrike(Language.Default, "The Energy Cores Skill Strike")
+
+            .AddName(Language.Spanish, "Cañón de Granito").AddTooltip(Language.Spanish, "Convierte las balas en fragmentos de granito\nSi dos fragmentos chocan en el aire, se rompen en núcleos de energía guiados").AddSkillStrike(Language.Spanish, "Los Núcleos de Energía realizan Golpes de Habilidad")
+            .AddName(Language.French, "Canon de Granit").AddTooltip(Language.French, "Convertit les balles en morceaux de granit\nSi deux morceaux se percutent en l'air, ils se brisent en noyaux d'énergie à tête chercheuse").AddSkillStrike(Language.French, "Les Noyaux d'Énergie déclenchent des Coups de Compétence")
+            .AddName(Language.German, "Granitkanone").AddTooltip(Language.German, "Verwandelt Kugeln in Granitbrocken\nWenn zwei Brocken in der Luft kollidieren, zerbrechen sie in zielsuchende Energiekugeln").AddSkillStrike(Language.German, "Die Energiekugeln führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Cannone di Granito").AddTooltip(Language.Italian, "Converte i proiettili in pezzi di granito\nSe due pezzi si scontrano a mezz'aria, si rompono in nuclei energetici a ricerca").AddSkillStrike(Language.Italian, "I Nuclei di Energia eseguono Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Granitowa Armata").AddTooltip(Language.Polish, "Konwertuje pociski w granitowe odłamki\nJeśli dwa odłamki zderzą się w powietrzu, rozbiją się na samonaprowadzające się rdzenie energetyczne").AddSkillStrike(Language.Polish, "Rdzenie Energetyczne wykonują Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Canhão de Granito").AddTooltip(Language.PortugueseBrazil, "Converte balas em pedaços de granito\nSe dois pedaços colidirem no ar, eles se quebram em núcleos de energia teleguiados").AddSkillStrike(Language.PortugueseBrazil, "Os Núcleos de Energia realizam Golpes de Habilidade")
+            .AddName(Language.Russian, "Гранитная Пушка").AddTooltip(Language.Russian, "Преобразует пули в гранитные обломки\nЕсли два обломка сталкиваются в воздухе, они распадаются на самонаводящиеся энергетические ядра").AddSkillStrike(Language.Russian, "Энергетические Ядра активируют Навык Удара");
+            //.AddName(Language.ChineseTraditional, "花崗岩加農砲").AddTooltip(Language.ChineseTraditional, "將子彈轉換為花崗岩碎塊\n如果兩個碎塊在空中相撞，它們會破裂成追蹤能量核心").AddSkillStrike(Language.ChineseTraditional, "能量核心觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "花岗岩加农炮").AddTooltip(Language.ChineseSimplified, "将子弹转换为花岗岩碎块\n如果两个碎块在空中相撞，它们会破裂成追踪能量核心").AddSkillStrike(Language.ChineseSimplified, "能量核心触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 22;
@@ -42,15 +54,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Item.autoReuse = true;
             Item.noMelee = true;
             Item.noUseGraphic = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Energy Cores Skill Strike [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

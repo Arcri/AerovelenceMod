@@ -14,15 +14,34 @@ using AerovelenceMod.Content.Projectiles;
 using System;
 using System.Collections.Generic;
 using AerovelenceMod.Common;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 {
-    public class Eos : ModItem
+    public class Eos : TranslatableModItem
     {
         bool tick = false;
 
         int combo = 1;
 
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Eos", "Ends a combo with a spin attack\nHit enemies with the spin while dashing to bash off of them, gaining brief invulnerability\nAfter bashing an enemy, your next 2 combos will fire projectiles")
+            .AddName(Language.Default, "Eos")
+            .AddTooltip(Language.Default, "Ends a combo with a spin attack\nHit enemies with the spin while dashing to bash off of them, gaining brief invulnerability\nAfter bashing an enemy, your next 2 combos will fire projectiles")
+            .AddSkillStrike(Language.Default, "Skill Strikes when bashing")
+
+            .AddName(Language.Spanish, "Eos").AddTooltip(Language.Spanish, "Termina un combo con un ataque giratorio\nGolpea a los enemigos con el giro mientras te deslizas para rebotar en ellos, ganando invulnerabilidad breve\nDespués de rebotar en un enemigo, tus próximos 2 combos dispararán proyectiles").AddSkillStrike(Language.Spanish, "Los Golpes de Habilidad ocurren al rebotar")
+            .AddName(Language.French, "Eos").AddTooltip(Language.French, "Termine un combo avec une attaque tournoyante\nFrappez des ennemis en tournant lors d'une ruée pour rebondir, gagnant une brève invulnérabilité\nAprès un rebond sur un ennemi, vos 2 prochains combos tireront des projectiles").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après un rebond")
+            .AddName(Language.German, "Eos").AddTooltip(Language.German, "Beendet eine Kombo mit einem Drehangriff\nTriff Feinde mit dem Dreh während eines Sprints, um von ihnen abzuprallen und kurzzeitig unverwundbar zu werden\nNach einem Abpraller feuern deine nächsten 2 Kombos Projektile ab").AddSkillStrike(Language.German, "Fähigkeitsschläge treten beim Abprallen auf")
+            .AddName(Language.Italian, "Eos").AddTooltip(Language.Italian, "Termina una combo con un attacco rotante\nColpisci i nemici con la rotazione mentre scatti per rimbalzare, ottenendo una breve invulnerabilità\nDopo il rimbalzo su un nemico, i tuoi prossimi 2 combo spareranno proiettili").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità avvengono dopo un rimbalzo")
+            //.AddName(Language.Polish, "Eos").AddTooltip(Language.Polish, "Kończy kombinację ataków wirującym ciosem\nUderz wrogów obrotem podczas sprintu, aby się odbić i zyskać krótką niewrażliwość\nPo odbiciu od wroga, twoje następne 2 kombosy wystrzelą pociski").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po odbiciu")
+            //.AddName(Language.PortugueseBrazil, "Eos").AddTooltip(Language.PortugueseBrazil, "Termina um combo com um ataque giratório\nAtingir inimigos com a rotação enquanto corre faz você ricochetear, ganhando breve invulnerabilidade\nApós ricochetear em um inimigo, seus próximos 2 combos dispararão projéteis").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem ao ricochetear")
+            .AddName(Language.Russian, "Эос").AddTooltip(Language.Russian, "Завершает комбо вращающейся атакой\nПопади во врага вращением во время рывка, чтобы отскочить от него и получить кратковременную неуязвимость\nПосле отскока твои следующие 2 комбо выпустят снаряды").AddSkillStrike(Language.Russian, "Навык Удара активируется при отскоке");
+            //.AddName(Language.ChineseTraditional, "曙光").AddTooltip(Language.ChineseTraditional, "以旋轉攻擊結束連擊\n衝刺時使用旋轉擊中敵人可彈開，獲得短暫無敵\n彈開敵人後，你的下一個2次連擊會發射投射物").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在彈開時")
+            //.AddName(Language.ChineseSimplified, "曙光").AddTooltip(Language.ChineseSimplified, "以旋转攻击结束连击\n冲刺时使用旋转击中敌人可弹开，获得短暂无敌\n弹开敌人后，你的下2次连击会发射投射物").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在弹开时");
+
+        }
         public override void SetDefaults()
         {
             Item.damage = 92;
@@ -46,22 +65,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Aurora.Eos
 
             Item.shootSpeed = 1f;
             Item.shoot = ModContent.ProjectileType<EosSwing>();
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes when bashing [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-
-            TooltipLine Warning = new(Mod, "Warning", "This item will be obtained a different way in the future, but I've decided to have Cyvercry drop it for " +
-                "now so he at least has some reward.")
-            {
-                OverrideColor = Color.Orange,
-            };
-            tooltips.Add(Warning);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

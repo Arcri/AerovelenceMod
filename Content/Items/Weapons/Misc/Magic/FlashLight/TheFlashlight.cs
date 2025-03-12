@@ -14,14 +14,29 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class TheFlashlight : ModItem
+    public class TheFlashlight : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
+            this.ModifyLocalization("TheFlashlight", "Targets the closest enemy to the mouse")
+            .AddName(Language.Default, "The Flashlight")
+            .AddTooltip(Language.Default, "Targets the closest enemy to the mouse")
+            .AddSkillStrike(Language.Default, "Skill Strikes after locking onto the same enemy for a while")
+
+            .AddName(Language.Spanish, "La Linterna").AddTooltip(Language.Spanish, "Apunta al enemigo más cercano al ratón").AddSkillStrike(Language.Spanish, "Golpes de Habilidad tras fijarse en el mismo enemigo por un tiempo")
+            .AddName(Language.French, "La Lampe-Torche").AddTooltip(Language.French, "Cible l'ennemi le plus proche du curseur").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après s'être verrouillé sur le même ennemi pendant un certain temps")
+            .AddName(Language.German, "Die Taschenlampe").AddTooltip(Language.German, "Zielt auf den nächsten Feind in Mausnähe").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, nachdem dasselbe Ziel für eine Weile anvisiert wurde")
+            .AddName(Language.Italian, "La Torcia").AddTooltip(Language.Italian, "Mira al nemico più vicino al cursore").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po'")
+            //.AddName(Language.Polish, "Latarka").AddTooltip(Language.Polish, "Namierza najbliższego wroga względem kursora").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po namierzeniu tego samego wroga przez pewien czas")
+            //.AddName(Language.PortugueseBrazil, "Lanterna").AddTooltip(Language.PortugueseBrazil, "Mira no inimigo mais próximo do cursor").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem após mirar no mesmo inimigo por um tempo")
+            .AddName(Language.Russian, "Фонарик").AddTooltip(Language.Russian, "Наводится на ближайшего врага к курсору").AddSkillStrike(Language.Russian, "Навык Удара активируется после удержания прицела на одном враге в течение некоторого времени");
+            //.AddName(Language.ChineseTraditional, "手電筒").AddTooltip(Language.ChineseTraditional, "鎖定最接近滑鼠的敵人").AddSkillStrike(Language.ChineseTraditional, "長時間鎖定同一個敵人後觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "手电筒").AddTooltip(Language.ChineseSimplified, "锁定最接近鼠标的敌人").AddSkillStrike(Language.ChineseSimplified, "长时间锁定同一个敌人后触发技能打击");
         }
         public override void SetDefaults()
         {
@@ -44,15 +59,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noUseGraphic = true;
             Item.noMelee = true;
             Item.autoReuse = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

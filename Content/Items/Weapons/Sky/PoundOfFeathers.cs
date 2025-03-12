@@ -12,11 +12,29 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Sky
 {
-    public class PoundOfFeathers : ModItem
+    public class PoundOfFeathers : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("PoundOfFeathers", "'Weighs less than a pound of bricks!'")
+            .AddName(Language.Default, "Pound of Feathers")
+            .AddTooltip(Language.Default, "'Weighs less than a pound of bricks!'")
+            .AddSkillStrike(Language.Default, "Skill Strikes at close range")
+
+            .AddName(Language.Spanish, "Libra de Plumas").AddTooltip(Language.Spanish, "'¡Pesa menos que una libra de ladrillos!'").AddSkillStrike(Language.Spanish, "Realiza Golpes de Habilidad a corta distancia")
+            .AddName(Language.French, "Livre de Plumes").AddTooltip(Language.French, "'Pèse moins qu'une livre de briques !'").AddSkillStrike(Language.French, "Déclenche un Coup de Compétence à courte portée")
+            .AddName(Language.German, "Pfund Federn").AddTooltip(Language.German, "'Wiegt weniger als ein Pfund Ziegel!'").AddSkillStrike(Language.German, "Führt Fähigkeitsschläge aus, wenn der Gegner nahe ist")
+            .AddName(Language.Italian, "Libbra di Piume").AddTooltip(Language.Italian, "'Pesa meno di una libbra di mattoni!'").AddSkillStrike(Language.Italian, "Esegue Colpi dell'Abilità a distanza ravvicinata")
+            .AddName(Language.Polish, "Funt Piór").AddTooltip(Language.Polish, "'Waży mniej niż funt cegieł!'").AddSkillStrike(Language.Polish, "Ciosy Umiejętności przy bliskim dystansie")
+            .AddName(Language.PortugueseBrazil, "Libra de Penas").AddTooltip(Language.PortugueseBrazil, "'Pesa menos que uma libra de tijolos!'").AddSkillStrike(Language.PortugueseBrazil, "Realiza Golpes de Habilidade a curta distância")
+            .AddName(Language.Russian, "Фунт Перьев").AddTooltip(Language.Russian, "'Весит меньше, чем фунт кирпичей!'").AddSkillStrike(Language.Russian, "Навык Удара активируется в ближнем бою")
+            .AddName(Language.ChineseTraditional, "一磅羽毛").AddTooltip(Language.ChineseTraditional, "'比一磅磚頭還輕！'").AddSkillStrike(Language.ChineseTraditional, "近距離觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "一磅羽毛").AddTooltip(Language.ChineseSimplified, "'比一磅砖头还轻！'").AddSkillStrike(Language.ChineseSimplified, "近距离触发技能打击");
+        }
 
         public override void SetDefaults()
         {

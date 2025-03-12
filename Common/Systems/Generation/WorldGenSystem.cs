@@ -17,8 +17,8 @@ namespace AerovelenceMod.Common.Systems.Generation
 
         public override void SetStaticDefaults()
 		{
-			CrystalCavernsTerrainPassMessage = Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsTerrainPassMessage)}"));
-            CrystalCavernsPolishMessage = Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsPolishMessage)}"));
+			CrystalCavernsTerrainPassMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsTerrainPassMessage)}"));
+            CrystalCavernsPolishMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsPolishMessage)}"));
         }
 
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)

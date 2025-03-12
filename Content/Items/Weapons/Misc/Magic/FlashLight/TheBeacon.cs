@@ -17,14 +17,29 @@ using Terraria.Graphics;
 using AerovelenceMod.Content.Projectiles.TempVFX;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class TheBeacon : ModItem
+    public class TheBeacon : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
+            this.ModifyLocalization("TheBeacon", "Targets the closest enemy to the mouse\nReleases flaming tendrils around the targeted enemy")
+            .AddName(Language.Default, "The Beacon")
+            .AddTooltip(Language.Default, "Targets the closest enemy to the mouse\nReleases flaming tendrils around the targeted enemy")
+            .AddSkillStrike(Language.Default, "Skill Strikes after locking onto the same enemy for a while")
+
+            .AddName(Language.Spanish, "El Faro").AddTooltip(Language.Spanish, "Apunta al enemigo más cercano al ratón\nLibera zarcillos llameantes alrededor del enemigo objetivo").AddSkillStrike(Language.Spanish, "Golpes de Habilidad tras fijarse en el mismo enemigo por un tiempo")
+            .AddName(Language.French, "Le Phare").AddTooltip(Language.French, "Cible l'ennemi le plus proche du curseur\nLibère des vrilles enflammées autour de l'ennemi ciblé").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après s'être verrouillé sur le même ennemi pendant un certain temps")
+            .AddName(Language.German, "Das Leuchtfeuer").AddTooltip(Language.German, "Zielt auf den nächsten Feind in Mausnähe\nEntfesselt flammende Ranken um das anvisierte Ziel").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, nachdem dasselbe Ziel für eine Weile anvisiert wurde")
+            .AddName(Language.Italian, "Il Faro").AddTooltip(Language.Italian, "Mira al nemico più vicino al cursore\nRilascia viticci fiammeggianti attorno al nemico bersaglio").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po'")
+            //.AddName(Language.Polish, "Latarnia").AddTooltip(Language.Polish, "Namierza najbliższego wroga względem kursora\nUwalnia płonące macki wokół namierzonego wroga").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po namierzeniu tego samego wroga przez pewien czas")
+            //.AddName(Language.PortugueseBrazil, "O Farol").AddTooltip(Language.PortugueseBrazil, "Mira no inimigo mais próximo do cursor\nLibera tentáculos flamejantes ao redor do inimigo alvo").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem após mirar no mesmo inimigo por um tempo")
+            .AddName(Language.Russian, "Маяк").AddTooltip(Language.Russian, "Наводится на ближайшего врага к курсору\nВыпускает горящие щупальца вокруг цели").AddSkillStrike(Language.Russian, "Навык Удара активируется после удержания прицела на одном враге в течение некоторого времени");
+            //.AddName(Language.ChineseTraditional, "信標").AddTooltip(Language.ChineseTraditional, "鎖定最接近滑鼠的敵人\n釋放火焰觸鬚圍繞目標敵人").AddSkillStrike(Language.ChineseTraditional, "長時間鎖定同一個敵人後觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "信标").AddTooltip(Language.ChineseSimplified, "锁定最接近鼠标的敌人\n释放火焰触须围绕目标敌人").AddSkillStrike(Language.ChineseSimplified, "长时间锁定同一个敌人后触发技能打击");
         }
 
         public override void SetDefaults()
@@ -50,15 +65,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noMelee = true;
             Item.channel = true;
             Item.noUseGraphic = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

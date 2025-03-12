@@ -19,12 +19,31 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Projectiles.Other;
 using static Terraria.NPC;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ember
 {
-    public class BurningJealousy : ModItem
+    public class BurningJealousy : TranslatableModItem
     {
         bool tick = false;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Hell Brigade", "Hold Right-Click to guard, gaining a large defense boost\nRetaliate with an explosive counter-attack if hit while guarding")
+            .AddSkillStrike(Language.Default, "Counter-Attack Skill Strikes")
+
+            .AddName(Language.Spanish, "Brigada del Infierno").AddTooltip(Language.Spanish, "Mantén clic derecho para bloquear, obteniendo un gran impulso de defensa\nContraataca explosivamente si te golpean mientras bloqueas").AddSkillStrike(Language.Spanish, "Golpe de Habilidad de Contraataque")
+            .AddName(Language.French, "Brigade Infernale").AddTooltip(Language.French, "Maintenez le clic droit pour vous protéger et obtenir un gros bonus de défense\nRipostez avec une contre-attaque explosive si vous êtes touché en bloquant").AddSkillStrike(Language.French, "La contre-attaque provoque un Coup Adroit")
+            .AddName(Language.German, "Höllenbrigade").AddTooltip(Language.German, "Halte Rechtsklick gedrückt, um dich zu schützen und einen großen Verteidigungsbonus zu erhalten\nKontere mit einem explosiven Gegenschlag, wenn du beim Blocken getroffen wirst").AddSkillStrike(Language.German, "Konterangriffs-Fähigkeitsschlag")
+            .AddName(Language.Italian, "Brigata Infernale").AddTooltip(Language.Italian, "Tieni premuto il tasto destro per proteggerti, ottenendo un grande aumento di difesa\nContrattacca con un'esplosione se vieni colpito mentre blocchi").AddSkillStrike(Language.Italian, "Colpo dell'Abilità di Contrattacco")
+            //.AddName(Language.Polish, "Piekielna Brygada").AddTooltip(Language.Polish, "Przytrzymaj prawy przycisk myszy, aby się osłonić i zyskać duży bonus do obrony\nSkontruj potężnym eksplodującym atakiem, jeśli zostaniesz trafiony podczas blokowania").AddSkillStrike(Language.Polish, "Cios Umiejętności Kontrataku")
+            //.AddName(Language.PortugueseBrazil, "Brigada Infernal").AddTooltip(Language.PortugueseBrazil, "Segure o botão direito para se defender, ganhando um grande aumento de defesa\nRevide com um contra-ataque explosivo se for atingido enquanto bloqueia").AddSkillStrike(Language.PortugueseBrazil, "Golpe de Habilidade de Contra-Ataque")
+            .AddName(Language.Russian, "Адская Бригада").AddTooltip(Language.Russian, "Удерживайте правую кнопку мыши, чтобы защищаться и значительно увеличить защиту.\nАтакуйте взрывным контрударом, если вас ударят во время блока").AddSkillStrike(Language.Russian, "Удары Навыка Контратаки");
+            //.AddName(Language.ChineseTraditional, "地獄旅團").AddTooltip(Language.ChineseTraditional, "按住右鍵進行防禦，獲得巨大的防禦加成\n若在防禦時受到攻擊，將以爆炸性的反擊進行報復").AddSkillStrike(Language.ChineseTraditional, "反擊觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "地狱旅团").AddTooltip(Language.ChineseSimplified, "按住右键进行防御，获得巨大的防御加成\n若在防御时受到攻击，将以爆炸性的反击进行报复").AddSkillStrike(Language.ChineseSimplified, "反击触发技能打击");
+        }
+
 
         public override void SetDefaults()
         {
@@ -49,14 +68,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
             Item.shoot = ModContent.ProjectileType<BurningJealousyHeldProj>();
         }
         public override bool AltFunctionUse(Player player) => true;
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Counter-Attack Skill Strikes [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override void AddRecipes()
         {

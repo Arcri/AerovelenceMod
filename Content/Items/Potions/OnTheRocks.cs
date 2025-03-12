@@ -2,11 +2,27 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Potions
 {
     public class OnTheRocks : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("OnTheRocks", "'Stone-Aged'")
+            .AddName(Language.Default, "On The Rocks").AddTooltip(Language.Default, "'Stone-Aged'")
+            .AddName(Language.Spanish, "En Las Rocas").AddTooltip(Language.Spanish, "'Edad de Piedra'")
+            .AddName(Language.French, "Sur Les Roches").AddTooltip(Language.French, "'Âge de Pierre'")
+            .AddName(Language.German, "Auf Den Felsen").AddTooltip(Language.German, "'Steinzeitlich'")
+            .AddName(Language.Italian, "Sulle Rocce").AddTooltip(Language.Italian, "'Età della Pietra'")
+            .AddName(Language.Polish, "Na Skałach").AddTooltip(Language.Polish, "'Epoka Kamienia'")
+            .AddName(Language.PortugueseBrazil, "Nas Rochas").AddTooltip(Language.PortugueseBrazil, "'Idade da Pedra'")
+            .AddName(Language.Russian, "На Камнях").AddTooltip(Language.Russian, "'Каменный Век'")
+            .AddName(Language.ChineseTraditional, "石上").AddTooltip(Language.ChineseTraditional, "'石器時代'")
+            .AddName(Language.ChineseSimplified, "石上").AddTooltip(Language.ChineseSimplified, "'石器时代'");
+        }
+
         public override void SetDefaults()
         {
             Item.width = 34;

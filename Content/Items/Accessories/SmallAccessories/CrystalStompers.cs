@@ -1,3 +1,4 @@
+﻿using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
@@ -9,8 +10,21 @@ using Terraria.ModLoader;
 namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
 {
     [AutoloadEquip(EquipType.Shoes)]
-    public class CrystalStompers : ModItem
+    public class CrystalStompers : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("CrystalStompers", "Double-Tap Down to perform a crystal stomp")
+            .AddName(Language.Spanish, "Pisadores de Cristal").AddTooltip(Language.Spanish, "Toca dos veces abajo para realizar un pisotón de cristal")
+            .AddName(Language.French, "Écraseurs de Cristal").AddTooltip(Language.French, "Appuyez deux fois sur bas pour effectuer un écrasement de cristal")
+            .AddName(Language.German, "Kristallstampfer").AddTooltip(Language.German, "Doppeltippen nach unten, um einen Kristallstampfer auszuführen")
+            .AddName(Language.Italian, "Pestatori di Cristallo").AddTooltip(Language.Italian, "Tocca due volte in giù per eseguire un pestaggio di cristallo")
+            .AddName(Language.Polish, "Kryształowe Stompy").AddTooltip(Language.Polish, "Podwójne naciśnięcie w dół wykonuje kryształowy skok")
+            .AddName(Language.PortugueseBrazil, "Pisoteadores de Cristal").AddTooltip(Language.PortugueseBrazil, "Toque duas vezes para baixo para executar um pisoteio de cristal")
+            .AddName(Language.Russian, "Кристальные Топтуны").AddTooltip(Language.Russian, "Дважды нажмите вниз, чтобы выполнить кристальный удар")
+            .AddName(Language.ChineseTraditional, "水晶踐踏者").AddTooltip(Language.ChineseTraditional, "雙擊向下執行水晶踐踏")
+            .AddName(Language.ChineseSimplified, "水晶践踏者").AddTooltip(Language.ChineseSimplified, "双击向下执行水晶践踏");
+        }
         public override void SetDefaults()
         {
             Item.width = 28;

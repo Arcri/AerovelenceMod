@@ -1,4 +1,4 @@
-using AerovelenceMod.Common.Globals.SkillStrikes;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Items.Weapons.Underworld;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,12 +17,30 @@ using ReLogic.Content;
 using Terraria.Graphics.Shaders;
 using Terraria.GameContent.UI.Elements;
 using AerovelenceMod.Common;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {
-    public class RedundantFibber : ModItem
+    public class RedundantFibber : TranslatableModItem
     {
         public static int CurrentColorIndex = 0;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("RedundantFibber", "+50% love\n'Would I lie to you?'\nBullets shot will ricochet")
+            .AddName(Language.Default, "Redundant Fibber").AddTooltip(Language.Default, "+50% love\n'Would I lie to you?'\nBullets shot will ricochet")
+            .AddSkillStrike(Language.Default, "Ricochet bullets may or may not Skill Strike")
+
+            .AddName(Language.Spanish, "Redundant Fibber").AddTooltip(Language.Spanish, "+50% amor\n'¿Te mentiría yo?'\nLas balas disparadas rebotarán").AddSkillStrike(Language.Spanish, "Las balas rebotadas pueden o no realizar Golpes de Habilidad")
+            .AddName(Language.French, "Redundant Fibber").AddTooltip(Language.French, "50% d'amour\n'Te mentirais-je?'\nLes balles tirées ricocheront").AddSkillStrike(Language.French, "Les balles ricochées peuvent ou non déclencher des Coups de Compétence")
+            .AddName(Language.German, "Redundant Fibber").AddTooltip(Language.German, "50% Liebe\n'Würde ich dich anlügen?'\nAbgeschossene Kugeln prallen ab").AddSkillStrike(Language.German, "Abprallende Kugeln können Fähigkeitsschläge auslösen… oder auch nicht")
+            .AddName(Language.Italian, "Redundant Fibber").AddTooltip(Language.Italian, "50% amore\n'Ti mentirei mai?'\nI proiettili sparati rimbalzeranno").AddSkillStrike(Language.Italian, "I proiettili rimbalzati possono o meno eseguire Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Zbędny Kłamca").AddTooltip(Language.Polish, "50% miłości\n'Czy bym cię okłamał?'\nStrzelone pociski będą rykoszetować").AddSkillStrike(Language.Polish, "Odbite pociski mogą, ale nie muszą, wykonać Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Mentiroso Redundante").AddTooltip(Language.PortugueseBrazil, "50% amor\n'Eu mentiria para você?'\nAs balas disparadas ricochetearão").AddSkillStrike(Language.PortugueseBrazil, "As balas ricocheteadas podem ou não realizar Golpes de Habilidade")
+            .AddName(Language.Russian, "Редундант Фибер").AddTooltip(Language.Russian, "50% любви\n'Разве я бы тебе солгал?'\nПули будут рикошетить").AddSkillStrike(Language.Russian, "Рикошетирующие пули могут или не могут активировать Навык Удара")
+            //.AddName(Language.ChineseTraditional, "多餘的騙子").AddTooltip(Language.ChineseTraditional, "50%的愛\n'我會對你撒謊嗎？'\n子彈會反彈").AddSkillStrike(Language.ChineseTraditional, "反彈的子彈可能會，也可能不會觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "多余的骗子").AddTooltip(Language.ChineseSimplified, "50% 的爱\n'我会对你撒谎吗？'\n子弹会反弹").AddSkillStrike(Language.ChineseSimplified, "反弹的子弹可能会，也可能不会触发技能打击");
+        }
 
         public override void SetDefaults()
         {
@@ -47,6 +65,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
+            TooltipHelper.ApplyTranslations(this, tooltips);
             foreach (TooltipLine line in tooltips)
             {
                 if (line.Name == "Damage")
@@ -54,12 +73,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     line.Text = line.Text.Replace(Item.damage.ToString(), "523,031");
                 }
             }
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes when it lies the most [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
+
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

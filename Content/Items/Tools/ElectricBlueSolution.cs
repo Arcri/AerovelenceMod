@@ -9,14 +9,27 @@ using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using System.Net.Mime;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Tools
 {
-    public class ElectricBlueSolution : ModItem
+    public class ElectricBlueSolution : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 99;
+            this.ModifyLocalization("ElectricBlueSolution", "Spreads Crystal Caverns")
+            .AddName(Language.Default, "Electric Blue Solution").AddTooltip(Language.Default, "Spreads Crystal Caverns")
+            .AddName(Language.Spanish, "Solución Azul Eléctrica").AddTooltip(Language.Spanish, "Expande las Cavernas de Cristal")
+            .AddName(Language.French, "Solution Bleue Électrique").AddTooltip(Language.French, "Étend les Cavernes de Cristal")
+            .AddName(Language.German, "Elektrisch Blaue Lösung").AddTooltip(Language.German, "Verbreitet Kristallhöhlen")
+            .AddName(Language.Italian, "Soluzione Blu Elettrica").AddTooltip(Language.Italian, "Diffonde le Caverne di Cristallo")
+            .AddName(Language.Polish, "Elektryczny Niebieski Roztwór").AddTooltip(Language.Polish, "Rozprzestrzenia Kryształowe Jaskinie")
+            .AddName(Language.PortugueseBrazil, "Solução Azul Elétrica").AddTooltip(Language.PortugueseBrazil, "Espalha as Cavernas de Cristal")
+            .AddName(Language.Russian, "Электрический Синий Раствор").AddTooltip(Language.Russian, "Распространяет Кристальные Пещеры")
+            .AddName(Language.ChineseTraditional, "電藍溶液").AddTooltip(Language.ChineseTraditional, "擴展水晶洞穴")
+            .AddName(Language.ChineseSimplified, "电蓝溶液").AddTooltip(Language.ChineseSimplified, "扩展水晶洞穴");
+
         }
 
         public override void SetDefaults()

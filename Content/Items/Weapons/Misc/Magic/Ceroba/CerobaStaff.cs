@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
@@ -25,6 +25,7 @@ using Terraria.Map;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
 using static Terraria.NPC;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
 {
@@ -32,8 +33,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba
     //This weapon is a fucking atrocity codewise
     //I am sorry for anyone going through this that isn't me
 
-    public class CerobaStaffItem : ModItem
+    public class CerobaStaffItem : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Devotion", "Right-Click to attack with a ward that marks enemies\nMarked enemies take massively increased damage from the weapon")
+            .AddName(Language.Default, "Devotion").AddTooltip(Language.Default, "Right-Click to attack with a ward that marks enemies\nMarked enemies take massively increased damage from the weapon")
+            .AddSkillStrike(Language.Default, "Skill Strikes marked enemies")
+
+            .AddName(Language.Spanish, "Devoción").AddTooltip(Language.Spanish, "Haz clic derecho para atacar con un sello que marca enemigos\nLos enemigos marcados reciben un daño enormemente aumentado del arma").AddSkillStrike(Language.Spanish, "Golpes de Habilidad contra enemigos marcados")
+            .AddName(Language.French, "Dévotion").AddTooltip(Language.French, "Clic droit pour attaquer avec un sceau qui marque les ennemis\nLes ennemis marqués subissent des dégâts massivement augmentés de l'arme").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent sur les ennemis marqués")
+            .AddName(Language.German, "Hingabe").AddTooltip(Language.German, "Rechtsklick, um mit einem Siegel anzugreifen, das Feinde markiert\nMarkierte Feinde erleiden massiv erhöhten Schaden durch die Waffe").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf markierte Feinde auf")
+            .AddName(Language.Italian, "Devozione").AddTooltip(Language.Italian, "Tasto destro per attaccare con un sigillo che marchia i nemici\nI nemici marchiati subiscono danni enormemente aumentati dall'arma").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano sui nemici marchiati")
+            //.AddName(Language.Polish, "Oddanie").AddTooltip(Language.Polish, "Prawy przycisk, aby zaatakować pieczęcią, która oznacza wrogów\nOznaczeni wrogowie otrzymują ogromnie zwiększone obrażenia od broni").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują na oznaczonych wrogach")
+            //.AddName(Language.PortugueseBrazil, "Devoção").AddTooltip(Language.PortugueseBrazil, "Botão direito para atacar com um selo que marca inimigos\nOs inimigos marcados sofrem dano massivamente aumentado da arma").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem contra inimigos marcados")
+            .AddName(Language.Russian, "Преданность").AddTooltip(Language.Russian, "ПКМ, чтобы атаковать печатью, которая отмечает врагов\nОтмеченные враги получают значительно увеличенный урон от оружия").AddSkillStrike(Language.Russian, "Навык Удара активируется на отмеченных врагах");
+            //.AddName(Language.ChineseTraditional, "忠誠").AddTooltip(Language.ChineseTraditional, "右鍵攻擊並標記敵人\n被標記的敵人受到武器大量額外傷害").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在標記的敵人上")
+            //.AddName(Language.ChineseSimplified, "忠诚").AddTooltip(Language.ChineseSimplified, "右键攻击并标记敌人\n被标记的敌人受到武器大量额外伤害").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在标记的敌人上");
+        }
         public override void SetDefaults()
         {
             Item.damage = 78;

@@ -21,11 +21,30 @@ using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common;
 using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
-    public class OceanMist : ModItem
+    public class OceanMist : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("OceanMist", "Casts a water burst")
+            .AddName(Language.Default, "Ocean Mist")
+            .AddTooltip(Language.Default, "Casts a water burst")
+            .AddSkillStrike(Language.Default, "Skill Strikes at full mana")
+
+            .AddName(Language.Spanish, "Niebla Oceánica").AddTooltip(Language.Spanish, "Lanza una ráfaga de agua").AddSkillStrike(Language.Spanish, "Realiza Golpes de Habilidad con maná completo")
+            .AddName(Language.French, "Brume Océanique").AddTooltip(Language.French, "Lance une explosion d'eau").AddSkillStrike(Language.French, "Déclenche un Coup de Compétence à mana plein")
+            .AddName(Language.German, "Ozeannebel").AddTooltip(Language.German, "Wirft eine Wasserexplosion").AddSkillStrike(Language.German, "Führt Fähigkeitsschläge bei vollem Mana aus")
+            .AddName(Language.Italian, "Nebbia Oceanica").AddTooltip(Language.Italian, "Scaglia un'esplosione d'acqua").AddSkillStrike(Language.Italian, "Esegue Colpi dell'Abilità a mana pieno")
+            .AddName(Language.Polish, "Morska Mgła").AddTooltip(Language.Polish, "Wystrzeliwuje wodną eksplozję").AddSkillStrike(Language.Polish, "Ciosy Umiejętności przy pełnej manie")
+            .AddName(Language.PortugueseBrazil, "Névoa do Oceano").AddTooltip(Language.PortugueseBrazil, "Lança uma explosão de água").AddSkillStrike(Language.PortugueseBrazil, "Realiza Golpes de Habilidade com mana cheio")
+            .AddName(Language.Russian, "Океанский Туман").AddTooltip(Language.Russian, "Выпускает водяной взрыв").AddSkillStrike(Language.Russian, "Навык Удара активируется при полном запасе маны")
+            .AddName(Language.ChineseTraditional, "海霧").AddTooltip(Language.ChineseTraditional, "釋放水爆").AddSkillStrike(Language.ChineseTraditional, "滿法力時觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "海雾").AddTooltip(Language.ChineseSimplified, "释放水爆").AddSkillStrike(Language.ChineseSimplified, "满法力时触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 7;
@@ -47,15 +66,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             Item.channel = true;
             Item.noUseGraphic = true;
             Item.noMelee = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes at full mana <1.3x multiplier> [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

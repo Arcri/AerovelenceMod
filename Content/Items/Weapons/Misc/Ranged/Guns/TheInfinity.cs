@@ -12,10 +12,11 @@ using Terraria.ModLoader;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Common;
 using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {
-    public class TheInfinity : ModItem
+    public class TheInfinity : TranslatableModItem
     {
         public static int CurrentElementIndex = 0;
 
@@ -47,6 +48,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             
         ];
 
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Infinity", "'It's closer than you think! (No it isn't)'\nRight-Click to change elements")
+            .AddName(Language.Default, "Infinity")
+            .AddTooltip(Language.Default, "'It's closer than you think! (No it isn't)'\nRight-Click to change elements")
+            .AddSkillStrike(Language.Default, "Skill Strikes below 50 defense")
+
+            .AddName(Language.Spanish, "Infinity").AddTooltip(Language.Spanish, "'¡Está más cerca de lo que piensas! (No, no lo está)'\nHaz clic derecho para cambiar elementos").AddSkillStrike(Language.Spanish, "Golpes de Habilidad por debajo de 50 defensa")
+            .AddName(Language.French, "Infinity").AddTooltip(Language.French, "'C'est plus proche que tu ne le penses ! (Non, ce ne l'est pas)'\nClic droit pour changer d'élément").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent en dessous de 50 défense")
+            .AddName(Language.German, "Infinity").AddTooltip(Language.German, "'Es ist näher, als du denkst! (Nein, ist es nicht)'\nRechtsklick, um das Element zu wechseln").AddSkillStrike(Language.German, "Fähigkeitsschläge treten bei unter 50 Verteidigung auf")
+            .AddName(Language.Italian, "Infinity").AddTooltip(Language.Italian, "'È più vicino di quanto pensi! (No, non lo è)'\nTasto destro per cambiare elemento").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano sotto i 50 di difesa")
+            //.AddName(Language.Polish, "Nieskończoność").AddTooltip(Language.Polish, "'Jest bliżej, niż myślisz! (Nie, nie jest)'\nPrawy przycisk, aby zmienić elementy").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują poniżej 50 obrony")
+            //.AddName(Language.PortugueseBrazil, "Infinito").AddTooltip(Language.PortugueseBrazil, "'Está mais perto do que você pensa! (Não, não está)'\nBotão direito para alterar elementos").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem abaixo de 50 de defesa")
+            .AddName(Language.Russian, "Инфинити").AddTooltip(Language.Russian, "'Это ближе, чем ты думаешь! (Нет, не ближе)'\nПКМ, чтобы сменить элементы").AddSkillStrike(Language.Russian, "Навык Удара активируется при защите ниже 50");
+            //.AddName(Language.ChineseTraditional, "無限").AddTooltip(Language.ChineseTraditional, "'它比你想的更近！(不，它沒有)'\n右鍵切換元素").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在防禦低於 50 時")
+            //.AddName(Language.ChineseSimplified, "无限").AddTooltip(Language.ChineseSimplified, "'它比你想的更近！(不，它没有)'\n右键切换元素").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在防御低于 50 时");
+        }
+
         public override void SetDefaults()
         {
             Item.width = 64;
@@ -66,15 +86,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Item.shoot = ModContent.ProjectileType<TheInfinityHeldProj>();
             Item.shootSpeed = 12f;
             Item.useAmmo = AmmoID.Bullet;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes based on element (?) [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool CanConsumeAmmo(Item ammo, Player player) { return false; }
@@ -315,21 +326,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 _ => DustID.WhiteTorch
             };
         }
-
         private void FireElementalBullet(Vector2 aimDirection, int damage)
         {
             int elementIndex = TheInfinity.CurrentElementIndex;
             int projType = ModContent.ProjectileType<InfinityBullet>();
             Vector2 velocity = aimDirection * 16f;
-            Vector2 muzzleOffset = new Vector2(-50, -10);
-            muzzleOffset = muzzleOffset.RotatedBy(aimDirection.ToRotation());
-            if (Owner.direction == -1)
-                muzzleOffset.Y *= -1;
-            Vector2 spawnPosition = Projectile.Center + aimDirection * 36f + muzzleOffset;
+            float barrelLength = -10f;
+            float verticalOffset = -6f * Owner.direction;
+            float rotation = Projectile.rotation;
+            Vector2 barrelOffset = new Vector2((float)Math.Cos(rotation) * barrelLength, (float)Math.Sin(rotation) * barrelLength);
+            Vector2 verticalAdjustment = new Vector2((float)Math.Cos(rotation + MathHelper.PiOver2) * verticalOffset, (float)Math.Sin(rotation + MathHelper.PiOver2) * verticalOffset);
+            Vector2 spawnPosition = Projectile.Center + barrelOffset + verticalAdjustment;
             int bulletProj = Projectile.NewProjectile(Owner.GetSource_ItemUse(Owner.HeldItem), spawnPosition, velocity, projType, damage, Owner.HeldItem.knockBack, Owner.whoAmI, elementIndex);
             Color dustColor = TheInfinity.ElementColors[elementIndex];
             int dustType = GetDustTypeForElement(elementIndex);
         }
+
+
 
         private float progressiveDrawProgress = 0f;
         private float progressiveDrawSpeed = 0.002f;

@@ -16,14 +16,29 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using Terraria.Graphics.Shaders;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
 {
-    public class TheLaserPointer : ModItem
+    public class TheLaserPointer : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
+            this.ModifyLocalization("LaserPointer", "Targets the closest enemy to the mouse\nReleases homing sparks after locking onto the same enemy for a while")
+            .AddName(Language.Default, "Laser Pointer")
+            .AddTooltip(Language.Default, "Targets the closest enemy to the mouse\nReleases homing sparks after locking onto the same enemy for a while")
+            .AddSkillStrike(Language.Default, "Skill Strikes after locking onto the same enemy for a while")
+
+            .AddName(Language.Spanish, "Puntero Láser").AddTooltip(Language.Spanish, "Apunta al enemigo más cercano al ratón\nLibera chispas teledirigidas después de fijarse en el mismo enemigo por un tiempo").AddSkillStrike(Language.Spanish, "Golpes de Habilidad tras fijarse en el mismo enemigo por un tiempo")
+            .AddName(Language.French, "Pointeur Laser").AddTooltip(Language.French, "Cible l'ennemi le plus proche du curseur\nLibère des étincelles chercheuses après s'être verrouillé sur le même ennemi pendant un certain temps").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après s'être verrouillé sur le même ennemi pendant un certain temps")
+            .AddName(Language.German, "Laserpointer").AddTooltip(Language.German, "Zielt auf den nächsten Feind in Mausnähe\nEntfesselt zielsuchende Funken, nachdem dasselbe Ziel für eine Weile anvisiert wurde").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, nachdem dasselbe Ziel für eine Weile anvisiert wurde")
+            .AddName(Language.Italian, "Puntatore Laser").AddTooltip(Language.Italian, "Mira al nemico più vicino al cursore\nRilascia scintille a ricerca dopo aver puntato lo stesso nemico per un po'").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po'")
+            //.AddName(Language.Polish, "Wskaźnik Laserowy").AddTooltip(Language.Polish, "Namierza najbliższego wroga względem kursora\nUwalnia samonaprowadzające się iskry po namierzeniu tego samego wroga przez pewien czas").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po namierzeniu tego samego wroga przez pewien czas")
+            //.AddName(Language.PortugueseBrazil, "Ponteiro Laser").AddTooltip(Language.PortugueseBrazil, "Mira no inimigo mais próximo do cursor\nLibera faíscas teleguiadas após mirar no mesmo inimigo por um tempo").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem após mirar no mesmo inimigo por um tempo")
+            .AddName(Language.Russian, "Лазерная Указка").AddTooltip(Language.Russian, "Наводится на ближайшего врага к курсору\nВыпускает самонаводящиеся искры после удержания прицела на одном враге в течение некоторого времени").AddSkillStrike(Language.Russian, "Навык Удара активируется после удержания прицела на одном враге в течение некоторого времени");
+            //.AddName(Language.ChineseTraditional, "雷射指示器").AddTooltip(Language.ChineseTraditional, "鎖定最接近滑鼠的敵人\n鎖定同一敵人一段時間後釋放追蹤火花").AddSkillStrike(Language.ChineseTraditional, "長時間鎖定同一個敵人後觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "激光指示器").AddTooltip(Language.ChineseSimplified, "锁定最接近鼠标的敌人\n锁定同一敌人一段时间后释放追踪火花").AddSkillStrike(Language.ChineseSimplified, "长时间锁定同一个敌人后触发技能打击");
         }
         public override void SetDefaults()
         {
@@ -46,15 +61,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight
             Item.noUseGraphic = true;
             Item.noMelee = true;
             Item.autoReuse = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes after locking onto the same enemy for a while [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

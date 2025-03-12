@@ -128,12 +128,7 @@ Items: {
 
 	ObsidianEye: {
 		DisplayName: Obsidian Eye
-		Tooltip:
-			'''
-			Not consumable
-			Summons Cyvercry
-			Only usable at night
-			'''
+		Tooltip: ""
 	}
 
 	DebugItem: {
@@ -183,41 +178,17 @@ Items: {
 
 	ElementalShift: {
 		DisplayName: Elemental Shift
-		Tooltip:
-			'''
-			Attacking creates an energy ball that can be hit around
-			Right-Click to destroy the ball
-			'''
-	}
-
-	BurningJealousy: {
-		DisplayName: Hell Brigade
-		Tooltip:
-			'''
-			Hold Right-Click to guard, gaining a large defense boost
-			Retaliate with an explosive counter-attack if hit while guarding
-			'''
+		Tooltip: ""
 	}
 
 	Solsear: {
 		DisplayName: Solsear
-		Tooltip:
-			'''
-			Fires a continuous laser that deals more damage at the tip
-			Right-Click to fire a bomb
-			Aim the tip of the laser into the bomb to increase its damage and size
-			'With great firepower comes great irresponsibility'
-			'''
+		Tooltip: ""
 	}
 
 	FlareGun: {
 		DisplayName: Combat Flare Gun
-		Tooltip:
-			'''
-			Does not require ammo
-			5% summon tag crit chance
-			Click again with good timing to fire faster
-			'''
+		Tooltip: ""
 	}
 
 	DeepFreeze: {
@@ -232,48 +203,32 @@ Items: {
 
 	ClockworkLazinator: {
 		DisplayName: Clockwork Lazinator
-		Tooltip:
-			'''
-			Right-Click to wind up the weapon, increasing how long it fires for
-			Caps out at 4 winds
-			'''
+		Tooltip: ""
 	}
 
 	CthulhusWrath: {
 		DisplayName: Kindling Wrath (Unfinished)
-		Tooltip:
-			'''
-			This weapon is buggy as hell, so it has been made unobtainable
-			It should hopefully return in a future patch
-			'''
+		Tooltip: ""
 	}
 
 	TheBeacon: {
 		DisplayName: The Beacon
-		Tooltip:
-			'''
-			Targets the closest enemy to the mouse
-			Releases flaming tendrils around the targeted enemy
-			'''
+		Tooltip: ""
 	}
 
 	TheFlashlight: {
 		DisplayName: The Flashlight
-		Tooltip: Targets the closest enemy to the mouse
+		Tooltip: ""
 	}
 
 	TheLaserPointer: {
 		DisplayName: The Laser Pointer
-		Tooltip:
-			'''
-			Targets the closest enemy to the mouse
-			Releases homing sparks after locking onto the same enemy for a while
-			'''
+		Tooltip: ""
 	}
 
 	WandOfExploding: {
 		DisplayName: Wand Of Exploding
-		Tooltip: Inflicts Mana Burn, causing enemies to leak stars that restore mana
+		Tooltip: ""
 	}
 
 	EntourageCrusher: {
@@ -283,56 +238,32 @@ Items: {
 
 	TheSahara: {
 		DisplayName: The Sahara
-		Tooltip:
-			'''
-			Hold to charge, increasing damage and velocity
-			Releases a fire vortex at full charge
-			'''
+		Tooltip: ""
 	}
 
 	WarBow: {
 		DisplayName: War Bow
-		Tooltip:
-			'''
-			Hold to charge, increasing damage and velocity
-			Embeds a spike into enemies at full charge
-			'''
+		Tooltip: ""
 	}
 
 	GraniteCannon: {
 		DisplayName: Granite Cannon
-		Tooltip:
-			'''
-			Converts bullet into granite chunks
-			If two chunks collide midair, the break into homing energy cores
-			'''
+		Tooltip: ""
 	}
 
 	AdamantitePulsar: {
 		DisplayName: Adamantite Pulsar
-		Tooltip:
-			'''
-			Does not require ammo
-			Right-Click to change modes
-			'''
+		Tooltip: ""
 	}
 
 	ShotgunAxe: {
 		DisplayName: Shotgun Axe
-		Tooltip:
-			'''
-			Converts bullets into a special projectile
-			Right-Click to chop with the axe, gouging enemies
-			'''
+		Tooltip: ""
 	}
 
 	TitaniumRocketLauncher: {
 		DisplayName: Titanium Rocket Launcher
-		Tooltip:
-			'''
-			Does not require ammo
-			Right-Click to shoot a large rocket that follows the mouse
-			'''
+		Tooltip: ""
 	}
 
 	OceanMist: {
@@ -392,11 +323,7 @@ Items: {
 
 	Skylight: {
 		DisplayName: Skylight
-		Tooltip:
-			'''
-			Does not require ammo
-			Right-Click to summon a massive lightning bolt from the sky
-			'''
+		Tooltip: ""
 	}
 
 	StormRazor: {
@@ -406,40 +333,27 @@ Items: {
 
 	Eos: {
 		DisplayName: Eos
-		Tooltip:
-			'''
-			Ends a combo with a spin attack
-			Hit enemies with the spin while dashing to bash off of them, gaining brief invulnerability
-			After bashing an enemy, your next 2 combos will fire projectiles
-			'''
+		Tooltip: ""
 	}
 
 	CrystalGlade: {
 		DisplayName: Crystal Glade
-		Tooltip: Right-Click to summon a portal that will change where your shots originate from
+		Tooltip: ""
 	}
 
 	PoundOfFeathers: {
 		DisplayName: Pound Of Feathers
-		Tooltip: "'Weighs less than a pound of bricks!'"
+		Tooltip: ""
 	}
 
 	CerobaStaffItem: {
 		DisplayName: Devotion
-		Tooltip:
-			'''
-			Right-Click to attack with a ward that marks enemies
-			Marked enemies take massively increased damage from the weapon
-			'''
+		Tooltip: ""
 	}
 
 	MarbleMusket: {
 		DisplayName: Marble Musket
-		Tooltip:
-			'''
-			Converts bullets into special gravity-affected projectiles
-			Hitting 3 consecutive shots releases homing stars
-			'''
+		Tooltip: ""
 	}
 
 	CyvercryThumbnailHelper: {
@@ -1039,6 +953,31 @@ Items: {
 		DisplayName: The Infinity
 		Tooltip: ""
 	}
+
+	BurningJealousy: {
+		DisplayName: Burning Jealousy
+
+		Tooltip: {
+			$parentVal: ""
+			es-ES:
+				'''
+				Mantén clic derecho para bloquear, obteniendo un gran impulso de defensa
+				Contraataca explosivamente si te golpean mientras bloqueas
+				'''
+			en-ES:
+				'''
+				Mantén clic derecho para bloquear, obteniendo un gran impulso de defensa
+				Contraataca explosivamente si te golpean mientras bloqueas
+				'''
+		}
+
+		SkillStrike: {
+			$parentVal: "[i:75] Counter-Attack Skill Strikes [i:75]"
+			es: "[i:75] Golpe de Habilidad de Contraataque [i:75]"
+			en-ES: "[i:75] Golpe de Habilidad de Contraataque [i:75]"
+			es-ES: "[i:75] Golpe de Habilidad de Contraataque [i:75]"
+		}
+	}
 }
 
 NPCs: {
@@ -1522,4 +1461,647 @@ Tiles: {
 Emotes: {
 	CyvercryEmote.Command: cyvercryemote
 	RockCollectorEmote.Command: rockcollectoremote
+}
+
+BurningJealousy: {
+	DisplayName: Hell Brigade
+
+	Tooltip: {
+		$parentVal:
+			'''
+			Hold Right-Click to guard, gaining a large defense boost
+			Retaliate with an explosive counter-attack if hit while guarding
+			'''
+		es:
+			'''
+			Mantén clic derecho para bloquear, obteniendo un gran impulso de defensa
+			Contraataca explosivamente si te golpean mientras bloqueas
+			'''
+	}
+
+	SkillStrike: {
+		$parentVal: "[i:75] Counter-Attack Skill Strikes [i:75]"
+		es: "[i:75] Golpe de Habilidad de Contraataque [i:75]"
+	}
+}
+
+ItemName: {
+	AmuletOfGlory: AmuletOfGlory
+	CrystalStompers: CrystalStompers
+	OpalOfCaVea: OpalOfCaVea
+	PlatinumHook: PlatinumHook
+	LargeGeode: LargeGeode
+	ObsidianEye: ObsidianEye
+	OnTheRocks: OnTheRocks
+	ResonanceDrill: ResonanceDrill
+	ElectricBlueSolution: ElectricBlueSolution
+	SpeedstersPickaxe: SpeedstersPickaxe
+	DeepFreeze: DeepFreeze
+	ElementalShift: ElementalShift
+	Eos: Eos
+	ExtinguishedDynamite: ExtinguishedDynamite
+	CrystalCrescent: CrystalCrescent
+	NerveFlagellator: NerveFlagellator
+	BurningJealousy: Hell Brigade
+	Solsear: Solsear
+	FlareGun: CombatFlareGun
+	CerobaStaffItem: Devotion
+	ClockworkLazinator: ClockworkLazinator
+	CrystalGlade: CrystalGlade
+	TheBeacon: TheBeacon
+	TheFlashlight: TheFlashlight
+	TheLaserPointer: LaserPointer
+	WandOfExploding: WandOfExploding
+	TetraBlades: TetraBlades
+	TheSahara: TheSahara
+	WarBow: WarBow
+	GraniteCannon: GraniteCannon
+	AdamantitePulsar: AdamantitePulsar
+	RedundantFibber: RedundantFibber
+	ShotgunAxe: ShotgunAxe
+	Skylight: Skylight
+	TheInfinity: Infinity
+	MarbleMusket: MarbleMusket
+	PouchOfRocks: PouchOfMagnets
+	TitaniumRocketLauncher: TitaniumRocketLauncher
+	H2OCaliber: H2OCaliber
+	OceanMist: OceanMist
+	MeteorCrossbow: MeteorCrossbow
+	PoundOfFeathers: PoundOfFeathers
+	LightOfTheAncients: LightOfTheAncients
+	TumblerockMedium: Rocciarotola
+	TumblerockSmall: Rocciarotola
+}
+
+ItemTooltip: {
+	AmuletOfGlory:
+		'''
+		Hitting enemies increases your movement and mining speed
+		Enemies nearby chests will emit light
+		'''
+	CrystalStompers: Double-Tap Down to perform a crystal stomp
+	OpalOfCaVea:
+		'''
+		Glowing crystals grow on your back every 5 seconds, up to 3
+		Enemies take damage if all 3 crystals have spawned
+		'''
+	PlatinumHook: Extends all gem hooks and upgrades them to glow
+	LargeGeode:
+		'''
+		Not consumable
+		Summons the Crystal Tumbler
+		Only usable in the Caverns Arena
+		'''
+	ObsidianEye:
+		'''
+		Not consumable
+		Summons Cyvercry
+		Only usable at night
+		'''
+	OnTheRocks: "'Stone-Aged'"
+	ResonanceDrill: Mines connected ore, the more you mine the more effective
+	ElectricBlueSolution: Spreads Crystal Caverns
+	SpeedstersPickaxe: Mining ramps up the speed of your pickaxe
+	DeepFreeze: "'Is it cold in here, or is it just me?'"
+	ElementalShift:
+		'''
+		Attacking creates an energy ball that can be hit around
+		Right-Click to destroy the ball
+		'''
+	Eos:
+		'''
+		Ends a combo with a spin attack
+		Hit enemies with the spin while dashing to bash off of them, gaining brief invulnerability
+		After bashing an enemy, your next 2 combos will fire projectiles
+		'''
+	ExtinguishedDynamite: ""
+	CrystalCrescent: Throws out a returning quarterstaff after a rapid swing
+	NerveFlagellator:
+		'''
+		Attacks with multiple nerve tendrils
+		Marked enemies may spawn a friendly nerve creeper when hit
+		'''
+	BurningJealousy:
+		'''
+		Hold Right-Click to guard, gaining a large defense boost
+		Retaliate with an explosive counter-attack if hit while guarding
+		'''
+	Solsear:
+		'''
+		Fires a continuous laser that deals more damage at the tip
+		Right-Click to fire a bomb
+		Aim the tip of the laser into the bomb to increase its damage and size
+		'With great firepower comes great irresponsibility'
+		'''
+	FlareGun:
+		'''
+		Does not require ammo
+		5% summon tag crit chance
+		Click again with good timing to fire faster
+		'''
+	CerobaStaffItem:
+		'''
+		Right-Click to attack with a ward that marks enemies
+		Marked enemies take massively increased damage from the weapon
+		'''
+	ClockworkLazinator:
+		'''
+		Right-Click to wind up the weapon, increasing how long it fires for
+		Caps out at 4 winds
+		'''
+	CrystalGlade: Right-Click to summon a portal that will change where your shots originate from
+	TheBeacon:
+		'''
+		Targets the closest enemy to the mouse
+		Releases flaming tendrils around the targeted enemy
+		'''
+	TheFlashlight: Targets the closest enemy to the mouse
+	TheLaserPointer:
+		'''
+		Targets the closest enemy to the mouse
+		Releases homing sparks after locking onto the same enemy for a while
+		'''
+	WandOfExploding: Inflicts Mana Burn, causing enemies to leak stars that restore mana
+	TetraBlades: Right-Click to dash up to 4 times
+	TheSahara:
+		'''
+		Hold to charge, increasing damage and velocity
+		Releases a fire vortex at full charge
+		'''
+	WarBow:
+		'''
+		Hold to charge, increasing damage and velocity
+		Embeds a spike into enemies at full charge
+		'''
+	GraniteCannon:
+		'''
+		Converts bullets into granite chunks
+		If two chunks collide midair, they break into homing energy cores
+		'''
+	AdamantitePulsar:
+		'''
+		Does not require ammo
+		Right-Click to change modes
+		'''
+	RedundantFibber:
+		'''
+		+50% love
+		'Would I lie to you?'
+		Bullets shot will ricochet
+		'''
+	ShotgunAxe:
+		'''
+		Converts bullets into a special projectile
+		Right-Click to chop with the axe, gouging enemies
+		'''
+	Skylight:
+		'''
+		Does not require ammo
+		Right-Click to summon a massive lightning bolt from the sky
+		'''
+	TheInfinity:
+		'''
+		'It's closer than you think! (No it isn't)'
+		Right-Click to change elements
+		'''
+	MarbleMusket:
+		'''
+		Converts bullets into special gravity-affected projectiles
+		Hitting 3 consecutive shots releases homing stars
+		'''
+	PouchOfRocks: Throws 2 magnetic stones which can collide and explode
+	TitaniumRocketLauncher:
+		'''
+		Does not require ammo
+		Right-Click to shoot a large rocket that follows the mouse
+		'''
+	H2OCaliber: Fires bubbles which can merge
+	OceanMist: Casts a water burst
+	MeteorCrossbow: Fires a rocket arrow
+	PoundOfFeathers: "'Weighs less than a pound of bricks!'"
+	LightOfTheAncients:
+		'''
+		Fires small, fast hellfire bullets
+		Has a visible overheating gauge above the player that fills as you fire
+		The gun becomes more powerful as it heats up, but if you keep firing it will need to cool down
+		'''
+}
+
+NPCName: {
+	TumblerockMedium: Tumblerock
+	TumblerockSmall: Tumblerock
+	AmuletOfGlory: Amuleto della Gloria
+	CrystalStompers: Pestatori di Cristallo
+	OpalOfCaVea: Opale di Ca Vea
+	PlatinumHook: Gancio di Platino
+	LargeGeode: Grande Geode
+	ObsidianEye: Occhio d'Ossidiana
+	OnTheRocks: Sulle Rocce
+	ResonanceDrill: Trapano a Risonanza
+	ElectricBlueSolution: Soluzione Blu Elettrica
+	SpeedstersPickaxe: Piccone del Velocista
+	DeepFreeze: Congelamento Profondo
+	ElementalShift: Cambio Elementale
+	Eos: Eos
+	ExtinguishedDynamite: Dinamite Spenta
+	CrystalCrescent: Crescente di Cristallo
+	NerveFlagellator: Flagellatore Nervoso
+	BurningJealousy: Brigata Infernale
+	Solsear: Scottasole
+	FlareGun: Pistola Razzo da Combattimento
+	CerobaStaffItem: Devozione
+	ClockworkLazinator: Lazinator a Ingranaggi
+	CrystalGlade: Radura di Cristallo
+	TheBeacon: Il Faro
+	TheFlashlight: La Torcia
+	TheLaserPointer: Puntatore Laser
+	WandOfExploding: Bacchetta delle Esplosioni
+	TetraBlades: Lame Tetra
+	TheSahara: Il Sahara
+	WarBow: Arco da Guerra
+	GraniteCannon: Cannone di Granito
+	AdamantitePulsar: Pulsar di Adamantite
+	RedundantFibber: Bugiardo Ridondante
+	ShotgunAxe: Ascia a Fucile
+	Skylight: Luce Celeste
+	TheInfinity: Infinito
+	MarbleMusket: Moschetto di Marmo
+	PouchOfRocks: Sacca di Magneti
+	TitaniumRocketLauncher: Lanciarazzi in Titanio
+	H2OCaliber: Calibro H2O
+	OceanMist: Nebbia Oceanica
+	MeteorCrossbow: Balestra Meteoritica
+	PoundOfFeathers: Libbra di Piume
+	LightOfTheAncients: Luce degli Antichi
+	707: AerovelenceMod.TumblerockSmall.DisplayName
+	706: AerovelenceMod.TumblerockMedium.DisplayName
+}
+
+Bestiary: {
+	TumblerockMedium: These rolling stones come in many different shapes and sizes. Their magnetic fields allow them to cling to metallic surfaces.
+	TumblerockSmall: These smaller tumblers come in many different shapes and sizes. They can grow to enormous sizes, and exhibit magnetic properties.
+	706: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
+	707: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
+}
+
+NPCBestiary: {
+	TumblerockMedium: These rolling stones come in many different shapes and sizes. Their magnetic fields allow them to cling to metallic surfaces.
+	TumblerockSmall: These smaller tumblers come in many different shapes and sizes. They can grow to enormous sizes, and exhibit magnetic properties.
+	706: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
+	707: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
+}
+
+AmuletOfGlory: {
+	DisplayName: Amuleto della Gloria
+	Tooltip:
+		'''
+		Colpire i nemici aumenta la velocità di movimento e di estrazione
+		I nemici vicino ai bauli emetteranno luce
+		'''
+}
+
+CrystalStompers: {
+	DisplayName: Pestatori di Cristallo
+	Tooltip: Tocca due volte in giù per eseguire un pestaggio di cristallo
+}
+
+OpalOfCaVea: {
+	DisplayName: Opale di Ca Vea
+	Tooltip:
+		'''
+		Cristalli luminosi crescono sulla tua schiena ogni 5 secondi, fino a 3
+		I nemici subiscono danni se tutti e 3 i cristalli sono apparsi
+		'''
+}
+
+PlatinumHook: {
+	DisplayName: Gancio di Platino
+	Tooltip: Estende tutti i ganci di gemme e li fa brillare
+}
+
+LargeGeode: {
+	DisplayName: Grande Geode
+	Tooltip:
+		'''
+		Non consumabile
+		Evoca il Rullo di Cristallo
+		Utilizzabile solo nell'Arena delle Caverne
+		'''
+}
+
+ObsidianEye: {
+	DisplayName: Occhio d'Ossidiana
+	Tooltip:
+		'''
+		Non consumabile
+		Evoca Cyvercry
+		Utilizzabile solo di notte
+		'''
+}
+
+OnTheRocks: {
+	DisplayName: Sulle Rocce
+	Tooltip: "'Età della Pietra'"
+}
+
+ResonanceDrill: {
+	DisplayName: Trapano a Risonanza
+	Tooltip: Estrae minerali connessi, più ne estrai, più è efficace
+}
+
+ElectricBlueSolution: {
+	DisplayName: Soluzione Blu Elettrica
+	Tooltip: Diffonde le Caverne di Cristallo
+}
+
+SpeedstersPickaxe: {
+	DisplayName: Piccone del Velocista
+	Tooltip: L'estrazione aumenta la velocità del tuo piccone
+}
+
+DeepFreeze: {
+	DisplayName: Congelamento Profondo
+	Tooltip: "'Fa freddo qui, o sono solo io?'"
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano sotto il 25% di mana [i:75]"
+}
+
+ElementalShift: {
+	DisplayName: Cambio Elementale
+	Tooltip:
+		'''
+		Attaccare crea una sfera di energia che può essere colpita
+		Tasto destro per distruggere la sfera
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità avvengono dopo che la sfera rimbalza due volte su un nemico [i:75]"
+}
+
+Eos: {
+	DisplayName: Eos
+	Tooltip:
+		'''
+		Termina una combo con un attacco rotante
+		Colpisci i nemici con la rotazione mentre scatti per rimbalzare, ottenendo una breve invulnerabilità
+		Dopo il rimbalzo su un nemico, i tuoi prossimi 2 combo spareranno proiettili
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità avvengono dopo un rimbalzo [i:75]"
+}
+
+ExtinguishedDynamite: {
+	DisplayName: Dinamite Spenta
+	SkillStrike: "[i:75] Esplode ogni secondo ed esegue Colpi dell'Abilità [i:75]"
+	Tooltip: ""
+}
+
+CrystalCrescent: {
+	DisplayName: Crescente di Cristallo
+	Tooltip: Lancia un bastone da combattimento che ritorna dopo un colpo rapido
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano mentre è in mano [i:75]"
+}
+
+NerveFlagellator: {
+	DisplayName: Flagellatore Nervoso
+	Tooltip:
+		'''
+		Attacca con più viticci nervosi
+		I nemici marchiati possono evocare un rampicante nervoso amichevole quando colpiti
+		'''
+	SkillStrike: "[i:75] I piccoli viticci nervosi eseguono Colpi dell'Abilità [i:75]"
+}
+
+Solsear: {
+	DisplayName: Scottasole
+	Tooltip:
+		'''
+		Spara un laser continuo che infligge più danni alla punta
+		Tasto destro per sparare una bomba
+		Mira la punta del laser sulla bomba per aumentarne il danno e la dimensione
+		'Con grande potenza di fuoco viene grande irresponsabilità'
+		'''
+	SkillStrike: "[i:75] Le Bombe eseguono Colpi dell'Abilità alla massima dimensione [i:75]"
+}
+
+FlareGun: {
+	DisplayName: Pistola Razzo da Combattimento
+	Tooltip:
+		'''
+		Non richiede munizioni
+		5% di probabilità di critico per tag degli evocatori
+		Clicca di nuovo con il giusto tempismo per sparare più velocemente
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano a lunga distanza [i:75]"
+}
+
+CerobaStaffItem: {
+	DisplayName: Devozione
+	Tooltip:
+		'''
+		Tasto destro per attaccare con un sigillo che marchia i nemici
+		I nemici marchiati subiscono danni enormemente aumentati dall'arma
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano sui nemici marchiati [i:75]"
+}
+
+ClockworkLazinator: {
+	DisplayName: Lazinator a Ingranaggi
+	Tooltip:
+		'''
+		Tasto destro per caricare l'arma, aumentando la durata del fuoco
+		Si ferma a 4 cariche
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano dopo aver sparato abbastanza a lungo [i:75]"
+}
+
+CrystalGlade: {
+	DisplayName: Radura di Cristallo
+	Tooltip: Tasto destro per evocare un portale che cambierà l'origine dei tuoi colpi
+	SkillStrike: "[i:75] I colpi dal portale eseguono Colpi dell'Abilità [i:75]"
+}
+
+TheBeacon: {
+	DisplayName: Il Faro
+	Tooltip:
+		'''
+		Mira al nemico più vicino al cursore
+		Rilascia viticci fiammeggianti attorno al nemico bersaglio
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po' [i:75]"
+}
+
+TheFlashlight: {
+	DisplayName: La Torcia
+	Tooltip: Mira al nemico più vicino al cursore
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po' [i:75]"
+}
+
+TheLaserPointer: {
+	DisplayName: Puntatore Laser
+	Tooltip:
+		'''
+		Mira al nemico più vicino al cursore
+		Rilascia scintille a ricerca dopo aver puntato lo stesso nemico per un po'
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano dopo aver puntato lo stesso nemico per un po' [i:75]"
+}
+
+WandOfExploding: {
+	DisplayName: Bacchetta delle Esplosioni
+	Tooltip: Infligge Bruciatura di Mana, facendo perdere stelle ai nemici che ripristinano mana
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano sotto il 50% di mana [i:75]"
+}
+
+TetraBlades: {
+	DisplayName: Lame Tetra
+	Tooltip: Tasto destro per scattare fino a 4 volte
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano dopo aver usato tutti e 4 gli scatti [i:75]"
+}
+
+TheSahara: {
+	DisplayName: Il Sahara
+	Tooltip:
+		'''
+		Tieni premuto per caricare, aumentando danni e velocità
+		Rilascia un vortice di fuoco alla carica completa
+		'''
+	SkillStrike: "[i:75] Il Vortice di Fuoco esegue Colpi dell'Abilità [i:75]"
+}
+
+WarBow: {
+	DisplayName: Arco da Guerra
+	Tooltip:
+		'''
+		Tieni premuto per caricare, aumentando danni e velocità
+		Incorpora una punta nei nemici a carica completa
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano rilasciando con tempismo perfetto [i:75]"
+}
+
+GraniteCannon: {
+	DisplayName: Cannone di Granito
+	Tooltip:
+		'''
+		Converte i proiettili in pezzi di granito
+		Se due pezzi si scontrano a mezz'aria, si rompono in nuclei energetici a ricerca
+		'''
+	SkillStrike: "[i:75] I Nuclei di Energia eseguono Colpi dell'Abilità [i:75]"
+}
+
+AdamantitePulsar: {
+	DisplayName: Pulsar di Adamantite
+	Tooltip:
+		'''
+		Non richiede munizioni
+		Tasto destro per cambiare modalità
+		'''
+}
+
+RedundantFibber: {
+	DisplayName: Bugiardo Ridondante
+	Tooltip:
+		'''
+		50% amore
+		'Ti mentirei mai?'
+		I proiettili sparati rimbalzeranno
+		'''
+	SkillStrike: "[i:75] I proiettili rimbalzati possono o meno eseguire Colpi dell'Abilità [i:75]"
+}
+
+ShotgunAxe: {
+	DisplayName: Ascia a Fucile
+	Tooltip:
+		'''
+		Converte i proiettili in un proiettile speciale
+		Tasto destro per colpire con l'ascia, ferendo i nemici
+		'''
+	SkillStrike: "[i:75] I proiettili eseguono Colpi dell'Abilità sui nemici feriti [i:75]"
+}
+
+Skylight: {
+	DisplayName: Luce Celeste
+	Tooltip:
+		'''
+		Non richiede munizioni
+		Tasto destro per evocare un fulmine massiccio dal cielo
+		'''
+	SkillStrike: "[i:75] Il Fulmine esegue Colpi dell'Abilità su un colpo diretto [i:75]"
+}
+
+TheInfinity: {
+	DisplayName: Infinito
+	Tooltip:
+		'''
+		'È più vicino di quanto pensi! (No, non lo è)'
+		Tasto destro per cambiare elemento
+		'''
+	SkillStrike: "[i:75] I Colpi dell'Abilità si attivano sotto i 50 di difesa [i:75]"
+}
+
+MarbleMusket: {
+	DisplayName: Moschetto di Marmo
+	Tooltip:
+		'''
+		Converte i proiettili in speciali proiettili influenzati dalla gravità
+		Colpisci 3 volte di fila per rilasciare stelle a ricerca
+		'''
+	SkillStrike: "[i:75] Le Stelle eseguono Colpi dell'Abilità [i:75]"
+}
+
+PouchOfRocks: {
+	DisplayName: Sacca di Magneti
+	Tooltip: Lancia 2 pietre magnetiche che possono collidere ed esplodere
+	SkillStrike: "[i:75] Le Esplosioni eseguono Colpi dell'Abilità [i:75]"
+}
+
+TitaniumRocketLauncher: {
+	DisplayName: Lanciarazzi in Titanio
+	Tooltip:
+		'''
+		Non richiede munizioni
+		Tasto destro per sparare un grande razzo che segue il cursore
+		'''
+	SkillStrike: "[i:75] Il Grande Razzo esegue un Colpo dell'Abilità dopo un secondo [i:75]"
+}
+
+H2OCaliber: {
+	DisplayName: Calibro H2O
+	Tooltip: Spara bolle che possono fondersi
+	SkillStrike: "[i:75] Le bolle completamente fuse eseguono un Colpo dell'Abilità [i:75]"
+}
+
+OceanMist: {
+	DisplayName: Nebbia Oceanica
+	Tooltip: Scaglia un'esplosione d'acqua
+	SkillStrike: "[i:75] Esegue Colpi dell'Abilità a mana pieno [i:75]"
+}
+
+MeteorCrossbow: {
+	DisplayName: Balestra Meteoritica
+	Tooltip: Spara una freccia razzo
+	SkillStrike: "[i:75] La Freccia alla massima velocità esegue un Colpo dell'Abilità [i:75]"
+}
+
+PoundOfFeathers: {
+	DisplayName: Libbra di Piume
+	Tooltip: "'Pesa meno di una libbra di mattoni!'"
+	SkillStrike: "[i:75] Esegue Colpi dell'Abilità a distanza ravvicinata [i:75]"
+}
+
+LightOfTheAncients: {
+	DisplayName: Luce degli Antichi
+	Tooltip:
+		'''
+		Spara piccole e rapide proiettili infernali
+		Ha un indicatore di surriscaldamento visibile sopra il giocatore che si riempie mentre spari
+		L'arma diventa più potente man mano che si scalda, ma se continui a sparare dovrà raffreddarsi
+		'''
+	SkillStrike: "[i:75] Esegue un Colpo dell'Abilità proprio prima del surriscaldamento [i:75]"
+}
+
+TumblerockMedium: {
+	DisplayName: Rocciarotola
+	BestiaryFlavor: Queste rocce rotolanti esistono in varie forme e dimensioni. I loro campi magnetici permettono loro di aderire alle superfici metalliche.
+}
+
+TumblerockSmall: {
+	DisplayName: Rocciarotola
+	BestiaryFlavor: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
 }

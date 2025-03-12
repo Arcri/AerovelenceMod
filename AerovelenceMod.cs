@@ -22,6 +22,8 @@ using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Items.Weapons.Starglass;
 using AerovelenceMod.Content.Biomes;
+using AerovelenceMod.Common.Systems.Language;
+using System;
 
 namespace AerovelenceMod
 {
@@ -50,11 +52,17 @@ namespace AerovelenceMod
         public const string AssetPath = $"{nameof(AerovelenceMod)}/Assets/";
 
         internal static AerovelenceMod Instance { get; set; }
+
         public AerovelenceMod()
         {
             Instance = this;
+            LanguageManager.Instance.OnLanguageChanged += OnLanguageChanged;
         }
-		public override void PostSetupContent()
+
+        private void OnLanguageChanged(object sender){ ForceRefreshAllTranslations(); }
+
+
+        public override void PostSetupContent()
 		{
 			/*var bossChecklist = ModLoader.GetMod("BossChecklist");
 			var terrariaAmbience = ModLoader.GetMod("TerrariaAmbience");
@@ -355,17 +363,67 @@ namespace AerovelenceMod
 			Instance = null;
 			LegElectricity = null;
 			RailgunShader = null;
-		}
 
-		public override void Close()
+            if (LanguageManager.Instance != null)
+                LanguageManager.Instance.OnLanguageChanged -= OnLanguageChanged;
+        }
+
+		public void ForceRefreshAllTranslations()
+		{
+			try
+			{
+				LocalizationPatcher.ApplyNamePatches();
+                if (Main.netMode != NetmodeID.Server)
+				{
+					for (int i = 0; i < Main.player.Length; i++)
+					{
+						Player player = Main.player[i];
+						if (player == null || !player.active)
+							continue;
+						for (int j = 0; j < player.inventory.Length; j++)
+							player.inventory[j].ForceUpdateDisplayName();
+						for (int j = 0; j < player.armor.Length; j++)
+							player.armor[j].ForceUpdateDisplayName();
+						for (int j = 0; j < player.bank.item.Length; j++)
+							player.bank.item[j].ForceUpdateDisplayName();
+						for (int j = 0; j < player.bank2.item.Length; j++)
+							player.bank2.item[j].ForceUpdateDisplayName();
+						for (int j = 0; j < player.bank3.item.Length; j++)
+							player.bank3.item[j].ForceUpdateDisplayName();
+						for (int j = 0; j < player.bank4.item.Length; j++)
+							player.bank4.item[j].ForceUpdateDisplayName();
+					}
+					for (int i = 0; i < Main.item.Length; i++)
+					{
+						if (Main.item[i] != null && Main.item[i].active)
+							Main.item[i].ForceUpdateDisplayName();
+					}
+					for (int i = 0; i < Main.npc.Length; i++)
+					{
+						if (Main.npc[i] != null && Main.npc[i].active)
+						{
+							Main.npc[i].ForceUpdateDisplayName();
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Warn($"Error refreshing translations: {ex.Message}");
+			}
+		}
+    
+
+    public override void Close()
 		{
 			base.Close();
 		}
 
+        [Obsolete]
         public override void AddRecipeGroups()/* tModPorter Note: Removed. Use ModSystem.AddRecipeGroups */
         {
             {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Iron Bars", new int[]
+                RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Iron Bars", new int[]
                 {
                     ItemID.IronBar,
                     ItemID.LeadBar
@@ -375,7 +433,7 @@ namespace AerovelenceMod
             }
 
             {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
+                RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Silver Bars", new int[]
                 {
                     ItemID.SilverBar,
                     ItemID.TungstenBar
@@ -384,7 +442,7 @@ namespace AerovelenceMod
 
             }
 			{
-				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Adamantite Bars", new int[]
+				RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Adamantite Bars", new int[]
 				{
 					ItemID.AdamantiteBar,
 					ItemID.TitaniumBar
@@ -393,7 +451,7 @@ namespace AerovelenceMod
 
 			}
 			{
-				RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Cobalt Bars", new int[]
+				RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Cobalt Bars", new int[]
 				{
 					ItemID.CobaltBar,
 					ItemID.PalladiumBar
@@ -402,7 +460,7 @@ namespace AerovelenceMod
 
 			}
 			{
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
+                RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Evil Materials", new int[]
                 {
                     ItemID.ShadowScale,
                     ItemID.TissueSample
@@ -411,7 +469,7 @@ namespace AerovelenceMod
                 RecipeGroup.RegisterGroup("AerovelenceMod:EvilMaterials", group);
             }
             {
-                RecipeGroup group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Gold Bars", new int[]
+                RecipeGroup group = new RecipeGroup(() => Terraria.Localization.Language.GetTextValue("LegacyMisc.37") + " Gold Bars", new int[]
                 {
                     ItemID.PlatinumBar,
                     ItemID.GoldBar

@@ -14,11 +14,30 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
 {
-    public class CrystalGlade : ModItem
+    public class CrystalGlade : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("CrystalGlade", "Right-Click to summon a portal that will change where your shots originate from")
+            .AddName(Language.Default, "Crystal Glade")
+            .AddTooltip(Language.Default, "Right-Click to summon a portal that will change where your shots originate from")
+            .AddSkillStrike(Language.Default, "Shots from the portal Skill Strike")
+
+            .AddName(Language.Spanish, "Claro de Cristal").AddTooltip(Language.Spanish, "Haz clic derecho para invocar un portal que cambiará el origen de tus disparos").AddSkillStrike(Language.Spanish, "Los disparos desde el portal realizan Golpes de Habilidad")
+            .AddName(Language.French, "Clairière de Cristal").AddTooltip(Language.French, "Clic droit pour invoquer un portail qui changera l'origine de vos tirs").AddSkillStrike(Language.French, "Les tirs provenant du portail déclenchent des Coups de Compétence")
+            .AddName(Language.German, "Kristalllichtung").AddTooltip(Language.German, "Rechtsklick, um ein Portal zu beschwören, das den Ursprung deiner Schüsse verändert").AddSkillStrike(Language.German, "Schüsse aus dem Portal führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Radura di Cristallo").AddTooltip(Language.Italian, "Tasto destro per evocare un portale che cambierà l'origine dei tuoi colpi").AddSkillStrike(Language.Italian, "I colpi dal portale eseguono Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Kryształowa Polana").AddTooltip(Language.Polish, "Prawy przycisk, aby przywołać portal zmieniający miejsce, z którego pochodzą twoje strzały").AddSkillStrike(Language.Polish, "Strzały z portalu wykonują Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Clareira de Cristal").AddTooltip(Language.PortugueseBrazil, "Botão direito para invocar um portal que mudará de onde seus tiros se originam").AddSkillStrike(Language.PortugueseBrazil, "Os tiros vindos do portal realizam Golpes de Habilidade")
+            .AddName(Language.Russian, "Кристальная Поляна").AddTooltip(Language.Russian, "ПКМ, чтобы призвать портал, изменяющий точку происхождения твоих выстрелов").AddSkillStrike(Language.Russian, "Выстрелы из портала активируют Навык Удара");
+            //.AddName(Language.ChineseTraditional, "水晶林地").AddTooltip(Language.ChineseTraditional, "右鍵召喚一個改變射擊起點的傳送門").AddSkillStrike(Language.ChineseTraditional, "從傳送門發射的射擊會觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "水晶林地").AddTooltip(Language.ChineseSimplified, "右键召唤一个改变射击起点的传送门").AddSkillStrike(Language.ChineseSimplified, "从传送门发射的射击会触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 73;
@@ -42,15 +61,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade
             Item.channel = true;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Shots from the portal Skill Strike [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

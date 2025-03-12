@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using AerovelenceMod.Common.Utilities;
@@ -11,11 +11,29 @@ using AerovelenceMod.Common.Systems;
 using System.Collections.Generic;
 using System;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
-    public class PouchOfRocks : ModItem
+    public class PouchOfRocks : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("PouchOfMagnets", "Throws 2 magnetic stones which can collide and explode")
+            .AddName(Language.Default, "Pouch of Magnets").AddTooltip(Language.Default, "Throws 2 magnetic stones which can collide and explode")
+            .AddSkillStrike(Language.Default, "The explosions Skill Strike")
+
+            .AddName(Language.Spanish, "Bolsa de Imanes").AddTooltip(Language.Spanish, "Lanza 2 piedras magnéticas que pueden chocar y explotar").AddSkillStrike(Language.Spanish, "Las explosiones realizan Golpes de Habilidad")
+            .AddName(Language.French, "Pochette d'Aimants").AddTooltip(Language.French, "Lance 2 pierres magnétiques qui peuvent entrer en collision et exploser").AddSkillStrike(Language.French, "Les explosions déclenchent des Coups de Compétence")
+            .AddName(Language.German, "Beutel mit Magneten").AddTooltip(Language.German, "Wirft 2 magnetische Steine, die kollidieren und explodieren können").AddSkillStrike(Language.German, "Die Explosionen führen Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Sacca di Magneti").AddTooltip(Language.Italian, "Lancia 2 pietre magnetiche che possono collidere ed esplodere").AddSkillStrike(Language.Italian, "Le Esplosioni eseguono Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Worek z Magnesami").AddTooltip(Language.Polish, "Rzuca 2 magnetyczne kamienie, które mogą się zderzyć i eksplodować").AddSkillStrike(Language.Polish, "Eksplozje wykonują Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Bolsa de Ímãs").AddTooltip(Language.PortugueseBrazil, "Lança 2 pedras magnéticas que podem colidir e explodir").AddSkillStrike(Language.PortugueseBrazil, "As explosões realizam Golpes de Habilidade")
+            .AddName(Language.Russian, "Мешочек с Магнитами").AddTooltip(Language.Russian, "Бросает 2 магнитных камня, которые могут столкнуться и взорваться").AddSkillStrike(Language.Russian, "Взрывы активируют Навык Удара");
+            //.AddName(Language.ChineseTraditional, "磁石袋").AddTooltip(Language.ChineseTraditional, "投擲 2 顆磁石，可相撞並爆炸").AddSkillStrike(Language.ChineseTraditional, "爆炸觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "磁石袋").AddTooltip(Language.ChineseSimplified, "投掷 2 颗磁石，可相撞并爆炸").AddSkillStrike(Language.ChineseSimplified, "爆炸触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 8;
@@ -46,17 +64,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             Projectile.NewProjectile(source, position, vel2, type, damage, knockback, player.whoAmI, 0f, pairID);
             return false;
         }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine line = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The explosions skill strike [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(line);
-        }
-
-
     }
 
     public class MagneticRock : ModProjectile

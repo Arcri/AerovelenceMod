@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,11 +14,25 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Weapons.Overworld
 {
-    public class MeteorCrossbow : ModItem
+    public class MeteorCrossbow : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("MeteorCrossbow","Fires a rocket arrow")
+            .AddName(Language.Default, "Meteor Crossbow")
+            .AddTooltip(Language.Default, "Fires a rocket arrow")
+            .AddSkillStrike(Language.Default, "The Arrow at full velocity Skill Strikes")
+
+            .AddName(Language.Spanish, "Ballesta Meteórica").AddTooltip(Language.Spanish, "Dispara una flecha cohete").AddSkillStrike(Language.Spanish, "La Flecha a velocidad máxima realiza Golpes de Habilidad")
+            .AddName(Language.French, "Arbalète Météorique").AddTooltip(Language.French, "Tire une flèche-fusée").AddSkillStrike(Language.French, "La Flèche à pleine vitesse déclenche un Coup de Compétence")
+            .AddName(Language.German, "Meteorarmbrust").AddTooltip(Language.German, "Feuert einen Raketenpfeil").AddSkillStrike(Language.German, "Der Pfeil führt Fähigkeitsschläge bei maximaler Geschwindigkeit aus")
+            .AddName(Language.Italian, "Balestra Meteoritica").AddTooltip(Language.Italian, "Spara una freccia razzo").AddSkillStrike(Language.Italian, "La Freccia alla massima velocità esegue un Colpo dell'Abilità")
+            .AddName(Language.Polish, "Meteoryczna Kusza").AddTooltip(Language.Polish, "Wystrzeliwuje rakietową strzałę").AddSkillStrike(Language.Polish, "Strzała przy pełnej prędkości wykonuje Cios Umiejętności")
+            .AddName(Language.PortugueseBrazil, "Besta Meteórica").AddTooltip(Language.PortugueseBrazil, "Dispara uma flecha foguete").AddSkillStrike(Language.PortugueseBrazil, "A Flecha na velocidade máxima realiza um Golpe de Habilidade")
+            .AddName(Language.Russian, "Метеоритный Арбалет").AddTooltip(Language.Russian, "Выпускает ракетную стрелу").AddSkillStrike(Language.Russian, "Стрела на полной скорости активирует Навык Удара")
+            .AddName(Language.ChineseTraditional, "隕石弩").AddTooltip(Language.ChineseTraditional, "發射火箭箭矢").AddSkillStrike(Language.ChineseTraditional, "箭矢在全速時觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "陨石弩").AddTooltip(Language.ChineseSimplified, "发射火箭箭矢").AddSkillStrike(Language.ChineseSimplified, "箭矢在全速时触发技能打击");
         }
 
         public override void SetDefaults()
@@ -43,15 +58,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Overworld
 
             Item.value = Item.sellPrice(gold: 2, silver: 50);
             Item.UseSound = SoundID.DD2_BallistaTowerShot;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Arrow at full velocity Skill Strikes [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

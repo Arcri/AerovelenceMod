@@ -16,11 +16,30 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Projectiles;
 using Terraria.Map;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {
-    public class ShotgunAxe : ModItem
+    public class ShotgunAxe : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("ShotgunAxe", "Converts bullets into a special projectile\nRight-Click to chop with the axe, gouging enemies")
+            .AddName(Language.Default, "Shotgun Axe")
+            .AddTooltip(Language.Default, "Converts bullets into a special projectile\nRight-Click to chop with the axe, gouging enemies")
+            .AddSkillStrike(Language.Default, "Bullets Skill Strike gouged enemies")
+
+            .AddName(Language.Spanish, "Escopeta Hacha").AddTooltip(Language.Spanish, "Convierte las balas en un proyectil especial\nHaz clic derecho para cortar con el hacha, hiriendo a los enemigos").AddSkillStrike(Language.Spanish, "Las balas realizan Golpes de Habilidad contra enemigos heridos")
+            .AddName(Language.French, "Hache à Fusil").AddTooltip(Language.French, "Convertit les balles en un projectile spécial\nClic droit pour frapper avec la hache, entaillant les ennemis").AddSkillStrike(Language.French, "Les balles déclenchent des Coups de Compétence contre les ennemis entaillés")
+            .AddName(Language.German, "Schrotflinten-Axt").AddTooltip(Language.German, "Verwandelt Kugeln in ein spezielles Projektil\nRechtsklick, um mit der Axt zuzuschlagen und Feinde zu verletzen").AddSkillStrike(Language.German, "Kugeln führen Fähigkeitsschläge gegen verwundete Feinde aus")
+            .AddName(Language.Italian, "Ascia a Fucile").AddTooltip(Language.Italian, "Converte i proiettili in un proiettile speciale\nTasto destro per colpire con l'ascia, ferendo i nemici").AddSkillStrike(Language.Italian, "I proiettili eseguono Colpi dell'Abilità sui nemici feriti")
+            //.AddName(Language.Polish, "Strzelbo-Siekiera").AddTooltip(Language.Polish, "Konwertuje pociski w specjalny pocisk\nPrawy przycisk, aby ciąć siekierą, kalecząc wrogów").AddSkillStrike(Language.Polish, "Pociski wykonują Ciosy Umiejętności na okaleczonych wrogach")
+            //.AddName(Language.PortugueseBrazil, "Machado Espingarda").AddTooltip(Language.PortugueseBrazil, "Converte balas em um projétil especial\nBotão direito para cortar com o machado, ferindo inimigos").AddSkillStrike(Language.PortugueseBrazil, "As balas realizam Golpes de Habilidade contra inimigos feridos")
+            .AddName(Language.Russian, "Дробовик-Топор").AddTooltip(Language.Russian, "Преобразует пули в специальный снаряд\nПКМ, чтобы рубануть топором, нанося увечья врагам").AddSkillStrike(Language.Russian, "Пули активируют Навык Удара по раненым врагам");
+            //.AddName(Language.ChineseTraditional, "霰彈槍斧").AddTooltip(Language.ChineseTraditional, "將子彈轉換為特殊投射物\n右鍵使用斧頭劈砍，對敵人造成撕裂").AddSkillStrike(Language.ChineseTraditional, "子彈對撕裂的敵人觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "霰弹枪斧").AddTooltip(Language.ChineseSimplified, "将子弹转换为特殊投射物\n右键使用斧头劈砍，对敌人造成撕裂").AddSkillStrike(Language.ChineseSimplified, "子弹对撕裂的敌人触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 77;
@@ -48,15 +67,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         }
         public override bool AltFunctionUse(Player player) => true;
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Bullets Skill Strike gouged enemies [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

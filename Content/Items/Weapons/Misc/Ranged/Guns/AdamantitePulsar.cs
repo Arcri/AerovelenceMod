@@ -14,14 +14,28 @@ using Terraria.GameContent;
 using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {
-    public class AdamantitePulsar : ModItem
+    public class AdamantitePulsar : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
-            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<TitaniumRocketLauncher>();;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<TitaniumRocketLauncher>();
+            this.ModifyLocalization("AdamantitePulsar", "Does not require ammo\nRight-Click to change modes")
+            .AddName(Language.Default, "Adamantite Pulsar")
+            .AddTooltip(Language.Default, "Does not require ammo\nRight-Click to change modes")
+
+            .AddName(Language.Spanish, "Pulsar de Adamantita").AddTooltip(Language.Spanish, "No requiere munición\nHaz clic derecho para cambiar de modo")
+            .AddName(Language.French, "Pulsar en Adamantite").AddTooltip(Language.French, "Ne nécessite pas de munitions\nClic droit pour changer de mode")
+            .AddName(Language.German, "Adamantit-Pulsar").AddTooltip(Language.German, "Benötigt keine Munition\nRechtsklick, um den Modus zu wechseln")
+            .AddName(Language.Italian, "Pulsar di Adamantite").AddTooltip(Language.Italian, "Non richiede munizioni\nTasto destro per cambiare modalità")
+            //.AddName(Language.Polish, "Pulsar Adamantytowy").AddTooltip(Language.Polish, "Nie wymaga amunicji\nPrawy przycisk, aby zmienić tryb")
+            //.AddName(Language.PortugueseBrazil, "Pulsar de Adamantita").AddTooltip(Language.PortugueseBrazil, "Não requer munição\nBotão direito para alterar modos")
+            .AddName(Language.Russian, "Адамантитовый Пульсар").AddTooltip(Language.Russian, "Не требует боеприпасов\nПКМ, чтобы сменить режим");
+            //.AddName(Language.ChineseTraditional, "堅鋼脈衝器").AddTooltip(Language.ChineseTraditional, "不需要彈藥\n右鍵切換模式")
+            //.AddName(Language.ChineseSimplified, "精金脉冲器").AddTooltip(Language.ChineseSimplified, "不需要弹药\n右键切换模式");
         }
 
         public override void SetDefaults()
@@ -173,36 +187,78 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             int itemID = ModContent.ItemType<AdamantitePulsar>();
+            string currentLanguage = Terraria.Localization.LanguageManager.Instance.ActiveCulture.Name;
 
-            if (mode == 0)
+            string modeCharge, modeBurst, skillStrikeCharge, skillStrikeBurst;
+
+            switch (currentLanguage)
             {
-                TooltipLine modeDesc = new(Mod, "mode", "Charge - Hold to charge a piercing shot, accuracy increasing the longer you charge")
-                {
-                    
-                    OverrideColor = Color.Red,
-                };
-                tooltips.Add(modeDesc);
+                case "es-ES": // Spanish
+                    modeCharge = "Carga - Mantén presionado para cargar un disparo perforante, aumentando la precisión cuanto más tiempo cargues";
+                    modeBurst = "Ráfaga - Dispara una ráfaga de tres balas";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Golpe de Habilidad al soltar con un tiempo perfecto [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] El tercer disparo realiza un Golpe de Habilidad si los otros aciertan al mismo objetivo [i:" + ItemID.FallenStar + "]";
+                    break;
 
-                TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strike by releasing with perfect timing [i:" + ItemID.FallenStar + "]")
-                {
-                    OverrideColor = Color.Gold,
-                };
-                tooltips.Add(SSline);
-            }
-            else if (mode == 1)
-            {
-                TooltipLine modeDesc = new(Mod, "mode", "Burst - Fires a burst of three bullets")
-                {
-                    OverrideColor = Color.Red,
-                };
-                tooltips.Add(modeDesc);
+                case "fr-FR": // French
+                    modeCharge = "Charge - Maintenez pour charger un tir perçant, augmentant la précision plus longtemps vous chargez";
+                    modeBurst = "Rafale - Tire une rafale de trois balles";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Coup de Compétence en relâchant avec un timing parfait [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Le troisième tir déclenche un Coup de Compétence si les autres ont touché la même cible [i:" + ItemID.FallenStar + "]";
+                    break;
 
-                TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Third shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]")
-                {
-                    OverrideColor = Color.Gold,
-                };
-                tooltips.Add(SSline);
+                case "de-DE": // German
+                    modeCharge = "Aufladen - Halte gedrückt, um einen durchdringenden Schuss aufzuladen, wobei die Genauigkeit mit der Ladezeit steigt";
+                    modeBurst = "Salve - Feuert eine Salve von drei Kugeln";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Fähigkeitsschlag beim perfekten Timing beim Loslassen [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Der dritte Schuss führt einen Fähigkeitsschlag aus, wenn die anderen das gleiche Ziel treffen [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                case "it-IT": // Italian
+                    modeCharge = "Carica - Tieni premuto per caricare un colpo perforante, aumentando la precisione più a lungo carichi";
+                    modeBurst = "Raffica - Spara una raffica di tre proiettili";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Colpo dell'Abilità rilasciando con tempismo perfetto [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Il terzo colpo esegue un Colpo dell'Abilità se gli altri colpiscono lo stesso bersaglio [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                case "pl-PL": // Polish
+                    modeCharge = "Ładunek - Przytrzymaj, aby naładować przeszywający strzał, zwiększając celność im dłużej ładujesz";
+                    modeBurst = "Seria - Wystrzeliwuje serię trzech kul";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Cios Umiejętności przy wypuszczeniu z idealnym wyczuciem czasu [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Trzeci strzał wykonuje Cios Umiejętności, jeśli poprzednie trafiły w ten sam cel [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                case "pt-BR": // Portuguese (Brazil)
+                    modeCharge = "Carga - Segure para carregar um tiro perfurante, aumentando a precisão quanto mais tempo carregar";
+                    modeBurst = "Rajada - Dispara uma rajada de três balas";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Golpe de Habilidade ao soltar com tempo perfeito [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] O terceiro tiro realiza um Golpe de Habilidade se os outros atingirem o mesmo alvo [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                case "ru-RU": // Russian
+                    modeCharge = "Заряд - Удерживайте, чтобы зарядить проникающий выстрел, увеличивая точность с увеличением заряда";
+                    modeBurst = "Очередь - Выпускает очередь из трех пуль";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Навык Удара активируется при отпускании с идеальным таймингом [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Третий выстрел активирует Навык Удара, если предыдущие попали в ту же цель [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                case "zh-Hant": // Chinese (Traditional)
+                    modeCharge = "充能 - 按住蓄力發射貫穿射擊，充能時間越長準確度越高";
+                    modeBurst = "連發 - 發射三發子彈";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] 以完美時機釋放觸發技能打擊 [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] 第三發擊中相同目標時觸發技能打擊 [i:" + ItemID.FallenStar + "]";
+                    break;
+
+                default: // English and fallback
+                    modeCharge = "Charge - Hold to charge a piercing shot, accuracy increasing the longer you charge";
+                    modeBurst = "Burst - Fires a burst of three bullets";
+                    skillStrikeCharge = "[i:" + ItemID.FallenStar + "] Skill Strike by releasing with perfect timing [i:" + ItemID.FallenStar + "]";
+                    skillStrikeBurst = "[i:" + ItemID.FallenStar + "] Third shot Skill Strikes if the other shots hit the same target [i:" + ItemID.FallenStar + "]";
+                    break;
             }
+
+            tooltips.Add(new TooltipLine(Mod, "mode", mode == 0 ? modeCharge : modeBurst) { OverrideColor = Color.Red });
+            tooltips.Add(new TooltipLine(Mod, "SkillStrike", mode == 0 ? skillStrikeCharge : skillStrikeBurst) { OverrideColor = Color.Gold });
         }
 
         public override void AddRecipes()

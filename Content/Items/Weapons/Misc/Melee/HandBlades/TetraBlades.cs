@@ -15,10 +15,11 @@ using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
 {
-    public class TetraBlades : ModItem
+    public class TetraBlades : TranslatableModItem
     {
         private Color col = Color.LimeGreen;
         private bool trueFrontFalseBack = true;
@@ -27,6 +28,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
 
         private int dashRefreshCounter = -1;
         private int dashes = 4;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("TetraBlades", "Right-Click to dash up to 4 times")
+            .AddName(Language.Default, "Tetra Blades")
+            .AddTooltip(Language.Default, "Right-Click to dash up to 4 times")
+            .AddSkillStrike(Language.Default, "Skill Strikes when all 4 dashes are used")
+
+            .AddName(Language.Spanish, "Cuchillas Tetra").AddTooltip(Language.Spanish, "Haz clic derecho para impulsarte hasta 4 veces").AddSkillStrike(Language.Spanish, "Golpes de Habilidad cuando se usan los 4 impulsos")
+            .AddName(Language.French, "Lames Tétra").AddTooltip(Language.French, "Clic droit pour foncer jusqu'à 4 fois").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent après avoir utilisé les 4 ruées")
+            .AddName(Language.German, "Tetra-Klingen").AddTooltip(Language.German, "Rechtsklick, um bis zu 4 Mal zu dashen").AddSkillStrike(Language.German, "Fähigkeitsschläge treten auf, wenn alle 4 Dashes genutzt wurden")
+            .AddName(Language.Italian, "Lame Tetra").AddTooltip(Language.Italian, "Tasto destro per scattare fino a 4 volte").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano dopo aver usato tutti e 4 gli scatti")
+            //.AddName(Language.Polish, "Ostrza Tetra").AddTooltip(Language.Polish, "Prawy przycisk, aby wykonać do 4 dashów").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują po zużyciu wszystkich 4 dashów")
+            //.AddName(Language.PortugueseBrazil, "Lâminas Tetra").AddTooltip(Language.PortugueseBrazil, "Botão direito para dar até 4 investidas").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem quando todas as 4 investidas são usadas")
+            .AddName(Language.Russian, "Тетра Клинки").AddTooltip(Language.Russian, "ПКМ, чтобы совершить до 4 рывков").AddSkillStrike(Language.Russian, "Навык Удара активируется после использования всех 4 рывков");
+            //.AddName(Language.ChineseTraditional, "四刃刀").AddTooltip(Language.ChineseTraditional, "右鍵衝刺最多 4 次").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在所有 4 次衝刺都使用後")
+            //.AddName(Language.ChineseSimplified, "四刃刀").AddTooltip(Language.ChineseSimplified, "右键冲刺最多 4 次").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在所有 4 次冲刺都使用后");
+        }
 
         public override void SetDefaults()
         {
@@ -61,14 +80,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
                 Register();
         }
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SSline = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes when all 4 dashed are used [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SSline);
-        }
         public override bool AltFunctionUse(Player player) => true;
 
         public override void HoldItem(Player player)

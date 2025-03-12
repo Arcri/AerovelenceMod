@@ -7,15 +7,33 @@ using System.Collections.Generic;
 using Terraria.DataStructures;
 using System;
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Tools
 {
-    public class SpeedstersPickaxe : ModItem
+    public class SpeedstersPickaxe : TranslatableModItem
     {
         private const int BaseUseTime = 10;
         private const int MinUseTime = 4;
         private const int MaxStacks = 40;
         private const int DecayInterval = 5;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization(
+                "SpeedstersPickaxe",
+                "Mining ramps up the speed of your pickaxe")
+            .AddName(Language.Default, "Speedster's Pickaxe").AddTooltip(Language.Default, "Mining ramps up the speed of your pickaxe")
+            .AddName(Language.Spanish, "Pico del Velocista").AddTooltip(Language.Spanish, "Minar aumenta la velocidad de tu pico")
+            .AddName(Language.French, "Pioche du Sprinteur").AddTooltip(Language.French, "L'extraction augmente la vitesse de votre pioche")
+            .AddName(Language.German, "Rasante Spitzhacke").AddTooltip(Language.German, "Bergbau steigert die Geschwindigkeit deiner Spitzhacke")
+            .AddName(Language.Italian, "Piccone del Velocista").AddTooltip(Language.Italian, "L'estrazione aumenta la velocità del tuo piccone")
+            .AddName(Language.Polish, "Kilof Sprintera").AddTooltip(Language.Polish, "Kopanie zwiększa prędkość twojego kilofa")
+            .AddName(Language.PortugueseBrazil, "Picareta do Velocista").AddTooltip(Language.PortugueseBrazil, "Minerar acelera a velocidade da sua picareta")
+            .AddName(Language.Russian, "Кирка Скоростного").AddTooltip(Language.Russian, "Добыча руды ускоряет вашу кирку")
+            .AddName(Language.ChineseTraditional, "疾速鎬").AddTooltip(Language.ChineseTraditional, "挖礦會逐步提升你的鎬速度")
+            .AddName(Language.ChineseSimplified, "疾速镐").AddTooltip(Language.ChineseSimplified, "挖矿会逐步提升你的镐速度");
+        }
 
         public override void SetDefaults()
         {

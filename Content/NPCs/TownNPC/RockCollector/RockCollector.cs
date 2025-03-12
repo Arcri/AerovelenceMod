@@ -1,4 +1,3 @@
-using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.EmoteBubbles;
@@ -29,6 +28,7 @@ using AerovelenceMod.Content.Items.Tools;
 using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using AerovelenceMod.Content.Items.Potions;
 using AerovelenceMod.Content.Items.Tools.Drills;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {

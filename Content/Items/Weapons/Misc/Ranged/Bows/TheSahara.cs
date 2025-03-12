@@ -1,4 +1,5 @@
-using AerovelenceMod.Common.Globals.SkillStrikes;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
@@ -22,9 +23,27 @@ using static Terraria.ModLoader.ModContent;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 {
-	public class TheSahara : ModItem
+	public class TheSahara : TranslatableModItem
 	{
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("TheSahara", "Hold to charge, increasing damage and velocity\nReleases a fire vortex at full charge")
+            .AddName(Language.Default, "The Sahara")
+            .AddTooltip(Language.Default, "Hold to charge, increasing damage and velocity\nReleases a fire vortex at full charge")
+            .AddSkillStrike(Language.Default, "The Fire Vortex Skill Strikes")
+
+            .AddName(Language.Spanish, "El Sahara").AddTooltip(Language.Spanish, "Mantén presionado para cargar, aumentando el daño y la velocidad\nLibera un vórtice de fuego con la carga completa").AddSkillStrike(Language.Spanish, "El Vórtice de Fuego realiza Golpes de Habilidad")
+            .AddName(Language.French, "Le Sahara").AddTooltip(Language.French, "Maintenez pour charger, augmentant les dégâts et la vitesse\nLibère un vortex de feu à pleine charge").AddSkillStrike(Language.French, "Le Vortex de Feu déclenche des Coups de Compétence")
+            .AddName(Language.German, "Die Sahara").AddTooltip(Language.German, "Halte gedrückt, um aufzuladen, wodurch Schaden und Geschwindigkeit steigen\nSetzt bei voller Ladung einen Feuervortex frei").AddSkillStrike(Language.German, "Der Feuervortex führt Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Il Sahara").AddTooltip(Language.Italian, "Tieni premuto per caricare, aumentando danni e velocità\nRilascia un vortice di fuoco alla carica completa").AddSkillStrike(Language.Italian, "Il Vortice di Fuoco esegue Colpi dell'Abilità")
+            .AddName(Language.Polish, "Sahara").AddTooltip(Language.Polish, "Przytrzymaj, aby ładować, zwiększając obrażenia i prędkość\nPrzy pełnym naładowaniu uwalnia ognisty wir").AddSkillStrike(Language.Polish, "Ognisty Wir wykonuje Ciosy Umiejętności")
+            .AddName(Language.PortugueseBrazil, "O Saara").AddTooltip(Language.PortugueseBrazil, "Segure para carregar, aumentando o dano e a velocidade\nLibera um vórtice de fogo com carga máxima").AddSkillStrike(Language.PortugueseBrazil, "O Vórtice de Fogo realiza Golpes de Habilidade")
+            .AddName(Language.Russian, "Сахара").AddTooltip(Language.Russian, "Удерживайте, чтобы зарядить, увеличивая урон и скорость\nПри полной зарядке выпускает огненный вихрь").AddSkillStrike(Language.Russian, "Огненный Вихрь активирует Навык Удара")
+            .AddName(Language.ChineseTraditional, "撒哈拉").AddTooltip(Language.ChineseTraditional, "按住蓄力，增加傷害和速度\n滿蓄力時釋放火焰漩渦").AddSkillStrike(Language.ChineseTraditional, "火焰漩渦觸發技能打擊")
+            .AddName(Language.ChineseSimplified, "撒哈拉").AddTooltip(Language.ChineseSimplified, "按住蓄力，增加伤害和速度\n满蓄力时释放火焰漩涡").AddSkillStrike(Language.ChineseSimplified, "火焰漩涡触发技能打击");
+        }
+
+        public override void SetDefaults()
 		{
 			Item.damage = 20;
             Item.knockBack = KnockbackTiers.Average;
@@ -47,15 +66,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
             Item.channel = true;
 			Item.noUseGraphic = true;
 		}
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Fire Vortex Skill Strikes [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
@@ -349,7 +359,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         /// <param name="color">Color to blend onto the background color.</param>
         /// <param name="backColor">Color to blend the other color onto.</param>
         /// <param name="amount">How much of <paramref name="color"/> to keep,
-        /// �on top of� <paramref name="backColor"/>.</param>
+        /// “on top of” <paramref name="backColor"/>.</param>
         /// <returns>The blended colors.</returns>
         public Color Blend(Color myColor, Color backColor, double amount)
         {

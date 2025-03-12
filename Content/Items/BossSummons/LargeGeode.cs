@@ -1,4 +1,4 @@
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
+﻿using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using Microsoft.Xna.Framework;
@@ -10,6 +10,7 @@ using System;
 using Terraria.DataStructures;
 using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using System.Linq;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.BossSummons
 {
@@ -43,9 +44,24 @@ namespace AerovelenceMod.Content.Items.BossSummons
         public static int Platform6Width;
     }
 
-    public class LargeGeode : ModItem
+    public class LargeGeode : TranslatableModItem
     {
         private static List<Point> placedTiles = new List<Point>();
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("LargeGeode", "Not consumable\nSummons the Crystal Tumbler\nOnly usable in the Caverns Arena")
+            .AddName(Language.Default, "Large Geode").AddTooltip(Language.Default, "Not consumable\nSummons the Crystal Tumbler\nOnly usable in the Caverns Arena")
+            .AddName(Language.Spanish, "Geoda Grande").AddTooltip(Language.Spanish, "No consumible\nInvoca al Rodador de Cristal\nSolo usable en la Arena de las Cavernas")
+            .AddName(Language.French, "Grande Géode").AddTooltip(Language.French, "Non consommable\nInvoque le Rouleur de Cristal\nUtilisable uniquement dans l'Arène des Cavernes")
+            .AddName(Language.German, "Große Geode").AddTooltip(Language.German, "Nicht verbrauchbar\nBeschwört den Kristall-Tumbler\nNur in der Höhlenarena verwendbar")
+            .AddName(Language.Italian, "Grande Geode").AddTooltip(Language.Italian, "Non consumabile\nEvoca il Rullo di Cristallo\nUtilizzabile solo nell'Arena delle Caverne")
+            .AddName(Language.Polish, "Duża Geoda").AddTooltip(Language.Polish, "Nie zużywa się\nPrzywołuje Kryształowego Tumblera\nMożna używać tylko na Arenie Jaskiń")
+            .AddName(Language.PortugueseBrazil, "Grande Geodo").AddTooltip(Language.PortugueseBrazil, "Não consumível\nInvoca o Tumbler de Cristal\nSomente utilizável na Arena das Cavernas")
+            .AddName(Language.Russian, "Большая Геода").AddTooltip(Language.Russian, "Не расходуется\nПризывает Кристального Тумблера\nМожно использовать только в Пещерной Арене")
+            .AddName(Language.ChineseTraditional, "大型晶洞").AddTooltip(Language.ChineseTraditional, "不可消耗\n召喚水晶翻滾者\n僅限於洞穴競技場使用")
+            .AddName(Language.ChineseSimplified, "大型晶洞").AddTooltip(Language.ChineseSimplified, "不可消耗\n召唤水晶翻滚者\n仅限于洞穴竞技场使用");
+        }
 
         public override void SetDefaults()
         {

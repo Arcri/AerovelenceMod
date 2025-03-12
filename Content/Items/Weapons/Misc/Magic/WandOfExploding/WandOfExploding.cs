@@ -20,15 +20,32 @@ using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 {
-    public class WandOfExploding : ModItem
+    public class WandOfExploding : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
+
+            this.ModifyLocalization("WandOfExploding", "Inflicts Mana Burn, causing enemies to leak stars that restore mana")
+            .AddName(Language.Default, "Wand of Exploding")
+            .AddTooltip(Language.Default, "Inflicts Mana Burn, causing enemies to leak stars that restore mana")
+            .AddSkillStrike(Language.Default, "Skill Strikes under 50% mana")
+
+            .AddName(Language.Spanish, "Vara de Explosión").AddTooltip(Language.Spanish, "Inflige Quemadura de Maná, haciendo que los enemigos suelten estrellas que restauran maná").AddSkillStrike(Language.Spanish, "Golpes de Habilidad por debajo del 50% de maná")
+            .AddName(Language.French, "Baguette Explosive").AddTooltip(Language.French, "Inflige Brûlure de Mana, faisant perdre des étoiles aux ennemis qui restaurent du mana").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent sous 50% de mana")
+            .AddName(Language.German, "Zauberstab der Explosionen").AddTooltip(Language.German, "Verursacht Manabrand, wodurch Feinde Sterne verlieren, die Mana wiederherstellen").AddSkillStrike(Language.German, "Fähigkeitsschläge treten bei unter 50% Mana auf")
+            .AddName(Language.Italian, "Bacchetta delle Esplosioni").AddTooltip(Language.Italian, "Infligge Bruciatura di Mana, facendo perdere stelle ai nemici che ripristinano mana").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano sotto il 50% di mana")
+            //.AddName(Language.Polish, "Różdżka Eksplozji").AddTooltip(Language.Polish, "Nakłada Oparzenie Many, sprawiając, że wrogowie tracą gwiazdy przywracające manę").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują poniżej 50% many")
+            //.AddName(Language.PortugueseBrazil, "Varinha Explosiva").AddTooltip(Language.PortugueseBrazil, "Inflige Queimadura de Mana, fazendo os inimigos soltarem estrelas que restauram mana").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem abaixo de 50% de mana")
+            .AddName(Language.Russian, "Жезл Взрыва").AddTooltip(Language.Russian, "Накладывает Манапожог, заставляя врагов терять звезды, восстанавливающие ману").AddSkillStrike(Language.Russian, "Навык Удара активируется при мане ниже 50%");
+            //.AddName(Language.ChineseTraditional, "爆炸魔杖").AddTooltip(Language.ChineseTraditional, "施加法力燃燒，使敵人洩漏恢復法力的星星").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在法力低於 50% 時")
+            //.AddName(Language.ChineseSimplified, "爆炸魔杖").AddTooltip(Language.ChineseSimplified, "施加法力燃烧，使敌人泄漏恢复法力的星星").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在法力低于 50% 时");
         }
+
         public override void SetDefaults()
         {
             Item.damage = 26;
@@ -51,15 +68,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             Item.noMelee = true;
             Item.channel = true;
             Item.noUseGraphic = true;
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes under 50% mana [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override void AddRecipes()

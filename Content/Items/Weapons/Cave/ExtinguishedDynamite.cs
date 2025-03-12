@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
@@ -27,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
         }
     }
 
-    public class ExtinguishedDynamite : ModItem
+    public class ExtinguishedDynamite : TranslatableModItem
     {
         private int ExplosionRadius = 120;
         private float ExplosionKnockback = 12f;
@@ -36,6 +37,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("ExtinguishedDynamite", "")
+            .AddName(Language.Default, "Extinguished Dynamite")
+            .AddSkillStrike(Language.Default, "Every second explodes and Skill Strikes")
+
+            .AddName(Language.Spanish, "Dinamita Extinguida").AddSkillStrike(Language.Spanish, "Cada segundo explota y realiza Golpes de Habilidad")
+            .AddName(Language.French, "Dynamite Éteinte").AddSkillStrike(Language.French, "Explose toutes les secondes et déclenche des Coups de Compétence")
+            .AddName(Language.German, "Gelöschte Dynamitstange").AddSkillStrike(Language.German, "Explodiert jede Sekunde und führt Fähigkeitsschläge aus")
+            .AddName(Language.Italian, "Dinamite Spenta").AddSkillStrike(Language.Italian, "Esplode ogni secondo ed esegue Colpi dell'Abilità")
+            //.AddName(Language.Polish, "Zgaszony Dynamit").AddSkillStrike(Language.Polish, "Eksploduje co sekundę i wykonuje Ciosy Umiejętności")
+            //.AddName(Language.PortugueseBrazil, "Dinamite Extinta").AddSkillStrike(Language.PortugueseBrazil, "Explode a cada segundo e realiza Golpes de Habilidade")
+            .AddName(Language.Russian, "Потухший Динамит").AddSkillStrike(Language.Russian, "Взрывается при каждом втором попадании и активирует Навык Удара");
+            //.AddName(Language.ChineseTraditional, "熄滅炸藥").AddSkillStrike(Language.ChineseTraditional, "每秒爆炸並觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "熄灭炸药").AddSkillStrike(Language.ChineseSimplified, "每秒爆炸并触发技能打击");
+
         }
 
         public override void SetDefaults()

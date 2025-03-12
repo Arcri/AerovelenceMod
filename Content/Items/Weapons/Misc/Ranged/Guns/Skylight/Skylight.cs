@@ -1,5 +1,4 @@
-﻿using AerovelenceMod.Common.Globals.SkillStrikes;
-using AerovelenceMod.Common.Utilities;
+﻿using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance;
 using AerovelenceMod.Content.Projectiles;
@@ -15,12 +14,30 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.NPC;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
-using System.Collections.Generic;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 {
-    public class Skylight : ModItem
+    public class Skylight : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Skylight", "Does not require ammo\nRight-Click to summon a massive lightning bolt from the sky")
+            .AddName(Language.Default, "Skylight")
+            .AddTooltip(Language.Default, "Does not require ammo\nRight-Click to summon a massive lightning bolt from the sky")
+            .AddSkillStrike(Language.Default, "Lightning Bolt Skill Strikes on a direct hit")
+
+            .AddName(Language.Spanish, "Skylight").AddTooltip(Language.Spanish, "No requiere munición\nHaz clic derecho para invocar un rayo masivo desde el cielo").AddSkillStrike(Language.Spanish, "El Rayo realiza Golpes de Habilidad en impacto directo")
+            .AddName(Language.French, "Skylight").AddTooltip(Language.French, "Ne nécessite pas de munitions\nClic droit pour invoquer un énorme éclair depuis le ciel").AddSkillStrike(Language.French, "L'Éclair déclenche des Coups de Compétence en touchant directement")
+            .AddName(Language.German, "Skylight").AddTooltip(Language.German, "Benötigt keine Munition\nRechtsklick, um einen massiven Blitz aus dem Himmel zu beschwören").AddSkillStrike(Language.German, "Der Blitz führt Fähigkeitsschläge bei einem direkten Treffer aus")
+            .AddName(Language.Italian, "Skylight").AddTooltip(Language.Italian, "Non richiede munizioni\nTasto destro per evocare un fulmine massiccio dal cielo").AddSkillStrike(Language.Italian, "Il Fulmine esegue Colpi dell'Abilità su un colpo diretto")
+            //.AddName(Language.Polish, "Światło Niebios").AddTooltip(Language.Polish, "Nie wymaga amunicji\nPrawy przycisk, aby przywołać potężny piorun z nieba").AddSkillStrike(Language.Polish, "Piorun wykonuje Ciosy Umiejętności przy bezpośrednim trafieniu")
+            //.AddName(Language.PortugueseBrazil, "Luz Celeste").AddTooltip(Language.PortugueseBrazil, "Não requer munição\nBotão direito para invocar um relâmpago maciço do céu").AddSkillStrike(Language.PortugueseBrazil, "O Relâmpago realiza Golpes de Habilidade em um acerto direto")
+            .AddName(Language.Russian, "Скайлайт").AddTooltip(Language.Russian, "Не требует боеприпасов\nПКМ, чтобы призвать огромную молнию с неба").AddSkillStrike(Language.Russian, "Молния активирует Навык Удара при прямом попадании");
+            //.AddName(Language.ChineseTraditional, "Skylight").AddTooltip(Language.ChineseTraditional, "不需要彈藥\n右鍵召喚從天而降的巨大閃電").AddSkillStrike(Language.ChineseTraditional, "閃電在直接命中時觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "Skylight").AddTooltip(Language.ChineseSimplified, "不需要弹药\n右键召唤从天而降的巨大闪电").AddSkillStrike(Language.ChineseSimplified, "闪电在直接命中时触发技能打击");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 85;
@@ -47,15 +64,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
         }
 
         public override bool AltFunctionUse(Player Player) { return true; }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Lightning Bolt Skill Strikes on a direct hit [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

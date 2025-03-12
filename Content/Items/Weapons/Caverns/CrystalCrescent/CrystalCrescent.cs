@@ -12,16 +12,35 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using Mono.Cecil;
 using static System.Net.Mime.MediaTypeNames;
-using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
+using AerovelenceMod.Content.Dusts.GlowDusts;
 
 namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 {
     //MOSTLY DONE
-    public class CrystalCrescent : ModItem
+    public class CrystalCrescent : TranslatableModItem
     {
         bool tick = false;
         public static int attackCount = 0;
+
+        public override void SetStaticDefaults()
+        {
+            this.ModifyLocalization("Crystal Crescent", "Throws out a returning quarterstaff after a rapid swing")
+            .AddName(Language.Default, "Crystal Crescent")
+            .AddTooltip(Language.Default, "Throws out a returning quarterstaff after a rapid swing")
+            .AddSkillStrike(Language.Default, "Skill Strikes while in hand")
+
+            .AddName(Language.Spanish, "Creciente de Cristal").AddTooltip(Language.Spanish, "Lanza una vara larga que regresa después de un golpe rápido").AddSkillStrike(Language.Spanish, "Golpes de Habilidad mientras está en mano")
+            .AddName(Language.French, "Croissant de Cristal").AddTooltip(Language.French, "Lance un bâton de combat revenant après une frappe rapide").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent tant que tenu en main")
+            .AddName(Language.German, "Kristallhalbmond").AddTooltip(Language.German, "Wirft einen zurückkehrenden Kampfstab nach einem schnellen Schwung").AddSkillStrike(Language.German, "ähigkeitsschläge werden aktiviert, solange die Waffe in der Hand gehalten wird")
+            .AddName(Language.Italian, "Crescente di Cristallo").AddTooltip(Language.Italian, "Lancia un bastone da combattimento che ritorna dopo un colpo rapido").AddSkillStrike(Language.Italian, "I Colpi dell'Abilità si attivano mentre è in mano")
+            //.AddName(Language.Polish, "Kryształowy Półksiężyc").AddTooltip(Language.Polish, "Wyrzuca powracający kostur bojowy po szybkim zamachu").AddSkillStrike(Language.Polish, "Ciosy Umiejętności występują, gdy broń jest w dłoni")
+            //.AddName(Language.PortugueseBrazil, "Meia-Lua de Cristal").AddTooltip(Language.PortugueseBrazil, "Arremessa um bastão de combate que retorna após um golpe rápido").AddSkillStrike(Language.PortugueseBrazil, "Os Golpes de Habilidade ocorrem enquanto estiver em mão")
+            .AddName(Language.Russian, "Кристальный Полумесяц").AddTooltip(Language.Russian, "Бросает возвращающийся боевой посох после быстрого взмаха").AddSkillStrike(Language.Russian, "Навык Удара активируется, пока оружие в руке");
+            //.AddName(Language.ChineseTraditional, "水晶新月").AddTooltip(Language.ChineseTraditional, "快速揮動後投擲一根回旋的長棍").AddSkillStrike(Language.ChineseTraditional, "技能打擊發生在持有時")
+            //.AddName(Language.ChineseSimplified, "水晶新月").AddTooltip(Language.ChineseSimplified, "快速挥动后投掷一根回旋的长棍").AddSkillStrike(Language.ChineseSimplified, "技能打击发生在持有时");
+        }
 
         public override void SetDefaults()
         {
@@ -40,15 +59,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
             Item.shootSpeed = 1f;
             Item.shoot = ModContent.ProjectileType<CrystalCrescentSwingProj>();
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Skill Strikes while in hand [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool CanUseItem(Player player)

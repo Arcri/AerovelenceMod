@@ -1,4 +1,5 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
@@ -21,14 +22,28 @@ using static Terraria.NPC;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 {
-	public class TitaniumRocketLauncher : ModItem
+	public class TitaniumRocketLauncher : TranslatableModItem
 	{
 		public override void SetStaticDefaults()
 		{
             ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<AdamantitePulsar>();
+			this.ModifyLocalization("TitaniumRocketLauncher", "Does not require ammo\nRight-Click to shoot a large rocket that follows the mouse")
+			.AddName(Language.Default, "Titanium Rocket Launcher")
+			.AddTooltip(Language.Default, "Does not require ammo\nRight-Click to shoot a large rocket that follows the mouse")
+			.AddSkillStrike(Language.Default, "Big Rocket Skill Strikes after a second")
+
+			.AddName(Language.Spanish, "Lanzacohetes de Titanio").AddTooltip(Language.Spanish, "No requiere munición\nHaz clic derecho para disparar un gran cohete que sigue el ratón").AddSkillStrike(Language.Spanish, "El Gran Cohete realiza Golpes de Habilidad después de un segundo")
+			.AddName(Language.French, "Lance-Roquettes en Titane").AddTooltip(Language.French, "Ne nécessite pas de munitions\nClic droit pour tirer une grosse roquette qui suit la souris").AddSkillStrike(Language.French, "La Grosse Roquette déclenche un Coup de Compétence après une seconde")
+			.AddName(Language.German, "Titan-Raketenwerfer").AddTooltip(Language.German, "Benötigt keine Munition\nRechtsklick, um eine große Rakete abzufeuern, die der Maus folgt").AddSkillStrike(Language.German, "Die Große Rakete führt einen Fähigkeitsschlag nach einer Sekunde aus")
+			.AddName(Language.Italian, "Lanciarazzi in Titanio").AddTooltip(Language.Italian, "Non richiede munizioni\nTasto destro per sparare un grande razzo che segue il cursore").AddSkillStrike(Language.Italian, "Il Grande Razzo esegue un Colpo dell'Abilità dopo un secondo")
+			//.AddName(Language.Polish, "Tytanowa Wyrzutnia Rakiet").AddTooltip(Language.Polish, "Nie wymaga amunicji\nPrawy przycisk, aby wystrzelić dużą rakietę podążającą za myszką").AddSkillStrike(Language.Polish, "Duża Rakieta wykonuje Cios Umiejętności po sekundzie")
+			//.AddName(Language.PortugueseBrazil, "Lança-Foguetes de Titânio").AddTooltip(Language.PortugueseBrazil, "Não requer munição\nBotão direito para disparar um grande foguete que segue o mouse").AddSkillStrike(Language.PortugueseBrazil, "O Grande Foguete realiza um Golpe de Habilidade após um segundo")
+			.AddName(Language.Russian, "Титановый Ракетница").AddTooltip(Language.Russian, "Не требует боеприпасов\nПКМ, чтобы выстрелить большой ракетой, следящей за курсором").AddSkillStrike(Language.Russian, "Большая Ракета активирует Навык Удара через секунду");
+            //.AddName(Language.ChineseTraditional, "鈦火箭發射器").AddTooltip(Language.ChineseTraditional, "不需要彈藥\n右鍵發射一枚跟隨滑鼠的大型火箭").AddSkillStrike(Language.ChineseTraditional, "大火箭在一秒後觸發技能打擊")
+            //.AddName(Language.ChineseSimplified, "钛火箭发射器").AddTooltip(Language.ChineseSimplified, "不需要弹药\n右键发射一枚跟随鼠标的大型火箭").AddSkillStrike(Language.ChineseSimplified, "大火箭在一秒后触发技能打击");
         }
 
-		public override void SetDefaults()
+        public override void SetDefaults()
 		{
 			Item.damage = 60;
 			Item.knockBack = KnockbackTiers.Strong;
@@ -105,14 +120,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				Item.useAnimation = 25; //26
 			}
 			
-		}
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
-		{
-			TooltipLine line = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar  + "] Big Rocket Skill Strikes after a second [i:" + ItemID.FallenStar + "]")
-			{
-				OverrideColor = Color.Gold,
-			};
-			tooltips.Add(line);
 		}
 
         public override void AddRecipes()
