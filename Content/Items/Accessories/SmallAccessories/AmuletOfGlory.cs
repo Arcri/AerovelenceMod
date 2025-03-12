@@ -20,11 +20,11 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
             .AddName(Language.French, "Amulette de Gloire").AddTooltip(Language.French, "Frapper des ennemis augmente votre vitesse de déplacement et d’extraction\nLes ennemis proches des coffres émettront de la lumière")
             .AddName(Language.German, "Amulett des Ruhms").AddTooltip(Language.German, "Das Treffen von Gegnern erhöht deine Bewegungs- und Bergbaugeschwindigkeit\nFeinde in der Nähe von Truhen leuchten")
             .AddName(Language.Italian, "Amuleto della Gloria").AddTooltip(Language.Italian, "Colpire i nemici aumenta la velocità di movimento e di estrazione\nI nemici vicino ai bauli emetteranno luce")
-            .AddName(Language.Polish, "Amulet Chwały").AddTooltip(Language.Polish, "Trafienie wroga zwiększa twoją prędkość ruchu i wydobycia\nWrogowie w pobliżu skrzyń emitują światło")
-            .AddName(Language.PortugueseBrazil, "Amuleto da Glória").AddTooltip(Language.PortugueseBrazil, "Acertar inimigos aumenta sua velocidade de movimento e mineração\nInimigos próximos a baús emitirão luz")
-            .AddName(Language.Russian, "Амулет Славы").AddTooltip(Language.Russian, "Попадание по врагам увеличивает вашу скорость передвижения и добычи\nВраги рядом с сундуками будут излучать свет")
-            .AddName(Language.ChineseTraditional, "榮耀護身符").AddTooltip(Language.ChineseTraditional, "擊中敵人會提高你的移動速度和挖掘速度\n靠近寶箱的敵人會發出光芒")
-            .AddName(Language.ChineseSimplified, "荣耀护身符").AddTooltip(Language.ChineseSimplified, "击中敌人会提高你的移动速度和挖掘速度\n靠近宝箱的敌人会发光");
+            //.AddName(Language.Polish, "Amulet Chwały").AddTooltip(Language.Polish, "Trafienie wroga zwiększa twoją prędkość ruchu i wydobycia\nWrogowie w pobliżu skrzyń emitują światło")
+            //.AddName(Language.PortugueseBrazil, "Amuleto da Glória").AddTooltip(Language.PortugueseBrazil, "Acertar inimigos aumenta sua velocidade de movimento e mineração\nInimigos próximos a baús emitirão luz")
+            .AddName(Language.Russian, "Амулет Славы").AddTooltip(Language.Russian, "Попадание по врагам увеличивает вашу скорость передвижения и добычи\nВраги рядом с сундуками будут излучать свет");
+            //.AddName(Language.ChineseTraditional, "榮耀護身符").AddTooltip(Language.ChineseTraditional, "擊中敵人會提高你的移動速度和挖掘速度\n靠近寶箱的敵人會發出光芒")
+            //.AddName(Language.ChineseSimplified, "荣耀护身符").AddTooltip(Language.ChineseSimplified, "击中敌人会提高你的移动速度和挖掘速度\n靠近宝箱的敌人会发光");
         }
 
         public override void SetDefaults()

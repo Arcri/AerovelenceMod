@@ -13,25 +13,25 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Tools.Drills
 {
-    public class VortexDrill : GlobalItem
+    public class ChlorophyteDrill : GlobalItem
     {
         public override void SetDefaults(Item item)
         {
-            if (item.type == ItemID.VortexDrill)
+            if (item.type == ItemID.ChlorophyteDrill)
             {
-                item.damage = 50;
-                item.knockBack = 0.5f;
+                item.damage = 35;
+                item.knockBack = 1f;
                 item.width = item.height = 26;
-                item.pick = 225;
+                item.pick = 200;
                 item.useAnimation = 15;
-                item.useTime = 2;
-                item.shootSpeed = 32f;
+                item.useTime = 4;
+                item.shootSpeed = 40f;
 
-                item.rare = ItemRarities.PillarsAndML;
-                item.value = Item.sellPrice(0, 7, 0, 0);
+                item.rare = ItemRarities.PlanteraGolemTier;
+                item.value = Item.sellPrice(0, 4, 32, 0);
                 item.useStyle = ItemUseStyleID.Shoot;
                 item.DamageType = DamageClass.Melee;
-                item.shoot = ModContent.ProjectileType<VortexDrillProj>();
+                item.shoot = ModContent.ProjectileType<ChlorophyteDrillProj>();
 
                 item.channel = true;
                 item.noUseGraphic = true;
@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
         public override bool CanUseItem(Item item, Player player)
         {
-            if (item.type == ItemID.VortexDrill)
+            if (item.type == ItemID.ChlorophyteDrill)
             {
-                return player.ownedProjectileCounts[ModContent.ProjectileType<VortexDrillProj>()] == 0;
+                return player.ownedProjectileCounts[ModContent.ProjectileType<ChlorophyteDrillProj>()] == 0;
             }
             return base.CanUseItem(item, player);
         }
@@ -58,9 +58,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
     }
 
-    public class VortexDrillProj : ModProjectile
+    public class ChlorophyteDrillProj : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VortexDrillProj";
+        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VanillaDrills/ChlorophyteDrillProj";
         private Texture2D _colorGlowTexture;
         private Texture2D _pulseGlowTexture;
         private Texture2D _drillTexture;
@@ -90,9 +90,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         public override void SetDefaults()
         {
-            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VortexDrillProjGlow").Value;
-            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VortexDrillDrillOrange").Value;
-            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VortexDrillDrill").Value;
+            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/ChlorophyteDrillProjGlow").Value;
+            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/ChlorophyteDrillDrillOrange").Value;
+            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/ChlorophyteDrillDrill").Value;
 
             Projectile.width = 42;
             Projectile.height = 42;
@@ -201,7 +201,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
                 Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(1.2f, 1.2f);
 
-                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Aqua, Main.rand.NextFloat(0.2f, 0.4f));
+                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Lime, Main.rand.NextFloat(0.2f, 0.4f));
                 gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                     rotPower: 0.2f,
                     timeBeforeSlow: 5,

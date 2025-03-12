@@ -60,7 +60,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
     public class AdamantiteDrillProj : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/AdamantiteDrillProj";
+        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VanillaDrills/AdamantiteDrillProj";
         private Texture2D _colorGlowTexture;
         private Texture2D _pulseGlowTexture;
         private Texture2D _drillTexture;
@@ -90,9 +90,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         public override void SetDefaults()
         {
-            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/AdamantiteDrillProjGlow").Value;
-            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/AdamantiteDrillDrillOrange").Value;
-            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/AdamantiteDrillDrill").Value;
+            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/AdamantiteDrillProjGlow").Value;
+            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/AdamantiteDrillDrillOrange").Value;
+            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/AdamantiteDrillDrill").Value;
 
             Projectile.width = 42;
             Projectile.height = 42;

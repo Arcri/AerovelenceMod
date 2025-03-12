@@ -13,25 +13,25 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Tools.Drills
 {
-    public class TitaniumDrill : GlobalItem
+    public class Drax : GlobalItem
     {
         public override void SetDefaults(Item item)
         {
-            if (item.type == ItemID.TitaniumDrill)
+            if (item.type == ItemID.Drax)
             {
-                item.damage = 27;
-                item.knockBack = 0.5f;
+                item.damage = 35;
+                item.knockBack = 4.75f;
                 item.width = item.height = 26;
-                item.pick = 190;
+                item.pick = 200;
                 item.useAnimation = 15;
                 item.useTime = 4;
                 item.shootSpeed = 32f;
 
                 item.rare = ItemRarities.EarlyHardmode;
-                item.value = Item.sellPrice(0, 2, 52, 0);
+                item.value = Item.sellPrice(0, 4, 40, 0);
                 item.useStyle = ItemUseStyleID.Shoot;
                 item.DamageType = DamageClass.Melee;
-                item.shoot = ModContent.ProjectileType<TitaniumDrillProj>();
+                item.shoot = ModContent.ProjectileType<DraxProj>();
 
                 item.channel = true;
                 item.noUseGraphic = true;
@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
         public override bool CanUseItem(Item item, Player player)
         {
-            if (item.type == ItemID.TitaniumDrill)
+            if (item.type == ItemID.Drax)
             {
-                return player.ownedProjectileCounts[ModContent.ProjectileType<TitaniumDrillProj>()] == 0;
+                return player.ownedProjectileCounts[ModContent.ProjectileType<DraxProj>()] == 0;
             }
             return base.CanUseItem(item, player);
         }
@@ -58,9 +58,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
     }
 
-    public class TitaniumDrillProj : ModProjectile
+    public class DraxProj : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/TitaniumDrillProj";
+        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VanillaDrills/DraxProj";
         private Texture2D _colorGlowTexture;
         private Texture2D _pulseGlowTexture;
         private Texture2D _drillTexture;
@@ -90,9 +90,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         public override void SetDefaults()
         {
-            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/TitaniumDrillProjGlow").Value;
-            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/TitaniumDrillDrillOrange").Value;
-            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/TitaniumDrillDrill").Value;
+            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/DraxProjGlow").Value;
+            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/DraxDrillOrange").Value;
+            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/DraxDrill").Value;
 
             Projectile.width = 42;
             Projectile.height = 42;
@@ -200,8 +200,10 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
                 Vector2 tipPosition = Projectile.Center + direction * 18f;
 
                 Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(1.2f, 1.2f);
+                Color[] colors = { Color.Orange, Color.Blue, Color.Lime };
+                Color randomColor = colors[Main.rand.Next(colors.Length)];
 
-                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Aquamarine, Main.rand.NextFloat(0.2f, 0.4f));
+                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, randomColor, Main.rand.NextFloat(0.2f, 0.4f));
                 gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                     rotPower: 0.2f,
                     timeBeforeSlow: 5,

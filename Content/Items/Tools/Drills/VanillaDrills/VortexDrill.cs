@@ -13,11 +13,11 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Tools.Drills
 {
-    public class NebulaDrill : GlobalItem
+    public class VortexDrill : GlobalItem
     {
         public override void SetDefaults(Item item)
         {
-            if (item.type == ItemID.NebulaDrill)
+            if (item.type == ItemID.VortexDrill)
             {
                 item.damage = 50;
                 item.knockBack = 0.5f;
@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
                 item.value = Item.sellPrice(0, 7, 0, 0);
                 item.useStyle = ItemUseStyleID.Shoot;
                 item.DamageType = DamageClass.Melee;
-                item.shoot = ModContent.ProjectileType<NebulaDrillProj>();
+                item.shoot = ModContent.ProjectileType<VortexDrillProj>();
 
                 item.channel = true;
                 item.noUseGraphic = true;
@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
         public override bool CanUseItem(Item item, Player player)
         {
-            if (item.type == ItemID.NebulaDrill)
+            if (item.type == ItemID.VortexDrill)
             {
-                return player.ownedProjectileCounts[ModContent.ProjectileType<NebulaDrillProj>()] == 0;
+                return player.ownedProjectileCounts[ModContent.ProjectileType<VortexDrillProj>()] == 0;
             }
             return base.CanUseItem(item, player);
         }
@@ -58,9 +58,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
     }
 
-    public class NebulaDrillProj : ModProjectile
+    public class VortexDrillProj : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/NebulaDrillProj";
+        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VanillaDrills/VortexDrillProj";
         private Texture2D _colorGlowTexture;
         private Texture2D _pulseGlowTexture;
         private Texture2D _drillTexture;
@@ -90,9 +90,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         public override void SetDefaults()
         {
-            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/NebulaDrillProjGlow").Value;
-            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/NebulaDrillDrillOrange").Value;
-            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/NebulaDrillDrill").Value;
+            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/VortexDrillProjGlow").Value;
+            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/VortexDrillDrillOrange").Value;
+            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/VortexDrillDrill").Value;
 
             Projectile.width = 42;
             Projectile.height = 42;
@@ -201,7 +201,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
                 Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(1.2f, 1.2f);
 
-                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Pink, Main.rand.NextFloat(0.2f, 0.4f));
+                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Aqua, Main.rand.NextFloat(0.2f, 0.4f));
                 gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                     rotPower: 0.2f,
                     timeBeforeSlow: 5,

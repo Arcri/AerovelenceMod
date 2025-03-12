@@ -21,11 +21,11 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
             .AddName(Language.French, "Opale de Ca Vea").AddTooltip(Language.French, "Des cristaux lumineux poussent sur votre dos toutes les 5 secondes, jusqu'à 3\nLes ennemis subissent des dégâts si les 3 cristaux sont apparus")
             .AddName(Language.German, "Ca Veas Opal").AddTooltip(Language.German, "Leuchtende Kristalle wachsen alle 5 Sekunden auf deinem Rücken, bis zu 3\nFeinde erleiden Schaden, wenn alle 3 Kristalle erschienen sind")
             .AddName(Language.Italian, "Opale di Ca Vea").AddTooltip(Language.Italian, "Cristalli luminosi crescono sulla tua schiena ogni 5 secondi, fino a 3\nI nemici subiscono danni se tutti e 3 i cristalli sono apparsi")
-            .AddName(Language.Polish, "Opal Ca Vea").AddTooltip(Language.Polish, "Świecące kryształy rosną na twoich plecach co 5 sekund, do 3 sztuk\nWrogowie otrzymują obrażenia, jeśli pojawią się wszystkie 3 kryształy")
-            .AddName(Language.PortugueseBrazil, "Opala de Ca Vea").AddTooltip(Language.PortugueseBrazil, "Cristais brilhantes crescem nas suas costas a cada 5 segundos, até 3\nInimigos sofrem dano se todos os 3 cristais surgirem")
-            .AddName(Language.Russian, "Опал Ка Веа").AddTooltip(Language.Russian, "Светящиеся кристаллы появляются на вашей спине каждые 5 секунд, до 3 штук\nВраги получают урон, если появились все 3 кристалла")
-            .AddName(Language.ChineseTraditional, "卡維亞的蛋白石").AddTooltip(Language.ChineseTraditional, "每 5 秒你的背上會長出發光的水晶，最多 3 個\n如果所有 3 個水晶都已生成，敵人會受到傷害")
-            .AddName(Language.ChineseSimplified, "卡维亚的蛋白石").AddTooltip(Language.ChineseSimplified, "每 5 秒你的背上会长出发光的水晶，最多 3 个\n如果所有 3 个水晶都已生成，敌人会受到伤害");
+            //.AddName(Language.Polish, "Opal Ca Vea").AddTooltip(Language.Polish, "Świecące kryształy rosną na twoich plecach co 5 sekund, do 3 sztuk\nWrogowie otrzymują obrażenia, jeśli pojawią się wszystkie 3 kryształy")
+            //.AddName(Language.PortugueseBrazil, "Opala de Ca Vea").AddTooltip(Language.PortugueseBrazil, "Cristais brilhantes crescem nas suas costas a cada 5 segundos, até 3\nInimigos sofrem dano se todos os 3 cristais surgirem")
+            .AddName(Language.Russian, "Опал Ка Веа").AddTooltip(Language.Russian, "Светящиеся кристаллы появляются на вашей спине каждые 5 секунд, до 3 штук\nВраги получают урон, если появились все 3 кристалла");
+            //.AddName(Language.ChineseTraditional, "卡維亞的蛋白石").AddTooltip(Language.ChineseTraditional, "每 5 秒你的背上會長出發光的水晶，最多 3 個\n如果所有 3 個水晶都已生成，敵人會受到傷害")
+            //.AddName(Language.ChineseSimplified, "卡维亚的蛋白石").AddTooltip(Language.ChineseSimplified, "每 5 秒你的背上会长出发光的水晶，最多 3 个\n如果所有 3 个水晶都已生成，敌人会受到伤害");
         }
 
         public override void SetDefaults()

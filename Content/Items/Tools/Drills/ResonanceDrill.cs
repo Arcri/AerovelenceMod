@@ -27,12 +27,11 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
             .AddName(Language.French, "Perceuse de Résonance").AddTooltip(Language.French, "Mine les minerais connectés, plus vous minez, plus c'est efficace")
             .AddName(Language.German, "Resonanzbohrer").AddTooltip(Language.German, "Gräbt verbundene Erze, je mehr du abbaust, desto effektiver")
             .AddName(Language.Italian, "Trapano a Risonanza").AddTooltip(Language.Italian, "Estrae minerali connessi, più ne estrai, più è efficace")
-            .AddName(Language.Polish, "Wiertło Rezonansowe").AddTooltip(Language.Polish, "Wydobywa połączone rudy, im więcej kopiesz, tym jest skuteczniejsze")
-            .AddName(Language.PortugueseBrazil, "Broca de Ressonância").AddTooltip(Language.PortugueseBrazil, "Minera minérios conectados, quanto mais você minera, mais eficaz")
-            .AddName(Language.Russian, "Резонансный Бур").AddTooltip(Language.Russian, "Добывает связанные руды, чем больше копаешь, тем эффективнее")
-            .AddName(Language.ChineseTraditional, "共振鑽機").AddTooltip(Language.ChineseTraditional, "挖掘相連的礦石，挖得越多效果越好")
-            .AddName(Language.ChineseSimplified, "共振钻机").AddTooltip(Language.ChineseSimplified, "挖掘相连的矿石，挖得越多效果越好");
-
+            //.AddName(Language.Polish, "Wiertło Rezonansowe").AddTooltip(Language.Polish, "Wydobywa połączone rudy, im więcej kopiesz, tym jest skuteczniejsze")
+            //.AddName(Language.PortugueseBrazil, "Broca de Ressonância").AddTooltip(Language.PortugueseBrazil, "Minera minérios conectados, quanto mais você minera, mais eficaz")
+            .AddName(Language.Russian, "Гармонический Бур").AddTooltip(Language.Russian, "Добывает связанные руды, чем больше копаешь, тем эффективнее");
+            //.AddName(Language.ChineseTraditional, "共振鑽機").AddTooltip(Language.ChineseTraditional, "挖掘相連的礦石，挖得越多效果越好")
+            //.AddName(Language.ChineseSimplified, "共振钻机").AddTooltip(Language.ChineseSimplified, "挖掘相连的矿石，挖得越多效果越好");
         }
 
         public override void SetDefaults()

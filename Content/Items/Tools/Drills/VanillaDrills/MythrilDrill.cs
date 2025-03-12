@@ -13,25 +13,25 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.Tools.Drills
 {
-    public class OrichalcumDrill : GlobalItem
+    public class MythrilDrill : GlobalItem
     {
         public override void SetDefaults(Item item)
         {
-            if (item.type == ItemID.OrichalcumDrill)
+            if (item.type == ItemID.MythrilDrill)
             {
-                item.damage = 17;
+                item.damage = 15;
                 item.knockBack = 0.5f;
                 item.width = item.height = 26;
-                item.pick = 165;
+                item.pick = 150;
                 item.useAnimation = 15;
-                item.useTime = 5;
+                item.useTime = 6;
                 item.shootSpeed = 32f;
 
                 item.rare = ItemRarities.EarlyHardmode;
-                item.value = Item.sellPrice(0, 1, 98, 0);
+                item.value = Item.sellPrice(0, 1, 62, 0);
                 item.useStyle = ItemUseStyleID.Shoot;
                 item.DamageType = DamageClass.Melee;
-                item.shoot = ModContent.ProjectileType<OrichalcumDrillProj>();
+                item.shoot = ModContent.ProjectileType<MythrilDrillProj>();
 
                 item.channel = true;
                 item.noUseGraphic = true;
@@ -43,9 +43,9 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
         public override bool CanUseItem(Item item, Player player)
         {
-            if (item.type == ItemID.OrichalcumDrill)
+            if (item.type == ItemID.MythrilDrill)
             {
-                return player.ownedProjectileCounts[ModContent.ProjectileType<OrichalcumDrillProj>()] == 0;
+                return player.ownedProjectileCounts[ModContent.ProjectileType<MythrilDrillProj>()] == 0;
             }
             return base.CanUseItem(item, player);
         }
@@ -58,9 +58,10 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
     }
 
-    public class OrichalcumDrillProj : ModProjectile
+    public class MythrilDrillProj : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/OrichalcumDrillProj";
+        public override string Texture => "AerovelenceMod/Content/Items/Tools/Drills/VanillaDrills/MythrilDrillProj";
+        private Texture2D _blackGlowTexture;
         private Texture2D _colorGlowTexture;
         private Texture2D _pulseGlowTexture;
         private Texture2D _drillTexture;
@@ -90,9 +91,10 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 99999999;
         public override void SetDefaults()
         {
-            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/OrichalcumDrillProjGlow").Value;
-            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/OrichalcumDrillDrillOrange").Value;
-            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/OrichalcumDrillDrill").Value;
+            _blackGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/MythrilDrillProjGlowBlack").Value;
+            _colorGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/MythrilDrillProjGlow").Value;
+            _pulseGlowTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/MythrilDrillDrillOrange").Value;
+            _drillTexture = Mod.Assets.Request<Texture2D>("Content/Items/Tools/Drills/VanillaDrills/MythrilDrillDrill").Value;
 
             Projectile.width = 42;
             Projectile.height = 42;
@@ -201,7 +203,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
 
                 Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(1.2f, 1.2f);
 
-                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Pink, Main.rand.NextFloat(0.2f, 0.4f));
+                Dust gd = Dust.NewDustPerfect(tipPosition, ModContent.DustType<GlowPixelCross>(), dustVel, 0, Color.Green, Main.rand.NextFloat(0.2f, 0.4f));
                 gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
                     rotPower: 0.2f,
                     timeBeforeSlow: 5,
@@ -230,6 +232,7 @@ namespace AerovelenceMod.Content.Items.Tools.Drills
             Main.spriteBatch.Draw(texture, actualPos, null, lightColor, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Draw(_blackGlowTexture, actualPos, null, Color.White, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0);
             Main.spriteBatch.Draw(_drillTexture, actualPos, null, cycleColor * 0.75f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0);
             Main.spriteBatch.Draw(_colorGlowTexture, actualPos, null, cycleColor * 0.75f, direction.ToRotation() + MathHelper.PiOver2, origin, Projectile.scale, spriteEffects, 0);
 

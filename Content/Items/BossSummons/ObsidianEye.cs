@@ -18,11 +18,11 @@ namespace AerovelenceMod.Content.Items.BossSummons
             .AddName(Language.French, "Œil d'Obsidienne").AddTooltip(Language.French, "Non consommable\nInvoque Cyvercry\nUtilisable uniquement la nuit")
             .AddName(Language.German, "Obsidiansauge").AddTooltip(Language.German, "Nicht verbrauchbar\nBeschwört Cyvercry\nNur nachts verwendbar")
             .AddName(Language.Italian, "Occhio d'Ossidiana").AddTooltip(Language.Italian, "Non consumabile\nEvoca Cyvercry\nUtilizzabile solo di notte")
-            .AddName(Language.Polish, "Oko Obsydianu").AddTooltip(Language.Polish, "Nie zużywa się\nPrzywołuje Cyvercry\nMożna używać tylko w nocy")
-            .AddName(Language.PortugueseBrazil, "Olho de Obsidiana").AddTooltip(Language.PortugueseBrazil, "Não consumível\nInvoca Cyvercry\nSomente utilizável à noite")
-            .AddName(Language.Russian, "Обсидиановый Глаз").AddTooltip(Language.Russian, "Не расходуется\nПризывает Cyvercry\nМожно использовать только ночью")
-            .AddName(Language.ChineseTraditional, "黑曜石之眼").AddTooltip(Language.ChineseTraditional, "不可消耗\n召喚 Cyvercry\n僅限夜間使用")
-            .AddName(Language.ChineseSimplified, "黑曜石之眼").AddTooltip(Language.ChineseSimplified, "不可消耗\n召唤 Cyvercry\n仅限夜间使用");
+            //.AddName(Language.Polish, "Oko Obsydianu").AddTooltip(Language.Polish, "Nie zużywa się\nPrzywołuje Cyvercry\nMożna używać tylko w nocy")
+            //.AddName(Language.PortugueseBrazil, "Olho de Obsidiana").AddTooltip(Language.PortugueseBrazil, "Não consumível\nInvoca Cyvercry\nSomente utilizável à noite")
+            .AddName(Language.Russian, "Обсидиановый Глаз").AddTooltip(Language.Russian, "Не расходуется\nПризывает Cyvercry\nМожно использовать только ночью");
+            //.AddName(Language.ChineseTraditional, "黑曜石之眼").AddTooltip(Language.ChineseTraditional, "不可消耗\n召喚 Cyvercry\n僅限夜間使用")
+            //.AddName(Language.ChineseSimplified, "黑曜石之眼").AddTooltip(Language.ChineseSimplified, "不可消耗\n召唤 Cyvercry\n仅限夜间使用");
         }
 
         public override void SetDefaults()
