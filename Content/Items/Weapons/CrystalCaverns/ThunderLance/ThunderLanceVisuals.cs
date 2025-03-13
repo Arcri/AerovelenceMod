@@ -14,7 +14,7 @@ using AerovelenceMod.Content.Projectiles;
 using Terraria.Utilities;
 using System.Net;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
 {
     public class ThunderBall : ModProjectile
     {
@@ -329,7 +329,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
             spearBackGlow();
 
 
-            Texture2D Spear = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceProjectile");
+            Texture2D Spear = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/ThunderLance/ThunderLanceProjectile");
 
             Vector2 origin = new Vector2(Spear.Width * 0.95f, Spear.Height * 0.05f);
 
@@ -341,7 +341,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
 
         public void spearBackGlow()
         {
-            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceBackGlow");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/ThunderLance/ThunderLanceBackGlow");
 
             Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/BoFIrisAlt", AssetRequestMode.ImmediateLoad).Value;
 

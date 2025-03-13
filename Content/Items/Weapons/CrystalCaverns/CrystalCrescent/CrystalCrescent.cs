@@ -16,7 +16,7 @@ using AerovelenceMod.Common.Systems.Language;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CrystalCrescent
 {
     //MOSTLY DONE
     public class CrystalCrescent : TranslatableModItem
@@ -85,7 +85,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
 
         public override string Texture => "Terraria/Images/Projectile_0";
 
-        //public override string Texture => "AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent";
+        //public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CrystalCrescent/CrystalCrescent";
 
         BaseTrailInfo relativeTrail = new BaseTrailInfo();
         BaseTrailInfo counterrelativeTrail = new BaseTrailInfo();
@@ -239,7 +239,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             relativeTrail.TrailDrawing(Main.spriteBatch);
             counterrelativeTrail.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent");
+            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CrystalCrescent/CrystalCrescent");
 
             Vector2 origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
             float rotationOffset = 0;
@@ -364,7 +364,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.CrystalCrescent
             relativeTrail.TrailDrawing(Main.spriteBatch);
             counterrelativeTrail.TrailDrawing(Main.spriteBatch);
 
-            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/CrystalCrescent/CrystalCrescent");
+            Texture2D Blade = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CrystalCrescent/CrystalCrescent");
 
             Vector2 origin = new Vector2(Blade.Width / 2, Blade.Height / 2);
             float rotationOffset = 0;

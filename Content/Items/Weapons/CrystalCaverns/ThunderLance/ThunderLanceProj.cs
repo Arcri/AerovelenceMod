@@ -16,7 +16,7 @@ using ReLogic.Content;
 using Terraria.Map;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
 {
     public class ThunderLanceProj : ModProjectile
     {
@@ -228,8 +228,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
             spearBackGlow();
 
 
-            Texture2D Spear = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceProjectile");
-            Texture2D SpearGlowMask = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Caverns/ThunderLance/ThunderLanceGlowMask");
+            Texture2D Spear = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/ThunderLance/ThunderLanceProjectile");
+            Texture2D SpearGlowMask = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/CrystalCaverns/ThunderLance/ThunderLanceGlowMask");
 
             Vector2 extraOffset = new Vector2(-55, 0).RotatedBy(Projectile.rotation - MathHelper.PiOver2);
 

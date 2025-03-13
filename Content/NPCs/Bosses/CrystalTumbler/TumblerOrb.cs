@@ -2,7 +2,6 @@ using System;
 using AerovelenceMod.Common.Utilities;
 using System.Collections.Generic;
 using AerovelenceMod.Content.Dusts.GlowDusts;
-using AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
@@ -14,6 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.GameContent;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {

@@ -1,6 +1,5 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
-using AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance;
 using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
@@ -15,6 +14,7 @@ using Terraria.ModLoader;
 using static Terraria.NPC;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight
 {

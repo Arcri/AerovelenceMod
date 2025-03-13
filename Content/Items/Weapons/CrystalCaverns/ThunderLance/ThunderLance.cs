@@ -16,7 +16,7 @@ using static Humanizer.In;
 using System.Runtime.InteropServices;
 using Terraria.DataStructures;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns.ThunderLance
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
 {
     public class ThunderLance : ModItem
     {
