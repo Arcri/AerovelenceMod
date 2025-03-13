@@ -36,10 +36,10 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
         }
 
         int timer = 0;
-        float overallScale = 1f;
+        //float overallScale = 1f;
 
-        bool popping = false;
-        float popProgress = 0;
+        //bool popping = false;
+        //float popProgress = 0;
 
         public override void AI()
         {
@@ -131,7 +131,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
 
         int timer = 0;
 
-        bool chase = false;
+        //bool chase = false;
         public override void AI()
         {
             //Trail1 Info Dump
@@ -316,7 +316,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.ThunderLance
 
         int timer = 0;
         float scale = 1;
-        float alpha = 1;
+        //float alpha = 1;
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();

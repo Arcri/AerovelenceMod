@@ -144,11 +144,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         //Infinity symbol
         private List<Vector2> infinityPoints = [];
-        private int maxInfinityPoints = 100;
         private float infinityTime = 0f;
         private float infinitySpeed = 0.15f;
         private float infinityScale = 24f;
-        private int infinityLifetime = 30;
 
         public ref float Angle => ref Projectile.ai[1];
         public Vector2 direction = Vector2.Zero;

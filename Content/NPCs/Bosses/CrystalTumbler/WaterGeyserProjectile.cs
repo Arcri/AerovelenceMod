@@ -33,15 +33,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.extraUpdates = 1;
         }
 
-        private float direction = 0f;
-        private float curvePower = 1f;
         private int timer = 0;
         private float waveFrequency = 0.05f;
         private float waveAmplitude = 2f;
         private float fadeOutTimer = 60f;
 
-        BaseTrailInfo trail1 = new BaseTrailInfo();
-        BaseTrailInfo trail2 = new BaseTrailInfo();
+        BaseTrailInfo trail1 = new();
+        BaseTrailInfo trail2 = new();
 
         public override void AI()
         {

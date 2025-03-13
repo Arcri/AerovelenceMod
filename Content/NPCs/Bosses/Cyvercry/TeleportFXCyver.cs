@@ -57,9 +57,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 			return false;
         }
 
-		float mainAlpha = 1f;
+		//float mainAlpha = 1f;
 
-		float starAlpha = 1f;
+		//float starAlpha = 1f;
 		public List<StarParticle> stars = new List<StarParticle>();
 		bool spawnedStars = false;
 		public override void AI()
@@ -91,7 +91,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 				if (!reverse)
 				{
-                    bool anyStarsActive = false;
+                    //bool anyStarsActive = false;
                     foreach (StarParticle star in stars)
                     {
                         star.Update();
@@ -207,7 +207,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
 		public void Update()
 		{
-			float size = 1f;
+			//float size = 1f;
 
 			if (timer > 20)
 				alpha = MathHelper.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.03f), 0f, 1f);

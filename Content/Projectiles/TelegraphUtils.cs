@@ -188,42 +188,23 @@ namespace AerovelenceMod.Content.Projectiles
         /// <summary>
         /// Stores data related to a telegraph line.
         /// </summary>
-        private class TelegraphData
+        private class TelegraphData(Func<Vector2> getStartPosition, float length, Vector2 direction, float fadeStrength, float rotationEasing, bool focus, bool aimAtTarget, Func<Vector2>? getTargetPosition, Color color, bool extraGlowFX, bool isStatic, float lifetime)
         {
-            public Vector2 Start;
-            public float Length;
-            public Vector2 Direction;
-            public float FadeStrength;
-            public float RotationOffset;
-            public bool Focus;
-            public Func<Vector2>? GetTargetPosition { get; private set; }
-            public bool AimAtTarget { get; private set; }
-            public Color Color;
-            public bool ExtraGlowFX;
-            public float Lifetime;
-            public float MaxLifetime;
-            public float FadeOut;
-            public bool IsStatic;
-            public Func<Vector2> GetStartPosition;
-
-            public TelegraphData(Func<Vector2> getStartPosition, float length, Vector2 direction, float fadeStrength, float rotationEasing, bool focus, bool aimAtTarget, Func<Vector2>? getTargetPosition, Color color, bool extraGlowFX, bool isStatic, float lifetime)
-            {
-                GetStartPosition = getStartPosition;
-                Start = getStartPosition();
-                Length = length;
-                Direction = direction;
-                FadeStrength = fadeStrength;
-                RotationOffset = MathHelper.ToRadians(Main.rand.NextFloat(-rotationEasing, rotationEasing));
-                Focus = focus;
-                AimAtTarget = aimAtTarget;
-                GetTargetPosition = getTargetPosition;
-                Color = color;
-                ExtraGlowFX = extraGlowFX;
-                Lifetime = lifetime;
-                MaxLifetime = lifetime;
-                FadeOut = fadeStrength;
-                IsStatic = isStatic;
-            }
+            public Vector2 Start = getStartPosition();
+            public float Length = length;
+            public Vector2 Direction = direction;
+            public float FadeStrength = fadeStrength;
+            public float RotationOffset = MathHelper.ToRadians(Main.rand.NextFloat(-rotationEasing, rotationEasing));
+            public bool Focus = focus;
+            public Func<Vector2>? GetTargetPosition { get; private set; } = getTargetPosition;
+            public bool AimAtTarget { get; private set; } = aimAtTarget;
+            public Color Color = color;
+            public bool ExtraGlowFX = extraGlowFX;
+            public float Lifetime = lifetime;
+            public float MaxLifetime = lifetime;
+            public float FadeOut = fadeStrength;
+            public bool IsStatic = isStatic;
+            public Func<Vector2> GetStartPosition = getStartPosition;
         }
     }
 }
