@@ -1,5 +1,6 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Projectiles.Other;
 using Humanizer;
@@ -423,6 +424,27 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                 if (verletAttack[i] == 0)
                 {
+                    if (triggerVFX[i] == 1) //trigger vfx
+                    {
+                        triggerVFX[i] = 0;
+                        NPC npc = rememberSticked[i];
+                        float calcDist = 1f;
+                        Vector2 direct = (npc.Center - (verletEndPos[i] + Main.screenPosition)).SafeNormalize(Vector2.Zero);
+                        for (int loop = 0; loop < 5000; loop++)
+                        {
+                            Vector2 stepCalcPos = (verletEndPos[i] + Main.screenPosition) + direct * calcDist;
+                            if (Vector2.Distance(stepCalcPos, npc.Center) < 1)
+                            {
+                                break;
+                            }
+                            calcDist += 1f;
+                            if (loop % 20 == 0)
+                            {
+                                Dust.NewDust(stepCalcPos, 1, 1, ModContent.DustType<StringSnap>(), SpeedY: Main.rand.NextFloat(-5f, 5f), SpeedX: Main.rand.NextFloat(-2.5f, 2.5f));
+                            }
+                        }
+                    }
+
                     if (verletStretch[i] > 0)
                     {
                         DrawVerlet(verletPos, verletEndPos[i], Color.White, i, (float)verletStretch[i] / 500, p: Main.player[Projectile.owner]);
@@ -435,7 +457,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 else if (verletAttack[i] == 1)
                 {
                     float dist = Vector2.Distance(Main.MouseWorld, verletStickedTo[i].Center);
-
+                    triggerVFX[i] = 1;
                     Vector2 stickLoc = new Vector2(verletStickedTo[i].Center.X, verletStickedTo[i].Center.Y);
                     if (!verletStickedTo[i].boss)
                     {
@@ -464,6 +486,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             plr.lerp.Clear();
             for (int i = 0; i < 4; i++)
             {
+                ResetValues(i);
                 plr.pointCollection[i] = new List<Vector2>();
             }
         }
@@ -471,7 +494,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
         Vector2[] verletEndPos = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         Vector2[] verletSpeed = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         Vector2[] verletBossGrabRand = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
+        NPC[] rememberSticked = { null, null, null, null };
         NPC[] verletStickedTo = { null, null, null, null };
+        int[] triggerVFX = { 0, 0, 0, 0 };
         int[] verletAttack = { 0, 0, 0, 0 };
         int[] verletHitCD = { 0, 0, 0, 0 };
         int[] verletChoke = { 0, 0, 0, 0 };
@@ -645,6 +670,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             verletTargetLerp[i] = 0f;
             verletChoke[i] = 0;
             verletAttack[i] = 0;
+            rememberSticked[i] = verletStickedTo[i];
             verletStickedTo[i] = null;
             //adding line breaking vfx
         }
