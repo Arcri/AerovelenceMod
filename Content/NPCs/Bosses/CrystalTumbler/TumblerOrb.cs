@@ -124,7 +124,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 {
                     float offsetX = Main.rand.NextFloat(-0.5f, 0.5f);
                     Vector2 dustPosition = new Vector2(-Projectile.width * 0.2f * Projectile.scale, 0f).RotatedBy(offsetX * MathHelper.TwoPi).RotatedBy(Projectile.velocity.ToRotation());
-                    int dustIndex = Dust.NewDust(Projectile.Center - Vector2.One * 5f, 10, 10, 226, -Projectile.velocity.X / 3f, -Projectile.velocity.Y / 3f, 150, Color.Transparent, 0.7f);
+                    int dustIndex = Dust.NewDust(Projectile.Center - Vector2.One * 5f, 10, 10, DustID.Electric, -Projectile.velocity.X / 3f, -Projectile.velocity.Y / 3f, 150, Color.Transparent, 0.7f);
                     Main.dust[dustIndex].position = Projectile.Center + dustPosition;
                     Main.dust[dustIndex].velocity = Vector2.Normalize(Main.dust[dustIndex].position - Projectile.Center) * 2f;
                     Main.dust[dustIndex].noGravity = true;
@@ -134,7 +134,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 {
                     float offsetY = Main.rand.NextFloat(-0.5f, 0.5f);
                     Vector2 dustPosition = new Vector2(-Projectile.width * 6f * Projectile.scale, 0f).RotatedBy(offsetY * MathHelper.TwoPi).RotatedBy(Projectile.velocity.ToRotation());
-                    int dustIndex = Dust.NewDust(Projectile.Center - Vector2.One * 5f, 10, 10, 226, -Projectile.velocity.X / 3f, -Projectile.velocity.Y / 3f, 150, Color.Transparent, 0.7f);
+                    int dustIndex = Dust.NewDust(Projectile.Center - Vector2.One * 5f, 10, 10, DustID.Electric, -Projectile.velocity.X / 3f, -Projectile.velocity.Y / 3f, 150, Color.Transparent, 0.7f);
                     Main.dust[dustIndex].velocity = Vector2.Zero;
                     Main.dust[dustIndex].position = Projectile.Center + dustPosition;
                     Main.dust[dustIndex].noGravity = true;
@@ -345,7 +345,6 @@ parentDied = true;
         private float alpha = 1f;
         private float glowScale = 0f;
         private float initialScaleFactor = 0.10f;
-        private bool parentDied = false;
 
         public override void AI()
         {
@@ -448,7 +447,6 @@ parentDied = true;
         public Vector2 endPoint;
         public float LaserRotation = 0;
         private Vector2 initialPosition;
-        private bool zapBoss = true;
         private NPC crystalTumbler;
 
         private bool isFadingOut = false;
@@ -457,8 +455,6 @@ parentDied = true;
 
         Vector2 storedCenter = Vector2.Zero;
         int timer = 0;
-
-        float distFromPlayer = 0;
 
         Vector2 storedMousePos = Vector2.Zero;
         public float baseDamage = 0f;
