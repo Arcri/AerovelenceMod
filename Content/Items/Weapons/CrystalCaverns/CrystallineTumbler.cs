@@ -8,12 +8,10 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 {
     public class CrystallineTumbler : ModNPC
     {
-        private int frameVariant;
-        private bool initializedFrames = false;
 
         public override void SetStaticDefaults()
         {
@@ -52,12 +50,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Caverns
                     Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.GemSapphire, NPC.velocity.X, NPC.velocity.Y, 0, Color.White);
             }
         }
-        public float timer = 0f;    
+        public float timer = 0f;
         public override void AI()
         {
             NPC.rotation += NPC.velocity.X * 0.05f;
             if (timer == 420)
-                NPC.life = 0;
+            { 
+                for (float m = 0f; m < 5f; m += 0.7f)
+                {
+                    Dust.NewDust(NPC.position, NPC.width, NPC.height, 68, Main.rand.NextFloat(-0.25f, 0.25f), Main.rand.NextFloat(-0.25f, 0.25f));
+                }
+             NPC.life = 0;
+            }
             timer++;
         }
     }

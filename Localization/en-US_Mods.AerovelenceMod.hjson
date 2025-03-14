@@ -396,6 +396,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	Crystalline: {
+		DisplayName: Crystalline
+		Tooltip: ""
+	}
+
 	GlimmerwoodBathtubItem: {
 		DisplayName: Glimmerwood Bathtub
 		Tooltip: ""
@@ -1063,6 +1068,16 @@ Items: {
 		DisplayName: Bishops Staff
 		Tooltip: ""
 	}
+
+	GoldHalberd: {
+		DisplayName: Gold Halberd
+		Tooltip: ""
+	}
+
+	PlatinumHalberd: {
+		DisplayName: Platinum Halberd
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1111,6 +1126,7 @@ NPCs: {
 	ElectricTetra.DisplayName: Electric Tetra
 	Lumurker.DisplayName: Lumurker
 	Bomber.DisplayName: Bomber
+	CrystallineTumbler.DisplayName: Crystalline Tumbler
 }
 
 Projectiles: {
@@ -1520,6 +1536,11 @@ Projectiles: {
 	HugeJesusStar.DisplayName: Huge Jesus Star
 	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
 	BishopsStaffStar.DisplayName: Bishops Staff Star
+	CrystallineProjectile.DisplayName: Crystalline Projectile
+	GoldHalberdStabProjectile.DisplayName: Gold Halberd Stab Projectile
+	GoldHalberdSwingProjectile.DisplayName: Gold Halberd Swing Projectile
+	PlatinumHalberdStabProjectile.DisplayName: Platinum Halberd Stab Projectile
+	PlatinumHalberdSwingProjectile.DisplayName: Platinum Halberd Swing Projectile
 }
 
 Configs: {

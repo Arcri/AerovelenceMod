@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using AerovelenceMod.Common.Utilities;
-using AerovelenceMod.Content.Items.Weapons.Caverns;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns;
 using Microsoft.CodeAnalysis;
 using Mono.Cecil;
 using Terraria;
@@ -12,7 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace AerovelenceMod.Content.Items.Weapons.Caverns
+namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 {
     public class Crystalline : ModItem
     {
