@@ -1058,6 +1058,11 @@ Items: {
 		DisplayName: Slate Roller Banner
 		Tooltip: ""
 	}
+
+	BishopsStaff: {
+		DisplayName: Bishops Staff
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1509,6 +1514,12 @@ Projectiles: {
 	InfinityBullet.DisplayName: Infinity Bullet
 	InfinityHeldProj.DisplayName: Infinity Held Proj
 	TheInfinityHeldProj.DisplayName: The Infinity Held Proj
+	BishopsStaffProj.DisplayName: Bishops Staff Proj
+	JesusStar.DisplayName: Jesus Star
+	JesusStarLaser.DisplayName: Jesus Star Laser
+	HugeJesusStar.DisplayName: Huge Jesus Star
+	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
+	BishopsStaffStar.DisplayName: Bishops Staff Star
 }
 
 Configs: {
