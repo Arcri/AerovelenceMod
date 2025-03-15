@@ -1063,6 +1063,11 @@ Items: {
 		DisplayName: Bishops Staff
 		Tooltip: ""
 	}
+
+	Marionette: {
+		DisplayName: Marionette
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1520,6 +1525,7 @@ Projectiles: {
 	HugeJesusStar.DisplayName: Huge Jesus Star
 	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
 	BishopsStaffStar.DisplayName: Bishops Staff Star
+	MarionetteProj.DisplayName: Marionette Proj
 }
 
 Configs: {
