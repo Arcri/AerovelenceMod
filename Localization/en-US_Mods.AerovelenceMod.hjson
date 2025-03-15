@@ -1066,6 +1066,9 @@ Items: {
 
 	Marionette: {
 		DisplayName: Marionette
+		Tooltip: ""
+	}
+
 	GaussShotgun: {
 		DisplayName: Gauss Shotgun
 		Tooltip: ""
@@ -1528,6 +1531,9 @@ Projectiles: {
 	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
 	BishopsStaffStar.DisplayName: Bishops Staff Star
 	MarionetteProj.DisplayName: Marionette Proj
+	GaussExplosionVFX.DisplayName: Gauss Explosion V F X
+	GaussShotgunRecoil.DisplayName: Gauss Shotgun Recoil
+	BasicRecoilProj.DisplayName: Basic Recoil Proj
 }
 
 Configs: {
