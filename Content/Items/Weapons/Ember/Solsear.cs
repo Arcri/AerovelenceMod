@@ -122,13 +122,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Ember
 
                 for (int i = 0; i < 2; i++)
                 {
-                    int b = Projectile.NewProjectile(null, position, velocity * 0.65f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    Main.projectile[b].rotation = velocity.ToRotation();
-                    if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
-                    {
-                        pulseb.color = new Color(255, 60, 5);
-                        pulseb.size = 0.3f;
-                    }
+                    //int b = Projectile.NewProjectile(null, position, velocity * 0.65f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    //Main.projectile[b].rotation = velocity.ToRotation();
+                    //if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
+                    //{
+                    //    pulseb.color = new Color(255, 60, 5);
+                    //    pulseb.size = 0.3f;
+                    //}
                 }
 
                 return false;

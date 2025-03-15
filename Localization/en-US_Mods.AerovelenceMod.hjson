@@ -1063,6 +1063,11 @@ Items: {
 		DisplayName: Bishops Staff
 		Tooltip: ""
 	}
+
+	GaussShotgun: {
+		DisplayName: Gauss Shotgun
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -1520,6 +1525,9 @@ Projectiles: {
 	HugeJesusStar.DisplayName: Huge Jesus Star
 	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
 	BishopsStaffStar.DisplayName: Bishops Staff Star
+	GaussExplosionVFX.DisplayName: Gauss Explosion V F X
+	BasicRecoilProj.DisplayName: Basic Recoil Proj
+	GaussShotgunRecoil.DisplayName: Gauss Shotgun Recoil
 }
 
 Configs: {

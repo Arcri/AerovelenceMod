@@ -219,13 +219,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Melee.HandBlades
                     player.velocity = (mousePos - player.Center).SafeNormalize(Vector2.UnitX) * 10; //12
 
 
-                    int b = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -0.5f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    Main.projectile[b].rotation = velocity.ToRotation();
-                    if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
-                    {
-                        pulseb.color = Color.White;
-                        pulseb.size = 0.25f;
-                    }
+                    //int b = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -0.5f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    //Main.projectile[b].rotation = velocity.ToRotation();
+                    //if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
+                    //{
+                    //    pulseb.color = Color.White;
+                    //    pulseb.size = 0.25f;
+                    //}
 
                     int afg = Projectile.NewProjectile(null, player.Center, player.velocity.SafeNormalize(Vector2.UnitX) * -1f, ModContent.ProjectileType<DistortProj>(), 0, 0);
                     Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
