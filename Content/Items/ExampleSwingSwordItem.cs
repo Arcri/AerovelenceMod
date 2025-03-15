@@ -70,7 +70,7 @@ namespace AerovelenceMod.Content.Items
             Projectile.localNPCHitCooldown = -1;
             Projectile.scale = 1f;
             Projectile.ownerHitCheck = true;
-            Projectile.extraUpdates = 7;
+            Projectile.extraUpdates = 0; //7
         }
 
         bool playedSound = false;
@@ -84,22 +84,22 @@ namespace AerovelenceMod.Content.Items
                 Projectile.spriteDirection = Main.MouseWorld.X > Main.player[Projectile.owner].MountedCenter.X ? 1 : -1;
             }
 
-            /* funny spin :)
             SwingHalfAngle = 400;
             easingAdditionAmount = 0.01f;
             offset = 60;
             frameToStartSwing = 2;
             timeAfterEnd = 5;
             startingProgress = 0.1f;
-            */
 
+            /*
             SwingHalfAngle = 190; // 190
             easingAdditionAmount = 0.025f / Projectile.extraUpdates; //0.02f // 0.025f
             offset = 50;
             frameToStartSwing = 3;
             timeAfterEnd = 6;
             startingProgress = 0.02f;
-            
+            */
+
             StandardSwingUpdate();
             StandardHeldProjCode();
 

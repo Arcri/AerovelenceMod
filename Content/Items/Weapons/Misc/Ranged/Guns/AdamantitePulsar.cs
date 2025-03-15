@@ -117,13 +117,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             else if (mode == 1)
             {
 
-                int b = Projectile.NewProjectile(null, position + velocity * (20), velocity * 2.25f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                Main.projectile[b].rotation = velocity.ToRotation();
-                if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
-                {
-                    pulseb.color = new Color(255, 10, 10);
-                    pulseb.size = 0.3f;
-                }
+                //int b = Projectile.NewProjectile(null, position + velocity * (20), velocity * 2.25f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                //Main.projectile[b].rotation = velocity.ToRotation();
+                //if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
+                //{
+                //    pulseb.color = new Color(255, 10, 10);
+                //    pulseb.size = 0.3f;
+                //}
 
 
                 for (int i = 0; i < 5; i++)
@@ -444,21 +444,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     float vel1 = reticleProgress == 1 ? 2.3f : 2.25f;
                     float vel2 = reticleProgress == 1 ? 2.8f : 2.75f;
 
-                    int pulse1 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel1, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    Main.projectile[pulse1].rotation = adjustedVel.ToRotation();
-                    if (Main.projectile[pulse1].ModProjectile is CirclePulse funnyapple)
-                    {
-                        funnyapple.color = new Color(255, 10, 10);
-                        funnyapple.size = (reticleProgress == 1 ? 0.65f : 0.55f);
-                    }
+                    //int pulse1 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel1, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    //Main.projectile[pulse1].rotation = adjustedVel.ToRotation();
+                    //if (Main.projectile[pulse1].ModProjectile is CirclePulse funnyapple)
+                    //{
+                    //    funnyapple.color = new Color(255, 10, 10);
+                    //    funnyapple.size = (reticleProgress == 1 ? 0.65f : 0.55f);
+                    //}
 
-                    int pulse2 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel2, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    Main.projectile[pulse2].rotation = adjustedVel.ToRotation();
-                    if (Main.projectile[pulse2].ModProjectile is CirclePulse funnyapple2)
-                    {
-                        funnyapple2.color = new Color(255, 10, 10);
-                        funnyapple2.size = (reticleProgress == 1 ? 0.35f : 0.25f);
-                    }
+                    //int pulse2 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel2, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
+                    //Main.projectile[pulse2].rotation = adjustedVel.ToRotation();
+                    //if (Main.projectile[pulse2].ModProjectile is CirclePulse funnyapple2)
+                    //{
+                    //    funnyapple2.color = new Color(255, 10, 10);
+                    //    funnyapple2.size = (reticleProgress == 1 ? 0.35f : 0.25f);
+                    //}
                     #endregion
 
                     for (int i = 0; i < 12 + (reticleProgress == 1 ? 4 : 0); i++)

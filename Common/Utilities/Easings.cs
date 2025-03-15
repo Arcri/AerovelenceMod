@@ -202,6 +202,17 @@ namespace AerovelenceMod.Common.Utilities
             return toReturn;
         }
 
+        public static float easeInOutBack(float progress, float in_tensity = 1f, float out_tensity = 1f)
+        {
+            float c4i = c2 * in_tensity;
+            float c4o = c2 * out_tensity;
+
+            float toReturn = 0f;
+            toReturn = progress < 0.5f
+              ? (MathF.Pow(2f * progress, 2f) * ((c4i + 1f) * 2f * progress - c4i)) / 2f
+              : (MathF.Pow(2f * progress - 2f, 2f) * ((c4o + 1f) * (progress * 2f - 2f) + c4o) + 2f) / 2f;
+            return toReturn;
+        }
         //Misc
         public static float easeInOutHarsh(float progress)
         {

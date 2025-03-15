@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
             dust.frame = new Rectangle(0, 0, 64, 64);
             dust.fadeIn = 1f;
             dust.noGravity = true;
-            dust.shader = new ArmorShaderData(new Ref<Effect>(AerovelenceMod.Instance.Assets.Request<Effect>("Effects/NewGlowDustShader").Value), "ArmorBasic");
+            dust.shader = new ArmorShaderData(new Ref<Effect>(AerovelenceMod.Instance.Assets.Request<Effect>("Effects/GlowDustShader").Value), "ArmorBasic");
         }
 
         public override Color? GetAlpha(Dust dust, Color lightColor)

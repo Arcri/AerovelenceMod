@@ -24,6 +24,8 @@ using AerovelenceMod.Content.Items.Weapons.Starglass;
 using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Common.Systems.Language;
 using System;
+using AerovelenceMod.Common.Interfaces;
+using System.Linq;
 
 namespace AerovelenceMod
 {
@@ -222,10 +224,30 @@ namespace AerovelenceMod
 
         public static Effect fadeShader;
 
+        private List<IOrderedLoadable> loadCache;
         public override void Load()
 		{
-			//StarglassParticleDetour.Load();
-			ModDetours.Load();
+            // Literally ripped from SLR
+            #region IOrderedLoadable Loading
+            loadCache = new List<IOrderedLoadable>();
+
+            foreach (Type type in Code.GetTypes())
+            {
+                if (!type.IsAbstract && type.GetInterfaces().Contains(typeof(IOrderedLoadable)))
+                {
+                    object instance = Activator.CreateInstance(type);
+                    loadCache.Add(instance as IOrderedLoadable);
+                }
+            }
+
+            for (int k = 0; k < loadCache.Count; k++)
+            {
+                loadCache[k].Load();
+            }
+            #endregion
+
+            //StarglassParticleDetour.Load();
+            ModDetours.Load();
 
             ModContent.GetInstance<CrystalCavernsSurfaceBiome>();
 

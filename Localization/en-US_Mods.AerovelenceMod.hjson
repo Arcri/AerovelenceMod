@@ -1066,6 +1066,8 @@ Items: {
 
 	Marionette: {
 		DisplayName: Marionette
+	GaussShotgun: {
+		DisplayName: Gauss Shotgun
 		Tooltip: ""
 	}
 }
