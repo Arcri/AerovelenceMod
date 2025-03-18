@@ -74,9 +74,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     glowVal = 1;
                     for (int m = 0; m < 5 + Main.rand.Next(0, 2); m++)
                     {
-                        Color col = Color.SkyBlue * 1f;
+                        Color col = Color.SkyBlue * 0.5f;
                         Dust d = Dust.NewDustPerfect(Projectile.Center + Projectile.rotation.ToRotationVector2() * -20, ModContent.DustType<MuraLineDust>(),
-                            Projectile.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)) * Main.rand.NextFloat(0.75f, 3.5f) * 4.3f, newColor: col, Scale: Main.rand.NextFloat(1.3f, 1.65f));
+                            Projectile.rotation.ToRotationVector2().RotatedBy(Main.rand.NextFloat(-0.25f, 0.25f)) * Main.rand.NextFloat(0.75f, 3.5f) * 4.3f, newColor: col, Scale: Main.rand.NextFloat(1f, 1.3f));
                         d.fadeIn = 0.65f;
                         d.alpha = 20;
                     }

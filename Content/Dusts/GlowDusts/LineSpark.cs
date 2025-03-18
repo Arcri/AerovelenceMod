@@ -17,6 +17,7 @@ using Terraria.Localization;
 using Terraria.UI;
 using static Terraria.ModLoader.ModContent;
 using AerovelenceMod.Effects.Dyes;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Dusts.GlowDusts
 {
@@ -25,7 +26,6 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 	{
 		public override string Texture => "AerovelenceMod/Content/Dusts/GlowDusts/DustTextures/GlowLine1Black";
 
-
 		public override void OnSpawn(Dust dust)
 		{
 			dust.noGravity = true;
@@ -33,10 +33,7 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 			dust.frame = new Rectangle(0, 0, 128, 27);
 		}
 
-		public override Color? GetAlpha(Dust dust, Color lightColor)
-		{
-			return dust.color;
-		}
+        public override Color? GetAlpha(Dust dust, Color lightColor) => dust.color;
 
 		public override bool Update(Dust dust)
 		{
@@ -100,13 +97,6 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
                     }
                 }
 
-                //velFadeSpeed = 0.97f
-                //time to start fade = 40
-                //pre fade strength = 0.99
-                //post fade strength = 0.97f
-                //kill early time 60
-
-
                 dust.fadeIn++;
             }
 
@@ -142,7 +132,39 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
 
 	}
 
-	public class LineSparkBehavior
+    public class PixelatedLineSpark : LineSpark
+    {
+        public override bool PreDraw(Dust dust)
+        {
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.Dusts, () =>
+            {
+                Color White = Color.White with { A = 0 } * (dust.alpha / 255f);
+                Texture2D tex = Texture2D.Value;
+
+                if (dust.customData != null)
+                {
+                    if (dust.customData is LineSparkBehavior behavior)
+                    {
+                        Vector2 scale = behavior.Vector2DrawScale * dust.scale;
+
+                        Main.spriteBatch.Draw(tex, dust.position - Main.screenPosition, null, dust.color with { A = 0 }, dust.rotation, tex.Size() / 2f, scale * 1f, SpriteEffects.None, 0f);
+
+                        if (behavior.DrawWhiteCore)
+                            Main.spriteBatch.Draw(tex, dust.position - Main.screenPosition, null, White with { A = 0 } * 1f, dust.rotation, tex.Size() / 2f, scale * 0.5f, SpriteEffects.None, 0f);
+                    }
+                }
+                else
+                {
+                    Main.spriteBatch.Draw(tex, dust.position - Main.screenPosition, null, dust.color with { A = 0 }, dust.rotation, tex.Size() / 2f, dust.scale * 1f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(tex, dust.position - Main.screenPosition, null, White with { A = 0 }, dust.rotation, tex.Size() / 2f, dust.scale * 0.65f, SpriteEffects.None, 0f);
+                }
+            });
+
+            return false;
+        }
+    }
+
+    public class LineSparkBehavior
 	{
 		public Behavior behaviorToUse = Behavior.Base;
 		//Default behavoir is Base with preset values

@@ -142,11 +142,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
         bool playedSound = false;
         public override void AI()
         {
-            if (timer == 0)
-                previousRotations = new List<float>();
-            //Main.NewText(getProgress(easingProgress));
-
-
             //test high starting amount and long frame to start swing
 
             SwingHalfAngle = 160;
@@ -180,7 +175,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             }
 
             //Dust
-            /*
+            
             if (timer % 1 == 0 && getProgress(easingProgress) > 0.2f && getProgress(easingProgress) < 0.85f && justHitTime <= 0)
             {
                 //i rofl to hide the pain
@@ -194,11 +189,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                 }
 
             }
-            */
+            
+
             justHitTime--;
         }
 
-        public List<float> previousRotations;
+        public List<float> previousRotations = new List<float>();
 
         public override bool PreDraw(ref Color lightColor)
         {
@@ -249,27 +245,30 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
 
 
             if (getProgress(easingProgress) >= 0.1f && getProgress(easingProgress) <= 0.9f ) {
+                 
+                //Main.spriteBatch.End();
+                //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-                Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/ImpactTexturesOLD/pixelKennySlashTiny");
+                Texture2D Trail = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/pixelKennySlashBlack");
                 Vector2 pos = Main.player[Projectile.owner].Center - Main.screenPosition + new Vector2(5f + 10f * (float)Math.Sin(MathHelper.Pi * getProgress(easingProgress)), 0).RotatedBy(originalAngle);
 
-                Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.DeepPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f), SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.White * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.5f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f), SpriteEffects.None, 0f);
+                float slashScale = 0.65f + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1.1f);
+                slashScale *= 0.5f;
+
+                Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.DeepPink with { A = 0 } * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, slashScale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Trail, pos, Trail.Frame(1, 1, 0, 0), Color.White with { A = 0 } * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.5f), originalAngle + MathHelper.PiOver2, Trail.Size() / 2, slashScale, SpriteEffects.None, 0f);
 
                 Vector2 otherOffset = new Vector2(-8, -8).RotatedBy(currentAngle) * (Projectile.ai[0] > 0 ? 0 : 1);
 
                 Texture2D OuterGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/OblivionOuterGlow");
-                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, effects, 0f);
-                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.4f) + 0.1f, effects, 0f);
+                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink with { A = 0 } * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, effects, 0f);
+                Main.spriteBatch.Draw(OuterGlow, armPosition - Main.screenPosition + offset + otherOffset, null, Color.HotPink with { A = 0 } * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.4f) + 0.1f, effects, 0f);
                 //Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, null, Color.HotPink * ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 1f), Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), OuterGlow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f) + 0.1f, Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
 
                
 
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+                //Main.spriteBatch.End();
+                //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
 
                 //Texture2D OuterGlow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/BossDrops/Cyvercry/OblivionWhiteGlow");
                 //Main.spriteBatch.Draw(OuterGlow, Projectile.Center - Main.screenPosition, null, Color.DeepPink * 0.5f, Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), OuterGlow.Size() / 2, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), Projectile.ai[0] != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
@@ -283,7 +282,8 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Main.spriteBatch.Draw(Blade, armPosition - Main.screenPosition + offset, null, lightColor, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), effects, 0f);
             Main.spriteBatch.Draw(Glow, armPosition - Main.screenPosition + offset, null, Color.White, Projectile.rotation + rotationOffset, origin, Projectile.scale + ((float)Math.Sin(getProgress(easingProgress) * Math.PI) * 0.3f), effects, 0f);
 
-            /* This would work well for another weapon, but not this one
+            
+            // This would work well for another weapon, but not this one
             if (getProgress(easingProgress) >= 0.3f && getProgress(easingProgress) <= 0.7f)
             {
 
@@ -300,7 +300,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
                     Projectile.rotation + (Projectile.ai[0] != 1 ? 0 : MathHelper.PiOver2 * 3), Star.Size() / 2,
                     0.3f, SpriteEffects.None, 0f);
             }
-            */
+            //*/
             return false;
         }
 

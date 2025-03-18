@@ -396,6 +396,11 @@ Items: {
 		Tooltip: ""
 	}
 
+	Crystalline: {
+		DisplayName: Crystalline
+		Tooltip: ""
+	}
+
 	GlimmerwoodBathtubItem: {
 		DisplayName: Glimmerwood Bathtub
 		Tooltip: ""
@@ -1534,6 +1539,10 @@ Projectiles: {
 	GaussExplosionVFX.DisplayName: Gauss Explosion V F X
 	GaussShotgunRecoil.DisplayName: Gauss Shotgun Recoil
 	BasicRecoilProj.DisplayName: Basic Recoil Proj
+	OblivionFinaleSwing.DisplayName: Oblivion Finale Swing
+	OblivionHeldProjectile.DisplayName: Oblivion Held Projectile
+	CrystallineProj.DisplayName: Crystalline Proj
+	CrystallineVFX.DisplayName: Crystalline V F X
 }
 
 Configs: {

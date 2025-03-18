@@ -10,6 +10,7 @@ float fadeAmount = 0.0;
 float glowThreshold = 0.4;
 float glowIntensity = 2.5;
 
+float reps = 1.0;
 
 struct VertexShaderInput
 {
@@ -48,7 +49,7 @@ float4 White(VertexShaderOutput input) : COLOR0
 {    
     float2 coords = input.TextureCoordinates.xy;
     
-    float x = (coords.x + progress) % 1;
+    float x = ((coords.x * reps) + progress) % 1; //1
     float2 noisecoords = float2(x, coords.y);
     
     float4 in_color = tex2D(tent, noisecoords);
@@ -65,8 +66,6 @@ float4 White(VertexShaderOutput input) : COLOR0
     float input_alpha = input.Color.a;
     
     return float4(better_color, in_color.a * average) * average * input_alpha;
-
-    //return float4(better_color, in_color.a * average) * average * (1.0 - sqrt(input.TextureCoordinates.x));
 }
 
 technique BasicColorDrawing
