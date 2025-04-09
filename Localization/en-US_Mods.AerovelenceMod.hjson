@@ -605,31 +605,6 @@ Items: {
 		DisplayName: Structure Stamp Item
 		Tooltip: ""
 	}
-
-	SkinSewingNeedle: {
-		DisplayName: Skin Sewing Needle
-		Tooltip: ""
-	}
-
-	CavernChestItem: {
-		DisplayName: Cavern Chest Item
-		Tooltip: ""
-	}
-
-	CitadelChestItem: {
-		DisplayName: Citadel Chest Item
-		Tooltip: ""
-	}
-
-	CitadelChestKey: {
-		DisplayName: Citadel Chest Key
-		Tooltip: ""
-	}
-
-	CavernStoneColumnItem: {
-		DisplayName: Cavern Stone Column Item
-		Tooltip: ""
-	}
 }
 
 NPCs: {
@@ -966,10 +941,6 @@ Projectiles: {
 	SharpCrystalShard.DisplayName: Sharp Crystal Shard
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
-	SkinSewingNeedleProj.DisplayName: Skin Sewing Needle Proj
-	NeedleBlood.DisplayName: Needle Blood
-	NeedleAfterimage.DisplayName: Needle Afterimage
-	NeedleHit.DisplayName: Needle Hit
 }
 
 Configs: {
