@@ -46,7 +46,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry
             Item.useStyle = ItemUseStyleID.Swing;
             
             Item.shootSpeed = 1f;
-            Item.shoot = ModContent.ProjectileType<OblivionFinaleSwing>();
+            Item.shoot = ModContent.ProjectileType<OblivionHeldProjectile>();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
