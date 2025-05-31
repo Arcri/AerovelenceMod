@@ -10,6 +10,7 @@ using Terraria.Graphics.Shaders;
 using ReLogic.Content;
 using AerovelenceMod.Common.Utilities;
 using System.Collections.Generic;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Projectiles.Other
 {
@@ -165,14 +166,14 @@ namespace AerovelenceMod.Content.Projectiles.Other
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, myEffect, Main.GameViewMatrix.TransformationMatrix);
 
-            myEffect.CurrentTechnique.Passes[0].Apply();
-			foreach (FadeExplosionClass smoke in Smokes)
-			{
+            foreach (FadeExplosionClass smoke in Smokes)
+            {
 				smoke.DrawExplo(Main.spriteBatch, Tex);
-			}
+            }
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend; //Fixes things like RainbowRod Trail disappearing
 
             return false;
 		}

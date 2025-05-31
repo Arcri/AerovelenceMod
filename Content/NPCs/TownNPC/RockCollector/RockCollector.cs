@@ -29,6 +29,7 @@ using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using AerovelenceMod.Content.Items.Potions;
 using AerovelenceMod.Content.Items.Tools.Drills;
 using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {

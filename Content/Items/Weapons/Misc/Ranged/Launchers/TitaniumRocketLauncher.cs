@@ -1,8 +1,10 @@
 ﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun;
 using AerovelenceMod.Content.Items.Weapons.Ember;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.Projectiles.Other;
@@ -11,16 +13,19 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VFXPlus.Content.Projectiles;
 using static Terraria.ModLoader.ModContent;
 using static Terraria.NPC;
 
-namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers
 {
 	public class TitaniumRocketLauncher : TranslatableModItem
 	{
@@ -83,7 +88,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				damage = (int)(damage * 1.75f);
 				velocity *= 0.2f;
 
-				Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldSmall>(), 0, 0, player.whoAmI);
+				//Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldSmall>(), 0, 0, player.whoAmI);
 
 				for (int i = 0; i < 4 + Main.rand.Next(4); i++)
 				{
@@ -91,7 +96,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 						Velocity: oopsie.RotatedByRandom(0.45f) * 4f * Main.rand.NextFloat(0.7f, 1.3f), Alpha: 100, Color.White, 0.4f);
 				}
 
-			}
+                int gun = Projectile.NewProjectile(null, position, Vector2.Zero, ModContent.ProjectileType<TitaniumLauncherHeldMini>(), 0, 0, player.whoAmI);
+                if (Main.projectile[gun].ModProjectile is TitaniumLauncherHeldMini held)
+                {
+                    held.SetProjInfo(
+                        GunID: ModContent.ItemType<TitaniumRocketLauncher>(),
+                        AnimTime: 20,
+                        NormalXOffset: 18f,
+                        DestXOffset: 0f,
+                        YRecoilAmount: 0.05f,
+                        HoldOffset: new Vector2(-2f, 0f),
+                        TipPos: new Vector2(48f, -3f),
+                        StarPos: new Vector2(38f, -3f)
+                        );
+                }
+            }
 
 			Vector2 muzzleOffset = Vector2.Normalize(velocity) * 50f;
 
@@ -133,11 +152,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
     }
 	public class TitaniumRocket : ModProjectile
 	{
-        public override void SetStaticDefaults()
-        {
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 12;
-			ProjectileID.Sets.TrailingMode[Projectile.type] = 2; 
-        }
         public override void SetDefaults()
 		{
             Projectile.DamageType = DamageClass.Ranged;
@@ -158,7 +172,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 		public override void AI()
 		{
-			Player owner = Main.player[Projectile.owner];
+            int trailCount = 12;
+
+            previousPositions.Add(Projectile.Center);
+            previousRotations.Add(Projectile.velocity.ToRotation());
+            if (previousPositions.Count > trailCount)
+            {
+                previousPositions.RemoveAt(0);
+                previousRotations.RemoveAt(0);
+            }
+
+            Player owner = Main.player[Projectile.owner];
 
 
 			if (Main.myPlayer == Projectile.owner)
@@ -207,9 +231,53 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				Vector2 dustVel = (Projectile.velocity * Main.rand.NextFloat(0.85f, 1.15f) * -0.5f).RotateRandom(0.3f);
 				d.velocity = dustVel;
 			}
-		}
 
-		public override void OnKill(int timeLeft)
+            float fadeInTime = Math.Clamp((i + 16f) / 35f, 0f, 1f);
+            overallScale = Easings.easeInOutBack(fadeInTime, 0f, 1f);
+        }
+
+        float overallScale = 0f;
+        float colVal = 0f;
+        public List<float> previousRotations = new List<float>();
+        public List<Vector2> previousPositions = new List<Vector2>();
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Color trailCol = Color.Lerp(Color.White, Color.Orange, Easings.easeOutCirc(colVal));
+
+            Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/Flare").Value;
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderProjectiles, () =>
+            {
+                for (int i = 0; i < previousPositions.Count; i++)
+                {
+                    float scale = (float)i / previousPositions.Count;
+                    //Vector2 vec2Scale = new Vector2(scale * (i == 0 ? 0.6f : 1f), scale * 0.75f) * Projectile.scale * 1.25f;
+
+                    Vector2 vec2Scale = new Vector2(1f, 0.75f * Easings.easeOutQuad(scale)) * Projectile.scale * overallScale;
+
+                    Vector2 drawPos = previousPositions[i] - Main.screenPosition;
+
+                    Main.spriteBatch.Draw(Flare, drawPos, null, trailCol with { A = 0 }, previousRotations[i], Flare.Size() / 2f, vec2Scale, 0, 0f);
+                }
+            });
+
+
+            Texture2D projTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Launchers/TitaniumRocket").Value;
+
+            Vector2 vec2Scale = new Vector2(1f, 1f - Math.Clamp(Projectile.velocity.Length() * 0.01f, 0, 0.3f)) * Projectile.scale * 0.75f * overallScale;
+            SpriteEffects effects = (Projectile.spriteDirection == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            Color col = i >= 60 ? Color.Orange : Color.White;
+
+            Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, projTex.Size() / 2, vec2Scale * 1.5f, effects, 0f);
+            Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, null, col with { A = 0 } * 0.75f, Projectile.rotation, projTex.Size() / 2, vec2Scale * 1.5f, effects, 0f);
+
+            if (i >= 60)
+                Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, null, Color.Orange with { A = 0 }, Projectile.rotation, projTex.Size() / 2, vec2Scale * 2f * (1f + colVal), effects, 0f);
+
+            return false;
+        }
+
+        public override void OnKill(int timeLeft)
 		{
 			SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.5f, Volume = 0.67f, MaxInstances = -1, PitchVariance = 0.25f }, Projectile.Center);
 
@@ -327,55 +395,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
             }
         }
 
-        float colVal = 0f;
-        public override bool PreDraw(ref Color lightColor)
-        {
-			//Main.spriteBatch.End();
-			//Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-			Color trailCol = Color.Lerp(Color.White, Color.Orange, colVal);
-
-			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Starlight");
-			Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-			SpriteEffects effects = (Projectile.spriteDirection == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			for (int k = 0; k < Projectile.oldPos.Length - 1; k++)
-			{
-				float floatScale = (Projectile.scale * 1.75f) - k / (float)Projectile.oldPos.Length;
-				Vector2 scale = new Vector2(floatScale * (i == 0 ? 0.6f : 1f), floatScale * 0.75f);
-
-				Vector2 drawPos = Projectile.oldPos[k] + new Vector2(Projectile.width, Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
-				Main.spriteBatch.Draw(texture, drawPos, null, trailCol with { A = 0 }, Projectile.oldRot[k], drawOrigin, scale, effects, 0f);
-			}
-			//Main.spriteBatch.End();
-			//Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
-
-			Texture2D projTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/TitaniumRocket");
-
-			Vector2 vec2Scale = new Vector2(1f, 1f - Math.Clamp(Projectile.velocity.Length() * 0.01f, 0, 0.3f)) * Projectile.scale * 0.75f;
-
-			Color col = i >= 60 ? Color.Orange : Color.White;
-
-			Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, projTex.Frame(1, 1, 0, 0), lightColor, Projectile.rotation, projTex.Size() / 2, vec2Scale * 1.5f, effects, 0f);
-			Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, projTex.Frame(1, 1, 0, 0), col with { A = 0 } * 0.75f, Projectile.rotation, projTex.Size() / 2, vec2Scale * 1.5f, effects, 0f);
-
-			if (i >= 60)
-				Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, projTex.Frame(1, 1, 0, 0), Color.Orange with { A = 0 }, Projectile.rotation, projTex.Size() / 2, vec2Scale * 2f * (1f + colVal), effects, 0f);
-
-			return false;
-        }
-
-
 	}
 	public class TitaniumMiniRocket : ModProjectile
 	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 20; //12
-			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
-		}
-
-		private Vector2 shotDir = Vector2.Zero;
-
 		public override void SetDefaults()
 		{
             Projectile.DamageType = DamageClass.Ranged;
@@ -394,7 +416,17 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
         public override void AI()
         {
-			Projectile.rotation = Projectile.velocity.ToRotation();
+			int trailCount = 15;
+
+            previousPositions.Add(Projectile.Center);
+            previousRotations.Add(Projectile.velocity.ToRotation());
+            if (previousPositions.Count > trailCount)
+			{
+                previousPositions.RemoveAt(0);
+                previousRotations.RemoveAt(0);
+            }
+
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
 			if (Projectile.ai[0] < 30)
 				Projectile.velocity *= 1.055f; //05
@@ -408,42 +440,46 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				d.fadeIn = 50;
             }
 
-			Projectile.ai[0]++;
+
+            float fadeInTime = Math.Clamp((Projectile.ai[0] + 16f) / 40f, 0f, 1f);
+            overallScale = Easings.easeInOutBack(fadeInTime, 0f, 1f);
+
+            Projectile.ai[0]++;
         }
 
+        float overallScale = 0f;
+		public List<float> previousRotations = new List<float>();
+		public List<Vector2> previousPositions = new List<Vector2>();
         public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D projTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Ranged/TitaniumMiniRocket");
 			SpriteEffects effects = (Projectile.spriteDirection == -1) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
+			Texture2D Flare = Mod.Assets.Request<Texture2D>("Assets/Pixel/Flare").Value;
 
-			Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Starlight");
-			Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
-			for (int k = 0; k < Projectile.oldPos.Length - 5; k++) // 12 20
-			{
-				float floatScale = (Projectile.scale * 1f) - k / (float)Projectile.oldPos.Length;
-				Vector2 scale = new Vector2(floatScale, floatScale * 0.85f);
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderProjectiles, () =>
+            {
+				for (int i = 0; i < previousPositions.Count; i++)
+				{
+					float scale = (float)i / previousPositions.Count;
+					Vector2 vec2Scale = new Vector2(scale, Easings.easeOutQuad(scale) * 0.5f) * Projectile.scale * overallScale;
 
-				Vector2 drawPos = Projectile.oldPos[k] + new Vector2(Projectile.width, Projectile.height) / 2f + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
-				Main.spriteBatch.Draw(texture, drawPos, null, Color.White, Projectile.oldRot[k], drawOrigin, scale, effects, 0f);
-			}
+                    Vector2 drawPos = previousPositions[i] - Main.screenPosition;
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+                    Main.spriteBatch.Draw(Flare, drawPos, null, Color.White with { A = 0 } * scale, previousRotations[i], Flare.Size() / 2f, vec2Scale, effects, 0f);
+                }
+            });
 
-			Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, projTex.Frame(1, 1, 0, 0), lightColor, Projectile.rotation, projTex.Size() / 2, Projectile.scale, effects, 0f);
+            Texture2D rocketTex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Launchers/TitaniumMiniRocket").Value;
 
-			Main.spriteBatch.Draw(projTex, Projectile.Center - Main.screenPosition, projTex.Frame(1, 1, 0, 0), Color.White with { A = 0 } * 0.75f, Projectile.rotation, projTex.Size() / 2, Projectile.scale * 1.5f, effects, 0f);
+            Main.spriteBatch.Draw(rocketTex, Projectile.Center - Main.screenPosition, null, lightColor, Projectile.rotation, rocketTex.Size() / 2, Projectile.scale * overallScale, effects, 0f);
+			Main.spriteBatch.Draw(rocketTex, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.75f, Projectile.rotation, rocketTex.Size() / 2, Projectile.scale * 1.5f * overallScale, effects, 0f);
 
 			return false;
 		}
 
         public override void OnKill(int timeLeft)
         {
-
             SoundEngine.PlaySound(SoundID.Item70 with { Pitch = -0.4f, Volume = 0.45f, MaxInstances = -1, PitchVariance = 0.35f }, Projectile.Center);
 
             SoundStyle style3 = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = -.55f, Volume = 0.66f, MaxInstances = -1, PitchVariance = 0.2f };
@@ -483,7 +519,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 
 					newSmoke.size = 0.3f + Main.rand.NextFloat(-0.1f, 0.15f);
 					feh.Smokes.Add(newSmoke);
-
 				}
 			}
 
@@ -549,81 +584,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
         }
     }
 
-	public class TitaniumLauncherHeldSmall : ModProjectile
-	{
-		public override string Texture => "Terraria/Images/Projectile_0";
-
-		private bool firstFrame = false;
-
-		private Vector2 currentDirection => Projectile.rotation.ToRotationVector2();
-
-		Player owner => Main.player[Projectile.owner];
-
-		public override void SetDefaults()
-		{
-			Projectile.DamageType = DamageClass.Magic;
-
-            Projectile.width = 2;
-            Projectile.height = 2;
-            Projectile.timeLeft = 999999;
-            Projectile.penetrate = -1;
-
-            Projectile.friendly = true;
-            Projectile.hostile = false;
-			Projectile.tileCollide = false;
-			Projectile.ignoreWater = true;
-		}
-		public override bool? CanDamage() { return false; }
-		public override void AI()
-		{
-			owner.heldProj = Projectile.whoAmI;
-
-			if (owner.itemTime <= 1)
-				Projectile.active = false;
-
-			Projectile.Center = owner.MountedCenter;
-
-			if (!firstFrame)
-			{
-				firstFrame = true;
-				Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
-			}
-
-			if (Projectile.ai[0] == 1)
-				offset = 7;
-
-			if (Projectile.ai[0] > 1)
-				offset = Math.Clamp(MathHelper.Lerp(offset, 21, 0.1f), 0, 22);
-			
-			glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.25f, 0.1f), 0, 1);
-
-			Projectile.ai[0]++;
-		}
-
-		private float offset = 20;
-		private float glowIntensity = 1f;
-		public override bool PreDraw(ref Color lightColor)
-		{
-			Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/TitaniumRocketLauncher").Value;
-			Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/TitaniumRocketLauncherGlow").Value;
-
-
-			Vector2 position = (owner.MountedCenter + (currentDirection * offset)) - Main.screenPosition;
-			position.Y += owner.gfxOffY;
-			position += new Vector2(0, 2 * owner.direction).RotatedBy(Projectile.rotation); //Extra Offset
-
-			float rotation = currentDirection.ToRotation() + (owner.direction == 1 ? 0 : -MathF.PI);
-			SpriteEffects SE = (owner.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
-
-			Vector2 origin = Texture.Size() / 2;
-
-			Main.spriteBatch.Draw(Texture, position, null, lightColor, rotation, origin, 1f, SE, 0.0f);
-			Main.spriteBatch.Draw(Glow, position, null, Color.White with { A = 0 } * glowIntensity * 1f, rotation, origin, 1f, SE, 0.0f);
-
-			return false;
-		}
-	}
-
 	public class TitaniumLauncherHeldLarge : ModProjectile
 	{
 		public override string Texture => "Terraria/Images/Projectile_0";
@@ -648,9 +608,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			Projectile.timeLeft = 999999;
 			Projectile.ignoreWater = true;
 		}
-		public override bool? CanDamage() { return false; }
-		public override void AI()
+		public override bool? CanDamage() => false;
+		public override bool? CanCutTiles() => false;
+
+        public override void AI()
 		{
+			ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
+
 			owner.heldProj = Projectile.whoAmI;
 			Projectile.Center = owner.Center;
 
@@ -668,20 +632,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			//Shoot rocket
 			if (Projectile.ai[0] == 45)
 			{
-				Vector2 velocity = Projectile.rotation.ToRotationVector2() * 12f;
-				Vector2 pos = owner.Center;
+                Vector2 velocity = Projectile.rotation.ToRotationVector2() * 12f;
+                Vector2 pos = owner.Center;
 
-				Vector2 muzzleOffset = Vector2.Normalize(velocity) * 50f;
+                Vector2 muzzleOffset = Vector2.Normalize(velocity) * 50f;
 
-				if (Collision.CanHit(pos, 0, 0, pos + muzzleOffset, 0, 0))
+                if (Collision.CanHit(pos, 0, 0, pos + muzzleOffset, 0, 0))
+                    pos += muzzleOffset;
+
+
+                if (owner.whoAmI == Main.myPlayer)
 				{
-					pos += muzzleOffset;
-				}
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, velocity, ModContent.ProjectileType<TitaniumRocket>(), Projectile.damage, Projectile.knockBack, owner.whoAmI);
+                }
+                owner.velocity += velocity * -0.55f;
 
-				Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, velocity, ModContent.ProjectileType<TitaniumRocket>(), Projectile.damage, Projectile.knockBack, owner.whoAmI);
-				owner.velocity += velocity * -0.55f;
 
-				for (int i = 0; i < 8 + Main.rand.Next(4); i++)
+                for (int i = 0; i < 8 + Main.rand.Next(4); i++)
 				{
 					Dust d = Dust.NewDustPerfect(owner.Center + muzzleOffset, ModContent.DustType<MuraLineBasic>(),
 						Velocity: velocity.RotatedByRandom(0.4f) * Main.rand.NextFloat(0.7f, 1.3f), Alpha: 20, Color.White, 0.45f);
@@ -690,8 +657,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 				SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { Volume = 0.4f, PitchVariance = 0.2f, Pitch = 0.5f }, owner.Center);
 
 				offset = 0;
-				//if (Projectile.ai[0] > 2)
-					//offset = Math.Clamp(MathHelper.Lerp(offset, 21, 0.1f), 0, 22);
 
 				glowIntensity = 2;
 				hasShot = true;
@@ -719,8 +684,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 		private float progress = 0f;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/TitaniumRocketLauncher").Value;
-			Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/TitaniumRocketLauncherGlow").Value;
+			Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Launchers/TitaniumRocketLauncher").Value;
+			Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Launchers/TitaniumRocketLauncherGlow").Value;
 
 
 			Vector2 position = (owner.MountedCenter + (currentDirection * offset)) - Main.screenPosition;
@@ -743,5 +708,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged
 			return false;
 		}
 	}
+
+    public class TitaniumLauncherHeldMini : BasicRecoilProj
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Texture = TextureAssets.Item[gunID].Value;
+
+            Player Player = Main.player[Projectile.owner];
+            SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+
+            Vector2 heldOffset = new Vector2(HoldoutOffset.X, HoldoutOffset.Y * Player.direction).RotatedBy(Projectile.rotation);
+            Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY) + heldOffset;
+
+            Main.spriteBatch.Draw(Texture, drawPos, null, lightColor, Projectile.rotation, Texture.Size() / 2, Projectile.scale, mySE, 0f);
+
+            //Glowlayer
+            Texture2D Glowlayer = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Launchers/TitaniumRocketLauncherGlow").Value;
+            Main.spriteBatch.Draw(Glowlayer, drawPos, null, Color.White with { A = 0 } * Easings.easeOutCubic(bonusPower), Projectile.rotation, Glowlayer.Size() / 2, Projectile.scale, mySE, 0f);
+
+
+            return false;
+        }
+    }
+
 
 }

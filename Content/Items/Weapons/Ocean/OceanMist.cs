@@ -22,6 +22,7 @@ using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common;
 using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 
 namespace AerovelenceMod.Content.Items.Weapons.Ocean
 {
@@ -32,7 +33,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             this.ModifyLocalization("OceanMist", "Casts a water burst")
             .AddName(Language.Default, "Ocean Mist")
             .AddTooltip(Language.Default, "Casts a water burst")
-            .AddSkillStrike(Language.Default, "Skill Strikes at full mana")
+            .AddSkillStrike(Language.Default, "Skill Strikes at Full Mana")
 
             .AddName(Language.Spanish, "Niebla Oceánica").AddTooltip(Language.Spanish, "Lanza una ráfaga de agua").AddSkillStrike(Language.Spanish, "Realiza Golpes de Habilidad con maná completo")
             .AddName(Language.French, "Brume Océanique").AddTooltip(Language.French, "Lance une explosion d'eau").AddSkillStrike(Language.French, "Déclenche un Coup de Compétence à mana plein")
@@ -156,10 +157,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             float startRotation = goalRotation + (MathHelper.TwoPi * -1.25f) * Player.direction;
 
             float spinInProgress = Math.Clamp((float)timer / 20f, 0f, 1f);
-            Projectile.rotation = MathHelper.Lerp(startRotation, goalRotation, Easings.easeInOutSine(spinInProgress));
+            Projectile.rotation = MathHelper.Lerp(startRotation, goalRotation, Easings.easeInOutHarsh(spinInProgress)); //InOutSine
+
+            //Like how this looks without composite arms better
+            //Player.SetCompositeArmFront(true, stretch: Player.CompositeArmStretchAmount.Full, Angle - MathHelper.PiOver2);
 
             #endregion
 
+            float maxOffset = 16f; //14f
 
             if (timer >= 42)
             {
@@ -171,25 +176,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 else
                 {
                     //Fade out projectile
-                    OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, -15f, 0.03f), -20, 14);
+                    OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, -15f, 0.03f), -20, maxOffset);
                     alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, -0.25f, 0.15f), 0, 1);
                 }
             }
             else
             {
                 //Fade in
-                OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 14, 0.2f), -100, 14);
-                alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, 1, 0.08f), 0, 1);
+                OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, maxOffset, 0.2f), -100, maxOffset);
+                alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, 1f, 0.065f), 0, 1f); //0.08
             }
 
+            //Shoot shot
             if (timer == 20)
             {
                 //FX
                 glowAlpha = 1f;
-                glowScale = 1f; 
-
-                //Dust
-                ArmorShaderData dustShader2 = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+                justShotPower = 1f;
                 
                 Vector2 vel = new Vector2(12.5f, 0).RotatedBy(direction.ToRotation());
                 
@@ -197,9 +200,10 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 {
                     if (i < 4)
                     {
-                        Dust gd = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + vel, ModContent.DustType<GlowCircleDust>(), Main.rand.NextVector2Circular(5, 5), new Color(30, 105, 255), 0.6f, 0.7f, 0f, dustShader2);
-                        gd.fadeIn = 2;
-                        gd.scale *= Main.rand.NextFloat(0.9f, 1.3f);
+                        Dust d = Dust.NewDustPerfect(Projectile.Center + vel, ModContent.DustType<GlowFlare>(), Main.rand.NextVector2Circular(3, 3),
+                            newColor: new Color(30, 105, 255), Scale: 0.7f);
+                        d.customData = new GlowFlareBehavior(0.4f, 2.5f, 1f);
+                        d.scale *= Main.rand.NextFloat(0.9f, 1.3f);
                     }
 
                     int a = Dust.NewDust(Projectile.Center + vel * 2, 1, 1, DustID.BlueTorch, Scale: 2f);
@@ -214,7 +218,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                 SoundEngine.PlaySound(style, Projectile.Center);
 
                 //Spawn Proj
-                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
+                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Angle.ToRotationVector2() * 8f, ModContent.ProjectileType<OceanMistShot>(), Projectile.damage, Projectile.knockBack, Main.myPlayer);
 
                 if (shouldSkillStrike)
                     SkillStrikeUtil.setSkillStrike(Main.projectile[shot], 1.3f, 100, 0.35f, 0f); //1
@@ -228,7 +232,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             //Vfx values
             glowAlpha = Math.Clamp(MathHelper.Lerp(glowAlpha, -0.5f, 0.05f), 0f, 1f);
-            glowScale = Math.Clamp(MathHelper.Lerp(glowScale, -0.15f, 0.02f), 0f, 1.2f);
+
+            justShotPower = Math.Clamp(MathHelper.Lerp(justShotPower, -0.75f, 0.08f), 0f, 1f);
 
             // For having the spin always rotate away from the player
             Projectile.ai[0] = Player.direction;
@@ -238,30 +243,36 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
         float justShotPower = 0f;
         float glowAlpha = 0f;
-        float glowScale = 1f;
+
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
             Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMist");
             Texture2D Twirl = CommonTextures.PixelSwirl.Value;
             Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMistGlowy");
+            Texture2D White = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Ocean/OceanMistWhite");
 
 
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
             Vector2 pos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY);
 
-            Color col = shouldSkillStrike ? Color.Gold with { A = 0 } : Color.LightSkyBlue;
+            Color SwirlCol = shouldSkillStrike ? Color.Yellow : Color.LightSkyBlue * 0.75f;
 
             if (timer <= 20)
             {
-                Main.spriteBatch.Draw(Twirl, pos, null, col * 0.35f * alphaPercent, Projectile.rotation, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Twirl, pos, null, SwirlCol with { A = 0 } * 0.4f * alphaPercent, Projectile.rotation, Twirl.Size() / 2, Projectile.scale * 0.75f, SpriteEffects.None, 0f);
             }
 
-            Main.spriteBatch.Draw(Glow, pos, null, Color.Black * glowAlpha * 0.3f, Projectile.rotation, Glow.Size() / 2, Projectile.scale * glowScale, mySE, 0f);
+            float weaponScale = Projectile.scale + (0.35f * justShotPower);
 
-            Main.spriteBatch.Draw(Glow, pos, null, Color.SkyBlue with { A = 0 } * glowAlpha, Projectile.rotation, Glow.Size() / 2, Projectile.scale * glowScale, mySE, 0f);
-            Main.spriteBatch.Draw(Weapon, pos, null, lightColor * alphaPercent, Projectile.rotation, Weapon.Size() / 2, Projectile.scale, mySE, 0f);
 
+            Main.spriteBatch.Draw(Glow, pos, null, Color.DeepSkyBlue with { A = 0 } * glowAlpha * 1.5f, Projectile.rotation, Glow.Size() / 2, weaponScale, mySE, 0f);
+            Main.spriteBatch.Draw(Weapon, pos, null, lightColor * alphaPercent, Projectile.rotation, Weapon.Size() / 2, weaponScale, mySE, 0f);
+
+
+            //Glow overlay
+            float overlayAlpha = Easings.easeInSine(glowAlpha);
+            Main.spriteBatch.Draw(White, pos, null, Color.LightSkyBlue with { A = 0 } * overlayAlpha, Projectile.rotation, Weapon.Size() / 2, weaponScale, mySE, 0f);
 
             return false;
         }
@@ -292,12 +303,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
             if (maximumPierce <= 0)
                 return false;
 
+            //Check collision in a radius for every 2 positions
             int i = 0;
             foreach (Vector2 vec in previousPostions)
             {
-                i++;
-                if (i % 4 == 0 && targetHitbox.Distance(vec) < 10)
+                if (i % 2 == 0 && targetHitbox.Distance(vec) < 10)
                     return true;
+                i++;
+
             }
             return false;
         }
@@ -322,22 +335,67 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
             Projectile.velocity.Y += 0.09f;
 
+            //Dust
+            if (timer % 2 == 0 && timer > 3 && Main.rand.NextBool(2))
+            {
+                Vector2 dustVel = Main.rand.NextVector2Circular(3f, 3f);
+
+                Dust da = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelAlts>(), dustVel, newColor: Color.DeepSkyBlue * 0.65f, Scale: Main.rand.NextFloat(0.15f, 0.25f) * 1.75f);
+                da.velocity -= Projectile.velocity.RotatedByRandom(0.2f) * 0.65f;
+                da.alpha = 12;
+            }
+
+            if (timer % 3 == 0 && Main.rand.NextBool(5) && timer > 3)
+            {
+                Vector2 vel = Main.rand.NextVector2Circular(7f, 7f);
+                Dust de = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowFlare>(), vel, newColor: Color.DodgerBlue, Scale: 0.5f);
+                de.customData = new GlowFlareBehavior(0.4f, 2.5f, 1f);
+
+                de.velocity *= 0.45f;
+                de.velocity += Projectile.velocity * 0.5f;
+            }
+
+            starPower = Math.Clamp(MathHelper.Lerp(starPower, 1.25f, 0.04f), 0f, 1f);
+
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 0.7f);
+
             timer++;
         }
 
 
+        float starPower = 0f;
 
         float overallAlpha = 1f;
         public List<float> previousRotations = new List<float>();
         public List<Vector2> previousPostions = new List<Vector2>();
         public override bool PreDraw(ref Color lightColor)
         {
-            PixellationSystem.QueuePixelationAction(() =>
+            //Star
+            if (starPower < 1)
+            {
+                Texture2D star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
+
+                Vector2 posOffset = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 3f;
+
+                Vector2 drawPos = Projectile.Center + posOffset - Main.screenPosition;
+
+                float dir = Projectile.velocity.X > 0 ? 1 : -1;
+
+                float starRotation = MathHelper.Lerp(0f, MathHelper.Pi * 2f * dir, Easings.easeInOutQuad(starPower)) + Projectile.velocity.ToRotation();
+                float starScale = Easings.easeOutQuint(1f - starPower) * Projectile.scale * 1.3f;
+
+                Vector2 starScaleVec2 = new Vector2(1f, 0.5f) * starScale;
+
+                Main.EntitySpriteDraw(star, drawPos, null, Color.DeepSkyBlue with { A = 0 } * starPower, starRotation, star.Size() / 2f, starScale, SpriteEffects.None);
+                Main.EntitySpriteDraw(star, drawPos, null, Color.White with { A = 0 } * starPower, starRotation, star.Size() / 2f, starScale * 0.55f, SpriteEffects.None);
+            }
+
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.Dusts, () =>
             {
                 DrawTrail();
-            }, PixellationSystem.RenderType.AlphaBlend);
+            });
 
-                return false;
+            return false;
         }
 
         public void DrawTrail()
@@ -353,11 +411,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
                     float sineScale = MathF.Sin((float)Main.timeForVisualEffects * 0.25f) * 0.1f;
 
-                    Vector2 AfterImagePos = previousPostions[i] - Main.screenPosition + Main.rand.NextVector2Circular(5f, 5f); //3f
+                    Vector2 AfterImagePos = previousPostions[i] - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f); //3f
 
                     float startScale = Projectile.scale + sineScale;
 
-                    Color between = Color.Lerp(Color.DeepSkyBlue, Color.DodgerBlue, 0.75f);
+                    Color between = Color.Lerp(Color.DeepSkyBlue, Color.DodgerBlue, 0.8f);
                     Color col = Color.Lerp(between, Color.DodgerBlue, 1f - progress);
 
                     float easedFadeValue = Easings.easeInSine(progress);
@@ -367,12 +425,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
                     Vector2 lineScale2 = new Vector2(1.25f, 0.08f + 0.05f * progress); //0.1f 0.2f
 
                     //Main
-                    Main.EntitySpriteDraw(line, AfterImagePos / 2, null, col with { A = 0 } * 1f * easedFadeValue,
-                        previousRotations[i], line.Size() / 2f, lineScale * startScale * 0.5f, SpriteEffects.None);
+                    Main.EntitySpriteDraw(line, AfterImagePos, null, col with { A = 0 } * 1f * easedFadeValue,
+                        previousRotations[i], line.Size() / 2f, lineScale * startScale, SpriteEffects.None);
 
                     //White
-                    Main.EntitySpriteDraw(line, AfterImagePos / 2, null, Color.White with { A = 0 } * 1f * easedFadeValue,
-                        previousRotations[i], line.Size() / 2f, lineScale2 * startScale * 0.5f, SpriteEffects.None);
+                    Main.EntitySpriteDraw(line, AfterImagePos, null, Color.White with { A = 0 } * 1f * easedFadeValue,
+                        previousRotations[i], line.Size() / 2f, lineScale2 * startScale, SpriteEffects.None);
 
                 }
 
@@ -384,13 +442,51 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
         public override void OnKill(int timeLeft)
         {
+            Color col = Color.Lerp(Color.DeepSkyBlue, Color.DodgerBlue, 0.5f);
 
-            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/ENV_water_splash_01") with { Pitch = .51f, Volume = 0.5f, MaxInstances = -1 }; SoundEngine.PlaySound(style, Projectile.Center);
+            //Dust On Trail
+            int i = 0;
+            foreach (Vector2 pos in previousPostions)
+            {
+                i++;
+                if (Main.rand.NextBool(2))
+                {
+                    int a = Dust.NewDust(pos, 0, 0, ModContent.DustType<GlowFlare>(), 0, 0, newColor: col, Scale: Main.rand.NextFloat(0.45f, 0.55f));
+                    Main.dust[a].customData = new GlowFlareBehavior(0.4f, 2.5f, 1f);
+                    Main.dust[a].velocity *= 0.55f + ((i * 0.04f));
+                    Main.dust[a].velocity += Projectile.velocity * 0.2f;
+                }
+            }
+
+            //Dust on tip
+            for (int j = 0; j < Main.rand.Next(4, 7);  j++)
+            {
+                Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(1f, 5f);
+
+                float dustScale = Main.rand.NextFloat(0.5f, 0.65f);
+
+                Dust d = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowFlare>(), dustVel, newColor: col, Scale: dustScale);
+                d.customData = new GlowFlareBehavior(0.4f, 2.5f, 1f);
+                d.velocity += Projectile.velocity * 0.1f;
+            }
+
+            SoundStyle style = new SoundStyle("AerovelenceMod/Sounds/Effects/ENV_water_splash_01") with { Volume = 0.5f, Pitch = 0.5f, MaxInstances = -1 }; 
+            SoundEngine.PlaySound(style, Projectile.Center);
         }
 
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+
+            Color dustCol = Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike ? Color.Orange : Color.DeepSkyBlue;
+            for (int i = 0; i < 2 + Main.rand.Next(0,3); i++)
+            {
+                Vector2 dustVel = Main.rand.NextVector2Circular(2f, 2f);
+
+                Dust.NewDustPerfect(target.Center, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: dustCol, Scale: Main.rand.NextFloat(0.2f, 0.3f));
+            }
+
+            
             if (maximumPierce % 2 == 0)
                 Projectile.damage = (int)(Projectile.damage * 0.95f);
             maximumPierce--;

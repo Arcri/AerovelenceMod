@@ -15,6 +15,7 @@ using AerovelenceMod.Content.Projectiles.Other;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 {

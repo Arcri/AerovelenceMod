@@ -1543,6 +1543,7 @@ Projectiles: {
 	OblivionHeldProjectile.DisplayName: Oblivion Held Projectile
 	CrystallineProj.DisplayName: Crystalline Proj
 	CrystallineVFX.DisplayName: Crystalline V F X
+	TitaniumLauncherHeldMini.DisplayName: Titanium Launcher Held Mini
 }
 
 Configs: {
