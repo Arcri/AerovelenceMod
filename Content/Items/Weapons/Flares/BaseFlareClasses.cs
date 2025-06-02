@@ -95,13 +95,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         //Location of the little gungeon bullet texture
         public String textureLocation = "Content/Items/Weapons/Flares/FlareCores/FireFlare2";
 
+        public override string Texture => "Terraria/Images/Projectile_0";
+
         public int timer = 0;
 
         //for drawing
         float vortexRot = 0;
         float vortexRotsmall;
         float secondScale = 0.3f; //Scale used for drawing the quad-point star
-        float randomRot = 0;
+        public float randomRot = 0f;
+
+        float alpha = 0f;
+        float goldPulseValue = 0f;
 
         public override void SetDefaults()
         {
@@ -116,7 +121,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Projectile.tileCollide = true;
         }
 
-        float alpha = 0f;
+
         public override void AI()
         {
             baseAILogic();
@@ -136,10 +141,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             //Set randomRot to a random rotation (*shocking*)
             if (timer == 0)
             {
+
                 randomRot = Main.rand.NextFloat(6.28f);
+            
             }
 
-            
             //Rotate based on direction 
             if (Projectile.velocity.X < 0)
             {
@@ -190,6 +196,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
 
         public void baseDrawing()
         {
+            
             //load textures
             Texture2D softGlow = Mod.Assets.Request<Texture2D>("Assets/Glow").Value;
             Texture2D star = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Flares/star_06").Value;
@@ -286,6 +293,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
                 p.alpha = 0;
             }
         }
+
+
+        public abstract override void OnKill(int timeLeft);
+
+        public abstract override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone);
 
     }
 

@@ -13,8 +13,11 @@ using AerovelenceMod.Content.Buffs.FlareDebuffs;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {
-    public class FireFlare : ModProjectile
+    public class FireFlare : BaseFlare //ModProjectile
     {
+        //old code incase I broke something down the line - loco
+
+        /*
         public override string Texture => "Terraria/Images/Projectile_0";
 
         public int timer = 0;
@@ -23,6 +26,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
         public float FlareLerp = 0.3f;
         
         public float[] randomRotation = new float[5];
+
+        float alpha = 0f;
+        float goldPulseValue = 0f;
 
         public override void SetDefaults()
         {
@@ -39,7 +45,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             Projectile.tileCollide = true;
 
         }
-        float alpha = 0f;
+        
         public override void AI()
         {
 
@@ -102,7 +108,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             timer++;
         }
 
-        float goldPulseValue = 0f;
+
         public override bool PreDraw(ref Color lightColor)
         {
 
@@ -192,6 +198,48 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FireFlareExplosion>(), 0, 0, Main.myPlayer);
             Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
             for (int i = 0; i < 3; i++) 
+            {
+                Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleRise>(),
+                    Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.4f, 0f, dustShader);
+                p.alpha = 0;
+            }
+
+            target.AddBuff(ModContent.BuffType<FlareFire>(), 200);
+        }
+        */
+
+
+        public override void OnKill(int timeLeft)
+        {
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_betsy_fireball_shot_2") with { Pitch = -.53f, };
+            SoundEngine.PlaySound(style, Projectile.Center);
+
+            for (int i = 0; i < 5; i++) //2
+            {
+                Dust p = GlowDustHelper.DrawGlowDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(0, 0), ModContent.DustType<GlowCircleRise>(),
+                    Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.7f, 0f, dustShader);
+                p.alpha = 0;
+            }
+
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+
+            SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/FlareImpact") with { Volume = 0.5f, PitchVariance = 0.1f };
+            SoundEngine.PlaySound(style2, Projectile.Center);
+
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Item_45") with { Pitch = .75f, PitchVariance = 0.2f };
+            SoundEngine.PlaySound(style, Projectile.Center);
+
+            ArmorShaderData dustShader = new ArmorShaderData(new Ref<Effect>(Mod.Assets.Request<Effect>("Effects/GlowDustShader", AssetRequestMode.ImmediateLoad).Value), "ArmorBasic");
+            Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
+
+            int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FireFlareExplosion>(), 0, 0, Main.myPlayer);
+            Main.projectile[a].rotation = Main.rand.NextFloat(6.28f);
+            for (int i = 0; i < 3; i++)
             {
                 Dust p = GlowDustHelper.DrawGlowDustPerfect(target.Center, ModContent.DustType<GlowCircleRise>(),
                     Main.rand.NextVector2Circular(5, 5), Color.OrangeRed, Main.rand.NextFloat(0.4f, 0.7f), 0.4f, 0f, dustShader);

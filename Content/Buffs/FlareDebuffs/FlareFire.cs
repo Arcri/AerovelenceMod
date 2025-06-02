@@ -87,7 +87,10 @@ namespace AerovelenceMod.Content.Buffs.FlareDebuffs
 
                     HitInfo myHit = new HitInfo();
                     myHit.Damage = 10;
-                    myHit.HideCombatText = true;
+                    myHit.HideCombatText = false;
+
+                    npc.StrikeNPC(myHit);
+
 
                     npc.HitSound = storedHitsound;
                 }

@@ -967,6 +967,7 @@ Projectiles: {
 	HealerBeam.DisplayName: Healer Beam
 	PlatformProjectile.DisplayName: Platform Projectile
 	JellyfishAuraProjectile.DisplayName: Jellyfish Aura Projectile
+	BaseFlare.DisplayName: Base Flare
 }
 
 Configs: {

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 
 namespace AerovelenceMod.Content.Items.Weapons.Flares
 {
+    //combat flare gun
     public class FlareGun : ModItem
     {
         public int lockOutTimer;
@@ -80,6 +81,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Flares
             
             return true;
         }
+
         public override void HoldItem(Player player)
         {
             if (player.controlUseItem == true && player.ownedProjectileCounts[ModContent.ProjectileType<FlareGunHeldProjectile>()] >= 1 && player.channel == false)
