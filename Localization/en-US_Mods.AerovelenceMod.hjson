@@ -1544,6 +1544,8 @@ Projectiles: {
 	CrystallineProj.DisplayName: Crystalline Proj
 	CrystallineVFX.DisplayName: Crystalline V F X
 	TitaniumLauncherHeldMini.DisplayName: Titanium Launcher Held Mini
+	FlareGunHeldProjectileOld.DisplayName: Flare Gun Held Projectile Old
+	FlareGunRecoilProjectile.DisplayName: Flare Gun Recoil Projectile
 }
 
 Configs: {
