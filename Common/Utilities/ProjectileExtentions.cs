@@ -65,7 +65,7 @@ namespace AerovelenceMod.Common.Utilities
             // Kill the projectile if the player dies or gets crowd controlled
             if (!Player.active || Player.dead || Player.noItems || Player.CCed)
             {
-                p.Kill();
+                p.active = false;
             }
         }
 

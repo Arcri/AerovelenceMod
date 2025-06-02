@@ -191,6 +191,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun
         {
             Texture2D Texture = TextureAssets.Item[gunID].Value;
 
+            String path = "Assets/MuzzleFlashes/Sprite/MiddleMuzzleFlash" + muzzleFlashNum + "Gray";
+
+            Texture2D MuzzleFlash = Mod.Assets.Request<Texture2D>(path).Value;
+            Texture2D MuzzleFlashGlow = Mod.Assets.Request<Texture2D>(path + "Glow").Value;
+
             Player Player = Main.player[Projectile.owner];
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
@@ -202,26 +207,20 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun
 
 
             //Muzzle Flash
-            Texture2D MuzzleFlash = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/Sprite/MiddleMuzzleFlashGray").Value;
-            Texture2D MuzzleFlashGlow = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/Sprite/MiddleMuzzleFlashGrayGlow").Value;
-
-            int frameHeight = MuzzleFlash.Height / 3;
-            Rectangle muzzleFlashSourceRect = new Rectangle(0, frameHeight * muzzleFlashNum, MuzzleFlash.Width, frameHeight);
-            Vector2 muzzleFlashOrigin = muzzleFlashSourceRect.Size() / 2f;
-
             Vector2 muzzleFlashPos = drawPos + new Vector2(TipPosition.X, TipPosition.Y * Player.direction).RotatedBy(Projectile.rotation); //33 -3
+            Vector2 muzzleFlashOrigin = new Vector2(MuzzleFlash.Width / 2f, MuzzleFlash.Height / 2f);
 
             float easedMuzzleFlashAlpha = Easings.easeInSine(muzzleFlashPower);
             float muzzleFlashScale = Projectile.scale * 2f * Easings.easeOutSine(muzzleFlashPower);
 
 
-            Main.spriteBatch.Draw(MuzzleFlashGlow, muzzleFlashPos + Main.rand.NextVector2Circular(3f, 3f), muzzleFlashSourceRect, Color.DeepSkyBlue with { A = 0 } * easedMuzzleFlashAlpha * 0.75f, Projectile.rotation, muzzleFlashOrigin, muzzleFlashScale, mySE, 0f);
+            Main.spriteBatch.Draw(MuzzleFlashGlow, muzzleFlashPos + Main.rand.NextVector2Circular(3f, 3f), null, Color.DeepSkyBlue with { A = 0 } * easedMuzzleFlashAlpha * 0.75f, Projectile.rotation, muzzleFlashOrigin, muzzleFlashScale, mySE, 0f);
 
-            Main.spriteBatch.Draw(MuzzleFlash, muzzleFlashPos, muzzleFlashSourceRect, Color.White * easedMuzzleFlashAlpha * 0.35f, Projectile.rotation, muzzleFlashOrigin, muzzleFlashScale, mySE, 0f);
+            Main.spriteBatch.Draw(MuzzleFlash, muzzleFlashPos, null, Color.White * easedMuzzleFlashAlpha * 0.35f, Projectile.rotation, muzzleFlashOrigin, muzzleFlashScale, mySE, 0f);
 
             float overglowAlpha = Easings.easeInQuad(bonusPower);
 
-            Main.spriteBatch.Draw(MuzzleFlashGlow, muzzleFlashPos, muzzleFlashSourceRect, Color.DodgerBlue with { A = 0 } * overglowAlpha, Projectile.rotation, muzzleFlashOrigin, 3f * (1f - bonusPower), mySE, 0f);
+            Main.spriteBatch.Draw(MuzzleFlashGlow, muzzleFlashPos, null, Color.DodgerBlue with { A = 0 } * overglowAlpha, Projectile.rotation, muzzleFlashOrigin, 3f * (1f - bonusPower), mySE, 0f);
 
 
 
