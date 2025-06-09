@@ -1110,6 +1110,8 @@ NPCs: {
 			LikeNPC_Princess: I like {NPCName}.
 			Princess_LovesNPC: I like {NPCName}.
 		}
+
+		Census.SpawnCondition: Conditions unknown
 	}
 
 	CrystalTumbler2.DisplayName: Crystal Tumbler2
@@ -1648,6 +1650,7 @@ ItemName: {
 	LightOfTheAncients: LightOfTheAncients
 	TumblerockMedium: Rocciarotola
 	TumblerockSmall: Rocciarotola
+	Marionette: The Marionette
 }
 
 ItemTooltip: {
@@ -1801,6 +1804,13 @@ ItemTooltip: {
 		Fires small, fast hellfire bullets
 		Has a visible overheating gauge above the player that fills as you fire
 		The gun becomes more powerful as it heats up, but if you keep firing it will need to cool down
+		'''
+	Marionette:
+		'''
+		Continuously drain mana to summon a set of handle bars and puppet strings at the cursor.
+		The ends of the strings can attach to enemies and choke their arteries.
+		If the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap.
+		Choke damage gains a small crit chance for every string that is attached.
 		'''
 }
 
@@ -2221,4 +2231,16 @@ TumblerockMedium: {
 TumblerockSmall: {
 	DisplayName: Rocciarotola
 	BestiaryFlavor: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
+}
+
+Marionette: {
+	DisplayName: The Marionette
+	Tooltip:
+		'''
+		Continuously drain mana to summon a set of handle bars and puppet strings at the cursor.
+		The ends of the strings can attach to enemies and choke their arteries.
+		If the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap.
+		Choke damage gains a small crit chance for every string that is attached.
+		'''
+	SkillStrike: "[i:75] Skill Strikes when all strings are attached [i:75]"
 }

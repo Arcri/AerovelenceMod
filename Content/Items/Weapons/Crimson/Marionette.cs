@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.Dusts.GlowDusts;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,8 +24,26 @@ using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace AerovelenceMod.Content.Items.Weapons.Crimson
 {
-    public class Marionette : ModItem
+    public class Marionette : TranslatableModItem
     {
+        public override void SetStaticDefaults()
+        {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("Marionette", "Continuously drain mana to summon a set of handle bars and puppet strings at the cursor\nThe ends of the strings can attach to enemies and choke their arteries\nIf the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap\nChoke damage gains a small crit chance for every string that is attached")
+            .AddName(Language.Default, "The Marionette").AddTooltip(Language.Default, "Continuously drain mana to summon a set of handle bars and puppet strings at the cursor\nThe ends of the strings can attach to enemies and choke their arteries\nIf the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap\nChoke damage gains a small crit chance for every string that is attached")
+            .AddSkillStrike(Language.Default, "Skill Strikes when all strings are attached");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
+
+        }
         public override void SetDefaults()
         {
             Item.width = Item.height = 32;
@@ -182,11 +202,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                             skillStrike = true;
                         }
 
-                        int critChanceMult = 3 * howManyAttached;
+                        int critChanceMult = 4 * howManyAttached;
 
                         if (verletChoke[i] > 200)
                         {
-                            if (Main.rand.Next(100) < (10 + critChanceMult))
+                            if (Main.rand.Next(100) < (critChanceMult))
                             {
                                 hit.Crit = true;
                             }

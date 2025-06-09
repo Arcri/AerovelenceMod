@@ -39,7 +39,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
             this.ModifyLocalization("ExtinguishedDynamite", "")
             .AddName(Language.Default, "Extinguished Dynamite")
-            .AddSkillStrike(Language.Default, "Every second explodes and Skill Strikes")
+            .AddSkillStrike(Language.Default, "Every second hit Skill Strikes with an explosion")
 
             .AddName(Language.Spanish, "Dinamita Extinguida").AddSkillStrike(Language.Spanish, "Cada segundo explota y realiza Golpes de Habilidad")
             .AddName(Language.French, "Dynamite Éteinte").AddSkillStrike(Language.French, "Explose toutes les secondes et déclenche des Coups de Compétence")
@@ -70,14 +70,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
             Item.shoot = ProjectileID.None;
         }
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Explosion Skill Strikes [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
-        }
+        //public override void ModifyTooltips(List<TooltipLine> tooltips)
+        //{
+        //    TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] The Explosion Skill Strikes [i:" + ItemID.FallenStar + "]")
+        //    {
+        //        OverrideColor = Color.Gold,
+        //    };
+        //    tooltips.Add(SkillStrike);
+        //}
 
         public override bool MeleePrefix() => true;
 
