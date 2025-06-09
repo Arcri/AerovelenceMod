@@ -1651,6 +1651,7 @@ ItemName: {
 	TumblerockMedium: Rocciarotola
 	TumblerockSmall: Rocciarotola
 	Marionette: The Marionette
+	BishopsStaff: Bishop's Staff
 }
 
 ItemTooltip: {
@@ -1811,6 +1812,13 @@ ItemTooltip: {
 		The ends of the strings can attach to enemies and choke their arteries.
 		If the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap.
 		Choke damage gains a small crit chance for every string that is attached.
+		'''
+	BishopsStaff:
+		'''
+		Hold [Attack(Left Click)] to ground the staff and channel mana towards it
+		While channeling, the staff generates a starry sky above itself
+		The stars fire stellar beams towards the ground and generate faster over time
+		After some time, larger stars will generate, firing larger beams
 		'''
 }
 
@@ -2243,4 +2251,16 @@ Marionette: {
 		Choke damage gains a small crit chance for every string that is attached.
 		'''
 	SkillStrike: "[i:75] Skill Strikes when all strings are attached [i:75]"
+}
+
+BishopsStaff: {
+	DisplayName: Bishop's Staff
+	Tooltip:
+		'''
+		Hold [Attack(Left Click)] to ground the staff and channel mana towards it
+		While channeling, the staff generates a starry sky above itself
+		The stars fire stellar beams towards the ground and generate faster over time
+		After some time, larger stars will generate, firing larger beams
+		'''
+	SkillStrike: "[i:75] Large stars Skill Strike [i:75]"
 }

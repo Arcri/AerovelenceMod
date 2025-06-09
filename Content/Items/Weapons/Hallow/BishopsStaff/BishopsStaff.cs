@@ -19,14 +19,29 @@ using Terraria.Graphics.Shaders;
 using AerovelenceMod.Common;
 using AerovelenceMod.Content.Projectiles;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Weapons.Hallow.BishopsStaff
 {
-    public class BishopsStaff : ModItem
+    public class BishopsStaff : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("BishopsStaff", "Hold Left Click to ground the staff and channel mana towards it\nWhile channeling, the staff generates a starry sky above itself\nThe stars fire stellar beams towards the ground and generate faster over time\nAfter some time, larger stars will generate, firing larger beams")
+            .AddName(Language.Default, "Bishop's Staff").AddTooltip(Language.Default, "Hold [Attack(Left Click)] to ground the staff and channel mana towards it\nWhile channeling, the staff generates a starry sky above itself\nThe stars fire stellar beams towards the ground and generate faster over time\nAfter some time, larger stars will generate, firing larger beams")
+            .AddSkillStrike(Language.Default, "Large stars Skill Strike");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
+
         }
 
         public override void SetDefaults()
