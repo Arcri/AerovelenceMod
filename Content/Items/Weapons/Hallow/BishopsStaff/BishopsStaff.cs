@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Hallow.BishopsStaff
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
             this.ModifyLocalization("BishopsStaff", "Hold Left Click to ground the staff and channel mana towards it\nWhile channeling, the staff generates a starry sky above itself\nThe stars fire stellar beams towards the ground and generate faster over time\nAfter some time, larger stars will generate, firing larger beams")
-            .AddName(Language.Default, "Bishop's Staff").AddTooltip(Language.Default, "Hold [Attack(Left Click)] to ground the staff and channel mana towards it\nWhile channeling, the staff generates a starry sky above itself\nThe stars fire stellar beams towards the ground and generate faster over time\nAfter some time, larger stars will generate, firing larger beams")
+            .AddName(Language.Default, "Bishop's Staff").AddTooltip(Language.Default, "Hold Left Click to ground the staff and channel mana towards it\nWhile channeling, the staff generates a starry sky above itself\nThe stars fire stellar beams towards the ground and generate faster over time\nAfter some time, larger stars will generate, firing larger beams")
             .AddSkillStrike(Language.Default, "Large stars Skill Strike");
 
             //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
