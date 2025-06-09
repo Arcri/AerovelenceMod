@@ -9,13 +9,28 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
+using Terraria.GameContent.Creative;
 
 namespace AerovelenceMod.Content.Items.Sets.Phantic
 {
-    public class RedShade : ModItem
+    public class RedShade : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("RedShade", "Projectiles home in and possess enemies\nPossessed enemies release smaller copies of the spirit upon death")
+            .AddName(Language.Default, "Red Shade").AddTooltip(Language.Default, "Projectiles home in and possess enemies\nPossessed enemies release smaller copies of the spirit upon death");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
             Item.staff[Item.type] = true;
         }
 

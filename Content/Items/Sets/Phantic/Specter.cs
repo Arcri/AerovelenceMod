@@ -13,12 +13,30 @@ using Terraria.GameContent;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
 
 namespace AerovelenceMod.Content.Items.Sets.Phantic
 {
-    public class Specter : ModItem
+    public class Specter : TranslatableModItem
     {
-        public override void SetStaticDefaults() { CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1; }
+        public override void SetStaticDefaults()
+        {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("Specter", "Left click to stab forward\nRight click to slash and wound enemies for a short time")
+            .AddName(Language.Default, "Specter").AddTooltip(Language.Default, "Left click to stab forward\nRight click to slash and wound enemies for a short time")
+            .AddSkillStrike(Language.Default, "Stabbing wounded enemies Skill Strikes");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
+
+        }
 
         public override void SetDefaults()
         {
@@ -41,15 +59,6 @@ namespace AerovelenceMod.Content.Items.Sets.Phantic
 
             Item.shootSpeed = 3.7f;
             Item.shoot = ModContent.ProjectileType<SpecterStabProjectile>();
-        }
-
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
-        {
-            TooltipLine SkillStrike = new(Mod, "SkillStrike", "[i:" + ItemID.FallenStar + "] Stab the Soulwounded to Skill Strike [i:" + ItemID.FallenStar + "]")
-            {
-                OverrideColor = Color.Gold,
-            };
-            tooltips.Add(SkillStrike);
         }
 
         public override bool AltFunctionUse(Player player)

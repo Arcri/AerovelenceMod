@@ -4,7 +4,7 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.Localization;
+//using Terraria.Localization;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.Audio;
@@ -12,12 +12,32 @@ using Terraria.GameContent;
 using Terraria.UI;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Common.Systems.Language;
+using Terraria.GameContent.Creative;
 
 namespace AerovelenceMod.Content.Items.Sets.Phantic
 {
-    public class PhanticWhip : ModItem
+    public class PhanticWhip : TranslatableModItem
     {
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(PhanticWhipDebuff.TagDamage);
+        //public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(PhanticWhipDebuff.TagDamage);
+
+        public override void SetStaticDefaults()
+        {
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("PhanticWhip", "Inflicts enemies with a short-timed soul sapping effect\nYour minions capture soul energy from afflicted enemies\nThe energy is released when you next swing the whip in an arc of spirits")
+            .AddName(Language.Default, "Phantic Whip").AddTooltip(Language.Default, "Inflicts enemies with a short-timed soul sapping effect\nYour minions capture soul energy from afflicted enemies\nThe energy is released when you next swing the whip in an arc of spirits");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
+
+        }
 
         public override void SetDefaults()
         {
@@ -47,7 +67,7 @@ namespace AerovelenceMod.Content.Items.Sets.Phantic
 
         public static readonly int TagDamage = 12;
 
-        public override LocalizedText Description => base.Description.WithFormatArgs(TagDamage);
+        //public override LocalizedText Description => base.Description.WithFormatArgs(TagDamage);
 
         public override void SetStaticDefaults()
         {

@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Sets.Phantic.Armor;
 using Microsoft.Xna.Framework;
@@ -18,11 +19,24 @@ namespace AerovelenceMod.Content.Items.Sets.Phantic
         public int soulerangThrowStage = 0;
     }
 
-    public class Soulerang : ModItem
+    public class Soulerang : TranslatableModItem
     {
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            this.ModifyLocalization("Soulerang", "This boomerang has a unique flight pattern, and can go through blocks")
+            .AddName(Language.Default, "Soulerang").AddTooltip(Language.Default, "This boomerang has a unique flight pattern, and can go through blocks");
+
+            //.AddName(Language.Spanish, "").AddSkillStrike(Language.Spanish, "")
+            //.AddName(Language.French, "").AddSkillStrike(Language.French, "")
+            //.AddName(Language.German, "").AddSkillStrike(Language.German, "")
+            //.AddName(Language.Italian, "").AddSkillStrike(Language.Italian, "")
+            //.AddName(Language.Polish, "").AddSkillStrike(Language.Polish, "")
+            //.AddName(Language.PortugueseBrazil, "").AddSkillStrike(Language.PortugueseBrazil, "")
+            //.AddName(Language.Russian, "").AddSkillStrike(Language.Russian, "");
+            //.AddName(Language.ChineseTraditional, "").AddSkillStrike(Language.ChineseTraditional, "")
+            //.AddName(Language.ChineseSimplified, "").AddSkillStrike(Language.ChineseSimplified, "")
+
         }
 
         public override void SetDefaults()
