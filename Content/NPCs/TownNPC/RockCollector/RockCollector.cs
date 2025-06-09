@@ -268,7 +268,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         {
             int[] itemsToReceive = [ModContent.ItemType<ShotgunAxe>()];//ReinforcedPlatinumGrapple>(), ModContent.ItemType<MiningSack>(), ModContent.ItemType<AmuletOfGlory>()];
             int[] itemSuperAdamantite = [ModContent.ItemType<AdamantitePulsar>()];
-            int[] itemSuperTitanium = [ModContent.ItemType<TitaniumRocketLauncher>()];
+            int[] itemSuperTitanium = [ModContent.ItemType<Items.Weapons.Misc.Ranged.Launchers.TitaniumRocketLauncher>()];
 
             int[] searchForItems = [
                 ModContent.ItemType<ShotgunAxe>()/*, ModContent.ItemType<TinCluster>(),
