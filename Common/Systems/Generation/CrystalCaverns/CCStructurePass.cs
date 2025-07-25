@@ -160,21 +160,34 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 PlaceStructureSafely("ancientbridge")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                PlaceStructureSafely("librarydarkleft")
-                    .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                PlaceStructureSafely("librarydarkright")
-                    .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                PlaceStructureSafely("librarylightleft")
-                    .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
-                PlaceStructureSafely("librarylightright")
-                    .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
                 PlaceStructureSafely("smallshrine")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                if (rand.NextBool())
+                {
+                    PlaceStructureSafely("librarydarkleft")
                     .ProtectStructure()
                     .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                }
+                else
+                {
+                    PlaceStructureSafely("librarydarkright")
+                        .ProtectStructure()
+                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                }
+                if (rand.NextBool())
+                {
+                    PlaceStructureSafely("librarylightleft")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                } 
+                else
+                {
+                    PlaceStructureSafely("librarylightright")
+                    .ProtectStructure()
+                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                }
+
                 if (mainPass.WorldSizeScale > 1.2f) // Medium or large world, 1.2f instead of 1f so floating point math doesn't screw it up
                 {
                     PlaceStructureSafely("librarydarkleft")
@@ -291,8 +304,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         float probability = 0.5f + (float)Math.Sin(heightPosition * Math.PI) * 0.5f;
 
                         if (rand.NextFloat() < probability 
-                            && (localX + boundRect.Width / 2 < boundRect.Width * (0.30 + mainPass.WorldSizeScale / 20) 
-                            || localX + boundRect.Width / 2 > boundRect.Width * (0.70 - mainPass.WorldSizeScale / 20)))
+                            && (localX + boundRect.Width / 2 < boundRect.Width * (0.30 + mainPass.WorldSizeScale / (40.0f / 3f)) // .30 .375 .45
+                            || localX + boundRect.Width / 2 > boundRect.Width * (0.70 - mainPass.WorldSizeScale / (40.0f / 3f))))
                         {
                             _validPoints.Add(new Point(worldX, worldY));
 

@@ -1652,6 +1652,10 @@ ItemName: {
 	TumblerockSmall: Rocciarotola
 	Marionette: The Marionette
 	BishopsStaff: Bishop's Staff
+	PhanticWhip: Phantic Whip
+	RedShade: Red Shade
+	Soulerang: Soulerang
+	Specter: Specter
 }
 
 ItemTooltip: {
@@ -1819,6 +1823,23 @@ ItemTooltip: {
 		While channeling, the staff generates a starry sky above itself
 		The stars fire stellar beams towards the ground and generate faster over time
 		After some time, larger stars will generate, firing larger beams
+		'''
+	PhanticWhip:
+		'''
+		Inflicts enemies with a short-timed soul sapping effect
+		Your minions capture soul energy from afflicted enemies
+		The energy is released when you next swing the whip in an arc of spirits
+		'''
+	RedShade:
+		'''
+		Projectiles home in and possess enemies
+		Possessed enemies release smaller copies of the spirit upon death
+		'''
+	Soulerang: This boomerang has a unique flight pattern, and can go through blocks
+	Specter:
+		'''
+		Left click to stab forward
+		Right click to slash and wound enemies for a short time
 		'''
 }
 
@@ -2263,4 +2284,38 @@ BishopsStaff: {
 		After some time, larger stars will generate, firing larger beams
 		'''
 	SkillStrike: "[i:75] Large stars Skill Strike [i:75]"
+}
+
+PhanticWhip: {
+	DisplayName: Phantic Whip
+	Tooltip:
+		'''
+		Inflicts enemies with a short-timed soul sapping effect
+		Your minions capture soul energy from afflicted enemies
+		The energy is released when you next swing the whip in an arc of spirits
+		'''
+}
+
+RedShade: {
+	DisplayName: Red Shade
+	Tooltip:
+		'''
+		Projectiles home in and possess enemies
+		Possessed enemies release smaller copies of the spirit upon death
+		'''
+}
+
+Soulerang: {
+	DisplayName: Soulerang
+	Tooltip: This boomerang has a unique flight pattern, and can go through blocks
+}
+
+Specter: {
+	DisplayName: Specter
+	Tooltip:
+		'''
+		Left click to stab forward
+		Right click to slash and wound enemies for a short time
+		'''
+	SkillStrike: "[i:75] Stabbing wounded enemies Skill Strikes [i:75]"
 }
