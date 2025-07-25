@@ -6,24 +6,11 @@ using Terraria.IO;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
-using Terraria.Graphics.Shaders;
-using Terraria.GameContent.Generation;
 using ReLogic.Utilities;
-using System.Security.Cryptography.X509Certificates;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture.Items;
-using Terraria.ModLoader.IO;
-using Terraria.Enums;
-using System.Collections.Generic;
 using System.Linq;
 using AerovelenceMod.Content.Tiles.Citadel;
 using AerovelenceMod.Common.Utilities.Generation;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
-using System.Runtime.CompilerServices;
-using Terraria.GameContent.RGB;
 
 namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 {
@@ -153,13 +140,22 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 Origin = new Point(Origin.X, Origin.Y + SurfaceHeight);
                 TumblerTunnelEnd = Point.Zero;
                 TumblerArenaPolarity = 1;
-                // BIOME SURFACE
                 ShapeData surfaceRectShapeData = new ShapeData();
                 ShapeData surfaceExposedShapeData = new ShapeData();
                 ShapeData lightningBoltShapeData = new ShapeData();
-                Point surfaceRectOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y - (int)(SurfaceHeight * 1.75));
 
-            // BIOME SURFACE
+                GenShape upperUndergroundShape = new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight));
+                GenShape lowerUndergroundShape = new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight));
+                GenShape upperUndergroundWallShape = new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1));
+                GenShape lowerUndergroundWallShape = new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight));
+
+                Point surfaceRectOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y - (int)(SurfaceHeight * 1.75));
+                Point upperUndergroundOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y);
+                Point lowerUndergroundOrigin = new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight));
+                Point upperUndergroundWallOrigin = new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y);
+                Point lowerUndergroundWallOrigin = new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1);
+
+                // BIOME SURFACE
                 WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 1.75)), new Actions.Blank().Output(surfaceRectShapeData));
 
                 void TileReplacement(ushort[] toBeReplaced, ushort replaceWith)
@@ -281,22 +277,22 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TransitionWallDithering([DirtWall], StoneWall);
                 TransitionWallDithering(ReplaceWithBrickWalls, BrickWall);
 
-            // BIOME UNDERGROUND
+                // BIOME UNDERGROUND
                 void GenUpperUnderground(ushort[] toBeReplaced, ushort replaceWith)
                 {
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(3, 3),
                         new Modifiers.Dither(0.8),
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(5, 5),
                         new Modifiers.Dither(0.95),
@@ -311,40 +307,34 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenUpperUnderground(ReplaceWithBrickTiles, BrickTile);
 
                 // Clear other tiles
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2, Origin.Y), new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.OnlyTiles(ClearTiles),
                     new Actions.ClearTile()
                 }));
 
                 // Lower underground
-                ShapeData lowerUndergroundDitheringShapeData = new ShapeData();
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.Flip(false, true),
-                    new Modifiers.SkipTiles(LivingWoodTiles),
-                    new Modifiers.OnlyTiles(ReplaceWithStoneTiles),
-                    new Actions.Blank().Output(lowerUndergroundDitheringShapeData)
-                }));
 
                 void GenLowerUnderground(ushort[] toBeReplaced, ushort replaceWith)
                 {
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Flip(false, true),
                         new Modifiers.SkipTiles(LivingWoodTiles),
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new ModShapes.All(lowerUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
                     {
+                        new Modifiers.Flip(false, true),
                         new Modifiers.Expand(3, 3),
                         new Modifiers.Dither(0.6),
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new ModShapes.All(lowerUndergroundDitheringShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
                     {
+                        new Modifiers.Flip(false, true),
                         new Modifiers.Expand(5, 5),
                         new Modifiers.Dither(0.85),
                         new Modifiers.OnlyTiles(toBeReplaced),
@@ -358,7 +348,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenLowerUnderground(ReplaceWithBrickTiles, BrickTile);
 
                 // Clear other tiles
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight)), new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Flip(false, true),
                     new Modifiers.OnlyTiles(ClearTiles),
@@ -369,19 +359,19 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 void GenUpperUndergroundWalls(ushort[] targetWalls, ushort replaceWith, bool onlyWalls)
                 {
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y), new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundWallOrigin, upperUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new Actions.PlaceWall(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y), new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundWallOrigin, upperUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(3, 3),
                         new Modifiers.Dither(0.85),
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new Actions.PlaceWall(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y), new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(upperUndergroundWallOrigin, upperUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(5, 5),
                         new Modifiers.Dither(0.95),
@@ -394,31 +384,26 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenUpperUndergroundWalls(ReplaceWithBrickWalls, BrickWall, true);
 
                 // Lower underground walls
-                ShapeData lowerUndergroundWallDitheringShapeData = new ShapeData();
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.Flip(false, true),
-                    new Modifiers.SkipWalls(ReplaceWithBrickWalls),
-                    new Actions.Blank().Output(lowerUndergroundWallDitheringShapeData)
-                }));
 
                 void GenLowerUndergroundWalls(ushort[] targetWalls, ushort replaceWith, bool onlyWalls)
                 {
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundWallOrigin, lowerUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Flip(false, true),
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new Actions.PlaceWall(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new ModShapes.All(lowerUndergroundWallDitheringShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundWallOrigin, lowerUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
+                        new Modifiers.Flip(false, true),
                         new Modifiers.Expand(3, 3),
                         new Modifiers.Dither(0.6),
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new Actions.PlaceWall(replaceWith)
                     }));
-                    WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new ModShapes.All(lowerUndergroundWallDitheringShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(lowerUndergroundWallOrigin, lowerUndergroundWallShape, Actions.Chain(new GenAction[]
                     {
+                        new Modifiers.Flip(false, true),
                         new Modifiers.Expand(5, 5),
                         new Modifiers.Dither(0.85),
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
@@ -430,7 +415,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenLowerUndergroundWalls(ReplaceWithBrickWalls, BrickWall, true);
 
                 // Clear a lot of the walls to allow the background to be visible frequently
-                WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y), new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1)), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(upperUndergroundWallOrigin, upperUndergroundWallShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 5),
                     new Modifiers.Dither(0.999975),
@@ -441,8 +426,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroGenUtils.ClearWallRunner(),
                     new AeroGenUtils.ClearWallRunner()
                 }));
-                WorldUtils.Gen(new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1), new ModShapes.All(lowerUndergroundWallDitheringShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(lowerUndergroundWallOrigin, lowerUndergroundWallShape, Actions.Chain(new GenAction[]
                 {
+                    new Modifiers.Flip(false, true),
                     new Modifiers.Expand(5, 5),
                     new Modifiers.Dither(0.999975),
                     new Modifiers.IsNotSolid(),
@@ -514,7 +500,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 WorldUtils.Gen(
                     //new Point(Origin.X - BiomeWidth, Origin.Y),
                     Origin,
-                    new Shapes.Rectangle(BiomeWidth, (int)(0.5 * UndergroundHeight)),
+                    upperUndergroundShape,
                     Actions.Chain(
                         new GenAction[]
                         {
@@ -527,7 +513,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 WorldUtils.Gen(
                     //new Point(Origin.X - BiomeWidth / 2, Origin.Y + (int)(.5 * UndergroundHeight)),
                     Origin,
-                    new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight)),
+                    lowerUndergroundShape,
                     Actions.Chain(
                         new GenAction[]
                         {
