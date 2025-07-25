@@ -22,7 +22,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            AddMapEntry(new Color(089, 120, 179));
+            AddMapEntry(new Color(80, 120, 180));
 			DustType = 59;
             CommonTileHelper.SetTileProtection(this);
         }

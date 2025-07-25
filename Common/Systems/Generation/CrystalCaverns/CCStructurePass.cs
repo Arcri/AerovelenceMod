@@ -304,8 +304,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         float probability = 0.5f + (float)Math.Sin(heightPosition * Math.PI) * 0.5f;
 
                         if (rand.NextFloat() < probability 
-                            && (localX + boundRect.Width / 2 < boundRect.Width * (0.30 + mainPass.WorldSizeScale / (40.0f / 3f)) // .30 .375 .45
-                            || localX + boundRect.Width / 2 > boundRect.Width * (0.70 - mainPass.WorldSizeScale / (40.0f / 3f))))
+                            && (localX + boundRect.Width / 2 < boundRect.Width * (0.225 + mainPass.WorldSizeScale / (40.0f / 3f)) // .30 .375 .45
+                            || localX + boundRect.Width / 2 > boundRect.Width * (0.775 - mainPass.WorldSizeScale / (40.0f / 3f)))) // .70 .625 .55
                         {
                             _validPoints.Add(new Point(worldX, worldY));
 

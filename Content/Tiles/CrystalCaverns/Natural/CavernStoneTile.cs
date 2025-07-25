@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-            AddMapEntry(new Color(065, 065, 085));
+            AddMapEntry(new Color(075, 075, 095));
             DustType = 59;
             HitSound = SoundID.Tink;
             CommonTileHelper.SetTileProtection(this);

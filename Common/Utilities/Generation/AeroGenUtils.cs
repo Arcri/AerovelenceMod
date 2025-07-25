@@ -360,6 +360,25 @@ namespace AerovelenceMod.Common.Utilities.Generation
             }
         }
 
+        public class NotSolidBelow : GenAction
+        {
+            private int _distance;
+
+            public NotSolidBelow(int distance)
+            {
+                _distance = distance;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                if (!WorldUtils.Find(new Point(x, y), Searches.Chain(new Searches.Down(1), new Conditions.IsSolid().AreaOr(1, _distance)), out Point _))
+                {
+                    return UnitApply(origin, x, y, args);
+                }
+                return Fail();
+            }
+        }
+
         public class ClearWallRunner : GenAction
         {
             public ClearWallRunner() { }

@@ -112,8 +112,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             CrystalTile = (ushort)ModContent.TileType<CavernCrystalTile>();
             ChargedTile = (ushort)ModContent.TileType<ChargedStoneTile>();
             BrickTile = (ushort)ModContent.TileType<CitadelBrickTile>();
-            DirtWall = (ushort)ModContent.WallType<CavernDirtWall>();
-            StoneWall = (ushort)ModContent.WallType<CavernStoneWall>();
+            DirtWall = (ushort)ModContent.WallType<CavernDirtWallUnsafe>();
+            StoneWall = (ushort)ModContent.WallType<CavernStoneWallUnsafe>();
             BrickWall = (ushort)ModContent.WallType<CitadelBrickWall>();
             LivingWoodTile = TileID.LivingWood;
             LivingLeafTile = TileID.LeafBlock;
@@ -124,15 +124,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             ReplaceWithChargedTiles = [TileID.ClayBlock, TileID.Diamond, TileID.Ruby, TileID.Emerald, TileID.Sapphire, TileID.Topaz, TileID.Amethyst];
             ReplaceWithSandTiles = [TileID.Sand, TileID.Sandstone, TileID.Crimsand, TileID.Ebonsand, TileID.Silt, TileID.Slush];
-            ReplaceWithStoneTiles = [TileID.Stone, TileID.Dirt, TileID.Grass, TileID.Mud, TileID.JungleGrass, TileID.MushroomGrass, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.SnowBlock, TileID.Ebonstone, TileID.Crimstone, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.Hive];
+            ReplaceWithStoneTiles = [TileID.Stone, TileID.Marble, TileID.Granite, TileID.HardenedSand, TileID.IceBlock, TileID.Ebonstone, TileID.Crimstone, TileID.Hive];
             ReplaceWithBrickTiles = [TileID.SandstoneBrick];
-            ReplaceWithDirtTiles = [StoneTile, CrystalTile, TileID.Copper, TileID.Tin, TileID.Iron, TileID.Lead, TileID.Silver, TileID.Tungsten, TileID.Gold, TileID.Platinum, TileID.Demonite, TileID.Crimtane];
+            ReplaceWithDirtTiles = [TileID.Dirt, TileID.DirtiestBlock, TileID.Mud, TileID.Grass, TileID.JungleGrass, TileID.MushroomGrass, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.SnowBlock];
             ClearTiles = [/*TileID.Larva*/];
 
             ReplaceWithBrickWalls = [WallID.SandstoneBrick, BrickWall];
 
             LivingWoodTiles = [LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile];
-            // Terrible array I need to fix but probably won't
 
             Origin = DetermineOrigin(BiomeWidth, UndergroundHeight, SurfaceHeight, BiomeHeight); //center x, top of underground y
             if (!Origin.Equals(Point.Zero)) 
@@ -257,8 +256,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     }
                 }
 
-                TransitionDithering([DirtTile], StoneTile);
-                TransitionDithering(ReplaceWithBrickTiles, BrickTile);
+                //TransitionDithering([DirtTile], StoneTile);
+                //TransitionDithering(ReplaceWithBrickTiles, BrickTile);
 
                 // Surface to underground wall dithering
                 void TransitionWallDithering(ushort[] toBeReplaced, ushort replaceWith)
@@ -274,8 +273,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     }
                 }
 
-                TransitionWallDithering([DirtWall], StoneWall);
-                TransitionWallDithering(ReplaceWithBrickWalls, BrickWall);
+                //TransitionWallDithering([DirtWall], StoneWall);
+                //TransitionWallDithering(ReplaceWithBrickWalls, BrickWall);
 
                 // BIOME UNDERGROUND
                 void GenUpperUnderground(ushort[] toBeReplaced, ushort replaceWith)
@@ -305,6 +304,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenUpperUnderground(ReplaceWithSandTiles, SandTile);
                 GenUpperUnderground(ReplaceWithChargedTiles, ChargedTile);
                 GenUpperUnderground(ReplaceWithBrickTiles, BrickTile);
+                GenUpperUnderground(ReplaceWithDirtTiles, DirtTile);
 
                 // Clear other tiles
                 WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
@@ -346,6 +346,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenLowerUnderground(ReplaceWithSandTiles, SandTile);
                 GenLowerUnderground(ReplaceWithChargedTiles, ChargedTile);
                 GenLowerUnderground(ReplaceWithBrickTiles, BrickTile);
+                GenLowerUnderground(ReplaceWithDirtTiles, DirtTile);
 
                 // Clear other tiles
                 WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
@@ -488,10 +489,48 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroGenUtils.PlaceTail(CrystalTile, 6, new Vector2D(0, -20), 0, 4, 3)
                 }));
 
+                // Tumbler arena prep
                 TumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
 
                 TumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5).ToPoint();
                 WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5);
+
+                // Underground crystal growths
+                WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new AeroGenUtils.NotSolidAbove(20),
+                    new Modifiers.Offset(0, 2),
+                    new Modifiers.Dither(.985), // 1/66.66 chance
+                    new Modifiers.OnlyTiles(StoneTile, ChargedTile),
+                    new AeroGenUtils.PlaceTail(CrystalTile, 4, new Vector2D(0, -10), 0, 4, 3)
+                }));
+                WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new AeroGenUtils.NotSolidBelow(20),
+                    new Modifiers.Offset(0, -2),
+                    new Modifiers.Dither(.985), // 1/66.66 chance
+                    new Modifiers.OnlyTiles(StoneTile, ChargedTile),
+                    new AeroGenUtils.PlaceTail(CrystalTile, 4, new Vector2D(0, 10), 0, 4, 3)
+                }));
+                WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Flip(false, true),
+                    new AeroGenUtils.NotSolidAbove(20),
+                    new Modifiers.Offset(0, 2),
+                    new Modifiers.Dither(.985), // 1/66.66 chance
+                    new Modifiers.OnlyTiles(StoneTile, ChargedTile),
+                    new AeroGenUtils.PlaceTail(CrystalTile, 4, new Vector2D(0, -10), 0, 4, 3)
+                }));
+                WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Flip(false, true),
+                    new AeroGenUtils.NotSolidBelow(20),
+                    new Modifiers.Offset(0, -2),
+                    new Modifiers.Dither(.985), // 1/66.66 chance
+                    new Modifiers.OnlyTiles(StoneTile, ChargedTile),
+                    new AeroGenUtils.PlaceTail(CrystalTile, 4, new Vector2D(0, 10), 0, 4, 3)
+                }));
+
 
                 ShapeData upperUndergroundShapeData = new ShapeData();
                 ShapeData lowerUndergroundShapeData = new ShapeData();
