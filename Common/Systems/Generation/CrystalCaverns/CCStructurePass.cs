@@ -239,7 +239,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 int pickIndex = WorldGen.genRand.Next(_validPoints.Count);
                 Point chosen = _validPoints[pickIndex];
                 _validPoints.RemoveAt(pickIndex);
-                HouseGenerator.GenerateCaveHouse(chosen.X, chosen.Y);
+                HouseGenerator.GenerateCaveHouse(chosen.X, chosen.Y, checkIfProtected: true);
             }
         }
 

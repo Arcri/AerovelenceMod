@@ -15,6 +15,7 @@ using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 
 namespace AerovelenceMod.Common.Utilities.Generation
 {
@@ -43,6 +44,11 @@ namespace AerovelenceMod.Common.Utilities.Generation
             public int Y;
             public int Width;
             public int Height;
+
+            public Rectangle ToRectangle()
+            {
+                return new Rectangle(X, Y, Width, Height);
+            }
         }
 
         #region Loot Pool Configuration
@@ -118,7 +124,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
         #endregion
 
 
-        public static void GenerateCaveHouse(int startX, int startY)
+        public static void GenerateCaveHouse(int startX, int startY, bool checkIfProtected = false)
         {
             int houseCount = Main.rand.Next(1, 4);
             HouseInfo[] houses = new HouseInfo[houseCount];
@@ -142,6 +148,19 @@ namespace AerovelenceMod.Common.Utilities.Generation
 
                 currentBottom = topRow;
             }
+
+            if (checkIfProtected)
+            {
+                Rectangle houseRectangles = Rectangle.Empty;
+                foreach (var house in houses)
+                {
+                    if (AeroStructure.ProtectedStructures.Any(x => x.Intersects(house.ToRectangle())))
+                    {
+                        return;
+                    }
+                }
+            }
+
             foreach (var h in houses)
                 ClearHouseRegion(h);
 
