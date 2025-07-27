@@ -7,7 +7,7 @@ using Terraria.Graphics.Effects;
 using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
 using System;
 
-namespace AerovelenceMod.Content.Skies
+namespace AerovelenceMod.Backgrounds.Skies
 {
     public class CyverSky : CustomSky
     {
@@ -105,10 +105,10 @@ namespace AerovelenceMod.Content.Skies
             if (maxDepth >= 0 && minDepth < 0)
             {
 
-                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/Cyversky1080", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-                    new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * (intensity) * (bonusIntensity));
+                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/Cyversky1080", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                    new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * intensity * bonusIntensity);
 
-                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Content/Skies/WhiteSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/WhiteSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                     new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White with { A = 0 } * whiteStrength);
 
                 if (CyverAttack == -1)
@@ -118,7 +118,7 @@ namespace AerovelenceMod.Content.Skies
                         for (int i = 0; i < 100; i++) 
                         {
                             bgLines[i].X = Main.rand.Next(Main.screenWidth);
-                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)(Main.screenHeight / 4.5f * 3.5), Main.screenHeight);
                         }
                         runOnce = false;
                     }
@@ -127,19 +127,19 @@ namespace AerovelenceMod.Content.Skies
                     {
 
                         if (i % 2 == 0)
-                            bgLines[i] += new Vector2(2.5f + (i / 15), 0) * (1f + lineBonusSpeed);
+                            bgLines[i] += new Vector2(2.5f + i / 15, 0) * (1f + lineBonusSpeed);
                         else
-                            bgLines[i] -= new Vector2(2.5f + (i / 15), 0) * (1f + lineBonusSpeed);
+                            bgLines[i] -= new Vector2(2.5f + i / 15, 0) * (1f + lineBonusSpeed);
 
-                        if (bgLines[i].X > (Main.screenWidth + 300))
+                        if (bgLines[i].X > Main.screenWidth + 300)
                         {
                             bgLines[i].X = -200 + Main.rand.Next(-1000, 180);
-                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)(Main.screenHeight / 4.5f * 3.5), Main.screenHeight);
                         }
                         else if (bgLines[i].X < -300)
                         {
                             bgLines[i].X = Main.screenWidth + 200 + Main.rand.Next(-180, 1000);
-                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)((Main.screenHeight / 4.5f) * 3.5), Main.screenHeight);
+                            bgLines[i].Y = Main.rand.NextBool() ? Main.rand.Next(0, (int)(Main.screenHeight / 4.5f)) : Main.rand.Next((int)(Main.screenHeight / 4.5f * 3.5), Main.screenHeight);
                         }
 
                         float width2 = Main.rand.NextFloat(0.25f, 1.75f);
@@ -150,7 +150,7 @@ namespace AerovelenceMod.Content.Skies
                             new Vector2(bgLines[i].X, bgLines[i].Y), null, colToUse with { A = 0 } * bonusIntensity * intensity * 2f * lineAlpha, 0, new Vector2(36, 36), new Vector2(width2, 0.10f), SpriteEffects.None, 0f );
 
                         spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Assets/Pixel/Starlight", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
-                            new Vector2(bgLines[i].X, bgLines[i].Y), null, Color.White with { A = 0 } * bonusIntensity * intensity * lineAlpha, 0, new Vector2(36, 36), new Vector2(width2, 0.10f + (2f * bgLineBoost)) * 0.5f, SpriteEffects.None, 0f);
+                            new Vector2(bgLines[i].X, bgLines[i].Y), null, Color.White with { A = 0 } * bonusIntensity * intensity * lineAlpha, 0, new Vector2(36, 36), new Vector2(width2, 0.10f + 2f * bgLineBoost) * 0.5f, SpriteEffects.None, 0f);
                     }
                 }
                 

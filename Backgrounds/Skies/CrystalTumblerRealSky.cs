@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace AerovelenceMod.Content.Skies
+namespace AerovelenceMod.Backgrounds.Skies
 {
     public class CrystalTumblerRealSky : CustomSky
     {

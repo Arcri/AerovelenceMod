@@ -7,7 +7,7 @@ using Terraria;
 using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 
-namespace AerovelenceMod
+namespace AerovelenceMod.Backgrounds.Skies
 {
     public class OverlaySystem : ModSystem
     {
@@ -20,7 +20,7 @@ namespace AerovelenceMod
             try
             {
                 crystalTumblerTexture = ModContent.Request<Texture2D>(
-                    "AerovelenceMod/Content/Skies/CrystalTumblerSky",
+                    "AerovelenceMod/Backgrounds/Skies/CrystalTumblerSky",
                     AssetRequestMode.ImmediateLoad
                 ).Value;
 
@@ -32,7 +32,7 @@ namespace AerovelenceMod
 
                 ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"Loaded texture with dimensions: {crystalTumblerTexture.Width}x{crystalTumblerTexture.Height}");
 
-                Terraria.IL_Main.DrawBackground += Main_DrawBackground_IL;
+                IL_Main.DrawBackground += Main_DrawBackground_IL;
                 ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn("OverlaySystem loaded successfully");
             }
             catch (Exception e)
@@ -49,7 +49,7 @@ namespace AerovelenceMod
                 ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn("Couldn't find return in DrawBackground");
                 return;
             }
-            c.EmitDelegate<Action>(() =>
+            c.EmitDelegate(() =>
             {
                 bool bossIsActive = NPC.AnyNPCs(ModContent.NPCType<CrystalTumbler2>());
                 if (!bossIsActive || crystalTumblerTexture == null)
@@ -99,7 +99,7 @@ namespace AerovelenceMod
         public override void Unload()
         {
             crystalTumblerTexture = null;
-            Terraria.IL_Main.DrawBackground -= Main_DrawBackground_IL;
+            IL_Main.DrawBackground -= Main_DrawBackground_IL;
             ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn("OverlaySystem unloaded");
         }
     }

@@ -14,7 +14,6 @@ using Terraria.Graphics.Shaders;
 using Terraria.Localization;
 using Terraria.UI;
 using ReLogic.Content;
-using AerovelenceMod.Content.Skies;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using ReLogic.Graphics;
 using AerovelenceMod.Common;

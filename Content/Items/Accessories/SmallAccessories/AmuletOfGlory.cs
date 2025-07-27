@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Buffs;
 using AerovelenceMod.Common.Systems.Language;
+using System;
 
 namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
 {
@@ -49,7 +50,10 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[proj.owner];
-            player.AddBuff(ModContent.BuffType<Glory>(), 300);
+            if (hasAmulet)
+            {
+                player.AddBuff(ModContent.BuffType<Glory>(), 300);
+            }
         }
     }
 
