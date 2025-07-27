@@ -59,7 +59,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
-                return SpawnCondition.OverworldNightMonster.Chance * 0.3f;
+                return SpawnCondition.Cavern.Chance + SpawnCondition.Underground.Chance;
             }
             return 0f;
         }

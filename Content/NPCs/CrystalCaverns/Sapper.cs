@@ -5,10 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
+using Terraria.WorldBuilding;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
@@ -75,17 +77,11 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             });
         }
 
-
-
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
-                if (!WorldGen.SolidTile(spawnInfo.SpawnTileX, spawnInfo.SpawnTileY - 1))
-                {
-                    return 0f;
-                }
-                return SpawnCondition.OverworldNightMonster.Chance;
+                return SpawnCondition.Cavern.Chance * 0.5f + SpawnCondition.Underground.Chance * 0.5f;
             }
             return 0f;
         }
@@ -126,6 +122,13 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 
         private void Initialize()
         {
+            Point spawnPoint = Point.Zero;
+            WorldUtils.Find(NPC.Center.ToTileCoordinates() + new Point(0, 40), Searches.Chain(new Searches.Up(50), new Conditions.IsSolid()), out spawnPoint);
+            if (spawnPoint != Point.Zero)
+            {
+                NPC.Center = spawnPoint.ToWorldCoordinates();
+            }
+
             segmentCount = Main.rand.Next(MIN_SEGMENTS, MAX_SEGMENTS + 1);
             segments = [];
             Vector2 basePos = NPC.Center;

@@ -2,6 +2,8 @@
 using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CrystalCrescent;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
 using System;
@@ -115,26 +117,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 List<(Vector2 Position, List<PrimaryItemConfiguration> Primary, List<ItemConfiguration> Secondary)> shrinesToProcess = new();
                 List<PrimaryItemConfiguration> crystalShrinePrimary = new()
                 {
-                    new(ItemID.BandofRegeneration, 1, 1, 1f),
-                    new(ItemID.MagicMirror, 1, 1, 1f),
-                    new(ItemID.CloudinaBottle, 1, 1, 1f),
-                    new(ItemID.HermesBoots, 1, 1, 1f),
-                    new(ItemID.EnchantedBoomerang, 1, 1, 1f),
-                    new(ItemID.ShoeSpikes, 1, 1, 1f),
-                    new(ItemID.FlareGun, 1, 1, 1f),
-                    new(ItemID.Extractinator, 1, 1, 1f),
-                    new(ItemID.LavaCharm, 1, 1, 1f),
-                    new(ItemID.LuckyHorseshoe, 1, 1, 1f),
-                    new(ModContent.ItemType<Eos>(), 1, 1, 1f)
+                    new(ModContent.ItemType<CrystalCrescent>(), 1, 1, 1f),
                 };
 
                 List<ItemConfiguration> crystalShrineSecondary = new()
                 {
-                    new(ItemID.SuspiciousLookingEye, 1, 1),
-                    new(ItemID.Dynamite, 1, 1),
-                    new(ItemID.JestersArrow, 25, 50),
+
+                    new(ItemID.SuspiciousLookingEye, 0, 1),
                     new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10),
-                    new(new List<int> { ItemID.FlamingArrow, ItemID.ThrowingKnife }, 25, 50),
                     new(ItemID.HealingPotion, 3, 5),
                     new(new List<int>
                     {
@@ -142,9 +132,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
                         ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
                     }, 1, 2),
-                    new(ItemID.RecallPotion, 1, 2),
-                    new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29),
-                    new(ItemID.GoldCoin, 1, 2)
+                    new(ItemID.RecallPotion, 0, 3),
+                    new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 30),
+                    new(ModContent.ItemType<CavernCrystalItem>(), 10, 30),
+                    new(ItemID.GoldCoin, 1, 3),
                 };
 
                 WorldGen.noTileActions = false;

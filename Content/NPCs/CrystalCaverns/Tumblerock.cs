@@ -1,4 +1,5 @@
-﻿using AerovelenceMod.Common.Systems.Language;
+﻿using AerovelenceMod.Common.Globals.NPCs;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
-                return SpawnCondition.OverworldNightMonster.Chance;
+                return SpawnCondition.OverworldDaySlime.Chance * 0.5f + SpawnCondition.OverworldNightMonster.Chance;
             return 0f;
         }
 
@@ -126,7 +127,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
-                return SpawnCondition.OverworldNightMonster.Chance * 0.9f;
+                return SpawnCondition.OverworldDaySlime.Chance * 0.5f + SpawnCondition.OverworldNightMonster.Chance;
             return 0f;
         }
 

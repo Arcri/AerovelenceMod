@@ -1,4 +1,3 @@
-using AerovelenceMod.Common.Globals.Players;
 using AerovelenceMod.Content.Biomes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -108,7 +107,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if ((spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>())) && spawnInfo.Water)
             {
-                return SpawnCondition.CaveJellyfish.Chance;
+                return SpawnCondition.CaveJellyfish.Chance * 0.25f;
             }
             return 0;
         }

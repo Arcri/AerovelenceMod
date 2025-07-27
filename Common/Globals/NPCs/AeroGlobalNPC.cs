@@ -1,10 +1,13 @@
 using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Biomes;
 using AerovelenceMod.Content.Buffs;
 using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace AerovelenceMod.Common.Globals.NPCs
 {
@@ -33,82 +36,20 @@ namespace AerovelenceMod.Common.Globals.NPCs
 
         public override bool CheckDead(NPC npc)
         {
-			/*
-			if (npc.type == NPCID.EyeofCthulhu && !NPC.downedBoss1)
-			{
-				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
-				{
-					int EEXX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
-					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
-
-					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].HasTile)
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("PhanticOreBlock").Type);
-                }
-
-				Main.NewText("Phantom stones formed in the caves!", 180, 60, 140);
-			}
-			*/
-			/*
-			if (npc.type == ModContent.NPCType<CrystalTumbler>() && !DownedWorld.DownedCrystalTumbler)
-			{
-				for (int k = 0; k < (int)(Main.maxTilesX * Main.maxTilesY * 13 * 2E-05); k++)
-				{
-					int EEXX = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
-					int WHHYY = WorldGen.genRand.Next((int)Main.rockLayer, Main.maxTilesY - 130);
-
-					if (Main.tile[EEXX, WHHYY] != null)
-                        if (Main.tile[EEXX, WHHYY].HasTile)
-                            WorldGen.OreRunner(EEXX, WHHYY, WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), (ushort)Mod.Find<ModTile>("BurnshockOreBlock").Type);
-                }
-
-				Main.NewText("Electric gemstones light the caverns!", 180, 60, 140);
-			}
-			*/
 			return true;
 		}
 
 		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
-			/*
-			if (SoulFire)
-			{
-				if (Main.rand.Next(4) < 3)
-				{
-					int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, ModContent.DustType<WispDust>(), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default, 3.5f);
-					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity *= 1.8f;
-					Main.dust[dust].velocity.Y -= 0.5f;
-
-					if (Main.rand.NextBool(4))
-					{
-						Main.dust[dust].noGravity = false;
-						Main.dust[dust].scale *= 0.5f;
-					}
-				}
-
-				Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
-			}
-
-			if (Electrified)
-			{
-				if (Main.rand.Next(4) < 3)
-				{
-					int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, ModContent.DustType<WispDust>(), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default, 3.5f);
-					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity *= 1.8f;
-					Main.dust[dust].velocity.Y -= 0.5f;
-
-					if (Main.rand.NextBool(4))
-					{
-						Main.dust[dust].noGravity = false;
-						Main.dust[dust].scale *= 0.5f;
-					}
-				}
-
-				Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
-			}
-			*/
+			
 		}
-	}
+
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
+			{
+				pool[0] = 0f;
+			}
+        }
+    }
 }

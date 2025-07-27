@@ -108,7 +108,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if ((spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsSurfaceBiome>()) || spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>())) && spawnInfo.Water)
             {
-                return SpawnCondition.CaveJellyfish.Chance;
+                return SpawnCondition.OverworldWaterCritter.Chance * 1.2f;
             }
             return 0;
         }

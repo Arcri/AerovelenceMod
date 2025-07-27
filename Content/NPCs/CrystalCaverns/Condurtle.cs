@@ -47,7 +47,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         private bool facingRight = true;
 
         private const float DETECTION_RANGE = 250f;
-        private const int ATTACK_COOLDOWN = 240;
+        private const int ATTACK_COOLDOWN = 60;
         private const int POST_ATTACK_WALK_TIME = 60;
         private const int SHELL_MAX_TIME = 300;
         private int conductorID = -1;
@@ -97,7 +97,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
-                return SpawnCondition.OverworldNightMonster.Chance * 0.3f;
+                return SpawnCondition.Underground.Chance * 0.5f + SpawnCondition.Cavern.Chance * 0.5f;
             }
             return 0f;
         }

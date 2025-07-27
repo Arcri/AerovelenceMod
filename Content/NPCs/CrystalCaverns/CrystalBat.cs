@@ -56,7 +56,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
         {
             if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
             {
-                return SpawnCondition.Cavern.Chance;
+                return SpawnCondition.Cavern.Chance * 0.5f + SpawnCondition.Underground.Chance * 0.5f;
             }
             return 0f;
         }

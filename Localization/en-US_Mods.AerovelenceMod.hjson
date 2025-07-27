@@ -1083,10 +1083,19 @@ Items: {
 NPCs: {
 	CyverBot.DisplayName: Cyver Bot
 	CyverBotOrbiter.DisplayName: Cyver Bot Orbiter
-	Cyvercry2.DisplayName: Cyvercry
+
+	Cyvercry2: {
+		DisplayName: Cyvercry
+		SpawnInfo: Use {0} at night.
+	}
+
+	CrystalTumbler: {
+		DisplayName: Crystal Tumbler
+		SpawnInfo: Use {0} at the mysterious gate in the Crystal Caverns.
+	}
+
 	MovingPlatform.DisplayName: Moving Platform
 	FeatheredFoe.DisplayName: Feathered Foe
-	CrystalTumbler.DisplayName: Crystal Tumbler
 	CrystalBomb.DisplayName: Crystal Bomb
 	HealerDrone.DisplayName: Healer Drone
 
