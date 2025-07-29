@@ -19,9 +19,23 @@ namespace AerovelenceMod.Backgrounds.Skies
         private Bolt[] bolts;
         private int ticksUntilNextBolt;
         private UnifiedRandom random = new UnifiedRandom();
+        private static Texture2D[] boltTextures = [
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt1", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt2", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt3", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt4", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value];
+        private static Texture2D[] boltFlashTextures = [
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash1", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash2", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash3", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash4", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash5", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value];
 
         private struct Bolt
         {
+            public Texture2D Texture;
+            public Texture2D FlashTexture;
             public Vector2 Position;
             public float Rotation;
             public float Depth;
@@ -37,6 +51,9 @@ namespace AerovelenceMod.Backgrounds.Skies
             for (int i = 0; i < bolts.Length; i++)
             {
                 bolts[i].IsAlive = false;
+                int textureNum = random.Next(5);
+                bolts[i].Texture = boltTextures[textureNum];
+                bolts[i].FlashTexture = boltFlashTextures[textureNum];
             }
         }
 
@@ -136,20 +153,20 @@ namespace AerovelenceMod.Backgrounds.Skies
                 {
                     continue;
                 }
-                Texture2D value = AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyBolt", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                Texture2D texture = bolts[i].Texture;
                 int life = bolts[i].Life;
                 if (life > 26 && life % 2 == 0)
                 {
-                    value = AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSkyFlash", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                    //texture = bolts[i].FlashTexture;
                 }
                 Vector2 vector3 = Main.screenPosition + new Vector2(Main.screenWidth >> 1, Main.screenHeight >> 1);
                 Vector2 position = (bolts[i].Position - vector3) * new Vector2(1f / bolts[i].Depth, 0.9f / bolts[i].Depth) + vector3 - Main.screenPosition;
                 float lifeColorDecay = life / 30f;
                 spriteBatch.Draw(
-                    texture: value,
+                    texture: texture,
                     position: position,
                     sourceRectangle: null,
-                    color: Color.White * lifeColorDecay,
+                    color: (new Color(255, 255, 255, 0) * lifeColorDecay),
                     rotation: bolts[i].Rotation, //
                     origin: Vector2.Zero, //
                     scale: 5f / bolts[i].Depth,
