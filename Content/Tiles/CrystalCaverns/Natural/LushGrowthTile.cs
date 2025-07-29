@@ -83,43 +83,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                     }
                 }
             }*/
-            int tileX, tileY;
-            for (int y = -1; y <= 1; y++)
-            {
-                for (int x1 = -1; x1 <= 1; x1++)
-                {
-                    tileX = i + x1;
-                    tileY = j + y;
-                    if (!WorldGen.InWorld(i, j, 0)) continue;
-                    if (Main.tile[tileX, tileY].TileType == TileID.MushroomGrass && Main.rand.NextBool(4))
-                    {
-                        Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<LushGrowthTile>();
-                        WorldGen.SquareTileFrame(tileX, tileY, true);
-                    }
-                }
-            }
-            for (int x = i - 1; x <= i + 1; x++)
-            {
-                for (int y = j - 1; y <= j + 1; y++)
-                {
-                    if ((x != i || j != y) && Main.tile[x, y].HasTile && Main.tile[x, y].TileType == ModContent.TileType<CrystalDirtTile>())
-                    {
-                        WorldGen.SpreadGrass(x, y, ModContent.TileType<CrystalDirtTile>(), Type, false, new TileColorCache());
-                        if (Main.tile[x, y].TileType == Type)
-                        {
-                            WorldGen.SquareTileFrame(x, y, true);
-                        }
-                    }
-                    if ((x != i || j != y) && Main.tile[x, y].HasTile && Main.tile[x, y].TileType == TileID.Dirt)
-                    {
-                        WorldGen.SpreadGrass(x, y, TileID.Dirt, Type, false, new TileColorCache());
-                        if (Main.tile[x, y].TileType == Type)
-                        {
-                            WorldGen.SquareTileFrame(x, y, true);
-                        }
-                    }
-                }
-            }
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

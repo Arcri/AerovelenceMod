@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using ReLogic.Utilities;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.WorldBuilding;
 using static Terraria.Collision;
@@ -75,32 +76,36 @@ namespace AerovelenceMod.Common.Utilities.Generation
             private readonly float _verticalRadius;
             private readonly float _horizontalVariance;
             private readonly float _verticalVariance;
+            private readonly GenAction[] _addArgs;
 
-            public PlaceBlob(ushort type, int radius)
+            public PlaceBlob(ushort type, int radius, GenAction[] addArgs)
             {
                 _type = type;
                 _horizontalRadius = radius;
                 _verticalRadius = radius;
                 _horizontalVariance = 0;
                 _verticalVariance = 0;
+                _addArgs = addArgs;
             }
 
-            public PlaceBlob(ushort type, int horizontalRadius, int verticalRadius)
+            public PlaceBlob(ushort type, int horizontalRadius, int verticalRadius, GenAction[] addArgs)
             {
                 _type = type;
                 _horizontalRadius = horizontalRadius;
                 _verticalRadius = verticalRadius;
                 _horizontalVariance = 0;
                 _verticalVariance = 0;
+                _addArgs = addArgs;
             }
 
-            public PlaceBlob(ushort type, float horizontalRadius, float verticalRadius, float horizontalVariance, float verticalVariance)
+            public PlaceBlob(ushort type, float horizontalRadius, float verticalRadius, float horizontalVariance, float verticalVariance, GenAction[] addArgs)
             {
                 _type = type;
                 _horizontalRadius = horizontalRadius;
                 _verticalRadius = verticalRadius;
                 _horizontalVariance = horizontalVariance;
                 _verticalVariance = verticalVariance;
+                _addArgs = addArgs;
             }
 
             public override bool Apply(Point origin, int x, int y, params object[] args)
@@ -110,11 +115,65 @@ namespace AerovelenceMod.Common.Utilities.Generation
                 WorldUtils.Gen(new Point(x, y), new Shapes.Circle(
                         (int)Math.Round(_horizontalRadius + WorldGen.genRand.NextFloat(-_horizontalVariance, _horizontalVariance + 1)),
                         (int)Math.Round(_verticalRadius + WorldGen.genRand.NextFloat(-_verticalVariance, _verticalVariance + 1))),
-                    Actions.Chain(new GenAction[]
-                    {
+                    Actions.Chain(_addArgs.Concat([
                         new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 2, _horizontalRadius + _horizontalVariance),
                         new SwapSolidTileInclusive(_type)
-                    }));
+                    ]).ToArray()));
+
+                return UnitApply(origin, x, y, args);
+            }
+        }
+
+        public class PlaceBlobWall : GenAction
+        {
+            private readonly ushort _type;
+            private readonly float _horizontalRadius;
+            private readonly float _verticalRadius;
+            private readonly float _horizontalVariance;
+            private readonly float _verticalVariance;
+            private readonly GenAction[] _addArgs;
+
+            public PlaceBlobWall(ushort type, int radius, GenAction[] addArgs)
+            {
+                _type = type;
+                _horizontalRadius = radius;
+                _verticalRadius = radius;
+                _horizontalVariance = 0;
+                _verticalVariance = 0;
+                _addArgs = addArgs;
+            }
+
+            public PlaceBlobWall(ushort type, int horizontalRadius, int verticalRadius, GenAction[] addArgs)
+            {
+                _type = type;
+                _horizontalRadius = horizontalRadius;
+                _verticalRadius = verticalRadius;
+                _horizontalVariance = 0;
+                _verticalVariance = 0;
+                _addArgs = addArgs;
+            }
+
+            public PlaceBlobWall(ushort type, float horizontalRadius, float verticalRadius, float horizontalVariance, float verticalVariance, GenAction[] addArgs)
+            {
+                _type = type;
+                _horizontalRadius = horizontalRadius;
+                _verticalRadius = verticalRadius;
+                _horizontalVariance = horizontalVariance;
+                _verticalVariance = verticalVariance;
+                _addArgs = addArgs;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                Tile tile = _tiles[x, y];
+
+                WorldUtils.Gen(new Point(x, y), new Shapes.Circle(
+                        (int)Math.Round(_horizontalRadius + WorldGen.genRand.NextFloat(-_horizontalVariance, _horizontalVariance + 1)),
+                        (int)Math.Round(_verticalRadius + WorldGen.genRand.NextFloat(-_verticalVariance, _verticalVariance + 1))),
+                    Actions.Chain(_addArgs.Concat([
+                        new Modifiers.RadialDither(_horizontalRadius + _horizontalVariance - 3, _horizontalRadius + _horizontalVariance),
+                        new Actions.PlaceWall(_type)
+                    ]).ToArray()));
 
                 return UnitApply(origin, x, y, args);
             }

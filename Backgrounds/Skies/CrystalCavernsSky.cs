@@ -119,7 +119,7 @@ namespace AerovelenceMod.Backgrounds.Skies
         {
             if (ticksUntilNextBolt <= 0)
             {
-                ticksUntilNextBolt = random.Next(3, 6);
+                ticksUntilNextBolt = random.Next(5, 7);
                 int i;
                 for (i = 0; bolts[i].IsAlive && i != bolts.Length - 1; i++)
                 {
