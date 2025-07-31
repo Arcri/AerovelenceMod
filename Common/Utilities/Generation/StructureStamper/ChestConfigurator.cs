@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using System;
+using Terraria.Utilities;
 
 namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 {
@@ -11,6 +12,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
 
         private static readonly object chestLock = new object();
         private static bool isConfiguringChest = false;
+        private static UnifiedRandom rand = WorldGen.genRand;
         /// <summary>
         /// 
         /// </summary>
@@ -71,7 +73,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         foreach (var primaryConfig in chestConfig.PrimaryItems)
                         {
                             if (slotIndex >= maxSlots) break;
-                            if (primaryConfig != null && Main.rand.NextFloat() < primaryConfig.Weight)
+                            if (primaryConfig != null && rand.NextFloat() < primaryConfig.Weight)
                             {
                                 slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex, x, y);
                             }
@@ -112,7 +114,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         continue;
                     }
 
-                    int itemType = itemConfig.ItemTypeChoices[Main.rand.Next(itemConfig.ItemTypeChoices.Count)];
+                    int itemType = itemConfig.ItemTypeChoices[rand.Next(itemConfig.ItemTypeChoices.Count)];
                     if (itemType <= 0 || itemType >= ItemLoader.ItemCount)
                     {
                         ModContent.GetInstance<AerovelenceMod>()?.Logger.Warn($"Invalid itemType {itemType} for chest at ({chestX}, {chestY}).");
@@ -122,7 +124,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                     try
                     {
                         int stackSize = Math.Clamp(
-                            Main.rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
+                            rand.Next(itemConfig.MinStack, itemConfig.MaxStack + 1),
                             1,
                             ContentSamples.ItemsByType[itemType].maxStack
                         );

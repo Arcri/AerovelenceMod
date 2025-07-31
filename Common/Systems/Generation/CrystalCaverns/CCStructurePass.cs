@@ -1,6 +1,7 @@
 ﻿using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
+using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CrystalCrescent;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
@@ -114,29 +115,62 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 UnifiedRandom rand = WorldGen.genRand;
                 InitializeValidPoints(mainPass.TotalUnderground);
-                List<(Vector2 Position, List<PrimaryItemConfiguration> Primary, List<ItemConfiguration> Secondary)> shrinesToProcess = new();
-                List<PrimaryItemConfiguration> crystalShrinePrimary = new()
+
+                #region Loot Pools
+                List<PrimaryItemConfiguration> smallShrinePrimary = new()
                 {
-                    new(ModContent.ItemType<CrystalCrescent>(), 1, 1, 1f),
+                    new(ModContent.ItemType<CrystalCrescent>(), 1, 1, 1f)
                 };
 
-                List<ItemConfiguration> crystalShrineSecondary = new()
+                List<ItemConfiguration> smallShrineSecondary = new()
                 {
-
-                    new(ItemID.SuspiciousLookingEye, 0, 1),
-                    new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10),
-                    new(ItemID.HealingPotion, 3, 5),
+                    rand.NextBool(5) ? new(ItemID.SuspiciousLookingEye, 1, 1) : new(null, 1, 1),
+                    rand.NextBool(3) ? new(ItemID.Dynamite, 1, 1) : new(null, 1, 1),
+                    rand.NextBool(4) ? new(ItemID.Dynamite, 25, 50) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ItemID.HealingPotion, 3, 5) : new(null, 1, 1),
                     new(new List<int>
                     {
                         ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
                         ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
                         ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
                     }, 1, 2),
-                    new(ItemID.RecallPotion, 0, 3),
-                    new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 30),
-                    new(ModContent.ItemType<CavernCrystalItem>(), 10, 30),
-                    new(ItemID.GoldCoin, 1, 3),
+                    rand.NextBool(2) ? new(ItemID.RecallPotion, 1, 2) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ModContent.ItemType < CavernCrystalItem >(), 10, 30) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ItemID.GoldCoin, 1, 2) : new(null, 1, 1),
                 };
+
+                List<PrimaryItemConfiguration> genericLootPrimary = new()
+                {
+                    new(ItemID.BandofRegeneration, 1, 1, 1f),
+                    new(ItemID.MagicMirror, 1, 1, 1f),
+                    new(ItemID.CloudinaBottle, 1, 1, 1f),
+                    new(ItemID.HermesBoots, 1, 1, 1f),
+                    new(ItemID.Mace, 1, 1, 1f),
+                    new(ModContent.ItemType<CrystalStompers>(), 1, 1, 1f)
+                };
+
+                List<ItemConfiguration> genericLootSecondary = new()
+                {
+                    rand.NextBool(5) ? new(ItemID.SuspiciousLookingEye, 1, 1) : new(null, 1, 1),
+                    rand.NextBool(3) ? new(ItemID.Dynamite, 1, 1) : new(null, 1, 1),
+                    rand.NextBool(4) ? new(ItemID.Dynamite, 25, 50) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ItemID.HealingPotion, 3, 5) : new(null, 1, 1),
+                    new(new List<int>
+                    {
+                        ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
+                        ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
+                        ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
+                    }, 1, 2),
+                    rand.NextBool(2) ? new(ItemID.RecallPotion, 1, 2) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ModContent.ItemType < CavernCrystalItem >(), 10, 30) : new(null, 1, 1),
+                    rand.NextBool(2) ? new(ItemID.GoldCoin, 1, 2) : new(null, 1, 1),
+                };
+
+                #endregion
 
                 WorldGen.noTileActions = false;
 
@@ -150,64 +184,64 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 PlaceStructureSafely("ancientbridge")
                     .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 PlaceStructureSafely("smallshrine")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 if (rand.NextBool())
                 {
                     PlaceStructureSafely("librarydarkleft")
                     .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 }
                 else
                 {
                     PlaceStructureSafely("librarydarkright")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 }
                 if (rand.NextBool())
                 {
                     PlaceStructureSafely("librarylightleft")
                     .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 } 
                 else
                 {
                     PlaceStructureSafely("librarylightright")
                     .ProtectStructure()
-                    .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                    .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 }
 
                 if (mainPass.WorldSizeScale > 1.2f) // Medium or large world, 1.2f instead of 1f so floating point math doesn't screw it up
                 {
                     PlaceStructureSafely("librarydarkleft")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarydarkright")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarylightleft")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarylightright")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 }
                 if (mainPass.WorldSizeScale > 1.7f) // Large world, otherwise same as last if statement
                 {
                     PlaceStructureSafely("librarydarkleft")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarydarkright")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarylightleft")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                     PlaceStructureSafely("librarylightright")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, crystalShrinePrimary, crystalShrineSecondary);
+                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 }
 
                 PlaceRandomCaveHouses();
