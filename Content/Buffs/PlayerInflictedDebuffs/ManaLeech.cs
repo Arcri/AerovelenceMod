@@ -18,18 +18,18 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
         public int timer = 0;
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Mana Leech"); // Buff display name
-            // Description.SetDefault("uh i hope people cant see this"); // Buff description
             Main.debuff[Type] = true;  // Is it a debuff?
-            //Main.buffNoTimeDisplay[Type] = false;
             Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
 
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<ManaLeechModNPC>().ManaLeechDebuff = true;
-            timer++;
+            if (npc.type != NPCID.TargetDummy) //Im not letting this happen lol
+            {
+                npc.GetGlobalNPC<ManaLeechModNPC>().ManaLeechDebuff = true;
+                timer++;
+            }
         }
     }
 
@@ -69,28 +69,31 @@ namespace AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs
                     Main.dust[dust].velocity.X *= 0.5f;
                     Main.dust[dust].alpha = 2;
                     Main.dust[dust].noLight = true;
+                    //Main.dust[dust].rotation = Main.rand.NextFloat(6.28f);
 
 
-                    if (ManaLeechTime % 4 == 0)
+                    if (ManaLeechTime % 8 == 0)
                     {
                         int dust2 = Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowPixelRise>(), Scale: 0.5f, newColor: Color.DodgerBlue);
                         Main.dust[dust2].velocity.Y = Math.Abs(Main.dust[dust2].velocity.Y) * -1;
                         Main.dust[dust2].velocity.X *= 0.85f;
                         Main.dust[dust2].alpha = 2;
                         Main.dust[dust2].noLight = true;
+                        //Main.dust[dust2].rotation = Main.rand.NextFloat(6.28f);
                     }
 
                 }
 
+                if (ManaLeechTime % 4 == 0)
+                {
+                    int dust3 = Dust.NewDust(npc.position, npc.width, npc.height, ModContent.DustType<GlowPixelCross>(), newColor: Color.DodgerBlue);
+                    Main.dust[dust3].scale *= 0.35f;
+                }
+
                 if (ManaLeechTime % 17 == 0)
                 {
-                    //Vector2 v = Main.rand.NextVector2Unit();
                     int dust3 = Dust.NewDust(npc.position, npc.width, npc.height, DustID.PortalBoltTrail, newColor: Color.DeepSkyBlue);
                     Main.dust[dust3].velocity.Y = Math.Abs(Main.dust[dust3].velocity.Y) * -2;
-
-                    //Vector2 v = Main.rand.NextVector2Unit();
-                    //Dust sa = Dust.NewDustPerfect(Projectile.Center, DustID.PortalBoltTrail, v * Main.rand.NextFloat(1f, 6f), 0,
-                        //Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.9f));
                 }
 
                 ManaLeechTime++;

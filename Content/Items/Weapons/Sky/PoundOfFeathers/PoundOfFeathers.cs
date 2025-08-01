@@ -1,20 +1,18 @@
 ﻿using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
-using AerovelenceMod.Content.Projectiles.TempVFX;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using System;
 using System.Collections.Generic;
 using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Systems.Language;
 
-namespace AerovelenceMod.Content.Items.Weapons.Sky
+namespace AerovelenceMod.Content.Items.Weapons.Sky.PoundOfFeathers
 {
     public class PoundOfFeathers : TranslatableModItem
     {
@@ -126,7 +124,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             {
                 Projectile.ai[0] = Projectile.velocity.Length();
                 previousRotations = new List<float>();
-                previousPostions = new List<Vector2>();
+                previousPositions = new List<Vector2>();
             }
 
             //Normal behavior
@@ -158,10 +156,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
 
                 fadeAlpha = Math.Clamp(MathHelper.Lerp(fadeAlpha, 1.5f, 0.15f), 0f, 1f);
 
+                //Skill strike if we are in the first 10 frames
                 if (timer <= 10)
                     SkillStrikeUtil.setSkillStrike(Projectile, 1.3f, 1, 0.25f, 0f);
                 else
                     Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike = false;
+
+                //Dust
+                if (timer % 3 == 0 && Main.rand.NextBool(3) && timer > 5)
+                {
+                    Vector2 dustVel = Main.rand.NextVector2CircularEdge(1.25f, 1.25f) - Projectile.velocity * 0.25f;
+                    float dustScale = Main.rand.NextFloat(0.25f, 0.35f) * 1.5f;
+
+                    Dust smoke = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowFlare>(), dustVel, newColor: Color.DeepSkyBlue, Scale: dustScale);
+                    smoke.alpha = 2;
+                }
             }
             else
             {
@@ -169,66 +178,84 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 fadeAlpha = Math.Clamp(MathHelper.Lerp(fadeAlpha, -0.5f, 0.15f), 0f, 1f);
             }
 
+            //Store trail positions and rotations
             int trailCount = 10;
             if (!stuckIn)
             {
                 previousRotations.Add(Projectile.rotation);
-                previousPostions.Add(Projectile.Center);
+                previousPositions.Add(Projectile.Center);
 
                 if (previousRotations.Count > trailCount)
                     previousRotations.RemoveAt(0);
 
-                if (previousPostions.Count > trailCount)
-                    previousPostions.RemoveAt(0);
+                if (previousPositions.Count > trailCount)
+                    previousPositions.RemoveAt(0);
             }
 
             timer++;
         }
 
-        public List<float> previousRotations;
-        public List<Vector2> previousPostions;
+        List<float> previousRotations;
+        List<Vector2> previousPositions;
 
         float fadeAlpha = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
             if (timer <= 0) return false;
-            Texture2D Feather = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/Feather").Value;
-            Texture2D FeatherGray = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/FeatherGray").Value;
-            Texture2D FeatherWhite = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/FeatherWhite").Value;
+            Texture2D Feather = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/PoundOfFeathers/Feather").Value;
+            Texture2D FeatherGray = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/PoundOfFeathers/FeatherGray").Value;
+            Texture2D FeatherWhite = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Sky/PoundOfFeathers/FeatherWhite").Value;
 
             Vector2 featherScale = new Vector2(1f, 1f * fadeAlpha) * Projectile.scale;
 
+            bool doSkillStrikeVisuals = Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike && hasHit;
+
             #region after image
-            if (previousRotations != null && previousPostions != null)
+            for (int i = 0; i < previousRotations.Count; i++)
             {
-                for (int i = 0; i < previousRotations.Count; i++)
+                float progress = (float)i / previousRotations.Count;
+
+                float size = (0.75f + (progress * 0.25f)) * Projectile.scale;
+
+                Color betweenBlue = Color.Lerp(Color.DeepSkyBlue, Color.SkyBlue, 0.5f);
+
+                Color col = Color.Lerp(Color.DodgerBlue, betweenBlue, progress) * progress;
+                Color col2 = Color.Lerp(Color.DodgerBlue, betweenBlue, progress) * progress;
+
+                //Color Gold if we just skill striked
+                if (doSkillStrikeVisuals)
                 {
-                    float progress = (float)i / previousRotations.Count;
-                    float size = (0.75f + (progress * 0.25f)) * Projectile.scale;
-
-                    Color col = Color.Lerp(Color.Blue, Color.DeepSkyBlue, progress) * progress * fadeAlpha;
-
-                    float size2 = (1f + (progress * 0.25f)) * Projectile.scale;
-                    Main.EntitySpriteDraw(FeatherGray, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 0.55f,
-                            previousRotations[i], FeatherGray.Size() / 2f, size2 * featherScale, SpriteEffects.None);
-
-                    Vector2 vec2Scale = new Vector2(1.5f, 0.25f) * size;
-                    Main.EntitySpriteDraw(FeatherWhite, previousPostions[i] - Main.screenPosition, null, col with { A = 0 } * 0.85f,
-                        previousRotations[i], FeatherGray.Size() / 2f, vec2Scale, SpriteEffects.None);
+                    col = Color.Orange * progress;
+                    col2 = Color.Lerp(Color.Orange, Color.Gold, progress) * progress;
                 }
 
+                //Draw After Image
+                float size2 = (1f + (progress * 0.25f)) * Projectile.scale;
+                Main.EntitySpriteDraw(FeatherGray, previousPositions[i] - Main.screenPosition, null, col with { A = 0 } * 0.45f * fadeAlpha,
+                        previousRotations[i], FeatherGray.Size() / 2f, size2, SpriteEffects.None);
+
+                //Draw another after image, but thinner to make a solid line
+                Vector2 vec2Scale = new Vector2(1.5f, 0.25f) * size;
+                Main.EntitySpriteDraw(FeatherWhite, previousPositions[i] - Main.screenPosition, null, col2 with { A = 0 } * 0.75f * fadeAlpha,
+                        previousRotations[i], FeatherGray.Size() / 2f, vec2Scale, SpriteEffects.None);
             }
             #endregion
 
-
-            for (int i = 0; i < 3; i++)
+            //Draw Border
+            Color borderCol = doSkillStrikeVisuals ? Color.Gold : Color.DeepSkyBlue;
+            for (int i = 0; i < 4; i++)
             {
-                Main.EntitySpriteDraw(FeatherWhite, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f), null, Color.DeepSkyBlue * 0.5f * (fadeAlpha * fadeAlpha), Projectile.rotation, Feather.Size() / 2f, featherScale * 1.05f, SpriteEffects.None);
+                Main.EntitySpriteDraw(FeatherWhite, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f), null, borderCol * 0.5f * (fadeAlpha * fadeAlpha), 
+                    Projectile.rotation, Feather.Size() / 2f, featherScale * 1.05f, SpriteEffects.None);
             }
 
-            Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, lightColor * fadeAlpha, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
+            if (doSkillStrikeVisuals)
+                Main.EntitySpriteDraw(FeatherGray, Projectile.Center - Main.screenPosition, null, Color.Gold * fadeAlpha, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
+            else
+                Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, lightColor * fadeAlpha, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
 
-            Main.EntitySpriteDraw(Feather, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 } * 0.4f * fadeAlpha, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
+            Color overCol = (doSkillStrikeVisuals ? Color.Gold : Color.White) * 0.4f * fadeAlpha;
+            Main.EntitySpriteDraw(FeatherGray, Projectile.Center - Main.screenPosition, null, overCol with { A = 0 }, Projectile.rotation, Feather.Size() / 2f, featherScale, SpriteEffects.None);
 
             return false;
         }
@@ -240,8 +267,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
                 hitFX();  
         }
 
+        bool hasHit = false;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (Projectile.GetGlobalProjectile<SkillStrikeGProj>().SkillStrike)
+            {
+                hasHit = true;
+                for (int i = 0; i < 3 + Main.rand.Next(-1, 2); i++)
+                {
+                    Vector2 randomStart = Main.rand.NextVector2Circular(3f, 3f) * 1f;
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: Color.Gold, Scale: Main.rand.NextFloat(0.35f, 0.45f));
+                    dust.velocity += Projectile.velocity * 0.1f;
+
+                    dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(
+                        rotPower: 0.15f, preSlowPower: 0.99f, timeBeforeSlow: 8, postSlowPower: 0.92f, velToBeginShrink: 4f, fadePower: 0.88f, shouldFadeColor: false);
+                }
+            }
+
             hitFX();
             stuckIn = true;
             Projectile.timeLeft = 10;
@@ -256,11 +298,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Sky
             stuckIn = true;
             Projectile.timeLeft = 10;
             Projectile.velocity = Vector2.Zero;
-            Projectile.Center = previousPostions[previousPostions.Count - 1]; //To make sure it doesn't break on slopes because terraria sucks dick
+            Projectile.Center = previousPositions[previousPositions.Count - 1]; //To make sure it doesn't break on slopes because terraria sucks dick
 
             return false;
         }
 
+        //Spawn Dust and play sound
         public void hitFX()
         {
             for (int i = 0; i < 3 + Main.rand.Next(-1, 2); i++)

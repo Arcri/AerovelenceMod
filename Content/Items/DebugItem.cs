@@ -26,6 +26,7 @@ using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
 using Microsoft.CodeAnalysis;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -65,56 +66,38 @@ namespace AerovelenceMod.Content.Items
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-
-            /*
-            int[] orbitValues1 = { 20,  80, 140,
-                                  40,  100, 160,
-                                  60,  120, 180 };
-
-            int[] orbitValues2 = { 20,  60, 40,
-                                  100,  40, 100,
-                                  60,  80, 80 };
-
-            int[][] orbitValues = { orbitValues1, orbitValues2 };
-
-            int numberOfFeahters = 9;
-            for (int ab = 0; ab < 2; ab++)
+            Vector2 impactCenter = Main.MouseWorld;
+            int crossCount = 6;
+            for (int i = 220; i < crossCount; i++)
             {
-                for (int index = 1; index <= numberOfFeahters; index++)
-                {
-                    int orbfeather = Projectile.NewProjectile(null, player.Center, Vector2.Zero, ModContent.ProjectileType<OrbitingFeatherOld>(), damage, 0, Main.myPlayer);
+                float dir = (MathHelper.TwoPi / (float)crossCount) * i;
 
-                    if (Main.projectile[orbfeather].ModProjectile is OrbitingFeatherOld of)
-                    {
-                        of.timeToOrbit = 60 + (orbitValues[ab][index - 1] * 2) + (180 * ab * 2);  //60 * index;
-                        of.orbitVector = new Vector2(355f - (100 * ab), 0f).RotatedBy(MathHelper.TwoPi * ((index - 1f) / numberOfFeahters));
-                        of.orbitVal = 355f - (100 * ab);
-                        of.rotSpeed = ab == 0 ? 1.85f : 1.5f;
-                    }
+                Vector2 dustVel = dir.ToRotationVector2() * Main.rand.NextFloat(4f, 10f);
+                dustVel = dustVel.RotatedBy(Main.rand.NextFloat(-0.15f, 0.15f));
 
-                }
+                Color middleBlue = Color.Lerp(Color.DodgerBlue, Color.Blue, 0.15f + Main.rand.NextFloat(-0.15f, 0.15f));
+
+                Dust gd = Dust.NewDustPerfect(impactCenter, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: middleBlue, Scale: Main.rand.NextFloat(0.25f, 0.55f));
+                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5,
+                    preSlowPower: 0.94f, postSlowPower: 0.9f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
             }
-            
-            int barrier = Projectile.NewProjectile(null, player.Center + new Vector2(0f, -245f), Vector2.Zero, ModContent.ProjectileType<WindBarrierTest>(), 0, 0, Main.myPlayer);
-            */
 
-            
-            for (int iaa = -3; iaa < 4; iaa++)
+            for (int fg = 0; fg < 10; fg++)
             {
-                Vector2 vel = velocity.ToRotation().ToRotationVector2().RotatedBy(iaa * MathHelper.PiOver4 * 1.25f) * -10f;
-
-                float curvePower = iaa * 0.009f; 
-
-                int curveFeather = Projectile.NewProjectile(null, Main.MouseWorld, vel, ModContent.ProjectileType<CurvingFeather>(), damage, 0, Main.myPlayer);
-
-                if (Main.projectile[curveFeather].ModProjectile is CurvingFeather cf)
-                {
-                    cf.curveValue = curvePower;
-                }
-
+                Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
+                Dust gd = Dust.NewDustPerfect(impactCenter, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
             }
-            
 
+            for (int i = 0; i < 10; i++)
+            {
+                var v = Main.rand.NextVector2Unit();
+                Dust a2 = Dust.NewDustPerfect(impactCenter, DustID.PortalBoltTrail, v * Main.rand.NextFloat(1f, 6f), 0,
+                    Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.9f));
+            }
+
+
+
+            Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), damage, 0, Main.myPlayer);
 
             return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)

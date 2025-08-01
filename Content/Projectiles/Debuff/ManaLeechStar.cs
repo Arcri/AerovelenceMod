@@ -4,12 +4,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.ItemDropRules;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Terraria.Graphics;
-using ReLogic.Content;
+using AerovelenceMod.Common;
 
 namespace AerovelenceMod.Content.Projectiles
 {
@@ -19,11 +15,6 @@ namespace AerovelenceMod.Content.Projectiles
 
 		private int timer;
 		public float scale = 1f;
-
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Arrow");
-		}
 
 		public override void SetDefaults()
 		{
@@ -40,43 +31,25 @@ namespace AerovelenceMod.Content.Projectiles
 			Projectile.ignoreWater = true;
 
 		}
-        public override bool? CanCutTiles()
-        {
-			return false;
-        }
-        public override bool? CanDamage()
-        {
-			return false;
-        }
+		public override bool? CanCutTiles() => false;
+
+		public override bool? CanDamage() => false;
 
         public override void AI()
 		{
-			//Obv not multiplayer compatible
+			//TODO: Very not multiplayer compatible
 			Player target = Main.player[Main.myPlayer];
 
 			if (timer > 20)
 			{
 				Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(target.Center) * (13f + (timer * 0.02f)), .3f);
-				/*
-				float prime = 12.5f;
-				float distX = target.Center.X - Projectile.Center.X;
-				float distY = target.Center.Y - Projectile.Center.Y;
-				float whyPythagBro = (float)Math.Sqrt((double)distX * (double)distX + (double)distY * (double)distY);
-				float primeOverWhyPythag = prime / whyPythagBro;
-				float distXTimesPythag = distX * primeOverWhyPythag;
-				float distYTimesPythag = distY * primeOverWhyPythag;
 
-				Projectile.velocity.X = (Projectile.velocity.X * (float)(10f - 1) + distXTimesPythag) / 10f; //- 1
-				Projectile.velocity.Y = (Projectile.velocity.Y * (float)(10f - 1) + distYTimesPythag) / 10f;
-				*/
 				if (Projectile.Center.Distance(target.Center) < 30)
                 {
 					SoundEngine.PlaySound(SoundID.MaxMana with { Pitch = 0.7f, Volume = 0.2f }, target.position);
-					target.statMana++;
-					//player.HealEffect(2);
-					target.ManaEffect(1);
+					target.statMana += 3;
+					target.ManaEffect(3);
 					Projectile.Kill();
-					//target.statMana = ;
                 }
 			}
 			else
@@ -99,15 +72,26 @@ namespace AerovelenceMod.Content.Projectiles
 		{
 			Texture2D Star = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/Twinkle");
 
-			Color colToUse = new Color(30, 150, 255); //Color.DodgerBlue;
-			colToUse.A = 0;
-
-			Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition, null, colToUse, Projectile.rotation, Star.Size() / 2, Projectile.scale * scale * 0.3f, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition, null, colToUse, Projectile.rotation, Star.Size() / 2, Projectile.scale * scale * 0.3f, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Star, Projectile.Center - Main.screenPosition, null, colToUse, Projectile.rotation, Star.Size() / 2, Projectile.scale * scale * 0.3f, SpriteEffects.None, 0f);
+			Color betweenBlueA = Color.Lerp(Color.DodgerBlue, Color.DeepSkyBlue, 0.5f);
+            Color betweenBlueB = Color.Lerp(Color.Blue, Color.DodgerBlue, 0.5f);
 
 
-			return false;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+            Color[] cols = { Color.White * 1f, betweenBlueA * 0.75f, betweenBlueB * 0.525f };
+            float[] scales = { 1.15f, 1.6f, 2.5f };
+
+            float orbAlpha = 2f;
+			float orbScale = 0.2f * Projectile.scale * scale;
+            Vector2 orbOrigin = Star.Size() / 2f;
+
+            float sineScale1 = 1f + (float)Math.Sin(Main.timeForVisualEffects * 0.07f) * 0.15f;
+            float sineScale2 = 1f + (float)Math.Cos(Main.timeForVisualEffects * 0.13f) * 0.1f;
+
+            Main.EntitySpriteDraw(Star, drawPos, null, cols[0] with { A = 0 } * orbAlpha, Projectile.rotation, orbOrigin, orbScale * scales[0], SpriteEffects.None);
+            Main.EntitySpriteDraw(Star, drawPos, null, cols[1] with { A = 0 } * orbAlpha, Projectile.rotation, orbOrigin, orbScale * scales[1] * sineScale1, SpriteEffects.None);
+            Main.EntitySpriteDraw(Star, drawPos, null, cols[2] with { A = 0 } * orbAlpha, Projectile.rotation, orbOrigin, orbScale * scales[2] * sineScale2, SpriteEffects.None);
+
+            return false;
 		}
 	}
 

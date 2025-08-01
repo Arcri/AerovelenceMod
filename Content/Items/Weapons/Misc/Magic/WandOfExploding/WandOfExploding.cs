@@ -6,21 +6,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent;
 using Terraria.Audio;
 using ReLogic.Content;
-using Terraria.DataStructures;
-using AerovelenceMod.Content.Projectiles.Weapons.Magic;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
-using Terraria.Graphics.Shaders;
-using AerovelenceMod.Content.Projectiles;
-using AerovelenceMod.Content.Dusts;
-using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Content.Items.Weapons.Misc.Melee;
 using AerovelenceMod.Content.Buffs.PlayerInflictedDebuffs;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common;
+using Terraria.Graphics;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 {
@@ -33,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             this.ModifyLocalization("WandOfExploding", "Inflicts Mana Burn, causing enemies to leak stars that restore mana")
             .AddName(Language.Default, "Wand of Exploding")
             .AddTooltip(Language.Default, "Inflicts Mana Burn, causing enemies to leak stars that restore mana")
-            .AddSkillStrike(Language.Default, "Skill Strikes under 50% mana")
+            .AddSkillStrike(Language.Default, "Explosion Skill Strikes under 50% mana")
 
             .AddName(Language.Spanish, "Vara de Explosión").AddTooltip(Language.Spanish, "Inflige Quemadura de Maná, haciendo que los enemigos suelten estrellas que restauran maná").AddSkillStrike(Language.Spanish, "Golpes de Habilidad por debajo del 50% de maná")
             .AddName(Language.French, "Baguette Explosive").AddTooltip(Language.French, "Inflige Brûlure de Mana, faisant perdre des étoiles aux ennemis qui restaurent du mana").AddSkillStrike(Language.French, "Les Coups de Compétence se déclenchent sous 50% de mana")
@@ -48,7 +42,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
         public override void SetDefaults()
         {
-            Item.damage = 26;
+            Item.damage = 21;
             Item.knockBack = KnockbackTiers.Average;
             Item.mana = 14;
             Item.shootSpeed = 17f;
@@ -70,13 +64,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             Item.noUseGraphic = true;
         }
 
+        //We don't want just pulling out the staff to consume mana
+        public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
+        {
+            //Costs zero mana with just holding the weapon out
+            //This still causes natural mana regen to pause for some reason probably a tmod or vanilla bug //TODO: report this or find a way to fix it
+            if (player.itemTime == 0)
+                mult = 0f;
+            base.ModifyManaCost(player, ref reduce, ref mult);
+        }
+
         public override void AddRecipes()
         {
             CreateRecipe().
                 AddRecipeGroup("AerovelenceMod:EvilBars", 10).
                 AddIngredient(ItemID.Sapphire, 5).
                 AddIngredient(ItemID.ManaCrystal, 3).
-                 AddTile(TileID.Anvils).
+                AddTile(TileID.Anvils).
                 Register();
         }
 
@@ -85,12 +89,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
     public class WandOfExplodingHeldProj : ModProjectile
     {
         int timer = 0;
-        public float OFFSET = 0; //20
-        public float alphaPercent = 0;
-        public ref float Angle => ref Projectile.ai[1];
-        public Vector2 direction = Vector2.Zero;
-        float lerpToStuff = 0;
-        bool fade = false;
         public override string Texture => "Terraria/Images/Projectile_0";
 
         public override void SetDefaults()
@@ -112,131 +110,219 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
         public override bool? CanCutTiles() => false;
 
+        //How far away the projectile will be held by the player
+        float offsetAmount = 0f;
+
+        //The progress of the fade in animation (1f = done)
+        float fadeInProgress = 0f;
+
+        float recoilProg = 0f; //1f = most recoil
+
         public override void AI()
         {
-            Player Player = Main.player[Projectile.owner];
+            Player player = Main.player[Projectile.owner];
 
+            #region startAnim
+            //Starting Animation
+            float rotationBonus = 0f;
+            if (fadeInProgress < 1f)
+            {
+                int timeForFadeInAnim = 20;
+
+                fadeInProgress = (float)timer / timeForFadeInAnim;
+
+                float rotationEaseValue = Easings.easeOutCubic(fadeInProgress);
+                rotationBonus = MathHelper.Lerp(MathHelper.TwoPi * -2.5f * player.direction, 0f, rotationEaseValue);
+
+                float offsetEaseValue = Easings.easeOutSine(fadeInProgress);
+                offsetAmount = MathHelper.Lerp(-10f, 28f, offsetEaseValue);
+
+                float scaleEaseValue = Easings.easeInOutBack(fadeInProgress, 0f, 2f);
+                overallScale = MathHelper.Lerp(0.6f, 1f, scaleEaseValue);
+
+                float alphaEaseValue = Easings.easeOutQuart(fadeInProgress);
+                overallAlpha = alphaEaseValue;
+
+                //Play boomerang spin sound
+                if (timer % 7 == 0)
+                {
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Item_7") with { Pitch = .45f, PitchVariance = 0.2f }; 
+                    SoundEngine.PlaySound(style, Projectile.Center);
+                    SoundEngine.PlaySound(style, Projectile.Center);
+                }
+
+            }
+            #endregion
+
+            recoilProg = Math.Clamp(recoilProg- 0.05f, 0f, 1f);
+
+            //Held Proj Code
             ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
 
+            if (!player.channel)
+                Projectile.active = false;
+
             Projectile.velocity = Vector2.Zero;
 
-            if (Player.channel && !fade)
-            {
-                Projectile.timeLeft++;
-                Player.itemTime = 2;
-                Player.itemAnimation = 2;
-                if (Projectile.owner == Main.myPlayer)
-                {
-                    Angle = (Main.MouseWorld - (Player.Center)).ToRotation();
-                }
-                direction = Angle.ToRotationVector2();
+            Vector2 mousePos = Vector2.Zero;
+            if (Projectile.owner == Main.myPlayer)
+                mousePos = Main.MouseWorld;
 
+            float rotDir = (mousePos - player.Center).ToRotation();
+
+            //Recoil = move back for 15% of the duration, ease back in for the other 85%
+            float recoilOffset = 0f;
+            if (recoilProg > 0.85f)
+            {
+                float recoilLerp = Utils.GetLerpValue(1f, 0.85f, recoilProg, true);
+                recoilOffset = MathHelper.Lerp(0f, -16f, Easings.easeOutCubic(recoilLerp)); //-10f
             }
             else
-                fade = true;
-
-            Player.ChangeDir(direction.X > 0 ? 1 : -1);
-
-            if (!fade)
             {
-                OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, 16, 0.1f), 0, 15);
-                alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, 1.2f, 0.08f), 0, 1);
-            } 
-            else
-            {
-                OFFSET = Math.Clamp(MathHelper.Lerp(OFFSET, -2f, 0.1f), 0, 15);
-                alphaPercent = Math.Clamp(MathHelper.Lerp(alphaPercent, -0.2f, 0.08f), 0, 1);
+                float recoilLerp = Utils.GetLerpValue(0.85f, 0f, recoilProg, true);
+                recoilOffset = MathHelper.Lerp(-16f, 0f, Easings.easeInCubic(recoilLerp)); //-10f
             }
 
-            lerpToStuff = Math.Clamp(MathHelper.Lerp(lerpToStuff, -0.2f, 0.06f), 0, 0.4f);
+            Projectile.Center = player.MountedCenter + rotDir.ToRotationVector2() * (offsetAmount + recoilOffset);
+            Projectile.rotation = rotDir + rotationBonus;
 
-            direction = Angle.ToRotationVector2().RotatedBy(lerpToStuff * Player.direction * -1f);
-            Projectile.Center = Player.Center + (direction * OFFSET);
-            Projectile.velocity = Vector2.Zero;
-            Player.itemRotation = direction.ToRotation();
+            player.heldProj = Projectile.whoAmI;
+            player.ChangeDir(mousePos.X < player.Center.X ? -1 : 1);
+            //player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotDir - MathHelper.PiOver2);
 
-            if (Player.direction != 1)
-                Player.itemRotation -= 3.14f;
+            //Use this if you are not doing composite arms
+            //player.itemRotation = MathHelper.WrapAngle(rotDir + (player.direction != 1 ? -3.14f : 0f));
 
-            Player.itemRotation = MathHelper.WrapAngle(Player.itemRotation);
+            player.itemTime = 2;
+            player.itemAnimation = 2;
+            Projectile.timeLeft = 2;
 
-            Player.heldProj = Projectile.whoAmI;
 
-            Projectile.rotation = direction.ToRotation();
+            float armEase = Easings.easeOutQuad(fadeInProgress);
+            if (armEase > 0.75f)
+                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotDir - MathHelper.PiOver2);
+            else if (armEase > 0.5f)
+                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.ThreeQuarters, rotDir - MathHelper.PiOver2);
+            else if (armEase > 0.25f)
+                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Quarter, rotDir - MathHelper.PiOver2);
+            else
+                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.None, rotDir - MathHelper.PiOver2);
 
-            if (timer % 40 == 0 && timer != 0 && !fade)
+            //Fire Bolt
+            if (timer % 40 == 0 && timer != 0 && fadeInProgress == 1f)
             {
-                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_109") with { Pitch = .86f, PitchVariance = 0.15f, Volume = 0.5f }; 
+                Vector2 normDir = rotDir.ToRotationVector2();
+
+                //Sound
+                SoundStyle style = new SoundStyle("Terraria/Sounds/Item_109") with { Volume = 0.5f, Pitch = 0.75f, PitchVariance = 0.15f };
                 SoundEngine.PlaySound(style, Projectile.Center);
 
-                SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_book_staff_cast_0") with { Pitch = 0f, Volume = 0.3f }; 
+                SoundStyle style2 = new SoundStyle("Terraria/Sounds/Custom/dd2_book_staff_cast_0") with { Volume = 0.3f, PitchVariance = 0.1f, };
                 SoundEngine.PlaySound(style2, Projectile.Center);
 
-                Vector2 vel = new Vector2(17, 0).RotatedBy(direction.ToRotation());
-                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + vel.SafeNormalize(Vector2.UnitX) * OFFSET, vel, ModContent.ProjectileType<WandOfExplodingProj>(),
+                //Bolt Projectile
+                Vector2 vel = new Vector2(17, 0).RotatedBy(rotDir);
+                int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<WandOfExplodingBolt>(),
                     Projectile.damage, 0, Main.myPlayer);
 
-                for (int fg = 0; fg < 5 + Main.rand.Next(2); fg++)
+                //GPA Dust
+                for (int fg = 0; fg < 2 + Main.rand.Next(2); fg++)
                 {
-                    Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
-
                     Vector2 dir = vel.SafeNormalize(Vector2.UnitX).RotatedByRandom(1f) * Main.rand.NextFloat(0.3f, 1.35f) * 2.5f;
 
-                    Dust gd = Dust.NewDustPerfect(Projectile.Center + vel.SafeNormalize(Vector2.UnitX) * OFFSET, ModContent.DustType<GlowPixelAlts>(), dir, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
+                    Dust gd = Dust.NewDustPerfect(Projectile.Center + normDir * 10f, ModContent.DustType<GlowPixelAlts>(), dir, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
                     gd.velocity += vel * 0.1f;
                 }
 
-                for (int i = 0; i < 3 + Main.rand.Next(2); i++)
+                //Cross Dust
+                int crossCount = 3 + Main.rand.Next(2);
+                for (int i = 0; i < crossCount; i++)
                 {
-                    Vector2 v = Main.rand.NextVector2Unit();
-                    Dust sa = Dust.NewDustPerfect(Projectile.Center + vel.SafeNormalize(Vector2.UnitX) * OFFSET, DustID.PortalBoltTrail, vel.SafeNormalize(Vector2.UnitX).RotatedByRandom(1.2) * Main.rand.NextFloat(2f, 4f), 0,
-                        Color.LightSkyBlue, 1.2f);
-                    sa.noGravity = true;
+                    float prog = (float)i / (float)crossCount;
+
+                    Vector2 dustVel = rotDir.ToRotationVector2() * MathHelper.Lerp(2.5f, 7f, prog);
+                    dustVel = dustVel.RotatedByRandom(0.5f);
+
+                    Color middleBlue = Color.Lerp(Color.DodgerBlue, Color.DeepSkyBlue, 0.25f + Main.rand.NextFloat(-0.15f, 0.15f));
+
+                    Dust gd = Dust.NewDustPerfect(Projectile.Center + normDir * 10f, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: middleBlue, Scale: Main.rand.NextFloat(0.25f, 0.45f));
+                    gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.15f, timeBeforeSlow: 5,
+                        preSlowPower: 0.94f, postSlowPower: 0.90f, velToBeginShrink: 1f, fadePower: 0.92f, shouldFadeColor: false);
                 }
 
-                if (!Player.CheckMana(Player.inventory[Player.selectedItem], pay: true))
+                //Circle Pulse
+                Dust d2 = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<CirclePulse>(), normDir * 2f, newColor: Color.Lerp(Color.DodgerBlue, Color.Blue, 0.15f));
+                CirclePulseBehavior b2 = new CirclePulseBehavior(0.25f, true, 6, 0.2f, 0.4f);
+                b2.drawLayer = RenderLayer.UnderProjectiles;
+                d2.customData = b2;
+                d2.scale = 0.25f * 0.15f;
+
+                //Deactivate Proj if we are out of mana
+                if (!player.CheckMana(player.inventory[player.selectedItem], pay: true))
                     Projectile.active = false;
 
-                OFFSET -= 20;
+                //Start recoiling
+                recoilProg = 1f;
             }
-            if (fade)
-                fadeVal += 0.15f;
 
-            Vector2 lightPos = Projectile.Center + (direction.SafeNormalize(Vector2.UnitX) * OFFSET);
-
-            Lighting.AddLight(lightPos, Color.SkyBlue.ToVector3() * alphaPercent * 0.4f);
+            Vector2 lightPos = Projectile.Center + (rotDir.ToRotationVector2() * offsetAmount);
+            Lighting.AddLight(lightPos, Color.SkyBlue.ToVector3() * overallAlpha * 0.4f);
 
             timer++;
         }
 
-        float fadeVal = 0f;
+
+        float overallAlpha = 1f;
+        float overallScale = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-            Player Player = Main.player[Projectile.owner];
-
-            if (fade)
-                lightColor = Color.Lerp(lightColor, Color.Blue * 0.3f, fadeVal);
+            Player player = Main.player[Projectile.owner];
 
             Texture2D texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/WandOfExploding").Value;
             Texture2D glowMask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/WandOfExplodingGlowmask").Value;
 
+            Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, player.gfxOffY);
+
+            //Twirl
+            if (fadeInProgress < 1f)
+            {
+                Texture2D Twirl = CommonTextures.PixelSwirl.Value;
+                float twirlAlpha = Easings.easeInQuad(Utils.GetLerpValue(1f, 0.25f, fadeInProgress, true));
+
+                Main.spriteBatch.Draw(Twirl, drawPos, null, Color.SaddleBrown * 0.5f * overallAlpha * twirlAlpha, Projectile.rotation + MathHelper.PiOver2, Twirl.Size() / 2, Projectile.scale * overallScale * 0.7f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(Twirl, drawPos, null, Color.SaddleBrown * 0.5f * overallAlpha * twirlAlpha, Projectile.rotation, Twirl.Size() / 2, Projectile.scale * overallScale * 0.4f, SpriteEffects.None, 0f);
+            }
+
+            //Main Texture + Glowmask
             Vector2 origin = texture.Size() / 2f;
-            Vector2 position = Projectile.Center - (0.5f * (direction * -17)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition;
+            SpriteEffects SE = player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+            float extraRot = player.direction == 1 ? MathHelper.PiOver4 : MathHelper.PiOver4 * -1; //Sprite is diagonal, so make it straight
 
-            Vector2 newOffset = new Vector2(0, 2 * Player.direction).RotatedBy(Angle);
+            Main.spriteBatch.Draw(texture, drawPos, null, lightColor * overallAlpha, Projectile.rotation + extraRot, origin, Projectile.scale * overallScale, SE, 0.0f);
+            Main.spriteBatch.Draw(glowMask, drawPos, null, Color.White * overallAlpha, Projectile.rotation + extraRot, origin, Projectile.scale * overallScale, SE, 0.0f);
 
-            SpriteEffects myEffect = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            float bonusRot = Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.PiOver4 * -1;
+            //Star
+            Texture2D star = CommonTextures.RainbowRod.Value;
 
-            Main.spriteBatch.Draw(texture, position + newOffset, null, lightColor * alphaPercent, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
-            Main.spriteBatch.Draw(glowMask, position + newOffset, null, Color.White * alphaPercent * 0.3f, direction.ToRotation() + bonusRot, origin, Projectile.scale, myEffect, 0.0f);
+            Vector2 starPos = drawPos + Projectile.rotation.ToRotationVector2() * 18f;
+            float starRot = Projectile.rotation + MathHelper.Lerp(5f * player.direction, 0f, Easings.easeInCirc(recoilProg));
+            float starScale = MathHelper.Lerp(0f, 1f, Easings.easeOutQuad(Utils.GetLerpValue(0f, 0.5f, recoilProg, true))) * 1.2f;
+            float starAlpha = 1f * starScale;
+
+            Main.spriteBatch.Draw(star, starPos, null, Color.DodgerBlue with { A = 0 } * starAlpha, starRot, star.Size() / 2f, Projectile.scale * overallScale * 0.5f * starScale, SE, 0.0f);
+            Main.spriteBatch.Draw(star, starPos, null, Color.White with { A = 0 } * starAlpha, starRot, star.Size() / 2f, Projectile.scale * overallScale * 0.25f * starScale, SE, 0.0f);
+
+            //Glorb
+            Texture2D glorb = CommonTextures.feather_circle128PMA.Value;
+            Main.spriteBatch.Draw(glorb, starPos, null, Color.Blue with { A = 0 } * starAlpha * 0.25f, 0f, glorb.Size() / 2f, Projectile.scale * overallScale * 0.35f * starScale, SE, 0.0f);
+            Main.spriteBatch.Draw(glorb, starPos, null, Color.DodgerBlue with { A = 0 } * starAlpha * 0.5f, 0f, glorb.Size() / 2f, Projectile.scale * overallScale * 0.15f * starScale, SE, 0.0f);
 
             return false;
         }
 
     }
 
-    public class WandOfExplodingProj : TrailProjBase
+    public class WandOfExplodingBolt : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
@@ -264,122 +350,248 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             Projectile.localNPCHitCooldown = -1;
         }
 
-        float alpha = 1;
         public override void AI()
-        {    
+        {
             if (timer > 15)
                 Projectile.velocity *= 0.8f;
             else if (timer > 10)
                 Projectile.velocity *= 0.99f;
             
-            if (timer > 15)
-            {
-                Projectile.scale = Math.Clamp(MathHelper.Lerp(Projectile.scale, -0.2f, 0.05f), 0f, 1f);
-                alpha = Math.Clamp(MathHelper.Lerp(alpha, -0.2f, 0.1f), 0f, 1f);
+            if (timer == 30)
+                Projectile.Kill();
 
-
-                if (alpha == 0)
-                {
-                    for (int fg = 0; fg < 20; fg++)
-                    {
-                        Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
-                        Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
-                    }
-
-                    for (int i = 0; i < 10; i++)
-                    {
-                        var v = Main.rand.NextVector2Unit();
-                        Dust a = Dust.NewDustPerfect(Projectile.Center, DustID.PortalBoltTrail, v * Main.rand.NextFloat(1f, 6f), 0,
-                            Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.9f));
-                    }
-                    
-                    int afg = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<DistortProj>(), 0, 0);
-                    Main.projectile[afg].rotation = Main.rand.NextFloat(6.28f);
-
-                    if (Main.projectile[afg].ModProjectile is DistortProj distort)
-                    {
-                        distort.tex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Flares/star_05");
-                        distort.implode = true;
-                        distort.scale = 0.6f;
-                    }
-
-                    int explo = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.25f), 0, Projectile.owner);
-
-                    if (Main.player[Projectile.owner].statMana <= Main.player[Projectile.owner].statManaMax2 / 2f)
-                        SkillStrikeUtil.setSkillStrike(Main.projectile[explo], 1.3f, 100, 0.35f, 0f);
-
-                    SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 0.16f, Pitch = 0.5f };
-                    SoundEngine.PlaySound(style, Projectile.Center);
-
-                    Projectile.active = false;
-                }
-
-            }
-
-            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 0.5f * alpha);
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 0.5f * overallAlpha);
 
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection = Projectile.direction;
 
-            Projectile.frameCounter++;
-            if (Projectile.frameCounter >= 5)
-            {
-                Projectile.frameCounter = 0;
-                Projectile.frame = (Projectile.frame + 1) % Main.projFrames[Projectile.type];
-            }
+            if (timer % 5 == 0)
+                Projectile.frame = (Projectile.frame + 1) % 4;
+
+
+            //Alpha and scale
+            overallAlpha = Math.Clamp(MathHelper.Lerp(overallAlpha, 1.25f, 0.06f), 0f, 1f);
+
+            float timeForPopInAnim = 22; //33
+            float animProgress = Math.Clamp((timer + 6) / timeForPopInAnim, 0f, 1f);
+
+            overallScale = MathHelper.Lerp(0f, 1f, Easings.easeInOutBack(animProgress, 0f, 1.75f)) * 1f;
+
+            //Trail
+            int trailCount = 12; //12
+            previousRotations.Add(Projectile.velocity.ToRotation());
+            previousPositions.Add(Projectile.Center + Projectile.velocity);
+
+            if (previousRotations.Count > trailCount)
+                previousRotations.RemoveAt(0);
+
+            if (previousPositions.Count > trailCount)
+                previousPositions.RemoveAt(0);
+
             timer++;
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/LintyTrail").Value;
-            trailColor = Color.DodgerBlue * alpha;
-            trailTime = timer * 0.05f;
-
-            // other things you can adjust
-            trailPointLimit = 10;
-            trailWidth = 10;
-            trailMaxLength = 120;
-
-            //MUST call TrailLogic AFTER assigning trailRot and trailPos
-            trailRot = Projectile.velocity.ToRotation();
-            trailPos = Projectile.Center + Projectile.velocity;
-            TrailLogic();
         }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            //Set timer to 20 if we are under it
+            timer = Math.Max(timer, 20);
+            Projectile.velocity *= 0.5f;
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            //Dust
+            for (int fg = 0; fg < 20; fg++)
+            {
+                Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
+                Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                var v = Main.rand.NextVector2Unit();
+                Dust a = Dust.NewDustPerfect(Projectile.Center, DustID.PortalBoltTrail, v * Main.rand.NextFloat(1f, 6f), 0,
+                    Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.9f));
+            }
+
+            //Explosion
+            int explo = Projectile.NewProjectile(null, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), (int)(Projectile.damage * 1.25f), 0, Projectile.owner);
+
+            if (Main.player[Projectile.owner].statMana <= Main.player[Projectile.owner].statManaMax2 / 2f)
+                SkillStrikeUtil.setSkillStrike(Main.projectile[explo], 1.3f, 100, 0.35f, 0f);
+
+            //Sound
+            SoundStyle style = new SoundStyle("Terraria/Sounds/Custom/dd2_explosive_trap_explode_1") with { PitchVariance = 0.16f, Pitch = 0.5f };
+            SoundEngine.PlaySound(style, Projectile.Center);
+
+        }
+
+        float overallScale = 0f;
+        float overallAlpha = 0f;
+        List<float> previousRotations = new List<float>();
+        List<Vector2> previousPositions = new List<Vector2>();
         public override bool PreDraw(ref Color lightColor)
         {
-            if (timer == 0)
-                return false;
-            
-            TrailDrawing();
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderProjectiles, () =>
+            {
+                DrawTrail(giveUp: false);
+            });
+            DrawTrail(giveUp: true);
 
-            Texture2D Proj = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/ExplodingBolt").Value;
-            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/ExplodingBoltGlowMask").Value;
-            Texture2D Glorb = Mod.Assets.Request<Texture2D>("Assets/Orbs/SoftGlow").Value;
+            Texture2D fireball = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Magic/WandOfExploding/ExplodingBolt").Value;
 
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+            drawPos += Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3f;
 
-            int frameHeight = Proj.Height / Main.projFrames[Projectile.type];
+            int frameHeight = fireball.Height / 4;
             int startY = frameHeight * Projectile.frame;
-
-            // Get this frame on texture
-            Rectangle sourceRectangle = new Rectangle(0, startY, Proj.Width, frameHeight);
-
+            Rectangle sourceRectangle = new Rectangle(0, startY, fireball.Width, frameHeight);
             Vector2 origin = sourceRectangle.Size() / 2f;
+            SpriteEffects se = Projectile.velocity.X > 0f ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
+            float endPower = Utils.GetLerpValue(20, 30, timer, true);
+            Vector2 randomOffset = Main.rand.NextVector2Circular(6f, 6f) * endPower;
 
-            Main.spriteBatch.Draw(Proj, Projectile.Center - Main.screenPosition, sourceRectangle, lightColor * alpha, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Glow, Projectile.Center - Main.screenPosition, sourceRectangle, Color.White * alpha, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0f);
+            //Glowing Border
+            for (int i = 0; i < 4; i++)
+            {
+                Main.EntitySpriteDraw(fireball, drawPos + Main.rand.NextVector2Circular(2f, 2f) + randomOffset, sourceRectangle, Color.White with { A = 0 } * overallAlpha, Projectile.rotation, origin, 1.05f * Projectile.scale * overallScale, se);
+            }
 
-            Color col = Color.DeepSkyBlue;
-            col.A = 0;
-            Main.spriteBatch.Draw(Glorb, Projectile.Center - Main.screenPosition, null, col * alpha, Projectile.rotation, Glorb.Size() / 2, new Vector2(Projectile.scale, Projectile.scale * 0.5f), SpriteEffects.None, 0f);
+            //Main Tex
+            Main.EntitySpriteDraw(fireball, drawPos + randomOffset, sourceRectangle, Color.White * overallAlpha, Projectile.rotation, origin, Projectile.scale * overallScale, se);
 
             return false;
         }
 
-        public override float WidthFunction(float progress)
+        Effect myEffect = null;
+        public void DrawTrail(bool giveUp)
         {
-            float num = 1f;
-            float lerpValue = Utils.GetLerpValue(0f, 0.4f, progress, clamped: true);
-            num *= 1f - (1f - lerpValue) * (1f - lerpValue);
-            return MathHelper.Lerp(0f, trailWidth, num) * 0.5f; // 0.3f
+            if (giveUp)
+                return;
+
+            #region orb
+            //Glorb
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+            drawPos += Projectile.velocity.SafeNormalize(Vector2.UnitX) * -3f;
+
+            Texture2D orb = CommonTextures.feather_circle128PMA.Value;
+            Color[] cols = { Color.DeepSkyBlue * 0.75f, Color.DodgerBlue * 0.525f, Color.Blue * 0.375f };
+            float[] scales = { 1.15f, 1.6f, 2.5f };
+
+            float orbRot = Projectile.velocity.ToRotation();
+            float orbAlpha = 0.8f * overallAlpha;
+            Vector2 orbScale = new Vector2(0.85f, 0.55f) * 0.3f * Projectile.scale * overallScale;
+            Vector2 orbOrigin = orb.Size() / 2f;
+
+            float sineScale1 = 1f + (float)Math.Sin(Main.timeForVisualEffects * 0.07f) * 0.15f;
+            float sineScale2 = 1f + (float)Math.Cos(Main.timeForVisualEffects * 0.13f) * 0.1f;
+
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[0] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[0], SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[1] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[1] * sineScale1, SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[2] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[2] * sineScale2, SpriteEffects.None);
+            #endregion
+
+            //Trail
+            Texture2D trailTextureUnder = Mod.Assets.Request<Texture2D>("Assets/Trails/EvenThinnerGlowLine").Value;
+            Texture2D trailTextureOver = Mod.Assets.Request<Texture2D>("Assets/Trails/EvenThinnerGlowLine").Value;
+
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+
+            //Convert lists to arrays for use in vertex strip
+            Vector2[] pos_arr = previousPositions.ToArray();
+            float[] rot_arr = previousRotations.ToArray();
+
+            float sineWidthMult = 1f + (float)Math.Cos(Main.timeForVisualEffects * 0.09f) * 0.15f;
+
+            Color StripColor(float progress) => Color.White * (progress * progress * progress);
+            float StripWidthUnder(float progress) => 40f * Easings.easeOutQuad(progress) * overallScale * sineWidthMult;
+            float StripWidthOver(float progress) => 12f * Easings.easeOutQuad(progress) * overallScale * sineWidthMult;
+
+            VertexStrip vertexStripUnder = new VertexStrip();
+            vertexStripUnder.PrepareStrip(pos_arr, rot_arr, StripColor, StripWidthUnder, -Main.screenPosition, includeBacksides: true);
+
+            VertexStrip vertexStripOver = new VertexStrip();
+            vertexStripOver.PrepareStrip(pos_arr, rot_arr, StripColor, StripWidthOver, -Main.screenPosition, includeBacksides: true);
+
+            #region Trail Params + Drawing
+            myEffect.Parameters["WorldViewProjection"].SetValue(Main.GameViewMatrix.NormalizedTransformationmatrix);
+            myEffect.Parameters["progress"].SetValue(timer * 0.05f);
+            myEffect.Parameters["reps"].SetValue(1f);
+
+            //UnderLayer
+            myEffect.Parameters["TrailTexture"].SetValue(trailTextureUnder);
+            myEffect.Parameters["ColorOne"].SetValue(Color.Lerp(Color.DeepSkyBlue, Color.DodgerBlue, 0.3f).ToVector3() * 1f);
+            myEffect.Parameters["glowThreshold"].SetValue(1f);
+            myEffect.Parameters["glowIntensity"].SetValue(1f);
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+            vertexStripUnder.DrawTrail();
+            vertexStripUnder.DrawTrail();
+
+
+            //Over layer
+            Color overCol = Color.Lerp(Color.DeepSkyBlue, Color.SkyBlue, 0.75f);
+            myEffect.Parameters["TrailTexture"].SetValue(trailTextureOver);
+            myEffect.Parameters["ColorOne"].SetValue(overCol.ToVector3() * 1f);
+            myEffect.Parameters["glowThreshold"].SetValue(0.7f); //0.6
+            myEffect.Parameters["glowIntensity"].SetValue(2f); //2.25
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+            vertexStripOver.DrawTrail();
+
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            #endregion
+
+            #region SolidTrail(good) use for fibber 
+            /*
+            //Trail
+            Texture2D trailTexture = Mod.Assets.Request<Texture2D>("Assets/Trails/EasySwipeTrail").Value;
+
+            if (myEffect == null)
+                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+
+            //Convert lists to arrays for use in vertex strip
+            Vector2[] pos_arr = previousPositions.ToArray();
+            float[] rot_arr = previousRotations.ToArray();
+
+            float sineWidthMult = 1f + (float)Math.Cos(Main.timeForVisualEffects * 0.09f) * 0.15f;
+
+            Color StripColor(float progress) => Color.White * (progress * progress);
+            float StripWidthUnder(float progress) => 20f * Easings.easeOutCubic(progress) * overallScale * sineWidthMult;
+            float StripWidthOver(float progress) => 8f * Easings.easeOutCubic(progress) * overallScale * sineWidthMult;
+
+            VertexStrip vertexStripUnder = new VertexStrip();
+            vertexStripUnder.PrepareStrip(pos_arr, rot_arr, StripColor, StripWidthUnder, -Main.screenPosition, includeBacksides: true);
+
+            VertexStrip vertexStripOver = new VertexStrip();
+            vertexStripOver.PrepareStrip(pos_arr, rot_arr, StripColor, StripWidthOver, -Main.screenPosition, includeBacksides: true);
+
+
+
+            myEffect.Parameters["WorldViewProjection"].SetValue(Main.GameViewMatrix.NormalizedTransformationmatrix);
+            myEffect.Parameters["progress"].SetValue(timer * 0.05f * 0f);
+            myEffect.Parameters["TrailTexture"].SetValue(trailTexture);
+            myEffect.Parameters["reps"].SetValue(1f);
+
+            //UnderLayer
+            myEffect.Parameters["ColorOne"].SetValue(Color.Lerp(Color.DodgerBlue, Color.Blue, 0.5f).ToVector3() * 1f);
+            myEffect.Parameters["glowThreshold"].SetValue(1f);
+            myEffect.Parameters["glowIntensity"].SetValue(1f);
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+            vertexStripUnder.DrawTrail();
+
+
+            //Over layer
+            myEffect.Parameters["ColorOne"].SetValue(Color.SkyBlue.ToVector3() * 1f);
+            myEffect.Parameters["glowThreshold"].SetValue(0.7f); //0.6
+            myEffect.Parameters["glowIntensity"].SetValue(2f); //2.25
+            myEffect.CurrentTechnique.Passes["MainPS"].Apply();
+            vertexStripOver.DrawTrail();
+
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            */
+            #endregion
         }
     }
 
@@ -397,8 +609,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
         {
             Projectile.DamageType = DamageClass.Magic;
 
-            Projectile.width = 80;
-            Projectile.height = 80;
+            Projectile.width = 100;
+            Projectile.height = 100;
             Projectile.timeLeft = 200;
             Projectile.penetrate = -1;
 
@@ -434,31 +646,53 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
 
             Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * 1f);
 
+            int timeForFadeInAnim = 15;
+
+            float fadeInProgress = Math.Clamp((float)timer / timeForFadeInAnim, 0f, 1f);
+
+            float scaleEaseValue = Easings.easeInOutHarsh(fadeInProgress);
+            overallScale = MathHelper.Lerp(0.5f, 1f, scaleEaseValue);
+
             timer++;
         }
+
+        public float overallAlpha = 1f;
+        public float overallScale = 0f;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Explo = Mod.Assets.Request<Texture2D>("Assets/Anim/BlueFlareDarkGlowPMA").Value;
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
 
+            //Orb
+            Texture2D orb = CommonTextures.feather_circle128PMA.Value;
+            Color[] cols = { Color.DeepSkyBlue * 0.75f, Color.DodgerBlue * 0.525f, Color.Blue * 0.375f };
+            float[] scales = { 1.15f, 1.6f, 2.5f };
+
+            float orbRot = Projectile.velocity.ToRotation();
+            float orbAlpha = 0.1f * overallAlpha;
+            float orbScale = 1.5f * Projectile.scale * overallScale;
+            Vector2 orbOrigin = orb.Size() / 2f;
+
+            float sineScale1 = 1f + (float)Math.Sin(Main.timeForVisualEffects * 0.07f) * 0.15f;
+            float sineScale2 = 1f + (float)Math.Cos(Main.timeForVisualEffects * 0.13f) * 0.1f;
+
+            Main.EntitySpriteDraw(orb, drawPos + new Vector2(0f, 0f), null, cols[0] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[0], SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos + new Vector2(0f, 0f), null, cols[1] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[1] * sineScale1, SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos + new Vector2(0f, 0f), null, cols[2] with { A = 0 } * orbAlpha, orbRot, orbOrigin, orbScale * scales[2] * sineScale2, SpriteEffects.None);
+
+
+            //Explo
+            Texture2D Explo = Mod.Assets.Request<Texture2D>("Assets/Anim/BlueFlareDarkGlowPMA").Value;
             int frameHeight = Explo.Height / Main.projFrames[Projectile.type];
             int startY = frameHeight * Projectile.frame;
-
-            Color glowColor = Color.DeepSkyBlue;
-            glowColor.A = 0;
-
-            Color glowColor2 = Color.White;
-            glowColor2.A = 0;
-
             // Get this frame on texture
             Rectangle sourceRectangle = new Rectangle(0, startY, Explo.Width, frameHeight);
 
-
             Vector2 origin = sourceRectangle.Size() / 2f;
+            float drawScale = Projectile.scale * overallScale * 1.25f;
 
-            Vector2 scale12 = new Vector2(1f, 1f);
-
-            Main.spriteBatch.Draw(Explo, Projectile.Center - Main.screenPosition, sourceRectangle, Color.Black * 0.4f, Projectile.rotation, origin, scale12, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Explo, Projectile.Center - Main.screenPosition, sourceRectangle, glowColor2, Projectile.rotation, origin, scale12, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Explo, drawPos, sourceRectangle, Color.Black * 0.4f, Projectile.rotation, origin, drawScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Explo, drawPos, sourceRectangle, Color.DeepSkyBlue with { A = 0 } * 0.2f, Projectile.rotation, origin, drawScale * 1.15f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Explo, drawPos, sourceRectangle, Color.White with { A = 0 }, Projectile.rotation, origin, drawScale, SpriteEffects.None, 0f);
 
             return false;
         }

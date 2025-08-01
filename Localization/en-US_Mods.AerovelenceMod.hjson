@@ -1557,6 +1557,8 @@ Projectiles: {
 	TitaniumLauncherHeldMini.DisplayName: Titanium Launcher Held Mini
 	FlareGunHeldProjectileOld.DisplayName: Flare Gun Held Projectile Old
 	FlareGunRecoilProjectile.DisplayName: Flare Gun Recoil Projectile
+	NewWandOfExplodingHeldProj.DisplayName: New Wand Of Exploding Held Proj
+	WandOfExplodingBolt.DisplayName: Wand Of Exploding Bolt
 }
 
 Configs: {

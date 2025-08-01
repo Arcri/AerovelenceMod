@@ -150,7 +150,7 @@ namespace AerovelenceMod.Common.Globals.SkillStrikes
 
             //Damage number
             Vector2 randomSpawnPos = Main.rand.NextVector2FromRectangle(new Rectangle((int)target.position.X, (int)target.position.Y, target.width, (int)(target.height * 0.75f)));
-            Dust text = Dust.NewDustPerfect(randomSpawnPos, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -12f), Scale: 1f);
+            Dust text = Dust.NewDustPerfect(randomSpawnPos, ModContent.DustType<SkillStrikeText>(), new Vector2(0f, -12f * Main.rand.NextFloat(1f, 1.25f)), Scale: 1f);
 
             SkillStrikeTextBehavior sstb = new SkillStrikeTextBehavior();
             sstb.isCrit = false;

@@ -7,6 +7,8 @@ using System;
 using ReLogic.Graphics;
 using Microsoft.Extensions.DependencyInjection;
 using AerovelenceMod.Common.Utilities;
+using Terraria.UI.Chat;
+using Terraria.ID;
 
 namespace AerovelenceMod.Content.Dusts.GlowDusts
 {
@@ -40,7 +42,12 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
                         behavior.secondOpacity = Math.Clamp(behavior.secondOpacity - 0.035f, 0, 1);
 
                     //if (dust.scale > 0.5f)
-                    dust.scale = Math.Clamp(MathHelper.Lerp(dust.scale, 0.25f, 0.15f), 0.5f, 0.8f);
+                    //dust.scale = Math.Clamp(MathHelper.Lerp(dust.scale, 0.25f, 0.15f), 0.5f, 0.8f);
+
+                    float timeForPopInAnim = 22;
+                    float animProgress = Math.Clamp((dust.alpha + 7) / timeForPopInAnim, 0f, 1f);
+
+                    dust.scale = MathHelper.Lerp(0f, 1f, Easings.easeInOutBack(animProgress, 0f, 1.75f)) * 0.5f;
 
                     behavior.colorLerpValue = Math.Clamp(MathHelper.Lerp(behavior.colorLerpValue, -0.25f, 0.1f), 0f, 1f);
 
@@ -72,37 +79,27 @@ namespace AerovelenceMod.Content.Dusts.GlowDusts
             {
                 if (dust.customData is SkillStrikeTextBehavior behavior)
                 {
-                    //Texture2D ExtraGlow = Mod.Assets.Request<Texture2D>("Assets/Orbs/SoftGlow").Value;
-
-                    Color innerColor = Color.BlanchedAlmond;
-
                     float alpha = dust.fadeIn;
 
-                    DynamicSpriteFont myFont = FontAssets.MouseText.Value;
+                    DynamicSpriteFont myFont = FontAssets.DeathText.Value;
                     Vector2 origin = (myFont.MeasureString(behavior.damageNumber) / 2f) * 0.5f;
 
                     Vector2 posOffset = myFont.MeasureString(behavior.damageNumber) / 2f;
-                    Vector2 drawPos = dust.position - Main.screenPosition - posOffset * 1f;
 
-                    ///Color col = behavior.isCrit ? new Color(255, 90, 170) : Color.Gold * 1f;
-                    Color col = Color.Lerp(Color.Gold, Color.White, behavior.colorLerpValue);
+                    posOffset.X -= 8;
+                    Vector2 drawPos = dust.position - Main.screenPosition - posOffset * 0.475f;
 
-                    //Based off SLR starsight ability thing
-                    for (int k = 0; k < 5; k++)
-                    {
-                        float rotOff = (k / 5f) * MathHelper.TwoPi;
+                    //Color outerCol = Color.Lerp(new Color(255, 160, 0), Color.White, Easings.easeInQuad(behavior.colorLerpValue)) * 0.9f;
 
-                        Vector2 off = Vector2.One.RotatedBy((Main.timeForVisualEffects * 0.08f) + rotOff) * 4f * dust.scale;
-                        Main.spriteBatch.DrawString(FontAssets.DeathText.Value, behavior.damageNumber, drawPos + off, col * 0.8f * alpha, 0, origin, dust.scale * 0.9f, 0, 0);
-                        
-                        //if (behavior.isCrit)
-                            //Main.spriteBatch.DrawString(FontAssets.DeathText.Value, behavior.damageNumber, drawPos + off, Color.Black * 0.15f * alpha, 0, origin, dust.scale, 0, 0);
+                    Color textCol = Color.White * 1f * alpha;
+                    Color borderCol = Color.Lerp(Color.Orange, Color.White, behavior.colorLerpValue) * 1f * alpha;
 
-                    }
+                    Vector2 drawScale = new Vector2(1f, 1f) * dust.scale * 1f;
+                    ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, myFont, behavior.damageNumber, drawPos, textCol * 0.5f, 0f, origin, drawScale);
+                    ChatManager.DrawColorCodedStringShadow(Main.spriteBatch, myFont, behavior.damageNumber, drawPos, borderCol, 0f, origin, drawScale);
+                    ChatManager.DrawColorCodedStringShadow(Main.spriteBatch, myFont, behavior.damageNumber, drawPos + Main.rand.NextVector2Circular(1f, 1f), borderCol with { A = 0 } * 0.15f, 0f, origin, drawScale);
+                    ChatManager.DrawColorCodedString(Main.spriteBatch, myFont, behavior.damageNumber, drawPos, textCol with { A = 0 }, 0f, origin, drawScale);
 
-                    Color outerCol = Color.Lerp(new Color(255, 160, 0), Color.White, Easings.easeInQuad(behavior.colorLerpValue)) * 0.9f;
-
-                    Utils.DrawBorderStringFourWay(Main.spriteBatch, FontAssets.DeathText.Value, behavior.damageNumber, drawPos.X, drawPos.Y, innerColor * alpha, outerCol * alpha, origin, dust.scale * 0.9f);
 
                 }
             }
