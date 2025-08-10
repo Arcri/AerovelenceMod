@@ -124,21 +124,20 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 List<ItemConfiguration> smallShrineSecondary = new()
                 {
-                    rand.NextBool(5) ? new(ItemID.SuspiciousLookingEye, 1, 1) : new(null, 1, 1),
-                    rand.NextBool(3) ? new(ItemID.Dynamite, 1, 1) : new(null, 1, 1),
-                    rand.NextBool(4) ? new(ItemID.Dynamite, 25, 50) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ItemID.HealingPotion, 3, 5) : new(null, 1, 1),
+                    new(ItemID.SuspiciousLookingEye, 1, 1, 1f/5),
+                    new(ItemID.Dynamite, 25, 50, 1f/3),
+                    new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10, 1f/2),
+                    new(ItemID.HealingPotion, 3, 5, 1f/2),
                     new(new List<int>
                     {
                         ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
                         ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
                         ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
-                    }, 1, 2),
-                    rand.NextBool(2) ? new(ItemID.RecallPotion, 1, 2) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ModContent.ItemType < CavernCrystalItem >(), 10, 30) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ItemID.GoldCoin, 1, 2) : new(null, 1, 1),
+                    }, 1, 2, 2f/3), // Vanilla splits the potions into two item slots for caverns chests
+                    new(ItemID.RecallPotion, 1, 2, 1f/2),
+                    new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29, 1f/2),
+                    new(ModContent.ItemType <CavernCrystalItem>(), 10, 30, 1f),
+                    new(ItemID.GoldCoin, 1, 2, 1f/2)
                 };
 
                 List<PrimaryItemConfiguration> genericLootPrimary = new()
@@ -153,21 +152,20 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 List<ItemConfiguration> genericLootSecondary = new()
                 {
-                    rand.NextBool(5) ? new(ItemID.SuspiciousLookingEye, 1, 1) : new(null, 1, 1),
-                    rand.NextBool(3) ? new(ItemID.Dynamite, 1, 1) : new(null, 1, 1),
-                    rand.NextBool(4) ? new(ItemID.Dynamite, 25, 50) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ItemID.HealingPotion, 3, 5) : new(null, 1, 1),
+                    new(ItemID.SuspiciousLookingEye, 1, 1, 1f/5),
+                    new(ItemID.Dynamite, 25, 50, 1f/3),
+                    new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10, 1f/2),
+                    new(ItemID.HealingPotion, 3, 5, 1f/2),
                     new(new List<int>
                     {
                         ItemID.SpelunkerPotion, ItemID.FeatherfallPotion, ItemID.NightOwlPotion, ItemID.WaterWalkingPotion,
                         ItemID.ArcheryPotion, ItemID.GravitationPotion, ItemID.ThornsPotion, ItemID.InvisibilityPotion,
                         ItemID.HunterPotion, ItemID.BattlePotion, ItemID.TeleportationPotion
-                    }, 1, 2),
-                    rand.NextBool(2) ? new(ItemID.RecallPotion, 1, 2) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ModContent.ItemType < CavernCrystalItem >(), 10, 30) : new(null, 1, 1),
-                    rand.NextBool(2) ? new(ItemID.GoldCoin, 1, 2) : new(null, 1, 1),
+                    }, 1, 2, 2f/3), // Vanilla splits the potions into two item slots for caverns chests
+                    new(ItemID.RecallPotion, 1, 2, 1f/2),
+                    new(new List<int> { ItemID.Torch, ItemID.Glowstick }, 15, 29, 1f/2),
+                    new(ModContent.ItemType <CavernCrystalItem>(), 10, 30, 1f),
+                    new(ItemID.GoldCoin, 1, 2, 1f/2)
                 };
 
                 #endregion
@@ -187,7 +185,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
                 PlaceStructureSafely("smallshrine")
                         .ProtectStructure()
-                        .ApplyItemConfigurationsToAll(rand, genericLootPrimary, genericLootSecondary);
+                        .ApplyItemConfigurationsToAll(rand, smallShrinePrimary, smallShrineSecondary);
                 if (rand.NextBool())
                 {
                     PlaceStructureSafely("librarydarkleft")

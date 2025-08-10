@@ -70,10 +70,21 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                     int maxSlots = chest.item.Length;
                     if (chestConfig.PrimaryItems != null)
                     {
+                        float totalWeight = 0;
                         foreach (var primaryConfig in chestConfig.PrimaryItems)
                         {
-                            if (slotIndex >= maxSlots) break;
-                            if (primaryConfig != null && rand.NextFloat() < primaryConfig.Weight)
+                            if (primaryConfig != null)
+                            {
+                                totalWeight += primaryConfig.Weight;
+                            }
+                        }
+                        float currentWeightThresh = 0;
+                        float choice = rand.NextFloat() * totalWeight;
+                        foreach (var primaryConfig in chestConfig.PrimaryItems)
+                        {
+                            if (primaryConfig == null || slotIndex >= maxSlots) break;
+                            currentWeightThresh += primaryConfig.Weight;
+                            if (currentWeightThresh > choice)
                             {
                                 slotIndex = PlaceItemInNextAvailableSlot(chest.item, primaryConfig, slotIndex, x, y);
                             }
@@ -84,7 +95,7 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
                         foreach (var itemConfig in chestConfig.Items)
                         {
                             if (slotIndex >= maxSlots) break;
-                            if (itemConfig != null)
+                            if (itemConfig != null && rand.NextFloat() < itemConfig.SpawnChance)
                             {
                                 slotIndex = PlaceItemInNextAvailableSlot(chest.item, itemConfig, slotIndex, x, y);
                             }
@@ -164,13 +175,13 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
         public float Weight { get; set; }
 
         public PrimaryItemConfiguration(int itemType, int minStack, int maxStack, float weight)
-            : base(itemType, minStack, maxStack)
+            : base(itemType, minStack, maxStack, 1)
         {
             Weight = weight;
         }
 
         public PrimaryItemConfiguration(List<int> itemTypeChoices, int minStack, int maxStack, float weight)
-            : base(itemTypeChoices, minStack, maxStack)
+            : base(itemTypeChoices, minStack, maxStack, 1)
         {
             Weight = weight;
         }
@@ -182,19 +193,22 @@ namespace AerovelenceMod.Common.Utilities.Generation.StructureStamper
         public List<int> ItemTypeChoices { get; set; }
         public int MinStack { get; set; }
         public int MaxStack { get; set; }
+        public float SpawnChance { get; set; }
 
-        public ItemConfiguration(List<int> itemTypeChoices, int minStack, int maxStack)
+        public ItemConfiguration(List<int> itemTypeChoices, int minStack, int maxStack, float spawnChance)
         {
             ItemTypeChoices = itemTypeChoices;
             MinStack = minStack;
             MaxStack = maxStack;
+            SpawnChance = spawnChance;
         }
 
-        public ItemConfiguration(int itemType, int minStack, int maxStack)
+        public ItemConfiguration(int itemType, int minStack, int maxStack, float spawnChance)
         {
             ItemTypeChoices = new List<int> { itemType };
             MinStack = minStack;
             MaxStack = maxStack;
+            SpawnChance = spawnChance;
         }
     }
 }
