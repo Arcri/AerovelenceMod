@@ -18,7 +18,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Main.tileLighted[Type] = true;
             Main.tileBlockLight[Type] = true;
             AddMapEntry(new Color(100, 155, 255));
-            //ItemDrop = ModContent.ItemType<Items.Placeable.CrystalDirtItem>();
             TileID.Sets.Grass[Type] = true;
             TileID.Sets.NeedsGrassFraming[Type] = true;
             TileID.Sets.NeedsGrassFramingDirt[Type] = ModContent.TileType<CrystalDirtTile>();
@@ -50,46 +49,30 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             return false;
         }
 
-        public override void RandomUpdate(int i, int j)
-        {
-            Tile tile = Framing.GetTileSafely(i, j);
-            Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-            Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            /*if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
-                {
-                   // tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
-                    tileAbove.HasTile = true;
-                    tileAbove.TileFrameY = 0;
-                    tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
-                    WorldGen.SquareTileFrame(i, j + 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope)
-                {
-                    tileBelow.TileType = (ushort)ModContent.TileType<CrystalVines>();
-                    tileBelow.HasTile = true;
-                    WorldGen.SquareTileFrame(i, j + 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j + 1, 3, TileChangeType.None);
-                    }
-                }
-            }*/
-        }
-
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             r = 0f;
             g = 0.050f;
             b = 0.200f;
+        }
+    }
+
+    public class LushGrowthItem : ModItem 
+    {
+        public override void SetDefaults()
+        {
+            Item.width = 16;
+            Item.height = 16;
+            Item.maxStack = Item.CommonMaxStack;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.consumable = true;
+            Item.createTile = ModContent.TileType<CrystalGrassTile>();
+            Item.rare = ItemRarityID.White;
+            Item.value = 5;
         }
     }
 }

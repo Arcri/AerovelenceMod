@@ -34,6 +34,27 @@ namespace AerovelenceMod.Common.Utilities.Generation
             }
         }
 
+        public class SwapWall : GenAction
+        {
+            private ushort _type;
+
+            public SwapWall(ushort type)
+            {
+                _type = type;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                Tile tile = _tiles[x, y];
+                if (tile.WallType != 0)
+                {
+                    WorldUtils.Gen(new Point(x, y), new Shapes.Rectangle(1, 1), new Actions.PlaceWall(_type));
+                    return UnitApply(origin, x, y, args);
+                }
+                return Fail();
+            }
+        }
+
         public class PlaceTail : GenAction
         {
             private readonly ushort _type;
