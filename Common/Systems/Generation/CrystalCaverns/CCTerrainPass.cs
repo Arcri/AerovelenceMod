@@ -377,6 +377,46 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenLowerUndergroundWalls(ReplaceWithBrickWalls, StoneWall, false);
                 GenLowerUndergroundWalls(ReplaceWithBrickWalls, BrickWall, true);
 
+
+                // Lush growths
+                ShapeData lushBiomeUpperOrigins = new ShapeData();
+                ShapeData lushBiomeLowerOrigins = new ShapeData();
+                WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Dither(0.999925),
+                    new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
+                    new Actions.Blank().Output(lushBiomeUpperOrigins)
+                }));
+                WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Flip(false, true),
+                    new Modifiers.Dither(0.999925),
+                    new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
+                    new Actions.Blank().Output(lushBiomeLowerOrigins)
+                }));
+
+                int lushBiomeSize = (int)(30 * WorldSizeScale);
+
+                for (int i = 0; i < (int)(200 * WorldSizeScale); i++)
+                {
+                    WorldUtils.Gen(upperUndergroundOrigin, new ModShapes.All(lushBiomeUpperOrigins), Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.Offset(
+                            WorldGen.genRand.Next(-lushBiomeSize, lushBiomeSize + 1),
+                            WorldGen.genRand.Next(-lushBiomeSize, lushBiomeSize + 1)),
+                        new AeroGenUtils.PlaceBlob(LushTile, 9, 9, [new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile), new Modifiers.IsTouchingAir(true)]),
+                        new AeroGenUtils.PlaceBlobWall(LushWall, 9, 9, [new Modifiers.OnlyWalls(StoneWall)]),
+                    }));
+                    WorldUtils.Gen(lowerUndergroundOrigin, new ModShapes.All(lushBiomeLowerOrigins), Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.Offset(
+                            WorldGen.genRand.Next(-lushBiomeSize, lushBiomeSize + 1), 
+                            WorldGen.genRand.Next(-lushBiomeSize, lushBiomeSize + 1)),
+                        new AeroGenUtils.PlaceBlob(LushTile, 9, 9, [new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile), new Modifiers.IsTouchingAir(true)]),
+                        new AeroGenUtils.PlaceBlobWall(LushWall, 9, 9, [new Modifiers.OnlyWalls(StoneWall)]),
+                    }));
+                }
+
                 // Clear a lot of the walls to allow the background to be visible frequently
                 WorldUtils.Gen(upperUndergroundWallOrigin, upperUndergroundWallShape, Actions.Chain(new GenAction[]
                 {
@@ -400,40 +440,6 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroGenUtils.ClearWallRunner()
                 }));
 
-                // Lush growths
-                ShapeData lushBiomeUpperOrigins = new ShapeData();
-                ShapeData lushBiomeLowerOrigins = new ShapeData();
-                WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.Dither(0.9995),
-                    new Modifiers.IsTouchingAir(true),
-                    new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
-                    new Actions.Blank().Output(lushBiomeUpperOrigins)
-                }));
-                WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.Flip(false, true),
-                    new Modifiers.IsTouchingAir(true),
-                    new Modifiers.Dither(0.9995),
-                    new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
-                    new Actions.Blank().Output(lushBiomeLowerOrigins)
-                }));
-                for (int i = 0; i < WorldGen.genRand.Next(1000); i++)
-                {
-                    WorldUtils.Gen(upperUndergroundOrigin, new ModShapes.All(lushBiomeUpperOrigins), Actions.Chain(new GenAction[]
-                    {
-                        new Modifiers.Offset(WorldGen.genRand.Next(-15, 16), WorldGen.genRand.Next(-15, 16)),
-                        new AeroGenUtils.PlaceBlob(LushTile, (int)(9f * WorldSizeScale), (int)(9f * WorldSizeScale), [new Modifiers.IsTouchingAir(true), new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile), new AeroGenUtils.SolidBelow(2), new AeroGenUtils.NotSolidAbove(2)]),
-                        new AeroGenUtils.PlaceBlobWall(LushWall, (int)(9f * WorldSizeScale), (int)(9f * WorldSizeScale), [new Modifiers.IsTouchingAir(true), new Modifiers.OnlyWalls(StoneWall)]),
-                    }));
-                    WorldUtils.Gen(lowerUndergroundOrigin, new ModShapes.All(lushBiomeLowerOrigins), Actions.Chain(new GenAction[]
-                    {
-                        new Modifiers.Offset(WorldGen.genRand.Next(-15, 16), WorldGen.genRand.Next(-15, 16)),
-                        new AeroGenUtils.PlaceBlob(LushTile, (int)(9f * WorldSizeScale), (int)(9f * WorldSizeScale), [new Modifiers.IsTouchingAir(true), new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile), new AeroGenUtils.SolidBelow(2), new AeroGenUtils.NotSolidAbove(2)]),
-                        new AeroGenUtils.PlaceBlobWall(LushWall, (int)(9f * WorldSizeScale), (int)(9f * WorldSizeScale), [new Modifiers.IsTouchingAir(true), new Modifiers.OnlyWalls(StoneWall)]),
-                    }));
-                }
-
                 // Main lightning bolt cave
                 WorldUtils.Gen(new Point(Origin.X, Origin.Y - (int)(SurfaceHeight * 2.25)), new AeroGenUtils.LightningBoltShape((int)(625 * WorldSizeScale), 50 * (int)((WorldSizeScale - 1) * 0.8 + 1), 2, 30), Actions.Chain(new GenAction[]
                 {
@@ -444,12 +450,12 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(3, 0),
-                        new Modifiers.OnlyTiles(DirtTile, StoneTile),
+                        new Modifiers.OnlyTiles(DirtTile, StoneTile, SandTile),
                         new Modifiers.IsTouchingAir(true),
                         new Modifiers.RectangleMask(-BiomeWidth / 2, BiomeWidth / 2, 5, (int)(SurfaceHeight * 4)), // SurfaceHeight * 1.75 was what I started it at
                         new Modifiers.Blotches(4, 4, 1),
                         new Modifiers.NotInShape(lightningBoltShapeData),
-                        new AeroGenUtils.IsTouchingWall(true, DirtWall, StoneWall),
+                        new AeroGenUtils.IsTouchingWalls(true, DirtWall, StoneWall),
                         new Actions.SetTileKeepWall(StoneTile),
                     })
                 }));
@@ -462,17 +468,6 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new AeroGenUtils.SolidBelow(10),
                     new AeroGenUtils.NotSolidAbove(50),
                     new Actions.Blank().Output(surfaceExposedShapeData),
-                }));
-
-                // Surface rock blobs
-                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
-                {
-                    new Modifiers.Offset(0, 2),
-                    new Modifiers.Dither(.9875), // 1/80 chance
-                    new Modifiers.IsTouchingAir(),
-                    new AeroGenUtils.NotTouchingTiles(true, LivingWoodTiles),
-                    new Modifiers.OnlyTiles(GrassTile, DirtTile, SandTile, StoneTile),
-                    new AeroGenUtils.PlaceBlob(StoneTile, 5.5f, 5.5f, 1.5f, 1.5f, []),
                 }));
 
                 // Surface crystal growths

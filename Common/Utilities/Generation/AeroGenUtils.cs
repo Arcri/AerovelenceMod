@@ -4,6 +4,7 @@ using ReLogic.Utilities;
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.WorldBuilding;
 using static Terraria.Collision;
 
@@ -46,9 +47,9 @@ namespace AerovelenceMod.Common.Utilities.Generation
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
                 Tile tile = _tiles[x, y];
-                if (tile.WallType != 0)
+                if (tile.WallType != WallID.None)
                 {
-                    WorldUtils.Gen(new Point(x, y), new Shapes.Rectangle(1, 1), new Actions.PlaceWall(_type));
+                    WorldGen.ReplaceWall(x, y, _type);
                     return UnitApply(origin, x, y, args);
                 }
                 return Fail();
@@ -333,7 +334,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
             }
         }
 
-        public class IsTouchingWall : GenAction
+        public class IsTouchingWalls : GenAction
         {
             private static readonly int[] DIRECTIONS = new int[16] {
             0,
@@ -356,7 +357,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
             private bool _useDiagonals;
             private ushort[] _wallIds;
 
-            public IsTouchingWall(bool useDiagonals, params ushort[] wallIds)
+            public IsTouchingWalls(bool useDiagonals, params ushort[] wallIds)
             {
                 _useDiagonals = useDiagonals;
                 _wallIds = wallIds;
