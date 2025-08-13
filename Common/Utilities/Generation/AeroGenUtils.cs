@@ -49,7 +49,7 @@ namespace AerovelenceMod.Common.Utilities.Generation
                 Tile tile = _tiles[x, y];
                 if (tile.WallType != WallID.None)
                 {
-                    WorldGen.ReplaceWall(x, y, _type);
+                    tile.WallType = _type;
                     return UnitApply(origin, x, y, args);
                 }
                 return Fail();

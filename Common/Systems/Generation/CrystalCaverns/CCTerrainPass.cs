@@ -48,6 +48,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         private ushort[] ReplaceWithSandTiles { get; set; }
         private ushort[] ReplaceWithChargedTiles { get; set; }
         private ushort[] ReplaceWithBrickTiles { get; set; }
+        private ushort[] SurfaceOres { get; set; }
+
         private ushort[] ClearTiles {  get; set; }
 
         private ushort[] ReplaceWithBrickWalls { get; set; }
@@ -92,9 +94,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             return _instance;
         }
 
-        private CCTerrainPass(string name, float loadWeight) : base(name, loadWeight)
-		{
-        }
+        private CCTerrainPass(string name, float loadWeight) : base(name, loadWeight) {}
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
@@ -132,7 +132,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             ReplaceWithBrickTiles = [TileID.SandstoneBrick];
             ReplaceWithDirtTiles = [TileID.Dirt, TileID.DirtiestBlock, TileID.Mud, TileID.Grass, TileID.JungleGrass, TileID.MushroomGrass, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.SnowBlock];
 
+            SurfaceOres = [TileID.Tin, TileID.Copper, TileID.Iron, TileID.Lead];
+
             ReplaceWithBrickWalls = [WallID.SandstoneBrick, BrickWall];
+
+            ClearTiles = [TileID.BreakableIce];
 
             LivingWoodTiles = [LivingWoodTile, LivingLeafTile, LivingWoodPlatformTile, LivingWoodDoorTile];
 
@@ -157,10 +161,33 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 Point upperUndergroundWallOrigin = new Point(Origin.X - BiomeWidth / 2 + 1, Origin.Y);
                 Point lowerUndergroundWallOrigin = new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight) - 1);
 
+                // Preliminary tile clearing
+
+                void PrelimClearTiles(ushort[] toBeCleared)
+                {
+                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.OnlyTiles(),
+                        new Actions.ClearTile()
+                    }));
+                    WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.OnlyTiles(toBeCleared),
+                        new Actions.ClearTile()
+                    }));
+                    WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
+                    {
+                        new Modifiers.OnlyTiles(toBeCleared),
+                        new Actions.ClearTile()
+                    }));
+                }
+
+                PrelimClearTiles(ClearTiles);
+
                 // BIOME SURFACE
                 WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 2.25)), new Actions.Blank().Output(surfaceRectShapeData));
 
-                void TileReplacement(ushort[] toBeReplaced, ushort replaceWith)
+                void GenSurface(ushort[] toBeReplaced, ushort replaceWith)
                 {
                     WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
                     {
@@ -169,12 +196,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     }));
                 }
 
-                // Tile replacement
-                TileReplacement(ReplaceWithChargedTiles, ChargedTile);
-                TileReplacement(ReplaceWithSandTiles, SandTile);
-                TileReplacement(ReplaceWithStoneTiles, StoneTile);
-                TileReplacement(ReplaceWithBrickTiles, BrickTile);
-                TileReplacement(ReplaceWithDirtTiles, DirtTile);
+                GenSurface(ReplaceWithChargedTiles, ChargedTile);
+                GenSurface(ReplaceWithSandTiles, SandTile);
+                GenSurface(ReplaceWithStoneTiles.Concat(SurfaceOres).ToArray(), StoneTile);
+                GenSurface(ReplaceWithBrickTiles, BrickTile);
+                GenSurface(ReplaceWithDirtTiles, DirtTile);
 
                 void SurfaceDithering(ushort[] toBeReplaced, ushort replaceWith)
                 {
@@ -259,7 +285,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.OnlyTiles(toBeReplaced),
-                        new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
+                        new AeroGenUtils.SwapSolidTileInclusive(replaceWith),
                     }));
                     WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                     {
@@ -377,6 +403,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenLowerUndergroundWalls(ReplaceWithBrickWalls, StoneWall, false);
                 GenLowerUndergroundWalls(ReplaceWithBrickWalls, BrickWall, true);
 
+                // Tumbler arena prep
+                TumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
+
+                TumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5).ToPoint();
+                WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, (int)(07 * WorldSizeScale), 5);
 
                 // Lush growths
                 ShapeData lushBiomeUpperOrigins = new ShapeData();
@@ -478,13 +509,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     new Modifiers.OnlyTiles(GrassTile, DirtTile, SandTile, StoneTile),
                     new AeroGenUtils.PlaceTail(CrystalTile, 6, new Vector2D(0, -20), 0, 4, 3)
                 }));
-
-                // Tumbler arena prep
-                TumblerArenaPolarity = WorldGen.genRand.NextBool().ToDirectionInt();
-
-                TumblerTunnelEnd = WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, 3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5).ToPoint();
-                WorldGen.digTunnel(Origin.X, Origin.Y + UndergroundHeight / 2, -3 * TumblerArenaPolarity, 0, (int)(65 * WorldSizeScale), 5);
-
+         
                 // Underground crystal growths
                 WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                 {
@@ -561,14 +586,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
 		private Point DetermineOrigin(int biomeWidth, int undergroundHeight, int surfaceHeight, int biomeHeight)
         {
-            Point fallbackPoint = Point.Zero;
-            Point evilFallbackPoint = Point.Zero;
-            // Using Point.Zero as a standin for a 'null' value, aka no valid spawn location found and the biome will not generate
+            int[] biomeOverlapDegrees = new int[5];
+            Point[] surfacePoints = new Point[5];
             Point surfacePoint = Point.Zero;
 
             for (int attempts = 0; attempts < 10000; attempts++)
 			{
                 int x = WorldGen.genRand.Next((int)(500 * WorldSizeScale), Main.maxTilesX - (int)(500 * WorldSizeScale));
+                // Don't place on the spawn point
 				while (Main.maxTilesX * .4 < x && x < Main.maxTilesX * .6)
 				{
 					x = WorldGen.genRand.Next((int)(500 * WorldSizeScale), Main.maxTilesX - (int)(500 * WorldSizeScale));
@@ -576,79 +601,81 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 Point initialPoint = new Point(x, (int)Main.worldSurface);
 
+                // Don't center the biome on a living tree (it'd cover the lightning cave)
 				bool flag = WorldUtils.Find(initialPoint, Searches.Chain(new Searches.Up((int)(200 * WorldSizeScale)), new Conditions.IsTile(TileID.LivingWood, TileID.LeafBlock).AreaOr(1, 50)), out Point _);
-				if (flag)
-					continue;
+				if (flag) continue;
+                // Find a point with 50 tiles of air above it
                 flag = WorldUtils.Find(initialPoint, Searches.Chain(new Searches.Up(1000), new Conditions.IsSolid().AreaOr(1, 50).Not()), out surfacePoint);
+                if (!flag) continue;
+
                 // Adjust result to point to surface, not 50 tiles above 
                 surfacePoint.Y += 50;
 
-                // Search up to 1000 tiles above for an area 50 tiles tall and 1 tile wide without a single solid tile. Basically find the surface.
-                if (!flag)
-                    continue;
-
-                // Check on the left bound, mid-left side, center line, mid-right side, and right bound for suboptimal but sometimes acceptable results
-                if (!CheckPointEvilFallback(-(int)(.5 * biomeWidth), surfacePoint) ||
-                    !CheckPointEvilFallback(-(int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPointEvilFallback(0, surfacePoint) ||
-                    !CheckPointEvilFallback((int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPointEvilFallback((int)(.5 * biomeWidth), surfacePoint))
-                    continue;
-                evilFallbackPoint = surfacePoint;
-                // Check on the left bound, mid-left side, center line, mid-right side, and right bound for suboptimal but acceptable results
-                if (!CheckPointFallback(-(int)(.5 * biomeWidth), surfacePoint) ||
-                    !CheckPointFallback(-(int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPointFallback(0, surfacePoint) ||
-                    !CheckPointFallback((int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPointFallback((int)(.5 * biomeWidth), surfacePoint))
-                    continue;
-                fallbackPoint = surfacePoint;
                 // Check on the left side, mid-left side, center line, mid-right side, and right side of the biome
-                if (!CheckPoint(-(int)(.5 * biomeWidth), surfacePoint) ||
-                    !CheckPoint(-(int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPoint(0, surfacePoint) ||
-                    !CheckPoint((int)(.25 * biomeWidth), surfacePoint) ||
-                    !CheckPoint((int)(.5 * biomeWidth), surfacePoint))
-					continue;
+                int[] pointVals = new int[5];
+                for (int i = 0; i < 5; i++)
+                {
+                    pointVals[i] = CheckPoint((int)((-0.5f + 0.25f * i) * biomeWidth), surfacePoint);
+                }
+                int pointStrikes = pointVals.Max();
 
-                Console.WriteLine("Crystal Caverns generation process finished in " + attempts + " attempts.");
-				surfacePoint.Y = DetermineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
-                return surfacePoint;
+                // Prefer placements that only overlap the other biome slightly
+                int overlapDegree = 0;
+                foreach (int val in pointVals)
+                {
+                    if (val == pointStrikes)
+                    {
+                        overlapDegree++;
+                    }
+                }
+
+                // Ideal point
+                if (pointStrikes == 0)
+                {
+                    Console.WriteLine("Crystal Caverns generation process finished in " + attempts + " attempts.");
+                    surfacePoint.Y = DetermineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
+                    GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+                    return surfacePoint;
+                }
+                // Prefer placements that only overlap the other biome slightly, part 2
+                else if (biomeOverlapDegrees[pointStrikes] > overlapDegree || biomeOverlapDegrees[pointStrikes] == 0)
+                {
+                    biomeOverlapDegrees[pointStrikes] = overlapDegree;
+                    surfacePoints[pointStrikes] = surfacePoint;
+                }
             }
-            Console.WriteLine("Could not find a suitable location to place the Crystal Caverns");
-			if (fallbackPoint != Point.Zero)
-			{
-				Console.WriteLine("Falling back to a location overlapping with evil to generate the Crystal Caverns");
-                surfacePoint.Y = DetermineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
-                return fallbackPoint;
-            }
-            if (evilFallbackPoint != Point.Zero)
+            Console.WriteLine("Could not find an ideal location to place the Crystal Caverns");
+
+            // Nonideal point handling
+            int firstPointIndex = Array.FindIndex(surfacePoints, point => point != Point.Zero);
+
+            switch (firstPointIndex)
             {
-                Console.WriteLine("Falling back to a location overlapping with evil / jungle / ice to generate the Crystal Caverns");
-                surfacePoint.Y = DetermineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
-                GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+                case 1:
+                    Console.WriteLine("Placing the Crystal Caverns over an evil biome");
+                    break;
+                case 2:
+                    Console.WriteLine("Placing the Crystal Caverns over an evil/ice biome");
+                    break;
+                case 3:
+                    Console.WriteLine("Placing the Crystal Caverns over an evil/ice/desert/jungle/shimmer biome");
+                    break;
+                case 4:
+                    Console.WriteLine("Placing the Crystal Caverns overan evil/ice/desert/jungle/shimmer biome or a dungeon/temple");
+                    break;
             }
-            return evilFallbackPoint;
+            surfacePoint = surfacePoints[firstPointIndex];
+
+            surfacePoint.Y = DetermineOriginY(biomeWidth, surfacePoint); // Correct the Y position of the biome to the average of the right and left bound's surrounding terrain height
+            GenVars.structures.AddProtectedStructure(new Rectangle(surfacePoint.X - (int)(.5 * biomeWidth), surfacePoint.Y, biomeWidth, biomeHeight), 0);
+            return surfacePoint;
         }
 
-		private bool CheckPoint(int xOffset, Point surfacePoint) 
+		private int CheckPoint(int xOffset, Point surfacePoint) 
 		{
+            int strikes = 0;
 			Point point = new Point(surfacePoint.X + xOffset, surfacePoint.Y);
-			//surfacePoint argument means only the central point is taken into consideration, while point means all three are
-			if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
-				TileID.JungleGrass,
-				TileID.IceBlock,
-                TileID.SnowBlock)), out Point _))
-				return false;
-            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
-                TileID.Sandstone,
-                TileID.BlueDungeonBrick,
-                TileID.GreenDungeonBrick,
-                TileID.PinkDungeonBrick,
-                TileID.LihzahrdBrick)), out Point _))
-                return false;
+            //surfacePoint argument means only the central point is taken into consideration, while point means all three are
             if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
                 TileID.Crimstone,
                 TileID.Ebonstone,
@@ -656,42 +683,23 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 TileID.Ebonsand,
                 TileID.CorruptGrass,
                 TileID.CrimsonGrass)), out Point _))
-                return false;
-            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroGenUtils.HasShimmer()), out Point _))
-                return false;            
-            return true;
-        }
-
-		private bool CheckPointFallback(int xOffset, Point surfacePoint)
-		{
-            Point point = new Point(surfacePoint.X + xOffset, surfacePoint.Y);
+                strikes = 1;
             if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
-                TileID.JungleGrass,
                 TileID.IceBlock)), out Point _))
-                return false;
-            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
-                TileID.Sandstone,
-                TileID.BlueDungeonBrick,
-                TileID.GreenDungeonBrick,
-                TileID.PinkDungeonBrick,
-                TileID.LihzahrdBrick)), out Point _))
-                return false;
+                strikes = 2;
             if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight + 100), new AeroGenUtils.HasShimmer()), out Point _))
-                return false;
-            return true;
-        }
-
-        private bool CheckPointEvilFallback(int xOffset, Point surfacePoint)
-        {
-            Point point = new Point(surfacePoint.X + xOffset, surfacePoint.Y);
+                strikes = 3;
             if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
                 TileID.Sandstone,
+                TileID.JungleGrass)), out Point _))
+                strikes = 3;
+            if (WorldUtils.Find(point, Searches.Chain(new Searches.Down(UndergroundHeight + SurfaceHeight), new Conditions.IsTile(
                 TileID.BlueDungeonBrick,
                 TileID.GreenDungeonBrick,
                 TileID.PinkDungeonBrick,
                 TileID.LihzahrdBrick)), out Point _))
-                return false;
-            return true;
+                strikes = 4;
+            return strikes;
         }
 
         private int DetermineOriginY(int biomeWidth, Point surfacePoint)
