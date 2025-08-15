@@ -20,8 +20,9 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using static AerovelenceMod.Common.Utilities.ProjectileExtensions;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common.Interfaces;
 
-namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.ClockworkLazinator
 {
     public class ClockworkLazinator : TranslatableModItem
     {
@@ -81,7 +82,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
         {
-            //Dont consume mana on right-click
+            //Dont consume mana on right-click (still pauses mana regen though but I don't think we can avoid that
             if (player.altFunctionUse == 2)
                 mult *= 0;
         }
@@ -95,7 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                 if (windNumber == Main.player[player.whoAmI].GetModPlayer<LazinatorPlayer>().WINDUP_MAX)
                 {
-                    SoundStyle style3 = new SoundStyle("Terraria/Sounds/Menu_Close") with { Pitch = -1f, MaxInstances = 0, Volume = 1f };
+                    SoundStyle style3 = new SoundStyle("Terraria/Sounds/Menu_Close") with { Volume = 0.75f, Pitch = -1f, MaxInstances = 0 };
 
                     SoundEngine.PlaySound(style3, Main.player[player.whoAmI].Center);
                     SoundEngine.PlaySound(style3, Main.player[player.whoAmI].Center);
@@ -111,9 +112,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (player.altFunctionUse == 2)
-            {
                 type = ModContent.ProjectileType<LazinatorWindUp>();
-            }
 
             Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
             return false;
@@ -126,11 +125,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 9999;
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 1250;
         }
 
-        public Vector2 endPoint = new Vector2(0,0);
-        public float Rotation = 0;
+        public Vector2 endPoint = Vector2.Zero;
+        float Rotation = 0;
 
         int timer = 0;
 
@@ -192,52 +191,44 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-            myEffect.Parameters["uColor"].SetValue(Color.HotPink.ToVector3() * uColorIntensity);
-            myEffect.Parameters["uTime"].SetValue(2);
-            myEffect.Parameters["uOpacity"].SetValue(0.7f); //0.8
-            myEffect.Parameters["uSaturation"].SetValue(1.2f);
-
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-            myEffect.CurrentTechnique.Passes[0].Apply();
-
             if (timer > 0)
             {
-                var texBeam = Mod.Assets.Request<Texture2D>("Assets/Trails/Clear/ThinLineGlowClear").Value;
+                Texture2D texBeam = Mod.Assets.Request<Texture2D>("Assets/Trails/ThinGlowLine").Value;
 
-                Vector2 origin2 = new Vector2(0, texBeam.Height / 2f);
+                Vector2 beamOrigin = new Vector2(0, texBeam.Height / 2f);
 
-                float height = 0.15f * Projectile.scale * lineWidth;
+                float height = 0.12f * Projectile.scale * lineWidth;
 
                 if (height == 0f)
                     Projectile.active = false;
 
                 float distance = (Projectile.Center - endPoint).Length() / 256f;
 
-                Vector2 v2Scale = new Vector2(distance, height);
-                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Rotation, origin2, v2Scale, 0, 0);
-                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.DeepPink, Rotation, origin2, v2Scale, 0, 0);
+                Color beamCol = Color.Lerp(Color.DeepPink, Color.HotPink, 0.55f);
+                Vector2 v2Scale1 = new Vector2(distance, height);
+                Vector2 v2Scale2 = new Vector2(distance, height * 0.25f);
+
+                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, beamCol with { A = 0 } * 1f, Rotation, beamOrigin, v2Scale1, 0, 0);
+                Main.spriteBatch.Draw(texBeam, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Rotation, beamOrigin, v2Scale2, 0, 0);
 
 
-                Texture2D circle = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
+                //End Points
+                Texture2D star = Mod.Assets.Request<Texture2D>("Assets/Pixel/CrispStarPMA").Value;
 
-                Vector2 offset = new Vector2(0f, (0.5f * Projectile.height) * -Main.player[Projectile.owner].direction).RotatedBy(Rotation - MathHelper.Pi) * Projectile.scale;
+                Vector2 starOrigin = star.Size() / 2f;
+                float starScale = 0.4f * lineWidth * Projectile.scale;
 
-                Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, Rotation, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
-                Main.spriteBatch.Draw(circle, Projectile.Center - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.HotPink, Rotation, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+                Color starCol = Color.Lerp(Color.DeepPink, Color.HotPink, 0.95f);
 
-                Main.spriteBatch.Draw(circle, endPoint - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.DeepPink, Rotation, circle.Size() / 2, 0.4f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
-                Main.spriteBatch.Draw(circle, endPoint - Main.screenPosition, circle.Frame(1, 1, 0, 0), Color.DeepPink, Rotation, circle.Size() / 2, 0.3f * lineWidth * Projectile.scale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, starCol with { A = 0 }, Rotation, starOrigin, starScale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Rotation, starOrigin, starScale * 0.35f, SpriteEffects.None, 0);
+
+                Main.spriteBatch.Draw(star, endPoint - Main.screenPosition, null, starCol with { A = 0 }, Rotation, starOrigin, starScale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(star, endPoint - Main.screenPosition, null, Color.White with { A = 0 }, Rotation, starOrigin, starScale * 0.35f, SpriteEffects.None, 0);
 
             }
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
-            
         }
-
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             collided = true;
@@ -288,19 +279,18 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         }
     }
 
-    //Why did i do it like this
+    //Why did i do it like this | actually nevermind this isn't that bad
     public class LazinatorHeldProj : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
-        public int timer = 0;
-        public float OFFSET = 20; 
+        int timer = 0;
+        float OFFSET = 20; 
 
-        public ref float Angle => ref Projectile.ai[1];
-        public Vector2 direction = Vector2.Zero;
-        public float lerpToStuff = 0;
-        public bool hasReachedDestination = false;
-        public bool ShouldFire = true;
+        ref float Angle => ref Projectile.ai[1];
+        Vector2 direction = Vector2.Zero;
+        float lerpToStuff = 0;
+        bool ShouldFire = true;
 
 
         public override void SetDefaults()
@@ -326,6 +316,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         int shotCount = 0;
         public override void AI()
         {
+            //Determine time left based on number of winds
             if (firstFrame)
             {
                 Projectile.timeLeft = Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds * 30 + 50;
@@ -334,28 +325,37 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             HeldProjCode(false);
             
+            Player owner = Main.player[Projectile.owner];
+
+            //Fire weapon
             if (ShouldFire)
             {
-                if (timer % 4 == 0 && timer > 15 && timer < 40 + (Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds * 30)) //40
+                if (timer % 4 == 0 && timer > 15 && timer < 40 + (owner.GetModPlayer<LazinatorPlayer>().winds * 30))
                 {
                     Vector2 vel = new Vector2(10, 0).RotatedBy(Angle);
                     Vector2 pos = Projectile.Center;
 
+                    //Offset position to be at muzzle unless that would be through tiles
                     Vector2 muzzleOffset = Vector2.Normalize(vel) * 37f;
                     if (Collision.CanHit(Projectile.Center, 0, 0, Projectile.Center + muzzleOffset, 0, 0))
-                    {
                         pos += muzzleOffset;
+
+                    if (Main.myPlayer == Projectile.owner)
+                    {
+                        int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), Projectile.damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
+
+                        if (Main.projectile[a].ModProjectile is LazinatorShot shot)
+                            shot.endPoint = pos;
+
+                        //Not sure if this will cause issue where it is only a skill strike for the owner
+                        if (shotCount > 20)
+                            SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f, 1, 0.5f, 0.15f);
                     }
-                    int a = Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel.RotatedByRandom(0.05f), ModContent.ProjectileType<LazinatorShot>(), Projectile.damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI);
 
-                    if (Main.projectile[a].ModProjectile is LazinatorShot shot)
-                        shot.endPoint = pos;
 
-                    if (shotCount > 20)
-                        SkillStrikeUtil.setSkillStrike(Main.projectile[a], 1.3f, 1, 0.5f, 0.15f);
-
-                    SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Pitch = .65f, PitchVariance = .2f, Volume = 0.3f };
+                    SoundStyle style = new SoundStyle("Terraria/Sounds/Research_3") with { Volume = 0.3f, Pitch = .65f, PitchVariance = .2f };
                     SoundEngine.PlaySound(style, Main.player[Projectile.owner].Center);
+
                     SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_158") with { Pitch = .44f, };
                     SoundEngine.PlaySound(style2, Main.player[Projectile.owner].Center);
 
@@ -369,17 +369,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                         dp.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
                             1f, 0.5f);
-
                     }
 
                     glowIntensity = 1f;
                     drawXScale = 0.85f;
 
-                    Player p = Main.player[Projectile.owner];
-
-                    if (!p.CheckMana(p.inventory[p.selectedItem], pay: true))
+                    if (!owner.CheckMana(owner.inventory[owner.selectedItem], pay: true))
                     {
-                        Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = 0;
+                        owner.GetModPlayer<LazinatorPlayer>().winds = 0;
                         Projectile.active = false;
                     }
 
@@ -389,12 +386,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.75f, 0.08f), 0, 1);
 
+            //Reset wind count when projectile is about to die
             if (Projectile.timeLeft == 2)
             {
                 Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = 0;
             }
         }
 
+        //Generic held projectile code
         public void HeldProjCode(bool windup)
         {
             Player Player = Main.player[Projectile.owner];
@@ -412,11 +411,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
             direction = Angle.ToRotationVector2();
             Player.ChangeDir(direction.X > 0 ? 1 : -1);
-
-            if (lerpToStuff == 0.6f)
-            {
-                hasReachedDestination = true;
-            }
 
             if (timer == 0)
             {
@@ -454,9 +448,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
         public override bool PreDraw(ref Color lightColor)
         {
             Player Player = Main.player[Projectile.owner];
-            Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinator");
-            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinatorGlow");
-            Texture2D White = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinatorWhite");
+            Texture2D Weapon = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinator/ClockworkLazinator");
+            Texture2D Glow = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinator/ClockworkLazinatorGlow");
+            Texture2D White = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Content/Items/Weapons/Misc/Magic/ClockworkLazinator/ClockworkLazinatorWhite");
 
             SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
@@ -469,6 +463,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             Main.spriteBatch.Draw(Glow, drawPos + drawOffset, null, Color.White * alpha, Projectile.rotation, Weapon.Size() / 2, drawScale, mySE, 0f);
             Main.spriteBatch.Draw(White, drawPos + drawOffset, null, Color.White with { A = 0 } * alpha * glowIntensity, Projectile.rotation, White.Size() / 2, drawScale, mySE, 0f);
 
+            //Over glow (fully charged winds)
             float pinkGlowSize = 1f + (pinkGlowPower * 0.2f);
             float pinkGlowAlpha = pinkGlowPower;
             if (pinkGlowPower > 0f)
@@ -483,22 +478,23 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
     public class LazinatorWindUp : LazinatorHeldProj
     {
-        public int windUpTimer = 0;
-        public float windUpPercent = 0;
-        public float windUpValue = 0;
-        public bool shouldKill = false;
-
+        int windUpTimer = 0;
+        float windUpPercent = 0;
+        float windUpValue = 0;
+        bool shouldKill = false;
 
         public override void AI()
         {
             HeldProjCode(true);
 
+            Player owner = Main.player[Projectile.owner];
+
             Projectile.timeLeft = 2;
 
-            if (!Main.mouseRight)
-            {
+
+            //Will kill proj at end of wind if they are not actively holding right clicker
+            if (Main.myPlayer == owner.whoAmI && !Main.mouseRight)
                 shouldKill = true;
-            }
 
             if (windUpTimer >= 20)
             {
@@ -509,20 +505,20 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                     if (windNumber == Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().WINDUP_MAX)
                     {
-                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_108") with { Pitch = .6f, PitchVariance = 0.2f, Volume = 0.7f };
+                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_108") with { Volume = 0.7f, Pitch = .6f, PitchVariance = 0.2f };
                         SoundEngine.PlaySound(style, Projectile.Center);
+
                         SoundStyle style2 = new SoundStyle("Terraria/Sounds/Item_72") with { Volume = .75f, Pitch = .6f, }; 
                         SoundEngine.PlaySound(style2, Projectile.Center);
 
-
-                        SoundStyle style4 = new SoundStyle("Terraria/Sounds/Item_149") with { Pitch = .7f, Volume = 1f };
+                        SoundStyle style4 = new SoundStyle("Terraria/Sounds/Item_149") with { Volume = 1f, Pitch = .7f };
                         SoundEngine.PlaySound(style4, Projectile.Center);
 
                         pinkGlowPower = 1f;
                     }
                     else
                     {
-                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_149") with { Pitch = .4f, Volume = 1f, PitchVariance = 0.1f };
+                        SoundStyle style = new SoundStyle("Terraria/Sounds/Item_149") with { Volume = 1f, Pitch = .4f, PitchVariance = 0.1f };
                         SoundEngine.PlaySound(style, Projectile.Center);
 
                         SoundStyle style3 = new SoundStyle("AerovelenceMod/Sounds/Effects/TwinsDual_Union04") with { Volume = .2f, Pitch = -0.2f, PitchVariance = .25f, };
@@ -543,7 +539,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
 
                     Main.player[Projectile.owner].GetModPlayer<LazinatorPlayer>().winds = Math.Clamp(windNumber + 1, 0, 4);
 
-                    windUpTimer = -10; //-20
+                    windUpTimer = -10;
                     windUpValue = 0;
                     windUpPercent = 0;
 
@@ -554,7 +550,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic
             }
             windUpValue = (float)Math.Sin(windUpPercent) * 0.4f;
 
-            Main.player[Projectile.owner].SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - Main.player[Projectile.owner].Center).ToRotation() - MathHelper.PiOver2 + windUpValue);
+            float armRot = (Projectile.Center - owner.Center).ToRotation() - MathHelper.PiOver2 + windUpValue;
+            Main.player[Projectile.owner].SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, armRot);
 
             pinkGlowPower = Math.Clamp(MathHelper.Lerp(pinkGlowPower, -0.25f, 0.12f), 0, 1);
             glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.75f, 0.08f), 0, 1);

@@ -411,7 +411,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Ocean
 
                     float sineScale = MathF.Sin((float)Main.timeForVisualEffects * 0.25f) * 0.1f;
 
-                    Vector2 AfterImagePos = previousPostions[i] - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f); //3f
+                    Vector2 AfterImagePos = previousPostions[i] - Main.screenPosition + Main.rand.NextVector2Circular(2f, 2f); //3f
 
                     float startScale = Projectile.scale + sineScale;
 

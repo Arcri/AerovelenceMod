@@ -175,12 +175,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             if (recoilProg > 0.85f)
             {
                 float recoilLerp = Utils.GetLerpValue(1f, 0.85f, recoilProg, true);
-                recoilOffset = MathHelper.Lerp(0f, -16f, Easings.easeOutCubic(recoilLerp)); //-10f
+                recoilOffset = MathHelper.Lerp(0f, -14f, Easings.easeOutCubic(recoilLerp)); //-10f
             }
             else
             {
                 float recoilLerp = Utils.GetLerpValue(0.85f, 0f, recoilProg, true);
-                recoilOffset = MathHelper.Lerp(-16f, 0f, Easings.easeInCubic(recoilLerp)); //-10f
+                recoilOffset = MathHelper.Lerp(-14f, 0f, Easings.easeInCubic(recoilLerp)); //-10f
             }
 
             Projectile.Center = player.MountedCenter + rotDir.ToRotationVector2() * (offsetAmount + recoilOffset);
@@ -498,7 +498,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding
             Texture2D trailTextureOver = Mod.Assets.Request<Texture2D>("Assets/Trails/EvenThinnerGlowLine").Value;
 
             if (myEffect == null)
-                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
             //Convert lists to arrays for use in vertex strip
             Vector2[] pos_arr = previousPositions.ToArray();
