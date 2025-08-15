@@ -125,7 +125,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.ClockworkLazinator
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 1250;
+            ProjectileID.Sets.DrawScreenCheckFluff[Projectile.type] = 2222;
         }
 
         public Vector2 endPoint = Vector2.Zero;
