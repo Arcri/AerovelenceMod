@@ -1078,6 +1078,11 @@ Items: {
 		DisplayName: Platinum Halberd
 		Tooltip: ""
 	}
+
+	CrystalBarrierRaiser: {
+		Tooltip: ""
+		DisplayName: Crystal Barrier Raiser
+	}
 }
 
 NPCs: {
@@ -1536,11 +1541,26 @@ Projectiles: {
 	HugeJesusStar.DisplayName: Huge Jesus Star
 	HugeJesusStarLaser.DisplayName: Huge Jesus Star Laser
 	BishopsStaffStar.DisplayName: Bishops Staff Star
+<<<<<<< Updated upstream
 	CrystallineProjectile.DisplayName: Crystalline Projectile
 	GoldHalberdStabProjectile.DisplayName: Gold Halberd Stab Projectile
 	GoldHalberdSwingProjectile.DisplayName: Gold Halberd Swing Projectile
 	PlatinumHalberdStabProjectile.DisplayName: Platinum Halberd Stab Projectile
 	PlatinumHalberdSwingProjectile.DisplayName: Platinum Halberd Swing Projectile
+=======
+	MarionetteProj.DisplayName: Marionette Proj
+	GaussExplosionVFX.DisplayName: Gauss Explosion V F X
+	GaussShotgunRecoil.DisplayName: Gauss Shotgun Recoil
+	BasicRecoilProj.DisplayName: Basic Recoil Proj
+	OblivionFinaleSwing.DisplayName: Oblivion Finale Swing
+	OblivionHeldProjectile.DisplayName: Oblivion Held Projectile
+	CrystallineProj.DisplayName: Crystalline Proj
+	CrystallineVFX.DisplayName: Crystalline V F X
+	TitaniumLauncherHeldMini.DisplayName: Titanium Launcher Held Mini
+	FlareGunHeldProjectileOld.DisplayName: Flare Gun Held Projectile Old
+	FlareGunRecoilProjectile.DisplayName: Flare Gun Recoil Projectile
+	CrystalBarrier.DisplayName: Crystal Barrier
+>>>>>>> Stashed changes
 }
 
 Configs: {
@@ -1643,6 +1663,16 @@ ItemName: {
 	LightOfTheAncients: LightOfTheAncients
 	TumblerockMedium: Rocciarotola
 	TumblerockSmall: Rocciarotola
+<<<<<<< Updated upstream
+=======
+	Marionette: The Marionette
+	BishopsStaff: Bishop's Staff
+	PhanticWhip: Phantic Whip
+	RedShade: Red Shade
+	Soulerang: Soulerang
+	Specter: Specter
+	CrystalBarrierRaiser: Crystal Thorn-Barrier Raiser
+>>>>>>> Stashed changes
 }
 
 ItemTooltip: {
@@ -1797,6 +1827,41 @@ ItemTooltip: {
 		Has a visible overheating gauge above the player that fills as you fire
 		The gun becomes more powerful as it heats up, but if you keep firing it will need to cool down
 		'''
+<<<<<<< Updated upstream
+=======
+	Marionette:
+		'''
+		Continuously drain mana to summon a set of handle bars and puppet strings at the cursor.
+		The ends of the strings can attach to enemies and choke their arteries.
+		If the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap.
+		Choke damage gains a small crit chance for every string that is attached.
+		'''
+	BishopsStaff:
+		'''
+		Hold [Attack(Left Click)] to ground the staff and channel mana towards it
+		While channeling, the staff generates a starry sky above itself
+		The stars fire stellar beams towards the ground and generate faster over time
+		After some time, larger stars will generate, firing larger beams
+		'''
+	PhanticWhip:
+		'''
+		Inflicts enemies with a short-timed soul sapping effect
+		Your minions capture soul energy from afflicted enemies
+		The energy is released when you next swing the whip in an arc of spirits
+		'''
+	RedShade:
+		'''
+		Projectiles home in and possess enemies
+		Possessed enemies release smaller copies of the spirit upon death
+		'''
+	Soulerang: This boomerang has a unique flight pattern, and can go through blocks
+	Specter:
+		'''
+		Left click to stab forward
+		Right click to slash and wound enemies for a short time
+		'''
+	CrystalBarrierRaiser: Throws out a returning quarterstaff after a rapid swing
+>>>>>>> Stashed changes
 }
 
 NPCName: {
@@ -2217,3 +2282,69 @@ TumblerockSmall: {
 	DisplayName: Rocciarotola
 	BestiaryFlavor: Queste piccole rocce rotolanti esistono in varie forme e dimensioni. Possono crescere fino a dimensioni enormi e possiedono proprietà magnetiche.
 }
+<<<<<<< Updated upstream
+=======
+
+Marionette: {
+	DisplayName: The Marionette
+	Tooltip:
+		'''
+		Continuously drain mana to summon a set of handle bars and puppet strings at the cursor.
+		The ends of the strings can attach to enemies and choke their arteries.
+		If the handle bars get too far from a string's attach point, or if a string stays attached for too long, it will weaken and snap.
+		Choke damage gains a small crit chance for every string that is attached.
+		'''
+	SkillStrike: "[i:75] Skill Strikes when all strings are attached [i:75]"
+}
+
+BishopsStaff: {
+	DisplayName: Bishop's Staff
+	Tooltip:
+		'''
+		Hold [Attack(Left Click)] to ground the staff and channel mana towards it
+		While channeling, the staff generates a starry sky above itself
+		The stars fire stellar beams towards the ground and generate faster over time
+		After some time, larger stars will generate, firing larger beams
+		'''
+	SkillStrike: "[i:75] Large stars Skill Strike [i:75]"
+}
+
+PhanticWhip: {
+	DisplayName: Phantic Whip
+	Tooltip:
+		'''
+		Inflicts enemies with a short-timed soul sapping effect
+		Your minions capture soul energy from afflicted enemies
+		The energy is released when you next swing the whip in an arc of spirits
+		'''
+}
+
+RedShade: {
+	DisplayName: Red Shade
+	Tooltip:
+		'''
+		Projectiles home in and possess enemies
+		Possessed enemies release smaller copies of the spirit upon death
+		'''
+}
+
+Soulerang: {
+	DisplayName: Soulerang
+	Tooltip: This boomerang has a unique flight pattern, and can go through blocks
+}
+
+Specter: {
+	DisplayName: Specter
+	Tooltip:
+		'''
+		Left click to stab forward
+		Right click to slash and wound enemies for a short time
+		'''
+	SkillStrike: "[i:75] Stabbing wounded enemies Skill Strikes [i:75]"
+}
+
+CrystalBarrierRaiser: {
+	DisplayName: Crystal Thorn-Barrier Raiser
+	Tooltip: Throws out a returning quarterstaff after a rapid swing
+}
+>>>>>>> Stashed changes
