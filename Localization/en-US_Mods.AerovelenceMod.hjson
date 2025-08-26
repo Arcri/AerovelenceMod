@@ -1569,6 +1569,13 @@ Projectiles: {
 	FlareGunRecoilProjectile.DisplayName: Flare Gun Recoil Projectile
 	NewWandOfExplodingHeldProj.DisplayName: New Wand Of Exploding Held Proj
 	WandOfExplodingBolt.DisplayName: Wand Of Exploding Bolt
+	FibberBulletAlt.DisplayName: Fibber Bullet Alt
+	CyverCannonFinaleProjectile.DisplayName: Cyver Cannon Finale Projectile
+	CyverCannonHyperBeam.DisplayName: Cyver Cannon Hyper Beam
+	CyverCannonLaser.DisplayName: Cyver Cannon Laser
+	CyverCannonProjectile.DisplayName: Cyver Cannon Projectile
+	OblivionActivateAnimation.DisplayName: Oblivion Activate Animation
+	OblivionExplosionPulse.DisplayName: Oblivion Explosion Pulse
 }
 
 Configs: {

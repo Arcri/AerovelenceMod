@@ -294,12 +294,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                         //int laserLeft = Projectile.NewProjectile(NPC.GetSource_FromAI(), auraPosition, new Vector2(-1, 0), ModContent.ProjectileType<CyverHyperBeam>(), 20, 0f);
 
 
-                        int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), auraPosition, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0f);
-                        Projectile explo = Main.projectile[b];
-                        if (explo.ModProjectile is PinkExplosion pinkExplo)
-                        {
-                            pinkExplo.exploScale = 2.51f;
-                        }
+                        //int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), auraPosition, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0f);
+                        //Projectile explo = Main.projectile[b];
+                        //if (explo.ModProjectile is PinkExplosion pinkExplo)
+                        //{
+                        //    pinkExplo.exploScale = 2.51f;
+                        //}
 
                         for (int i = 0; i < 6; i++)
                         {
@@ -562,13 +562,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                 SoundStyle stylec = new SoundStyle("Terraria/Sounds/Item_67") with { Pitch = 0.4f, Volume = 0.75f, MaxInstances = -1, PitchVariance = 0.25f }; //1f
                 SoundEngine.PlaySound(stylec, NPC.Center);
 
-                int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0f);
-                Projectile explo = Main.projectile[b];
-                if (explo.ModProjectile is PinkExplosion pinkExplo)
-                {
-                    pinkExplo.exploScale = 1f;
-                    pinkExplo.numberOfDraws = 2;
-                }
+                //int b = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitX) * 10f, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0f);
+                //Projectile explo = Main.projectile[b];
+                //if (explo.ModProjectile is PinkExplosion pinkExplo)
+                //{
+                //    pinkExplo.exploScale = 1f;
+                //    pinkExplo.numberOfDraws = 2;
+                //}
                 newProjPause = 20;
                 ballPauseTime = 10;
 

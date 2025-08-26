@@ -27,6 +27,7 @@ using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
 using Microsoft.CodeAnalysis;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
+using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -82,22 +83,10 @@ namespace AerovelenceMod.Content.Items
                     preSlowPower: 0.94f, postSlowPower: 0.9f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
             }
 
-            for (int fg = 0; fg < 10; fg++)
-            {
-                Vector2 randomStart = Main.rand.NextVector2CircularEdge(3, 3);
-                Dust gd = Dust.NewDustPerfect(impactCenter, ModContent.DustType<GlowPixelAlts>(), randomStart * Main.rand.NextFloat(0.3f, 1.35f) * 1.5f, newColor: Color.DodgerBlue, Scale: Main.rand.NextFloat(1f, 1.6f) * 0.4f);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                var v = Main.rand.NextVector2Unit();
-                Dust a2 = Dust.NewDustPerfect(impactCenter, DustID.PortalBoltTrail, v * Main.rand.NextFloat(1f, 6f), 0,
-                    Color.DeepSkyBlue, Main.rand.NextFloat(0.4f, 0.9f));
-            }
+            FlashSystem.SetCAFlashEffect(0.075f, 35, 1f, 0.35f, true, true);
 
 
-
-            Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), damage, 0, Main.myPlayer);
+            //Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), damage, 0, Main.myPlayer);
 
             return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)

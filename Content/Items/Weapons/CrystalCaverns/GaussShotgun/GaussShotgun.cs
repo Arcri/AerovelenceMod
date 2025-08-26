@@ -348,24 +348,9 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun
             d.customData = DustBehaviorUtil.AssignBehavior_SGDBase(timeToStartFade: 3, timeToChangeScale: 0, fadeSpeed: 0.9f, sizeChangeSpeed: 0.95f, timeToKill: 20,
                 overallAlpha: 0.15f, DrawWhiteCore: true, 1f, 1f); ;
 
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                if (Main.npc[i].active && !Main.npc[i].dontTakeDamage && Vector2.Distance(Projectile.Center, Main.npc[i].Center) < 85f)
-                {
-                    int Direction = 0;
-                    if (Projectile.position.X - Main.npc[i].position.X < 0)
-                        Direction = 1;
-                    else
-                        Direction = -1;
+            //Hit all enemies in a radius
+            GeneralUtils.strikeNPCsInRadius(Projectile.Center, 85f, Projectile.damage * 0.5f, Projectile.knockBack * 0.5f);
 
-                    HitInfo myHit = new HitInfo();
-                    myHit.Damage = Projectile.damage;
-                    //myHit.Knockback = Projectile.knockBack;
-                    myHit.HitDirection = Direction;
-
-                    Main.npc[i].StrikeNPC(myHit);
-                }
-            }
             SoundEngine.PlaySound(SoundID.Item94, Projectile.Center);
 
             for (int i = 0; i < 13 + Main.rand.Next(0, 6); i++) //2 //0,3
@@ -390,6 +375,13 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun
                 gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.3f, timeBeforeSlow: 5,
                     preSlowPower: 0.94f, postSlowPower: 0.90f, velToBeginShrink: 1f, fadePower: 0.92f, shouldFadeColor: false);
             }
+
+            Color between = Color.Lerp(Color.DeepSkyBlue, Color.SkyBlue, 0.15f);
+            Dust d11 = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<FeatheredGlowDust>(), Velocity: Vector2.Zero, newColor: between, Scale: 0.75f);
+
+            FeatheredGlowBehavior fgb = new FeatheredGlowBehavior(AlphaChangeSpeed: 0.65f, timeToChangeAlpha: 6, ScaleChangeSpeed: 1.1f, timeToKill: 120, OverallAlpha: 0.5f);
+            fgb.DrawWhiteCore = true;
+            d11.customData = fgb;
 
             return base.PreKill(timeLeft);
         }

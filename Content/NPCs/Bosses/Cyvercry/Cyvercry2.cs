@@ -968,7 +968,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
                     //SoundStyle style2 = new SoundStyle("AerovelenceMod/Sounds/Effects/AnnihilatorShot") with { Volume = .12f, Pitch = .4f, PitchVariance = .2f, MaxInstances = 1 };
                     //SoundEngine.PlaySound(style2);
 
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), from, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Main.myPlayer);
+                    //Projectile.NewProjectile(NPC.GetSource_FromAI(), from, Vector2.Zero, ModContent.ProjectileType<PinkExplosion>(), 0, 0, Main.myPlayer);
 
                     /*
                     for (int i = 0; i < 360; i += 20)
