@@ -1560,6 +1560,9 @@ Projectiles: {
 	FlareGunHeldProjectileOld.DisplayName: Flare Gun Held Projectile Old
 	FlareGunRecoilProjectile.DisplayName: Flare Gun Recoil Projectile
 	CrystalBarrier.DisplayName: Crystal Barrier
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -1672,6 +1675,9 @@ ItemName: {
 	Soulerang: Soulerang
 	Specter: Specter
 	CrystalBarrierRaiser: Crystal Thorn-Barrier Raiser
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -1861,6 +1867,9 @@ ItemTooltip: {
 		Right click to slash and wound enemies for a short time
 		'''
 	CrystalBarrierRaiser: Throws out a returning quarterstaff after a rapid swing
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -2347,4 +2356,7 @@ CrystalBarrierRaiser: {
 	DisplayName: Crystal Thorn-Barrier Raiser
 	Tooltip: Throws out a returning quarterstaff after a rapid swing
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
