@@ -72,7 +72,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             NPC.Happiness
                 .SetBiomeAffection<SnowBiome>(AffectionLevel.Like)
                 .SetBiomeAffection<ForestBiome>(AffectionLevel.Dislike)
-                .SetBiomeAffection<CrystalCavernsBiome>(AffectionLevel.Love)
+                .SetBiomeAffection<CrystalCavernsBiome>(AffectionLevel.Love).SetBiomeAffection<CrystalCavernsSurfaceBiome>(AffectionLevel.Love)
                 .SetNPCAffection(NPCID.Dryad, AffectionLevel.Love)
                 .SetNPCAffection(NPCID.Truffle, AffectionLevel.Like)
                 .SetNPCAffection(NPCID.Angler, AffectionLevel.Dislike)
@@ -178,7 +178,8 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                 "Stephing Stone",
                 "Geolbertina",
                 "Brock",
-                "Roark"
+                "Roark",
+                "Opalia"
             ];
         }
 
@@ -198,43 +199,45 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         public override string GetChat()
         {
             WeightedRandom<string> chat = new();
-            int demolitionist = NPC.FindFirstNPC(NPCID.Demolitionist);
-            int angler = NPC.FindFirstNPC(NPCID.Angler);
-            int dryad = NPC.FindFirstNPC(NPCID.Dryad);
+            //Commenting out this dialogue just in case, but probably not necessary to keep, someone more knowledgeable clean up
+            //int demolitionist = NPC.FindFirstNPC(NPCID.Demolitionist); 
+            //int angler = NPC.FindFirstNPC(NPCID.Angler);
+            //int dryad = NPC.FindFirstNPC(NPCID.Dryad);
 
-            if (demolitionist >= 0 && Main.rand.NextBool(4))
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DemolitionistDialogue", Main.npc[demolitionist].GivenName));
-            if (angler >= 0 && Main.rand.NextBool(6))
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.AnglerDialogue", Main.npc[angler].GivenName));
-            if (dryad >= 0 && Main.rand.NextBool(6))
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DryadDialogue", Main.npc[dryad].GivenName));
+            //if (demolitionist >= 0 && Main.rand.NextBool(4))
+            //    chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DemolitionistDialogue", Main.npc[demolitionist].GivenName));
+            //if (angler >= 0 && Main.rand.NextBool(6))
+            //    chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.AnglerDialogue", Main.npc[angler].GivenName));
+            //if (dryad >= 0 && Main.rand.NextBool(6))
+            //    chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.DryadDialogue", Main.npc[dryad].GivenName));
 
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue1"));
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue2"));
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue3"));
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue4"));
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.CommonDialogue"), 5.0);
-            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.RareDialogue"), 0.1);
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue1"));
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue2"));
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue3"));
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue4"));
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.CommonDialogue"), 5.0);
+            chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.RareDialogue"), 0.1);
 
-            NumberOfTimesTalkedTo++;
+            //Utterly worthless line + it saves the timestalkedto for some reason???
+            //NumberOfTimesTalkedTo++;
 
-            if (NumberOfTimesTalkedTo >= 10 && dryad >= 0)
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.TalkALot", Main.npc[dryad].GivenName));
+            //if (NumberOfTimesTalkedTo >= 10 && dryad >= 0)
+            //    chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.TalkALot", Main.npc[dryad].GivenName));
 
             // Ensure chat isn't empty to prevent crashes
             if (chat.elements.Count == 0)
             {
-                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue1"));
+                chat.Add(Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue1"));
             }
 
             string chosenChat = chat.Get();
 
             // Ensure chosenChat isn't null or empty
             if (string.IsNullOrEmpty(chosenChat))
-                chosenChat = Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue2");
+                chosenChat = Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue2");
 
-            if (chosenChat == Language.GetTextValue("Mods.AerovelenceMod.Dialogue.RockCollector.StandardDialogue4"))
-                Main.npcChatCornerItem = ItemID.HiveBackpack;
+            if (chosenChat == Language.GetTextValue("Mods.AerovelenceMod.NPCs.RockCollector.Dialogue.StandardDialogue4"))
+                Main.npcChatCornerItem = ModContent.ItemType<OnTheRocks>();
 
             return chosenChat;
         }
@@ -386,36 +389,38 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 
         public override void ModifyNPCLoot(NPCLoot npcLoot) => npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ShotgunAxe>()));
 
-        public override bool CanGoToStatue(bool toKingStatue) => true;
+        //COMMENTING OUT CUZ ROCK COLLECTOR IS LITERALLY AGENDER
+        
+        //public override bool CanGoToStatue(bool toKingStatue) => true;
 
-        public override void OnGoToStatue(bool toKingStatue)
-        {
-            if (Main.netMode == NetmodeID.Server)
-            {
-                ModPacket packet = Mod.GetPacket();
-              //  packet.Write((byte)ExampleMod.MessageType.ExampleTeleportToStatue);
-                packet.Write((byte)NPC.whoAmI);
-                packet.Send();
-            }
-            else
-            {
-                StatueTeleport();
-            }
-        }
+        //public override void OnGoToStatue(bool toKingStatue)
+        //{
+        //    if (Main.netMode == NetmodeID.Server)
+        //    {
+        //        ModPacket packet = Mod.GetPacket();
+        //      //  packet.Write((byte)ExampleMod.MessageType.ExampleTeleportToStatue);
+        //        packet.Write((byte)NPC.whoAmI);
+        //        packet.Send();
+        //    }
+        //    else
+        //    {
+        //        StatueTeleport();
+        //    }
+        //}
 
-        public void StatueTeleport()
-        {
-            for (int i = 0; i < 30; i++)
-            {
-                Vector2 position = Main.rand.NextVector2Square(-20, 21);
-                if (Math.Abs(position.X) > Math.Abs(position.Y))
-                    position.X = Math.Sign(position.X) * 20;
-                else
-                    position.Y = Math.Sign(position.Y) * 20;
+        //public void StatueTeleport()
+        //{
+        //    for (int i = 0; i < 30; i++)
+        //    {
+        //        Vector2 position = Main.rand.NextVector2Square(-20, 21);
+        //        if (Math.Abs(position.X) > Math.Abs(position.Y))
+        //            position.X = Math.Sign(position.X) * 20;
+        //        else
+        //            position.Y = Math.Sign(position.Y) * 20;
 
-                Dust.NewDustPerfect(NPC.Center + position, ModContent.DustType<PixelGlowOrb>(), Vector2.Zero).noGravity = true;
-            }
-        }
+        //        Dust.NewDustPerfect(NPC.Center + position, ModContent.DustType<PixelGlowOrb>(), Vector2.Zero).noGravity = true;
+        //    }
+        //}
 
         public override void TownNPCAttackStrength(ref int damage, ref float knockback)
         {
