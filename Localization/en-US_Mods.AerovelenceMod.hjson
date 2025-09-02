@@ -710,12 +710,12 @@ Items: {
 	}
 
 	CavernChestItem: {
-		DisplayName: Cavern Chest Item
+		DisplayName: Cavern Chest
 		Tooltip: ""
 	}
 
 	CitadelChestItem: {
-		DisplayName: Citadel Chest Item
+		DisplayName: Citadel Chest
 		Tooltip: ""
 	}
 
@@ -725,33 +725,33 @@ Items: {
 	}
 
 	CavernStoneColumnItem: {
-		DisplayName: Cavern Stone Column Item
+		DisplayName: Cavern Stone Column
 		Tooltip: ""
 	}
 
 	GlimmerwoodCandelabraItem: {
 		Tooltip: ""
-		DisplayName: Glimmerwood Candelabra Item
+		DisplayName: Glimmerwood Candelabra
 	}
 
 	GlimmerwoodLanternItem: {
 		Tooltip: ""
-		DisplayName: Glimmerwood Lantern Item
+		DisplayName: Glimmerwood Lantern
 	}
 
 	GlimmerwoodLeafItem: {
 		Tooltip: ""
-		DisplayName: Glimmerwood Leaf Item
+		DisplayName: Glimmerwood Leaf
 	}
 
 	CrystalDirtItem: {
 		Tooltip: ""
-		DisplayName: Crystal Dirt Item
+		DisplayName: Crystal Dirt
 	}
 
 	LightningTrapItem: {
 		Tooltip: ""
-		DisplayName: Lightning Trap Item
+		DisplayName: Lightning Trap
 	}
 
 	AmuletOfGlory: {
@@ -804,17 +804,17 @@ Items: {
 
 	CrackedCavernBrickItem: {
 		Tooltip: ""
-		DisplayName: Cracked Cavern Brick Item
+		DisplayName: Cracked Cavern Brick
 	}
 
 	CrystalGrowthRubbleItem: {
 		Tooltip: ""
-		DisplayName: Crystal Growth Rubble Item
+		DisplayName: Crystal Growth Rubble
 	}
 
 	CyvercryBossRelicItem: {
 		Tooltip: ""
-		DisplayName: Cyvercry Boss Relic Item
+		DisplayName: Cyvercry Boss Relic
 	}
 
 	CrystalCorn: {
@@ -978,7 +978,7 @@ Items: {
 	}
 
 	GlimmerwoodPlankedWallItem: {
-		DisplayName: Glimmerwood Planked Wall Item
+		DisplayName: Glimmerwood Planked Wall
 		Tooltip: ""
 	}
 
@@ -1138,12 +1138,12 @@ Items: {
 	}
 
 	LushGrowthWallItem: {
-		DisplayName: Lush Growth Wall Item
+		DisplayName: Lush Growth Wall
 		Tooltip: ""
 	}
 
 	LushGrowthItem: {
-		DisplayName: Lush Growth Item
+		DisplayName: Lush Growth
 		Tooltip: ""
 	}
 }
