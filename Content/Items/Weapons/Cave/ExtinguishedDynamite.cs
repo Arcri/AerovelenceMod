@@ -58,8 +58,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
             Item.width = 40;
             Item.height = 40;
             Item.rare = ItemRarities.EarlyPHM;
-            Item.value = Item.sellPrice(silver: 75);
-            Item.damage = 18;
+            Item.value = Item.sellPrice(silver: 2);
+            Item.damage = 16;
             Item.knockBack = 4f;
             Item.DamageType = DamageClass.Melee;
             Item.useStyle = ItemUseStyleID.Swing;
@@ -84,10 +84,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Cave
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.Dynamite, 3);
-            recipe.AddRecipeGroup("AerovelenceMod:IronBars", 8);
-            recipe.AddIngredient(ItemID.Torch, 5);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddIngredient(ItemID.Dynamite, 1);
+            recipe.AddCondition(Condition.NearWater);
             recipe.Register();
         }
 
