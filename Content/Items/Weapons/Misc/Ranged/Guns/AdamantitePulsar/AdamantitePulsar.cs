@@ -1,23 +1,27 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
+using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using AerovelenceMod.Content.Dusts.GlowDusts;
-using System;
-using Terraria.Audio;
-using Terraria.GameContent;
-using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Common.Globals.SkillStrikes;
-using System.Collections.Generic;
-using AerovelenceMod.Common.Systems.Language;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
+using VFXPlus.Content.Projectiles;
 
-namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
+namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.AdamantitePulsar
 {
     public class AdamantitePulsar : TranslatableModItem
     {
@@ -88,6 +92,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         int currentShot = 0;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            //Change Modes
             if (player.altFunctionUse == 2)
             {
                 player.itemAnimationMax = 0;
@@ -111,34 +116,67 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 return false;
             }
 
+            //Shoot
             if (mode == 0)
             {
                 Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<AdamantitePulsarHeldProj>(), damage, knockback, Main.myPlayer);
             }
             else if (mode == 1)
             {
+                #region dust
+                Vector2 dustOffsetPos = position + velocity.SafeNormalize(Vector2.UnitX) * 50f;
 
-                //int b = Projectile.NewProjectile(null, position + velocity * (20), velocity * 2.25f, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                //Main.projectile[b].rotation = velocity.ToRotation();
-                //if (Main.projectile[b].ModProjectile is CirclePulse pulseb)
-                //{
-                //    pulseb.color = new Color(255, 10, 10);
-                //    pulseb.size = 0.3f;
-                //}
-
-
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 2 + Main.rand.Next(1, 2); i++) //2 //0,3
                 {
-                    ColorSparkBehavior extraInfo = new ColorSparkBehavior();
-                    Vector2 vel = velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.75f, 1.25f) * 8f;
+                    Dust dp = Dust.NewDustPerfect(dustOffsetPos, ModContent.DustType<LineSpark>(),
+                        velocity.SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.NextFloat(6f, 22f),
+                        newColor: Color.Red * 1f, Scale: Main.rand.NextFloat(0.45f, 0.65f) * 0.45f);
 
-                    Dust d = Dust.NewDustPerfect(position + velocity * 10, ModContent.DustType<ColorSpark>(), vel, 57 + Main.rand.Next(-5, 5), Color.Crimson, 0.2f + Main.rand.NextFloat(0.1f));
-                    extraInfo.gravityIntensity = 0f;
-                    d.fadeIn = Main.rand.NextFloat(0.5f, 1f);
-                    d.customData = extraInfo;
+                    dp.customData = DustBehaviorUtil.AssignBehavior_LSBase(velFadePower: 0.88f, preShrinkPower: 0.99f, postShrinkPower: 0.8f, timeToStartShrink: 10 + Main.rand.Next(-5, 5), killEarlyTime: 80,
+                        0.8f, 0.5f); //80
+
                 }
 
-                Projectile.NewProjectile(source, position, Vector2.Zero, ModContent.ProjectileType<AdamantitePulsarHeldBurst>(), 0, 0, Main.myPlayer);
+                for (int i = 0; i < 3 + Main.rand.Next(0, 2); i++)
+                {
+                    Color col1 = Color.Lerp(Color.DeepPink, Color.HotPink, 0.65f);
+
+                    Vector2 randomStart = Main.rand.NextVector2Circular(4f, 4f) * 1f;
+                    Dust dust = Dust.NewDustPerfect(dustOffsetPos, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: Color.Red, Scale: Main.rand.NextFloat(0.25f, 0.3f) * 1.15f);
+                    dust.noLight = false;
+                    dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, preSlowPower: 0.99f, timeBeforeSlow: 0, postSlowPower: 0.89f,
+                        velToBeginShrink: 10f, fadePower: 0.93f, shouldFadeColor: false);
+
+                    dust.velocity += velocity.SafeNormalize(Vector2.UnitX) * 6f;
+                }
+                #endregion
+
+                //HeldProj
+                //Kill the current held proj if it exists
+                foreach (Projectile p in Main.projectile)
+                {
+                    if (p.active)
+                        if (p.type == ModContent.ProjectileType<AdamantitePulsarRecoilBurst>())
+                            if (p.owner == player.whoAmI)
+                                p.active = false;
+                }
+
+                int gun = Projectile.NewProjectile(null, position, Vector2.Zero, ModContent.ProjectileType<AdamantitePulsarRecoilBurst>(), 0, 0, player.whoAmI);
+                if (Main.projectile[gun].ModProjectile is AdamantitePulsarRecoilBurst held)
+                {
+                    held.SetProjInfo(
+                        GunID: ModContent.ItemType<AdamantitePulsar>(),
+                        AnimTime: 14,
+                        NormalXOffset: 26f,
+                        DestXOffset: 18f,
+                        YRecoilAmount: 0.02f,
+                        HoldOffset: new Vector2(0f, 5f),
+                        TipPos: new Vector2(34f, 0f),
+                        StarPos: new Vector2(28f, 0f)
+                        );
+
+                    held.timeToStartFade = 0;
+                }
 
                 Vector2 muzzleOffset = Vector2.Normalize(velocity) * 16;
                 if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
@@ -146,6 +184,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     position += muzzleOffset;
                 }
                 Projectile.NewProjectile(source, position, velocity * 4, ModContent.ProjectileType<AdamSmallShot>(), (int)(damage * 1f), knockback, Main.myPlayer);
+
 
                 //lol
                 SoundStyle style = new SoundStyle("Terraria/Sounds/Item_92") with { Pitch = .80f, PitchVariance = 0.2f, Volume = 0.2f }; 
@@ -272,84 +311,31 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         }
     }
 
-    public class AdamantitePulsarHeldBurst : ModProjectile
+    //3 shot burst held proj
+    public class AdamantitePulsarRecoilBurst : BasicRecoilProj
     {
         public override string Texture => "Terraria/Images/Projectile_0";
 
-        private bool firstFrame = false;
-
-        private Vector2 currentDirection => Projectile.rotation.ToRotationVector2();
-
-        Player owner => Main.player[Projectile.owner];
-
-        public override void SetDefaults()
-        {
-            Projectile.DamageType = DamageClass.Ranged;
-
-            Projectile.width = 2;
-            Projectile.height = 2;
-            Projectile.timeLeft = 999999;
-            Projectile.penetrate = -1;
-
-            Projectile.friendly = true;
-            Projectile.hostile = false;
-            Projectile.tileCollide = false;
-            Projectile.ignoreWater = true;
-        }
-        public override bool? CanDamage() { return false; }
-
-        public override bool? CanCutTiles() => false; 
-        
-
-        public override void AI()
-        {
-            ProjectileExtensions.KillHeldProjIfPlayerDeadOrStunned(Projectile);
-
-            owner.heldProj = Projectile.whoAmI;
-
-            if (owner.itemTime <= 1)
-                Projectile.active = false;
-
-            Projectile.Center = owner.Center;
-
-            if (!firstFrame)
-            {
-                firstFrame = true;
-                Projectile.rotation = Projectile.DirectionTo(Main.MouseWorld).ToRotation();
-            }
-
-            if (Projectile.ai[0] < 5)
-                offset = Math.Clamp(MathHelper.Lerp(offset, -5, 0.05f), 0, 10);
-            else
-                offset = Math.Clamp(MathHelper.Lerp(offset, 10, 0.2f), 0, 10);
-
-            glowIntensity = Math.Clamp(MathHelper.Lerp(glowIntensity, -0.5f, 0.1f), 0, 1);
-
-            Projectile.ai[0]++;
-        }
-
-        private float offset = 10;
-        private float glowIntensity = 1f;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D Texture = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar").Value;
-            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsarWhiteGlow").Value;
+            Texture2D Texture = TextureAssets.Item[gunID].Value;
 
+            Player Player = Main.player[Projectile.owner];
+            SpriteEffects mySE = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
-            Vector2 position = (owner.MountedCenter + (currentDirection * offset)) - Main.screenPosition;
-            position.Y += owner.gfxOffY;
-            position += new Vector2(8, 4 * owner.direction).RotatedBy(Projectile.rotation); //Extra Offset
+            Vector2 heldOffset = new Vector2(HoldoutOffset.X, HoldoutOffset.Y * Player.direction).RotatedBy(Projectile.rotation);
+            Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Player.gfxOffY) + heldOffset;
 
-            float rotation = currentDirection.ToRotation() + (owner.direction == 1 ? 0 : -MathF.PI);
-            SpriteEffects SE = (owner.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
+            Main.spriteBatch.Draw(Texture, drawPos, null, lightColor, Projectile.rotation, Texture.Size() / 2, Projectile.scale, mySE, 0f);
 
-            Vector2 origin = (Texture.Size() / 2) + new Vector2(-2 * owner.direction, 0); //Origin more at the trigger
+            //Glowmask
+            Texture2D Glowmask = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar/AdamantitePulsar_Glow").Value;
+            Main.spriteBatch.Draw(Glowmask, drawPos, null, Color.White, Projectile.rotation, Glowmask.Size() / 2, Projectile.scale, mySE, 0f);
 
-            Color col = Color.Lerp(Color.White, Color.Red, 1 - glowIntensity);
+            //Glowlayer
+            Texture2D Glowlayer = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar/AdamantitePulsar_WhiteGlow").Value;
+            Main.spriteBatch.Draw(Glowlayer, drawPos, null, Color.White with { A = 0 } * Easings.easeInQuad(bonusPower) * 3f, Projectile.rotation, Glowlayer.Size() / 2, Projectile.scale, mySE, 0f);
 
-            Main.spriteBatch.Draw(Texture, position, null, lightColor, rotation, origin, 1f, SE, 0.0f);
-            Main.spriteBatch.Draw(Glow, position, null, col with { A = 0 } * glowIntensity * 1f, rotation, origin, 1f, SE, 0.0f);
-            Main.spriteBatch.Draw(Glow, position, null, col with { A = 0 } * glowIntensity * 1f, rotation, origin, 1f, SE, 0.0f);
 
             return false;
         }
@@ -367,10 +353,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
         Vector2 reticleLocation = Vector2.Zero;
 
-        public override void SetStaticDefaults()
-        {
-            //DisplayName.SetDefault("Adamantite Pulsar");
-        }
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Ranged;
@@ -379,9 +361,6 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
             Projectile.width = Projectile.height = 20;
             Projectile.penetrate = -1;
 
-
-            Projectile.friendly = true;
-            Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
         }
@@ -414,9 +393,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                 }
                 direction = Angle.ToRotationVector2();
 
-            } else
+            } 
+            //Release Shot
+            else
             {
-                
+                //Make we dont shoot another laser if the player spam clicks during the recoil
                 if (Projectile.timeLeft > 100)
                 {
                     hasLetGo = true;
@@ -431,49 +412,38 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
                     Angle = adjustedVel.ToRotation();
 
-                    //float velRot = Angle + (Main.rand.NextFloat(1 - reticleProgress, (1 - reticleProgress) * -1) * 0.5f);
-                    //Vector2 vel = new Vector2(2, 0).RotatedBy(velRot);
 
                     int damage = (int)(Projectile.damage * (1f + (2f * reticleProgress)));
-
                     int shot = Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + adjustedVel * 10, adjustedVel * 1.5f, ModContent.ProjectileType<AdamantitePulseShot>(), damage, Projectile.knockBack, Main.myPlayer);
 
                     if (Main.projectile[shot].ModProjectile is AdamantitePulseShot aps)
                         aps.big = reticleProgress == 1;
 
-                    #region pulses
-                    float vel1 = reticleProgress == 1 ? 2.3f : 2.25f;
-                    float vel2 = reticleProgress == 1 ? 2.8f : 2.75f;
 
-                    //int pulse1 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel1, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    //Main.projectile[pulse1].rotation = adjustedVel.ToRotation();
-                    //if (Main.projectile[pulse1].ModProjectile is CirclePulse funnyapple)
-                    //{
-                    //    funnyapple.color = new Color(255, 10, 10);
-                    //    funnyapple.size = (reticleProgress == 1 ? 0.65f : 0.55f);
-                    //}
+                    #region dust
+                    Vector2 vel1 = adjustedVel * (reticleProgress == 1 ? 2.3f : 2.25f);
+                    Vector2 vel2 = adjustedVel * (reticleProgress == 1 ? 2.8f : 2.75f);
 
-                    //int pulse2 = Projectile.NewProjectile(null, Projectile.Center + adjustedVel * 20, adjustedVel * vel2, ModContent.ProjectileType<CirclePulse>(), 0, 0, Main.myPlayer);
-                    //Main.projectile[pulse2].rotation = adjustedVel.ToRotation();
-                    //if (Main.projectile[pulse2].ModProjectile is CirclePulse funnyapple2)
-                    //{
-                    //    funnyapple2.color = new Color(255, 10, 10);
-                    //    funnyapple2.size = (reticleProgress == 1 ? 0.35f : 0.25f);
-                    //}
-                    #endregion
+                    Dust circA = Dust.NewDustPerfect(Projectile.Center + adjustedVel * 3, ModContent.DustType<Dusts.GlowDusts.CirclePulse>(), vel1, newColor: new Color(255, 10, 10) * 0.6f, Scale: 0.01f);
+                    circA.customData = new CirclePulseBehavior((reticleProgress == 1 ? 0.65f : 0.55f), false, 2, 0.25f, 0.5f);                   
 
-                    for (int i = 0; i < 12 + (reticleProgress == 1 ? 4 : 0); i++)
+                    Dust circB = Dust.NewDustPerfect(Projectile.Center + adjustedVel * 3, ModContent.DustType<Dusts.GlowDusts.CirclePulse>(), vel2, newColor: new Color(255, 10, 10) * 0.7f, Scale: 0.01f);
+                    circB.customData = new CirclePulseBehavior((reticleProgress == 1 ? 0.35f : 0.25f), false, 1, 0.25f, 0.5f);
+
+                    Vector2 dustOffsetPos = Projectile.Center + adjustedVel * 10f;
+                    for (int i = 220; i < 4 + Main.rand.Next(0, 2); i++)
                     {
-                        float dustScale = 0.25f + Main.rand.NextFloat(0.15f) + (reticleProgress == 1 ? 0.1f : 0f);
+                        Color col1 = Color.Lerp(Color.DeepPink, Color.HotPink, 0.65f);
 
-                        ColorSparkBehavior extraInfo = new ColorSparkBehavior();
-                        Vector2 vel = adjustedVel.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.75f, 1.25f) * 8f;
+                        Vector2 randomStart = Main.rand.NextVector2Circular(6f, 6f) * 1f;
+                        Dust dust = Dust.NewDustPerfect(dustOffsetPos, ModContent.DustType<GlowPixelCross>(), randomStart, newColor: Color.Red, Scale: Main.rand.NextFloat(0.45f, 0.55f) * 1f);
+                        dust.noLight = false;
+                        dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, preSlowPower: 0.99f, timeBeforeSlow: 0, postSlowPower: 0.89f,
+                            velToBeginShrink: 10f, fadePower: 0.93f, shouldFadeColor: false);
 
-                        Dust d = Dust.NewDustPerfect(Projectile.Center + adjustedVel * 10, ModContent.DustType<ColorSpark>(), vel, 51 + Main.rand.Next(-5, 6), Color.Red, dustScale);
-                        extraInfo.gravityIntensity = 0f;
-                        d.fadeIn = Main.rand.NextFloat(0.5f, 1f);
-                        d.customData = extraInfo;
+                        dust.velocity += adjustedVel.SafeNormalize(Vector2.UnitX) * 12f;
                     }
+                    #endregion
 
                     if (skillCritWindow > 0 && reticleProgress == 1)
                     {
@@ -494,7 +464,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                     SoundStyle style3 = new SoundStyle("Terraria/Sounds/Research_3") with { Volume = .28f, Pitch = .6f, PitchVariance = 0.2f };
                     SoundEngine.PlaySound(style3, Projectile.Center);
 
-                    offset = 2;
+                    offset = 0;
 
                     if (reticleProgress == 1)
                     {
@@ -504,7 +474,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
                         Player.GetModPlayer<AeroPlayer>().ScreenShakePower = 18;
                         Player.velocity += Angle.ToRotationVector2() * -5.5f;
 
-                        offset = -7;
+                        offset = -13;
                     }
 
                     glowAmount = 1f;
@@ -564,45 +534,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
         {
             Player Player = Main.player[Projectile.owner];
 
-            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsarWhiteGlow").Value;
+            Texture2D Glow = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar/AdamantitePulsar_WhiteGlow").Value;
 
-            #region Arc
-            /*
-            Texture2D Arc = Mod.Assets.Request<Texture2D>("Assets/Pixel/Medusa_Gray").Value;
-            float opacity = Math.Clamp(reticleProgress * 1f, 0, 1) * 0.5f;
-            Vector2 scale = new Vector2(2f, 4f - (3.2f * reticleProgress));
-            Vector2 arcPos = Projectile.Center + Angle.ToRotationVector2() * 20f - Main.screenPosition;
-            Vector2 arcOrigin = new Vector2(0f, Arc.Height / 2);
-
-            Main.spriteBatch.Draw(Arc, arcPos, null, Color.Red with { A = 0 } * opacity, 
-                direction.ToRotation(), arcOrigin, scale, SpriteEffects.None, 0.0f);
-
-            Main.spriteBatch.Draw(Arc, arcPos, null, Color.Red with { A = 0 } * opacity * 0.75f, 
-                direction.ToRotation(), arcOrigin, scale * 0.85f, SpriteEffects.None, 0.0f);
-
-            Main.spriteBatch.Draw(Arc, arcPos, null, Color.White with { A = 0 } * opacity * 0.5f, 
-                direction.ToRotation(), arcOrigin, scale * 0.7f, SpriteEffects.None, 0.0f);
-            */
-            #endregion
-
-
+            //Gun Drawing
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-            int height1 = texture.Height;
-            Vector2 origin = new Vector2((float)texture.Width / 2f, (float)height1 / 2f);
             Vector2 position = (Projectile.Center - (0.5f * (direction * -17)) + new Vector2(0f, Player.gfxOffY) - Main.screenPosition).Floor();
-
-            Vector2 newOffset = new Vector2(0, 3 * Player.direction).RotatedBy(Angle);
+            position += new Vector2(0, 3 * Player.direction).RotatedBy(Angle);
 
             SpriteEffects myEffect = Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Main.spriteBatch.Draw(texture, position + newOffset, null, lightColor * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(texture, position, null, lightColor * gunOpacity, direction.ToRotation(), texture.Size() / 2f, Projectile.scale, myEffect, 0.0f);
 
             Color col1 = Color.Lerp(Color.White, Color.Gold, goldPulseAmount);
 
-            Main.spriteBatch.Draw(Glow, position + newOffset, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
-            Main.spriteBatch.Draw(Glow, position + newOffset, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), origin, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(Glow, position, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), texture.Size() / 2f, Projectile.scale, myEffect, 0.0f);
+            Main.spriteBatch.Draw(Glow, position, null, col1 with { A = 0 } * glowAmount * gunOpacity, direction.ToRotation(), texture.Size() / 2f, Projectile.scale, myEffect, 0.0f);
 
-            Texture2D OuterL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/RedOuterL").Value;
-            Texture2D InnerL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/WhiteInnerL").Value;
+
+            #region Reticle Drawing
+            Texture2D OuterL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar/RedOuterL").Value;
+            Texture2D InnerL = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulsar/WhiteInnerL").Value;
 
             float progress = Easings.easeInOutQuad(reticleProgress);
             float extraAngle = MathHelper.Lerp(MathF.PI * -0.25f, 2f * MathF.PI, progress);
@@ -611,12 +561,15 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns
 
             Color col = Color.Lerp(Color.Red, Color.Gold, goldPulseAmount);
 
-            Main.spriteBatch.Draw(OuterL, reticleLocation - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle + extraAngle), null, Color.White with { A = 0 } * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
-            Main.spriteBatch.Draw(OuterL, reticleLocation - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle + extraAngle), null, Color.White with { A = 0 } * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
+            Vector2 reticlePosA = reticleLocation - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle + extraAngle);
+            Vector2 reticlePosB = reticleLocation - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle + extraAngle);
 
-            Main.spriteBatch.Draw(InnerL, reticleLocation - Main.screenPosition + new Vector2(0, 100 * (1 - reticleProgress) + 10).RotatedBy(Angle + extraAngle), null, col * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
-            Main.spriteBatch.Draw(InnerL, reticleLocation - Main.screenPosition + new Vector2(0, -100 * (1 - reticleProgress) - 10).RotatedBy(Angle + extraAngle), null, col * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f); ;
-            
+            Main.spriteBatch.Draw(OuterL, reticlePosA, null, Color.White with { A = 0 } * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(OuterL, reticlePosB, null, Color.White with { A = 0 } * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f);
+
+            Main.spriteBatch.Draw(InnerL, reticlePosA, null, col * (opactity * 0.75f), Angle - MathHelper.PiOver4, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f);
+            Main.spriteBatch.Draw(InnerL, reticlePosB, null, col * (opactity * 0.75f), Angle + MathHelper.PiOver4 + MathHelper.PiOver2, OuterL.Size() / 2, scale, SpriteEffects.None, 0.0f);
+            #endregion
 
             return false;
         }

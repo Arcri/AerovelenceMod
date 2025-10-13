@@ -30,6 +30,7 @@ using AerovelenceMod.Content.Items.Potions;
 using AerovelenceMod.Content.Items.Tools.Drills;
 using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.AdamantitePulsar;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {
@@ -271,7 +272,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         {
             int[] itemsToReceive = [ModContent.ItemType<ShotgunAxe>()];//ReinforcedPlatinumGrapple>(), ModContent.ItemType<MiningSack>(), ModContent.ItemType<AmuletOfGlory>()];
             int[] itemSuperAdamantite = [ModContent.ItemType<AdamantitePulsar>()];
-            int[] itemSuperTitanium = [ModContent.ItemType<Items.Weapons.Misc.Ranged.Launchers.TitaniumRocketLauncher>()];
+            int[] itemSuperTitanium = [ModContent.ItemType<TitaniumRocketLauncher>()];
 
             int[] searchForItems = [
                 ModContent.ItemType<ShotgunAxe>()/*, ModContent.ItemType<TinCluster>(),

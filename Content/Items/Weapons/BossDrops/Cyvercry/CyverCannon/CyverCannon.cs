@@ -435,7 +435,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.CyverCannon
 
         public override void OnHitNPC(NPC target, HitInfo hit, int damageDone)
         {
-
             int dustCount = bigLaser ? 9 : 4;
             float scaleMult = bigLaser ? 1f : 0.75f;
 

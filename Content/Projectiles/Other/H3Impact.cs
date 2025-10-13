@@ -1,110 +1,104 @@
-﻿using System;
+﻿using AerovelenceMod.Common;
+using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent;
-using Terraria.Audio;
-using Terraria.Graphics.Shaders;
-using ReLogic.Content;
-using AerovelenceMod.Common.Utilities;
 
 namespace AerovelenceMod.Content.Projectiles.Other
 {
     public class H3Impact : ModProjectile
     {
+		public Color[] cols = { Color.White, Color.Crimson, Color.Red };
+		public bool pixelize = false;
+
 		float timer = 0;
-		public float opacity = 1f;
-		public Color color = Color.White;
-		public float size = 1f;
-		public float speed = 0.2f;
-
-
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("H3 Impact");
-		}
-
         public override void SetDefaults()
 		{
 			Projectile.width = 1;
 			Projectile.height = 1;
-			Projectile.friendly = true;
+			Projectile.friendly = false;
 			Projectile.hostile = false;
-			Projectile.penetrate = -1;
-			Projectile.scale = 1f;
-			Projectile.timeLeft = 200;
+			Projectile.timeLeft = 2200;
 			Projectile.tileCollide = false;
-			Projectile.scale = 1f;
-
 		}
 
-		public override bool? CanDamage()
-		{
-			return false;
-		}
+		public override bool? CanDamage() => false;
 
-		float xScale = 0.3f;
-		float yScale = 1f;
 		public override void AI()
         {
 			Player player = Main.player[Projectile.owner];
 
 			//Random rot of flare
 			if (timer == 1)
-				Projectile.ai[1] = Main.rand.NextFloat(6.28f);
-
-			if (timer > 1)
-            {
-				xScale = Math.Clamp(MathHelper.Lerp(xScale, 3, speed * 0.3f), 0, 10);
-				yScale = Math.Clamp(MathHelper.Lerp(yScale, -0.2f, speed), 0.02f, 1);
-			}
+				Projectile.ai[0] = Main.rand.NextFloat(6.28f);
 
 
-			if (yScale <= 0.02f)
+			int timeForAnim = 9; //8
+			progress = Math.Clamp((float)timer / (float)timeForAnim, 0f, 1f);
+
+			if (progress == 1f)
 				Projectile.active = false;
 
-			Projectile.ai[0] = Math.Clamp(MathHelper.Lerp(Projectile.ai[0], 1.1f, 0.04f), 0, 1);
-
-			Projectile.ai[1] += 0.04f;
 			timer++;
 		}
 
+		float drawScale = 1f;
+		float progress = 0f;
 		public override bool PreDraw(ref Color lightColor)
 		{
-			Texture2D Tex = Mod.Assets.Request<Texture2D>("Content/Projectiles/Other/H3Impact").Value;
-			Texture2D Tex3 = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_5").Value;
+			if (pixelize)
+                ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderProjectiles, () => { DrawProj(); });
+			else
+                DrawProj();
 
-			Vector2 scale = new Vector2(xScale * size, yScale * size);
-
-			Main.spriteBatch.Draw(Tex3, Projectile.Center - Main.screenPosition, null, Color.Black * (0.35f - Projectile.ai[0]), Projectile.ai[1], Tex3.Size() / 2, 0.25f + (0.75f * yScale), SpriteEffects.None, 0f);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-
-
-			Main.spriteBatch.Draw(Tex3, Projectile.Center - Main.screenPosition, null, color * (1.25f - Projectile.ai[0]), Projectile.ai[1], Tex3.Size() / 2, 0.25f + (0.75f * yScale), SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex3, Projectile.Center - Main.screenPosition, null, Color.White * (1.25f - Projectile.ai[0]), -Projectile.ai[1], Tex3.Size() / 2, 0.25f + (0.75f * yScale) * 0.5f, SpriteEffects.None, 0f);
-
-			Effect myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value;
-			myEffect.Parameters["uColor"].SetValue(color.ToVector3() * 3.2f);
-			myEffect.Parameters["uTime"].SetValue(2);
-			myEffect.Parameters["uOpacity"].SetValue(0.6f); //0.6
-			myEffect.Parameters["uSaturation"].SetValue(1.2f);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, myEffect, Main.GameViewMatrix.TransformationMatrix);
-
-			//Activate Shader
-			myEffect.CurrentTechnique.Passes[0].Apply();
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, null, color * opacity, Projectile.rotation, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
-			Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition, null, color * opacity, Projectile.rotation, Tex.Size() / 2, scale, SpriteEffects.None, 0f);
-
-			Main.spriteBatch.End(); //make this restart better later
-			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-			return false;
+            return false;
 		}
+
+		//In a separate function to be a little cleaner
+		public void DrawProj()
+		{
+            Texture2D orb = CommonTextures.feather_circle128PMA.Value;
+            Texture2D line = CommonTextures.SoulSpike.Value;
+            Texture2D flare = Mod.Assets.Request<Texture2D>("Assets/Flare/flare_4Black").Value;
+
+            float inverseProg = 1f - progress;
+			float easedInverseProg = Easings.easeInQuad(inverseProg);
+
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+
+			//Flares
+			float flareRot = (float)Main.timeForVisualEffects * 0.12f;
+			//Main.EntitySpriteDraw(flare, drawPos + new Vector2(0f, 0f), null, cols[2] with { A = 0 } * 0.35f, flareRot, flare.Size() / 2f, 2f * Projectile.scale * inverseProg, SpriteEffects.None);
+
+
+            float[] scales = { 1f, 1.6f, 2.5f };
+
+            //Orb
+            float orbAlpha = 1f;
+            float orbScale = 0.35f * inverseProg * Projectile.scale;
+
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[0] with { A = 0 } * orbAlpha, 0f, orb.Size() / 2f, orbScale * scales[0], SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[1] with { A = 0 } * orbAlpha, 0f, orb.Size() / 2f, orbScale * scales[1], SpriteEffects.None);
+            Main.EntitySpriteDraw(orb, drawPos, null, cols[2] with { A = 0 } * orbAlpha, 0f, orb.Size() / 2f, orbScale * scales[2], SpriteEffects.None);
+
+
+            //Line
+            Vector2 lineScale = new Vector2(4f - (3.5f * easedInverseProg), 0.15f + 0.85f * easedInverseProg) * Projectile.scale; //4f - 4f
+			float lineAlpha = Easings.easeOutCubic(inverseProg);
+            float lineRot = Projectile.rotation;
+
+            Main.EntitySpriteDraw(line, drawPos, null, cols[0] with { A = 0 } * lineAlpha, lineRot, line.Size() / 2f, lineScale * scales[0], SpriteEffects.None);
+            Main.EntitySpriteDraw(line, drawPos, null, cols[1] with { A = 0 } * lineAlpha, lineRot, line.Size() / 2f, lineScale * scales[1], SpriteEffects.None);
+            Main.EntitySpriteDraw(line, drawPos, null, cols[2] with { A = 0 } * lineAlpha, lineRot, line.Size() / 2f, lineScale * scales[2], SpriteEffects.None);
+        }
 
     }
 }

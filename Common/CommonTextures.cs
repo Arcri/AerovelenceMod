@@ -65,6 +65,8 @@ namespace AerovelenceMod.Common
         public static readonly Asset<Texture2D> Starlight = ModContent.Request<Texture2D>(PixelLoc + "Starlight", AssetRequestMode.ImmediateLoad);
 
         public static readonly Asset<Texture2D> Twinkle = ModContent.Request<Texture2D>(PixelLoc + "Twinkle", AssetRequestMode.ImmediateLoad);
+
+        public static readonly Asset<Texture2D> SoulSpike = ModContent.Request<Texture2D>(PixelLoc + "SoulSpike", AssetRequestMode.ImmediateLoad);
         #endregion
 
         #region TrailFolder

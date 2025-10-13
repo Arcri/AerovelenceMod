@@ -1146,6 +1146,26 @@ Items: {
 		DisplayName: Lush Growth
 		Tooltip: ""
 	}
+
+	Shocklash: {
+		DisplayName: Shocklash
+		Tooltip: ""
+	}
+
+	CavernSword: {
+		DisplayName: Cavern Sword
+		Tooltip: ""
+	}
+
+	BookOfBees: {
+		DisplayName: Book Of Bees
+		Tooltip: ""
+	}
+
+	LucentBeam: {
+		DisplayName: Lucent Beam
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -1575,6 +1595,16 @@ Projectiles: {
 	CyverCannonProjectile.DisplayName: Cyver Cannon Projectile
 	OblivionActivateAnimation.DisplayName: Oblivion Activate Animation
 	OblivionExplosionPulse.DisplayName: Oblivion Explosion Pulse
+	ShocklashProjectile.DisplayName: Shocklash Projectile
+	CavernSwordElecChain.DisplayName: Cavern Sword Elec Chain
+	CavernSwordElecShot.DisplayName: Cavern Sword Elec Shot
+	CavernSwordProj.DisplayName: Cavern Sword Proj
+	CavernSwordProjAlt.DisplayName: Cavern Sword Proj Alt
+	CavernSwordWhatDoICallThis.DisplayName: Cavern Sword What Do I Call This
+	HoverTestThing.DisplayName: Hover Test Thing
+	HiveProjectile.DisplayName: Hive Projectile
+	LucentBeamHeldProj.DisplayName: Lucent Beam Held Proj
+	AdamantitePulsarRecoilBurst.DisplayName: Adamantite Pulsar Recoil Burst
 }
 
 Configs: {

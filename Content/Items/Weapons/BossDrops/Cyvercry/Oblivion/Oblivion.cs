@@ -1192,10 +1192,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.Oblivion
                 if (energySwordWidth > 0f)
                     swordAlpha = 0f;
                 else
-                {
-
                     Projectile.active = false;
-                }
             }
             #endregion
 
@@ -1449,7 +1446,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.Oblivion
 
             if (decreaseBar)
             {
-                barVisualProgress = 1f - Utils.GetLerpValue(0, 360, decreaseTimer, true);
+                barVisualProgress = 1f - Utils.GetLerpValue(0, 300, decreaseTimer, true); //360 -> 300
 
                 decreaseTimer++;
 
