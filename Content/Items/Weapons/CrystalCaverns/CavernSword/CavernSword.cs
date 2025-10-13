@@ -204,7 +204,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
 
 
             #region swingTex
-            Texture2D SwingTex = (Texture2D)ModContent.Request<Texture2D>("VFXPlus/Assets/Slash/FullSlashTinyBlack");
+            Texture2D SwingTex = (Texture2D)ModContent.Request<Texture2D>("AerovelenceMod/Assets/Slash/FullSlashTinyBlack");
 
             float glowIntensity = 1f;
             if (getProgress(easingProgress) <= 0.30f)
@@ -266,7 +266,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
             Texture2D trailTexture2 = CommonTextures.Extra_196_Black.Value; //
 
             if (trailEffect == null)
-                trailEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+                trailEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
 
             //Convert lists to arrays for use in vertex strip
@@ -763,7 +763,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
         public void DrawTrail()
         {
             if (myEffect == null)
-                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
             Color betweenBlue = Color.Lerp(Color.DeepSkyBlue, Color.SkyBlue, 0.75f);
 
@@ -790,9 +790,6 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
             #endregion
 
             #region Shader
-
-            if (myEffect == null)
-                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
             float dist = (endPoint - startPoint).Length();
             float repValue = dist / 400f;
@@ -930,7 +927,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
             Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Trails/RealLightningBloom").Value; //
 
             if (myEffect == null)
-                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
 
             //Convert lists to arrays for use in vertex strip
@@ -1176,7 +1173,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CavernSword
             Texture2D trailTexture2 = Mod.Assets.Request<Texture2D>("Assets/Trails/Extra_196_Black").Value; //
 
             if (trailEffect == null)
-                trailEffect = ModContent.Request<Effect>("VFXPlus/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
+                trailEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/TrailShaders/TendrilShader", AssetRequestMode.ImmediateLoad).Value;
 
 
             //Convert lists to arrays for use in vertex strip

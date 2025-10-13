@@ -9,7 +9,6 @@ using System;
 using Terraria.DataStructures;
 using static Terraria.NPC;
 using ReLogic.Content;
-using VFXPlus.Content.Projectiles;
 using Terraria.Graphics;
 using UtfUnknown.Core.Models.SingleByte.Finnish;
 using AerovelenceMod.Content.Dusts.GlowDusts;
@@ -69,7 +68,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.LucentBeam
 
     public class LucentBeamHeldProj : ModProjectile
     {
-        public override string Texture => "VFXPlus/Content/VFXTest/Aero/GaussianStar";
+        public override string Texture => "Terraria/Images/Projectile_0";
 
         public override void SetDefaults()
         {
@@ -326,8 +325,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Magic.LucentBeam
 
             myEffect.Parameters["WorldViewProjection"].SetValue(Main.GameViewMatrix.NormalizedTransformationmatrix);
 
-            myEffect.Parameters["onTex"].SetValue(ModContent.Request<Texture2D>("VFXPlus/Assets/Trails/Clear/GlowTrailClear").Value);
-            myEffect.Parameters["gradientTex"].SetValue(ModContent.Request<Texture2D>("VFXPlus/Assets/Gradients/RainbowGrad1").Value);
+            myEffect.Parameters["onTex"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Clear/GlowTrailClear").Value);
+            myEffect.Parameters["gradientTex"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/RainbowGrad1").Value);
             myEffect.Parameters["baseColor"].SetValue(Color.White.ToVector3());
             myEffect.Parameters["satPower"].SetValue(0.8f); //higher power -> less affected by background  |95 | 3f looks very goozma
 

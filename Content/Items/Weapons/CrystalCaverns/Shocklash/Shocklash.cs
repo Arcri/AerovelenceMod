@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.Shocklash
 {
 	public class Shocklash : ModItem
 	{
-        public override string Texture => "VFXPlus/Content/VFXTest/CraftyWhip/Shocklash";
+        public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/Shocklash/Shocklash";
 
         public override void SetDefaults()
 		{

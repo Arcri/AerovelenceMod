@@ -12,7 +12,7 @@ using Terraria.GameContent;
 using AerovelenceMod.Common.Utilities;
 
 
-namespace VFXPlus.Content.Projectiles
+namespace AerovelenceMod.Content.Projectiles
 {
 
     public class BasicRecoilProj : ModProjectile

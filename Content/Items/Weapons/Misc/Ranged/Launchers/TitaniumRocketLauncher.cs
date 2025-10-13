@@ -22,7 +22,6 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using VFXPlus.Content.Projectiles;
 using static Terraria.ModLoader.ModContent;
 using static Terraria.NPC;
 

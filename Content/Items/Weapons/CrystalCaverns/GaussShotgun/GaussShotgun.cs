@@ -13,10 +13,10 @@ using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Common;
 using AerovelenceMod.Common.Systems;
-using VFXPlus.Content.Projectiles;
 using Terraria.GameContent;
 using AerovelenceMod.Content.Gores;
 using AerovelenceMod.Content.Dusts;
+using AerovelenceMod.Content.Projectiles;
 
 namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun
 {
