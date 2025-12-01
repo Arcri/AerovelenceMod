@@ -8,6 +8,7 @@ using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun;
 using AerovelenceMod.Content.Items.Weapons.Ember;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.AdamantitePulsar;
+using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

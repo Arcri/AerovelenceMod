@@ -5,6 +5,7 @@ using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
+using AerovelenceMod.Content.Projectiles;
 using AerovelenceMod.Content.Projectiles.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

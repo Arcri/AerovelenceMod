@@ -12,6 +12,9 @@
     <None Remove="Common\Systems\Generation\GenUtils\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Items\Weapons\CrystalCaverns\CrystalCrescent\crystalcrescent.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Content\Projectiles\CrystalCaverns\" />
   </ItemGroup>
 </Project>
