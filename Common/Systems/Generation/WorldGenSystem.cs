@@ -1,10 +1,6 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Terraria.GameContent.Generation;
+﻿using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.WorldBuilding;
-using Terraria.IO;
 using Terraria.Localization;
 using AerovelenceMod.Common.Systems.Generation.CrystalCaverns;
 
@@ -13,13 +9,15 @@ namespace AerovelenceMod.Common.Systems.Generation
     public class WorldGenSystem : ModSystem
     {
         public static LocalizedText CrystalCavernsTerrainPassMessage { get; private set; }
-        public static LocalizedText CrystalCavernsPolishMessage { get; private set; }
+        public static LocalizedText CrystalCavernsStructurePassMessage { get; private set; }
+		public static LocalizedText CrystalCavernsRubblePassMessage { get; private set; }
 
         public override void SetStaticDefaults()
 		{
 			CrystalCavernsTerrainPassMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsTerrainPassMessage)}"));
-            CrystalCavernsPolishMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsPolishMessage)}"));
-        }
+            CrystalCavernsStructurePassMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsStructurePassMessage)}"));
+			CrystalCavernsRubblePassMessage = Terraria.Localization.Language.GetOrRegister(Mod.GetLocalizationKey($"WorldGen.{nameof(CrystalCavernsRubblePassMessage)}"));
+		}
 
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
 		{
@@ -33,6 +31,11 @@ namespace AerovelenceMod.Common.Systems.Generation
 			{
 				tasks.Insert(CCPolishIndex + 1, new CCStructurePass("Crystal Caverns Polish", 101f));
 			}
-		}
+			int CCRubbleIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Piles"));
+            if (CCRubbleIndex != -1)
+			{
+				tasks.Insert(CCRubbleIndex + 1, new CCRubblePass("Crystal Caverns Rubble", 102f));
+			}
+        }
 	}
 }

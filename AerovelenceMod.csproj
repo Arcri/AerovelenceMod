@@ -13,6 +13,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Items\Weapons\CrystalCaverns\CrystalCrescent\crystalcrescent.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernPot2x2Rubble.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernStone1x1CeilingRubble.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernStone1x1FloorRubble.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernStone1x2CeilingRubble.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernStone1x2FloorRubble.png" />
+    <None Remove="Content\Tiles\CrystalCaverns\Rubble\CavernStone3x2FloorRubble.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Projectiles\CrystalCaverns\" />

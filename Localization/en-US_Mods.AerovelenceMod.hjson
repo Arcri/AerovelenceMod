@@ -1626,6 +1626,8 @@ Configs: {
 WorldGen: {
 	CrystalCavernsPolishMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsPolishMessage
 	CrystalCavernsTerrainPassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsTerrainPassMessage
+	CrystalCavernsStructurePassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsStructurePassMessage
+	CrystalCavernsRubblePassMessage: Mods.AerovelenceMod.WorldGen.CrystalCavernsRubblePassMessage
 }
 
 Tiles: {

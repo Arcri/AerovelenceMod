@@ -94,11 +94,12 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             return _instance;
         }
 
-        private CCTerrainPass(string name, float loadWeight) : base(name, loadWeight) {}
+        public CCTerrainPass(string name, float loadWeight) : base(name, loadWeight) {}
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-            progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
+            //progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
+            progress.Message = "Generating the Crystal Caverns";
 
             WorldSizeScale = Main.maxTilesY / 1200.0f;
 
@@ -155,6 +156,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 GenShape upperUndergroundWallShape = new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1));
                 GenShape lowerUndergroundWallShape = new Shapes.Mound(BiomeWidth / 2 - 1, (int)(.5 * UndergroundHeight));
 
+                // CCRubblePass has boilerplate of this
                 Point surfaceRectOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y - (int)(SurfaceHeight * 2.25));
                 Point upperUndergroundOrigin = new Point(Origin.X - BiomeWidth / 2, Origin.Y);
                 Point lowerUndergroundOrigin = new Point(Origin.X, Origin.Y + (int)(.5 * UndergroundHeight));

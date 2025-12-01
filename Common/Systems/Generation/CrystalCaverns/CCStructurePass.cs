@@ -36,7 +36,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             WorldGen.noTileActions = true;
             try
             {
-                progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
+                //progress.Message = WorldGenSystem.CrystalCavernsTerrainPassMessage.Value;
+                progress.Message = "Generating Crystal Caverns Structures";
+
                 CCTerrainPass mainPass = CCTerrainPass.Instance();
 
                 #region CC Gen Cleanup
