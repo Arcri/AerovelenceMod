@@ -294,6 +294,8 @@ namespace AerovelenceMod
 		public static Effect TrailShaderPixelate;
 		public static Effect TrailShaderGradient;
 
+        public static Effect SmokeColShader;
+
         public static Effect fadeShader;
 
         private List<IOrderedLoadable> loadCache;
@@ -332,13 +334,14 @@ namespace AerovelenceMod
 				var shaderRef = new Ref<Effect>(Assets.Request<Effect>("Effects/GlowMisc", AssetRequestMode.ImmediateLoad).Value);
 				Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low);
 				Filters.Scene[shaderName].Load();
-				//(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low)).Load(); //EF.High?
+                //(Filters.Scene[shaderName] = new Filter(new ScreenShaderData(shaderRef, "DistortPass"), EffectPriority.Low)).Load(); //EF.High?
 
 
-				//Filters.Scene[shaderName] = new Filter(new ScreenShaderData())
+                //Filters.Scene[shaderName] = new Filter(new ScreenShaderData())
 
+                SmokeColShader = Instance.Assets.Request<Effect>("Effects/Particle/SmokeColShader", AssetRequestMode.ImmediateLoad).Value;
 
-				DistortShader = ModContent.Request<Effect>("AerovelenceMod/Effects/DistortScreen", (AssetRequestMode)1).Value;
+                DistortShader = ModContent.Request<Effect>("AerovelenceMod/Effects/DistortScreen", (AssetRequestMode)1).Value;
 				CrystalShine = ModContent.Request<Effect>("AerovelenceMod/Effects/CrystalShine", (AssetRequestMode)1).Value;
 				Test2 = ModContent.Request<Effect>("AerovelenceMod/Effects/Test2", (AssetRequestMode)1).Value;
 
@@ -444,13 +447,17 @@ namespace AerovelenceMod
 
 			if (!Main.dedServ)
 			{
-				//DiscordRichPresence.Deinitialize();
-				//Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
-			}
-			TrailShader = null;
-			BasicTrailShader = null;
-			TrailShaderPixelate = null;
-			TrailShaderGradient = null;
+                //DiscordRichPresence.Deinitialize();
+                //Main.OnTickForThirdPartySoftwareOnly -= DiscordRichPresence.Update;
+
+                SmokeColShader = null;
+
+                TrailShader = null;
+                BasicTrailShader = null;
+                TrailShaderPixelate = null;
+                TrailShaderGradient = null;
+            }
+
 
 			UnloadDetours();
 			FargosModMutant = false;

@@ -1,33 +1,35 @@
-﻿using AerovelenceMod.Common.Utilities;
+﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Particles;
+using AerovelenceMod.Common.Systems;
+using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Dusts.GlowDusts;
+using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Content.Items.Weapons.Ember;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
+using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
+using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
+using AerovelenceMod.Content.Items.Weapons.Starglass;
+using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
+using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
+using AerovelenceMod.Content.Particles;
+using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.Projectiles.Other;
+using AerovelenceMod.Content.Projectiles.TempVFX;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Audio;
-using AerovelenceMod.Content.NPCs.Bosses.Cyvercry;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.FlashLight;
-using AerovelenceMod.Content.Projectiles.Other;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.Skylight;
-using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
-using AerovelenceMod.Content.Items.Weapons.Ember;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged;
-using AerovelenceMod.Content.Projectiles;
-using AerovelenceMod.Content.Items.Weapons.Starglass;
-using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade;
-using AerovelenceMod.Common.Globals.SkillStrikes;
-using AerovelenceMod.Content.Projectiles.TempVFX;
-using AerovelenceMod.Content.Dusts.GlowDusts;
-using System;
 using static AerovelenceMod.Common.Utilities.DustBehaviorUtil;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
-using AerovelenceMod.Content.NPCs.Bosses.FeatheredFoe;
-using Microsoft.CodeAnalysis;
-using AerovelenceMod.Content.Items.Weapons.Misc.Magic.WandOfExploding;
-using AerovelenceMod.Common.Systems;
 
 namespace AerovelenceMod.Content.Items
 {
@@ -62,8 +64,6 @@ namespace AerovelenceMod.Content.Items
             Item.noUseGraphic = true;
         }
 
-        //int primeLTG = Projectile.NewProjectile(null, position + new Vector2(0f, -300), Vector2.Zero, ModContent.ProjectileType<LowTierPrime>(), damage, 0, Main.myPlayer);
-
         bool tick = false;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -83,10 +83,26 @@ namespace AerovelenceMod.Content.Items
                     preSlowPower: 0.94f, postSlowPower: 0.9f, velToBeginShrink: 1.5f, fadePower: 0.92f, shouldFadeColor: false);
             }
 
-            FlashSystem.SetCAFlashEffect(0.075f, 35, 1f, 0.35f, true, true);
+            //FlashSystem.SetCAFlashEffect(0.075f, 35, 1f, 0.35f, true, true);
 
 
             //Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), damage, 0, Main.myPlayer);
+
+            //Fire Particle Example | Recommend setting debug item usetime to 1
+            for (int i = 0; i < 2; i++)
+            {
+                float fireScale = Main.rand.NextFloat(1.35f, 1.55f);
+                float alphaFade = Main.rand.NextFloat(0.94f, 0.95f);
+                float scaleFade = Main.rand.NextFloat(1.03f, 1.05f);
+
+                Color thisCol = Color.Lerp(Color.DodgerBlue, Color.Blue, 0.25f);
+                Vector2 myvel = new Vector2(0f, -1.75f).RotatedByRandom(0.2f) * Main.rand.NextFloat(8f, 14f) * 1f;
+                FireParticle fire1 = new FireParticle(Main.MouseWorld, myvel, fireScale * 1f, thisCol, colorMult: 2f, bloomAlpha: 1.65f, AlphaFade: alphaFade, VelFade: 0.87f, RotPower: 0.02f);
+                fire1.randomRotPower = 0.5f;
+                fire1.scaleFadePower = 1.05f;
+                ShaderParticleHandler.SpawnParticle(fire1);
+            }
+
 
             return false;
             for (int aaaa = 0; aaaa > 3; aaaa++)
