@@ -1166,6 +1166,11 @@ Items: {
 		DisplayName: Lucent Beam
 		Tooltip: ""
 	}
+
+	BooyahBomb: {
+		DisplayName: Booyah Bomb
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -1605,6 +1610,9 @@ Projectiles: {
 	HiveProjectile.DisplayName: Hive Projectile
 	LucentBeamHeldProj.DisplayName: Lucent Beam Held Proj
 	AdamantitePulsarRecoilBurst.DisplayName: Adamantite Pulsar Recoil Burst
+	BooyahBombProj.DisplayName: Booyah Bomb Proj
+	BooyahHeldProj.DisplayName: Booyah Held Proj
+	BooyahImpactVFX.DisplayName: Booyah Impact V F X
 }
 
 Configs: {
