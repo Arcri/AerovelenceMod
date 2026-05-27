@@ -52,6 +52,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
         private ushort[] ClearTiles {  get; set; }
 
+        private ushort[] ReplaceWithStoneWallsSurface { get; set; }
         private ushort[] ReplaceWithBrickWalls { get; set; }
 
         public Point Origin { get; private set; }
@@ -135,6 +136,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             SurfaceOres = [TileID.Tin, TileID.Copper, TileID.Iron, TileID.Lead];
 
+            ReplaceWithStoneWallsSurface = [WallID.EbonstoneUnsafe, WallID.IceUnsafe];
             ReplaceWithBrickWalls = [WallID.SandstoneBrick, BrickWall];
 
             ClearTiles = [TileID.BreakableIce];
@@ -261,25 +263,26 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     }));
                 }
 
-                GenSurfaceWalls(ReplaceWithBrickWalls.Concat([LivingWoodWall, BrickWall]).ToArray(), DirtWall, false);
+                GenSurfaceWalls(ReplaceWithStoneWallsSurface.Concat(ReplaceWithBrickWalls.Concat([LivingWoodWall, BrickWall])).ToArray(), DirtWall, false);
+                GenSurfaceWalls(ReplaceWithBrickWalls.Concat([LivingWoodWall, BrickWall]).ToArray(), StoneWall, false);
                 GenSurfaceWalls(ReplaceWithBrickWalls, BrickWall, true);
 
                 // Surface to underground wall dithering
-                void TransitionWallDithering(ushort[] toBeReplaced, ushort replaceWith)
+                void TransitionWallDithering(ushort[] targetWalls, ushort replaceWith, bool onlyWalls)
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 - 5, Origin.Y - (int)(SurfaceHeight * 0.1 * (i + 1))), new Shapes.Rectangle(BiomeWidth + 10, (int)(SurfaceHeight * 0.1 * (i + 1))), Actions.Chain(new GenAction[]
+                        WorldUtils.Gen(new Point(Origin.X - BiomeWidth / 2 - (5 - i * 2), Origin.Y - (int)(SurfaceHeight * (i + 1) / 20)), new Shapes.Rectangle(BiomeWidth + (10 - i * 4), (int)(SurfaceHeight * (i + 1) / 20)), Actions.Chain(new GenAction[]
                         {
-                            new Modifiers.Dither(0.1 + i * 0.3),
-                            new Modifiers.OnlyWalls(toBeReplaced),
+                            new Modifiers.Dither(0.6 + i * 0.175),
+                            onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                             new Actions.PlaceWall(replaceWith)
                         }));
                     }
                 }
 
-                TransitionWallDithering([DirtWall], StoneWall);
-                TransitionWallDithering(ReplaceWithBrickWalls, BrickWall);
+                TransitionWallDithering([DirtWall], StoneWall, false);
+                TransitionWallDithering(ReplaceWithBrickWalls, BrickWall, true);
 
                 // BIOME UNDERGROUND
                 void GenUpperUnderground(ushort[] toBeReplaced, ushort replaceWith)
