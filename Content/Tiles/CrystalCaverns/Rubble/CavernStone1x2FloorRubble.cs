@@ -20,6 +20,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             DustType = DustID.BlueTorch;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
 

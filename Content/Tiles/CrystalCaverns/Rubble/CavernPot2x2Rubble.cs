@@ -17,11 +17,13 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             Main.tileFrameImportant[Type] = true;
             Main.tileNoFail[Type] = true;
             Main.tileObsidianKill[Type] = true;
+            Main.tileCut[Type] = true;
 
             DustType = DustID.BlueTorch;
             HitSound = SoundID.Shatter;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
@@ -31,7 +33,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             // Tile breaks when placed over
             TileID.Sets.BreakableWhenPlacing[Type] = true;
             TileID.Sets.ReplaceTileBreakUp[Type] = true;
-
         }
 
         public override IEnumerable<Item> GetItemDrops(int i, int j)
