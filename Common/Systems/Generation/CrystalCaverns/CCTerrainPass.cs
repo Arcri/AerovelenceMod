@@ -58,9 +58,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         public Point Origin { get; private set; }
         public Point TumblerTunnelEnd { get; private set; }
         public int TumblerArenaPolarity { get; private set; }
+        public ShapeData TotalSurface { get; private set; }
         public ShapeData LowerUnderground { get; private set; }
         public ShapeData UpperUnderground { get; private set; }
         public ShapeData TotalUnderground { get; private set; }
+        public ShapeData TotalBiome { get; private set; }
 
         private static CCTerrainPass _instance;
         private static readonly object _lock = new object();
@@ -149,10 +151,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 Origin = new Point(Origin.X, Origin.Y + SurfaceHeight);
                 TumblerTunnelEnd = Point.Zero;
                 TumblerArenaPolarity = 1;
-                ShapeData surfaceRectShapeData = new ShapeData();
+                //ShapeData surfaceRectShapeData = new ShapeData();
                 ShapeData surfaceExposedShapeData = new ShapeData();
                 ShapeData lightningBoltShapeData = new ShapeData();
 
+                GenShape surfaceShape = new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 2.25));
                 GenShape upperUndergroundShape = new Shapes.Rectangle(BiomeWidth, (int)(.5 * UndergroundHeight));
                 GenShape lowerUndergroundShape = new Shapes.Mound(BiomeWidth / 2, (int)(.5 * UndergroundHeight));
                 GenShape upperUndergroundWallShape = new Shapes.Rectangle(BiomeWidth - 1, (int)(.5 * UndergroundHeight - 1));
@@ -169,9 +172,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 void PrelimClearTiles(ushort[] toBeCleared)
                 {
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
-                        new Modifiers.OnlyTiles(),
+                        new Modifiers.OnlyTiles(toBeCleared),
                         new Actions.ClearTile()
                     }));
                     WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
@@ -189,11 +192,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 PrelimClearTiles(ClearTiles);
 
                 // BIOME SURFACE
-                WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 2.25)), new Actions.Blank().Output(surfaceRectShapeData));
+                //WorldUtils.Gen(surfaceRectOrigin, new Shapes.Rectangle(BiomeWidth, (int)(SurfaceHeight * 2.25)), new Actions.Blank().Output(surfaceRectShapeData));
 
                 void GenSurface(ushort[] toBeReplaced, ushort replaceWith)
                 {
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
@@ -208,14 +211,14 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 void SurfaceDithering(ushort[] toBeReplaced, ushort replaceWith)
                 {
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(3, 0),
                         new Modifiers.Dither(0.75),
                         new Modifiers.OnlyTiles(toBeReplaced),
                         new AeroGenUtils.SwapSolidTileInclusive(replaceWith)
                     }));
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(5, 0),
                         new Modifiers.Dither(0.75),
@@ -231,7 +234,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 SurfaceDithering(ReplaceWithDirtTiles, DirtTile);
 
                 // Grass
-                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Expand(5, 0),
                     new Modifiers.OnlyTiles(DirtTile),
@@ -242,19 +245,19 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 // Walls
                 void GenSurfaceWalls(ushort[] targetWalls, ushort replaceWith, bool onlyWalls)
                 {
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new AeroGenUtils.SwapWall(replaceWith)
                     }));
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(3, 3),
                         new Modifiers.Dither(0.85),
                         onlyWalls ? new Modifiers.OnlyWalls(targetWalls) : new Modifiers.SkipWalls(targetWalls),
                         new AeroGenUtils.SwapWall(replaceWith)
                     }));
-                    WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                     {
                         new Modifiers.Expand(5, 5),
                         new Modifiers.Dither(0.95),
@@ -497,7 +500,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 }));
 
                 // Surface object generation
-                WorldUtils.Gen(surfaceRectOrigin, new ModShapes.All(surfaceRectShapeData), Actions.Chain(new GenAction[]
+                WorldUtils.Gen(surfaceRectOrigin, surfaceShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.OnlyTiles(GrassTile, DirtTile, SandTile),
                     new Modifiers.IsTouchingAir(true),
@@ -555,6 +558,22 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 ShapeData upperUndergroundShapeData = new ShapeData();
                 ShapeData lowerUndergroundShapeData = new ShapeData();
                 ShapeData totalUndergroundShapeData = new ShapeData();
+                ShapeData surfaceShapeData = new ShapeData();
+                ShapeData totalBiomeShapeData = new ShapeData();
+
+                WorldUtils.Gen(
+                    //new Point(Origin.X - BiomeWidth, Origin.Y),
+                    Origin,
+                    surfaceShape,
+                    Actions.Chain(
+                        new GenAction[]
+                        {
+                            new Modifiers.Offset(-BiomeWidth / 2, -(int)(SurfaceHeight * 2.25)),
+                            new Actions.Blank().Output(surfaceShapeData),
+                            new Actions.Blank().Output(totalBiomeShapeData)
+                        }
+                    )
+                );
                 // Must use same origin or total underground shape will not build correctly
                 WorldUtils.Gen(
                     //new Point(Origin.X - BiomeWidth, Origin.Y),
@@ -566,6 +585,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                             new Modifiers.Offset(-BiomeWidth / 2, 0),
                             new Actions.Blank().Output(upperUndergroundShapeData),
                             new Actions.Blank().Output(totalUndergroundShapeData),
+                            new Actions.Blank().Output(totalBiomeShapeData)
                         }
                     )
                 );
@@ -580,12 +600,16 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                             new Modifiers.Flip(false, true),
                             new Actions.Blank().Output(lowerUndergroundShapeData),
                             new Actions.Blank().Output(totalUndergroundShapeData),
+                            new Actions.Blank().Output(totalBiomeShapeData)
                         }
                     )
                 );
+
                 UpperUnderground = upperUndergroundShapeData;
                 LowerUnderground = lowerUndergroundShapeData;
                 TotalUnderground = totalUndergroundShapeData;
+                TotalSurface = surfaceShapeData;
+                TotalBiome = totalBiomeShapeData;
             }
 		}
 

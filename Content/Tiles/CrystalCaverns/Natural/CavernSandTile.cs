@@ -24,7 +24,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             AddMapEntry(new Color(90, 90, 120));
             DustType = 116;
             HitSound = SoundID.Tink;
-            //ItemDrop/* tModPorter Note: Removed. Tiles and walls will drop the item which places them automatically. Use RegisterItemDrop to alter the automatic drop if necessary. */ = ModContent.ItemType<CavernSandItem>();
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
         }
         public override bool CanExplode(int i, int j)
         {

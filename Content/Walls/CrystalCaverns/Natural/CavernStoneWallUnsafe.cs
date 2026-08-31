@@ -13,6 +13,7 @@ namespace AerovelenceMod.Content.Walls.CrystalCaverns.Natural
         {
             this.SimpleWall(ModContent.ItemType<CavernStoneWallItem>(), SoundID.Dig,
             DustID.Dirt, new Color(60, 60, 80), false);
+            WallID.Sets.Conversion.Stone[Type] = true;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

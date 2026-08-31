@@ -13,6 +13,7 @@ namespace AerovelenceMod.Content.Walls.CrystalCaverns.Natural
         {
             this.SimpleWall(ModContent.ItemType<CrystalGrassWallItem>(), SoundID.Dig,
             DustID.Dirt, new Color(54, 87, 129), true);
+            WallID.Sets.Conversion.Grass[Type] = true;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

@@ -7,23 +7,23 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Walls.CrystalCaverns.Natural
 {
-    public class LushGrowthWall : ModWall
+    public class CavernSandWall : ModWall
     {
         public override void SetStaticDefaults()
         {
-            this.SimpleWall(ModContent.ItemType<LushGrowthWallItem>(), SoundID.Dig,
-            DustID.Dirt, new Color(40, 70, 60), false);
-            //WallID.Sets.Conversion.Grass[Type] = true;
+            this.SimpleWall(ModContent.ItemType<CavernSandWallItem>(), SoundID.Dig,
+            DustID.Dirt, new Color(54, 87, 129), false);
+            WallID.Sets.Conversion.Sandstone[Type] = true;
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
     }
 
-    public class LushGrowthWallItem : ModItem
+    public class CavernSandWallItem : ModItem
     {
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<LushGrowthWall>());
+            Item.DefaultToPlaceableWall(ModContent.WallType<CavernStoneWall>());
         }
     }
 }

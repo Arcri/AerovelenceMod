@@ -1,7 +1,12 @@
 
 using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,6 +15,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
     [LegacyName("CavernStone")]
     public class CavernStoneTile : ModTile
     {
+        private Asset<Texture2D> glowTexture;
 
         public override void SetStaticDefaults()
         {
@@ -29,7 +35,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             DustType = 59;
             HitSound = SoundID.Tink;
             CommonTileHelper.SetTileProtection(this);
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
 
+            glowTexture = ModContent.Request<Texture2D>(Texture + "_Glowmask");
         }
         public static Vector2 TileOffset => Lighting.LegacyEngine.Mode > 1 ? Vector2.Zero : Vector2.One * 12;
 
@@ -37,17 +45,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
         {
             return ((new Vector2(i, j) + TileOffset) * 16) - Main.screenPosition - (off ?? new Vector2(0));
         }
-      /*  public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
-        {
-            Tile tile = Main.tile[i, j];
-            Vector2 zero = new Vector2(Main.offScreenRange, Main.offScreenRange);
-            if (Main.drawToScreen)
-            {
-                zero = Vector2.Zero;
-            }
-            int height = tile.frameY == 36 ? 18 : 16;
-            Main.Main.EntitySpriteDraw(mod.GetTexture("Blocks/CrystalCaverns/Tiles/CavernStone_Glowmask"), new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, new Rectangle(tile.frameX, tile.frameY, 16, height), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-        }*/
+
         public static bool PlaceObject(int x, int y, int type, bool mute = false, int style = 0, int alternate = 0, int random = -1, int direction = -1)
         {
             TileObject toBePlaced;
@@ -62,69 +60,34 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             }
             return false;
         }
-        /*
-        public override void RandomUpdate(int i, int j)
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Framing.GetTileSafely(i, j);
-            Tile tileBelow = Framing.GetTileSafely(i, j + 1);
-            Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
-                {
-                    tileAbove.TileType = (ushort)ModContent.TileType<CrystalGrowth>();
-                    tileAbove.HasTile = true;
-                    tileAbove.TileFrameY = 0;
-                    tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(15) * 18);
-                    WorldGen.SquareTileFrame(i, j + 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
-                {
-                    tileAbove.TileType = (ushort)ModContent.TileType<CavernsRubbleFloor>();
-                    tileAbove.HasTile = true;
-                    tileAbove.TileFrameY = 0;
-                    tileAbove.TileFrameX = (short)(WorldGen.genRand.Next(13) * 18);
-                    WorldGen.SquareTileFrame(i, j + 2, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            if (WorldGen.genRand.NextBool(25) && tileAbove.LiquidAmount > 250 && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
-                {
-                    tileAbove.TileType = (ushort)ModContent.TileType<LuminVines>();
-                    tileAbove.HasTile = true;
-                    WorldGen.SquareTileFrame(i, j - 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            if (WorldGen.genRand.NextBool(15) && tileBelow.LiquidAmount > 250 && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
-            {
-                if (!tile.BottomSlope)
-                {
-                    tileBelow.TileType = (ushort)ModContent.TileType<LuminVines>();
-                    tileBelow.HasTile = true;
-                    WorldGen.SquareTileFrame(i, j + 1, true);
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j + 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-        } */
+            Tile tile = Main.tile[i, j];
+
+            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+
+            // Draw original texture
+            spriteBatch.Draw(
+                TextureAssets.Tile[Type].Value,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+                Lighting.GetColor(i, j), 0f, default, 1f, SpriteEffects.None, 0f);
+
+            // Pulsating color for glowmask
+            Color maskColor = Color.White
+                * MathHelper.Lerp(0.0f, 2f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(i * 0.05f, j * 0.05f), Main.GlobalTimeWrappedHourly * 0.1f)), 8)));
+
+            // Draw glowmask
+            spriteBatch.Draw(
+                glowTexture.Value,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+                maskColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+            // Return false to stop vanilla draw
+            return false;
+        }
     }
     public class CavernStoneItem : ModItem
     {

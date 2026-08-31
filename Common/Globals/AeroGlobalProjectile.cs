@@ -43,48 +43,48 @@ namespace AerovelenceMod.Globals
 
         public override void PostAI(Projectile projectile)
         {
-            bool isConversionProjectile = projectile.type == ProjectileID.PurificationPowder
-            || projectile.type == ProjectileID.VilePowder
-            || projectile.type == ProjectileID.ViciousPowder
-            || projectile.type == ProjectileID.PureSpray
-            || projectile.type == ProjectileID.CorruptSpray
-            || projectile.type == ProjectileID.CrimsonSpray
-            || projectile.type == ProjectileID.HallowSpray;
-            if (!isConversionProjectile)
-                return;
+            //bool isConversionProjectile = projectile.type == ProjectileID.PurificationPowder
+            //|| projectile.type == ProjectileID.VilePowder
+            //|| projectile.type == ProjectileID.ViciousPowder
+            //|| projectile.type == ProjectileID.PureSpray
+            //|| projectile.type == ProjectileID.CorruptSpray
+            //|| projectile.type == ProjectileID.CrimsonSpray
+            //|| projectile.type == ProjectileID.HallowSpray;
+            //if (!isConversionProjectile)
+            //    return;
 
-            if (projectile.owner == Main.myPlayer)
-            {
-                int x = (int)(projectile.Center.X / 16f);
-                int y = (int)(projectile.Center.Y / 16f);
-                bool isPowder = projectile.type == ProjectileID.PurificationPowder
-                    || projectile.type == ProjectileID.VilePowder
-                    || projectile.type == ProjectileID.ViciousPowder;
+            //if (projectile.owner == Main.myPlayer)
+            //{
+            //    int x = (int)(projectile.Center.X / 16f);
+            //    int y = (int)(projectile.Center.Y / 16f);
+            //    bool isPowder = projectile.type == ProjectileID.PurificationPowder
+            //        || projectile.type == ProjectileID.VilePowder
+            //        || projectile.type == ProjectileID.ViciousPowder;
 
-                for (int i = x - 1; i <= x + 1; i++)
-                {
-                    for (int j = y - 1; j <= y + 1; j++)
-                    {
-                        if (projectile.type == ProjectileID.PureSpray || projectile.type == ProjectileID.PurificationPowder)
-                        {
-                            ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Pure, !isPowder);
-                        }
-                        if (projectile.type == ProjectileID.CorruptSpray || projectile.type == ProjectileID.VilePowder)
-                        {
-                            ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Corrupt, !isPowder);
-                        }
-                        if (projectile.type == ProjectileID.CrimsonSpray || projectile.type == ProjectileID.ViciousPowder)
-                        {
-                            ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Crimson, !isPowder);
-                        }
-                        if (projectile.type == ProjectileID.HallowSpray)
-                        {
-                            ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Hallow);
-                        }
-                        NetMessage.SendTileSquare(-1, i, j, 1, 1);
-                    }
-                }
-            }
+            //    for (int i = x - 1; i <= x + 1; i++)
+            //    {
+            //        for (int j = y - 1; j <= y + 1; j++)
+            //        {
+            //            if (projectile.type == ProjectileID.PureSpray || projectile.type == ProjectileID.PurificationPowder)
+            //            {
+            //                ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Pure, !isPowder);
+            //            }
+            //            if (projectile.type == ProjectileID.CorruptSpray || projectile.type == ProjectileID.VilePowder)
+            //            {
+            //                ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Corrupt, !isPowder);
+            //            }
+            //            if (projectile.type == ProjectileID.CrimsonSpray || projectile.type == ProjectileID.ViciousPowder)
+            //            {
+            //                ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Crimson, !isPowder);
+            //            }
+            //            if (projectile.type == ProjectileID.HallowSpray)
+            //            {
+            //                ElectricBlueSolutionProjectile.ConvertFromCrystalCavern(i, j, ConvertType.Hallow);
+            //            }
+            //            NetMessage.SendTileSquare(-1, i, j, 1, 1);
+            //        }
+            //    }
+            //}
         }
     }
 }

@@ -2,8 +2,10 @@ using AerovelenceMod.Content.Tiles.Citadel;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Building;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
@@ -17,6 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             Main.tileWaterDeath[Type] = false;
             Main.tileLavaDeath[Type] = false;
             Main.tileNoAttach[Type] = false;
+            Main.tileLighted[Type] = true;
             DustType = 116;
             HitSound = SoundID.Shatter;
             AddMapEntry(new Color(100, 125, 255));
@@ -82,7 +85,13 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 
             return true;
         }
-        public override void NearbyEffects(int i, int j, bool closer) => Lighting.AddLight(new Vector2(i, j) * 16, new Vector3(0.0f, 0.20f, 0.60f));
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            float lightFactor = MathHelper.Lerp(0.5f, 2f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(i * 0.05f, j * 0.05f), Main.GlobalTimeWrappedHourly * 0.1f)), 4)));
+            r = 0.0f * lightFactor;
+            g = 0.6f * lightFactor;
+            b = 0.9f * lightFactor;
+        }
     }
     public class CrystalGrowthRubbleItem : ModItem
     {

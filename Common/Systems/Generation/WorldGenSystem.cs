@@ -31,7 +31,7 @@ namespace AerovelenceMod.Common.Systems.Generation
 			{
 				tasks.Insert(CCPolishIndex + 1, new CCStructurePass("Crystal Caverns Polish", 101f));
 			}
-			int CCRubbleIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Piles"));
+			int CCRubbleIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Tile Cleanup"));
             if (CCRubbleIndex != -1)
 			{
 				tasks.Insert(CCRubbleIndex + 1, new CCRubblePass("Crystal Caverns Rubble", 102f));

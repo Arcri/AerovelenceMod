@@ -1,6 +1,8 @@
 using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,12 +27,14 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             AddMapEntry(new Color(80, 110, 170));
 			DustType = 59;
             CommonTileHelper.SetTileProtection(this);
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
         }
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            r = 0.0f;
-            g = 0.6f;
-            b = 0.9f;
+            float lightFactor = MathHelper.Lerp(0.3f, 2f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(i * 0.02f, j * 0.02f), Main.GlobalTimeWrappedHourly * 0.2f)), 2)));
+            r = 0.0f * lightFactor;
+            g = 0.6f * lightFactor;
+            b = 0.9f * lightFactor;
         }
     }
 

@@ -23,6 +23,13 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             CCTerrainPass mainPass = CCTerrainPass.Instance();
 
+            // Copied from CCTerrainPass.cs
+            Point surfaceRectOrigin = new Point(mainPass.Origin.X - mainPass.BiomeWidth / 2, mainPass.Origin.Y - (int)(mainPass.SurfaceHeight * 2.25));
+            Point upperUndergroundOrigin = new Point(mainPass.Origin.X - mainPass.BiomeWidth / 2, mainPass.Origin.Y);
+            Point lowerUndergroundOrigin = new Point(mainPass.Origin.X, mainPass.Origin.Y + (int)(.5 * mainPass.UndergroundHeight));
+            Point upperUndergroundWallOrigin = new Point(mainPass.Origin.X - mainPass.BiomeWidth / 2 + 1, mainPass.Origin.Y);
+            Point lowerUndergroundWallOrigin = new Point(mainPass.Origin.X, mainPass.Origin.Y + (int)(.5 * mainPass.UndergroundHeight) - 1);
+
             // Sets of rubble to be placed
             int[] potTileTypes = [ModContent.TileType<CavernPot2x2Rubble>()];
             int[] rubbleTileTypes = [
@@ -30,15 +37,33 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 ModContent.TileType<CavernStone1x1CeilingRubbleNatural>(),
                 ModContent.TileType<CavernStone1x2FloorRubbleNatural>(),
                 ModContent.TileType<CavernStone1x2CeilingRubbleNatural>(),
+                ModContent.TileType<CavernStone3x2FloorRubbleNatural>(),
                 ModContent.TileType<CavernStone3x2FloorRubbleNatural>()];
 
             // Tiles that rubble can be placed on
-            int[] validPlacementTiles = [
+            int[] validRubblePlacementTiles = [
+                mainPass.StoneTile, mainPass.ChargedTile, mainPass.LushTile];
+            int[] validPotPlacementTiles = [
                 mainPass.DirtTile, mainPass.GrassTile, mainPass.StoneTile,
                 mainPass.ChargedTile, mainPass.LushTile, mainPass.SandTile];
 
+            // Vanilla rubble to be removed
+            ushort[] rubbleRemovalTypes = [
+                TileID.Pots,
+                TileID.Stalactite,
+                TileID.SmallPiles,
+                TileID.LargePiles,
+                TileID.LargePiles2];
+
+            // Remove vanilla rubble
+            WorldUtils.Gen(mainPass.Origin, new ModShapes.All(mainPass.TotalBiome), Actions.Chain(new GenAction[]
+            {
+                new Modifiers.OnlyTiles(rubbleRemovalTypes),
+                new Actions.ClearTile()
+            }));
+
             // Place rubble
-            for (int i = 0; i < 500 * Math.Pow(mainPass.WorldSizeScale, 2); i++)
+            for (int i = 0; i < 1250 * Math.Pow(mainPass.WorldSizeScale, 2); i++)
             {
                 bool success = false;
                 int attempts = 0;
@@ -58,7 +83,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         continue;
 
                     // Ensure it is placed on valid tiles, compatible with 1 and 2 tile high rubble
-                    if (!validPlacementTiles.Contains(Main.tile[x, y + 1].TileType) && !validPlacementTiles.Contains(Main.tile[x, y + 2].TileType))
+                    if (!validRubblePlacementTiles.Contains(Main.tile[x, y + 1].TileType) && !validRubblePlacementTiles.Contains(Main.tile[x, y + 2].TileType))
                         continue;
 
                     int tileType = WorldGen.genRand.Next(rubbleTileTypes);
@@ -69,14 +94,11 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                     if (tileType == ModContent.TileType<CavernStone1x1CeilingRubbleNatural>() || 
                         tileType == ModContent.TileType<CavernStone1x2FloorRubbleNatural>() || 
-                        tileType == ModContent.TileType<CavernStone1x2CeilingRubbleNatural>())
+                        tileType == ModContent.TileType<CavernStone1x2CeilingRubbleNatural>() ||
+                        tileType == ModContent.TileType<CavernStone3x2FloorRubbleNatural>())
                     {
                         // These tile types have 6 variants each so pick one variant at random
                         placeStyle = WorldGen.genRand.Next(6);
-                    }
-                    else if (tileType == ModContent.TileType<CavernStone3x2FloorRubbleNatural>())
-                    {
-                        placeStyle = WorldGen.genRand.Next(7);
                     }
                     else if (tileType == ModContent.TileType<CavernStone1x1FloorRubbleNatural>())
                     {
@@ -89,7 +111,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             }
 
             // Place pots
-            for (int i = 0; i < 300 * Math.Pow(mainPass.WorldSizeScale, 2); i++)
+            for (int i = 0; i < 250 * Math.Pow(mainPass.WorldSizeScale, 2); i++)
             {
                 bool success = false;
                 int attempts = 0;
@@ -109,7 +131,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                         continue;
 
                     // Ensure it is placed on valid tiles, compatible with 1 and 2 tile high rubble
-                    if (!validPlacementTiles.Contains(Main.tile[x, y + 1].TileType) && !validPlacementTiles.Contains(Main.tile[x, y + 2].TileType))
+                    if (!validPotPlacementTiles.Contains(Main.tile[x, y + 1].TileType) && !validPotPlacementTiles.Contains(Main.tile[x, y + 2].TileType))
                         continue;
 
                     // Prevent pots from spawning on the surface but allow them in caves still
@@ -124,7 +146,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                     if (tileType == ModContent.TileType<CavernPot2x2Rubble>())
                     {
-                        placeStyle = WorldGen.genRand.Next(3);
+                        placeStyle = WorldGen.genRand.Next(9);
                     }
 
                     Console.WriteLine(placeStyle);

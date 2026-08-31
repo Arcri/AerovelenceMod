@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.ID;
 using Terraria;
+using Terraria.GameContent.RGB;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Common.Systems
 {
@@ -63,7 +64,8 @@ namespace AerovelenceMod.Common.Systems
                     {
                         if (WorldGen.InWorld(x, y) && Main.tile[x, y].LiquidAmount > 0 && Main.tile[x, y].LiquidType == LiquidID.Water) // Check if tile contains water
                         {
-                            Lighting.AddLight(new Vector2(x * 16, y * 16), 0.2f, 0.8f * _intensity, 0.8f * _intensity); // Adjust RGB for glow color
+                            float lightFactor = _intensity * MathHelper.Lerp(0.0f, 4f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(x * 0.1f, y * 0.1f), Main.GlobalTimeWrappedHourly * 0.1f)), 6)));
+                            Lighting.AddLight(new Vector2(x * 16, y * 16), 0.2f * lightFactor, 0.8f * lightFactor, 0.8f * lightFactor); // Adjust RGB for glow color
                         }
                     }
                 }

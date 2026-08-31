@@ -1,6 +1,11 @@
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -30,6 +35,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
     [LegacyName("CrystalGrass")]
     public class CrystalGrassTile : ModTile
     {
+        private Asset<Texture2D> glowTexture;
+
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
@@ -43,6 +50,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             TileID.Sets.Grass[Type] = true;
             TileID.Sets.NeedsGrassFraming[Type] = true;
             TileID.Sets.NeedsGrassFramingDirt[Type] = ModContent.TileType<CrystalDirtTile>();
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+
+            glowTexture = ModContent.Request<Texture2D>(Texture + "_Glowmask");
         }
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
@@ -148,6 +158,34 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             r = 0f;
             g = 0.050f;
             b = 0.200f;
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+
+            // Draw original texture
+            spriteBatch.Draw(
+                TextureAssets.Tile[Type].Value,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+                Lighting.GetColor(i, j), 0f, default, 1f, SpriteEffects.None, 0f);
+
+            // Pulsating color for glowmask
+            Color maskColor = Color.White   
+                * MathHelper.Lerp(0.1f, 0.7f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(i * 0.02f, j * 0.02f), Main.GlobalTimeWrappedHourly * 0.25f)), 2)));
+
+            // Draw glowmask
+            spriteBatch.Draw(
+                glowTexture.Value,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+                maskColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+            // Return false to stop vanilla draw
+            return false;
         }
     }
 }
