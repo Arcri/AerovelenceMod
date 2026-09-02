@@ -11,6 +11,8 @@ using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
 using System.Net.Mime;
 using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble;
+using System.Linq;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 
 namespace AerovelenceMod.Content.Items.Tools
 {
@@ -48,446 +50,6 @@ namespace AerovelenceMod.Content.Items.Tools
 
     public class ElectricBlueSolutionProjectile : ModProjectile
     {
-        //public ref float Progress => ref Projectile.ai[0];
-
-        //public override void SetDefaults()
-        //{
-        //    Projectile.DefaultToSpray();
-        //    Projectile.aiStyle = 0;
-        //}
-
-        //public override void AI()
-        //{
-        //    int dustType = DustID.BlueCrystalShard;
-
-        //    if (Projectile.owner == Main.myPlayer)
-        //    {
-        //        Convert((int)(Projectile.position.X + (Projectile.width * 0.5f)) / 16, (int)(Projectile.position.Y + (Projectile.height * 0.5f)) / 16, 2);
-        //    }
-
-        //    if (Projectile.timeLeft > 133)
-        //    {
-        //        Projectile.timeLeft = 133;
-        //    }
-
-        //    if (Progress > 7f)
-        //    {
-        //        float dustScale = 1f;
-
-        //        if (Progress == 8f)
-        //        {
-        //            dustScale = 0.2f;
-        //        }
-        //        else if (Progress == 9f)
-        //        {
-        //            dustScale = 0.4f;
-        //        }
-        //        else if (Progress == 10f)
-        //        {
-        //            dustScale = 0.6f;
-        //        }
-        //        else if (Progress == 11f)
-        //        {
-        //            dustScale = 0.8f;
-        //        }
-
-        //        Progress += 1f;
-
-        //        var dust = Dust.NewDustDirect(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, dustType, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
-
-        //        dust.noGravity = true;
-        //        dust.scale *= 1.75f;
-        //        dust.velocity.X *= 2f;
-        //        dust.velocity.Y *= 2f;
-        //        dust.scale *= dustScale;
-        //    }
-        //    else
-        //    {
-        //        Progress += 1f;
-        //    }
-
-        //    Projectile.rotation += 0.3f * Projectile.direction;
-        //}
-
-        //private static void Convert(int i, int j, int size = 4)
-        //{
-        //    for (int k = i - size; k <= i + size; k++)
-        //    {
-        //        for (int l = j - size; l <= j + size; l++)
-        //        {
-        //            if (WorldGen.InWorld(k, l, 1) && Math.Abs(k - i) + Math.Abs(l - j) < Math.Sqrt((size * size) + (size * size)))
-        //            {
-        //                ConvertTile(k, l);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private static void ConvertTile(int x, int y)
-        //{
-        //    Tile tile = Main.tile[x, y];
-
-        //    if (tile == null)
-        //        return;
-        //    int type = tile.TileType;
-        //    int wall = tile.WallType;
-        //    if (TileID.Sets.Conversion.JungleGrass[type] || type == TileID.JungleGrass || type == TileID.Mud)
-        //        return;
-        //    if (wall != 0 && !IsProtectedWall(wall))
-        //    {
-        //        ConvertWall(x, y, wall);
-        //    }
-        //    if (!IsProtectedTile(type))
-        //    {
-        //        ConvertTileType(x, y, type);
-        //        if (type == TileID.Dirt || type == TileID.SnowBlock ||
-        //            type == ModContent.TileType<CrystalDirtTile>())
-        //        {
-        //            CheckAndConvertToCrystalGrass(x, y);
-        //        }
-        //    }
-        //}
-
-        //private static bool IsProtectedWall(int wallType)
-        //{
-        //    return wallType == ModContent.WallType<CavernDirtWall>() ||
-        //           wallType == ModContent.WallType<CavernDirtWallUnsafe>() ||
-        //           wallType == ModContent.WallType<CavernSandWallUnsafe>() ||
-        //           wallType == ModContent.WallType<CavernStoneWall>() ||
-        //           wallType == ModContent.WallType<CavernStoneWallUnsafe>() ||
-        //           wallType == ModContent.WallType<CitadelBrickWall>() ||
-        //           wallType == ModContent.WallType<ColumnWall>() ||
-        //           wallType == ModContent.WallType<CrystalGrassWall>() ||
-        //           wallType == ModContent.WallType<CrystalGrassWallUnsafe>() ||
-        //           wallType == ModContent.WallType<GlimmerwoodPlankedWall>() ||
-        //           wallType == ModContent.WallType<GlimmerwoodWall>() ||
-        //           wallType == ModContent.WallType<LushGrowthWall>();
-
-        //}
-
-        //private static bool IsProtectedTile(int tileType)
-        //{
-        //    return tileType == ModContent.TileType<CrystalGrassTile>() ||
-        //           tileType == ModContent.TileType<CavernStoneTile>() ||
-        //           tileType == ModContent.TileType<CavernSandTile>() ||
-        //           tileType == ModContent.TileType<CrystalVines>();
-        //}
-
-        //private static void ConvertWall(int x, int y, int wallType)
-        //{
-        //    if (WallID.Sets.Conversion.Dirt[wallType])
-        //    {
-        //        Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernDirtWallUnsafe>();
-        //        WorldGen.SquareWallFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (WallID.Sets.Conversion.Grass[wallType])
-        //    {
-        //        Main.tile[x, y].WallType = (ushort)ModContent.WallType<CrystalGrassWallUnsafe>();
-        //        WorldGen.SquareWallFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (WallID.Sets.Conversion.HardenedSand[wallType])
-        //    {
-        //        Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernSandWallUnsafe>();
-        //        WorldGen.SquareWallFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (WallID.Sets.Conversion.Sandstone[wallType])
-        //    {
-        //        Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernSandWallUnsafe>();
-        //        WorldGen.SquareWallFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (WallID.Sets.Conversion.Stone[wallType])
-        //    {
-        //        Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernStoneWallUnsafe>();
-        //        WorldGen.SquareWallFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else
-        //    {
-        //        switch (wallType)
-        //        {
-        //            case WallID.DirtUnsafe:
-        //            case WallID.DirtUnsafe1:
-        //            case WallID.DirtUnsafe2:
-        //            case WallID.DirtUnsafe3:
-        //            case WallID.DirtUnsafe4:
-        //            case WallID.CaveUnsafe:
-        //            case WallID.Cave2Unsafe:
-        //            case WallID.Cave3Unsafe:
-        //            case WallID.Cave4Unsafe:
-        //            case WallID.Cave5Unsafe:
-        //            case WallID.Cave6Unsafe:
-        //            case WallID.Cave7Unsafe:
-        //            case WallID.Cave8Unsafe:
-        //            case WallID.Dirt:
-        //                Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernDirtWallUnsafe>();
-        //                WorldGen.SquareWallFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            /*case WallID.SnowWallUnsafe:
-        //                Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernDirtWall>();
-        //                WorldGen.SquareWallFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;*/
-        //            /*case WallID.IceUnsafe:
-        //                Main.tile[x, y].WallType = (ushort)ModContent.WallType<CavernStoneWall>();
-        //                WorldGen.SquareWallFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;*/
-        //            /*case WallID.LivingWoodUnsafe:
-        //                Main.tile[x, y].WallType = (ushort)ModContent.WallType<GlimmerwoodWall>();
-        //                WorldGen.SquareWallFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;*/
-        //        }
-        //    }
-        //}
-
-        //private static void ConvertTileType(int x, int y, int tileType)
-        //{
-        //    if (IsProtectedTile(tileType))
-        //        return;
-
-        //    if (TileID.Sets.Conversion.Grass[tileType] && !TileID.Sets.GrassSpecial[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CrystalGrassTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (TileID.Sets.Conversion.Stone[tileType] || Main.tileMoss[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStoneTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (TileID.Sets.Conversion.Sand[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernSandTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (TileID.Sets.Conversion.HardenedSand[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStoneTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (TileID.Sets.Conversion.Sandstone[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStoneTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-        //    else if (TileID.Sets.Conversion.Ice[tileType])
-        //    {
-        //        Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStoneTile>();
-        //        WorldGen.SquareTileFrame(x, y, true);
-        //        NetMessage.SendTileSquare(-1, x, y, 1);
-        //    }
-
-        //    else
-        //    {
-        //        switch (tileType)
-        //        {
-        //            case TileID.Dirt:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<CrystalDirtTile>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.SnowBlock:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<CrystalDirtTile>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.Silt:
-        //            case TileID.Slush:
-        //            case TileID.DesertFossil:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStoneTile>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.ClayBlock:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<CrystalDirtTile>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.Vines:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<CrystalVines>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.LivingWood:
-        //                Main.tile[x, y].TileType = (ushort)ModContent.TileType<FreshGlimmerwoodTile>();
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-        //            case TileID.LeafBlock:
-        //            case TileID.Sunflower:
-        //            case TileID.Plants:
-        //            case TileID.Plants2:
-        //            case TileID.JunglePlants:
-        //            case TileID.JunglePlants2:
-        //            case TileID.CorruptPlants:
-        //            case TileID.CrimsonPlants:
-        //            case TileID.HallowedPlants:
-        //            case TileID.HallowedPlants2:
-        //                WorldGen.KillTile(x, y);
-        //                if (Main.netMode == NetmodeID.MultiplayerClient)
-        //                {
-        //                    NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, x, y);
-        //                }
-        //                break;
-        //            case TileID.Stalactite:
-        //            case TileID.SmallPiles:
-        //            case TileID.LargePiles:
-        //            case TileID.LargePiles2:
-        //                //Main.tile[x, y].TileType = (ushort)ModContent.TileType<CavernStone3x2FloorRubbleNatural>();
-        //                //WorldGen.SquareTileFrame(x, y, true);
-        //                //NetMessage.SendTileSquare(-1, x, y, 1);
-        //                break;
-
-        //        }
-        //    }
-        //}
-
-        //private static void CheckAndConvertToCrystalGrass(int i, int j)
-        //{
-        //    if (Main.tile[i, j].TileType != ModContent.TileType<CrystalDirtTile>())
-        //        return;
-        //    bool exposedToAir = false;
-        //    if (IsExposedToAir(i, j - 1))
-        //        exposedToAir = true;
-        //    else if (IsExposedToAir(i, j + 1))
-        //        exposedToAir = true;
-        //    else if (IsExposedToAir(i - 1, j))
-        //        exposedToAir = true;
-        //    else if (IsExposedToAir(i + 1, j))
-        //        exposedToAir = true;
-        //    if (exposedToAir)
-        //    {
-        //        Main.tile[i, j].TileType = (ushort)ModContent.TileType<CrystalGrassTile>();
-        //        WorldGen.SquareTileFrame(i, j, true);
-        //        NetMessage.SendTileSquare(-1, i, j, 1);
-        //    }
-        //}
-
-        //private static bool IsExposedToAir(int i, int j)
-        //{
-        //    if (!WorldGen.InWorld(i, j))
-        //        return false;
-        //    Tile tile = Main.tile[i, j];
-        //    if (tile == null)
-        //        return true;
-        //    if (!tile.HasTile || !Main.tileSolid[tile.TileType])
-        //        return true;
-        //    return false;
-        //}
-
-        //public static void ConvertFromCrystalCavern(int startX, int endX, int startY, int endY, ConvertType convert)
-        //{
-
-        //    for (int x = startX; x <= endX; x++)
-        //    {
-        //        for (int y = startY; y <= endY; y++)
-        //        {
-        //            ConvertFromCrystalCavern(x, y, convert);
-        //        }
-        //    }
-        //}
-
-        //public static void ConvertFromCrystalCavern(int x, int y, ConvertType convert, bool tileframe = true)
-        //{
-        //    Tile tile = Main.tile[x, y];
-        //    if (tile == null)
-        //        return;
-
-        //    int type = tile.TileType;
-        //    int wallType = tile.WallType;
-
-        //    if (WorldGen.InWorld(x, y, 1))
-        //    {
-        //        if (wallType == ModContent.WallType<CavernDirtWall>() || wallType == ModContent.WallType<CavernDirtWallUnsafe>())
-        //        {
-        //            Main.tile[x, y].WallType = WallID.DirtUnsafe;
-        //        }
-        //        else if (wallType == ModContent.WallType<CavernStoneWall>() || wallType == ModContent.WallType<CavernStoneWallUnsafe>())
-        //        {
-        //            switch (convert)
-        //            {
-        //                case ConvertType.Corrupt:
-        //                    Main.tile[x, y].WallType = WallID.EbonstoneUnsafe;
-        //                    break;
-        //                case ConvertType.Crimson:
-        //                    Main.tile[x, y].WallType = WallID.CrimstoneUnsafe;
-        //                    break;
-        //                case ConvertType.Hallow:
-        //                    Main.tile[x, y].WallType = WallID.PearlstoneBrickUnsafe;
-        //                    break;
-        //                case ConvertType.Pure:
-        //                    Main.tile[x, y].WallType = WallID.Stone;
-        //                    break;
-        //            }
-        //        }
-        //        else if (wallType == ModContent.WallType<CavernSandWallUnsafe>())
-        //            Main.tile[x, y].WallType = WallID.Sandstone;
-        //        else if (wallType == ModContent.WallType<GlimmerwoodWall>())
-        //            Main.tile[x, y].WallType = WallID.LivingWood;
-
-        //        if (type == ModContent.TileType<CrystalDirtTile>())
-        //            tile.TileType = TileID.Dirt;
-        //        else if (type == ModContent.TileType<CrystalGrassTile>())
-        //            SetTileFromConvert(x, y, convert, TileID.CorruptGrass, TileID.CrimsonGrass, TileID.HallowedGrass, TileID.Grass);
-        //        else if (type == ModContent.TileType<CavernStoneTile>())
-        //            SetTileFromConvert(x, y, convert, TileID.Ebonstone, TileID.Crimstone, TileID.Pearlstone, TileID.Stone);
-        //        else if (type == ModContent.TileType<CavernSandTile>())
-        //            SetTileFromConvert(x, y, convert, TileID.Ebonsand, TileID.Crimsand, TileID.Pearlsand, TileID.Sand);
-        //        else if (type == ModContent.TileType<FreshGlimmerwoodTile>())
-        //            tile.TileType = TileID.LivingWood;
-        //        else if (type == ModContent.TileType<CrystalVines>())
-        //            SetTileFromConvert(x, y, convert, ushort.MaxValue, TileID.CrimsonVines, TileID.HallowedVines, TileID.Vines);
-        //        if (TileID.Sets.Conversion.Grass[type] || type == TileID.Dirt)
-        //            WorldGen.SquareTileFrame(x, y);
-
-        //        if (tileframe)
-        //        {
-        //            if (Main.netMode == NetmodeID.SinglePlayer)
-        //                WorldGen.SquareTileFrame(x, y, true);
-        //            else if (Main.netMode == NetmodeID.Server)
-        //                NetMessage.SendTileSquare(-1, x, y, 1);
-        //        }
-        //    }
-        //}
-
-        //private static void SetTileFromConvert(int x, int y, ConvertType convert, ushort corruptType, ushort crimsonType, ushort hallowType, ushort pureType)
-        //{
-        //    switch (convert)
-        //    {
-        //        case ConvertType.Corrupt:
-        //            if (corruptType != ushort.MaxValue)
-        //                Main.tile[x, y].TileType = corruptType;
-        //            else
-        //                Main.tile[x, y].TileType = pureType;
-        //            break;
-        //        case ConvertType.Crimson:
-        //            if (crimsonType != ushort.MaxValue)
-        //                Main.tile[x, y].TileType = crimsonType;
-        //            else
-        //                Main.tile[x, y].TileType = pureType;
-        //            break;
-        //        case ConvertType.Hallow:
-        //            if (hallowType != ushort.MaxValue)
-        //                Main.tile[x, y].TileType = hallowType;
-        //            else
-        //                Main.tile[x, y].TileType = pureType;
-        //            break;
-        //        case ConvertType.Pure:
-        //            Main.tile[x, y].TileType = pureType;
-        //            break;
-        //    }
-        //}
 
         public static int ConversionType;
 
@@ -584,6 +146,8 @@ namespace AerovelenceMod.Content.Items.Tools
         public static int Rubble1x2FloorType;
         public static int Rubble3x2FloorType;
 
+        public static int[] TargetRubble;
+
         public override void PostSetupContent()
         {
 
@@ -607,38 +171,50 @@ namespace AerovelenceMod.Content.Items.Tools
             //ChairType = ModContent.TileType<ExampleChair>();
             //WorkbenchType = ModContent.TileType<ExampleWorkbench>();
             Rubble1x1CeilingType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
-            Rubble1x1FloorType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
-            Rubble1x2CeilingType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
-            Rubble1x2FloorType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
-            Rubble3x2FloorType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
+            Rubble1x1FloorType = ModContent.TileType<CavernStone1x1FloorRubbleNatural>();
+            Rubble1x2CeilingType = ModContent.TileType<CavernStone1x2CeilingRubbleNatural>();
+            Rubble1x2FloorType = ModContent.TileType<CavernStone1x2FloorRubbleNatural>();
+            Rubble3x2FloorType = ModContent.TileType<CavernStone3x2FloorRubbleNatural>();
+            TargetRubble = [TileID.Stalactite, TileID.SmallPiles, TileID.LargePiles, TileID.LargePiles2];
 
-            // Normally we'd just use WallLoader.RegisterSimpleConversion on the basic wall types and rely on the fallback system
-            // but we want to convert safe walls to safe example walls and unsafe to unsafe, where vanilla convers safe walls to unsafe walls on all conversions
             for (int i = 0; i < WallLoader.WallCount; i++)
             {
+                int targetWallType = -1;
                 if (WallID.Sets.Conversion.Dirt[i] ||
-                    WallID.Sets.Conversion.Grass[i] ||
-                    WallID.Sets.Conversion.Stone[i] ||
-                    WallID.Sets.Conversion.Sandstone[i] ||
-                    WallID.Sets.Conversion.HardenedSand[i] ||
-                    WallID.Sets.Conversion.PureSand[i] ||
-                    //WallID.Sets.Conversion.Ice[i] ||
-                    WallID.Sets.Conversion.NewWall1[i] || // NewWalls are the underground wall variants
-                    WallID.Sets.Conversion.NewWall2[i] ||
-                    WallID.Sets.Conversion.NewWall3[i] ||
-                    WallID.Sets.Conversion.NewWall4[i])
-                    WallLoader.RegisterConversion(i, Type, ConvertWalls);
+                        i == WallID.Cave6Unsafe ||
+                        i == WallID.CaveWall ||
+                        i == WallID.CaveWall2 ||
+                        i == WallID.DirtUnsafe1 ||
+                        i == WallID.DirtUnsafe2 ||
+                        i == WallID.DirtUnsafe3 ||
+                        i == WallID.DirtUnsafe4)
+                    targetWallType = UnsafeDirtWallType;
+                else if (WallID.Sets.Conversion.Grass[i])
+                    targetWallType = UnsafeGrassWallType;
+                else if (WallID.Sets.Conversion.Stone[i] ||
+                        WallID.Sets.Conversion.NewWall1[i] || // NewWalls are the underground wall variants
+                        WallID.Sets.Conversion.NewWall2[i] ||
+                        WallID.Sets.Conversion.NewWall3[i] ||
+                        WallID.Sets.Conversion.NewWall4[i] ||
+                        i == WallID.RocksUnsafe1 ||
+                        i == WallID.RocksUnsafe2 ||
+                        i == WallID.RocksUnsafe3 ||
+                        i == WallID.RocksUnsafe4 ||
+                        i == WallID.CaveUnsafe ||
+                        i == WallID.Cave2Unsafe ||
+                        i == WallID.Cave3Unsafe ||
+                        i == WallID.Cave4Unsafe ||
+                        i == WallID.Cave5Unsafe ||
+                        i == WallID.Cave7Unsafe ||
+                        i == WallID.Cave8Unsafe)
+                    targetWallType = UnsafeStoneWallType;
+                else if (WallID.Sets.Conversion.Sandstone[i] ||
+                        WallID.Sets.Conversion.HardenedSand[i] ||
+                        WallID.Sets.Conversion.PureSand[i])
+                    targetWallType = UnsafeSandWallType;
+                if (targetWallType != -1)
+                    WallLoader.RegisterSimpleConversion(i, Type, targetWallType);
             }
-            WallLoader.RegisterConversionFallback(DirtWallType, WallID.Dirt, Type);
-            WallLoader.RegisterConversionFallback(UnsafeDirtWallType, WallID.DirtUnsafe, Type);
-            WallLoader.RegisterConversionFallback(GrassWallType, WallID.Grass, Type);
-            WallLoader.RegisterConversionFallback(UnsafeGrassWallType, WallID.GrassUnsafe, Type);
-            WallLoader.RegisterConversionFallback(StoneWallType, WallID.Cave8Echo, Type);
-            WallLoader.RegisterConversionFallback(UnsafeStoneWallType, WallID.Cave8Unsafe, Type);
-            WallLoader.RegisterConversionFallback(SandWallType, WallID.SandstoneEcho, Type);
-            WallLoader.RegisterConversionFallback(UnsafeSandWallType, WallID.Sandstone, Type);
-
-
 
             // We register a conversion method and fallback separately rather than using RegisterSimpleConversion, because ConvertGrass has custom logic for converting trees on the tile above
             TileLoader.RegisterConversion(TileID.Grass, Type, ConvertGrass);
@@ -655,7 +231,9 @@ namespace AerovelenceMod.Content.Items.Tools
 
             // This registers a conversion from the base tile to the modded tile, as well as a fallback from the modded tile to the base tile, so other solutions can convert the modded tile (eg to Ebonstone)
             TileLoader.RegisterSimpleConversion(TileID.Dirt, Type, DirtType);
-            TileLoader.RegisterSimpleConversion(TileID.Stone, Type, StoneType);
+            TileLoader.RegisterConversion(TileID.Stone, Type, ConvertStone);
+            TileLoader.RegisterSimpleConversion(TileID.Sandstone, Type, SandType);
+            TileLoader.RegisterSimpleConversion(TileID.HardenedSand, Type, SandType);
             TileLoader.RegisterSimpleConversion(TileID.Sand, Type, SandType);
             TileLoader.RegisterSimpleConversion(TileID.ClayBlock, Type, ClayType);
 
@@ -663,6 +241,10 @@ namespace AerovelenceMod.Content.Items.Tools
             // We could register a purifying conversion for these too if we wanted
             //TileLoader.RegisterConversion(TileID.Chairs, Type, ConvertChairs);
             //TileLoader.RegisterConversion(TileID.WorkBenches, Type, ConvertWorkbenches);
+            TileLoader.RegisterConversion(TileID.Stalactite, Type, ConvertRubble);
+            TileLoader.RegisterConversion(TileID.SmallPiles, Type, ConvertRubble);
+            TileLoader.RegisterConversion(TileID.LargePiles, Type, ConvertRubble);
+            TileLoader.RegisterConversion(TileID.LargePiles2, Type, ConvertRubble);
         }
 
         public bool ConvertGrass(int i, int j, int type, int conversionType)
@@ -679,15 +261,31 @@ namespace AerovelenceMod.Content.Items.Tools
             return false;
         }
 
+        public bool ConvertStone(int i, int j, int type, int conversionType)
+        {
+            int tileTypeAbove = -1;
+            if (j > 1 && Main.tile[i, j - 1].HasTile)
+                tileTypeAbove = Main.tile[i, j - 1].TileType;
+
+            int tileTypeBelow = -1;
+            if (j > 1 && Main.tile[i, j + 1].HasTile)
+                tileTypeBelow = Main.tile[i, j + 1].TileType;
+
+            ConvertRubble(i, j - 1, tileTypeAbove, conversionType);
+            ConvertRubble(i, j + 1, tileTypeBelow, conversionType);
+
+            //WorldGen.ConvertTile(i, j, StoneType);
+
+            return false;
+        }
+
         public void FindAndConvertTree(int i, int j, int tileTypeAbove)
         {
 
             if (tileTypeAbove == -1)
                 return;
 
-            if (!(tileTypeAbove == TileID.VanityTreeSakura) &&
-                !(tileTypeAbove == TileID.VanityTreeYellowWillow) &&
-                !(tileTypeAbove == TileID.Trees))
+            if (!TileID.Sets.IsATreeTrunk[tileTypeAbove])
                 return;
 
             int treeBottom = j;
@@ -696,12 +294,12 @@ namespace AerovelenceMod.Content.Items.Tools
 
             // Check for if the tile is the tree's "trunk" or just the root tiles on the side
             // We do this by checking for the specific tile frame of the tree tile.
-            // Necessary because the Trees ID doesn't care about the tile's frame and returns true even if the tile isnt the tree's "trunk"
+            // Necessary because the "IsATreeTrunk" ID set doesn't care about the tile's frame and returns true even if the tile isnt the tree's "trunk"
             int treeFrameX = Main.tile[treeCenterX, treeTop].TileFrameX / 22;
             int treeFrameY = Main.tile[treeCenterX, treeTop].TileFrameY / 22;
             bool isTreeTrunk = (treeFrameX != 1 && treeFrameX != 2) || treeFrameY < 6;
 
-            // Niche edgecase check: If a block was placed under a tree's branch, it shouldn't be converted at all, as it is not actually attached to the tile below
+            // Niche edgecase check: If a grass block was placed under a tree's branch, it shouldnt be converted at all, as it is not actually attached to the grass tile below
             bool isTreeBranch = (treeFrameX == 3 && treeFrameY < 3) || (treeFrameX == 4 && treeFrameY >= 3 && treeFrameY < 6);
             if (isTreeBranch)
                 return;
@@ -713,9 +311,7 @@ namespace AerovelenceMod.Content.Items.Tools
                 {
 
                     Tile topTile = Main.tile[x, treeTop];
-                    if (!topTile.HasTile || (!(topTile.TileType == TileID.VanityTreeSakura) &&
-                            !(topTile.TileType == TileID.VanityTreeYellowWillow) &&
-                            !(topTile.TileType == TileID.Trees)))
+                    if (!topTile.HasTile || !TileID.Sets.IsATreeTrunk[topTile.TileType])
                         continue;
 
                     // Check for tree trunk framing
@@ -733,23 +329,80 @@ namespace AerovelenceMod.Content.Items.Tools
             }
 
             // Find the top of the tree by repeatedly going up until we don't find any more tree tiles
-            while (treeTop >= 0 && Main.tile[treeCenterX, treeTop].HasTile && (Main.tile[treeCenterX, treeTop].TileType == TileID.VanityTreeSakura ||
-                    Main.tile[treeCenterX, treeTop].TileType == TileID.VanityTreeYellowWillow) ||
-                    Main.tile[treeCenterX, treeTop].TileType == TileID.Trees)
+            while (treeTop >= 0 && Main.tile[treeCenterX, treeTop].HasTile && TileID.Sets.IsATreeTrunk[Main.tile[treeCenterX, treeTop].TileType])
                 treeTop--;
 
-            // Turn all the tiles around it into trees
+            // Turn all the tiles around it into hell trees
             for (int x = treeCenterX - 1; x < treeCenterX + 2; x++)
             {
                 for (int y = treeTop; y < treeBottom; y++)
                 {
                     Tile t = Main.tile[x, y];
-                    if (t.HasTile && (t.TileType == TileID.VanityTreeSakura ||
-                            t.TileType == TileID.VanityTreeYellowWillow ||
-                            t.TileType == TileID.Trees))
+                    if (t.HasTile && TileID.Sets.IsATreeTrunk[t.TileType])
                         t.TileType = TileID.Trees;
                 }
             }
+
+            // Turn the floor into grass (We have to convert the adjacent tiles, otherwise the side root tiles may get broken)
+            // The framing will happen naturally when the floor tile below gets converted and frames the other adjacent tiles, so we don't need to use WorldGen.Convert here
+            for (int x = treeCenterX - 1; x < treeCenterX + 2; x++)
+            {
+                Tile t = Main.tile[x, treeBottom];
+                if (t.HasTile && TileID.Sets.Conversion.Grass[t.TileType] || TileID.Sets.Conversion.GolfGrass[t.TileType])
+                    t.TileType = (ushort)GrassType;
+            }
+        }
+
+        public bool ConvertRubble(int i, int j, int type, int conversionType)
+        {
+            int desiredRubbleType = -1;
+            bool shortRubble = false;
+
+            if (!TargetRubble.Contains(type))
+                return false;
+
+            if (Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType == type)
+            {
+                j++;
+            }
+            else if ((!Main.tile[i, j + 1].HasTile && Main.tile[i, j - 1].HasTile && Main.tile[i, j - 1].TileType != type) ||
+                (!Main.tile[i, j - 1].HasTile && Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType != type))
+            {
+                 shortRubble = true;
+            }
+
+            switch (type)
+            {
+                case TileID.Stalactite:
+                    if (Main.tile[i, j + 1].HasTile)
+                    {
+                        desiredRubbleType = Rubble1x2FloorType;
+                        if (shortRubble)
+                        {
+                            desiredRubbleType = Rubble1x1FloorType;
+                        }
+                    }
+                    else
+                    {
+                        desiredRubbleType = Rubble1x2CeilingType;
+                        if (shortRubble)
+                        {
+                            desiredRubbleType = Rubble1x1CeilingType;
+                            j++;
+                        }
+                    }
+
+                    Main.tile[i, j - 1].TileType = (ushort)desiredRubbleType;
+                    Main.tile[i, j].TileType = (ushort)desiredRubbleType;
+
+                    Main.tile[i, j - 1].TileFrameY = 0;
+                    Main.tile[i, j].TileFrameY = 18;
+
+                    WorldGen.ConvertTile(i, j, desiredRubbleType);
+                    break;
+            }
+
+            return false;
         }
 
         //public bool ConvertChairs(int i, int j, int type, int conversionType)
@@ -793,40 +446,12 @@ namespace AerovelenceMod.Content.Items.Tools
         //    return false;
         //}
 
-        public bool ConvertWalls(int i, int j, int type, int conversionType)
-        {
-            int wallType;
-            if (WallID.Sets.Conversion.Dirt[type])
-            {
-                wallType = Main.wallHouse[type] ? DirtWallType : UnsafeDirtWallType;
-            }
-            else if (WallID.Sets.Conversion.Grass[type])
-            {
-                wallType = Main.wallHouse[type] ? GrassWallType : UnsafeGrassWallType;
-            }
-            else if (WallID.Sets.Conversion.Stone[type] ||
-                WallID.Sets.Conversion.NewWall1[type] ||
-                WallID.Sets.Conversion.NewWall2[type] ||
-                WallID.Sets.Conversion.NewWall3[type] ||
-                WallID.Sets.Conversion.NewWall4[type])
-            {
-                wallType = Main.wallHouse[type] ? StoneWallType : UnsafeStoneWallType;
-            }
-            else if (WallID.Sets.Conversion.Sandstone[type] || WallID.Sets.Conversion.HardenedSand[type] || WallID.Sets.Conversion.PureSand[type])
-            {
-                wallType = Main.wallHouse[type] ? SandWallType : UnsafeSandWallType;
-            } else wallType = Main.wallHouse[type] ? DirtWallType : UnsafeDirtWallType;
-
-            WorldGen.ConvertWall(i, j, wallType);
-            return false;
-        }
+        //public enum ConvertType
+        //{
+        //    Pure,
+        //    Corrupt,
+        //    Crimson,
+        //    Hallow
+        //}
     }
-
-    //public enum ConvertType
-    //{
-    //    Pure,
-    //    Corrupt,
-    //    Crimson,
-    //    Hallow
-    //}
 }

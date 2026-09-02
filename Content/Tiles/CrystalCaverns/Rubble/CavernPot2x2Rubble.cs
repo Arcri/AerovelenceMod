@@ -17,6 +17,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
     {
         public override string Texture => "AerovelenceMod/Content/Tiles/CrystalCaverns/Rubble/CavernPot2x2Rubble";
         private Asset<Texture2D> glowTexture;
+        private int drawYOffset;
 
         public override void SetStaticDefaults()
         {
@@ -32,7 +33,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 3;
-            TileObjectData.newTile.DrawYOffset = 2;
+            drawYOffset = 2;
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
 
@@ -54,7 +55,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             // Draw original texture
             spriteBatch.Draw(
                 TextureAssets.Tile[Type].Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y + drawYOffset) + zero,
                 new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
                 Lighting.GetColor(i, j), 0f, default, 1f, SpriteEffects.None, 0f);
 
@@ -65,7 +66,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
             // Draw glowmask
             spriteBatch.Draw(
                 glowTexture.Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
+                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y + drawYOffset) + zero,
                 new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
                 maskColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
