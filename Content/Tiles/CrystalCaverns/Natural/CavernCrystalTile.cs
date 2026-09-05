@@ -20,6 +20,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             MinPick = 55;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
+            Main.tileBlendAll[Type] = true;
             Main.tileMerge[Type][ModContent.TileType<CrystalGrassTile>()] = true;
             Main.tileMerge[Type][ModContent.TileType<CavernCrystalTile>()] = true;
             Main.tileMerge[Type][ModContent.TileType<CavernStoneTile>()] = true;

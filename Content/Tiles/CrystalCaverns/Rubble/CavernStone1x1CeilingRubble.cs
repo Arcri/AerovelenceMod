@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.GameContent.RGB;
 using Terraria.ID;
@@ -26,8 +28,16 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble
 
             DustType = DustID.BlueTorch;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
+            // No "Style1x1Top" to run newTile.CopyFrom() on so have to specify everything manually
+            TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.Width = 1;
+            TileObjectData.newTile.Height = 1;
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinateHeights = [16];
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidBottom, TileObjectData.newTile.Width, 0);
+            
             drawYOffset = -2;
             TileObjectData.addTile(Type);
 

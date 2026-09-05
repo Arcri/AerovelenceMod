@@ -18,12 +18,11 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             //Main.tileMerge[Type][Mod.Find<ModTile>("FieldStone").Type] = true;
             Main.tileMergeDirt[Type] = true;
             Main.tileBlendAll[Type] = true;
-            Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(90, 90, 120));
             DustType = 116;
-            HitSound = SoundID.Tink;
+            HitSound = SoundID.Dig;
             TileID.Sets.GeneralPlacementTiles[Type] = false;
         }
         public override bool CanExplode(int i, int j)

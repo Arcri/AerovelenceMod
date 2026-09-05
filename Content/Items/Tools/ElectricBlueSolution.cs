@@ -6,13 +6,9 @@ using Microsoft.Xna.Framework;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
 using AerovelenceMod.Content.Walls.CrystalCaverns.Natural;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Glimmerwood;
-using AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture;
-using System.Net.Mime;
 using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble;
 using System.Linq;
-using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 
 namespace AerovelenceMod.Content.Items.Tools
 {
@@ -134,12 +130,11 @@ namespace AerovelenceMod.Content.Items.Tools
         public static int DirtType;
         public static int GrassType;
         public static int StoneType;
+        public static int MossType;
         public static int SandType;
         public static int ClayType;
         public static int VinesType;
 
-        //public static int ChairType;
-        //public static int WorkbenchType;
         public static int Rubble1x1CeilingType;
         public static int Rubble1x1FloorType;
         public static int Rubble1x2CeilingType;
@@ -164,12 +159,11 @@ namespace AerovelenceMod.Content.Items.Tools
             DirtType = ModContent.TileType<CrystalDirtTile>();
             GrassType = ModContent.TileType<CrystalGrassTile>();
             StoneType = ModContent.TileType<CavernStoneTile>();
+            MossType = ModContent.TileType<LushGrowthTile>();
             SandType = ModContent.TileType<CavernSandTile>();
             ClayType = ModContent.TileType<ChargedStoneTile>();
             VinesType = ModContent.TileType<CrystalVines>();
 
-            //ChairType = ModContent.TileType<ExampleChair>();
-            //WorkbenchType = ModContent.TileType<ExampleWorkbench>();
             Rubble1x1CeilingType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
             Rubble1x1FloorType = ModContent.TileType<CavernStone1x1FloorRubbleNatural>();
             Rubble1x2CeilingType = ModContent.TileType<CavernStone1x2CeilingRubbleNatural>();
@@ -232,19 +226,21 @@ namespace AerovelenceMod.Content.Items.Tools
             // This registers a conversion from the base tile to the modded tile, as well as a fallback from the modded tile to the base tile, so other solutions can convert the modded tile (eg to Ebonstone)
             TileLoader.RegisterSimpleConversion(TileID.Dirt, Type, DirtType);
             TileLoader.RegisterConversion(TileID.Stone, Type, ConvertStone);
+            TileLoader.RegisterConversion(TileID.GreenMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.BrownMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.RedMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.BlueMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.PurpleMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.LavaMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.KryptonMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.XenonMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.ArgonMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.VioletMoss, Type, ConvertMoss);
+            TileLoader.RegisterConversion(TileID.RainbowMoss, Type, ConvertMoss);
             TileLoader.RegisterSimpleConversion(TileID.Sandstone, Type, SandType);
             TileLoader.RegisterSimpleConversion(TileID.HardenedSand, Type, SandType);
             TileLoader.RegisterSimpleConversion(TileID.Sand, Type, SandType);
             TileLoader.RegisterSimpleConversion(TileID.ClayBlock, Type, ClayType);
-
-            // Chairs and Workbenches aren't normally converted by solutions, so there's no sensible fallback to register.
-            // We could register a purifying conversion for these too if we wanted
-            //TileLoader.RegisterConversion(TileID.Chairs, Type, ConvertChairs);
-            //TileLoader.RegisterConversion(TileID.WorkBenches, Type, ConvertWorkbenches);
-            TileLoader.RegisterConversion(TileID.Stalactite, Type, ConvertRubble);
-            TileLoader.RegisterConversion(TileID.SmallPiles, Type, ConvertRubble);
-            TileLoader.RegisterConversion(TileID.LargePiles, Type, ConvertRubble);
-            TileLoader.RegisterConversion(TileID.LargePiles2, Type, ConvertRubble);
         }
 
         public bool ConvertGrass(int i, int j, int type, int conversionType)
@@ -274,7 +270,25 @@ namespace AerovelenceMod.Content.Items.Tools
             ConvertRubble(i, j - 1, tileTypeAbove, conversionType);
             ConvertRubble(i, j + 1, tileTypeBelow, conversionType);
 
-            //WorldGen.ConvertTile(i, j, StoneType);
+            WorldGen.ConvertTile(i, j, StoneType);
+
+            return false;
+        }
+
+        public bool ConvertMoss(int i, int j, int type, int conversionType)
+        {
+            int tileTypeAbove = -1;
+            if (j > 1 && Main.tile[i, j - 1].HasTile)
+                tileTypeAbove = Main.tile[i, j - 1].TileType;
+
+            int tileTypeBelow = -1;
+            if (j > 1 && Main.tile[i, j + 1].HasTile)
+                tileTypeBelow = Main.tile[i, j + 1].TileType;
+
+            ConvertRubble(i, j - 1, tileTypeAbove, conversionType);
+            ConvertRubble(i, j + 1, tileTypeBelow, conversionType);
+
+            WorldGen.ConvertTile(i, j, MossType);
 
             return false;
         }
@@ -358,47 +372,197 @@ namespace AerovelenceMod.Content.Items.Tools
             int desiredRubbleType = -1;
             bool shortRubble = false;
 
+            short resultingVariants;
+            short frameVariant;
+
             if (!TargetRubble.Contains(type))
                 return false;
 
-            if (Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType == type)
+            Tile tileTarget = Main.tile[i, j];
+
+            Tile tileAbove = Main.tile[i, j - 1];
+            int tileTypeAbove = -1;
+            if (j > 1 && tileAbove.HasTile)
+                tileTypeAbove = tileAbove.TileType;
+
+            Tile tileBelow = Main.tile[i, j + 1];
+            int tileTypeBelow = -1;
+            if (j > -1 && tileBelow.HasTile)
+                tileTypeBelow = tileBelow.TileType;
+
+            Tile tileRight = Main.tile[i + 1, j];
+            int tileTypeRight = -1;
+            if (i > -1 && tileRight.HasTile)
+                tileTypeRight = tileRight.TileType;
+
+            Tile tileLeft = Main.tile[i - 1, j];
+            int tileTypeLeft = -1;
+            if (i > 1 && tileLeft.HasTile)
+                tileTypeLeft = tileLeft.TileType;
+
+            Tile tileTwiceLeft = Main.tile[i - 2, j];
+            int tileTypeTwiceLeft = -1;
+            if (i > 2 && tileTwiceLeft.HasTile)
+                tileTypeTwiceLeft = tileTwiceLeft.TileType;
+
+            Tile tileAboveLeft = Main.tile[i - 1, j - 1];
+            int tileTypeAboveLeft = -1;
+            if (i > 1 && j > 1 && tileAboveLeft.HasTile)
+                tileTypeAboveLeft = tileAboveLeft.TileType;
+
+            Tile tileAboveTwiceLeft = Main.tile[i - 2, j - 1];
+            int tileTypeAboveTwiceLeft = -1;
+            if (i > 2 && j > 1 && tileAboveTwiceLeft.HasTile)
+                tileTypeAboveTwiceLeft = tileAboveTwiceLeft.TileType;
+
+            // Ensure operation is done on bottom and right-most tile of the rubble
+            if (tileBelow.HasTile && tileBelow.TileType == type)
             {
-                j++;
+                return ConvertRubble(i, j + 1, type, conversionType);
             }
-            else if ((!Main.tile[i, j + 1].HasTile && Main.tile[i, j - 1].HasTile && Main.tile[i, j - 1].TileType != type) ||
-                (!Main.tile[i, j - 1].HasTile && Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType != type))
+            // Small pile handling of this is after tile replacement to avoid infinite loops back and forth
+            if (tileRight.HasTile && tileRight.TileType == type && !(type == TileID.Stalactite || type == TileID.SmallPiles))
             {
-                 shortRubble = true;
+                return ConvertRubble(i + 1, j, type, conversionType);
+            }
+
+            if ((!tileBelow.HasTile && tileAbove.HasTile && tileAbove.TileType != type) ||
+                (!tileAbove.HasTile && tileBelow.HasTile && tileBelow.TileType != type))
+            {
+                shortRubble = true;
             }
 
             switch (type)
             {
                 case TileID.Stalactite:
-                    if (Main.tile[i, j + 1].HasTile)
+                    if (tileBelow.HasTile && Main.tileSolid[tileBelow.TileType] && !tileBelow.TopSlope && !tileBelow.IsHalfBlock)
                     {
-                        desiredRubbleType = Rubble1x2FloorType;
                         if (shortRubble)
                         {
                             desiredRubbleType = Rubble1x1FloorType;
+                            resultingVariants = 12;
+                        }
+                        else
+                        {
+                            desiredRubbleType = Rubble1x2FloorType;
+                            resultingVariants = 6;
                         }
                     }
                     else
                     {
-                        desiredRubbleType = Rubble1x2CeilingType;
                         if (shortRubble)
                         {
                             desiredRubbleType = Rubble1x1CeilingType;
-                            j++;
+                            resultingVariants = 6;
+                        }
+                        else
+                        {
+                            desiredRubbleType = Rubble1x2CeilingType;
+                            resultingVariants = 5;
                         }
                     }
 
-                    Main.tile[i, j - 1].TileType = (ushort)desiredRubbleType;
-                    Main.tile[i, j].TileType = (ushort)desiredRubbleType;
+                    if (shortRubble)
+                    {
+                        tileTarget.TileType = (ushort)desiredRubbleType;
 
-                    Main.tile[i, j - 1].TileFrameY = 0;
-                    Main.tile[i, j].TileFrameY = 18;
+                        tileTarget.TileFrameX = (short)(WorldGen.genRand.Next(resultingVariants) * 18);
 
-                    WorldGen.ConvertTile(i, j, desiredRubbleType);
+                        tileTarget.TileFrameY = 0;
+
+                        if (Main.netMode != NetmodeID.SinglePlayer)
+                        {
+                            NetMessage.SendTileSquare(-1, i, j);
+                        }
+                    }
+                    else
+                    {
+                        tileAbove.TileType = (ushort)desiredRubbleType;
+                        tileTarget.TileType = (ushort)desiredRubbleType;
+
+                        frameVariant = (short)(WorldGen.genRand.Next(resultingVariants) * 18);
+                        tileAbove.TileFrameX = frameVariant;
+                        tileTarget.TileFrameX = frameVariant;
+
+                        tileAbove.TileFrameY = 0;
+                        tileTarget.TileFrameY = 18;
+
+                        if (Main.netMode != NetmodeID.SinglePlayer)
+                        {
+                            NetMessage.SendTileSquare(-1, i, j - 1, 1, 2);
+                        }   
+                    }
+
+                    // WorldGen.ConvertTile() Causes rubble tiles to break. Manually handling tile framing and typing solves the issue. 
+                    //WorldGen.ConvertTile(i, j, desiredRubbleType);
+                    break;
+
+                case TileID.SmallPiles:
+                    // Would have included logic for 2x1 rubble but we don't have assets for it so all small piles will become 1x1 rubble
+                    desiredRubbleType = Rubble1x1FloorType;
+                    resultingVariants = 12;
+
+                    tileTarget.TileType = (ushort)desiredRubbleType;
+
+                    frameVariant = (short)(WorldGen.genRand.Next(resultingVariants));
+                    tileTarget.TileFrameX = (short)(frameVariant * 18);
+
+                    tileTarget.TileFrameY = 0;
+
+                    if (Main.netMode != NetmodeID.SinglePlayer)
+                    {
+                        NetMessage.SendTileSquare(-1, i, j);
+                    }
+
+                    // Necessary or else adjacent strings of small piles would be replaced with a single one
+                    if (tileLeft.HasTile && tileLeft.TileType == TileID.SmallPiles)
+                    {
+                        ConvertRubble(i - 1, j, type, conversionType);
+                    }
+                    else if (tileRight.HasTile && tileRight.TileType == TileID.SmallPiles)
+                    {
+                        ConvertRubble(i + 1, j, type, conversionType);
+                    }
+
+                    // WorldGen.ConvertTile() Causes rubble tiles to break. Manually handling tile framing and typing solves the issue. 
+                    //WorldGen.ConvertTile(i, j, desiredRubbleType);
+                    break;
+
+                case TileID.LargePiles:
+                case TileID.LargePiles2:
+                    // Thankfully for once all rubble of these tile ids are the same size
+                    desiredRubbleType = Rubble3x2FloorType;
+                    resultingVariants = 6;
+
+                    tileAboveTwiceLeft.TileType = (ushort)desiredRubbleType;
+                    tileAboveLeft.TileType = (ushort)desiredRubbleType;
+                    tileAbove.TileType = (ushort)desiredRubbleType;
+                    tileTwiceLeft.TileType = (ushort)desiredRubbleType;
+                    tileLeft.TileType = (ushort)desiredRubbleType;
+                    tileTarget.TileType = (ushort)desiredRubbleType;
+
+                    frameVariant = (short)WorldGen.genRand.Next(resultingVariants);
+                    tileAboveTwiceLeft.TileFrameX = (short)(frameVariant * 3 * 18);
+                    tileAboveLeft.TileFrameX = (short)((frameVariant * 3 + 1) * 18);
+                    tileAbove.TileFrameX = (short)((frameVariant * 3 + 2) * 18);
+                    tileTwiceLeft.TileFrameX = (short)(frameVariant * 3 * 18);
+                    tileLeft.TileFrameX = (short)((frameVariant * 3 + 1) * 18);
+                    tileTarget.TileFrameX = (short)((frameVariant * 3 + 2) * 18);
+
+                    tileAboveTwiceLeft.TileFrameY = 0;
+                    tileAboveLeft.TileFrameY = 0;
+                    tileAbove.TileFrameY = 0;
+                    tileTwiceLeft.TileFrameY = 18;
+                    tileLeft.TileFrameY = 18;
+                    tileTarget.TileFrameY = 18;
+
+                    if (Main.netMode != NetmodeID.SinglePlayer)
+                    {
+                        NetMessage.SendTileSquare(-1, i - 2, j - 1, 3, 2);
+                    }
+
+                    // WorldGen.ConvertTile() Causes rubble tiles to break. Manually handling tile framing and typing solves the issue. 
+                    //WorldGen.ConvertTile(i, j, desiredRubbleType);
                     break;
             }
 

@@ -22,6 +22,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             //Main.tileMerge[Type][Mod.Find<ModTile>("CavernStone").Type] = true;
             //Main.tileMerge[Type][Mod.Find<ModTile>("ChargedStone").Type] = true;
             Main.tileMergeDirt[Type] = true;
+            Main.tileBlendAll[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
             AddMapEntry(new Color(80, 110, 170));

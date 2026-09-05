@@ -1,3 +1,4 @@
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -66,33 +67,17 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             b = 0.200f;
         }
 
-        // Needs to follow whatever CavernStoneTile.cs does for glowmask stuff
-        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Tile tile = Main.tile[i, j];
 
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-
-            // Draw original texture
-            spriteBatch.Draw(
-                TextureAssets.Tile[Type].Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
-                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
-                Lighting.GetColor(i, j), 0f, default, 1f, SpriteEffects.None, 0f);
+            Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y);
 
             // Pulsating color for glowmask
             Color maskColor = Color.White
                 * MathHelper.Lerp(0.0f, 2f, ((float)Math.Pow(Math.Sin(NoiseHelper.GetDynamicNoise(new Vector2(i * 0.05f, j * 0.05f), Main.GlobalTimeWrappedHourly * 0.1f)), 8)));
 
-            // Draw glowmask
-            spriteBatch.Draw(
-                glowTexture.Value,
-                new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero,
-                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
-                maskColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-
-            // Return false to stop vanilla draw
-            return false;
+            DrawUtils.DrawSlopedTile(glowTexture.Value, position, tile, maskColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 
