@@ -32,7 +32,7 @@ namespace AerovelenceMod.Content.Biomes
 
         public override bool IsBiomeActive(Player player)
         {
-            bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().CavernTiles >= 100;
+            bool b1 = ModContent.GetInstance<CrystalCavernsTileCount>().CavernTiles >= 1000;
             bool b2 = player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
 
             return b1 && b2;

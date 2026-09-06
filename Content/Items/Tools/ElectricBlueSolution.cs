@@ -132,7 +132,6 @@ namespace AerovelenceMod.Content.Items.Tools
         public static int StoneType;
         public static int MossType;
         public static int SandType;
-        public static int ClayType;
         public static int VinesType;
 
         public static int Rubble1x1CeilingType;
@@ -145,7 +144,6 @@ namespace AerovelenceMod.Content.Items.Tools
 
         public override void PostSetupContent()
         {
-
             // Cache the conversion types.
             DirtWallType = ModContent.WallType<CavernDirtWall>();
             UnsafeDirtWallType = ModContent.WallType<CavernDirtWallUnsafe>();
@@ -161,7 +159,6 @@ namespace AerovelenceMod.Content.Items.Tools
             StoneType = ModContent.TileType<CavernStoneTile>();
             MossType = ModContent.TileType<LushGrowthTile>();
             SandType = ModContent.TileType<CavernSandTile>();
-            ClayType = ModContent.TileType<ChargedStoneTile>();
             VinesType = ModContent.TileType<CrystalVines>();
 
             Rubble1x1CeilingType = ModContent.TileType<CavernStone1x1CeilingRubbleNatural>();
@@ -207,25 +204,27 @@ namespace AerovelenceMod.Content.Items.Tools
                         WallID.Sets.Conversion.PureSand[i])
                     targetWallType = UnsafeSandWallType;
                 if (targetWallType != -1)
-                    WallLoader.RegisterSimpleConversion(i, Type, targetWallType);
+                    WallLoader.RegisterConversion(i, Type, targetWallType);
             }
 
             // We register a conversion method and fallback separately rather than using RegisterSimpleConversion, because ConvertGrass has custom logic for converting trees on the tile above
+
             TileLoader.RegisterConversion(TileID.Grass, Type, ConvertGrass);
             TileLoader.RegisterConversionFallback(GrassType, TileID.Grass, Type);
-
-            bool Purify(int i, int j, int type, int conversionType)
-            {
-                WorldGen.ConvertTile(i, j, TileID.Grass);
-                return false;
-            }
-            TileLoader.RegisterConversion(GrassType, BiomeConversionID.Purity, Purify);
-            TileLoader.RegisterConversion(GrassType, BiomeConversionID.PurificationPowder, Purify);
-            TileLoader.RegisterConversion(GrassType, BiomeConversionID.Chlorophyte, Purify);
+            TileLoader.RegisterConversion(GrassType, BiomeConversionID.Purity, TileID.Grass);
+            TileLoader.RegisterConversion(GrassType, BiomeConversionID.PurificationPowder, TileID.Grass);
 
             // This registers a conversion from the base tile to the modded tile, as well as a fallback from the modded tile to the base tile, so other solutions can convert the modded tile (eg to Ebonstone)
             TileLoader.RegisterSimpleConversion(TileID.Dirt, Type, DirtType);
+            TileLoader.RegisterConversion(DirtType, BiomeConversionID.Corruption, TileID.Dirt);
+            TileLoader.RegisterConversion(DirtType, BiomeConversionID.Crimson, TileID.Dirt);
+            TileLoader.RegisterConversion(DirtType, BiomeConversionID.Hallow, TileID.Dirt);
+
             TileLoader.RegisterConversion(TileID.Stone, Type, ConvertStone);
+            TileLoader.RegisterConversionFallback(StoneType, TileID.Stone, Type);
+            TileLoader.RegisterConversion(StoneType, BiomeConversionID.Purity, TileID.Stone);
+            TileLoader.RegisterConversion(StoneType, BiomeConversionID.PurificationPowder, TileID.Stone);
+
             TileLoader.RegisterConversion(TileID.GreenMoss, Type, ConvertMoss);
             TileLoader.RegisterConversion(TileID.BrownMoss, Type, ConvertMoss);
             TileLoader.RegisterConversion(TileID.RedMoss, Type, ConvertMoss);
@@ -237,10 +236,18 @@ namespace AerovelenceMod.Content.Items.Tools
             TileLoader.RegisterConversion(TileID.ArgonMoss, Type, ConvertMoss);
             TileLoader.RegisterConversion(TileID.VioletMoss, Type, ConvertMoss);
             TileLoader.RegisterConversion(TileID.RainbowMoss, Type, ConvertMoss);
-            TileLoader.RegisterSimpleConversion(TileID.Sandstone, Type, SandType);
-            TileLoader.RegisterSimpleConversion(TileID.HardenedSand, Type, SandType);
-            TileLoader.RegisterSimpleConversion(TileID.Sand, Type, SandType);
-            TileLoader.RegisterSimpleConversion(TileID.ClayBlock, Type, ClayType);
+            TileLoader.RegisterConversionFallback(MossType, TileID.GreenMoss, Type);
+            TileLoader.RegisterConversion(MossType, BiomeConversionID.Purity, TileID.GreenMoss);
+            TileLoader.RegisterConversion(MossType, BiomeConversionID.PurificationPowder, TileID.GreenMoss);
+
+            TileLoader.RegisterConversion(TileID.Sand, Type, ConvertSandstone);
+            TileLoader.RegisterConversion(TileID.Sandstone, Type, ConvertSandstone);
+            TileLoader.RegisterConversion(TileID.HardenedSand, Type, ConvertSandstone);
+            TileLoader.RegisterConversionFallback(SandType, TileID.Sandstone, Type);
+            TileLoader.RegisterConversion(SandType, BiomeConversionID.Purity, TileID.Sand);
+            TileLoader.RegisterConversion(SandType, BiomeConversionID.PurificationPowder, TileID.Sand);
+
+
         }
 
         public bool ConvertGrass(int i, int j, int type, int conversionType)
@@ -289,6 +296,24 @@ namespace AerovelenceMod.Content.Items.Tools
             ConvertRubble(i, j + 1, tileTypeBelow, conversionType);
 
             WorldGen.ConvertTile(i, j, MossType);
+
+            return false;
+        }
+
+        public bool ConvertSandstone(int i, int j, int type, int conversionType)
+        {
+            int tileTypeAbove = -1;
+            if (j > 1 && Main.tile[i, j - 1].HasTile)
+                tileTypeAbove = Main.tile[i, j - 1].TileType;
+
+            int tileTypeBelow = -1;
+            if (j > 1 && Main.tile[i, j + 1].HasTile)
+                tileTypeBelow = Main.tile[i, j + 1].TileType;
+
+            ConvertRubble(i, j - 1, tileTypeAbove, conversionType);
+            ConvertRubble(i, j + 1, tileTypeBelow, conversionType);
+
+            WorldGen.ConvertTile(i, j, SandType);
 
             return false;
         }
@@ -568,54 +593,5 @@ namespace AerovelenceMod.Content.Items.Tools
 
             return false;
         }
-
-        //public bool ConvertChairs(int i, int j, int type, int conversionType)
-        //{
-        //    // Find the bottom of the chair
-        //    if (Main.tile[i, j + 1].HasTile && Main.tile[i, j + 1].TileType == TileID.Chairs)
-        //        j++;
-
-        //    Tile tileTop = Main.tile[i, j - 1];
-        //    Tile tileBottom = Main.tile[i, j];
-
-        //    // Manually convert the top part of the chair, and then the bottom half through WorldGen.Convert so it automatically handles the framing and syncing
-        //    tileTop.TileType = (ushort)ChairType;
-
-
-        //    // Reset the Y frame to be within the bounds of examplechair's tilesheet
-        //    tileTop.TileFrameY = 0;
-        //    tileBottom.TileFrameY = 18;
-
-        //    WorldGen.ConvertTile(i, j, ChairType);
-        //    return false;
-        //}
-
-        //public bool ConvertWorkbenches(int i, int j, int type, int conversionType)
-        //{
-        //    // Find the right of the workbench
-        //    if (Main.tile[i + 1, j].HasTile && Main.tile[i + 1, j].TileType == TileID.WorkBenches)
-        //        i++;
-
-        //    Tile tileLeft = Main.tile[i - 1, j];
-        //    Tile tileRight = Main.tile[i, j];
-
-        //    // Manually convert the right part of the workbench, and then the right half through WorldGen.Convert so it automatically handles the framing and syncing
-        //    tileLeft.TileType = (ushort)WorkbenchType;
-
-        //    // Reset the X frame to be within the bounds of exampleworkbench's tilesheet
-        //    tileLeft.TileFrameX = 0;
-        //    tileRight.TileFrameX = 18;
-
-        //    WorldGen.ConvertTile(i, j, WorkbenchType);
-        //    return false;
-        //}
-
-        //public enum ConvertType
-        //{
-        //    Pure,
-        //    Corrupt,
-        //    Crimson,
-        //    Hallow
-        //}
     }
 }

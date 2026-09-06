@@ -1,4 +1,5 @@
 using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -58,6 +59,27 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                 WorldGen.SquareTileFrame(x, y, true);
             }
             return false;
+        }
+
+        public override void RandomUpdate(int i, int j)
+        {
+            Tile tile = Framing.GetTileSafely(i, j);
+            Tile tileAbove = Framing.GetTileSafely(i, j - 1);
+            if (!tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
+            {
+                if (tile.Slope == SlopeType.Solid && !tile.IsHalfBlock)
+                {
+                    tileAbove.TileType = (ushort)ModContent.TileType<LushFlora>();
+                    tileAbove.HasTile = true;
+                    tileAbove.TileFrameY = (short)(WorldGen.genRand.Next(3) * 18);
+                    tileAbove.TileFrameX = 0;
+                    WorldGen.SquareTileFrame(i, j - 1, true);
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendTileSquare(-1, i, j - 1, 3, TileChangeType.None);
+                    }
+                }
+            }
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

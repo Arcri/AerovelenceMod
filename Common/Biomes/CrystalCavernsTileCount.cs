@@ -23,12 +23,13 @@ namespace AerovelenceMod.Content.Biomes
         {
             FieldsTiles = tileCounts[ModContent.TileType<CrystalGrassTile>()] +
                           tileCounts[ModContent.TileType<CrystalDirtTile>()] +
-                          tileCounts[ModContent.TileType<CavernStoneTile>()];
+                          tileCounts[ModContent.TileType<CavernStoneTile>()] +
+                          tileCounts[ModContent.TileType<CavernSandTile>()];
 
-            CavernTiles = tileCounts[ModContent.TileType<CavernStoneTile>()] +
-                          tileCounts[ModContent.TileType<CavernCrystalTile>()];
-
-            //CitadelTiles = tileCounts[ModContent.TileType<CitadelStone>()];
+            CavernTiles = tileCounts[ModContent.TileType<CrystalGrassTile>()] +
+                          tileCounts[ModContent.TileType<CrystalDirtTile>()] +
+                          tileCounts[ModContent.TileType<CavernStoneTile>()] +
+                          tileCounts[ModContent.TileType<CavernSandTile>()];
         }
     }
 }

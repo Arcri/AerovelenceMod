@@ -422,19 +422,19 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                 ShapeData lushBiomeLowerOrigins = new ShapeData();
                 WorldUtils.Gen(upperUndergroundOrigin, upperUndergroundShape, Actions.Chain(new GenAction[]
                 {
-                    new Modifiers.Dither(0.999925),
+                    new Modifiers.Dither(0.99994),
                     new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
                     new Actions.Blank().Output(lushBiomeUpperOrigins)
                 }));
                 WorldUtils.Gen(lowerUndergroundOrigin, lowerUndergroundShape, Actions.Chain(new GenAction[]
                 {
                     new Modifiers.Flip(false, true),
-                    new Modifiers.Dither(0.999925),
+                    new Modifiers.Dither(0.99994),
                     new Modifiers.OnlyTiles(StoneTile, DirtTile, SandTile, ChargedTile),
                     new Actions.Blank().Output(lushBiomeLowerOrigins)
                 }));
 
-                int lushBiomeSize = (int)(30 * WorldSizeScale);
+                int lushBiomeSize = (int)(25 * WorldSizeScale);
 
                 for (int i = 0; i < (int)(200 * WorldSizeScale); i++)
                 {

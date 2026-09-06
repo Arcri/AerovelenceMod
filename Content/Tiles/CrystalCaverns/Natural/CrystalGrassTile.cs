@@ -89,9 +89,9 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
             Tile tile = Framing.GetTileSafely(i, j);
             Tile tileBelow = Framing.GetTileSafely(i, j + 1);
             Tile tileAbove = Framing.GetTileSafely(i, j - 1);
-            if (WorldGen.genRand.NextBool(25) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
+            if (WorldGen.genRand.NextBool(10) && !tileAbove.HasTile && tile.LiquidType != LiquidID.Lava)
             {
-                if (!tile.BottomSlope && !tile.TopSlope && !tile.IsHalfBlock && !tile.TopSlope)
+                if (tile.Slope == SlopeType.Solid && !tile.IsHalfBlock)
                 {
                     tileAbove.TileType = (ushort)ModContent.TileType<CrystalFlora>();
                     tileAbove.HasTile = true;
@@ -104,7 +104,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                     }
                 }
             }
-            if (WorldGen.genRand.NextBool(15) && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
+            if (WorldGen.genRand.NextBool(10) && !tileBelow.HasTile && tile.LiquidType != LiquidID.Lava)
             {
                 if (!tile.BottomSlope)
                 {
@@ -114,21 +114,6 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural
                     if (Main.netMode == NetmodeID.Server)
                     {
                         NetMessage.SendTileSquare(-1, i, j + 1, 3, TileChangeType.None);
-                    }
-                }
-            }
-            int tileX, tileY;
-            for (int y = -1; y <= 1; y++)
-            {
-                for (int x1 = -1; x1 <= 1; x1++)
-                {
-                    tileX = i + x1;
-                    tileY = j + y;
-                    if (!WorldGen.InWorld(i, j, 0)) continue;
-                    if (Main.tile[tileX, tileY].TileType == TileID.MushroomGrass && Main.rand.NextBool(4))
-                    {
-                        Main.tile[tileX, tileY].TileType = (ushort)ModContent.TileType<CrystalGrassTile>();
-                        WorldGen.SquareTileFrame(tileX, tileY, true);
                     }
                 }
             }
