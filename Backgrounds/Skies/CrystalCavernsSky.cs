@@ -160,7 +160,7 @@ namespace AerovelenceMod.Backgrounds.Skies
                     //texture = bolts[i].FlashTexture;
                 }
                 Vector2 vector3 = Main.screenPosition + new Vector2(Main.screenWidth >> 1, Main.screenHeight >> 1);
-                Vector2 position = (bolts[i].Position - vector3) * new Vector2(1f / bolts[i].Depth, 0.9f / bolts[i].Depth) + vector3 - Main.screenPosition;
+                Vector2 position = (bolts[i].Position - vector3) * new Vector2(1f / bolts[i].Depth, 0.6f / bolts[i].Depth) + vector3 - Main.screenPosition;
                 float lifeColorDecay = life / 30f;
                 spriteBatch.Draw(
                     texture: texture,
@@ -172,7 +172,7 @@ namespace AerovelenceMod.Backgrounds.Skies
                     scale: 5f / bolts[i].Depth,
                     effects: 0,
                     layerDepth: 0f
-                    );
+                    );  
             }
         }
     }

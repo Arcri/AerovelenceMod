@@ -3,6 +3,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent.Drawing;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
 {
@@ -16,6 +18,8 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
             Main.tileNoFail[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileLighted[Type] = false;
+            TileID.Sets.IsVine[Type] = true;
+            TileID.Sets.VineThreads[Type] = true;
 
             AddMapEntry(new Color(100, 125, 255));
 
@@ -83,6 +87,19 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
                     }
                 }
             }
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            r = 0f;
+            g = 0.050f;
+            b = 0.200f;
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Main.instance.TilesRenderer.CrawlToTopOfVineAndAddSpecialPoint(j, i);
+            return false;
         }
     }
 }

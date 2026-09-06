@@ -1,9 +1,13 @@
+using AerovelenceMod.Common.Utilities;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria;
-using Terraria.DataStructures;
-using Microsoft.Xna.Framework;
 
 namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
 {
@@ -15,6 +19,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
             Main.tileCut[Type] = true;
             Main.tileNoFail[Type] = true;
             Main.tileMergeDirt[Type] = true;
+            TileID.Sets.SwaysInWindBasic[Type] = true;
             DustType = 116;
             HitSound = SoundID.Grass;
             AddMapEntry(new Color(100, 125, 255));
@@ -37,6 +42,13 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
                 WorldGen.KillTile(i, j);
             }
             return true;
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            r = 0f;
+            g = 0.050f;
+            b = 0.200f;
         }
     }
 }

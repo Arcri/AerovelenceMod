@@ -17,6 +17,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Natural.Flora
             Main.tileCut[Type] = true;
             Main.tileNoFail[Type] = true;
             Main.tileMergeDirt[Type] = true;
+            TileID.Sets.SwaysInWindBasic[Type] = true;
             DustType = 116;
             HitSound = SoundID.Grass;
             AddMapEntry(new Color(60, 120, 85));
