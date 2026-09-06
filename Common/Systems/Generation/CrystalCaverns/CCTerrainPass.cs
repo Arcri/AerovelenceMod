@@ -38,6 +38,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
         public ushort DirtWall { get; private set; }
         public ushort StoneWall { get; private set; }
         public ushort BrickWall { get; private set; }
+        public ushort GrassWall { get; private set; }
         public ushort LushWall { get; private set; }
         public ushort LivingWoodWall { get; private set; }
         public ushort LivingLeafWall { get; private set; }
@@ -54,6 +55,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
         private ushort[] ReplaceWithStoneWallsSurface { get; set; }
         private ushort[] ReplaceWithBrickWalls { get; set; }
+        private ushort[] ReplaceWithGrassWalls { get; set; }
 
         public Point Origin { get; private set; }
         public Point TumblerTunnelEnd { get; private set; }
@@ -122,6 +124,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
             DirtWall = (ushort)ModContent.WallType<CavernDirtWallUnsafe>();
             StoneWall = (ushort)ModContent.WallType<CavernStoneWallUnsafe>();
             BrickWall = (ushort)ModContent.WallType<CitadelBrickWall>();
+            GrassWall = (ushort)ModContent.WallType <CrystalGrassWall>();
             LushWall = (ushort)ModContent.WallType<LushGrowthWall>();
             LivingWoodTile = TileID.LivingWood;
             LivingLeafTile = TileID.LeafBlock;
@@ -138,8 +141,9 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
             SurfaceOres = [TileID.Tin, TileID.Copper, TileID.Iron, TileID.Lead];
 
-            ReplaceWithStoneWallsSurface = [WallID.EbonstoneUnsafe, WallID.IceUnsafe];
+            ReplaceWithStoneWallsSurface = [WallID.EbonstoneUnsafe, WallID.CrimstoneUnsafe, WallID.IceUnsafe, WallID.Sandstone];
             ReplaceWithBrickWalls = [WallID.SandstoneBrick, BrickWall];
+            ReplaceWithGrassWalls = [WallID.GrassUnsafe, WallID.FlowerUnsafe];
 
             ClearTiles = [TileID.BreakableIce];
 
@@ -266,9 +270,10 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
                     }));
                 }
 
-                GenSurfaceWalls(ReplaceWithStoneWallsSurface.Concat(ReplaceWithBrickWalls.Concat([LivingWoodWall, BrickWall])).ToArray(), DirtWall, false);
-                GenSurfaceWalls(ReplaceWithBrickWalls.Concat([LivingWoodWall, BrickWall]).ToArray(), StoneWall, false);
+                GenSurfaceWalls(ReplaceWithStoneWallsSurface, StoneWall, true);
+                GenSurfaceWalls(ReplaceWithGrassWalls, GrassWall, true);
                 GenSurfaceWalls(ReplaceWithBrickWalls, BrickWall, true);
+                GenSurfaceWalls(ReplaceWithStoneWallsSurface.Concat([LivingWoodWall, StoneWall, GrassWall, BrickWall]).ToArray(), DirtWall, false);
 
                 // Surface to underground wall dithering
                 void TransitionWallDithering(ushort[] targetWalls, ushort replaceWith, bool onlyWalls)
