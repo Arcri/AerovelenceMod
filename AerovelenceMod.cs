@@ -103,7 +103,7 @@ namespace AerovelenceMod
 				string tumblerInternalName = "CrystalTumbler";
 				float tumblerWeight = 1.8f;
 				Func<bool> tumblerDowned = () => DownedWorld.DownedCrystalTumbler;
-				int tumblerBossType = ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler2>();
+				int tumblerBossType = ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler>();
 				int tumblerSpawnItem = ModContent.ItemType<Content.Items.BossSummons.LargeGeode>();
 				List<int> tumblerCollectibles = new List<int>()
 				{
@@ -113,12 +113,12 @@ namespace AerovelenceMod
                 LocalizedText tumblerSpawnInfo = Terraria.Localization.Language.GetText("Mods.AerovelenceMod.NPCs.CrystalTumbler.SpawnInfo").WithFormatArgs("[i:" + ModContent.ItemType<LargeGeode>() + "]");
 				Action<SpriteBatch, Rectangle, Color> tumblerPortrait = (SpriteBatch spriteBatch, Rectangle rect, Color color) =>
 				{
-					Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumbler2").Value;
-					Vector2 centered = new Vector2(rect.X + (rect.Width / 2) - (texture.Width / 2), rect.Y + (rect.Height / 2) - (texture.Height / 2));
-					spriteBatch.Draw(texture, centered, color);
-                    Texture2D eyeTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumbler2Eye").Value;
-                    Vector2 eyeCentered = new Vector2(rect.X + (rect.Width / 2) - (texture.Width / 2), rect.Y + (rect.Height / 2) - (texture.Height / 2));
-                    spriteBatch.Draw(eyeTexture, eyeCentered, color);
+					Texture2D texture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumbler").Value;
+					Rectangle frame = texture.Frame(1, 2, 0, 0);
+					Vector2 centered = rect.Center.ToVector2();
+					spriteBatch.Draw(texture, centered, frame, color, 0f, frame.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                    Texture2D eyeTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumblerEye").Value;
+                    spriteBatch.Draw(eyeTexture, centered, null, color, 0f, eyeTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
                 };
 				bossChecklistMod.Call(

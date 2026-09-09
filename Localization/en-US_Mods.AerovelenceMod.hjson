@@ -90,7 +90,6 @@ NPCs: {
 		Census.SpawnCondition: Slay the Crystal Tumbler down in the depths of the Crystal Caverns
 	}
 
-	CrystalTumbler2.DisplayName: Crystal Tumbler2
 	MiniMoth.DisplayName: Mini Moth
 	CaveSlime.DisplayName: Cave Slime
 	CrystalSlime.DisplayName: Crystal Slime
@@ -104,6 +103,8 @@ NPCs: {
 	ElectricTetra.DisplayName: Electric Tetra
 	Lumurker.DisplayName: Lumurker
 	Bomber.DisplayName: Bomber
+	TumblerConductiveCrystal.DisplayName: Tumbler Conductive Crystal
+	TumblerCrystalBud.DisplayName: Tumbler Crystal Bud
 }
 
 Buffs: {
@@ -1618,6 +1619,22 @@ Projectiles: {
 	BooyahBombProj.DisplayName: Booyah Bomb Proj
 	BooyahHeldProj.DisplayName: Booyah Held Proj
 	BooyahImpactVFX.DisplayName: Booyah Impact V F X
+	TumblerAimLine.DisplayName: Tumbler Aim Line
+	TumblerAuraPulse.DisplayName: Tumbler Aura Pulse
+	TumblerBossAura.DisplayName: Tumbler Boss Aura
+	TumblerChargeBall.DisplayName: Tumbler Charge Ball
+	TumblerChargedKnifeBall.DisplayName: Tumbler Charged Knife Ball
+	TumblerConductiveField.DisplayName: Tumbler Conductive Field
+	TumblerFilamentRamp.DisplayName: Filament Ramp
+	TumblerMagneticPlatform.DisplayName: Magnetic Platform
+	TumblerPylonField.DisplayName: Pylon Field
+	TumblerKnifeBall.DisplayName: Tumbler Knife Ball
+	TumblerKnifeCrystal.DisplayName: Tumbler Knife Crystal
+	TumblerLightningBolt.DisplayName: Tumbler Lightning Bolt
+	TumblerMagneticRock.DisplayName: Tumbler Magnetic Rock
+	TumblerPlatformField.DisplayName: Tumbler Platform Field
+	TumblerSpark.DisplayName: Tumbler Spark
+	TumblerStar.DisplayName: Tumbler Star
 }
 
 Configs: {

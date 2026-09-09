@@ -1,0 +1,394 @@
+using System;
+using System.IO;
+using AerovelenceMod.Content.Items.BossSummons;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+
+namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
+{
+    public class TumblerMagneticPlatform : ModProjectile
+    {
+        private int age;
+        private int crushTimer = -1;
+        private int warningTicks = 90;
+        private int holdTicks = 45;
+        private float homeX;
+        private float spawnY;
+        private float ceilingY;
+        private float compression;
+        private float springVelocity;
+        private float returnY;
+
+        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectile";
+        public float SurfaceY => Projectile.Top.Y;
+        public Vector2 SurfaceStart => Projectile.TopLeft;
+        public Vector2 SurfaceEnd => Projectile.TopRight;
+        public bool CanStand => age >= Projectile.ai[2] + 35f && Projectile.Opacity >= 0.85f;
+        public bool Crushing => crushTimer >= warningTicks && crushTimer < warningTicks + 140 + holdTicks;
+
+        public static bool IsArenaPlatform(Projectile projectile)
+        {
+            return projectile.active && projectile.type == ModContent.ProjectileType<TumblerMagneticPlatform>();
+        }
+
+        public static int Spawn(NPC boss, Vector2 restingCenter, int delayTicks = 0)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return -1;
+            Vector2 origin = new(restingCenter.X, ArenaData.FloorY + 22f);
+            return Projectile.NewProjectile(boss.GetSource_FromAI(), origin, Vector2.Zero, ModContent.ProjectileType<TumblerMagneticPlatform>(), 0, 0f, Main.myPlayer, boss.whoAmI, restingCenter.Y, Math.Max(0, delayTicks));
+        }
+
+        public static void BeginCrush(NPC boss, int warningTicks = 90, int holdTicks = 45)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile projectile = Main.projectile[i];
+                if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI)
+                    continue;
+                TumblerMagneticPlatform platform = (TumblerMagneticPlatform)projectile.ModProjectile;
+                platform.warningTicks = Math.Max(60, warningTicks);
+                platform.holdTicks = Math.Max(15, holdTicks);
+                platform.crushTimer = 0;
+                projectile.netUpdate = true;
+            }
+        }
+
+        public static void Release(NPC boss)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile projectile = Main.projectile[i];
+                if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI)
+                    continue;
+                TumblerMagneticPlatform platform = (TumblerMagneticPlatform)projectile.ModProjectile;
+                platform.returnY = projectile.Center.Y;
+                platform.crushTimer = platform.warningTicks + 140 + platform.holdTicks;
+                projectile.netUpdate = true;
+            }
+        }
+
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 3;
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 1400;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 128;
+            Projectile.height = 30;
+            Projectile.timeLeft = 3600;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.netImportant = true;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            homeX = Projectile.Center.X;
+            spawnY = Projectile.Center.Y;
+            ceilingY = Projectile.ai[1] - 160f;
+            if (!ArenaData.Valid)
+                return;
+            for (float y = Projectile.ai[1] - 60f; y >= ArenaData.WorldBounds.Top + 16f; y -= 8f)
+            {
+                if (!Collision.SolidCollision(new Vector2(homeX - Projectile.width * 0.5f, y), Projectile.width, 4))
+                    continue;
+                ceilingY = Math.Min(Projectile.ai[1] - 40f, y + 40f);
+                break;
+            }
+        }
+
+        public override bool ShouldUpdatePosition() => false;
+
+        public override bool? CanDamage() => false;
+
+        public override void AI()
+        {
+            int bossIndex = (int)Projectile.ai[0];
+            if (bossIndex < 0 || bossIndex >= Main.maxNPCs || !Main.npc[bossIndex].active || Main.npc[bossIndex].type != ModContent.NPCType<CrystalTumbler>() || Main.npc[bossIndex].ai[0] == (float)TumblerState.Despawn)
+            {
+                Projectile.Kill();
+                return;
+            }
+            Projectile.timeLeft = 3600;
+            age++;
+            if (crushTimer >= 0)
+                crushTimer++;
+            float emergence = MathHelper.Clamp((age - Projectile.ai[2]) / 100f, 0f, 1f);
+            Projectile.Opacity = MathHelper.Clamp((age - Projectile.ai[2]) / 28f, 0f, 1f);
+            float load = 0f;
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                Player player = Main.player[i];
+                if (player.active && !player.dead && player.velocity.Y >= 0f && !player.controlDown && player.Right.X > Projectile.Left.X && player.Left.X < Projectile.Right.X && Math.Abs(player.Bottom.Y - SurfaceY) < 10f)
+                    load = 7f;
+            }
+            springVelocity = (springVelocity + (load - compression) * 0.07f) * 0.78f;
+            compression = MathHelper.Clamp(compression + springVelocity, -2f, 10f);
+            float lift = crushTimer < 0 ? 0f : MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - warningTicks) / 140f, 0f, 1f));
+            int releaseTime = warningTicks + 140 + holdTicks;
+            if (crushTimer == releaseTime)
+                returnY = Projectile.Center.Y;
+            if (crushTimer >= releaseTime)
+            {
+                lift = 1f - MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - releaseTime) / 120f, 0f, 1f));
+                if (crushTimer >= releaseTime + 120)
+                    crushTimer = -1;
+            }
+            float drift = MathF.Sin(age * 0.009f + Projectile.identity * 1.9f) * 15f * (1f - lift);
+            float bob = MathF.Sin(age * 0.019f + Projectile.identity * 1.9f) * 3f;
+            float restY = MathHelper.Lerp(Projectile.ai[1] + bob + compression, ceilingY, lift);
+            if (crushTimer >= releaseTime)
+                restY = MathHelper.Lerp(returnY, Projectile.ai[1] + bob + compression, 1f - lift);
+            Vector2 next = new(homeX + drift * emergence, MathHelper.Lerp(spawnY, restY, MathHelper.SmoothStep(0f, 1f, emergence)));
+            Projectile.Center = next;
+            if (Main.netMode == NetmodeID.Server && age % 90 == 0)
+                Projectile.netUpdate = true;
+            Lighting.AddLight(Projectile.Center, TumblerVFX.PhaseColor(Main.npc[bossIndex].ai[2]).ToVector3() * (0.25f + lift * 0.3f) * Projectile.Opacity);
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(age);
+            writer.Write(crushTimer);
+            writer.Write(warningTicks);
+            writer.Write(holdTicks);
+            writer.Write(homeX);
+            writer.Write(spawnY);
+            writer.Write(ceilingY);
+            writer.Write(compression);
+            writer.Write(springVelocity);
+            writer.Write(returnY);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            age = reader.ReadInt32();
+            crushTimer = reader.ReadInt32();
+            warningTicks = reader.ReadInt32();
+            holdTicks = reader.ReadInt32();
+            homeX = reader.ReadSingle();
+            spawnY = reader.ReadSingle();
+            ceilingY = reader.ReadSingle();
+            compression = reader.ReadSingle();
+            springVelocity = reader.ReadSingle();
+            returnY = reader.ReadSingle();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D rock = TextureAssets.Projectile[Type].Value;
+            Rectangle frame = rock.Frame(1, 3, 0, 0);
+            frame.Inflate(-3, -3);
+            Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/CrispStarPMA").Value;
+            Texture2D bloom = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/SoftGlow64").Value;
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            Vector2 center = Projectile.Center - Main.screenPosition;
+            int bossIndex = (int)Projectile.ai[0];
+            Color color = TumblerVFX.PhaseColor(bossIndex >= 0 && bossIndex < Main.maxNPCs ? Main.npc[bossIndex].ai[2] : 0f);
+            float warning = crushTimer < 0 ? 0f : MathHelper.Clamp(crushTimer / (float)warningTicks, 0f, 1f);
+            float opacity = Projectile.Opacity;
+            Color charged = Color.Lerp(color, new Color(255, 173, 58), warning);
+            spriteBatch.Draw(bloom, center + new Vector2(0f, 14f), null, TumblerVFX.Glow(charged, opacity * (0.16f + warning * 0.18f)), 0f, bloom.Size() * 0.5f, new Vector2(154f, 56f) / bloom.Size(), SpriteEffects.None, 0f);
+            for (int i = -1; i <= 1; i++)
+            {
+                Vector2 piece = center + new Vector2(i * 40f, i == 0 ? 2f : 4f);
+                Vector2 size = new(i == 0 ? 62f : 54f, i == 0 ? 39f : 32f);
+                spriteBatch.Draw(rock, piece, frame, Color.Lerp(lightColor, Color.White, 0.2f) * opacity, i * 0.06f, frame.Size() * 0.5f, size / frame.Size(), i < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                spriteBatch.Draw(rock, piece, frame, TumblerVFX.Glow(charged, opacity * 0.12f), i * 0.06f, frame.Size() * 0.5f, size / frame.Size(), i < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+            }
+            Vector2 left = SurfaceStart - Main.screenPosition;
+            Vector2 right = SurfaceEnd - Main.screenPosition;
+            TumblerVFX.DrawLine(spriteBatch, left + new Vector2(5f, 1f), right - new Vector2(5f, -1f), TumblerVFX.Glow(charged, opacity * 0.65f), 2f);
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 anchor = Vector2.Lerp(left, right, (i + 0.5f) / 5f) + new Vector2(0f, 29f);
+                float swing = MathF.Sin(age * 0.045f + i * 1.8f) * 5f;
+                Vector2 tip = anchor + new Vector2(swing, 9f + MathF.Sin(age * 0.025f + i) * 3f);
+                TumblerVFX.DrawElectricLine(spriteBatch, anchor, tip, charged, opacity * 0.45f, 4, Projectile.identity + i, 1f);
+                spriteBatch.Draw(star, tip, null, TumblerVFX.Glow(charged, opacity * 0.65f), 0f, star.Size() * 0.5f, 12f / star.Width, SpriteEffects.None, 0f);
+            }
+            if (crushTimer >= 0 && crushTimer < warningTicks)
+            {
+                Vector2 target = new(center.X, ceilingY - Projectile.height * 0.5f - Main.screenPosition.Y);
+                TumblerVFX.DrawTelegraph(spriteBatch, new Vector2(center.X, SurfaceY - Main.screenPosition.Y - 12f), target, charged, 0.24f + warning * 0.45f, 32f);
+                TumblerVFX.DrawCorona(spriteBatch, center, 74f, charged, warning * 0.25f, Projectile.identity, 1f);
+                for (int i = 0; i < 3; i++)
+                {
+                    float step = (age * 0.02f + i / 3f) % 1f;
+                    Vector2 arrow = center + new Vector2(0f, -30f - step * 44f);
+                    Color arrowColor = TumblerVFX.Glow(charged, (1f - step) * (0.4f + warning * 0.4f));
+                    TumblerVFX.DrawLine(spriteBatch, arrow + new Vector2(-7f, 7f), arrow, arrowColor, 1.6f);
+                    TumblerVFX.DrawLine(spriteBatch, arrow + new Vector2(7f, 7f), arrow, arrowColor, 1.6f);
+                }
+            }
+            return false;
+        }
+    }
+
+    public class TumblerPlatformCollision : ModSystem
+    {
+        public override void Load()
+        {
+            On_Player.SlopingCollision += ResolvePlatforms;
+        }
+
+        public override void Unload()
+        {
+            On_Player.SlopingCollision -= ResolvePlatforms;
+        }
+
+        private static void ResolvePlatforms(On_Player.orig_SlopingCollision orig, Player player, bool fallThrough, bool ignorePlats)
+        {
+            orig(player, fallThrough, ignorePlats);
+            player.GetModPlayer<TumblerPlatformPlayer>().ResolveStanding(fallThrough || ignorePlats);
+        }
+    }
+
+    public class TumblerPlatformPlayer : ModPlayer
+    {
+        private int platformIndex = -1;
+        private int platformIdentity = -1;
+        private int detachTimer;
+        private Vector2 previousBottom;
+        private Vector2 previousPlatformCenter;
+
+        public override void PreUpdate()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient && Player.whoAmI != Main.myPlayer)
+                return;
+            previousBottom = Player.Bottom;
+            if (detachTimer > 0)
+                detachTimer--;
+            if (Player.dead || !Player.active || Player.controlDown || Player.gravDir < 0f || Player.pulley || Player.GoingDownWithGrapple)
+            {
+                Detach(Player.controlDown ? 16 : 3);
+                return;
+            }
+            if (!TryGetPlatform(out TumblerMagneticPlatform platform))
+                return;
+            if (Player.velocity.Y < -0.5f || Player.justJumped || Player.Right.X <= platform.SurfaceStart.X || Player.Left.X >= platform.SurfaceEnd.X)
+            {
+                Detach(3);
+                return;
+            }
+            Vector2 carry = platform.Projectile.Center - previousPlatformCenter;
+            if (carry.LengthSquared() > 400f)
+            {
+                Detach(6);
+                return;
+            }
+            Vector2 allowed = Collision.TileCollision(Player.position, carry, Player.width, Player.height, true, true, (int)Player.gravDir);
+            if (carry.Y < -0.01f && allowed.Y > carry.Y + 0.5f)
+            {
+                int escapeDirection = Player.Center.X < platform.Projectile.Center.X ? -1 : 1;
+                if (platform.Crushing && Player.whoAmI == Main.myPlayer)
+                    Player.Hurt(PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was caught between a magnetic boulder and the cavern ceiling.")), 22, escapeDirection);
+                Player.velocity = new Vector2(escapeDirection * 5f, 2f);
+                Detach(30);
+                return;
+            }
+            Player.position += allowed;
+            previousBottom += allowed;
+            previousPlatformCenter = platform.Projectile.Center;
+            Player.velocity.Y = 0f;
+            Player.fallStart = (int)(Player.position.Y / 16f);
+        }
+
+        public override void PreUpdateMovement()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient && Player.whoAmI != Main.myPlayer)
+                return;
+            if (Player.velocity.Y < 0f || Player.justJumped || Player.controlDown)
+            {
+                Detach(Player.controlDown ? 16 : 3);
+                return;
+            }
+            if (TryGetPlatform(out TumblerMagneticPlatform platform) && Math.Abs(Player.Bottom.Y - platform.SurfaceY) <= 8f && Player.Right.X > platform.SurfaceStart.X && Player.Left.X < platform.SurfaceEnd.X)
+                Player.velocity.Y = 0f;
+        }
+
+        internal void ResolveStanding(bool fallThrough)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient && Player.whoAmI != Main.myPlayer)
+                return;
+            if (fallThrough || !Player.active || Player.dead || detachTimer > 0 || Player.controlDown || Player.gravDir < 0f || Player.velocity.Y < 0f || Player.justJumped || Player.GoingDownWithGrapple)
+                return;
+            TumblerMagneticPlatform landing = null;
+            float highest = float.MaxValue;
+            if (TryGetPlatform(out TumblerMagneticPlatform current) && Math.Abs(Player.Bottom.Y - current.SurfaceY) <= 8f && Player.Right.X > current.SurfaceStart.X + 3f && Player.Left.X < current.SurfaceEnd.X - 3f)
+            {
+                landing = current;
+                highest = current.SurfaceY;
+            }
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile projectile = Main.projectile[i];
+                if (!TumblerMagneticPlatform.IsArenaPlatform(projectile))
+                    continue;
+                TumblerMagneticPlatform platform = (TumblerMagneticPlatform)projectile.ModProjectile;
+                if (!platform.CanStand || Player.Right.X <= platform.SurfaceStart.X + 3f || Player.Left.X >= platform.SurfaceEnd.X - 3f)
+                    continue;
+                float top = platform.SurfaceY;
+                if (previousBottom.Y > top + 8f || Player.Bottom.Y < top || top >= highest)
+                    continue;
+                landing = platform;
+                highest = top;
+            }
+            if (landing == null)
+            {
+                platformIndex = -1;
+                return;
+            }
+            Vector2 destination = new(Player.position.X, highest - Player.height);
+            if (Collision.SolidCollision(destination, Player.width, Player.height))
+            {
+                Detach(12);
+                return;
+            }
+            Player.position = destination;
+            Player.velocity.Y = 0f;
+            Player.jump = 0;
+            Player.fallStart = (int)(Player.position.Y / 16f);
+            Player.gfxOffY = 0f;
+            platformIndex = landing.Projectile.whoAmI;
+            platformIdentity = landing.Projectile.identity;
+            previousPlatformCenter = landing.Projectile.Center;
+        }
+
+        private bool TryGetPlatform(out TumblerMagneticPlatform platform)
+        {
+            platform = null;
+            if (platformIndex < 0 || platformIndex >= Main.maxProjectiles)
+                return false;
+            Projectile projectile = Main.projectile[platformIndex];
+            if (!TumblerMagneticPlatform.IsArenaPlatform(projectile) || projectile.identity != platformIdentity)
+            {
+                platformIndex = -1;
+                return false;
+            }
+            platform = (TumblerMagneticPlatform)projectile.ModProjectile;
+            return platform.CanStand;
+        }
+
+        private void Detach(int ticks)
+        {
+            platformIndex = -1;
+            platformIdentity = -1;
+            detachTimer = Math.Max(detachTimer, ticks);
+        }
+    }
+}

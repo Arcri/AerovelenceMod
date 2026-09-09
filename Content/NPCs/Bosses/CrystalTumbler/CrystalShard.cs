@@ -1,44 +1,47 @@
-using Terraria;
-using Terraria.ModLoader;
+using System;
 using Microsoft.Xna.Framework;
-using AerovelenceMod.Content.Dusts.GlowDusts;
-using AerovelenceMod.Common.Utilities;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
     public class CrystalShard : ModProjectile
     {
-
         public override void SetDefaults()
         {
-            Projectile.aiStyle = 1;
             Projectile.width = 10;
-            Projectile.height = 10;
-            Projectile.alpha = 0;
-            Projectile.damage = 6;
+            Projectile.height = 20;
+            Projectile.timeLeft = 240;
+            Projectile.penetrate = 1;
             Projectile.friendly = false;
             Projectile.hostile = true;
             Projectile.tileCollide = true;
-            Projectile.ignoreWater = true;
+            Projectile.ignoreWater = false;
         }
-
-        private int dustSpawnTimer = 0;
 
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, Color.Blue.ToVector3() * 0.9f);
+            Projectile.velocity.Y = Math.Min(Projectile.velocity.Y + 0.22f, 12f);
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Lighting.AddLight(Projectile.Center, new Vector3(0.05f, 0.35f, 0.55f));
+        }
 
-            dustSpawnTimer++;
-            if (dustSpawnTimer >= 5)
-            {
-                Vector2 dustVel = Main.rand.NextVector2CircularEdge(1f, 1f) * Main.rand.NextFloat(2f, 3.25f);
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.Lerp(lightColor, Color.DeepSkyBlue, 0.3f), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None);
+            TumblerVFX.BeginAdditive(Main.spriteBatch);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.Cyan * 0.24f, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.1f, SpriteEffects.None);
+            TumblerVFX.EndAdditive(Main.spriteBatch);
+            return false;
+        }
 
-                Dust gd = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<GlowPixelCross>(), dustVel, newColor: Color.SkyBlue, Scale: Main.rand.NextFloat(0.2f, 0.4f));
-                gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5,
-                    preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
-
-                dustSpawnTimer = 0; 
-            }
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.Electrified, 30);
         }
     }
 }

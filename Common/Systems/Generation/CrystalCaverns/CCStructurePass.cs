@@ -2,6 +2,7 @@
 using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
+using AerovelenceMod.Content.Items.BossSummons;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
 using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.CrystalCrescent;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
@@ -174,13 +175,15 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 WorldGen.noTileActions = false;
 
-                StructureStamper.LoadStructure(
+                AeroStructure tumblerArena = StructureStamper.LoadStructure(
                     new Vector2(
                         mainPass.TumblerTunnelEnd.X - 60 + 60 * mainPass.TumblerArenaPolarity,
                         mainPass.TumblerTunnelEnd.Y - 46
                     ),
                     "tumblerarena"
                 ).ProtectStructure();
+                if (tumblerArena != AeroStructure.Empty)
+                    ArenaData.Initialize(tumblerArena.StartPosition.ToPoint());
 
                 PlaceStructureSafely("ancientbridge")
                     .ProtectStructure()

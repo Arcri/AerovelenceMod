@@ -496,14 +496,8 @@ parentDied = true;
                 initialPosition = Projectile.position;
                 crystalTumbler = FindCrystalTumbler();
             }
-            if (crystalTumbler != null)
-            {
-                var tumblerAI = (CrystalTumbler)crystalTumbler.ModNPC;
-                if (!tumblerAI.zapBoss)
-                {
-                    isFadingOut = true;
-                }
-            }
+            if (crystalTumbler == null || !crystalTumbler.active)
+                isFadingOut = true;
             if (isFadingOut)
             {
                 Projectile.alpha += (int)(fadeOutRate * 255);

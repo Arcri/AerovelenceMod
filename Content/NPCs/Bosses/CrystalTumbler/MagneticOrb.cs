@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void AI()
         {
-            int waterLayerTile = ArenaData.WaterLayer;
+            int waterLayerTile = (int)(ArenaData.FloorY / 16f);
             float waterLevelY = waterLayerTile * 16;
             Projectile.rotation += 0.2f;
             if (Projectile.timeLeft > 590)

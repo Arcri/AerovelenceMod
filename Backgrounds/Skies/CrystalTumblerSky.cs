@@ -51,7 +51,7 @@ namespace AerovelenceMod.Backgrounds.Skies
             }
             c.EmitDelegate(() =>
             {
-                bool bossIsActive = NPC.AnyNPCs(ModContent.NPCType<CrystalTumbler2>());
+                bool bossIsActive = NPC.AnyNPCs(ModContent.NPCType<CrystalTumbler>());
                 if (!bossIsActive || crystalTumblerTexture == null)
                     return;
 

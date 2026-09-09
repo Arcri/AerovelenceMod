@@ -101,11 +101,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void TriggerPenalty()
         {
-            NPC tumbler = Main.npc[(int)NPC.ai[0]];
-            if (tumbler.ModNPC is CrystalTumbler crystalTumbler)
-            {
-                crystalTumbler.StartLaserCountdown();
-            }
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC otherBomb = Main.npc[i];

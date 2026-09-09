@@ -8,7 +8,7 @@ using AerovelenceMod.Content.Tiles.Citadel;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria.DataStructures;
-using static AerovelenceMod.Content.Items.BossSummons.LargeGeode;
+using AerovelenceMod.Content.Items.BossSummons;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 {
@@ -33,8 +33,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.position.X = ArenaBoundaries.leftBoundary.X + Projectile.ai[0] * Projectile.width;
-            Projectile.position.Y = ArenaBoundaries.leftBoundary.Y - 200f;
+            Projectile.position.X = ArenaData.OuterArenaBoundaryLeft.X + Projectile.ai[0] * Projectile.width;
+            Projectile.position.Y = ArenaData.OuterArenaBoundaryLeft.Y - 200f;
             Projectile.localAI[0] = Projectile.position.X;
             Projectile.localAI[1] = Projectile.position.Y;
         }

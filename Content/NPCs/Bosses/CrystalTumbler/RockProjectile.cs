@@ -66,7 +66,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (owner == null)
             {
                 owner = Main.npc[(int)Projectile.ai[0]];
-                if (owner == null || !owner.active || owner.type != ModContent.NPCType<CrystalTumbler2>())
+                if (owner == null || !owner.active || owner.type != ModContent.NPCType<CrystalTumbler>())
                 {
                     Projectile.Kill();
                     return false;
@@ -103,7 +103,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
                     SoundStyle stylea = new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollide") with { Volume = .46f, Pitch = 1f, PitchVariance = 0f, };
 
-                    CrystalTumbler.isAttacking = false;
                     SoundEngine.PlaySound(stylea, Projectile.Center);
                     Projectile.damage = 12;
                     if (Projectile.ai[1] == 2)
