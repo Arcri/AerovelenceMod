@@ -267,6 +267,11 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 ModContent.ProjectileType<TumblerAuraPulse>(),
                 ModContent.ProjectileType<TumblerFilamentRamp>(),
                 ModContent.ProjectileType<TumblerPylonField>(),
+                ModContent.ProjectileType<TumblerLoopRail>(),
+                ModContent.ProjectileType<TumblerResidualField>(),
+                ModContent.ProjectileType<TumblerRazeBeam>(),
+                ModContent.ProjectileType<TumblerConvergenceOrb>(),
+                ModContent.ProjectileType<TumblerArenaGate>(),
                 ModContent.ProjectileType<TumblerMagneticPlatform>()
             ];
             for (int i = 0; i < Main.maxProjectiles; i++)
@@ -274,6 +279,8 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 Projectile projectile = Main.projectile[i];
                 if (projectile.active && projectileTypes.Contains(projectile.type))
                 {
+                    if (!clearBarriers && projectile.type == ModContent.ProjectileType<TumblerArenaGate>())
+                        continue;
                     if (preservePlatforms && projectile.type == ModContent.ProjectileType<TumblerMagneticPlatform>())
                         continue;
                     if (projectile.TryGetGlobalProjectile(out TumblerSharedProjectile shared) && (!shared.FromEncounter || projectile.friendly))
@@ -309,6 +316,26 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 temporaryBarrierTiles.Add(new Point(x, y));
                 WorldGen.SquareTileFrame(x, y, true);
             }
+        }
+
+        public static void SetGateClosure(int x, float bottom)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+            bool changed = false;
+            foreach (Point point in temporaryBarrierTiles)
+            {
+                if (point.X != x)
+                    continue;
+                Tile tile = Framing.GetTileSafely(point.X, point.Y);
+                bool open = (point.Y + 1) * 16f > bottom;
+                if (tile.IsActuated == open)
+                    continue;
+                tile.IsActuated = open;
+                changed = true;
+            }
+            if (changed && Main.netMode == NetmodeID.Server)
+                NetMessage.SendTileSquare(-1, x, TileBounds.Top, 1, (int)(FloorY / 16f) - TileBounds.Top + 1);
         }
 
         public static void ClearTemporaryBarriers()

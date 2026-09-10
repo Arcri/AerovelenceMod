@@ -12,9 +12,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     {
         private readonly List<LightningPath> dustPaths = new();
 
-        private sealed record LightningPath(Vector2[] Points, Color Color, float Opacity, float Width, float Length);
+        private sealed record LightningPath(Vector2[] Points, Color Color, float Opacity, float Width, float Length, float Bloom);
 
-        public static void DrawPath(Vector2[] worldPoints, Color color, float opacity, float width, bool emitDust = true)
+        public static void DrawPath(Vector2[] worldPoints, Color color, float opacity, float width, bool emitDust = true, RenderLayer? layer = null, float bloom = 1f)
         {
             if (Main.dedServ || worldPoints.Length < 2 || opacity <= 0f)
                 return;
@@ -22,8 +22,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             float length = 0f;
             for (int i = 1; i < points.Length; i++)
                 length += Vector2.Distance(points[i - 1], points[i]);
-            LightningPath path = new(points, color, MathHelper.Clamp(opacity, 0f, 1f), width, length);
-            PixellationSystem.QueuePixelationAction(() => Draw(path), PixellationSystem.RenderType.Additive);
+            LightningPath path = new(points, color, MathHelper.Clamp(opacity, 0f, 1f), width, length, bloom);
+            if (layer.HasValue)
+                ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(layer.Value, () => Draw(path, 1f, true));
+            else
+                PixellationSystem.QueuePixelationAction(() => Draw(path), PixellationSystem.RenderType.Additive);
             if (emitDust && !Main.gamePaused)
                 ModContent.GetInstance<TumblerLightningSystem>().dustPaths.Add(path);
         }
@@ -68,29 +71,34 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             dustPaths.Clear();
         }
 
-        private static void Draw(LightningPath path)
+        private static void Draw(LightningPath path, float scale = 0.5f, bool alphaBlend = false)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/feather_circle").Value;
-            float width = Math.Max(1f, path.Width * 0.5f);
+            float width = Math.Max(2f, path.Width) * scale;
             float pulse = 0.85f + 0.15f * MathF.Sin(Main.GameUpdateCount * 0.2f);
             Color core = Color.Lerp(path.Color, Color.White, 0.9f) * path.Opacity;
             Color middle = path.Color * (path.Opacity * 0.55f);
             Color outer = path.Color * (path.Opacity * 0.26f);
+            Color bloom = path.Color * (path.Opacity * 0.22f * pulse * path.Bloom);
+            if (alphaBlend)
+            {
+                core.A = middle.A = outer.A = bloom.A = 0;
+            }
             float glowSpacing = 0f;
             for (int i = 1; i < path.Points.Length; i++)
             {
-                Vector2 start = (path.Points[i - 1] - Main.screenPosition) * 0.5f;
-                Vector2 end = (path.Points[i] - Main.screenPosition) * 0.5f;
-                TumblerVFX.DrawLine(spriteBatch, start, end, outer, width + 3f);
-                TumblerVFX.DrawLine(spriteBatch, start, end, middle, width + 1.5f);
+                Vector2 start = (path.Points[i - 1] - Main.screenPosition) * scale;
+                Vector2 end = (path.Points[i] - Main.screenPosition) * scale;
+                TumblerVFX.DrawLine(spriteBatch, start, end, outer, width + 6f * scale);
+                TumblerVFX.DrawLine(spriteBatch, start, end, middle, width + 3f * scale);
                 TumblerVFX.DrawLine(spriteBatch, start, end, core, width);
                 float distance = Vector2.Distance(start, end);
-                while (glowSpacing <= distance)
+                while (path.Bloom > 0f && glowSpacing <= distance)
                 {
                     Vector2 position = Vector2.Lerp(start, end, distance > 0f ? glowSpacing / distance : 0f);
-                    spriteBatch.Draw(glow, position, null, path.Color * (path.Opacity * 0.22f * pulse), 0f, glow.Size() * 0.5f, (24f + width * 6f) / glow.Width, SpriteEffects.None, 0f);
-                    glowSpacing += 9f;
+                    spriteBatch.Draw(glow, position, null, bloom, 0f, glow.Size() * 0.5f, (48f * scale + width * 6f) / glow.Width, SpriteEffects.None, 0f);
+                    glowSpacing += 18f * scale;
                 }
                 glowSpacing -= distance;
             }

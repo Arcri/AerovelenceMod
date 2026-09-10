@@ -19,17 +19,78 @@ namespace AerovelenceMod.Common.Systems
         {
             On_WorldGen.PlaceTile += PlaceArenaTile;
             On_WorldGen.PlaceWall += PlaceArenaWall;
+            On_Liquid.AddWater += KeepArenaDry;
+            On_Liquid.Update += UpdateArenaLiquid;
         }
 
         public override void Unload()
         {
             On_WorldGen.PlaceTile -= PlaceArenaTile;
             On_WorldGen.PlaceWall -= PlaceArenaWall;
+            On_Liquid.AddWater -= KeepArenaDry;
+            On_Liquid.Update -= UpdateArenaLiquid;
         }
 
         private static bool PlaceArenaTile(On_WorldGen.orig_PlaceTile orig, int i, int j, int type, bool mute, bool forced, int player, int style)
         {
-            return (WorldGen.gen || !ArenaData.Valid || !ArenaData.TileBounds.Contains(i, j)) && orig(i, j, type, mute, forced, player, style);
+            return (WorldGen.gen || !ArenaData.Valid || !ArenaData.TileBounds.Contains(i, j) || AllowsDecoration(type) && !Framing.GetTileSafely(i, j).HasTile) && orig(i, j, type, mute, forced, player, style);
+        }
+
+        public static bool AllowsDecoration(int type) => type >= 0 && type < Main.tileSolid.Length && !Main.tileSolid[type] && !Main.tileSolidTop[type] && !TileID.Sets.Platforms[type];
+
+        private static bool DryArea(int x, int y)
+        {
+            if (!ArenaData.Valid || WorldGen.gen)
+                return false;
+            Rectangle bounds = ArenaData.TileBounds;
+            bounds.Inflate(8, 8);
+            return bounds.Contains(x, y);
+        }
+
+        private static void KeepArenaDry(On_Liquid.orig_AddWater orig, int x, int y)
+        {
+            if (DryArea(x, y))
+            {
+                if (ArenaData.TileBounds.Contains(x, y))
+                    Framing.GetTileSafely(x, y).LiquidAmount = 0;
+            }
+            else
+                orig(x, y);
+        }
+
+        private static void UpdateArenaLiquid(On_Liquid.orig_Update orig, Liquid liquid)
+        {
+            if (DryArea(liquid.x, liquid.y))
+            {
+                if (!ArenaData.TileBounds.Contains(liquid.x, liquid.y))
+                {
+                    liquid.kill = 999;
+                    return;
+                }
+                Framing.GetTileSafely(liquid.x, liquid.y).LiquidAmount = 0;
+            }
+            orig(liquid);
+        }
+
+        public override void PostUpdateWorld()
+        {
+            if (!ArenaData.Valid || Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+            Rectangle bounds = ArenaData.TileBounds;
+            for (int x = bounds.Left; x < bounds.Right; x++)
+            {
+                for (int y = bounds.Top; y < bounds.Bottom; y++)
+                {
+                    Tile tile = Framing.GetTileSafely(x, y);
+                    if (tile.LiquidAmount == 0 && !tile.RedWire && !tile.BlueWire && !tile.GreenWire && !tile.YellowWire && !tile.HasActuator)
+                        continue;
+                    tile.LiquidAmount = 0;
+                    tile.RedWire = tile.BlueWire = tile.GreenWire = tile.YellowWire = false;
+                    tile.HasActuator = false;
+                    if (Main.netMode == NetmodeID.Server)
+                        NetMessage.SendTileSquare(-1, x, y);
+                }
+            }
         }
 
         private static void PlaceArenaWall(On_WorldGen.orig_PlaceWall orig, int i, int j, int type, bool mute)
@@ -93,7 +154,7 @@ namespace AerovelenceMod.Common.Systems
 
         public override bool CanPlace(int i, int j, int type)
         {
-            return !InsideArena(i, j);
+            return !InsideArena(i, j) || TumblerArenaSystem.AllowsDecoration(type) && !Framing.GetTileSafely(i, j).HasTile;
         }
 
         public override bool CanReplace(int i, int j, int type, int tileTypeBeingPlaced)
@@ -166,10 +227,9 @@ namespace AerovelenceMod.Common.Systems
             bool targetingArena = player.whoAmI == Main.myPlayer && ArenaData.TileBounds.Contains(Player.tileTargetX, Player.tileTargetY);
             if (!playerInside && !targetingArena)
                 return true;
-            bool mining = item.pick > 0 || item.axe > 0 || item.hammer > 0;
-            bool placing = item.createTile >= 0 || item.createWall >= 0;
+            bool placing = item.createTile >= 0 && !TumblerArenaSystem.AllowsDecoration(item.createTile) || item.createWall >= 0;
             bool explosive = item.shoot > ProjectileID.None && item.shoot < ProjectileID.Sets.Explosive.Length && ProjectileID.Sets.Explosive[item.shoot];
-            return !mining && !placing && !explosive;
+            return !placing && !explosive;
         }
     }
 
@@ -199,7 +259,8 @@ namespace AerovelenceMod.Common.Systems
             if (ArenaData.Valid && ArenaData.TileBounds.Contains(x, y))
             {
                 Tile tile = Framing.GetTileSafely(x, y);
-                if (!tile.HasTile || tile.IsActuated || !TileID.Sets.Platforms[tile.TileType])
+                bool baseFloor = y >= (int)(ArenaData.FloorY / 16f) && Main.tileSolid[tile.TileType];
+                if (!tile.HasTile || tile.IsActuated || !TileID.Sets.Platforms[tile.TileType] && !baseFloor)
                     return false;
             }
             return null;

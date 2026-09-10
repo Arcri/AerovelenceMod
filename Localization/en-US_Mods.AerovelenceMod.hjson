@@ -1627,6 +1627,11 @@ Projectiles: {
 	TumblerConductiveField.DisplayName: Tumbler Conductive Field
 	TumblerFilamentRamp.DisplayName: Filament Ramp
 	TumblerMagneticPlatform.DisplayName: Magnetic Platform
+	TumblerArenaGate.DisplayName: Storm Gate
+	TumblerLoopRail.DisplayName: Filament Loop
+	TumblerResidualField.DisplayName: Scorched Current
+	TumblerRazeBeam.DisplayName: Crystal Raze
+	TumblerConvergenceOrb.DisplayName: Convergence Core
 	TumblerPylonField.DisplayName: Pylon Field
 	TumblerKnifeBall.DisplayName: Tumbler Knife Ball
 	TumblerKnifeCrystal.DisplayName: Tumbler Knife Crystal

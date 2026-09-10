@@ -109,6 +109,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Vector2 top = new(0f, -FieldHeight);
             float flash = timer >= Warning ? MathF.Pow(MathHelper.Clamp(1f - (timer - Warning) / 16f, 0f, 1f), 2f) : 0f;
             Color dischargeColor = Color.Lerp(color, Color.White, flash);
+            if (timer < Warning)
+            {
+                TumblerVFX.DrawTelegraph(spriteBatch, left + top, right + top, color, 0.3f + charge * 0.5f);
+                TumblerVFX.DrawTelegraph(spriteBatch, right + top, left + top, color, 0.3f + charge * 0.5f);
+            }
             if (timer >= Warning)
             {
                 Texture2D bloom = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/SoftGlow64").Value;

@@ -216,7 +216,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 270;
+            Projectile.timeLeft = 310;
         }
 
         public override bool ShouldUpdatePosition() => false;
@@ -257,7 +257,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.rotation = orbitAngle;
             if (Projectile.ai[0] < 1f)
             {
-                int fireTime = 150 + orbitSlot * 8;
+                int fireTime = 163 + orbitSlot * 18;
                 int lockTime = fireTime - 36;
                 if (timer >= lockTime - 36 && timer <= lockTime && Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -326,7 +326,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             Color color = Projectile.ai[0] >= 1f ? new Color(255, 190, 45) : new Color(40, 225, 255);
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            int fireTime = 150 + orbitSlot * 8;
+            int fireTime = 163 + orbitSlot * 18;
             float charge = MathHelper.Clamp(Projectile.ai[0] >= 1f ? timer / 90f : (timer - fireTime + 72f) / 72f, 0f, 1f);
             TumblerVFX.DrawCharge(Main.spriteBatch, drawPosition, color, charge, Projectile.scale * (18f + charge * 5f), Projectile.rotation);
             if (Projectile.ai[0] >= 1f && TryGetOwner(out NPC owner) && beamLocked)
@@ -798,205 +798,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         }
     }
 
-    public class TumblerMagneticRock : ModProjectile
-    {
-        private int timer;
-        private int bounces;
-        private Vector2 launchVelocity;
-        private bool initialized;
-        private readonly TumblerLightningVisual tether = new();
-
-        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectile";
-
-        public override void SetStaticDefaults()
-        {
-            Main.projFrames[Type] = 3;
-        }
-
-        public override void SetDefaults()
-        {
-            Projectile.width = 48;
-            Projectile.height = 48;
-            Projectile.hostile = true;
-            Projectile.tileCollide = false;
-            Projectile.ignoreWater = true;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 420;
-        }
-
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            writer.Write(timer);
-            writer.Write(bounces);
-            writer.Write(initialized);
-            writer.Write(launchVelocity.X);
-            writer.Write(launchVelocity.Y);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            timer = reader.ReadInt32();
-            bounces = reader.ReadInt32();
-            initialized = reader.ReadBoolean();
-            launchVelocity = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-        }
-
-        public override bool ShouldUpdatePosition() => timer >= 60;
-
-        public override bool? CanDamage() => timer >= 60;
-
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
-        {
-            width = 40;
-            height = 40;
-            fallThrough = false;
-            return true;
-        }
-
-        public override void AI()
-        {
-            if (!initialized)
-            {
-                launchVelocity = Projectile.velocity;
-                initialized = true;
-                Projectile.velocity = Vector2.Zero;
-            }
-            timer++;
-            if (timer == 1)
-                Projectile.frame = Projectile.identity % 3;
-            if (timer < 60)
-            {
-                Projectile.rotation += Math.Sign(launchVelocity.X) * timer * 0.00065f;
-                return;
-            }
-            Projectile.tileCollide = timer < 180;
-            if (timer == 60)
-            {
-                Projectile.velocity = new Vector2(launchVelocity.X * 1.2f, Math.Min(-9f, launchVelocity.Y * 1.35f));
-                SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.3f, Pitch = 0.2f }, Projectile.Center);
-                Projectile.netUpdate = true;
-            }
-            if (timer < 180)
-            {
-                Projectile.velocity.Y = Math.Min(Projectile.velocity.Y + 0.28f, 12f);
-                BounceOnMovingPlatform();
-            }
-            Projectile.rotation += Projectile.velocity.X * 0.021f;
-            Lighting.AddLight(Projectile.Center, new Vector3(0.05f, 0.55f, 0.7f));
-            if (!TryGetPartner(out Projectile partner))
-                return;
-            if (Projectile.identity < partner.identity)
-                tether.Update(Projectile, Projectile.Center, partner.Center, 0.6f);
-            if (timer < 180)
-                return;
-            Vector2 direction = (partner.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-            float speed = MathHelper.Lerp(8f, 15f, MathHelper.Clamp((timer - 180f) / 75f, 0f, 1f));
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * speed, 0.12f);
-            if (timer == 180)
-            {
-                SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.45f, Pitch = -0.1f }, Projectile.Center);
-                Projectile.netUpdate = true;
-            }
-            if (Projectile.identity < partner.identity && Projectile.Hitbox.Intersects(partner.Hitbox) && Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                Vector2 impact = (Projectile.Center + partner.Center) * 0.5f;
-                Projectile.NewProjectile(Projectile.GetSource_Death(), impact, Vector2.Zero, ModContent.ProjectileType<TumblerAuraPulse>(), Projectile.damage, 0f, Main.myPlayer, 86f, 28f, Projectile.ai[1]);
-                partner.Kill();
-                Projectile.Kill();
-            }
-        }
-
-        private bool TryGetPartner(out Projectile partner)
-        {
-            partner = null;
-            foreach (Projectile candidate in Main.ActiveProjectiles)
-            {
-                if (candidate.type == Type && candidate.owner == Projectile.owner && candidate.identity == (int)Projectile.ai[0] && candidate.whoAmI != Projectile.whoAmI)
-                {
-                    partner = candidate;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void BounceOnMovingPlatform()
-        {
-            if (Projectile.velocity.Y <= 0f)
-                return;
-            float surface = float.MaxValue;
-            foreach (Projectile candidate in Main.ActiveProjectiles)
-            {
-                if (!TumblerMagneticPlatform.IsArenaPlatform(candidate) || candidate.ModProjectile is not TumblerMagneticPlatform platform || !platform.CanStand)
-                    continue;
-                if (Projectile.Right.X + Projectile.velocity.X <= platform.SurfaceStart.X || Projectile.Left.X + Projectile.velocity.X >= platform.SurfaceEnd.X)
-                    continue;
-                if (Projectile.Bottom.Y <= platform.SurfaceY + 4f && Projectile.Bottom.Y + Projectile.velocity.Y >= platform.SurfaceY)
-                    surface = Math.Min(surface, platform.SurfaceY);
-            }
-            if (surface == float.MaxValue)
-                return;
-            Projectile.Bottom = new Vector2(Projectile.Center.X, surface);
-            BounceVertical(Projectile.velocity.Y);
-        }
-
-        private void BounceVertical(float incomingSpeed)
-        {
-            bounces++;
-            float hop = 8f + (Projectile.identity + bounces * 2) % 4 * 0.9f;
-            Projectile.velocity.Y = -MathHelper.Clamp(Math.Max(incomingSpeed * 0.85f, hop), 7.5f, 12f);
-            SoundEngine.PlaySound(SoundID.Item50 with { Volume = 0.18f, Pitch = 0.25f, MaxInstances = 4 }, Projectile.Center);
-            Projectile.netUpdate = true;
-        }
-
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > 0.1f)
-                Projectile.velocity.X = -oldVelocity.X * 0.86f;
-            if (oldVelocity.Y > 0f && Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > 0.1f)
-            {
-                BounceVertical(oldVelocity.Y);
-            }
-            else if (oldVelocity.Y < 0f && Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > 0.1f)
-                Projectile.velocity.Y = -oldVelocity.Y * 0.45f;
-            Projectile.netUpdate = true;
-            return false;
-        }
-
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-        {
-            target.AddBuff(BuffID.Electrified, 60);
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Vector2 position = Projectile.Center - Main.screenPosition;
-            Color color = TumblerVFX.PhaseColor(Projectile.ai[1]);
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Rectangle frame = texture.Frame(1, 3, 0, Projectile.frame);
-            float chargeProgress = MathHelper.Clamp(timer / 60f, 0f, 1f);
-            Main.EntitySpriteDraw(texture, position, frame, Color.Lerp(lightColor, color, timer < 60 ? 0.7f : 0.15f) * (0.2f + chargeProgress * 0.8f), Projectile.rotation, frame.Size() * 0.5f, 1f, SpriteEffects.None);
-            if (timer < 60)
-            {
-                TumblerVFX.DrawCharge(Main.spriteBatch, position, color, chargeProgress, 26f, timer * 0.025f);
-                TumblerVFX.DrawTelegraph(Main.spriteBatch, position, position + launchVelocity.SafeNormalize(-Vector2.UnitY) * 160f, color, 0.2f + chargeProgress * 0.6f);
-            }
-            if (TryGetPartner(out Projectile partner) && timer >= 60)
-            {
-                float charge = MathHelper.Clamp(1f - Vector2.Distance(Projectile.Center, partner.Center) / 420f, 0f, 1f);
-                TumblerVFX.DrawCorona(Main.spriteBatch, Projectile.Center - Main.screenPosition, 27f, color, 0.32f + charge * 0.55f, Projectile.identity);
-                if (Projectile.identity < partner.identity)
-                {
-                    if (timer < 180)
-                        TumblerVFX.DrawTelegraph(Main.spriteBatch, position, partner.Center - Main.screenPosition, color, 0.2f + (timer - 60f) / 180f);
-                    else
-                        tether.Draw(Main.spriteBatch, color, 0.3f + charge * 0.65f, 1.5f + charge);
-                }
-            }
-            return false;
-        }
-    }
-
     public class TumblerChargeBall : ModProjectile
     {
         private int timer;
@@ -1070,11 +871,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Texture2D texture = TumblerPhaseTextures.Get("TumblerOrb", true);
             Vector2 position = Projectile.Center - Main.screenPosition;
             Color color = new Color(255, 177, 45);
             Rectangle frame = texture.Frame(1, 4, 0, Projectile.frame);
-            Main.EntitySpriteDraw(texture, position, frame, TumblerVFX.Glow(color, 0.75f), Projectile.rotation, frame.Size() * 0.5f, Projectile.scale * 0.44f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, position, frame, TumblerVFX.Glow(Color.White, 0.75f), Projectile.rotation, frame.Size() * 0.5f, Projectile.scale * 0.44f, SpriteEffects.None);
             TumblerVFX.DrawCharge(Main.spriteBatch, position, color, timer / 60f, Projectile.scale * 23f, -Projectile.rotation);
             if (timer < 60)
             {
@@ -1150,12 +951,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Texture2D texture = TumblerPhaseTextures.Get("TumblerOrb", Charged);
             Color color = TumblerVFX.PhaseColor(Charged ? 1f : 0f);
             Vector2 position = Projectile.Center - Main.screenPosition;
             float fade = MathHelper.Clamp((105f - timer) / 30f, 0f, 1f);
             Rectangle frame = texture.Frame(1, 4, 0, Projectile.frame);
-            Main.EntitySpriteDraw(texture, position, frame, TumblerVFX.Glow(color, fade * 0.8f), Projectile.rotation, frame.Size() * 0.5f, Charged ? 0.5f : 0.42f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, position, frame, TumblerVFX.Glow(Color.White, fade * 0.8f), Projectile.rotation, frame.Size() * 0.5f, Charged ? 0.5f : 0.42f, SpriteEffects.None);
             TumblerVFX.DrawCharge(Main.spriteBatch, position, color, timer / 75f, Charged ? 23f : 18f, -Projectile.rotation, fade);
             if (timer >= 28 && timer < 75)
             {

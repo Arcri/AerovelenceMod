@@ -23,13 +23,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private float ceilingY;
         private float compression;
         private float springVelocity;
-        private float returnY;
+        private Vector2 returnPosition;
+        private float colorCharge;
+        private float proximitySink;
+        private int occupiedTicks;
+        private int collapseTimer = -1;
+        public bool Collapsing => collapseTimer >= 0;
 
         public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectile";
         public float SurfaceY => Projectile.Top.Y;
         public Vector2 SurfaceStart => Projectile.TopLeft;
         public Vector2 SurfaceEnd => Projectile.TopRight;
-        public bool CanStand => age >= Projectile.ai[2] + 35f && Projectile.Opacity >= 0.85f;
+        public bool CanStand => age >= Projectile.ai[2] + 35f && Projectile.Opacity >= 0.85f && collapseTimer < 60;
         public bool Crushing => crushTimer >= warningTicks && crushTimer < warningTicks + 140 + holdTicks;
 
         public static bool IsArenaPlatform(Projectile projectile)
@@ -52,14 +57,38 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projectile = Main.projectile[i];
-                if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI)
+                if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI || ((TumblerMagneticPlatform)projectile.ModProjectile).Collapsing)
                     continue;
                 TumblerMagneticPlatform platform = (TumblerMagneticPlatform)projectile.ModProjectile;
+                if (platform.crushTimer >= 0)
+                    continue;
                 platform.warningTicks = Math.Max(60, warningTicks);
                 platform.holdTicks = Math.Max(15, holdTicks);
                 platform.crushTimer = 0;
                 projectile.netUpdate = true;
             }
+        }
+
+        public static bool CollapseAll(NPC boss)
+        {
+            bool found = false;
+            foreach (Projectile projectile in Main.ActiveProjectiles)
+            {
+                if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI)
+                    continue;
+                found = true;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    ((TumblerMagneticPlatform)projectile.ModProjectile).BeginCollapse();
+            }
+            return found;
+        }
+
+        private void BeginCollapse()
+        {
+            if (collapseTimer >= 0)
+                return;
+            collapseTimer = 0;
+            Projectile.netUpdate = true;
         }
 
         public static void Release(NPC boss)
@@ -72,7 +101,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (!IsArenaPlatform(projectile) || projectile.ai[0] != boss.whoAmI)
                     continue;
                 TumblerMagneticPlatform platform = (TumblerMagneticPlatform)projectile.ModProjectile;
-                platform.returnY = projectile.Center.Y;
+                if (platform.Collapsing || platform.crushTimer < 0 || platform.crushTimer >= platform.warningTicks + 140 + platform.holdTicks)
+                    continue;
+                platform.returnPosition = projectile.Center;
                 platform.crushTimer = platform.warningTicks + 140 + platform.holdTicks;
                 projectile.netUpdate = true;
             }
@@ -125,6 +156,30 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             Projectile.timeLeft = 3600;
             age++;
+            float targetColor = Main.npc[bossIndex].ai[2] >= 1f ? 1f : crushTimer < 0 ? 0f : MathHelper.Clamp(crushTimer / (float)warningTicks, 0f, 1f);
+            colorCharge = MathHelper.Lerp(colorCharge, targetColor, 0.035f);
+            if (collapseTimer >= 0)
+            {
+                collapseTimer++;
+                if (collapseTimer < 60)
+                {
+                    Projectile.position.X += MathF.Sin(collapseTimer * 1.7f) * collapseTimer / 50f;
+                    if (!Main.dedServ && collapseTimer % 6 == 0)
+                        TumblerVFX.SpawnSpark(Projectile.Center + Main.rand.NextVector2Circular(55f, 12f), new Vector2(0f, 1f), Color.White, 0.23f);
+                }
+                else
+                {
+                    Projectile.velocity.Y = Math.Min(Projectile.velocity.Y + 0.5f, 13f);
+                    Projectile.position += Projectile.velocity;
+                    if (Projectile.Bottom.Y >= ArenaData.FloorY)
+                    {
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Left.X - 20f, ArenaData.FloorY), new Vector2(Projectile.width + 40f, 0f), ModContent.ProjectileType<TumblerResidualField>(), 18, 0f, Main.myPlayer, 180f, Main.npc[bossIndex].ai[2]);
+                        Projectile.Kill();
+                    }
+                }
+                return;
+            }
             if (crushTimer >= 0)
                 crushTimer++;
             float emergence = MathHelper.Clamp((age - Projectile.ai[2]) / 100f, 0f, 1f);
@@ -136,24 +191,36 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (player.active && !player.dead && player.velocity.Y >= 0f && !player.controlDown && player.Right.X > Projectile.Left.X && player.Left.X < Projectile.Right.X && Math.Abs(player.Bottom.Y - SurfaceY) < 10f)
                     load = 7f;
             }
+            foreach (Projectile hook in Main.ActiveProjectiles)
+            {
+                if (hook.aiStyle == ProjAIStyleID.Hook && hook.ai[0] == 2f && hook.Hitbox.Intersects(Projectile.Hitbox))
+                    load = 7f;
+            }
+            if (load > 0f && Main.netMode != NetmodeID.MultiplayerClient && ++occupiedTicks >= 420)
+                BeginCollapse();
+            float proximity = MathHelper.Clamp(1f - Math.Abs(Main.npc[bossIndex].Center.X - Projectile.Center.X) / 240f, 0f, 1f);
+            proximitySink = MathHelper.Lerp(proximitySink, proximity * 46f, 0.035f);
             springVelocity = (springVelocity + (load - compression) * 0.07f) * 0.78f;
             compression = MathHelper.Clamp(compression + springVelocity, -2f, 10f);
             float lift = crushTimer < 0 ? 0f : MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - warningTicks) / 140f, 0f, 1f));
             int releaseTime = warningTicks + 140 + holdTicks;
             if (crushTimer == releaseTime)
-                returnY = Projectile.Center.Y;
+                returnPosition = Projectile.Center;
+            float drift = MathF.Sin(age * 0.009f + Projectile.identity * 1.9f) * 15f;
+            float bob = MathF.Sin(age * 0.019f + Projectile.identity * 1.9f) * 3f;
+            Vector2 rest = new(homeX + drift, Projectile.ai[1] + bob + compression + proximitySink);
+            rest = Vector2.Lerp(new Vector2(homeX, spawnY), rest, MathHelper.SmoothStep(0f, 1f, emergence));
+            Vector2 next;
             if (crushTimer >= releaseTime)
             {
-                lift = 1f - MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - releaseTime) / 120f, 0f, 1f));
+                float progress = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - releaseTime) / 120f, 0f, 1f));
+                lift = 1f - progress;
+                next = Vector2.Lerp(returnPosition, rest, progress);
                 if (crushTimer >= releaseTime + 120)
                     crushTimer = -1;
             }
-            float drift = MathF.Sin(age * 0.009f + Projectile.identity * 1.9f) * 15f * (1f - lift);
-            float bob = MathF.Sin(age * 0.019f + Projectile.identity * 1.9f) * 3f;
-            float restY = MathHelper.Lerp(Projectile.ai[1] + bob + compression, ceilingY, lift);
-            if (crushTimer >= releaseTime)
-                restY = MathHelper.Lerp(returnY, Projectile.ai[1] + bob + compression, 1f - lift);
-            Vector2 next = new(homeX + drift * emergence, MathHelper.Lerp(spawnY, restY, MathHelper.SmoothStep(0f, 1f, emergence)));
+            else
+                next = Vector2.Lerp(rest, new Vector2(homeX, ceilingY), lift * emergence);
             Projectile.Center = next;
             if (Main.netMode == NetmodeID.Server && age % 90 == 0)
                 Projectile.netUpdate = true;
@@ -171,7 +238,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             writer.Write(ceilingY);
             writer.Write(compression);
             writer.Write(springVelocity);
-            writer.Write(returnY);
+            writer.WriteVector2(returnPosition);
+            writer.Write(proximitySink);
+            writer.Write(collapseTimer);
+            writer.Write(occupiedTicks);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -185,7 +255,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             ceilingY = reader.ReadSingle();
             compression = reader.ReadSingle();
             springVelocity = reader.ReadSingle();
-            returnY = reader.ReadSingle();
+            returnPosition = reader.ReadVector2();
+            proximitySink = reader.ReadSingle();
+            collapseTimer = reader.ReadInt32();
+            occupiedTicks = reader.ReadInt32();
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -198,10 +271,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             SpriteBatch spriteBatch = Main.spriteBatch;
             Vector2 center = Projectile.Center - Main.screenPosition;
             int bossIndex = (int)Projectile.ai[0];
-            Color color = TumblerVFX.PhaseColor(bossIndex >= 0 && bossIndex < Main.maxNPCs ? Main.npc[bossIndex].ai[2] : 0f);
+            Color color = Color.Lerp(TumblerVFX.PhaseColor(0f), TumblerVFX.PhaseColor(1f), colorCharge);
             float warning = crushTimer < 0 ? 0f : MathHelper.Clamp(crushTimer / (float)warningTicks, 0f, 1f);
             float opacity = Projectile.Opacity;
-            Color charged = Color.Lerp(color, new Color(255, 173, 58), warning);
+            Color charged = Color.Lerp(color, Color.White, collapseTimer < 0 ? 0f : 0.5f + MathF.Sin(age * 0.5f) * 0.3f);
             spriteBatch.Draw(bloom, center + new Vector2(0f, 14f), null, TumblerVFX.Glow(charged, opacity * (0.16f + warning * 0.18f)), 0f, bloom.Size() * 0.5f, new Vector2(154f, 56f) / bloom.Size(), SpriteEffects.None, 0f);
             for (int i = -1; i <= 1; i++)
             {

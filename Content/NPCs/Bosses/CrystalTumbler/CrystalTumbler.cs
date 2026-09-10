@@ -36,11 +36,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         Stunned,
         Despawn,
         MagnetClash,
-        MagneticCrush
+        MagneticCrush,
+        LoopSlam,
+        GroundRaze,
+        CrystalConvergence
     }
 
     [AutoloadBossHead]
-    public class CrystalTumbler : ModNPC
+    public partial class CrystalTumbler : ModNPC
     {
         private static readonly TumblerState[] PhaseOnePattern =
         [
@@ -62,9 +65,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             TumblerState.KnifeCrystals,
             TumblerState.MagneticCrush,
             TumblerState.CrystalCharge,
-            TumblerState.ShockDash,
+            TumblerState.ConductiveField,
+            TumblerState.LoopSlam,
+            TumblerState.GroundRaze,
             TumblerState.Overload,
-            TumblerState.Teleport
+            TumblerState.Teleport,
+            TumblerState.CrystalConvergence
         ];
 
         private readonly List<Vector2> afterimagePositions = [];
@@ -162,14 +168,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             State = TumblerState.Spawn;
             idleDirection = Main.rand.NextBool() ? 1 : -1;
             shieldHits = 10;
+            NPC.dontTakeDamage = true;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
             if (!ArenaData.Valid)
                 ArenaData.TryInitializeFromWorld(NPC.Center);
             if (IsServer)
             {
                 ArenaData.ClearEncounterEntities(false);
                 if (ArenaData.Valid)
-                    NPC.Center = new Vector2(ArenaData.ArenaCenter.X, FloorY - NPC.height * 0.5f);
-                ArenaData.CreateTemporaryBarriers();
+                {
+                    NPC.Center = EntranceStart;
+                    TumblerArenaGate.SpawnGates(NPC);
+                }
             }
             NPC.netUpdate = true;
         }
@@ -193,7 +204,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (State != TumblerState.Despawn && (!Target.active || Target.dead || !ArenaData.Valid || !encounterBounds.Contains(Target.Center.ToPoint())))
                 ChangeState(TumblerState.Despawn);
 
-            if (IsServer && !PhaseTwo && State is not TumblerState.PhaseTransition and not TumblerState.Despawn && NPC.life <= NPC.lifeMax * 0.5f)
+            if (IsServer && !PhaseTwo && State is not TumblerState.Spawn and not TumblerState.PhaseTransition and not TumblerState.Despawn && NPC.life <= NPC.lifeMax * 0.5f)
             {
                 phaseTransitionQueued = true;
                 shieldHits = 10;
@@ -235,13 +246,18 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 case TumblerState.Despawn: Despawn(); break;
                 case TumblerState.MagnetClash: MagnetClash(); break;
                 case TumblerState.MagneticCrush: MagneticCrush(); break;
+                case TumblerState.LoopSlam: LoopSlam(); break;
+                case TumblerState.GroundRaze: GroundRaze(); break;
+                case TumblerState.CrystalConvergence: CrystalConvergence(); break;
             }
 
             KeepInsideArena();
+            PressureDistantPlayer();
             UpdateRotation();
             if (!Main.dedServ && contactDamage && OnGround() && Math.Abs(NPC.velocity.X) >= 8f && Main.GameUpdateCount % 3 == 0)
                 KickUpDust(2);
-            Lighting.AddLight(NPC.Center, PhaseColor.ToVector3() * (0.35f + visualCharge * 0.55f));
+            if (State != TumblerState.Spawn || StateTimer >= 430)
+                Lighting.AddLight(NPC.Center, PhaseColor.ToVector3() * (0.35f + visualCharge * 0.55f));
             StateTimer++;
             if (IsServer && StateTimer % 45 == 0)
                 NPC.netUpdate = true;
@@ -251,16 +267,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void SpawnBehavior()
         {
-            NPC.dontTakeDamage = true;
-            NPC.velocity.X *= 0.92f;
-            visualCharge = MathHelper.Clamp(StateTimer / 70f, 0f, 1f);
-            if (StateTimer == 20)
-                SoundEngine.PlaySound(SoundID.Item29 with { Pitch = 0.2f }, NPC.Center);
-            if (StateTimer >= 90)
-            {
-                NPC.dontTakeDamage = false;
-                ChangeState(TumblerState.Idle);
-            }
+            Entrance();
         }
 
         private void IdleBehavior()
@@ -279,7 +286,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             visualCharge = MathHelper.Clamp(1f - Math.Abs(StateTimer - 55f) / 55f, 0f, 1f);
             if (StateTimer == 55 && IsServer)
             {
-                int yellowIndex = Main.rand.Next(7);
+                int yellowIndex = 6;
                 for (int i = 0; i < 7; i++)
                 {
                     Vector2 velocity = (MathHelper.TwoPi * i / 7f).ToRotationVector2() * 7f;
@@ -400,7 +407,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (StateTimer == 155)
                 SpawnProjectile<TumblerBossAura>(NPC.Center, Vector2.Zero, ProjectileDamage(22), 0f, NPC.whoAmI, 195f, 82f);
             if (StateTimer == 170 || StateTimer == 250)
-                SpawnProjectile<TumblerAimLine>(ArenaData.ClosestCrystal(Target.Center), (Target.Center - ArenaData.ClosestCrystal(Target.Center)).SafeNormalize(Vector2.UnitY), ProjectileDamage(15), 0f, PhaseTwo ? 1f : 0f);
+            {
+                foreach (NPC crystal in Main.ActiveNPCs)
+                {
+                    if (crystal.ModNPC is not TumblerConductiveCrystal || (StateTimer == 170) != (crystal.Center.X < NPC.Center.X))
+                        continue;
+                    Vector2 tip = crystal.Top + new Vector2(0f, 6f);
+                    SpawnProjectile<TumblerAimLine>(tip, (Target.Center - tip).SafeNormalize(Vector2.UnitY), ProjectileDamage(15), 0f, PhaseTwo ? 1f : 0f);
+                }
+            }
             if (StateTimer >= 155 && StateTimer < 350)
             {
                 contactDamage = true;
@@ -414,7 +429,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             GroundRoll(2.2f, 0.12f, 300f);
             visualCharge = MathHelper.Clamp(StateTimer / 75f, 0f, 1f);
-            if (StateTimer == 75)
+            if (StateTimer == 75 || StateTimer == 93 || StateTimer == 111)
                 SpawnMagneticRocks();
             if (StateTimer >= 360)
                 FinishAttack();
@@ -461,7 +476,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void ShockDash()
         {
-            bool rampPass = PhaseTwo || repetitions >= 2;
+            bool rampPass = PhaseTwo || repetitions >= 1;
             if (substate == 0)
             {
                 if (storedDirection == 0)
@@ -525,7 +540,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 visualCharge = 0.9f;
                 NPC.velocity.Y = Math.Min(NPC.velocity.Y + 0.42f, 16f);
                 if (PhaseTwo && StateTimer == 16)
-                    SpawnLightningSweep(repetitions == 2 ? 7 : 4, storedDirection, 54);
+                    SpawnLightningSweep(repetitions == 1 ? 7 : 4, storedDirection, 54);
                 if (ReachedWall(storedDirection))
                 {
                     Rebound(storedDirection, 7f, 0f);
@@ -538,7 +553,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     NPC.velocity.X *= 0.6f;
                     impactFlash = 1f;
                     SpawnAuraPulse(135f, 32, false);
-                    EnsureMagneticPlatforms();
+                    if (repetitions < 1 || !TumblerMagneticPlatform.CollapseAll(NPC))
+                        EnsureMagneticPlatforms();
                     EnsureConductiveCrystals();
                     KickUpDust(12);
                     SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.7f, Pitch = -0.25f }, NPC.Center);
@@ -566,7 +582,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (StateTimer >= 42)
                 {
                     repetitions++;
-                    if (repetitions >= 3)
+                    if (repetitions >= 2)
                         FinishAttack();
                     else
                     {
@@ -612,6 +628,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             if (StateTimer == 70)
             {
+                teleportOrigin = NPC.Center;
                 NPC.Center = teleportDestination;
                 NPC.velocity = Vector2.Zero;
                 afterimagePositions.Clear();
@@ -619,8 +636,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 shieldFlash = 1f;
                 ScreenShake(5f);
                 SpawnAuraPulse(100f, 30, false);
-                for (int i = -1; i <= 1; i++)
-                    SpawnProjectile<TumblerChargedKnifeBall>(NPC.Center + new Vector2(i * 75f, -85f), new Vector2(i * 2.5f, -2f), ProjectileDamage(16));
+                SpawnProjectile<TumblerChargedKnifeBall>(NPC.Center + new Vector2(0f, -85f), new Vector2(0f, -2f), ProjectileDamage(16));
                 NPC.netUpdate = true;
             }
             if (StateTimer >= 170)
@@ -831,6 +847,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             TumblerState[] pattern = PhaseTwo ? PhaseTwoPattern : PhaseOnePattern;
             TumblerState next = pattern[PatternIndex % pattern.Length];
             PatternIndex = (PatternIndex + 1) % pattern.Length;
+            if (!Main.expertMode && next is TumblerState.GroundRaze or TumblerState.CrystalConvergence)
+            {
+                next = pattern[PatternIndex % pattern.Length];
+                PatternIndex = (PatternIndex + 1) % pattern.Length;
+            }
             ChangeState(next);
         }
 
@@ -977,16 +998,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             if (!IsServer)
                 return;
-            int type = ModContent.ProjectileType<TumblerMagneticRock>();
-            int left = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-80f, -90f), new Vector2(-5.5f, -9.5f), type, ProjectileDamage(20), 0f, Main.myPlayer, 0f, PhaseTwo ? 1f : 0f);
-            int right = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(80f, -90f), new Vector2(5.5f, -9.5f), type, ProjectileDamage(20), 0f, Main.myPlayer, 0f, PhaseTwo ? 1f : 0f);
-            if (left < Main.maxProjectiles && right < Main.maxProjectiles)
-            {
-                Main.projectile[left].ai[0] = Main.projectile[right].identity;
-                Main.projectile[right].ai[0] = Main.projectile[left].identity;
-                Main.projectile[left].netUpdate = true;
-                Main.projectile[right].netUpdate = true;
-            }
+            int direction = Target.Center.X >= NPC.Center.X ? 1 : -1;
+            SpawnProjectile<TumblerMagneticRock>(NPC.Center + new Vector2(direction * 70f, -40f), new Vector2(direction * (5f + (StateTimer - 75f) / 18f), -9f), ProjectileDamage(20), 0f, NPC.whoAmI, PhaseTwo ? 1f : 0f);
+            SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.45f, Pitch = (StateTimer - 75f) / 90f }, NPC.Center);
         }
 
         private int ProjectileDamage(int normal)
@@ -1122,6 +1136,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             writer.Write(teleportDestination.X);
             writer.Write(teleportDestination.Y);
             writer.Write(rollVelocity);
+            writer.Write(teleportOrigin.X);
+            writer.Write(teleportOrigin.Y);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -1138,23 +1154,28 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             rampRise = new Vector2(reader.ReadSingle(), reader.ReadSingle());
             teleportDestination = new Vector2(reader.ReadSingle(), reader.ReadSingle());
             rollVelocity = reader.ReadSingle();
+            teleportOrigin = new Vector2(reader.ReadSingle(), reader.ReadSingle());
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            if (!NPC.IsABestiaryIconDummy && State == TumblerState.Spawn && StateTimer < 430)
+                return false;
             Texture2D texture = TextureAssets.Npc[Type].Value;
             bool phaseTwoArt = PhaseTwo || State == TumblerState.PhaseTransition;
             Rectangle frame = texture.Frame(1, 2, 0, phaseTwoArt ? 1 : 0);
             Vector2 origin = frame.Size() * 0.5f;
             Vector2 center = NPC.Center - screenPos;
+            DrawNewAttackEffects(spriteBatch, screenPos, texture, frame, origin);
+            DrawEntrance(spriteBatch, screenPos);
             float trailStrength = MathHelper.Clamp(NPC.velocity.Length() / 15f, 0f, 1f);
             if (State == TumblerState.MagnetClash && StateTimer < 75)
             {
                 Texture2D rock = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectile").Value;
                 Rectangle rockFrame = rock.Frame(1, 3, 0, 0);
-                for (int side = -1; side <= 1; side += 2)
+                int side = Target.Center.X >= NPC.Center.X ? 1 : -1;
                 {
-                    Vector2 destination = center + new Vector2(side * 80f, -90f);
+                    Vector2 destination = center + new Vector2(side * 70f, -40f);
                     Main.EntitySpriteDraw(rock, destination, rockFrame, TumblerVFX.Glow(PhaseColor, visualCharge * 0.45f), side * visualCharge, rockFrame.Size() * 0.5f, 48f / rockFrame.Width, SpriteEffects.None);
                     TumblerVFX.DrawCharge(spriteBatch, destination, PhaseColor, visualCharge, 27f, side * StateTimer * 0.025f);
                     TumblerVFX.DrawElectricLine(spriteBatch, center, destination, PhaseColor, visualCharge * 0.55f, 10, side);
@@ -1189,22 +1210,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     TumblerVFX.DrawElectricLine(spriteBatch, previous - normal, current - normal, new Color(70, 205, 255), progress * trailStrength * 0.3f, 5, i + 7f, 1f);
                 }
             }
-            Main.EntitySpriteDraw(texture, center, frame, Color.Lerp(drawColor, Color.White, Math.Max(shieldFlash, impactFlash * 0.6f)), NPC.rotation, origin, NPC.scale, SpriteEffects.None);
+            float teleportOpacity = State == TumblerState.Teleport ? MathHelper.Clamp(Math.Abs(StateTimer - 70f) / 18f, 0f, 1f) : 1f;
+            Main.EntitySpriteDraw(texture, center, frame, Color.Lerp(drawColor, Color.White, Math.Max(shieldFlash, impactFlash * 0.6f)) * teleportOpacity, NPC.rotation, origin, NPC.scale, SpriteEffects.None);
             if (State != TumblerState.Stunned)
             {
                 Texture2D eye = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumblerEye").Value;
                 Color eyeColor = phaseTwoArt ? new Color(255, 201, 84) : Color.White;
-                Main.EntitySpriteDraw(eye, center, null, eyeColor, NPC.rotation, eye.Size() * 0.5f, NPC.scale, SpriteEffects.None);
+                Main.EntitySpriteDraw(eye, center, null, eyeColor * teleportOpacity, NPC.rotation, eye.Size() * 0.5f, NPC.scale, SpriteEffects.None);
             }
             Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/Glowmask").Value;
             Color glowColor = TumblerVFX.Glow(PhaseColor, 0.25f + visualCharge * 0.5f + impactFlash * 0.2f);
-            Main.EntitySpriteDraw(glow, center, null, glowColor, NPC.rotation, glow.Size() * 0.5f, NPC.scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(glow, center, null, glowColor * teleportOpacity, NPC.rotation, glow.Size() * 0.5f, NPC.scale, SpriteEffects.None);
             if (State == TumblerState.PhaseTransition || auraScale > 0.05f)
                 DrawAura(spriteBatch, screenPos);
             if (visualCharge > 0.05f)
             {
                 TumblerVFX.DrawCorona(spriteBatch, center, 59f + visualCharge * 9f, PhaseColor, visualCharge * 0.8f, NPC.whoAmI);
-                if (spinTarget.HasValue && (State != TumblerState.ShockDash || !PhaseTwo && repetitions < 2))
+                if (spinTarget.HasValue && State != TumblerState.LoopSlam && (State != TumblerState.ShockDash || !PhaseTwo && repetitions < 1))
                 {
                     Vector2 start = new(NPC.Center.X, FloorY - NPC.height * 0.5f);
                     Vector2 end = new(storedDirection > 0 ? RightOuter - 60f : LeftOuter + 60f, start.Y);
