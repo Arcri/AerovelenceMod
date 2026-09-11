@@ -13,15 +13,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override string Texture => "Terraria/Images/Projectile_0";
         private static readonly Vector2[] curve = BuildCurve();
         private static readonly float[] distances = BuildDistances();
-        internal const int RideDuration = 135;
+        private readonly TumblerConjuredRail rail = new();
 
         internal static float StartX => ArenaData.ArenaCenter.X - 355f;
-
-        internal static float RideProgress(float ticks)
-        {
-            float time = MathHelper.Clamp(ticks / RideDuration, 0f, 1f);
-            return time * (0.82f + 0.18f * time);
-        }
 
         private static Vector2[] BuildCurve()
         {
@@ -81,45 +75,30 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 1400;
         public override bool? CanDamage() => false;
+        public override bool ShouldUpdatePosition() => false;
 
         public override void AI()
         {
             int bossIndex = (int)Projectile.ai[0];
             if (bossIndex < 0 || bossIndex >= Main.maxNPCs || !Main.npc[bossIndex].active || Main.npc[bossIndex].ModNPC is not CrystalTumbler boss)
             {
-                Projectile.Kill();
+                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 90);
+                rail.Update(t => Point(Projectile.Center, t), Projectile.ai[1], true);
                 return;
             }
             if (boss.LoopRailFinished)
-                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 75);
+                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 90);
             else
+            {
+                Projectile.timeLeft = 450;
                 Projectile.ai[1] = boss.LoopRailProgress;
+            }
+            rail.Update(t => Point(Projectile.Center, t), Projectile.ai[1], boss.LoopRailFinished);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float progress = Projectile.ai[1];
-            float opacity = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(Projectile.timeLeft / 75f, 0f, 1f));
-            int segments = Math.Max(2, (int)(progress * 108f));
-            Vector2[] outer = new Vector2[segments + 1];
-            Vector2[] inner = new Vector2[segments + 1];
-            for (int i = 0; i <= segments; i++)
-            {
-                float step = progress * i / segments;
-                Vector2 point = Point(Projectile.Center, step);
-                Vector2 tangent = Tangent(Projectile.Center, step);
-                Vector2 normal = new(-tangent.Y, tangent.X);
-                outer[i] = point + normal * 52f;
-                inner[i] = point + normal * 66f;
-                if (i > 0 && i % 3 == 0)
-                {
-                    Vector2[] brace = [outer[i - 3], inner[i], outer[i]];
-                    TumblerLightningSystem.DrawPath(brace, TumblerVFX.PhaseColor(0f), opacity * 0.3f, 1f, false);
-                }
-            }
-            TumblerLightningSystem.DrawPath(outer, TumblerVFX.PhaseColor(1f), opacity * 0.9f, 3f);
-            TumblerLightningSystem.DrawPath(inner, TumblerVFX.PhaseColor(0f), opacity * 0.4f, 1.5f);
-            TumblerVFX.DrawCharge(Main.spriteBatch, outer[^1] - Main.screenPosition, TumblerVFX.PhaseColor(1f), 1f, 13f, Main.GlobalTimeWrappedHourly, opacity);
+            rail.Draw(t => Point(Projectile.Center, t), 1, TumblerProjectileRetirement.VisualOpacity(Projectile), false);
             return false;
         }
     }

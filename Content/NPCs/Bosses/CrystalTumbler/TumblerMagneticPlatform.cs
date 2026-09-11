@@ -4,6 +4,7 @@ using AerovelenceMod.Content.Items.BossSummons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -34,7 +35,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public float SurfaceY => Projectile.Top.Y;
         public Vector2 SurfaceStart => Projectile.TopLeft;
         public Vector2 SurfaceEnd => Projectile.TopRight;
-        public bool CanStand => age >= Projectile.ai[2] + 35f && Projectile.Opacity >= 0.85f && collapseTimer < 60;
+        public bool CanStand => TumblerProjectileRetirement.VisualOpacity(Projectile) >= 1f && age >= Projectile.ai[2] + 35f && Projectile.Opacity >= 0.85f && collapseTimer < 60;
         public bool Crushing => crushTimer >= warningTicks && crushTimer < warningTicks + 140 + holdTicks;
 
         public static bool IsArenaPlatform(Projectile projectile)
@@ -161,6 +162,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (collapseTimer >= 0)
             {
                 collapseTimer++;
+                if (collapseTimer == 1)
+                    SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.45f, Pitch = -0.5f }, Projectile.Center);
+                if (collapseTimer is 24 or 42 or 54)
+                    SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.35f, Pitch = collapseTimer / 70f }, Projectile.Center);
+                if (collapseTimer == 60 && !Main.dedServ)
+                {
+                    SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/RockCollideBetter") with { Volume = 0.65f, Pitch = -0.2f }, Projectile.Center);
+                    for (int i = 0; i < 18; i++)
+                    {
+                        Vector2 direction = (i * MathHelper.TwoPi / 18f).ToRotationVector2();
+                        TumblerVFX.SpawnSpark(Projectile.Center + direction * 30f, direction * 4f, Color.White, 0.3f);
+                    }
+                    for (int i = 0; i < 8; i++)
+                        Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(55f, 12f), DustID.Stone, Main.rand.NextVector2Circular(3f, 2f), 0, new Color(135, 145, 155), 1.2f);
+                }
                 if (collapseTimer < 60)
                 {
                     Projectile.position.X += MathF.Sin(collapseTimer * 1.7f) * collapseTimer / 50f;
@@ -174,7 +190,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     if (Projectile.Bottom.Y >= ArenaData.FloorY)
                     {
                         if (Main.netMode != NetmodeID.MultiplayerClient)
-                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Left.X - 20f, ArenaData.FloorY), new Vector2(Projectile.width + 40f, 0f), ModContent.ProjectileType<TumblerResidualField>(), 18, 0f, Main.myPlayer, 180f, Main.npc[bossIndex].ai[2]);
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Left.X - 20f, ArenaData.FloorY), new Vector2(Projectile.width + 40f, 0f), ModContent.ProjectileType<TumblerResidualField>(), 14, 0f, Main.myPlayer, 180f, Main.npc[bossIndex].ai[2]);
                         Projectile.Kill();
                     }
                 }
@@ -196,7 +212,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (hook.aiStyle == ProjAIStyleID.Hook && hook.ai[0] == 2f && hook.Hitbox.Intersects(Projectile.Hitbox))
                     load = 7f;
             }
-            if (load > 0f && Main.netMode != NetmodeID.MultiplayerClient && ++occupiedTicks >= 420)
+            if (load > 0f && Main.netMode != NetmodeID.MultiplayerClient && ++occupiedTicks >= 240)
                 BeginCollapse();
             float proximity = MathHelper.Clamp(1f - Math.Abs(Main.npc[bossIndex].Center.X - Projectile.Center.X) / 240f, 0f, 1f);
             proximitySink = MathHelper.Lerp(proximitySink, proximity * 46f, 0.035f);
@@ -273,37 +289,54 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             int bossIndex = (int)Projectile.ai[0];
             Color color = Color.Lerp(TumblerVFX.PhaseColor(0f), TumblerVFX.PhaseColor(1f), colorCharge);
             float warning = crushTimer < 0 ? 0f : MathHelper.Clamp(crushTimer / (float)warningTicks, 0f, 1f);
-            float opacity = Projectile.Opacity;
+            float opacity = Projectile.Opacity * TumblerProjectileRetirement.VisualOpacity(Projectile);
+            float demagnetizing = collapseTimer < 0 ? 0f : MathHelper.Clamp(collapseTimer / 60f, 0f, 1f);
+            float magneticOpacity = opacity * (1f - demagnetizing) * (collapseTimer < 0 ? 1f : 0.45f + 0.55f * Math.Abs(MathF.Sin(collapseTimer * 0.65f)));
             Color charged = Color.Lerp(color, Color.White, collapseTimer < 0 ? 0f : 0.5f + MathF.Sin(age * 0.5f) * 0.3f);
-            spriteBatch.Draw(bloom, center + new Vector2(0f, 14f), null, TumblerVFX.Glow(charged, opacity * (0.16f + warning * 0.18f)), 0f, bloom.Size() * 0.5f, new Vector2(154f, 56f) / bloom.Size(), SpriteEffects.None, 0f);
+            spriteBatch.Draw(bloom, center + new Vector2(0f, 14f), null, TumblerVFX.Glow(charged, magneticOpacity * (0.16f + warning * 0.18f)), 0f, bloom.Size() * 0.5f, new Vector2(154f, 56f) / bloom.Size(), SpriteEffects.None, 0f);
             for (int i = -1; i <= 1; i++)
             {
-                Vector2 piece = center + new Vector2(i * 40f, i == 0 ? 2f : 4f);
+                Vector2 piece = center + new Vector2(i * (40f + demagnetizing * 8f), (i == 0 ? 2f : 4f) + Math.Abs(i) * demagnetizing * 6f);
                 Vector2 size = new(i == 0 ? 62f : 54f, i == 0 ? 39f : 32f);
                 spriteBatch.Draw(rock, piece, frame, Color.Lerp(lightColor, Color.White, 0.2f) * opacity, i * 0.06f, frame.Size() * 0.5f, size / frame.Size(), i < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
-                spriteBatch.Draw(rock, piece, frame, TumblerVFX.Glow(charged, opacity * 0.12f), i * 0.06f, frame.Size() * 0.5f, size / frame.Size(), i < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
+                spriteBatch.Draw(rock, piece, frame, TumblerVFX.Glow(charged, magneticOpacity * 0.12f), i * 0.06f, frame.Size() * 0.5f, size / frame.Size(), i < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0f);
             }
             Vector2 left = SurfaceStart - Main.screenPosition;
             Vector2 right = SurfaceEnd - Main.screenPosition;
-            TumblerVFX.DrawLine(spriteBatch, left + new Vector2(5f, 1f), right - new Vector2(5f, -1f), TumblerVFX.Glow(charged, opacity * 0.65f), 2f);
+            if (collapseTimer >= 0 && collapseTimer < 86)
+            {
+                float discharge = (collapseTimer < 60 ? 0.45f + demagnetizing * 0.55f : (86f - collapseTimer) / 26f) * opacity;
+                float separation = collapseTimer < 60 ? demagnetizing * 18f : 18f + (collapseTimer - 60f) * 3f;
+                for (int i = 0; i < 6; i++)
+                {
+                    Vector2 anchor = Vector2.Lerp(left, right, (i + 0.5f) / 6f) + new Vector2(0f, 18f);
+                    Vector2 end = anchor + new Vector2(MathF.Sin(age * 0.13f + i) * (15f + separation), 30f + separation);
+                    TumblerVFX.DrawElectricLine(spriteBatch, anchor, end, Color.Lerp(color, Color.White, 0.7f), discharge, 12, Projectile.identity + i * 19 + age / 3, 2.2f);
+                }
+                for (int i = -1; i <= 1; i += 2)
+                    TumblerVFX.DrawElectricLine(spriteBatch, center + new Vector2(i * 12f, 0f), center + new Vector2(i * (55f + separation), 6f), Color.White, discharge * 0.8f, 12, age / 2 + i, 2f);
+                if (collapseTimer >= 60)
+                    TumblerVFX.DrawCorona(spriteBatch, center, 65f + (collapseTimer - 60f) * 3f, Color.White, discharge * 0.9f, Projectile.identity, 3f);
+            }
+            TumblerVFX.DrawLine(spriteBatch, left + new Vector2(5f, 1f), right - new Vector2(5f, -1f), TumblerVFX.Glow(charged, magneticOpacity * 0.65f), 2f);
             for (int i = 0; i < 5; i++)
             {
                 Vector2 anchor = Vector2.Lerp(left, right, (i + 0.5f) / 5f) + new Vector2(0f, 29f);
                 float swing = MathF.Sin(age * 0.045f + i * 1.8f) * 5f;
                 Vector2 tip = anchor + new Vector2(swing, 9f + MathF.Sin(age * 0.025f + i) * 3f);
-                TumblerVFX.DrawElectricLine(spriteBatch, anchor, tip, charged, opacity * 0.45f, 4, Projectile.identity + i, 1f);
-                spriteBatch.Draw(star, tip, null, TumblerVFX.Glow(charged, opacity * 0.65f), 0f, star.Size() * 0.5f, 12f / star.Width, SpriteEffects.None, 0f);
+                TumblerVFX.DrawElectricLine(spriteBatch, anchor, tip, charged, magneticOpacity * 0.45f, 4, Projectile.identity + i, 1f);
+                spriteBatch.Draw(star, tip, null, TumblerVFX.Glow(charged, magneticOpacity * 0.65f), 0f, star.Size() * 0.5f, 12f / star.Width, SpriteEffects.None, 0f);
             }
             if (crushTimer >= 0 && crushTimer < warningTicks)
             {
                 Vector2 target = new(center.X, ceilingY - Projectile.height * 0.5f - Main.screenPosition.Y);
-                TumblerVFX.DrawTelegraph(spriteBatch, new Vector2(center.X, SurfaceY - Main.screenPosition.Y - 12f), target, charged, 0.24f + warning * 0.45f, 32f);
-                TumblerVFX.DrawCorona(spriteBatch, center, 74f, charged, warning * 0.25f, Projectile.identity, 1f);
+                TumblerVFX.DrawTelegraph(spriteBatch, new Vector2(center.X, SurfaceY - Main.screenPosition.Y - 12f), target, charged, (0.24f + warning * 0.45f) * opacity, 32f);
+                TumblerVFX.DrawCorona(spriteBatch, center, 74f, charged, warning * opacity * 0.25f, Projectile.identity, 1f);
                 for (int i = 0; i < 3; i++)
                 {
                     float step = (age * 0.02f + i / 3f) % 1f;
                     Vector2 arrow = center + new Vector2(0f, -30f - step * 44f);
-                    Color arrowColor = TumblerVFX.Glow(charged, (1f - step) * (0.4f + warning * 0.4f));
+                    Color arrowColor = TumblerVFX.Glow(charged, (1f - step) * (0.4f + warning * 0.4f) * opacity);
                     TumblerVFX.DrawLine(spriteBatch, arrow + new Vector2(-7f, 7f), arrow, arrowColor, 1.6f);
                     TumblerVFX.DrawLine(spriteBatch, arrow + new Vector2(7f, 7f), arrow, arrowColor, 1.6f);
                 }
@@ -328,6 +361,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             orig(player, fallThrough, ignorePlats);
             player.GetModPlayer<TumblerPlatformPlayer>().ResolveStanding(fallThrough || ignorePlats);
+            player.GetModPlayer<TumblerRipplePlayer>().Resolve();
         }
     }
 
@@ -369,7 +403,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 int escapeDirection = Player.Center.X < platform.Projectile.Center.X ? -1 : 1;
                 if (platform.Crushing && Player.whoAmI == Main.myPlayer)
-                    Player.Hurt(PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was caught between a magnetic boulder and the cavern ceiling.")), 22, escapeDirection);
+                    Player.Hurt(PlayerDeathReason.ByCustomReason(NetworkText.FromLiteral(Player.name + " was caught between a magnetic boulder and the cavern ceiling.")), 18, escapeDirection);
                 Player.velocity = new Vector2(escapeDirection * 5f, 2f);
                 Detach(30);
                 return;

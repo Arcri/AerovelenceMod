@@ -135,6 +135,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Texture2D texture = TextureAssets.Tile[TileID.SapphireGemspark].Value;
             float closure = Closure;
             float displacement = Height * (1f - closure);
+            float opacity = TumblerProjectileRetirement.VisualOpacity(Projectile);
             Color color = Color.Lerp(TumblerVFX.PhaseColor(0f), TumblerVFX.PhaseColor(1f), phase);
             float flash = MathHelper.Clamp(1f - (IntroTime - DropStart - 55f) / 18f, 0f, 1f);
             for (int row = 0; row < (int)(Height / 16f); row++)
@@ -146,7 +147,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Tile tile = Framing.GetTileSafely(TileX, (int)(Projectile.Center.Y / 16f) + row);
                 Rectangle source = new(tile.TileFrameX, tile.TileFrameY + clip, 16, 16 - clip);
                 Vector2 position = new(Projectile.Center.X - 8f, y + clip);
-                Main.spriteBatch.Draw(texture, position - Main.screenPosition, source, Color.Lerp(Color.White, color, 0.25f), 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(texture, position - Main.screenPosition, source, Color.Lerp(Color.White, color, 0.25f) * opacity, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
             if (closure >= 1f)
             {
@@ -157,7 +158,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     float jitter = i == 0 || i == count ? 0f : MathF.Sin(i * 8.13f + Main.GameUpdateCount / 3f) * 6f;
                     points[i] = Projectile.Center + new Vector2(jitter, Height * i / count);
                 }
-                TumblerLightningSystem.DrawPath(points, Color.Lerp(color, Color.White, flash), 0.8f, 2.5f + flash * 2f, true, RenderLayer.UnderTiles, 0f);
+                TumblerLightningSystem.DrawPath(points, Color.Lerp(color, Color.White, flash), opacity * 0.8f, 2.5f + flash * 2f, true, RenderLayer.UnderTiles, 0f);
             }
             return false;
         }

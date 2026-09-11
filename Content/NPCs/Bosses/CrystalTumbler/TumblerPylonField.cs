@@ -104,6 +104,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Color color = TumblerVFX.PhaseColor(Projectile.ai[2]);
             float charge = MathHelper.Clamp(timer / (float)Warning, 0f, 1f);
             float opacity = MathHelper.Clamp(timer / 22f, 0f, 1f) * MathHelper.Clamp((Warning + Duration + 20f - timer) / 20f, 0f, 1f);
+            opacity *= TumblerProjectileRetirement.VisualOpacity(Projectile);
             Vector2 left = Projectile.Center - Main.screenPosition;
             Vector2 right = left + Projectile.velocity;
             Vector2 top = new(0f, -FieldHeight);
@@ -111,8 +112,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Color dischargeColor = Color.Lerp(color, Color.White, flash);
             if (timer < Warning)
             {
-                TumblerVFX.DrawTelegraph(spriteBatch, left + top, right + top, color, 0.3f + charge * 0.5f);
-                TumblerVFX.DrawTelegraph(spriteBatch, right + top, left + top, color, 0.3f + charge * 0.5f);
+                TumblerVFX.DrawTelegraph(spriteBatch, left + top, right + top, color, (0.3f + charge * 0.5f) * opacity);
+                TumblerVFX.DrawTelegraph(spriteBatch, right + top, left + top, color, (0.3f + charge * 0.5f) * opacity);
             }
             if (timer >= Warning)
             {

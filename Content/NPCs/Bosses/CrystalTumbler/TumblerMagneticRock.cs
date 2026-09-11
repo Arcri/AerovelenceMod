@@ -49,6 +49,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Projectile.Kill();
                 return;
             }
+            if (boss.ai[0] != (float)TumblerState.MagnetClash)
+            {
+                TumblerProjectileRetirement.Begin(Projectile);
+                return;
+            }
             timer++;
             Projectile.frame = Projectile.identity % 3;
             Projectile.rotation += Projectile.velocity.X * 0.022f;

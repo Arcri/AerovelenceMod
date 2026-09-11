@@ -105,6 +105,7 @@ NPCs: {
 	Bomber.DisplayName: Bomber
 	TumblerConductiveCrystal.DisplayName: Tumbler Conductive Crystal
 	TumblerCrystalBud.DisplayName: Tumbler Crystal Bud
+	TumblerCarapaceShard.DisplayName: Tumbler Carapace Crystal
 }
 
 Buffs: {
@@ -1632,6 +1633,9 @@ Projectiles: {
 	TumblerResidualField.DisplayName: Scorched Current
 	TumblerRazeBeam.DisplayName: Crystal Raze
 	TumblerConvergenceOrb.DisplayName: Convergence Core
+	TumblerShieldStorm.DisplayName: Overshield Discharge
+	TumblerPulseShield.DisplayName: Pulsing Electric Shield
+	TumblerGuidedShard.DisplayName: Guided Crystal Shard
 	TumblerPylonField.DisplayName: Pylon Field
 	TumblerKnifeBall.DisplayName: Tumbler Knife Ball
 	TumblerKnifeCrystal.DisplayName: Tumbler Knife Crystal
@@ -1640,6 +1644,8 @@ Projectiles: {
 	TumblerPlatformField.DisplayName: Tumbler Platform Field
 	TumblerSpark.DisplayName: Tumbler Spark
 	TumblerStar.DisplayName: Tumbler Star
+	TumblerCascadeRail.DisplayName: Tumbler Cascade Rail
+	TumblerFloorRipple.DisplayName: Tumbler Floor Ripple
 }
 
 Configs: {

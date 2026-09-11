@@ -4,6 +4,7 @@ using AerovelenceMod.Common.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
@@ -11,6 +12,82 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     public class TumblerLightningSystem : ModSystem
     {
         private readonly List<LightningPath> dustPaths = new();
+        private readonly Dictionary<Entity, CapturedLightning> captured = new();
+        private readonly List<FadingLightning> fading = new();
+        private readonly List<CrystalRemnant> crystalRemnants = new();
+        private Entity captureOwner;
+
+        private sealed class CapturedLightning
+        {
+            internal ulong Updated;
+            internal readonly List<LightningPath> Paths = new();
+        }
+
+        private sealed record FadingLightning(LightningPath Path, ulong Started);
+        private sealed record CrystalRemnant(Texture2D Texture, Vector2 Position, Vector2 Size, float Rotation, Color Color, ulong Started);
+
+        public static void DissolveCrystal(NPC npc)
+        {
+            if (Main.dedServ)
+                return;
+            Release(npc);
+            TumblerLightningSystem system = ModContent.GetInstance<TumblerLightningSystem>();
+            Texture2D texture = TextureAssets.Npc[npc.type].Value;
+            if (texture == null)
+                return;
+            if (system.crystalRemnants.Count >= 32)
+                system.crystalRemnants.RemoveAt(0);
+            Vector2 size = npc.ModNPC is TumblerCarapaceShard ? new Vector2(24f, 48f) * npc.scale : npc.Size;
+            Color color = Color.Lerp(Lighting.GetColor(npc.Center.ToTileCoordinates()), Color.White, 0.4f);
+            system.crystalRemnants.Add(new CrystalRemnant(texture, npc.Center, size, npc.rotation, color, Main.GameUpdateCount));
+            for (int i = 0; i < 8; i++)
+                TumblerVFX.SpawnSpark(npc.position + Main.rand.NextVector2Square(0f, 1f) * npc.Size, Main.rand.NextVector2Circular(2.5f, 2.5f), new Color(205, 239, 255), 0.2f);
+        }
+
+        public static void BeginCapture(Entity owner)
+        {
+            if (Main.dedServ)
+                return;
+            TumblerLightningSystem system = ModContent.GetInstance<TumblerLightningSystem>();
+            system.captureOwner = owner;
+            if (!system.captured.TryGetValue(owner, out CapturedLightning capture))
+                system.captured[owner] = capture = new CapturedLightning();
+            capture.Updated = Main.GameUpdateCount;
+            capture.Paths.Clear();
+        }
+
+        public static void EndCapture()
+        {
+            if (!Main.dedServ)
+                ModContent.GetInstance<TumblerLightningSystem>().captureOwner = null;
+        }
+
+        public static void Release(Entity owner)
+        {
+            if (Main.dedServ)
+                return;
+            TumblerLightningSystem system = ModContent.GetInstance<TumblerLightningSystem>();
+            if (!system.captured.Remove(owner, out CapturedLightning capture) || Main.GameUpdateCount - capture.Updated > 8)
+                return;
+            int sparkBudget = 18;
+            foreach (LightningPath path in capture.Paths)
+            {
+                if (path.Opacity < 0.08f)
+                    continue;
+                if (system.fading.Count >= 240)
+                    system.fading.RemoveAt(0);
+                system.fading.Add(new FadingLightning(path, Main.GameUpdateCount));
+                int count = Math.Min(sparkBudget, Math.Clamp((int)(path.Length / 65f), 1, 6));
+                for (int i = 0; i < count; i++)
+                {
+                    int segment = Main.rand.Next(1, path.Points.Length);
+                    Vector2 point = Vector2.Lerp(path.Points[segment - 1], path.Points[segment], Main.rand.NextFloat());
+                    Vector2 direction = (path.Points[segment] - path.Points[segment - 1]).SafeNormalize(Vector2.UnitX).RotatedBy(Main.rand.NextBool() ? MathHelper.PiOver2 : -MathHelper.PiOver2);
+                    TumblerVFX.SpawnSpark(point, direction * Main.rand.NextFloat(1.2f, 3.5f), Color.Lerp(path.Color, Color.White, 0.7f), 0.23f);
+                    sparkBudget--;
+                }
+            }
+        }
 
         private sealed record LightningPath(Vector2[] Points, Color Color, float Opacity, float Width, float Length, float Bloom);
 
@@ -23,6 +100,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             for (int i = 1; i < points.Length; i++)
                 length += Vector2.Distance(points[i - 1], points[i]);
             LightningPath path = new(points, color, MathHelper.Clamp(opacity, 0f, 1f), width, length, bloom);
+            TumblerLightningSystem system = ModContent.GetInstance<TumblerLightningSystem>();
+            if (system.captureOwner != null && system.captured.TryGetValue(system.captureOwner, out CapturedLightning capture) && capture.Paths.Count < 64)
+                capture.Paths.Add(path);
             if (layer.HasValue)
                 ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(layer.Value, () => Draw(path, 1f, true));
             else
@@ -34,6 +114,37 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override void PostDrawTiles()
         {
             dustPaths.Clear();
+            captureOwner = null;
+            foreach (FadingLightning tail in fading)
+            {
+                float age = Main.GameUpdateCount - tail.Started;
+                float fade = MathHelper.Clamp(1f - age / 22f, 0f, 1f);
+                LightningPath path = tail.Path with { Opacity = tail.Path.Opacity * fade * fade, Width = Math.Max(1f, tail.Path.Width * fade), Bloom = tail.Path.Bloom * fade };
+                PixellationSystem.QueuePixelationAction(() => Draw(path), PixellationSystem.RenderType.Additive);
+            }
+            foreach (CrystalRemnant remnant in crystalRemnants)
+            {
+                float age = Main.GameUpdateCount - remnant.Started;
+                float opacity = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(1f - age / 30f, 0f, 1f));
+                ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderNPCs, () =>
+                    Main.spriteBatch.Draw(remnant.Texture, remnant.Position - Main.screenPosition - new Vector2(0f, age * 0.12f), null, remnant.Color * opacity, remnant.Rotation, remnant.Texture.Size() * 0.5f, remnant.Size / remnant.Texture.Size(), SpriteEffects.None, 0f));
+            }
+        }
+
+        public override void PostUpdateEverything()
+        {
+            fading.RemoveAll(tail => Main.GameUpdateCount - tail.Started >= 22);
+            crystalRemnants.RemoveAll(remnant => Main.GameUpdateCount - remnant.Started >= 30);
+            List<Entity> stale = new();
+            foreach (var pair in captured)
+                if (Main.GameUpdateCount - pair.Value.Updated > 8 || pair.Key is NPC { active: false })
+                    stale.Add(pair.Key);
+            foreach (Entity owner in stale)
+            {
+                if (owner is NPC { active: false, ModNPC: TumblerCrystalBud or TumblerConductiveCrystal or TumblerCarapaceShard } npc)
+                    DissolveCrystal(npc);
+                captured.Remove(owner);
+            }
         }
 
         public override void PostUpdateDusts()
@@ -69,6 +180,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override void OnWorldUnload()
         {
             dustPaths.Clear();
+            captured.Clear();
+            fading.Clear();
+            crystalRemnants.Clear();
+            captureOwner = null;
         }
 
         private static void Draw(LightningPath path, float scale = 0.5f, bool alphaBlend = false)
@@ -103,6 +218,17 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 glowSpacing -= distance;
             }
         }
+    }
+
+    public class TumblerActorVisuals : GlobalNPC
+    {
+        public override bool AppliesToEntity(NPC entity, bool lateInstantiation) => entity.ModNPC is TumblerCrystalBud or TumblerConductiveCrystal or TumblerCarapaceShard;
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            TumblerLightningSystem.BeginCapture(npc);
+            return true;
+        }
+        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => TumblerLightningSystem.EndCapture();
     }
 
     public class TumblerLightningDust : ModDust

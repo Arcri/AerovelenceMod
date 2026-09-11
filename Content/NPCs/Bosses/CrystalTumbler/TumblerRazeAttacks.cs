@@ -55,6 +55,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             float opacity = MathHelper.Clamp(age / 15f, 0f, 1f) * MathHelper.Clamp(Projectile.timeLeft / 25f, 0f, 1f);
+            opacity *= TumblerProjectileRetirement.VisualOpacity(Projectile);
             DrawField(Projectile.Center, Projectile.Center.X + Math.Abs(Projectile.velocity.X), Projectile.ai[1], opacity);
             return false;
         }
@@ -148,6 +149,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             Color color = TumblerVFX.PhaseColor(1f);
+            float retirementOpacity = TumblerProjectileRetirement.VisualOpacity(Projectile);
             float left = Math.Min(Edge, ArenaData.ArenaCenter.X + Math.Sign(Projectile.ai[1]) * 65f);
             float right = Math.Max(Edge, ArenaData.ArenaCenter.X + Math.Sign(Projectile.ai[1]) * 65f);
             if (timer < 120)
@@ -156,15 +158,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 for (int row = 0; row < 5; row++)
                 {
                     float y = MathHelper.Lerp(ArenaData.FloorY, FieldTop, row / 4f);
-                    TumblerVFX.DrawTelegraph(Main.spriteBatch, new Vector2(left, y) - Main.screenPosition, new Vector2(right, y) - Main.screenPosition, color, 0.3f + charge * 0.45f);
+                    TumblerVFX.DrawTelegraph(Main.spriteBatch, new Vector2(left, y) - Main.screenPosition, new Vector2(right, y) - Main.screenPosition, color, (0.3f + charge * 0.45f) * retirementOpacity);
                 }
-                TumblerVFX.DrawTelegraph(Main.spriteBatch, BeamTop - Main.screenPosition, BeamBottom - Main.screenPosition, color, 0.35f + charge * 0.45f);
-                TumblerVFX.DrawCharge(Main.spriteBatch, BeamTop - Main.screenPosition, color, charge, 48f, timer * 0.02f);
+                TumblerVFX.DrawTelegraph(Main.spriteBatch, BeamTop - Main.screenPosition, BeamBottom - Main.screenPosition, color, (0.35f + charge * 0.45f) * retirementOpacity);
+                TumblerVFX.DrawCharge(Main.spriteBatch, BeamTop - Main.screenPosition, color, charge, 48f, timer * 0.02f, retirementOpacity);
             }
             else
             {
-                float opacity = MathHelper.Clamp((FieldEnd - timer) / 60f, 0f, 1f);
-                float beamOpacity = MathHelper.Clamp((BeamEnd + 25f - timer) / 25f, 0f, 1f);
+                float opacity = MathHelper.Clamp((FieldEnd - timer) / 60f, 0f, 1f) * retirementOpacity;
+                float beamOpacity = MathHelper.Clamp((BeamEnd + 25f - timer) / 25f, 0f, 1f) * retirementOpacity;
                 lightning.Draw(Main.spriteBatch, Color.Lerp(color, Color.White, MathHelper.Clamp((134f - timer) / 14f, 0f, 1f)), beamOpacity, 3f);
                 left = Math.Min(Edge, SweepX);
                 right = Math.Max(Edge, SweepX);
@@ -180,10 +182,11 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     public class TumblerConvergenceOrb : ModProjectile
     {
         private int timer;
+        private int retirement;
         private float groundX;
         private readonly TumblerLightningVisual channel = new();
         private readonly TumblerLightningVisual raze = new();
-        private bool Active => timer >= 210 && timer < 510;
+        private bool Active => retirement == 0 && timer >= 210 && timer < 510;
         private float Growth => MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((timer - 40f) / 170f, 0f, 1f));
         private float CoreRadius => 12f + Growth * 78f + MathHelper.Clamp((timer - 210f) / 300f, 0f, 1f) * 18f;
         internal static Vector2 Anchor => new(ArenaData.ArenaCenter.X, ArenaData.FloorY - 260f);
@@ -209,16 +212,29 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool ShouldUpdatePosition() => false;
         public override bool? CanDamage() => Active;
 
+        internal void Retire()
+        {
+            if (retirement > 0)
+                return;
+            retirement = 40;
+            Projectile.hostile = false;
+            Projectile.timeLeft = 44;
+            Projectile.netUpdate = true;
+        }
+
         public override void AI()
         {
-            timer++;
             int bossIndex = (int)Projectile.ai[0];
-            Projectile.timeLeft = Math.Min(Projectile.timeLeft, Math.Max(1, 550 - timer));
             if (bossIndex < 0 || bossIndex >= Main.maxNPCs || !Main.npc[bossIndex].active || Main.npc[bossIndex].ai[0] != (float)TumblerState.CrystalConvergence)
+                Retire();
+            if (retirement > 0)
             {
-                Projectile.Kill();
+                if (--retirement == 0)
+                    Projectile.Kill();
                 return;
             }
+            timer++;
+            Projectile.timeLeft = Math.Min(Projectile.timeLeft, Math.Max(1, 550 - timer));
             Projectile.frame = timer / 5 % 4;
             Projectile.rotation += 0.035f;
             Projectile.Center = Anchor;
@@ -288,11 +304,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             writer.Write(timer);
             writer.Write(groundX);
+            writer.Write(retirement);
         }
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             timer = reader.ReadInt32();
             groundX = reader.ReadSingle();
+            retirement = reader.ReadInt32();
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -300,6 +318,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             SpriteBatch spriteBatch = Main.spriteBatch;
             Color color = TumblerVFX.PhaseColor(1f);
             float fade = MathHelper.Clamp((550f - timer) / 40f, 0f, 1f);
+            if (retirement > 0)
+                fade *= MathHelper.SmoothStep(0f, 1f, retirement / 40f);
             for (int i = 0; i < 3; i++)
             {
                 float charge = MathHelper.Clamp((timer - i * 40f) / 40f, 0f, 1f);
@@ -309,7 +329,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (charge >= 1f && (i != 1 || timer < 120))
                     TumblerVFX.DrawElectricLine(spriteBatch, start, end, color, fade * 0.7f, 24, i * 7f, 3f);
                 else if (charge > 0f && charge < 1f)
-                    TumblerVFX.DrawTelegraph(spriteBatch, start, end, color, charge * 0.65f);
+                    TumblerVFX.DrawTelegraph(spriteBatch, start, end, color, charge * fade * 0.65f);
             }
             float growth = Growth;
             Vector2 position = Projectile.Center - Main.screenPosition;
@@ -320,8 +340,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (timer < 210 && timer >= 120)
             {
                 Vector2 ground = new(groundX, ArenaData.FloorY);
-                TumblerVFX.DrawTelegraph(spriteBatch, position, ground - Main.screenPosition, color, growth * 0.85f);
-                TumblerVFX.DrawCharge(spriteBatch, ground - Main.screenPosition, color, growth, 32f, -timer * 0.03f);
+                TumblerVFX.DrawTelegraph(spriteBatch, position, ground - Main.screenPosition, color, growth * fade * 0.85f);
+                TumblerVFX.DrawCharge(spriteBatch, ground - Main.screenPosition, color, growth, 32f, -timer * 0.03f, fade);
             }
             if (timer >= 210)
             {

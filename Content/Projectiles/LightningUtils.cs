@@ -14,9 +14,6 @@ namespace AerovelenceMod.Content.Projectiles
 {
     public static class LightningUtils
     {
-        /// <summary>
-        /// Data structure holding all key fields for the lightning system.
-        /// </summary>
         public class LightningData
         {
             public int MaxSegments = 12;
@@ -39,21 +36,26 @@ namespace AerovelenceMod.Content.Projectiles
             public Projectile Projectile;
             public NPC Npc;
 
-            //for the static style
             public bool HasStaticUpdated = false;
             public int StaticTimer = 0;
             public int StaticMaxTime = 60;
 
-            //color support
             public Color? CoreColorOverride;
             public Color? MidColorOverride;
             public Color? OuterColorOverride;
             public Color? DistColorOverride;
             public Color? FlashColorOverride;
 
-            //glow stuff
             public float GlowIntensity = 0.4f;
             public float GlowScale = 0.15f;
+
+            public float StartThickness = 4f;
+            public float EndThickness = 0.6f;
+            public float BranchThicknessMultiplier = 0.55f;
+            public float BranchTipThicknessMultiplier = 0.08f;
+
+            public float ThicknessAt(float progress) => MathHelper.Lerp(
+                StartThickness, EndThickness, MathHelper.Clamp(progress, 0f, 1f));
 
             public LightningData(Projectile projectile, LightningStyle style = LightningStyle.Default)
             {
@@ -118,15 +120,13 @@ namespace AerovelenceMod.Content.Projectiles
             }
         }
 
-        /// <summary>
-        /// A single lightning branch.
-        /// </summary>
         public class Branch
         {
             public Vector2[] Positions { get; set; }
             public float[] Offsets { get; set; }
             public float Alpha { get; set; }
             public int LifeTime { get; set; }
+            public float ParentProgress { get; set; }
         }
 
         public enum LightningStyle
@@ -138,9 +138,6 @@ namespace AerovelenceMod.Content.Projectiles
             Static
         }
 
-        /// <summary>
-        /// Initializes the main lightning bolt based on the projectile's position and velocity.
-        /// </summary>
         public static void InitializeProjectiles(LightningData data)
         {
             data.SegmentPositions = new Vector2[data.MaxSegments];
@@ -157,12 +154,8 @@ namespace AerovelenceMod.Content.Projectiles
                 data.SegmentPositions[i] = data.Projectile.Center + direction * (segmentLength * i);
                 data.SegmentOffsets[i] = 0f;
             }
-            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
-        /// <summary>
-        /// Initializes the main lightning bolt based on the NPC's position and velocity.
-        /// </summary>
         public static void InitializeNPCs(LightningData data)
         {
             data.SegmentPositions = new Vector2[data.MaxSegments];
@@ -179,14 +172,12 @@ namespace AerovelenceMod.Content.Projectiles
                 data.SegmentPositions[i] = data.Npc.Center + direction * (segmentLength * i);
                 data.SegmentOffsets[i] = 0f;
             }
-            //SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
         }
 
         public static void InitializeBetweenPoints(LightningData data, Vector2 startPos, Vector2 endPos, LightningStyle style = LightningStyle.Default)
         {
             data.Style = style;
 
-            //only create brand-new arrays and branch list if we haven't done so yet
             if (!data.Initialized)
             {
                 data.Branches = new List<Branch>();
@@ -195,7 +186,6 @@ namespace AerovelenceMod.Content.Projectiles
                 data.Initialized = true;
             }
 
-            //now this recalcs base segment positions each frame so they follow startPos -> endPos, but do NOT re-new data.Branches
             Vector2 direction = endPos - startPos;
             data.DistanceToTarget = direction.Length();
             float segmentLength = data.DistanceToTarget / (data.MaxSegments - 1);
@@ -208,9 +198,6 @@ namespace AerovelenceMod.Content.Projectiles
         }
 
 
-        /// <summary>
-        /// Updates the main segments of the bolt with noise and random displacement. Also calls branch creation logic.
-        /// </summary>
         public static void UpdateSegments(LightningData data)
         {
             if (data.Style == LightningStyle.Static)
@@ -322,9 +309,6 @@ namespace AerovelenceMod.Content.Projectiles
             }
         }
 
-        /// <summary>
-        /// Creates a new branch from somewhere in the main bolt.
-        /// </summary>
         private static void CreateBranch(LightningData data)
         {
             int startSegment = Main.rand.Next(1, data.MaxSegments - 2);
@@ -340,6 +324,7 @@ namespace AerovelenceMod.Content.Projectiles
                 Positions = new Vector2[branchSegments],
                 Offsets = new float[branchSegments],
                 Alpha = 0.7f,
+                ParentProgress = startSegment / (float)(data.MaxSegments - 1),
                 LifeTime = Main.rand.Next(10, 20)
             };
 
@@ -368,9 +353,6 @@ namespace AerovelenceMod.Content.Projectiles
         }
 
 
-        /// <summary>
-        /// Updates all branches by applying noise and decrementing lifetime.
-        /// </summary>
         public static void UpdateBranches(LightningData data)
         {
             for (int i = data.Branches.Count - 1; i >= 0; i--)
@@ -399,14 +381,10 @@ namespace AerovelenceMod.Content.Projectiles
             }
         }
 
-        /// <summary>
-        /// Spawns dust around main segments and branches
-        /// </summary>
         public static void SpawnDust(LightningData data)
         {
             PixellationSystem.QueuePixelationAction(() =>
             {
-                //Main segments dust
                 for (int i = 0; i < 0.2; i++)
                 {
                     Vector2 randomSegment = data.SegmentPositions[Main.rand.Next(0, data.MaxSegments)];
@@ -430,7 +408,6 @@ namespace AerovelenceMod.Content.Projectiles
                     a.alpha = 2;
                 }
 
-                //Branch dust
                 foreach (Branch branch in data.Branches)
                 {
                     if (Main.rand.NextBool(3))
@@ -465,10 +442,6 @@ namespace AerovelenceMod.Content.Projectiles
             }, PixellationSystem.RenderType.Additive);
         }
 
-        /// <summary>
-        /// Draws the main segments and branches of the bolt, including glow, distortion, and impact effects.
-        /// Called in Projectile's PreDraw.
-        /// </summary>
         public static void DrawLightning(LightningData data, SpriteBatch spriteBatch)
         {
             if (data.SegmentPositions == null)
@@ -496,10 +469,6 @@ namespace AerovelenceMod.Content.Projectiles
 
                 float energyPulse = (float)Math.Sin(Main.GameUpdateCount * 0.2f) * 0.3f + 0.7f;
 
-                /*Color coreColor = Color.Yellow * data.Alpha * energyPulse;
-                Color midColor = new Color(150, 220, 255) * (data.Alpha * 0.5f * energyPulse);
-                Color outerColor = new Color(100, 180, 255) * (data.Alpha * 0.3f * energyPulse);
-                Color distColor = new Color(200, 230, 255) * (data.Alpha * 0.2f);*/
                 Color coreColor = (data.CoreColorOverride ?? Color.Yellow) * data.Alpha * 0.8f;
                 Color midColor = (data.MidColorOverride ?? new Color(150, 220, 255)) * (data.Alpha * 0.5f * 0.8f);
                 Color outerColor = (data.OuterColorOverride ?? new Color(100, 180, 255)) * (data.Alpha * 0.3f * 0.8f);
@@ -514,7 +483,6 @@ namespace AerovelenceMod.Content.Projectiles
                     float distance = direction.Length();
                     float rotation = direction.ToRotation();
 
-                    //1) Flash pass
                     if (flashIntensity > 0f)
                     {
                         spriteBatch.Draw(
@@ -530,7 +498,6 @@ namespace AerovelenceMod.Content.Projectiles
                         );
                     }
 
-                    //2) Core beam
                     spriteBatch.Draw(
                         lineTexture,
                         start,
@@ -543,7 +510,6 @@ namespace AerovelenceMod.Content.Projectiles
                         0
                     );
 
-                    //3) Middle glow
                     spriteBatch.Draw(
                         lineTexture,
                         start,
@@ -556,7 +522,6 @@ namespace AerovelenceMod.Content.Projectiles
                         0
                     );
 
-                    //4) Outer glow
                     spriteBatch.Draw(
                         lineTexture,
                         start,
@@ -569,7 +534,6 @@ namespace AerovelenceMod.Content.Projectiles
                         0
                     );
 
-                    //5) Distortion
                     float distortionOffset = (float)Math.Sin(Main.GameUpdateCount * 0.8f + i * 0.5f);
                     spriteBatch.Draw(
                         lineTexture,
@@ -616,11 +580,9 @@ namespace AerovelenceMod.Content.Projectiles
 
 
 
-                //impact spark at the start & end
                 DrawImpactPoint(data.SegmentPositions[0], 4f, data, spriteBatch);
                 DrawImpactPoint(data.SegmentPositions[data.MaxSegments - 1], 4f, data, spriteBatch);
 
-                //Branches
                 foreach (Branch branch in data.Branches)
                 {
                     for (int i = 0; i < data.MaxSegments - 1; i++)
@@ -672,7 +634,6 @@ namespace AerovelenceMod.Content.Projectiles
                         }
 
 
-                        //1) Flash pass
                         if (flashIntensity > 0f)
                         {
                             spriteBatch.Draw(
@@ -688,7 +649,6 @@ namespace AerovelenceMod.Content.Projectiles
                             );
                         }
 
-                        //2) Core beam
                         spriteBatch.Draw(
                             lineTexture,
                             start,
@@ -701,7 +661,6 @@ namespace AerovelenceMod.Content.Projectiles
                             0
                         );
 
-                        //3) Middle glow
                         spriteBatch.Draw(
                             lineTexture,
                             start,
@@ -714,7 +673,6 @@ namespace AerovelenceMod.Content.Projectiles
                             0
                         );
 
-                        //4) Outer glow
                         spriteBatch.Draw(
                             lineTexture,
                             start,
@@ -727,7 +685,6 @@ namespace AerovelenceMod.Content.Projectiles
                             0
                         );
 
-                        //5) Distortion
                         float distortionOffset = (float)Math.Sin(Main.GameUpdateCount * 0.8f + i * 0.5f);
                         spriteBatch.Draw(
                             lineTexture,
@@ -771,6 +728,41 @@ namespace AerovelenceMod.Content.Projectiles
         }
 
 
+        public static void DrawTaperedLightning(LightningData data, SpriteBatch spriteBatch)
+        {
+            if (data.SegmentPositions == null || data.Alpha <= 0f)
+                return;
+
+            DrawPath(data.SegmentPositions, data.StartThickness, data.EndThickness, data.Alpha);
+            foreach (Branch branch in data.Branches)
+            {
+                float root = data.ThicknessAt(branch.ParentProgress) * data.BranchThicknessMultiplier;
+                DrawPath(branch.Positions, root, root * data.BranchTipThicknessMultiplier,
+                    data.Alpha * branch.Alpha);
+            }
+
+            void DrawPath(Vector2[] points, float startWidth, float endWidth, float opacity)
+            {
+                for (int i = 0; i < points.Length - 1; i++)
+                {
+                    Vector2 delta = points[i + 1] - points[i];
+                    float width = Math.Max(0.05f, MathHelper.Lerp(startWidth, endWidth,
+                        (i + 0.5f) / (points.Length - 1)));
+                    Color glow = (data.OuterColorOverride ?? new Color(120, 170, 255)) with { A = 0 };
+                    Color core = (data.CoreColorOverride ?? Color.White) with { A = 0 };
+                    for (int pass = 0; pass < 3; pass++)
+                    {
+                        float scale = pass == 0 ? 5f : pass == 1 ? 2f : 1f;
+                        Color color = pass == 2 ? core : glow;
+                        spriteBatch.Draw(TextureAssets.MagicPixel.Value, points[i] - Main.screenPosition,
+                            new Rectangle(0, 0, 1, 1), color * opacity * (pass == 0 ? 0.12f : pass == 1 ? 0.3f : 1f),
+                            delta.ToRotation(), new Vector2(0f, 0.5f),
+                            new Vector2(delta.Length() + 0.5f, width * scale), SpriteEffects.None, 0f);
+                    }
+                }
+            }
+        }
+
         private static void DrawImpactPoint(Vector2 position, float size, LightningData data, SpriteBatch spriteBatch)
         {
             Texture2D lineTexture = TextureAssets.MagicPixel.Value;
@@ -780,7 +772,6 @@ namespace AerovelenceMod.Content.Projectiles
             float time = Main.GameUpdateCount * 0.1f;
             float pulseSize = 1f + (float)Math.Sin(time) * 0.2f;
 
-            //1) Rotating spark lines
             for (int i = 0; i < 4; i++)
             {
                 float angle = i * MathHelper.PiOver2 + time;
@@ -802,7 +793,6 @@ namespace AerovelenceMod.Content.Projectiles
                 );
             }
 
-            //2) Star overlay
             Texture2D starTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Flare/CrispStarPMA").Value;
 
             Color color1 = Color.Lerp(

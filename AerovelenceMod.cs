@@ -117,8 +117,9 @@ namespace AerovelenceMod
 					Rectangle frame = texture.Frame(1, 2, 0, 0);
 					Vector2 centered = rect.Center.ToVector2();
 					spriteBatch.Draw(texture, centered, frame, color, 0f, frame.Size() / 2f, 1f, SpriteEffects.None, 0f);
-                    Texture2D eyeTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumblerEye").Value;
-                    spriteBatch.Draw(eyeTexture, centered, null, color, 0f, eyeTexture.Size() / 2f, 1f, SpriteEffects.None, 0f);
+                    Texture2D eyeTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/CrystalTumbler_Eye", AssetRequestMode.ImmediateLoad).Value;
+                    Rectangle eyeFrame = eyeTexture.Frame(1, 2, 0, 0);
+                    spriteBatch.Draw(eyeTexture, centered, eyeFrame, Color.White, 0f, eyeFrame.Size() / 2f, 1f, SpriteEffects.None, 0f);
 
                 };
 				bossChecklistMod.Call(

@@ -36,7 +36,12 @@ namespace AerovelenceMod.Common.Systems
             return (WorldGen.gen || !ArenaData.Valid || !ArenaData.TileBounds.Contains(i, j) || AllowsDecoration(type) && !Framing.GetTileSafely(i, j).HasTile) && orig(i, j, type, mute, forced, player, style);
         }
 
-        public static bool AllowsDecoration(int type) => type >= 0 && type < Main.tileSolid.Length && !Main.tileSolid[type] && !Main.tileSolidTop[type] && !TileID.Sets.Platforms[type];
+        public static bool AllowsDecoration(int type) => type >= 0 && type < Main.tileSolid.Length
+            && type != TileID.Tombstones && type != ModContent.TileType<CavernGatewayTile>() && type != ModContent.TileType<ArenaCavernCrystalTile>()
+            && !Main.tileSolid[type] && !Main.tileSolidTop[type] && !TileID.Sets.Platforms[type]
+            && !TileID.Sets.BasicChest[type] && !TileID.Sets.BasicDresser[type];
+
+        public static bool RemovableDecoration(int type) => type == TileID.Tombstones || AllowsDecoration(type);
 
         private static bool DryArea(int x, int y)
         {
@@ -149,7 +154,7 @@ namespace AerovelenceMod.Common.Systems
     {
         public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
         {
-            return !InsideArena(i, j);
+            return !InsideArena(i, j) || TumblerArenaSystem.RemovableDecoration(type);
         }
 
         public override bool CanPlace(int i, int j, int type)
@@ -174,7 +179,7 @@ namespace AerovelenceMod.Common.Systems
 
         public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if (InsideArena(i, j))
+            if (InsideArena(i, j) && !TumblerArenaSystem.RemovableDecoration(type))
             {
                 fail = true;
                 effectOnly = false;
@@ -237,6 +242,11 @@ namespace AerovelenceMod.Common.Systems
     {
         public override bool PreAI(Projectile projectile)
         {
+            if (ArenaData.Valid && ProjectileID.Sets.IsAGravestone[projectile.type] && ArenaData.WorldBounds.Intersects(projectile.Hitbox))
+            {
+                projectile.Kill();
+                return false;
+            }
             if (IsExplosiveNearArena(projectile))
             {
                 projectile.Kill();
@@ -247,6 +257,8 @@ namespace AerovelenceMod.Common.Systems
 
         public override bool PreKill(Projectile projectile, int timeLeft)
         {
+            if (ArenaData.Valid && ProjectileID.Sets.IsAGravestone[projectile.type] && ArenaData.WorldBounds.Intersects(projectile.Hitbox))
+                return false;
             if (!IsExplosiveNearArena(projectile))
                 return true;
             if (Main.netMode != NetmodeID.SinglePlayer && projectile.owner == Main.myPlayer)
@@ -292,7 +304,7 @@ namespace AerovelenceMod.Common.Systems
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             if (source is EntitySource_Parent parent)
-                FromEncounter = parent.Entity is NPC { ModNPC: CrystalTumbler } || parent.Entity is Projectile { ModProjectile: TumblerStar or TumblerAimLine or TumblerKnifeBall };
+                FromEncounter = parent.Entity is NPC { ModNPC: CrystalTumbler } || parent.Entity is Projectile { ModProjectile: TumblerStar or TumblerAimLine or TumblerKnifeBall or TumblerGuidedShard };
         }
 
         public override void SendExtraAI(Projectile projectile, BitWriter bitWriter, BinaryWriter binaryWriter)

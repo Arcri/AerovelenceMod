@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -47,7 +47,8 @@ namespace AerovelenceMod.Backgrounds.Skies
         {
             deactivating = false;
             isActive = true;
-            bolts = new Bolt[500];
+            bolts = new Bolt[12];
+            ticksUntilNextBolt = random.Next(600, 1200);
             for (int i = 0; i < bolts.Length; i++)
             {
                 bolts[i].IsAlive = false;
@@ -70,9 +71,10 @@ namespace AerovelenceMod.Backgrounds.Skies
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+            if (maxDepth == float.MaxValue)
+                spriteBatch.Draw(AerovelenceMod.Instance.Assets.Request<Texture2D>("Backgrounds/Skies/CrystalCavernsSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                     new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * intensity);
-            if (Main.raining)
+            if (CrystalRainAtmosphere.IsRainActive)
                 DrawLightning(spriteBatch, minDepth, maxDepth);
         }
 
@@ -84,6 +86,9 @@ namespace AerovelenceMod.Backgrounds.Skies
         public override void Reset()
         {
             isActive = false;
+            intensity = 0f;
+            deactivating = false;
+            bolts = null;
         }
 
         public override void Update(GameTime gameTime)
@@ -91,10 +96,6 @@ namespace AerovelenceMod.Backgrounds.Skies
             if (isActive && !deactivating)
             {
                 intensity += increment;
-                /*if (intensity > 1f)
-                {
-                    intensity = MathHelper.Lerp(intensity, 1, 0.2f); //1f;
-                }*/
             }
             else
             {
@@ -117,9 +118,11 @@ namespace AerovelenceMod.Backgrounds.Skies
         
         private void UpdateLightning()
         {
-            if (ticksUntilNextBolt <= 0)
+            if (bolts == null)
+                return;
+            if (ticksUntilNextBolt <= 0 && !deactivating && CrystalRainAtmosphere.IsRainActive)
             {
-                ticksUntilNextBolt = random.Next(5, 7);
+                ticksUntilNextBolt = Main.hardMode ? random.Next(600, 1080) : random.Next(900, 1800);
                 int i;
                 for (i = 0; bolts[i].IsAlive && i != bolts.Length - 1; i++)
                 {
@@ -131,7 +134,8 @@ namespace AerovelenceMod.Backgrounds.Skies
                 bolts[i].Depth = random.NextFloat() * 8f + 2f;
                 bolts[i].Life = 30;
             }
-            ticksUntilNextBolt--;
+            if (ticksUntilNextBolt > 0)
+                ticksUntilNextBolt--;
             for (int j = 0; j < bolts.Length; j++)
             {
                 if (bolts[j].IsAlive)
@@ -147,6 +151,8 @@ namespace AerovelenceMod.Backgrounds.Skies
 
         private void DrawLightning(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            if (bolts == null)
+                return;
             for (int i = 0; i < bolts.Length; i++)
             {
                 if (!bolts[i].IsAlive || !(bolts[i].Depth > minDepth) || !(bolts[i].Depth < maxDepth))
@@ -157,7 +163,6 @@ namespace AerovelenceMod.Backgrounds.Skies
                 int life = bolts[i].Life;
                 if (life > 26 && life % 2 == 0)
                 {
-                    //texture = bolts[i].FlashTexture;
                 }
                 Vector2 vector3 = Main.screenPosition + new Vector2(Main.screenWidth >> 1, Main.screenHeight >> 1);
                 Vector2 position = (bolts[i].Position - vector3) * new Vector2(1f / bolts[i].Depth, 0.6f / bolts[i].Depth) + vector3 - Main.screenPosition;
@@ -166,9 +171,9 @@ namespace AerovelenceMod.Backgrounds.Skies
                     texture: texture,
                     position: position,
                     sourceRectangle: null,
-                    color: (new Color(255, 255, 255, 0) * lifeColorDecay),
-                    rotation: bolts[i].Rotation, //
-                    origin: Vector2.Zero, //
+                    color: (new Color(205, 215, 255, 0) * lifeColorDecay * (intensity / 0.3f) * 0.6f),
+                    rotation: bolts[i].Rotation,
+                    origin: Vector2.Zero,
                     scale: 5f / bolts[i].Depth,
                     effects: 0,
                     layerDepth: 0f

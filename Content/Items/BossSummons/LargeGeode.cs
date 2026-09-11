@@ -232,7 +232,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             return closest;
         }
 
-        public static void ClearEncounterEntities(bool clearBarriers = true, bool preservePlatforms = false)
+        public static void ClearEncounterEntities(bool clearBarriers = true, bool preservePlatforms = false, bool fadeProjectiles = false)
         {
             ClearingEncounter = true;
             int budType = ModContent.NPCType<TumblerCrystalBud>();
@@ -240,8 +240,9 @@ namespace AerovelenceMod.Content.Items.BossSummons
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
-                if (npc.active && (npc.type == budType || npc.type == crystalType))
+                if (npc.active && (npc.type == budType || npc.type == crystalType || npc.ModNPC is TumblerCarapaceShard))
                 {
+                    TumblerLightningSystem.DissolveCrystal(npc);
                     npc.active = false;
                     if (Main.netMode == NetmodeID.Server)
                         NetMessage.SendData(MessageID.SyncNPC, number: i);
@@ -251,6 +252,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             [
                 ModContent.ProjectileType<ElectricBolt>(),
                 ModContent.ProjectileType<CrystalShard>(),
+                ModContent.ProjectileType<TumblerGuidedShard>(),
                 ModContent.ProjectileType<Stalactite>(),
                 ModContent.ProjectileType<TumblerSpark>(),
                 ModContent.ProjectileType<TumblerStar>(),
@@ -268,9 +270,13 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 ModContent.ProjectileType<TumblerFilamentRamp>(),
                 ModContent.ProjectileType<TumblerPylonField>(),
                 ModContent.ProjectileType<TumblerLoopRail>(),
+                ModContent.ProjectileType<TumblerCascadeRail>(),
+                ModContent.ProjectileType<TumblerFloorRipple>(),
                 ModContent.ProjectileType<TumblerResidualField>(),
                 ModContent.ProjectileType<TumblerRazeBeam>(),
                 ModContent.ProjectileType<TumblerConvergenceOrb>(),
+                ModContent.ProjectileType<TumblerShieldStorm>(),
+                ModContent.ProjectileType<TumblerPulseShield>(),
                 ModContent.ProjectileType<TumblerArenaGate>(),
                 ModContent.ProjectileType<TumblerMagneticPlatform>()
             ];
@@ -285,7 +291,10 @@ namespace AerovelenceMod.Content.Items.BossSummons
                         continue;
                     if (projectile.TryGetGlobalProjectile(out TumblerSharedProjectile shared) && (!shared.FromEncounter || projectile.friendly))
                         continue;
-                    projectile.Kill();
+                    if (fadeProjectiles)
+                        TumblerProjectileRetirement.Begin(projectile);
+                    else
+                        projectile.Kill();
                 }
             }
             if (clearBarriers)

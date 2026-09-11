@@ -378,7 +378,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             Projectile.width = 2;
             Projectile.height = 2;
-            Projectile.timeLeft = 48;
+            Projectile.timeLeft = 82;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
         }
@@ -391,15 +391,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override void AI()
         {
             timer++;
-            if (timer < 22 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (timer < 24 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Player player = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity.SafeNormalize(Vector2.UnitX), (player.Center - Projectile.Center).SafeNormalize(Vector2.UnitX), 0.14f).SafeNormalize(Vector2.UnitX);
                 Projectile.netUpdate = timer % 7 == 0;
             }
-            if (timer == 22 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (timer == 24 && Main.netMode != NetmodeID.MultiplayerClient)
                 Projectile.netUpdate = true;
-            if (timer == 36 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (timer == 70 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX) * 10.5f, ModContent.ProjectileType<ElectricBolt>(), Projectile.damage, 0f, Main.myPlayer, Projectile.ai[0]);
                 SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.35f, Pitch = 0.2f }, Projectile.Center);
@@ -408,13 +408,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float opacity = timer < 22 ? timer / 22f * 0.48f : timer < 36 ? 0.85f : MathHelper.Clamp((44f - timer) / 8f, 0f, 1f) * 0.35f;
+            float opacity = timer < 70 ? MathHelper.Clamp(timer / 6f, 0f, 1f) * (timer < 24 ? 0.78f : 0.95f) : MathHelper.Clamp((82f - timer) / 12f, 0f, 1f) * 0.5f;
             Vector2 start = Projectile.Center - Main.screenPosition;
             Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.UnitX) * 1100f;
             Color color = TumblerVFX.PhaseColor(Projectile.ai[0]);
             TumblerVFX.DrawTelegraph(Main.spriteBatch, start, end, color, opacity);
-            if (timer < 36)
-                TumblerVFX.DrawCharge(Main.spriteBatch, start, color, timer / 36f, 15f, timer * 0.05f);
+            if (timer < 70)
+                TumblerVFX.DrawCharge(Main.spriteBatch, start, color, timer / 70f, 15f, timer * 0.05f);
             return false;
         }
     }
@@ -920,7 +920,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Projectile.hostile = false;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 115;
+            Projectile.timeLeft = 150;
         }
 
         public override void AI()
@@ -935,7 +935,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 Projectile.ai[0] = (target.Center - Projectile.Center).ToRotation();
                 Projectile.netUpdate = timer % 10 == 0 || timer == 45;
             }
-            if (timer == 75 && Main.netMode != NetmodeID.MultiplayerClient)
+            if (timer == 110 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Vector2 direction = Projectile.ai[0].ToRotationVector2();
                 int amount = Charged ? 3 : 1;
@@ -954,13 +954,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Texture2D texture = TumblerPhaseTextures.Get("TumblerOrb", Charged);
             Color color = TumblerVFX.PhaseColor(Charged ? 1f : 0f);
             Vector2 position = Projectile.Center - Main.screenPosition;
-            float fade = MathHelper.Clamp((105f - timer) / 30f, 0f, 1f);
+            float fade = MathHelper.Clamp((150f - timer) / 25f, 0f, 1f);
             Rectangle frame = texture.Frame(1, 4, 0, Projectile.frame);
             Main.EntitySpriteDraw(texture, position, frame, TumblerVFX.Glow(Color.White, fade * 0.8f), Projectile.rotation, frame.Size() * 0.5f, Charged ? 0.5f : 0.42f, SpriteEffects.None);
-            TumblerVFX.DrawCharge(Main.spriteBatch, position, color, timer / 75f, Charged ? 23f : 18f, -Projectile.rotation, fade);
-            if (timer >= 28 && timer < 75)
+            TumblerVFX.DrawCharge(Main.spriteBatch, position, color, timer / 110f, Charged ? 23f : 18f, -Projectile.rotation, fade);
+            if (timer >= 20 && timer < 110)
             {
-                float opacity = timer >= 45 ? 0.7f : MathHelper.Clamp((timer - 28f) / 17f, 0f, 1f) * 0.4f;
+                float opacity = timer >= 45 ? 0.95f : MathHelper.Clamp((timer - 20f) / 6f, 0f, 1f) * 0.78f;
                 int amount = Charged ? 3 : 1;
                 for (int i = 0; i < amount; i++)
                 {
@@ -1055,6 +1055,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Texture2D ring = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/whiteFireEye").Value;
             float lifetime = Math.Max(1f, Projectile.ai[1]);
             float opacity = MathHelper.Clamp(timer / 18f, 0f, 1f) * MathHelper.Clamp((lifetime - timer) / 18f, 0f, 1f);
+            opacity *= TumblerProjectileRetirement.VisualOpacity(Projectile);
             float scale = CurrentRadius() * 2f / ring.Width;
             Color color = TumblerVFX.PhaseColor(phase);
             Vector2 position = Projectile.Center - Main.screenPosition;

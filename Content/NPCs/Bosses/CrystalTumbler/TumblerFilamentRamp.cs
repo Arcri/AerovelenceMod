@@ -115,6 +115,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             float opacity = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(Age / 35f, 0f, 1f)) * MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(Projectile.timeLeft / 60f, 0f, 1f));
+            opacity *= TumblerProjectileRetirement.VisualOpacity(Projectile);
             if (opacity <= 0f)
                 return false;
 
