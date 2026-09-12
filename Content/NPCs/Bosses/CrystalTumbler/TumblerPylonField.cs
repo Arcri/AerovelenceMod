@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private int Duration => Math.Max(20, (int)Projectile.ai[1]);
         private bool Active => timer >= Warning && timer < Warning + Duration;
 
-        public override string Texture => "Terraria/Images/Projectile_0";
+        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/FencePylon";
 
         public override void SetStaticDefaults()
         {
@@ -125,17 +125,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     TumblerVFX.DrawElectricLine(spriteBatch, left + offset, right + offset, dischargeColor, opacity * (0.65f + flash * 0.35f), Math.Clamp((int)(Projectile.velocity.Length() / 24f), 4, 48), Projectile.identity + row * 6f, 1.5f + flash * 3f);
                 }
             }
-            DrawPylon(spriteBatch, left, dischargeColor, lightColor, opacity, charge);
-            DrawPylon(spriteBatch, right, dischargeColor, lightColor, opacity, charge);
+            DrawPylon(spriteBatch, left, dischargeColor, lightColor, opacity, charge, false);
+            DrawPylon(spriteBatch, right, dischargeColor, lightColor, opacity, charge, true);
             return false;
         }
 
-        private void DrawPylon(SpriteBatch spriteBatch, Vector2 position, Color color, Color lightColor, float opacity, float charge)
+        private void DrawPylon(SpriteBatch spriteBatch, Vector2 position, Color color, Color lightColor, float opacity, float charge, bool facingRight)
         {
-            Texture2D crystal = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/GroundSpike").Value;
-            Vector2 size = new(22f, FieldHeight);
-            Vector2 origin = new(crystal.Width * 0.5f, crystal.Height);
-            spriteBatch.Draw(crystal, position, null, Color.Lerp(lightColor, color, 0.3f) * opacity, 0f, origin, size / crystal.Size(), SpriteEffects.None, 0f);
+            Texture2D crystal = ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Texture2D mask = ModContent.Request<Texture2D>(Texture + "_Glowmask", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            int variant = (Projectile.identity + (facingRight ? 1 : 0)) % 3;
+            Rectangle frame = new(variant * 38, 0, 36, 62);
+            Vector2 origin = new(frame.Width * 0.5f, frame.Height);
+            Vector2 scale = new(FieldHeight / frame.Height);
+            SpriteEffects effects = facingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            spriteBatch.Draw(crystal, position, frame, Color.Lerp(lightColor, Color.White, 0.2f) * opacity, 0f, origin, scale, effects, 0f);
+            spriteBatch.Draw(mask, position, frame, Color.White * opacity, 0f, origin, scale, effects, 0f);
+            spriteBatch.Draw(mask, position, frame, TumblerVFX.Glow(color, opacity * charge * 0.65f), 0f, origin, scale, effects, 0f);
             Vector2 tip = position - new Vector2(0f, FieldHeight - 5f);
             TumblerVFX.DrawCharge(spriteBatch, tip, color, charge, 9f, timer * 0.025f, opacity);
         }

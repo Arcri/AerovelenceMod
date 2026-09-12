@@ -29,7 +29,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             for (int y = floor - 1; y >= ArenaData.TileBounds.Top; y--)
             {
                 Tile tile = Framing.GetTileSafely(x, y);
-                if (tile.HasTile && tile.TileType != TileID.SapphireGemspark)
+                if (tile.HasTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && tile.TileType != TileID.SapphireGemspark && tile.TileType != ModContent.TileType<TumblerBarrierTile>())
                     return (y + 1) * 16f;
             }
             return ArenaData.WorldBounds.Top + 16f;
@@ -144,8 +144,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 int clip = (int)MathF.Ceiling(Math.Max(0f, Projectile.Center.Y - y));
                 if (clip >= 16)
                     continue;
-                Tile tile = Framing.GetTileSafely(TileX, (int)(Projectile.Center.Y / 16f) + row);
-                Rectangle source = new(tile.TileFrameX, tile.TileFrameY + clip, 16, 16 - clip);
+                Rectangle source = new(18, 18 + clip, 16, 16 - clip);
                 Vector2 position = new(Projectile.Center.X - 8f, y + clip);
                 Main.spriteBatch.Draw(texture, position - Main.screenPosition, source, Color.Lerp(Color.White, color, 0.25f) * opacity, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
@@ -177,5 +176,21 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             return true;
         }
+    }
+
+    public class TumblerBarrierTile : ModTile
+    {
+        public override string Texture => "Terraria/Images/Tiles_0";
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = false;
+            Main.tileLighted[Type] = false;
+            Main.tileNoAttach[Type] = true;
+            DustType = -1;
+        }
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch) => false;
+        public override bool CanKillTile(int i, int j, ref bool blockDamaged) => false;
+        public override bool CanExplode(int i, int j) => false;
     }
 }

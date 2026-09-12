@@ -67,6 +67,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 impactFlash = 1f;
                 KickUpDust(22);
+                ThrowImpactRubble(14);
                 ScreenShake(12f);
                 SpawnAuraPulse(230f, 38, false);
                 SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/HardRockSlam") with { Volume = 0.95f, Pitch = -0.25f }, landing);
@@ -100,6 +101,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 NPC.velocity = Vector2.Zero;
                 afterimagePositions.Clear();
                 afterimageRotations.Clear();
+                edgeChargeCooldown = 600;
                 ChangeState(TumblerState.Idle);
             }
         }
@@ -121,8 +123,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
         }
 
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => State == TumblerState.Spawn ? false : null;
-        public override bool CheckActive() => State == TumblerState.Despawn;
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => State is TumblerState.Spawn or TumblerState.Death or TumblerState.Despawn ? false : null;
+        public override bool CheckActive() => false;
         public override void BossHeadSlot(ref int index)
         {
             if (State == TumblerState.Spawn && StateTimer < 430)

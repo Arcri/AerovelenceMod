@@ -21,9 +21,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             {
                 float startX = storedDirection > 0 ? LeftInner + 90f : RightInner - 90f;
                 MoveHorizontal(startX, 8f, 0.14f);
-                if (Math.Abs(NPC.Center.X - startX) > 8f || !OnGround())
+                if (NPC.Bottom.Y < FloorY - 2f)
+                {
+                    NPC.noTileCollide = true;
+                    if (NPC.velocity.Y >= 0f && NPC.Bottom.Y + Math.Max(1f, NPC.velocity.Y) >= FloorY)
+                    {
+                        NPC.Bottom = new Vector2(NPC.Center.X, FloorY);
+                        NPC.velocity.Y = 0f;
+                        NPC.noTileCollide = false;
+                    }
+                }
+                if (Math.Abs(NPC.Center.X - startX) > 8f || Math.Abs(NPC.Bottom.Y - FloorY) > 2f || !OnGround())
                     return;
-                rampStart = new Vector2(startX, FloorY - 52f);
+                rampStart = new Vector2(startX, FloorY - NPC.height * 0.5f);
                 SpawnProjectile<TumblerCascadeRail>(rampStart, Vector2.Zero, 0, 0f, NPC.whoAmI, storedDirection);
                 substate = 1;
                 StateTimer = 0;
@@ -46,6 +56,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 contactDamage = true;
                 float previousProgress = railProgress;
                 Vector2 destination = TumblerRailMotion.Advance(t => TumblerCascadeRail.Point(rampStart, storedDirection, t), ref railProgress, ref railSpeed);
+                destination.Y = Math.Min(destination.Y, FloorY - NPC.height * 0.5f);
                 NPC.velocity = destination - NPC.Center;
                 spinTarget = storedDirection * railSpeed / 52f;
                 visualCharge = 0.8f;
@@ -67,7 +78,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 NPC.noGravity = NPC.noTileCollide = false;
                 RollTowardPlayer(3.5f, 0.12f);
                 if (StateTimer == 1)
+                {
                     KickUpDust(12);
+                    ThrowImpactRubble(8);
+                }
                 if (StateTimer >= 25)
                     FinishAttack();
             }
@@ -110,6 +124,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 NPC.velocity = Vector2.Zero;
                 impactFlash = 1f;
                 KickUpDust(24);
+                ThrowImpactRubble(18);
                 ScreenShake(13f);
                 SpawnAuraPulse(200f, 35, false);
                 SpawnProjectile<TumblerFloorRipple>(new Vector2(rampStart.X, FloorY), Vector2.Zero, 0, 0f, NPC.whoAmI);

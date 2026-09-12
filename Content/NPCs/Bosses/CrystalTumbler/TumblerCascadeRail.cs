@@ -27,8 +27,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             float t = MathHelper.Clamp(progress, 0f, 1f);
             float width = ArenaData.InnerArenaBoundaryRight.X - ArenaData.InnerArenaBoundaryLeft.X - 180f;
             float wave = MathF.Sin(t * MathHelper.TwoPi);
-            float height = Math.Min(t < 0.5f ? 180f : 310f, start.Y - ArenaData.WorldBounds.Top - 100f);
-            return start + new Vector2(direction * width * t, -height * wave * wave);
+            float height = Math.Min(t < 0.5f ? 180f : 215f, start.Y - ArenaData.WorldBounds.Top - 100f);
+            Vector2 point = start + new Vector2(direction * width * t, -height * wave * wave);
+            point.Y = Math.Min(point.Y, ArenaData.FloorY - 52f);
+            return point;
         }
         public override void AI()
         {

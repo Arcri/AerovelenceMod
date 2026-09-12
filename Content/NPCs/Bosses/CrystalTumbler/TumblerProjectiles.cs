@@ -47,6 +47,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
+        internal static Color MagneticEnergyColor(float progress, float phase)
+        {
+            float cycle = 0.5f + MathF.Sin(progress * MathHelper.TwoPi) * 0.5f;
+            Color cold = cycle < 0.5f ? Color.Lerp(new Color(60, 250, 235), new Color(45, 130, 255), cycle * 2f) : Color.Lerp(new Color(45, 130, 255), new Color(140, 100, 255), (cycle - 0.5f) * 2f);
+            Color hot = Color.Lerp(new Color(255, 122, 25), new Color(255, 242, 110), cycle);
+            return Color.Lerp(cold, hot, MathHelper.Clamp(phase, 0f, 1f));
+        }
+
         public static void DrawElectricLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float opacity, int segments = 18, float seed = 0f, float width = 2f)
         {
             Vector2 fullDelta = end - start;
@@ -928,6 +936,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             timer++;
             Projectile.frame = timer / 7 % 4;
             Projectile.velocity *= timer < 32 ? 0.91f : 0.98f;
+            if (timer >= 45)
+                Projectile.velocity = Vector2.Zero;
             Projectile.rotation += 0.075f;
             if (timer <= 45 && Main.netMode != NetmodeID.MultiplayerClient)
             {

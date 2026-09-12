@@ -39,7 +39,7 @@ NPCs: {
 
 	CrystalTumbler: {
 		DisplayName: Crystal Tumbler
-		SpawnInfo: Use {0} at the mysterious gate in the Crystal Caverns.
+		SpawnInfo: Use {0} at the mysterious gate in the Crystal Caverns. Recommended after the Eye of Cthulhu, before the Eater of Worlds or Brain of Cthulhu.
 	}
 
 	MovingPlatform.DisplayName: Moving Platform
@@ -109,6 +109,11 @@ NPCs: {
 }
 
 Buffs: {
+	TumblingMountBuff: {
+		DisplayName: Tumbling Tumblerock
+		Description: Hold Up to carve a ramp; release to launch
+	}
+
 	FlareFire: {
 		DisplayName: Flare Fire
 		Description: Mods.AerovelenceMod.Buffs.FlareFire.Description
@@ -181,6 +186,11 @@ Buffs: {
 }
 
 Items: {
+	TumblingHarness: {
+		DisplayName: Tumbling Harness
+		Tooltip: Summons a rideable tumblerock
+	}
+
 	EnergyShield: {
 		DisplayName: Energy Shield
 		Tooltip: ""
@@ -1181,6 +1191,7 @@ Items: {
 }
 
 Projectiles: {
+	TumblingMountTrail.DisplayName: Tumbling Tumblerock
 	SkillCritImpact.DisplayName: Skill Crit Impact
 	SkillStrikeProj.DisplayName: Skill Strike Proj
 	EnergyShieldDash.DisplayName: Energy Shield Dash
@@ -1646,6 +1657,7 @@ Projectiles: {
 	TumblerStar.DisplayName: Tumbler Star
 	TumblerCascadeRail.DisplayName: Tumbler Cascade Rail
 	TumblerFloorRipple.DisplayName: Tumbler Floor Ripple
+	TumblerMagneticField.DisplayName: Tumbler Magnetic Field
 }
 
 Configs: {

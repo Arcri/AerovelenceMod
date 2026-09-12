@@ -104,7 +104,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (Math.Abs(q) >= 1f)
                     continue;
                 float crest = MathF.Cos(q * MathHelper.PiOver2);
-                height = Math.Max(height, crest * crest * 64f * MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(time / 18f, 0f, 1f)));
+                float amplitude = 64f * (wave == 0 ? 2f / 3f : 1f / 3f);
+                height = Math.Max(height, crest * crest * amplitude * MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(time / 18f, 0f, 1f)));
             }
             float edge = Math.Min(x - ArenaData.OuterArenaBoundaryLeft.X - 16f, ArenaData.OuterArenaBoundaryRight.X - 16f - x);
             float fade = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((245f - age) / 40f, 0f, 1f));

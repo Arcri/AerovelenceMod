@@ -101,13 +101,13 @@ namespace AerovelenceMod
 				);
 
 				string tumblerInternalName = "CrystalTumbler";
-				float tumblerWeight = 1.8f;
+				float tumblerWeight = 2.8f;
 				Func<bool> tumblerDowned = () => DownedWorld.DownedCrystalTumbler;
 				int tumblerBossType = ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler>();
 				int tumblerSpawnItem = ModContent.ItemType<Content.Items.BossSummons.LargeGeode>();
 				List<int> tumblerCollectibles = new List<int>()
 				{
-
+					ModContent.ItemType<Content.Items.Mounts.TumblingHarness>()
 				};
 				LocalizedText tumblerDisplayName = Terraria.Localization.Language.GetText("Mods.AerovelenceMod.NPCs.CrystalTumbler.DisplayName");
                 LocalizedText tumblerSpawnInfo = Terraria.Localization.Language.GetText("Mods.AerovelenceMod.NPCs.CrystalTumbler.SpawnInfo").WithFormatArgs("[i:" + ModContent.ItemType<LargeGeode>() + "]");
