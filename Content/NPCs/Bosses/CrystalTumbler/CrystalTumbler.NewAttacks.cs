@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void PressureDistantPlayer()
         {
-            if (State is not (TumblerState.Idle or TumblerState.BoltVolley or TumblerState.StarCircuit) || Math.Abs(Target.Center.X - NPC.Center.X) < 650f)
+            if (State is not (TumblerState.Idle or TumblerState.StarCircuit) || Math.Abs(Target.Center.X - NPC.Center.X) < 650f)
             {
                 distantTimer = Math.Max(0, distantTimer - 2);
                 return;
@@ -99,6 +99,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 NPC.velocity = Vector2.Zero;
                 impactFlash = 1f;
                 KickUpDust(18);
+                ThrowImpactRubble(14);
                 ScreenShake(11f);
                 SpawnAuraPulse(160f, 30, false);
                 SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.8f, Pitch = -0.4f }, NPC.Center);
@@ -176,7 +177,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     float position = i / 11f;
                     float brightness = Math.Max(0f, 1f - Math.Abs(position - progress) * 4f) * fade;
                     Vector2 point = Vector2.Lerp(start, teleportDestination, position) - screenPos;
-                    spriteBatch.Draw(texture, point, frame, TumblerVFX.Glow(PhaseColor, brightness * 0.45f), NPC.rotation - position * 2f, origin, NPC.scale * (0.8f + brightness * 0.2f), SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, point, frame, TumblerVFX.Glow(PhaseColor, brightness * 0.45f), NPC.rotation - position * 2f, origin, BodyDrawScale(frame) * (0.8f + brightness * 0.2f), SpriteEffects.None, 0f);
                 }
                 TumblerVFX.DrawElectricLine(spriteBatch, start - screenPos, teleportDestination - screenPos, PhaseColor, fade * 0.32f, 32, NPC.whoAmI);
             }

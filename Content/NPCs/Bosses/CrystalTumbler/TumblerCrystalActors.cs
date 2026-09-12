@@ -191,12 +191,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private float connection;
         private int bossIndex = -1;
 
-        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/GroundSpike";
+        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/Conductive_Crystal";
+        public override void DrawBehind(int index) => Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
 
         public override void SetDefaults()
         {
-            NPC.width = 42;
-            NPC.height = 96;
+            NPC.width = 48;
+            NPC.height = 84;
+            NPC.hide = true;
             NPC.damage = 0;
             NPC.defense = 9999;
             NPC.lifeMax = 9999;
@@ -224,17 +226,22 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             float targetCharge = boss.ai[0] == (float)TumblerState.ConductiveField ? MathHelper.Clamp(boss.ai[1] / 120f, 0f, 1f) : 0f;
             charge = MathHelper.Lerp(charge, targetCharge, 0.08f);
             connection = MathHelper.Lerp(connection, NPC.ai[1] > 0f ? 1f : 0f, 0.05f);
-            NPC.velocity.X *= 0.8f;
-            NPC.velocity.Y = Math.Min(NPC.velocity.Y + 0.35f, 12f);
-            if (ArenaData.Valid && NPC.Bottom.Y + NPC.velocity.Y >= ArenaData.FloorY)
+            NPC.ai[2]++;
+            NPC.velocity = Vector2.Zero;
+            if (ArenaData.Valid)
+                NPC.Bottom = new Vector2(NPC.Center.X, ArenaData.FloorY);
+            if (NPC.ai[2] <= 45f && (int)NPC.ai[2] % 5 == 0 && !Main.dedServ)
             {
-                NPC.velocity.Y = ArenaData.FloorY - NPC.Bottom.Y;
-                if (NPC.ai[1] == 0f)
-                {
-                    NPC.ai[1] = 1f;
-                    NPC.netUpdate = true;
-                    SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.35f, Pitch = -0.15f }, NPC.Bottom);
-                }
+                for (int i = 0; i < 3; i++)
+                    Dust.NewDustPerfect(NPC.Bottom + new Vector2(Main.rand.NextFloat(-22f, 22f), -3f), DustID.Stone, new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-4f, -1f)), 0, default, 1.1f);
+                TumblerVFX.SpawnSpark(NPC.Bottom, new Vector2(Main.rand.NextFloat(-1f, 1f), -2f), TumblerVFX.PhaseColor(phase), 0.25f);
+            }
+            if (NPC.ai[2] == 1f)
+                SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.45f, Pitch = -0.25f }, NPC.Bottom);
+            if (NPC.ai[2] >= 45f && NPC.ai[1] == 0f)
+            {
+                NPC.ai[1] = 1f;
+                NPC.netUpdate = true;
             }
             Lighting.AddLight(NPC.Center, TumblerVFX.PhaseColor(phase).ToVector3() * (glow * 0.45f + charge * 0.5f));
         }
@@ -252,12 +259,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             SpriteEffects effects = NPC.ai[0] < 0f ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             Vector2 root = NPC.Bottom - screenPos;
             Vector2 center = NPC.Center - screenPos;
-            Vector2 scale = new(32f / texture.Width, 96f / texture.Height);
+            float emergence = MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp(NPC.ai[2] / 45f, 0f, 1f));
+            Vector2 scale = Vector2.One;
             Color color = TumblerVFX.PhaseColor(phase);
             if (connection > 0.02f && ArenaData.CrystalPositions.Length > 0)
             {
                 Vector2 source = ArenaData.ClosestCrystal(NPC.Top) - screenPos;
-                Vector2 conductorTip = root - new Vector2(0f, 94f);
+                Vector2 conductorTip = root - new Vector2(0f, 82f);
                 Vector2 bend = Vector2.Lerp(source, conductorTip, 0.55f) + new Vector2(NPC.ai[0] * 34f, -14f);
                 float filamentStrength = connection * (0.2f + charge * 0.18f);
                 TumblerVFX.DrawElectricLine(spriteBatch, source, bend, color, filamentStrength, 12, NPC.whoAmI + 12f, 0.65f);
@@ -268,7 +276,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     Vector2 spark = progress < 0.55f ? Vector2.Lerp(source, bend, progress / 0.55f) : Vector2.Lerp(bend, conductorTip, (progress - 0.55f) / 0.45f);
                     Main.EntitySpriteDraw(star, spark, null, TumblerVFX.Glow(color, connection * 0.5f), 0f, star.Size() * 0.5f, new Vector2(9f, 5f) / star.Size(), SpriteEffects.None);
                 }
-                TumblerVFX.DrawCharge(spriteBatch, source, color, 0.18f + charge * 0.5f, 13f, Main.GlobalTimeWrappedHourly);
                 if (charge > 0.05f && bossIndex >= 0 && Main.npc[bossIndex].active)
                 {
                     NPC boss = Main.npc[bossIndex];
@@ -276,28 +283,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                         TumblerVFX.DrawElectricLine(spriteBatch, conductorTip, boss.Center - screenPos, color, charge * 0.4f, 18, NPC.whoAmI + 21f, 1f);
                 }
             }
-            Color stone = Color.Lerp(drawColor, new Color(135, 167, 195), 0.35f);
-            Main.EntitySpriteDraw(texture, root + new Vector2(-15f, -2f), null, stone * 0.8f, -0.16f, origin, new Vector2(17f, 59f) / texture.Size(), effects);
-            Main.EntitySpriteDraw(texture, root + new Vector2(16f, 0f), null, stone * 0.7f, 0.2f, origin, new Vector2(16f, 49f) / texture.Size(), effects);
-            Main.EntitySpriteDraw(texture, root, null, stone, 0f, origin, scale, effects);
-            Main.EntitySpriteDraw(texture, root, null, TumblerVFX.Glow(color, 0.16f + charge * 0.22f), 0f, origin, scale, effects);
-
-            Vector2 tip = root - new Vector2(0f, 94f);
-            Vector2 left = root + new Vector2(-13f, -51f);
-            Vector2 right = root + new Vector2(11f, -33f);
-            Vector2 bottom = root - new Vector2(1f, 9f);
-            Color seam = TumblerVFX.Glow(Color.Lerp(color, Color.White, 0.25f), 0.4f + charge * 0.5f);
-            TumblerVFX.DrawLine(spriteBatch, tip, left, seam, 1.2f);
-            TumblerVFX.DrawLine(spriteBatch, tip, right, seam * 0.8f, 1f);
-            TumblerVFX.DrawLine(spriteBatch, left, bottom, seam * 0.7f, 1.2f);
-            TumblerVFX.DrawLine(spriteBatch, right, bottom, seam, 1.2f);
-            TumblerVFX.DrawLine(spriteBatch, left, right, seam * 0.8f, 1f);
-            TumblerVFX.DrawLine(spriteBatch, tip, bottom, seam * 0.55f, 1f);
-            Main.EntitySpriteDraw(bloom, center, null, TumblerVFX.Glow(color, glow * 0.12f + charge * 0.2f), 0f, bloom.Size() * 0.5f, new Vector2(50f, 86f) / bloom.Size(), SpriteEffects.None);
-            Main.EntitySpriteDraw(star, center, null, TumblerVFX.Glow(Color.Lerp(color, Color.White, 0.4f), 0.4f + charge * 0.5f), 0f, star.Size() * 0.5f, new Vector2(30f + charge * 16f, 17f) / star.Size(), SpriteEffects.None);
-            Main.EntitySpriteDraw(star, tip, null, TumblerVFX.Glow(color, 0.4f + glow * 0.4f), 0f, star.Size() * 0.5f, 18f / star.Width, SpriteEffects.None);
-            if (charge > 0.05f)
-                TumblerVFX.DrawCorona(spriteBatch, center, 18f + charge * 7f, color, charge * 0.5f, NPC.whoAmI, 1.2f);
+            int visibleHeight = Math.Clamp((int)MathF.Round(texture.Height * emergence), 0, texture.Height);
+            if (visibleHeight > 0)
+            {
+                Texture2D mask = ModContent.Request<Texture2D>(Texture + "_Glowmask", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                Rectangle source = new(0, 0, texture.Width, visibleHeight);
+                Vector2 visibleOrigin = new(texture.Width * 0.5f, visibleHeight);
+                Main.EntitySpriteDraw(texture, root, source, drawColor, 0f, visibleOrigin, scale, effects);
+                Main.EntitySpriteDraw(mask, root, source, Color.White * (0.65f + charge * 0.35f), 0f, visibleOrigin, scale, effects);
+                Main.EntitySpriteDraw(mask, root, source, TumblerVFX.Glow(color, 0.15f + charge * 0.45f), 0f, visibleOrigin, scale, effects);
+                Vector2 tip = root - new Vector2(0f, visibleHeight - 2f);
+                Main.EntitySpriteDraw(bloom, center, null, TumblerVFX.Glow(color, emergence * (glow * 0.12f + charge * 0.2f)), 0f, bloom.Size() * 0.5f, new Vector2(50f, 86f) / bloom.Size(), SpriteEffects.None);
+                Main.EntitySpriteDraw(star, tip, null, TumblerVFX.Glow(color, emergence * (0.3f + charge * 0.5f)), 0f, star.Size() * 0.5f, 14f / star.Width, SpriteEffects.None);
+            }
             return false;
         }
     }

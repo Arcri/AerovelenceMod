@@ -17,7 +17,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private int bounces;
         private readonly TumblerLightningVisual tether = new();
         private Color ChargeColor => Projectile.ai[1] >= 1f ? TumblerVFX.PhaseColor(1f) : new Color(98, 209, 255);
-        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectile";
+        public override string Texture => "AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/ChargedStoneProjectile";
 
         public override void SetStaticDefaults()
         {
@@ -142,16 +142,32 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Rectangle frame = texture.Frame(1, 3, 0, Projectile.frame);
             float charge = MathHelper.Clamp((timer - 65f) / 45f, 0f, 1f);
+            float opacity = TumblerProjectileRetirement.VisualOpacity(Projectile);
+            Texture2D mask = ModContent.Request<Texture2D>(Texture + "_Glowmask", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Texture2D energy = ModContent.Request<Texture2D>(Texture + "_Energy", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/CrystalTumbler/RockProjectileGlow").Value;
             Rectangle glowFrame = glow.Frame(1, 3, 0, Projectile.frame);
-            Main.EntitySpriteDraw(glow, position, glowFrame, TumblerVFX.Glow(ChargeColor, charge), Projectile.rotation, glowFrame.Size() * 0.5f, 0.56f + charge * 0.08f, SpriteEffects.None);
-            Main.EntitySpriteDraw(texture, position, frame, Color.Lerp(lightColor, ChargeColor, charge * 0.25f), Projectile.rotation, frame.Size() * 0.5f, 1f, SpriteEffects.None);
+            Main.EntitySpriteDraw(glow, position, glowFrame, TumblerVFX.Glow(ChargeColor, charge * opacity), Projectile.rotation, glowFrame.Size() * 0.5f, 0.56f + charge * 0.08f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, position, frame, Color.Lerp(lightColor, ChargeColor, charge * 0.25f) * opacity, Projectile.rotation, frame.Size() * 0.5f, 1f, SpriteEffects.None);
+            Main.EntitySpriteDraw(mask, position, frame, Color.White * opacity, Projectile.rotation, frame.Size() * 0.5f, 1f, SpriteEffects.None);
+            TumblerVFX.BeginAdditive(Main.spriteBatch);
+            float breath = 0.75f + MathF.Sin(timer * (0.06f + charge * 0.08f)) * 0.25f;
+            for (int y = 0; y < frame.Height; y += 2)
+            {
+                Color gradient = TumblerVFX.MagneticEnergyColor(y / (float)frame.Height + timer * (0.015f + charge * 0.025f), Projectile.ai[1]);
+                gradient *= opacity * (0.4f + charge * 0.6f) * breath;
+                gradient.A = 255;
+                Rectangle strip = new(frame.X, frame.Y + y, frame.Width, Math.Min(2, frame.Height - y));
+                Vector2 origin = frame.Size() * 0.5f - new Vector2(0f, y);
+                Main.spriteBatch.Draw(energy, position, strip, gradient, Projectile.rotation, origin, 1f, SpriteEffects.None, 0f);
+            }
+            TumblerVFX.EndAdditive(Main.spriteBatch);
             if (TryBoss(out NPC boss) && timer > 45)
             {
                 if (timer <= 90)
-                    TumblerVFX.DrawTelegraph(Main.spriteBatch, position, boss.Center - Main.screenPosition, ChargeColor, charge * 0.7f);
+                    TumblerVFX.DrawTelegraph(Main.spriteBatch, position, boss.Center - Main.screenPosition, ChargeColor, charge * 0.7f * opacity);
                 else
-                    tether.Draw(Main.spriteBatch, ChargeColor, charge * 0.8f, 2f);
+                    tether.Draw(Main.spriteBatch, ChargeColor, charge * 0.8f * opacity, 2f);
             }
             foreach (Projectile other in Main.ActiveProjectiles)
             {
@@ -161,9 +177,9 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 if (otherTimer < 90)
                     continue;
                 if (timer < 110 || otherTimer < 110)
-                    TumblerVFX.DrawTelegraph(Main.spriteBatch, position, other.Center - Main.screenPosition, ChargeColor, 0.55f);
+                    TumblerVFX.DrawTelegraph(Main.spriteBatch, position, other.Center - Main.screenPosition, ChargeColor, 0.55f * opacity);
                 else
-                    TumblerVFX.DrawElectricLine(Main.spriteBatch, position, other.Center - Main.screenPosition, ChargeColor, 0.8f, 12, Projectile.identity, 2f);
+                    TumblerVFX.DrawElectricLine(Main.spriteBatch, position, other.Center - Main.screenPosition, ChargeColor, 0.8f * opacity, 12, Projectile.identity, 2f);
             }
             return false;
         }

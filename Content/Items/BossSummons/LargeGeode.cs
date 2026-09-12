@@ -264,6 +264,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 ModContent.ProjectileType<TumblerMagneticRock>(),
                 ModContent.ProjectileType<TumblerChargeBall>(),
                 ModContent.ProjectileType<TumblerKnifeBall>(),
+                ModContent.ProjectileType<TumblerMagneticField>(),
                 ModContent.ProjectileType<TumblerChargedKnifeBall>(),
                 ModContent.ProjectileType<TumblerBossAura>(),
                 ModContent.ProjectileType<TumblerAuraPulse>(),
@@ -319,9 +320,11 @@ namespace AerovelenceMod.Content.Items.BossSummons
             for (int y = floorTile - 1; y >= TileBounds.Top; y--)
             {
                 Tile tile = Framing.GetTileSafely(x, y);
-                if (tile.HasTile)
+                if (tile.HasTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType])
                     break;
-                tile.ResetToType(TileID.SapphireGemspark);
+                if (tile.HasTile)
+                    continue;
+                tile.ResetToType((ushort)ModContent.TileType<TumblerBarrierTile>());
                 temporaryBarrierTiles.Add(new Point(x, y));
                 WorldGen.SquareTileFrame(x, y, true);
             }
@@ -337,7 +340,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
                 if (point.X != x)
                     continue;
                 Tile tile = Framing.GetTileSafely(point.X, point.Y);
-                bool open = (point.Y + 1) * 16f > bottom;
+                bool open = false;
                 if (tile.IsActuated == open)
                     continue;
                 tile.IsActuated = open;
@@ -367,7 +370,7 @@ namespace AerovelenceMod.Content.Items.BossSummons
             foreach (Point point in tilesToClear)
             {
                 Tile tile = Framing.GetTileSafely(point.X, point.Y);
-                if (tile.HasTile && tile.TileType == TileID.SapphireGemspark)
+                if (tile.HasTile && (tile.TileType == ModContent.TileType<TumblerBarrierTile>() || tile.TileType == TileID.SapphireGemspark && temporaryBarrierTiles.Contains(point)))
                 {
                     tile.ClearTile();
                     WorldGen.SquareTileFrame(point.X, point.Y, true);

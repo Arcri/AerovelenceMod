@@ -46,9 +46,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private readonly ulong[] built = new ulong[Sections];
         private readonly ulong[] consumed = new ulong[Sections];
         private float lastProgress;
+        private ulong started;
+        private bool finished;
 
         internal void Update(Func<float, Vector2> point, float progress, bool finished)
         {
+            this.finished = finished;
+            if (started == 0)
+                started = Main.GameUpdateCount + 1;
             lastProgress = Math.Max(lastProgress, MathHelper.Clamp(progress, 0f, 1f));
             float lookAhead = 0f;
             if (!finished)
@@ -70,6 +75,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         internal void Draw(Func<float, Vector2> point, int direction, float opacity, bool supports)
         {
             ulong now = Main.GameUpdateCount + 1;
+            if (!finished && started > 0)
+                DrawTrajectory(point, opacity, now - started);
             for (int section = 0; section < Sections; section++)
             {
                 if (built[section] == 0)
@@ -100,6 +107,23 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 }
                 if (age < 10f)
                     TumblerVFX.DrawCharge(Main.spriteBatch, upper[2] - Main.screenPosition, Color.White, 1f, 9f, Main.GlobalTimeWrappedHourly, strength * (1f - age / 10f));
+            }
+        }
+
+        private void DrawTrajectory(Func<float, Vector2> point, float opacity, ulong age)
+        {
+            for (int i = 0; i < 22; i++)
+            {
+                float t = (i + 0.5f) / 22f;
+                float reveal = MathHelper.Clamp((age - i * 1.5f) / 8f, 0f, 1f);
+                float ahead = MathHelper.Clamp((t - lastProgress + 0.025f) / 0.06f, 0f, 1f);
+                float pulse = 0.5f + MathF.Cos(age * 0.12f - i * 0.7f) * 0.5f;
+                Vector2 tangent = (point(Math.Min(1f, t + 0.002f)) - point(Math.Max(0f, t - 0.002f))).SafeNormalize(Vector2.UnitX);
+                Vector2 wing = tangent.RotatedBy(MathHelper.PiOver2) * 5f;
+                Vector2 tip = point(t) - Main.screenPosition;
+                Color color = TumblerVFX.Glow(Color.Lerp(TumblerVFX.PhaseColor(0f), Color.White, pulse * 0.6f), opacity * reveal * ahead * (0.35f + pulse * 0.35f));
+                TumblerVFX.DrawLine(Main.spriteBatch, tip - tangent * 8f + wing, tip, color, 2f);
+                TumblerVFX.DrawLine(Main.spriteBatch, tip - tangent * 8f - wing, tip, color, 2f);
             }
         }
     }

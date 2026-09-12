@@ -85,7 +85,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         }
         private static float PhaseFor(Projectile projectile)
         {
-            if (projectile.ModProjectile is TumblerPylonField or TumblerConductiveField or TumblerAuraPulse)
+            if (projectile.ModProjectile is TumblerPylonField or TumblerConductiveField or TumblerAuraPulse or TumblerMagneticField)
                 return projectile.ai[2];
             if (projectile.ModProjectile is ElectricBolt or TumblerStar)
                 return projectile.ai[0];
@@ -125,7 +125,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             float opacity = MathHelper.SmoothStep(0f, 1f, remaining / 36f);
             Color color = TumblerVFX.PhaseColor(phase >= 1f ? 1f : 0f);
             Vector2 center = projectile.Center - Main.screenPosition;
-            if (projectile.ModProjectile is TumblerPylonField or TumblerResidualField or TumblerRazeBeam or TumblerBossAura or TumblerMagneticPlatform or TumblerArenaGate)
+            if (projectile.ModProjectile is TumblerPylonField or TumblerResidualField or TumblerRazeBeam or TumblerBossAura or TumblerMagneticPlatform or TumblerArenaGate or TumblerMagneticField or TumblerMagneticRock)
                 return true;
             if (projectile.ModProjectile is TumblerAimLine)
             {

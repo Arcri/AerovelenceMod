@@ -30,14 +30,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (index < 0)
                 return false;
             boss = Main.npc[index];
-            return boss.ai[0] == (float)TumblerState.Spawn && boss.ai[1] < CrystalTumbler.EntranceDuration;
+            return boss.ai[0] == (float)TumblerState.Spawn && boss.ai[1] < CrystalTumbler.EntranceDuration || boss.ai[0] == (float)TumblerState.Death;
         }
 
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable) => TryIntro(out _);
 
         public override void PreUpdateMovement()
         {
-            if (Player.whoAmI != Main.myPlayer || !TryIntro(out NPC boss))
+            if (Player.whoAmI != Main.myPlayer || !TryIntro(out NPC boss) || boss.ai[0] != (float)TumblerState.Spawn)
             {
                 pushDirection = 0;
                 pushTicks = 0;
@@ -98,6 +98,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 screen.interpolant = 0f;
             }
             float time = boss.ai[1];
+            if (boss.ai[0] == (float)TumblerState.Death)
+            {
+                float focusAmount = Smooth(time / 45f) * (1f - Smooth((time - 150f) / 30f));
+                screen.cutscene = true;
+                screen.lerpBackToPlayer = false;
+                screen.ScreenGoalPos = Vector2.Lerp(Player.Center, boss.Center, focusAmount * 0.85f);
+                Main.GameZoomTarget = MathHelper.Lerp(savedZoom, Math.Min(2f, savedZoom * 1.25f), focusAmount);
+                return;
+            }
             Vector2 left = GateFocus(-1);
             Vector2 right = GateFocus(1);
             Vector2 gateway = CrystalTumbler.GatewayFocus;

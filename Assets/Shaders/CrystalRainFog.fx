@@ -76,6 +76,16 @@ float4 Fog(float4 vertexColor : COLOR0, float2 uv : TEXCOORD0) : COLOR0
     float ribbon = tex2D(uNoise, (world + WindOffset * 1.13 + bend * 0.3) / float2(1250.0, 230.0)
         + bankWarp * 0.17).g;
     float groundVariation = lerp(0.65, 1.2, smoothstep(0.25, 0.76, ribbon));
+    float2 formationUV = (world + WindOffset * 0.78 + bend * 0.4) / float2(1120.0, 760.0);
+    float2 formationWarp = tex2D(uNoise, formationUV * 0.73
+        + float2(-Time * 0.0023, Time * 0.0017)).rg - 0.5;
+    float formation = tex2D(uNoise, formationUV + formationWarp * 0.52).r * 0.68;
+    formation += tex2D(uNoise, formationUV * 2.17 - formationWarp * 0.34).b * 0.32;
+    float pockets = smoothstep(0.28, 0.72, formation);
+    float structureDensity = lerp(0.23, 1.75, pockets);
+    float strandNoise = tex2D(uNoise, (world + WindOffset * 1.24 + formationWarp * 170.0)
+        / float2(830.0, 165.0) + bend / 900.0).g;
+    float strands = smoothstep(0.43, 0.73, strandNoise) * smoothstep(0.23, 0.62, formation);
 
     float2 lightStep = float2(40.0, 40.0) / MapSize;
     float3 localLight = tex2D(LightSampler, mapUV).rgb;
@@ -99,12 +109,12 @@ float4 Fog(float4 vertexColor : COLOR0, float2 uv : TEXCOORD0) : COLOR0
         float depth = slice * 0.25;
         float field = CloudField(world, depth, bend * (0.5 + depth * 0.5));
         float raised = CloudField(world - float2(22.0, 36.0), depth, bend * 0.6);
-        float body = 0.12 + field * field * 1.8;
-        float groundBank = ground * (0.32 + field * 1.9) * groundVariation;
+        float body = 0.07 + field * field * 1.8 + strands * 0.38;
+        float groundBank = ground * (0.2 + field * 1.9 + strands * 0.3) * groundVariation;
         float displaced = max(0.07, 1.0 - clearing * (0.6 + depth * 0.36));
         float density = (body * 0.045 + groundBank * 0.13) * displaced;
         density += rolling * ground * field * 0.065;
-        density *= bankDensity * exposure * lerp(0.11, 1.0, openSpace) * Intensity;
+        density *= bankDensity * structureDensity * exposure * lerp(0.11, 1.0, openSpace) * Intensity;
         float extinction = 1.0 - exp(-density);
         float silver = saturate((raised - field) * 2.4 + 0.1);
         float shading = 0.77 + raised * 0.23;
@@ -114,7 +124,7 @@ float4 Fog(float4 vertexColor : COLOR0, float2 uv : TEXCOORD0) : COLOR0
     }
 
     float veil = exposure * Intensity * (0.018 + ground * 0.016) * lerp(0.65, 1.15, bankCoverage)
-        * lerp(0.25, 1.0, openSpace);
+        * lerp(0.4, 1.1, pockets) * lerp(0.25, 1.0, openSpace);
     accumulated += transmission * veil * scatter;
     transmission *= 1.0 - veil;
     float halo = saturate(luminance - Daylight * 0.55 - 0.08);

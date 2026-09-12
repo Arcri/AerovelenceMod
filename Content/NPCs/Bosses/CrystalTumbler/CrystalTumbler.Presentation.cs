@@ -18,6 +18,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private TumblerState presentationState;
         private readonly Vector2?[] eyeOrigins = new Vector2?[2];
 
+        private static Rectangle BodyFrame(Texture2D texture, int frameIndex)
+        {
+            Rectangle frame = texture.Frame(1, 2, 0, frameIndex);
+            frame.Height -= 2;
+            return frame;
+        }
+
+        private Vector2 BodyDrawScale(Rectangle frame) => new(NPC.scale, NPC.scale * frame.Width / frame.Height);
+
         private void UpdatePresentation()
         {
             if (Main.dedServ)
@@ -79,15 +88,15 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         {
             Texture2D mask = ModContent.Request<Texture2D>(Texture + "_Glowmask", AssetRequestMode.ImmediateLoad).Value;
             Texture2D bloom = ModContent.Request<Texture2D>(Texture + "_Glowmask_Bloom", AssetRequestMode.ImmediateLoad).Value;
-            Rectangle maskFrame = mask.Frame(1, 2, 0, frameIndex);
-            Rectangle bloomFrame = bloom.Frame(1, 2, 0, frameIndex);
-            spriteBatch.Draw(mask, center, maskFrame, Color.White * opacity, NPC.rotation, maskFrame.Size() * 0.5f, NPC.scale, SpriteEffects.None, 0f);
+            Rectangle maskFrame = BodyFrame(mask, frameIndex);
+            Rectangle bloomFrame = BodyFrame(bloom, frameIndex);
+            spriteBatch.Draw(mask, center, maskFrame, Color.White * opacity, NPC.rotation, maskFrame.Size() * 0.5f, BodyDrawScale(maskFrame), SpriteEffects.None, 0f);
             if (crystalBloom < 0.01f)
                 return;
             TumblerVFX.BeginAdditive(spriteBatch);
             Color bloomColor = Color.White * (opacity * crystalBloom * 0.6f);
             bloomColor.A = 255;
-            spriteBatch.Draw(bloom, center, bloomFrame, bloomColor, NPC.rotation, bloomFrame.Size() * 0.5f, NPC.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bloom, center, bloomFrame, bloomColor, NPC.rotation, bloomFrame.Size() * 0.5f, BodyDrawScale(bloomFrame), SpriteEffects.None, 0f);
             TumblerVFX.EndAdditive(spriteBatch);
         }
 
@@ -113,13 +122,29 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             Vector2 origin = eyeOrigins[frameIndex].Value;
             if (NPC.IsABestiaryIconDummy)
-                spriteBatch.Draw(eye, center, frame, Color.White * opacity, 0f, origin, NPC.scale, SpriteEffects.None, 0f);
+                DrawEyeFlame(spriteBatch, eye, center, frame, origin, opacity);
             else
                 ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.OverPlayers, () =>
                 {
                     if (NPC.active && NPC.ModNPC == this)
-                        Main.spriteBatch.Draw(eye, NPC.Center - Main.screenPosition, frame, Color.White * opacity, 0f, origin, NPC.scale, SpriteEffects.None, 0f);
+                        DrawEyeFlame(Main.spriteBatch, eye, NPC.Center - Main.screenPosition, frame, origin, opacity);
                 });
+        }
+
+        private void DrawEyeFlame(SpriteBatch spriteBatch, Texture2D eye, Vector2 center, Rectangle frame, Vector2 origin, float opacity)
+        {
+            ulong seed = Main.TileFrameSeed ^ (ulong)(NPC.whoAmI + 1) * 7919UL;
+            float charge = MathHelper.Clamp(visualCharge + shieldFlash * 0.5f, 0f, 1f);
+            float breath = 1f + MathF.Sin(Main.GlobalTimeWrappedHourly * 5f) * 0.035f;
+            Color flame = new Color(100, 100, 100, 0) * opacity * (0.6f + charge * 0.4f);
+            for (int pass = 0; pass < 7; pass++)
+            {
+                float shakeX = Utils.RandomInt(ref seed, -10, 11) * 0.15f;
+                float shakeY = Utils.RandomInt(ref seed, -10, 1) * 0.35f;
+                Vector2 jitter = new(shakeX, shakeY);
+                spriteBatch.Draw(eye, center + jitter, frame, flame, 0f, origin, NPC.scale * breath * (1.04f + charge * 0.08f), SpriteEffects.None, 0f);
+            }
+            spriteBatch.Draw(eye, center, frame, Color.White * opacity, 0f, origin, NPC.scale, SpriteEffects.None, 0f);
         }
     }
 }
