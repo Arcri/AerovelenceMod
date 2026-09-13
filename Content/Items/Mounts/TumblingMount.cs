@@ -24,8 +24,8 @@ namespace AerovelenceMod.Content.Items.Mounts
             MountData.totalFrames = 2;
             MountData.standingFrameCount = MountData.runningFrameCount = MountData.inAirFrameCount = MountData.flyingFrameCount = MountData.idleFrameCount = MountData.swimFrameCount = 1;
             MountData.standingFrameDelay = MountData.runningFrameDelay = MountData.inAirFrameDelay = MountData.flyingFrameDelay = MountData.idleFrameDelay = MountData.swimFrameDelay = 10;
-            MountData.runSpeed = 7.5f;
-            MountData.dashSpeed = 10f;
+            MountData.runSpeed = TumblingRampMotion.GroundSpeed;
+            MountData.dashSpeed = TumblingRampMotion.GroundSpeed;
             MountData.acceleration = 0.16f;
             MountData.jumpHeight = 12;
             MountData.jumpSpeed = 6f;

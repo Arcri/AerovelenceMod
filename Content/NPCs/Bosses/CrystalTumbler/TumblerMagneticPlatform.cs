@@ -238,7 +238,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     TumblerVFX.SpawnSpark(Projectile.Top + Main.rand.NextVector2Circular(48f, 4f), new Vector2(Main.rand.NextFloat(-1.5f, 1.5f), -2f), Color.Lerp(TumblerVFX.PhaseColor(colorCharge), Color.White, instability), 0.2f + instability * 0.15f);
             }
             float proximity = MathHelper.Clamp(1f - Math.Abs(Main.npc[bossIndex].Center.X - Projectile.Center.X) / 240f, 0f, 1f);
-            proximitySink = MathHelper.Lerp(proximitySink, proximity * 46f, 0.035f);
+            float targetSink = Main.npc[bossIndex].ai[0] == (float)TumblerState.ConductiveField ? 0f : proximity * 46f;
+            proximitySink = MathHelper.Lerp(proximitySink, targetSink, 0.035f);
             springVelocity = (springVelocity + (load - compression) * 0.07f) * 0.78f;
             compression = MathHelper.Clamp(compression + springVelocity, -2f, 10f);
             float lift = crushTimer < 0 ? 0f : MathHelper.SmoothStep(0f, 1f, MathHelper.Clamp((crushTimer - warningTicks) / 140f, 0f, 1f));

@@ -68,6 +68,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         [
             TumblerState.LoopSlam,
             TumblerState.BoltVolley,
+            TumblerState.ConductiveField,
             TumblerState.MagnetClash,
             TumblerState.ElectricPulse,
             TumblerState.KnifeCrystals,
@@ -166,7 +167,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             NPC.HitSound = new SoundStyle("AerovelenceMod/Sounds/Effects/RockHit") with { Volume = 0.7f, PitchVariance = 0.18f };
             NPC.DeathSound = SoundID.NPCDeath14;
             if (!Main.dedServ)
-                Music = -1;
+                Music = 0;
         }
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
@@ -212,7 +213,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             if (State is not (TumblerState.Despawn or TumblerState.Death) && !TargetArenaPlayer())
                 ChangeState(TumblerState.Despawn);
             if (!Main.dedServ)
-                Music = State == TumblerState.Despawn || State == TumblerState.Spawn && StateTimer < 525 ? -1 : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalTumbler");
+                Music = State == TumblerState.Despawn ? -1 : State == TumblerState.Spawn && StateTimer < 525 ? 0 : MusicLoader.GetMusicSlot(Mod, "Sounds/Music/CrystalTumbler");
 
             if (IsServer && !PhaseTwo && State is not TumblerState.Spawn and not TumblerState.PhaseTransition and not TumblerState.Despawn and not TumblerState.Death && NPC.life <= NPC.lifeMax * 0.5f)
             {
@@ -461,28 +462,38 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         private void ConductiveField()
         {
             EnsureConductiveCrystals();
-            GroundRoll(1.8f, 0.08f, 180f);
-            visualCharge = MathHelper.Clamp(StateTimer / 120f, 0f, 1f);
-            if (StateTimer == 35)
-                SpawnConductiveLink(false);
-            if (StateTimer == 155)
-                SpawnProjectile<TumblerBossAura>(NPC.Center, Vector2.Zero, ProjectileDamage(22), 0f, NPC.whoAmI, 195f, 82f);
-            if (StateTimer == 170 || StateTimer == 250)
+            if (StateTimer <= 1)
+                EnsureMagneticPlatforms();
+            if (StateTimer < TumblerConductiveSequence.ChargeEnd)
             {
+                GroundRoll(1.8f, 0.08f, 180f);
+                contactDamage = false;
+            }
+            else
+                ConductiveFloorRoll();
+            visualCharge = MathHelper.Clamp(StateTimer / 90f, 0f, 1f);
+            if (StateTimer == 180)
+                SpawnConductiveLink(false);
+            if (StateTimer == 270)
+                SpawnProjectile<TumblerBossAura>(NPC.Center, Vector2.Zero, ProjectileDamage(22), 0f, NPC.whoAmI, 180f, 64f);
+            for (int shot = 0; shot < TumblerConductiveSequence.ShotCount; shot++)
+            {
+                if (StateTimer != TumblerConductiveSequence.WarningTime(shot))
+                    continue;
                 foreach (NPC crystal in Main.ActiveNPCs)
                 {
-                    if (crystal.ModNPC is not TumblerConductiveCrystal || (StateTimer == 170) != (crystal.Center.X < NPC.Center.X))
+                    if (crystal.ModNPC is not TumblerConductiveCrystal || Math.Sign(crystal.ai[0]) != TumblerConductiveSequence.Side(shot))
                         continue;
                     Vector2 tip = crystal.Top + new Vector2(0f, 6f);
                     SpawnProjectile<TumblerAimLine>(tip, (Target.Center - tip).SafeNormalize(Vector2.UnitY), ProjectileDamage(15), 0f, PhaseTwo ? 1f : 0f);
                 }
             }
-            if (StateTimer >= 155 && StateTimer < 350)
+            if (StateTimer >= 270 && StateTimer < 450)
             {
                 contactDamage = true;
                 auraScale = 0.8f;
             }
-            if (StateTimer >= 395)
+            if (StateTimer >= 450)
                 FinishAttack();
         }
 
@@ -610,8 +621,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     NPC.velocity.X *= 0.6f;
                     impactFlash = 1f;
                     SpawnAuraPulse(135f, 32, false);
-                    if (repetitions < 1 || !TumblerMagneticPlatform.CollapseAll(NPC))
-                        EnsureMagneticPlatforms();
+                    EnsureMagneticPlatforms();
                     EnsureConductiveCrystals();
                     KickUpDust(12);
                     ThrowImpactRubble(10);
@@ -624,6 +634,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             else
             {
+                contactDamage = Math.Abs(NPC.velocity.X) > 2.5f;
                 NPC.velocity.X = Approach(NPC.velocity.X, 0f, 0.35f);
                 if (StateTimer >= 42)
                 {
@@ -657,7 +668,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             GroundRoll(2.6f, 0.09f, 240f);
             visualCharge = 0.5f;
             if (StateTimer == 30 || StateTimer == 230 || StateTimer == 430)
+            {
                 SpawnPylonFields();
+                SpawnFenceUpperBolts();
+            }
             if (StateTimer >= 630)
                 FinishAttack();
         }
@@ -1213,8 +1227,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Content.Items.Weapons.BossDrops.CrystalTumbler.DarkCrystalStaff>()));
-            npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsExpert(), ModContent.ItemType<Content.Items.Mounts.TumblingHarness>()));
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Content.Items.TreasureBags.CrystalTumblerBag>()));
+            LeadingConditionRule normal = new LeadingConditionRule(new Conditions.NotExpert());
+            normal.OnSuccess(ItemDropRule.OneFromOptions(1, Content.Items.TreasureBags.CrystalTumblerBag.Weapons));
+            npcLoot.Add(normal);
         }
 
         public override void OnKill()

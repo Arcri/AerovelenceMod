@@ -56,6 +56,7 @@ namespace AerovelenceMod.Content.Items.Mounts
         {
             if (!Mounted || Player.dead || Player.whoAmI != Main.myPlayer)
                 return;
+            Player.velocity.X = MathHelper.Clamp(Player.velocity.X, -TumblingRampMotion.MaximumSpeed, TumblingRampMotion.MaximumSpeed);
             if (!Player.controlUp)
                 upReleased = true;
             bool canRide = !Player.CCed && !Player.pulley && !Player.tongued && !Player.shimmering && Player.grappling[0] == -1 && Player.gravDir == 1f;
@@ -74,7 +75,7 @@ namespace AerovelenceMod.Content.Items.Mounts
                 rampAge = 0;
                 Angle = 0f;
                 Direction = Math.Abs(Player.velocity.X) > 1f ? Math.Sign(Player.velocity.X) : Player.direction;
-                Speed = MathHelper.Clamp(Math.Abs(Player.velocity.X), 6f, 11f);
+                Speed = MathHelper.Clamp(Math.Abs(Player.velocity.X), TumblingRampMotion.MinimumSpeed, TumblingRampMotion.MaximumSpeed);
                 SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.45f, Pitch = 0.3f }, BallCenter);
             }
             if (!Riding)

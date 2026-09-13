@@ -112,10 +112,14 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         private void DrawTrajectory(Func<float, Vector2> point, float opacity, ulong age)
         {
+            float head = age * 0.32f % 27f;
             for (int i = 0; i < 22; i++)
             {
+                float distance = head - i;
+                if (distance <= 0f || distance >= 5f)
+                    continue;
                 float t = (i + 0.5f) / 22f;
-                float reveal = MathHelper.Clamp((age - i * 1.5f) / 8f, 0f, 1f);
+                float reveal = MathF.Sin(distance / 5f * MathHelper.Pi);
                 float ahead = MathHelper.Clamp((t - lastProgress + 0.025f) / 0.06f, 0f, 1f);
                 float pulse = 0.5f + MathF.Cos(age * 0.12f - i * 0.7f) * 0.5f;
                 Vector2 tangent = (point(Math.Min(1f, t + 0.002f)) - point(Math.Max(0f, t - 0.002f))).SafeNormalize(Vector2.UnitX);

@@ -134,7 +134,7 @@ namespace AerovelenceMod.Content.Items.Mounts
         {
             riding = reader.ReadBoolean();
             direction = reader.ReadSByte() < 0 ? -1 : 1;
-            speed = MathHelper.Clamp(reader.ReadSingle(), 6f, 12f);
+            speed = MathHelper.Clamp(reader.ReadSingle(), TumblingRampMotion.MinimumSpeed, TumblingRampMotion.MaximumSpeed);
             rampAge = Math.Clamp(reader.ReadInt32(), 0, 36000);
             Main.player[Projectile.owner].GetModPlayer<TumblingMountPlayer>().ReceiveRotation(Projectile.ai[2]);
         }
