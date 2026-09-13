@@ -68,6 +68,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     return;
                 substate = 2;
                 railSpeed = RailLaunchSpeed;
+                WarnLoopSlam();
                 StateTimer = 0;
                 NPC.netUpdate = true;
                 SoundEngine.PlaySound(SoundID.Item122 with { Volume = 0.6f, Pitch = -0.1f }, NPC.Center);
@@ -103,21 +104,10 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 ScreenShake(11f);
                 SpawnAuraPulse(160f, 30, false);
                 SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.8f, Pitch = -0.4f }, NPC.Center);
-                if (!TumblerMagneticPlatform.CollapseAll(NPC))
-                    EnsureMagneticPlatforms();
+                EnsureMagneticPlatforms();
                 EnsureConductiveCrystals();
-                if (Main.expertMode)
-                {
-                    for (int ring = 0; ring < 5; ring++)
-                    {
-                        for (int side = -1; side <= 1; side += 2)
-                        {
-                            float x = centerX + side * (80f + ring * (RightInner - centerX - 100f) / 4f);
-                            Vector2 source = new(x, ArenaData.WorldBounds.Top + 120f);
-                            SpawnProjectile<TumblerLightningBolt>(source, new Vector2(0f, FloorY - source.Y), ProjectileDamage(19), 0f, 60f + ring * 16f, 1f);
-                        }
-                    }
-                }
+                if (IsServer)
+                    TumblerLightningBolt.ReleaseSlam(NPC);
                 FinishAttack(Main.expertMode ? 150 : 90);
             }
         }

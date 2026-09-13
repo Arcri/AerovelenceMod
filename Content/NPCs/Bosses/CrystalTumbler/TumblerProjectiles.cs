@@ -430,6 +430,20 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
     public class TumblerLightningBolt : ModProjectile
     {
         private int timer;
+        private int ActiveDuration => Projectile.ai[2] < 0f ? Math.Clamp((int)-Projectile.ai[2], 10, 120) : 10;
+        private int FadeDuration => Projectile.ai[2] < 0f ? 14 : 4;
+
+        internal static void ReleaseSlam(NPC boss)
+        {
+            foreach (Projectile projectile in Main.ActiveProjectiles)
+            {
+                if (projectile.ModProjectile is not TumblerLightningBolt bolt || projectile.ai[2] != boss.whoAmI + 1)
+                    continue;
+                projectile.ai[2] = 0f;
+                projectile.ai[0] = bolt.timer + 1;
+                projectile.netUpdate = true;
+            }
+        }
 
         public override void SendExtraAI(BinaryWriter writer)
         {
@@ -470,6 +484,19 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override void AI()
         {
             timer++;
+            if (Projectile.ai[2] > 0f)
+            {
+                int owner = (int)Projectile.ai[2] - 1;
+                if (owner >= Main.maxNPCs || !Main.npc[owner].active || Main.npc[owner].ModNPC is not CrystalTumbler || Main.npc[owner].ai[0] != (float)TumblerState.LoopSlam)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                        TumblerProjectileRetirement.Begin(Projectile);
+                    return;
+                }
+                timer = Math.Min(timer, (int)Projectile.ai[0] - 1);
+                Projectile.timeLeft = 240;
+                return;
+            }
             if (timer == (int)Projectile.ai[0])
             {
                 SoundEngine.PlaySound(SoundID.Item122 with { Volume = 0.5f, Pitch = 0.15f }, Projectile.Center);
@@ -486,13 +513,13 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                 lightning.Update(Projectile, Projectile.Center, Projectile.Center + Projectile.velocity, 0.7f);
                 Lighting.AddLight(Projectile.Center + Projectile.velocity, TumblerVFX.PhaseColor(Projectile.ai[1]).ToVector3() * 1.1f);
             }
-            if (timer > Projectile.ai[0] + 14f)
+            if (timer > Projectile.ai[0] + ActiveDuration + FadeDuration)
                 Projectile.Kill();
         }
 
         public override bool? CanDamage()
         {
-            return timer >= Projectile.ai[0] && timer <= Projectile.ai[0] + 10f;
+            return Projectile.ai[2] <= 0f && timer >= Projectile.ai[0] && timer <= Projectile.ai[0] + ActiveDuration;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -506,7 +533,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
         public override bool PreDraw(ref Color lightColor)
         {
             float telegraph = MathHelper.Clamp(timer / Math.Max(1f, Projectile.ai[0]), 0f, 1f);
-            float strike = timer >= Projectile.ai[0] ? MathHelper.Clamp(1f - (timer - Projectile.ai[0]) / 14f, 0f, 1f) : 0f;
+            float strike = Projectile.ai[2] <= 0f && timer >= Projectile.ai[0] ? MathHelper.Clamp((Projectile.ai[0] + ActiveDuration + FadeDuration - timer) / (Projectile.ai[2] < 0f ? FadeDuration : 14f), 0f, 1f) : 0f;
             Color color = Projectile.ai[1] >= 1f ? new Color(255, 182, 48) : new Color(45, 225, 255);
             Vector2 start = Projectile.Center - Main.screenPosition;
             Vector2 end = start + Projectile.velocity;
@@ -518,7 +545,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             else
             {
-                TumblerVFX.DrawTelegraph(Main.spriteBatch, start, end, color, 0.18f + telegraph * 0.4f);
+                TumblerVFX.DrawTelegraph(Main.spriteBatch, start, end, color, MathHelper.Clamp(timer / 8f, 0f, 1f) * (0.65f + telegraph * 0.2f));
                 TumblerVFX.DrawCharge(Main.spriteBatch, end, color, telegraph, 13f + 9f * (1f - telegraph), -timer * 0.025f);
             }
             return false;

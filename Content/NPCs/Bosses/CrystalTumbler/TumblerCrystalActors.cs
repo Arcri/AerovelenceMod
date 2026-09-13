@@ -223,9 +223,12 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             }
             NPC boss = Main.npc[bossIndex];
             phase = boss.ai[2];
-            float targetCharge = boss.ai[0] == (float)TumblerState.ConductiveField ? MathHelper.Clamp(boss.ai[1] / 120f, 0f, 1f) : 0f;
+            bool attacking = boss.ai[0] == (float)TumblerState.ConductiveField;
+            int side = Math.Sign(NPC.ai[0]);
+            float targetCharge = attacking ? TumblerConductiveSequence.Charge(boss.ai[1], side) : 0f;
             charge = MathHelper.Lerp(charge, targetCharge, 0.08f);
-            connection = MathHelper.Lerp(connection, NPC.ai[1] > 0f ? 1f : 0f, 0.05f);
+            bool supplying = attacking && NPC.ai[1] > 0f && TumblerConductiveSequence.Supplying(boss.ai[1], side);
+            connection = MathHelper.Lerp(connection, supplying ? 1f : 0f, 0.2f);
             NPC.ai[2]++;
             NPC.velocity = Vector2.Zero;
             if (ArenaData.Valid)

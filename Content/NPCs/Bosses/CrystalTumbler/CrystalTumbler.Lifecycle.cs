@@ -67,7 +67,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             int interval = Math.Max(5, 24 - StateTimer / 8);
             if (StateTimer < 150 && StateTimer % interval == 0)
             {
-                SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.25f + charge * 0.3f, Pitch = charge * 0.6f }, NPC.Center);
+                SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.1f + charge * 0.12f, Pitch = charge * 0.6f, MaxInstances = 1 }, NPC.Center);
                 ScreenShake(2f + charge * 5f);
                 if (!Main.dedServ)
                     for (int i = 0; i < 7; i++)
@@ -91,8 +91,8 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
                     }
                 }
                 SpawnAuraPulse(300f, 40, false);
-                SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/ElectricExplode") with { Volume = 0.8f, Pitch = -0.3f }, NPC.Center);
-                SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.9f, Pitch = -0.4f }, NPC.Center);
+                SoundEngine.PlaySound(new SoundStyle("AerovelenceMod/Sounds/Effects/ElectricExplode") with { Volume = 0.3f, Pitch = -0.3f }, NPC.Center);
+                SoundEngine.PlaySound(SoundID.Item70 with { Volume = 0.6f, Pitch = -0.4f }, NPC.Center);
             }
             if (StateTimer >= 180 && IsServer)
                 NPC.StrikeInstantKill();
