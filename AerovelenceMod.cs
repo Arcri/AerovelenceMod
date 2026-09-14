@@ -32,6 +32,11 @@ namespace AerovelenceMod
 {
     public class AerovelenceMod : Mod
     {
+        public override void HandlePacket(System.IO.BinaryReader reader, int whoAmI)
+        {
+            if (reader.ReadByte() == Content.Items.Others.Misc.BabyCondurtleEgg.HatchPacket)
+                Content.Items.Others.Misc.BabyCondurtleEgg.ReceiveHatch(whoAmI);
+        }
 		public Asset<Effect> TrailShader;
 
 		public static IDictionary<string, Effect> ShaderDict = new Dictionary<string, Effect>();

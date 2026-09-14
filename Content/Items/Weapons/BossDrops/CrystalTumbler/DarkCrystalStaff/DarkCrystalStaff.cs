@@ -1,4 +1,4 @@
-﻿using AerovelenceMod.Common.Utilities;
+using AerovelenceMod.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,6 +11,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
 {
     public class DarkCrystalStaff : ModItem
     {
+        public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/DarkCrystalStaff/DarkCrystalStaff";
 
         public override void SetDefaults()
         {
