@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Creative;
@@ -62,6 +63,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Item.useTurn = true;
             Item.noUseGraphic = true;
         }
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, 0f, Main.MouseWorld.X, Main.MouseWorld.Y);
+            return false;
+        }
     }
 
     public class MarionetteProj : ModProjectile
@@ -78,28 +84,61 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Projectile.extraUpdates = 0; //used to be three, trying to update strings more frequently than the bars but failing :broken_heart:
         }
 
-        #region swingPhysicVars
-        float barsRot;
-        Vector2 stillPos;
-        Vector2 barLoc = Vector2.Zero;
-        float acc = 0f;
-        float accBack = 0f;
-        float accActualBack = 0.002f;
-        bool rotStop = false;
-        int rememberDir;
-        #endregion
-        int maxDist = 200;
-        Vector2 marionetteLoc = Vector2.Zero;
+        private float barsRot;
+        private float angularVelocity;
+        private Vector2 barLoc;
+        private int age;
+        private Vector2 previousScreenPosition;
+        private Vector2 sentCursor;
+        private const int maxDist = 200;
+        private Vector2 marionetteLoc;
+        private float Appearance => MarionetteMotion.Appearance(age);
+        private float AppearScale => 0.65f + Appearance * 0.35f;
+        private Vector2 BarsCenter => marionetteLoc + new Vector2(0f, 16f - (1f - Appearance) * 12f);
+        public override bool ShouldUpdatePosition() => false;
+
         public override void AI()
         {
             Player p = Main.player[Projectile.owner];
 
-            if (barLoc == Vector2.Zero)
+            if (!p.active || p.dead || p.CCed || p.noItems || p.HeldItem.type != ModContent.ItemType<Marionette>())
             {
-                barLoc = Main.MouseWorld;
+                Projectile.Kill();
+                return;
             }
-
-            marionetteLoc = Main.MouseWorld;
+            if (Projectile.owner == Main.myPlayer)
+            {
+                Vector2 cursor = Main.MouseWorld;
+                if (age == 0 || (age % 4 == 0 && Vector2.DistanceSquared(cursor, sentCursor) > 4f))
+                {
+                    sentCursor = cursor;
+                    Projectile.netUpdate = true;
+                }
+                Projectile.ai[1] = cursor.X;
+                Projectile.ai[2] = cursor.Y;
+            }
+            marionetteLoc = new Vector2(Projectile.ai[1], Projectile.ai[2]);
+            if (age == 0)
+            {
+                barLoc = marionetteLoc;
+                previousScreenPosition = Main.screenPosition;
+                if (!Main.dedServ)
+                {
+                    SoundEngine.PlaySound(SoundID.Item8 with { Volume = 0.3f, Pitch = -0.25f }, marionetteLoc);
+                    for (int i = 0; i < 18; i++)
+                    {
+                        Vector2 offset = Main.rand.NextVector2Circular(30f, 22f);
+                        Dust dust = Dust.NewDustPerfect(marionetteLoc + offset, DustID.RedTorch,
+                            -offset * 0.04f - Vector2.UnitY * 0.4f, 0, new Color(255, 45, 65), Main.rand.NextFloat(0.8f, 1.25f));
+                        dust.noGravity = true;
+                    }
+                }
+            }
+            Vector2 cameraDelta = previousScreenPosition - Main.screenPosition;
+            for (int i = 0; i < 4; i++)
+                if (verletEndPos[i] != Vector2.Zero) verletEndPos[i] += cameraDelta;
+            previousScreenPosition = Main.screenPosition;
+            age++;
 
             if (p.channel)
             {
@@ -112,15 +151,19 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 Projectile.spriteDirection = Projectile.direction;
             }
 
-            p.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.PiOver2);
+            p.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.DirectionTo(marionetteLoc).ToRotation() - MathHelper.PiOver2);
             Vector2 ArmPosition = p.RotatedRelativePoint(p.MountedCenter, false, false);
-            float RotationOffset = Utils.GetLerpValue(5, 255, Projectile.Distance(Main.MouseWorld), true);
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(Main.MouseWorld), RotationOffset);
+            float RotationOffset = Utils.GetLerpValue(5, 255, Projectile.Distance(marionetteLoc), true);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(marionetteLoc), RotationOffset);
             Projectile.Center = ArmPosition;
             Vector2 projPos = Projectile.Center += Projectile.velocity * 15;
 
             var plr = p.GetModPlayer<DrawBehindPlayer>();
             plr.DrawVerlet = true;
+            plr.Opacity = Appearance;
+            plr.pixelSource.Clear();
+            plr.col.Clear();
+            plr.lerp.Clear();
 
             #region function
             for (int i = 0; i < 4; i++)
@@ -128,6 +171,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 for (int n = 0; n < Main.maxNPCs; n++)
                 {
                     NPC npc = Main.npc[n];
+                    if (age < 20 || !npc.active || npc.life <= 0 || npc.friendly || npc.dontTakeDamage || npc.immortal)
+                        continue;
                     if (!npc.boss && !npc.friendly && !npc.dontTakeDamage)
                     {
                         if (verletAttack[i] == 0 && verletStretch[i] <= 0 && Vector2.Distance(npc.Center, verletEndPos[i] + Main.screenPosition) < 30)
@@ -167,55 +212,29 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                 if (verletAttack[i] == 1)
                 {
-                    if (verletStickedTo[i] != null && verletStickedTo[i].dontTakeDamage)
+                    if (verletStickedTo[i] == null || !verletStickedTo[i].active || verletStickedTo[i].life <= 0 || verletStickedTo[i].dontTakeDamage)
                     {
                         ResetValues(i);
                         continue;
                     }
 
-                    //verletEndPos[i] = verletStickedTo[i].Center - Main.screenPosition;
-
-                    if (verletStickedTo[i].dontTakeDamage)
-                    {
-                        ResetValues(i);
-                    }
-
-                    if (--verletHitCD[i] <= 0)
+                    if (--verletHitCD[i] <= 0 && Projectile.owner == Main.myPlayer)
                     {
                         int howManyAttached = 0;
                         for (int a = 0; a < 4; a++)
                         {
-                            if (verletStickedTo[a] != null)
+                            if (verletStickedTo[a] != null && verletStickedTo[a].active && verletStickedTo[a].life > 0 && !verletStickedTo[a].dontTakeDamage)
                             {
                                 howManyAttached++;
                             }
                         }
 
                         verletHitCD[i] = 15 * howManyAttached;
-                        bool skillStrike = false;
-                        NPC.HitInfo hit = verletStickedTo[i].CalculateHitInfo(Projectile.damage, 0);
-
-
-
-                        if (howManyAttached == 4)
-                        {
-                            skillStrike = true;
-                        }
-
-                        int critChanceMult = 4 * howManyAttached;
-
-                        if (verletChoke[i] > 200)
-                        {
-                            if (Main.rand.Next(100) < (critChanceMult))
-                            {
-                                hit.Crit = true;
-                            }
-                        }
-
-                        if (hit.Crit)
-                        {
-                            hit.Damage *= 2;
-                        }
+                        bool skillStrike = howManyAttached == 4;
+                        bool crit = verletChoke[i] > 200 && Main.rand.Next(100) < 4 * howManyAttached;
+                        NPC target = verletStickedTo[i];
+                        NPC.HitInfo hit = target.CalculateHitInfo(Projectile.damage, 0, crit: crit,
+                            damageType: Projectile.DamageType, damageVariation: true, luck: p.luck);
 
                         if (!skillStrike)
                         {
@@ -223,15 +242,9 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                         }
                         else
                         {
-                            var target = verletStickedTo[i];
-
-                            var multiplier = 1.5f;
-                            var skillStrikeMultiplier = multiplier * p.GetModPlayer<SkillStrikePlayer>().skillStrikeMultiplier;
-                            var superCritMultiplier = multiplier * p.GetModPlayer<SkillStrikePlayer>().superCritMultiplier;
-
-                            hit.Damage *= (int)skillStrikeMultiplier;
-                            if (hit.Crit)
-                                hit.Damage *= (int)superCritMultiplier;
+                            SkillStrikePlayer skillPlayer = p.GetModPlayer<SkillStrikePlayer>();
+                            hit.Damage = MarionetteMotion.SkillDamage(hit.Damage, skillPlayer.skillStrikeMultiplier, skillPlayer.superCritMultiplier, hit.Crit);
+                            hit.HideCombatText = true;
 
                             //visuals
                             SkillStrikeUtil.fakeSkillStrike(p, target, target.Center, crit: hit.Crit);
@@ -244,19 +257,24 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
                             text.customData = sstb;
                         }
-                        verletStickedTo[i].StrikeNPC(hit);
+                        target.StrikeNPC(hit);
+                        target.PlayerInteraction(Projectile.owner);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.SendStrikeNPC(target, hit);
                         //is there custom behaviour for super crits?
 
                     }
 
-                    if (Vector2.Distance(Main.MouseWorld, verletStickedTo[i].Center) > (int)(maxDist * 1.75f))
+                    if (Vector2.Distance(marionetteLoc, verletStickedTo[i].Center) > (int)(maxDist * 1.75f))
                     {
                         ResetValues(i);
+                        continue;
                     }
 
-                    if (verletStickedTo[i] != null && !verletStickedTo[i].active)
+                    if (verletStickedTo[i] == null || !verletStickedTo[i].active)
                     {
                         ResetValues(i);
+                        continue;
                     }
 
                     if (verletChoke[i] < 360)
@@ -278,114 +296,12 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             }
 
             #endregion
-            #region swingPhysics
-            Vector2 dir = (Main.MouseWorld - barLoc).SafeNormalize(Vector2.Zero);
-
-            if (Vector2.Distance(barLoc, Main.MouseWorld) > 15)
-            {
-                accBack = 0f;
-                accActualBack = 0.002f;
-                rotStop = false;
-
-                if (acc < 1f)
-                    acc += 0.001f;
-                if (barLoc.X < Main.MouseWorld.X)
-                {
-                    if (barsRot < 0.5f)
-                    {
-                        barsRot += acc;
-                        rememberDir = 1;
-                    }
-                }
-
-                if (barLoc.X > Main.MouseWorld.X)
-                {
-                    if (barsRot > -0.5f)
-                    {
-                        barsRot -= acc;
-                        rememberDir = -1;
-                    }
-                }
-
-                barLoc += dir * 10f;
-
-                int maxDist = 75;
-                if (Vector2.Distance(barLoc, Main.MouseWorld) > maxDist)
-                {
-                    dir = (barLoc - Main.MouseWorld).SafeNormalize(Vector2.Zero);
-                    barLoc = Main.MouseWorld + dir * maxDist;
-                }
-
-            }
-            else
-            {
-                acc = 0f;
-                if (accBack < 1f)
-                    accBack += 0.001f;
-
-                if (!rotStop)
-                {
-                    if (rememberDir == -1)
-                    {
-                        barsRot += accBack;
-                        if (barsRot > 0f)
-                        {
-                            accBack -= accActualBack;
-                            if (accActualBack > 0.0009f)
-                            {
-                                accActualBack -= 0.00001f;
-                            }
-                            else
-                            {
-                                rotStop = true;
-                                accActualBack = 0f;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        barsRot -= accBack;
-                        if (barsRot < 0f)
-                        {
-                            accBack -= accActualBack;
-                            if (accActualBack > 0.0009f)
-                            {
-                                accActualBack -= 0.00001f;
-                            }
-                            else
-                            {
-                                rotStop = true;
-                                accActualBack = 0f;
-                            }
-                        }
-
-                    }
-                }
-                else
-                {
-
-                    accActualBack += 0.001f;
-                    if (barsRot > 0f)
-                    {
-                        barsRot -= accActualBack;
-                    }
-
-                    if (barsRot < 0f)
-                    {
-                        barsRot += accActualBack;
-                    }
-                }
-
-
-                barLoc = Main.MouseWorld;
-            }
-
-            #endregion
+            MarionetteMotion.UpdateTilt(ref barsRot, ref angularVelocity, marionetteLoc.X - barLoc.X);
+            barLoc = marionetteLoc;
 
             //-------------------------------- moved here since now it wont lag a frame behind
 
-            Vector2 barsLoc = new Vector2(Main.MouseWorld.X, Main.MouseWorld.Y + 16) - Main.screenPosition;
+            Vector2 barsLoc = BarsCenter - Main.screenPosition;
 
             #region VerletStuff
             Vector2 verletPos = new Vector2(barsLoc.X - 22, barsLoc.Y - 6);
@@ -412,6 +328,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                     verletPos.Y += 20 * barsRot;
                     col = Color.White;
                 }
+                verletPos = barsLoc + (verletPos - barsLoc) * AppearScale;
                 Vector2 actualVerletEndPos = new Vector2(verletPos.X, verletPos.Y + maxDist * 1.5f);
                 if (verletEndPos[i] == Vector2.Zero)
                     verletEndPos[i] = verletPos;
@@ -436,35 +353,14 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                     verletStretch[i] -= 6;
                 }
 
-                if (Vector2.Distance(verletEndPos[i], barsLoc) > maxDist)
+                if (Vector2.Distance(verletEndPos[i], barsLoc) > maxDist * Appearance)
                 {
                     Vector2 direction = (verletEndPos[i] - barsLoc).SafeNormalize(Vector2.Zero);
-                    verletEndPos[i] = barsLoc + direction * maxDist;
+                    verletEndPos[i] = barsLoc + direction * maxDist * Appearance;
                 }
 
                 if (verletAttack[i] == 0)
                 {
-                    if (triggerVFX[i] == 1) //trigger vfx
-                    {
-                        triggerVFX[i] = 0;
-                        NPC npc = rememberSticked[i];
-                        float calcDist = 1f;
-                        Vector2 direct = (npc.Center - (verletEndPos[i] + Main.screenPosition)).SafeNormalize(Vector2.Zero);
-                        for (int loop = 0; loop < 5000; loop++)
-                        {
-                            Vector2 stepCalcPos = (verletEndPos[i] + Main.screenPosition) + direct * calcDist;
-                            if (Vector2.Distance(stepCalcPos, npc.Center) < 1)
-                            {
-                                break;
-                            }
-                            calcDist += 1f;
-                            if (loop % 20 == 0)
-                            {
-                                Dust.NewDust(stepCalcPos, 1, 1, ModContent.DustType<StringSnap>(), SpeedY: Main.rand.NextFloat(-5f, 5f), SpeedX: Main.rand.NextFloat(-2.5f, 2.5f));
-                            }
-                        }
-                    }
-
                     if (verletStretch[i] > 0)
                     {
                         DrawVerlet(verletPos, verletEndPos[i], Color.White, i, (float)verletStretch[i] / 500, p: Main.player[Projectile.owner]);
@@ -476,8 +372,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                 }
                 else if (verletAttack[i] == 1)
                 {
-                    float dist = Vector2.Distance(Main.MouseWorld, verletStickedTo[i].Center);
-                    triggerVFX[i] = 1;
+                    float dist = Vector2.Distance(marionetteLoc, verletStickedTo[i].Center);
                     Vector2 stickLoc = new Vector2(verletStickedTo[i].Center.X, verletStickedTo[i].Center.Y);
                     if (!verletStickedTo[i].boss)
                     {
@@ -496,7 +391,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             #endregion
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             Player p = Main.player[Projectile.owner];
             var plr = p.GetModPlayer<DrawBehindPlayer>();
@@ -514,9 +409,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
         Vector2[] verletEndPos = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         Vector2[] verletSpeed = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         Vector2[] verletBossGrabRand = { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
-        NPC[] rememberSticked = { null, null, null, null };
         NPC[] verletStickedTo = { null, null, null, null };
-        int[] triggerVFX = { 0, 0, 0, 0 };
         int[] verletAttack = { 0, 0, 0, 0 };
         int[] verletHitCD = { 0, 0, 0, 0 };
         int[] verletChoke = { 0, 0, 0, 0 };
@@ -529,15 +422,21 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
             Texture2D tex = ModContent.Request<Texture2D>(Mod.Name + "/Content/Items/Weapons/Crimson/MarionetteStringless").Value;
             Rectangle sourceRect = new Rectangle(0, 0, tex.Width, tex.Height);
 
-            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, sourceRect, Color.White, Projectile.rotation, sourceRect.Size() / 2, 1f, Projectile.direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, sourceRect, Color.White * Appearance, Projectile.rotation, sourceRect.Size() / 2, AppearScale, Projectile.direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
 
 
-            Vector2 barsLoc = new Vector2(Main.MouseWorld.X, Main.MouseWorld.Y + 16) - Main.screenPosition;
+            Vector2 barsLoc = BarsCenter - Main.screenPosition;
             tex = ModContent.Request<Texture2D>(Mod.Name + "/Content/Items/Weapons/Crimson/MarionetteBar").Value;
             sourceRect = new Rectangle(0, 0, tex.Width, tex.Height);
+            if (age < 24)
+            {
+                Texture2D glow = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Orbs/SoftGlow64").Value;
+                float flash = MathF.Sin(Appearance * MathHelper.Pi);
+                Main.EntitySpriteDraw(glow, barsLoc, null, new Color(255, 100, 130, 0) * flash * 0.45f, 0f, glow.Size() * 0.5f, 1.15f, SpriteEffects.None);
+            }
             float rot = MathHelper.Clamp(barsRot, -0.6f, 0.6f);
-            Main.EntitySpriteDraw(tex, barsLoc, sourceRect, Color.Gray, 0.6f + rot, sourceRect.Size() / 2, 1f, SpriteEffects.None);
-            Main.EntitySpriteDraw(tex, barsLoc, sourceRect, Color.White, 0f + rot, sourceRect.Size() / 2, 1f, SpriteEffects.None);
+            Main.EntitySpriteDraw(tex, barsLoc, sourceRect, Color.Gray * Appearance, 0.6f + rot, sourceRect.Size() / 2, AppearScale, SpriteEffects.None);
+            Main.EntitySpriteDraw(tex, barsLoc, sourceRect, Color.White * Appearance, 0f + rot, sourceRect.Size() / 2, AppearScale, SpriteEffects.None);
 
             return false;
         }
@@ -549,17 +448,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
         {
             Rectangle pixelSource = new Rectangle(0, 0, 2, 2);
 
-            float calcDist = 1f;
+            float calcDist = Vector2.Distance(verletPos1, verletPos2);
             Vector2 dir = (verletPos2 - verletPos1).SafeNormalize(Vector2.Zero);
-            for (int i = 0; i < 5000; i++)
-            {
-                Vector2 stepCalcPos = verletPos1 + dir * calcDist;
-                if (Vector2.Distance(stepCalcPos, verletPos2) < 1)
-                {
-                    break;
-                }
-                calcDist += 1f;
-            }
 
             List<Vector2> points = new List<Vector2>();
             points.Add(verletPos1);
@@ -663,22 +553,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
         public Vector2 CreateMiddlePoint(Vector2 verletPos1, Vector2 dir, float calcDist, float pointPos, int pointYOffset, int verletChoke)
         {
-            int shake = 0;
-            if (verletChoke > 250)
-            {
-                int rand = 0;
-                for (int i = 0; i < verletChoke - 250; i++)
-                {
-                    if (i % 15 == 0)
-                    {
-                        rand += 3;
-                    }
-                }
-                shake = Main.rand.Next(rand);
-            }
+            float tension = MathHelper.Clamp((verletChoke - 250f) / 110f, 0f, 1f);
+            float shake = MathF.Sin(age * 0.6f + pointPos * 15f) * tension * 3f * MathF.Sin(pointPos * MathHelper.Pi);
 
             Vector2 middlePoint = verletPos1 + dir * (calcDist * pointPos);
-            middlePoint.Y += pointYOffset + shake;
+            middlePoint.Y += pointYOffset * Appearance + shake;
             return middlePoint;
 
         }
@@ -686,13 +565,71 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
 
         public void ResetValues(int i, int delay = 60)
         {
+            NPC target = verletStickedTo[i];
+            if (target != null && !Main.dedServ)
+            {
+                Vector2 end = target.boss ? target.position + verletBossGrabRand[i] : target.Center - Vector2.UnitY * (target.height / 3f);
+                Vector2 direction = (BarsCenter - end).SafeNormalize(-Vector2.UnitY);
+                float length = Math.Min(70f, Vector2.Distance(BarsCenter, end) * 0.35f);
+                for (int piece = 0; piece < MarionetteMotion.BreakPieces; piece++)
+                {
+                    Vector2 point = end + direction * (length * (piece + 0.5f) / MarionetteMotion.BreakPieces);
+                    Dust dust = Dust.NewDustPerfect(point, ModContent.DustType<MarionetteThreadFragment>(), direction * 1.2f + Main.rand.NextVector2Circular(1.2f, 1.2f));
+                    dust.rotation = direction.ToRotation();
+                }
+            }
             verletBossGrabRand[i] = Vector2.Zero;
             verletTargetLerp[i] = 0f;
             verletChoke[i] = 0;
             verletAttack[i] = 0;
-            rememberSticked[i] = verletStickedTo[i];
             verletStickedTo[i] = null;
-            //adding line breaking vfx
+        }
+    }
+
+    internal static class MarionetteMotion
+    {
+        internal const int BreakPieces = 6;
+        internal static float Appearance(int age) => MathHelper.SmoothStep(0f, 1f, Math.Clamp(age / 20f, 0f, 1f));
+        internal static int SkillDamage(int damage, float skillBonus, float superBonus, bool crit)
+            => Math.Max(1, (int)MathF.Round(damage * 1.5f * skillBonus * (crit ? superBonus : 1f)));
+        internal static void UpdateTilt(ref float angle, ref float velocity, float horizontalMovement)
+        {
+            float target = Math.Clamp(horizontalMovement * 0.018f, -0.28f, 0.28f);
+            velocity = (velocity + (target - angle) * 0.12f) * 0.72f;
+            angle = Math.Clamp(angle + velocity, -0.35f, 0.35f);
+            if (Math.Abs(angle) < 0.0001f && Math.Abs(velocity) < 0.0001f && target == 0f)
+                angle = velocity = 0f;
+        }
+    }
+
+    public class MarionetteThreadFragment : ModDust
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void OnSpawn(Dust dust)
+        {
+            dust.noGravity = dust.noLight = true;
+            dust.customData = 0;
+            dust.scale = Main.rand.NextFloat(8f, 14f);
+            dust.fadeIn = Main.rand.NextFloat(-0.06f, 0.06f);
+        }
+        public override bool Update(Dust dust)
+        {
+            int age = (int)dust.customData + 1;
+            dust.customData = age;
+            dust.velocity *= 0.94f;
+            dust.velocity.Y += 0.025f;
+            dust.position += dust.velocity;
+            dust.rotation += dust.fadeIn;
+            if (age >= 30) dust.active = false;
+            return false;
+        }
+        public override bool PreDraw(Dust dust)
+        {
+            float fade = 1f - (int)dust.customData / 30f;
+            Color color = Color.Lerp(new Color(170, 40, 65), new Color(255, 210, 220), fade) * fade;
+            Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, dust.position - Main.screenPosition, new Rectangle(0, 0, 1, 1), color,
+                dust.rotation, new Vector2(0.5f), new Vector2(dust.scale, 1.5f), SpriteEffects.None);
+            return false;
         }
     }
 
@@ -730,7 +667,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
                                 for (int i = 0; i < 5000; i++)
                                 {
                                     Color gradColor = Color.Lerp(colA, colB, gladLerp);
-                                    Color accCol = Color.Lerp(gradColor, plr.col[pp], plr.lerp[pp]);
+                                    Color accCol = Color.Lerp(gradColor, plr.col[pp], plr.lerp[pp]) * plr.Opacity;
                                     Vector2 startPos = points[s];
                                     Vector2 endPos = points[s + 1];
                                     Vector2 direction = (endPos - startPos).SafeNormalize(Vector2.Zero);
@@ -760,6 +697,7 @@ namespace AerovelenceMod.Content.Items.Weapons.Crimson
     public class DrawBehindPlayer : ModPlayer
     {
         public bool DrawVerlet;
+        public float Opacity = 1f;
 
         public List<Rectangle> pixelSource = new List<Rectangle>();
         public List<Vector2>[] pointCollection = { new List<Vector2>(), new List<Vector2>(), new List<Vector2>(), new List<Vector2>() };

@@ -1,4 +1,4 @@
-﻿using AerovelenceMod.Common.Systems.Language;
+using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Tiles.CrystalCaverns.Natural;
@@ -80,7 +80,7 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
                     }
                 }
             }
-            player.eocDash = mp.DashTimer;
+            player.eocDash = System.Math.Max(0, mp.DashTimer);
             player.armorEffectDrawShadowEOCShield = true;
 
             Dust gd = Dust.NewDustDirect(
@@ -97,13 +97,8 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
             gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5, preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
             mp.DashTimer--;
             mp.DashDelay--;
-            if (mp.DashDelay == 0)
-            {
-                mp.DashDelay = CrystalStompersPlayer.MAX_DASH_DELAY;
-                mp.DashTimer = CrystalStompersPlayer.MAX_DASH_TIMER;
-                mp.DashActive = false;
-                player.eocHit = -1;
-            }
+            if (mp.DashDelay <= 0)
+                mp.EndStomp();
         }
 
         public override void AddRecipes()
@@ -132,9 +127,6 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
 
         public override void ResetEffects()
         {
-            if (DashActive)
-                return;
-
             bool dashAccessoryEquipped = false;
             for (int i = 3; i < 8 + Player.extraAccessorySlots; i++)
             {
@@ -144,7 +136,12 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
                     dashAccessoryEquipped = true;
             }
 
-            if (!dashAccessoryEquipped || Player.setSolar || Player.mount.Active)
+            if (!dashAccessoryEquipped || Player.setSolar || Player.mount.Active || Player.dead || Player.CCed || Player.pulley)
+            {
+                if (DashActive) EndStomp();
+                return;
+            }
+            if (DashActive)
                 return;
 
             if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[DashDown] < 15 && !Player.pulley)
@@ -159,10 +156,22 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
         public override void PreUpdate()
         {
             if (DashActive && Player.velocity.Y == 0)
-            {
-                DashActive = false;
-                DashDelay = 0;
-            }
+                EndStomp();
+        }
+
+        internal void EndStomp()
+        {
+            DashActive = false;
+            DashDelay = MAX_DASH_DELAY;
+            DashTimer = MAX_DASH_TIMER;
+            Player.eocDash = 0;
+            Player.eocHit = -1;
+            Player.armorEffectDrawShadowEOCShield = false;
+        }
+
+        public override void UpdateDead()
+        {
+            if (DashActive) EndStomp();
         }
     }
 }

@@ -4,6 +4,7 @@ using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts.GlowDusts;
 using AerovelenceMod.Content.Items.Weapons.Aurora.Eos;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb;
 using AerovelenceMod.Content.Items.Weapons.Ember;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.Ceroba;
 using AerovelenceMod.Content.Items.Weapons.Misc.Magic.CrystalGlade;
@@ -86,10 +87,10 @@ namespace AerovelenceMod.Content.Items
             //FlashSystem.SetCAFlashEffect(0.075f, 35, 1f, 0.35f, true, true);
 
 
-            //Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<WandOfExplodingExplosion>(), damage, 0, Main.myPlayer);
+            Projectile.NewProjectile(null, Main.MouseWorld, Vector2.Zero, ModContent.ProjectileType<BooyahSkillStrikeVFX>(), damage, 0, Main.myPlayer);
 
             //Fire Particle Example | Recommend setting debug item usetime to 1
-            for (int i = 0; i < 2; i++)
+            for (int i = 110; i < 2; i++)
             {
                 float fireScale = Main.rand.NextFloat(1.35f, 1.55f);
                 float alphaFade = Main.rand.NextFloat(0.94f, 0.95f);

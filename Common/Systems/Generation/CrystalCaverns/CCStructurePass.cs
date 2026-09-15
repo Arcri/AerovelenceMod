@@ -1,4 +1,7 @@
-﻿using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Items.Ammo;
+using AerovelenceMod.Content.Items.Others.Alchemical;
+using AerovelenceMod.Content.Items.Weapons.CrystalCaverns;
+using AerovelenceMod.Common.Globals.Worlds;
 using AerovelenceMod.Common.Utilities.Generation;
 using AerovelenceMod.Common.Utilities.Generation.StructureStamper;
 using AerovelenceMod.Content.Items.Accessories.SmallAccessories;
@@ -127,6 +130,7 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 List<ItemConfiguration> smallShrineSecondary = new()
                 {
+                    new(ModContent.ItemType<MineralWater>(), 2, 4, 1f / 2),
                     new(ItemID.SuspiciousLookingEye, 1, 1, 1f/5),
                     new(ItemID.Dynamite, 25, 50, 1f/3),
                     new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10, 1f/2),
@@ -145,9 +149,15 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 List<PrimaryItemConfiguration> genericLootPrimary = new()
                 {
-                    new(ItemID.BandofRegeneration, 1, 1, 1f),
+                    new(ModContent.ItemType<BandOfCrystallization>(), 1, 1, 1f),
                     new(ItemID.MagicMirror, 1, 1, 1f),
-                    new(ItemID.CloudinaBottle, 1, 1, 1f),
+                    new(ModContent.ItemType<SpikesInABottle>(), 1, 1, 1f),
+                    new(ModContent.ItemType<SilkenScarf>(), 1, 1, 1f),
+                    new(ModContent.ItemType<TheSling>(), 1, 1, 1f),
+                    new(ModContent.ItemType<RockRumbler>(), 1, 1, 1f),
+                    new(ModContent.ItemType<CavernousRampart>(), 1, 1, 1f),
+                    new(ModContent.ItemType<TumblerCommander>(), 1, 1, 1f),
+                    new(ModContent.ItemType<SaplingCane>(), 1, 1, 1f),
                     new(ItemID.HermesBoots, 1, 1, 1f),
                     new(ItemID.Mace, 1, 1, 1f),
                     new(ModContent.ItemType<CrystalStompers>(), 1, 1, 1f)
@@ -155,6 +165,8 @@ namespace AerovelenceMod.Common.Systems.Generation.CrystalCaverns
 
                 List<ItemConfiguration> genericLootSecondary = new()
                 {
+                    new(ModContent.ItemType<StoneSlug>(), 30, 60, 1f / 2),
+                    new(ModContent.ItemType<MineralWater>(), 2, 4, 1f / 2),
                     new(ItemID.SuspiciousLookingEye, 1, 1, 1f/5),
                     new(ItemID.Dynamite, 25, 50, 1f/3),
                     new(new List<int> { ItemID.SilverBar, ItemID.TungstenBar, ItemID.GoldBar, ItemID.PlatinumBar }, 3, 10, 1f/2),
