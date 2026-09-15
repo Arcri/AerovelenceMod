@@ -19,12 +19,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class SpeleothemConjurer : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/SpeleothemConjurer/SpeleothemConjurer";
-        private const string EnglishTooltip = "Channel a stationary shower of ethereal stalactites at the cursor\nConsumes 6 mana per spike; impacts leave crystal sediment\nRelease to pull the sediment together and erupt a towering stalagmite\nGather 12 impacts for a Skill Strike; the crystal shines white when ready";
+        private const string EnglishTooltip = "Channel a shower of stalactites at the cursor\nStalactites leave crystal sediment on shattering\nRelease to pull the sediment together and erupt a towering stalagmite";
 
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Speleothem Conjurer", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Erupt after gathering at least 12 spike impacts")
+                .AddSkillStrike(Language.Default, "Sufficiently large stalagmites Skill Strike")
                 .AddName(Language.Spanish, "Conjurador de Espeleotemas")
                 .AddTooltip(Language.Spanish, "Canaliza una lluvia fija de estalactitas etÃ©reas en el cursor\nConsume 6 de manÃ¡ por pÃºa; los impactos dejan sedimento de cristal\nSuelta para reunir el sedimento y hacer brotar una gran estalagmita\nAcumula 12 impactos para un Golpe de Habilidad; el cristal brillarÃ¡ en blanco")
                 .AddSkillStrike(Language.Spanish, "Haz brotar la estalagmita tras reunir al menos 12 impactos");

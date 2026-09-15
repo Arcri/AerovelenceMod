@@ -23,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/TumblerCommander/TumblerCommander";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Tumbler Commander", "Channel to guide a tiny tumbler along floors and walls toward the cursor\nMore distant targets make it roll faster\nConsumes 4 mana each half-second")
+            this.ModifyLocalization("Tumbler Commander", "Channel to guide a tiny tumbler towards your cursor\n The tumbler can scale up walls to reach your cursor")
                 .AddName(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Comandante Rodante")
                 .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Canaliza para guiar una pequeÃ±a roca rodante por suelos y paredes hacia el cursor\nLos objetivos lejanos la hacen rodar mÃ¡s rÃ¡pido\nConsume 4 de manÃ¡ cada medio segundo");
-            this.AddSkillStrike(Language.Default, "Strike while rolling at high speed");
+            this.AddSkillStrike(Language.Default, "Skill Strikes while rolling at sufficient speed");
             this.AddSkillStrike(Language.Spanish, "Golpea mientras ruedas a gran velocidad");
             base.SetStaticDefaults();
         }

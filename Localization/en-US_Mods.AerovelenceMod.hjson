@@ -204,6 +204,11 @@ Buffs: {
 		DisplayName: Mineral Poisoning
 		Description: Too many to list. Assume you are being poisoned by every possible mineral.
 	}
+
+	OnTheRocksBuff: {
+		DisplayName: On the Rocks
+		Description: 4% increased melee Skill Strike damage
+	}
 }
 
 Items: {
@@ -1521,6 +1526,187 @@ Items: {
 		DisplayName: Trojan Force
 		Tooltip: ""
 	}
+
+	TungstenCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Tungsten
+	}
+
+	TitaniumSuperCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Giant Super Titanium
+	}
+
+	TitaniumCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Titanium
+	}
+
+	TinCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Tin
+	}
+
+	SilverCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Silver
+	}
+
+	PlatinumCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Platinum
+	}
+
+	PhanticCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 145 silver coins and 7 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Phantic
+	}
+
+	PalladiumCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Palladium
+	}
+
+	OrichalcumCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Orichalcum
+	}
+
+	MythrilCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Mythril
+	}
+
+	LeadCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Lead
+	}
+
+	IronCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Iron
+	}
+
+	GoldCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Gold
+	}
+
+	CopperCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Copper
+	}
+
+	CobaltCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Cobalt
+	}
+
+	AdamantiteSuperCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Giant Super Adamantite
+	}
+
+	AdamantiteCluster: {
+		Tooltip:
+			'''
+			An unusually pure ore specimen
+			Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+			Hold the specimen to choose it; favorite it to keep it
+			'''
+		DisplayName: Super Adamantite
+	}
+
+	SilkenScarf: {
+		Tooltip:
+			'''
+			Slightly reduces enemy aggression
+			Restores 1 mana each second for each summoned minion
+			An ancient scarf of crystal moth silk, interlaced with crystal fibers
+			The moths refuse to eat it. Apart from the dust, it looks perfectly fine!
+			'''
+		DisplayName: Silken Scarf
+	}
 }
 
 Projectiles: {
@@ -2043,6 +2229,12 @@ Projectiles: {
 	SpeleothemHeld.DisplayName: Speleothem Held
 	StackerRockShot.DisplayName: Stacker Rock Shot
 	StackerRockTower.DisplayName: Stacker Rock Tower
+	SilkenScarfMote.DisplayName: Silken Scarf Mote
+	GeomagneticBolt.DisplayName: Geomagnetic Bolt
+	StackerRockSkipper.DisplayName: Stacker Rock Skipper
+	CondurtleArc.DisplayName: Condurtle Arc
+	CondurtleShard.DisplayName: Condurtle Shard
+	CondurtleSpark.DisplayName: Condurtle Spark
 }
 
 Configs: {
@@ -2186,6 +2378,24 @@ ItemName: {
 	TheSling: The Sling
 	TumblerCommander: Tumbler Commander
 	BabyCondurtle: Baby Condurtle
+	TungstenCluster: Super Tungsten
+	TitaniumSuperCluster: Giant Super Titanium
+	TitaniumCluster: Super Titanium
+	TinCluster: Super Tin
+	SilverCluster: Super Silver
+	PlatinumCluster: Super Platinum
+	PhanticCluster: Super Phantic
+	PalladiumCluster: Super Palladium
+	OrichalcumCluster: Super Orichalcum
+	MythrilCluster: Super Mythril
+	LeadCluster: Super Lead
+	IronCluster: Super Iron
+	GoldCluster: Super Gold
+	CopperCluster: Super Copper
+	CobaltCluster: Super Cobalt
+	AdamantiteSuperCluster: Giant Super Adamantite
+	AdamantiteCluster: Super Adamantite
+	SilkenScarf: Silken Scarf
 }
 
 ItemTooltip: {
@@ -2561,6 +2771,115 @@ ItemTooltip: {
 		Channel to guide a tiny tumbler along floors and walls toward the cursor
 		More distant targets make it roll faster
 		Consumes 4 mana each half-second
+		'''
+	TungstenCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	TitaniumSuperCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	TitaniumCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	TinCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	SilverCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	PlatinumCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	PhanticCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 145 silver coins and 7 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	PalladiumCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	OrichalcumCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	MythrilCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	LeadCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	IronCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	GoldCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	CopperCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	CobaltCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	AdamantiteSuperCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	AdamantiteCluster:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+	SilkenScarf:
+		'''
+		Slightly reduces enemy aggression
+		Restores 1 mana each second for each summoned minion
+		An ancient scarf of crystal moth silk, interlaced with crystal fibers
+		The moths refuse to eat it. Apart from the dust, it looks perfectly fine!
 		'''
 }
 
@@ -3380,4 +3699,191 @@ TumblerCommander: {
 		Consumes 4 mana each half-second
 		'''
 	SkillStrike: "[i:75] Strike while rolling at high speed [i:75]"
+}
+
+RockCollectorTrade: {
+	NoOre: Bring me a super ore specimen from your mining trips! Hold the one you want to trade, or I will take your highest-tier unfavorited specimen. Favorites stay in your collection.
+	TurnIn: Turn in rare ores
+	Thanks: Now that is a rock worth collecting! Here are {0} silver coins and {1} cavern crystals for your specimen.
+}
+
+SilkenScarf: {
+	DisplayName: Silken Scarf
+	Tooltip:
+		'''
+		Slightly reduces enemy aggression
+		Restores 1 mana each second for each summoned minion
+		An ancient scarf of crystal moth silk, interlaced with crystal fibers
+		The moths refuse to eat it. Apart from the dust, it looks perfectly fine!
+		'''
+}
+
+AdamantiteCluster: {
+	DisplayName: Super Adamantite
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+AdamantiteSuperCluster: {
+	DisplayName: Giant Super Adamantite
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+CobaltCluster: {
+	DisplayName: Super Cobalt
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+CopperCluster: {
+	DisplayName: Super Copper
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+GoldCluster: {
+	DisplayName: Super Gold
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+IronCluster: {
+	DisplayName: Super Iron
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+LeadCluster: {
+	DisplayName: Super Lead
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 40 silver coins and 4 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+MythrilCluster: {
+	DisplayName: Super Mythril
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+OrichalcumCluster: {
+	DisplayName: Super Orichalcum
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 265 silver coins and 9 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+PalladiumCluster: {
+	DisplayName: Super Palladium
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 200 silver coins and 8 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+PhanticCluster: {
+	DisplayName: Super Phantic
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 145 silver coins and 7 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+PlatinumCluster: {
+	DisplayName: Super Platinum
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 100 silver coins and 6 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+SilverCluster: {
+	DisplayName: Super Silver
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+TinCluster: {
+	DisplayName: Super Tin
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 25 silver coins and 3 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+TitaniumCluster: {
+	DisplayName: Super Titanium
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 340 silver coins and 10 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+TitaniumSuperCluster: {
+	DisplayName: Giant Super Titanium
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 520 silver coins and 12 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
+}
+
+TungstenCluster: {
+	DisplayName: Super Tungsten
+	Tooltip:
+		'''
+		An unusually pure ore specimen
+		Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
+		Hold the specimen to choose it; favorite it to keep it
+		'''
 }

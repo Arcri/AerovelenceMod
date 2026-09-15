@@ -19,11 +19,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class CavernsBrandistock : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CavernsBrandistock/CavernsBrandistock";
-        private const string EnglishTooltip = "Successful thrusts build blade stress\nAt 40% stress, three hidden crystal blades extend and Skill Strike\nAt maximum stress, the blades shatter and retract for 4 seconds\nYou can still thrust in staff mode while the mechanism recovers\nPause between attacks to let the stress fall";
+        private const string EnglishTooltip = "Successful thrusts build blade stress\nAt 40% stress, three hidden crystal blades extend out\nAt maximum stress, the blades shatter and reform after 4 seconds\nStress is relieved over time when weapon is not in use";
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Cavern's Brandistock", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Hit with the crystal blades fully extended")
+                .AddSkillStrike(Language.Default, "Hit with the crystal blades to Skill Strike")
                 .AddName(Language.Spanish, "Brandistock de las Cavernas")
                 .AddTooltip(Language.Spanish, "Los impactos acumulan tensión en las hojas\nAl 40% de tensión, tres hojas de cristal se extienden y asestan Golpes de Habilidad\nAl alcanzar el máximo, las hojas se rompen y retraen durante 4 segundos\nPuedes seguir atacando en modo bastón mientras se recupera el mecanismo\nHaz pausas entre ataques para reducir la tensión")
                 .AddSkillStrike(Language.Spanish, "Golpea con las hojas de cristal completamente extendidas");

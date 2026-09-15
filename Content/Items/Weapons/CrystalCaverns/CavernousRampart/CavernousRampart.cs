@@ -23,7 +23,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CavernousRampart/CavernousRampart";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Cavernous Rampart", "Hold to guard toward the cursor; cannot be used while mounted\nHits against the shield receive 12 additional defense\nA guarded hit exceeding 20% of maximum life shatters it for 6 seconds\nFast movement bashes enemies and grants a brief moment of invulnerability")
+            this.ModifyLocalization("Cavernous Rampart", "Hold to guard toward the cursor\nGuarding reduces damage taken, but taking too much damage breaks the rampart temporarily\nRun into enemies to cause shield bashes")
                 .AddName(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Baluarte Cavernoso")
                 .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Mantén pulsado para protegerte hacia el cursor; no se puede usar sobre una montura\nLos golpes contra el escudo reciben 12 de defensa adicional\nUn golpe bloqueado superior al 20% de tu vida máxima lo rompe durante 6 segundos\nEl movimiento rápido embiste a los enemigos y concede una breve invulnerabilidad");
 

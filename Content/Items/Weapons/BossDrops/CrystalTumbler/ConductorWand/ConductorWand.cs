@@ -22,10 +22,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
     public class ConductorWand : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/ConductorWand/ConductorWand";
-        private const string Description = "Channel a tethered electric bubble that gathers your minions\nThree captured minions and an additional 50 mana unleash a single plasma shock\nDrains 2 mana plus 2 per captured summon every half second\nRelease to free your summons; start a new bubble to shock again\nAlternatively carries one sentry; falling sentries release a landing shock";
+        private const string Description = "Channels an electric bubble that gathers your minions\nMana cost increases with minions gathered\nCan also carry one sentry at a time";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Conductor Wand", Description).AddSkillStrike(Language.Default, "Charge the plasma globe with three minions");
+            this.ModifyLocalization("Conductor Wand", Description).AddSkillStrike(Language.Default, "Capturing 3 minions unleashes a plasma globe at the cost of 50 mana");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

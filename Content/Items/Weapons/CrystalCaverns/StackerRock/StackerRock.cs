@@ -23,17 +23,17 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/StackerRock/StackerRock";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Stacker Rock", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early\nToppled rocks tumble, bounce, and roll forward")
+            this.ModifyLocalization("Stacker Rock", "Throws discs that linger on the floor; More can be piled up in one stack\nHit a tower from the side to topple it, sending rocks rolling")
                 .AddName(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Roca Apilable")
                 .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Rocas hechas para apilar\nLos discos se anclan en suelos sólidos y se apilan desde arriba\nCada roca añadida prolonga la duración de la torre\nGolpea una torre por el costado para derribarla antes\nLas rocas derribadas caen, rebotan y ruedan hacia delante");
-            this.AddSkillStrike(Language.Default, "Topple a tower of at least five rocks");
+            this.AddSkillStrike(Language.Default, "Topple a tower of at least five rocks to Skill Strike");
             this.AddSkillStrike(Language.Spanish, "Derriba una torre de al menos cinco rocas");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             tooltips.RemoveAll(line => line.Mod == "Terraria" && line.Name.StartsWith("Tooltip"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early\nToppled rocks tumble, bounce, and roll forward"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Throws discs that linger on the floor; More can be piled up in one stack\nHit a tower from the side to topple it, sending rocks rolling"));
             base.ModifyTooltips(tooltips);
         }
         public override void SetDefaults()

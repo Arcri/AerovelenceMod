@@ -18,12 +18,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class RockRumbler : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/RockRumbler/RockRumbler";
-        private const string EnglishTooltip = "Shoulder-fpires rocky energy bombs that shatter in a crystal blast\nThe white-hot launch burst marks the direct-hit Skill Strike window\nBombs lose their thrust and drop heavily after the burst\nDoes not consume ammo";
+        private const string EnglishTooltip = "Fires rocky energy bombs\nThe white-hot launch burst marks the direct-hit Skill Strike window\nBombs lose their thrust and drop heavily after the burst\nDoes not consume ammo";
 
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Rock Rumbler", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Direct hits during powered burst Skill Strike before gravity begins")
+                .AddSkillStrike(Language.Default, "Fired bombs glow white-hot upon being shot; Direct white-hot impacts cause Skill Strikes")
                 .AddName(Language.Spanish, "Retumbador de Rocas");
             base.SetStaticDefaults();
         }
