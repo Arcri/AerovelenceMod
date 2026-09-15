@@ -126,8 +126,8 @@ namespace AerovelenceMod.Content.Particles
         int maskTex = Main.rand.NextBool() ? 2 : 1;
         public override void DrawWithShader(SpriteBatch spriteBatch, Effect effect)
         {
-            Texture2D Smoke = ModContent.Request<Texture2D>("VFXPlus/Assets/Smoke/WispSmoke" + smokeTex).Value; //spark_02 and smoke_02 also look cool
-            Texture2D Mask = ModContent.Request<Texture2D>("VFXPlus/Assets/Smoke/InvertMask" + maskTex).Value;
+            Texture2D Smoke = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Smoke/WispSmoke" + smokeTex).Value; //spark_02 and smoke_02 also look cool
+            Texture2D Mask = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Smoke/InvertMask" + maskTex).Value;
 
             Vector2 drawPos = Center - Main.screenPosition;
             Vector2 TexOrigin = Smoke.Size() / 2f;

@@ -6,10 +6,12 @@ using AerovelenceMod.Content.Items.Weapons.CrystalCaverns.GaussShotgun;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using ReLogic.Utilities;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -38,7 +40,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
             Item.DamageType = DamageClass.Magic;
             Item.shoot = ModContent.ProjectileType<BooyahHeldProj>();
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.UseSound = SoundID.Item1;
+            //Item.UseSound = SoundID.Item1;
 
             Item.rare = ItemRarities.EarlyPHM;
             Item.value = Item.buyPrice(0, 0, 50, 0);
@@ -47,7 +49,6 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
             Item.autoReuse = false;
             Item.channel = true;
         }
-
     }
 
     //This projectile is the bomb while it is held in the player's hand
@@ -69,6 +70,8 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
         public override bool? CanCutTiles() => false;
         public override bool? CanDamage() => false;
 
+        SlotId soundSlot;
+        SoundStyle chargeSound = new SoundStyle("AerovelenceMod/Sounds/Effects/Thunder/ElectricChargeUp") with {  Pitch = -0.075f, PauseBehavior = PauseBehavior.PauseWithGame };
 
         int chargeTime = 75;
 
@@ -130,11 +133,28 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
                     if (toMouse.Y > 0.25f)
                         owner.fallStart = owner.position.ToTileCoordinates().Y;
 
+                    //Begin the AfterImage effect
+                    owner.GetModPlayer<BooyahBombPlayer>().StartAfterImage();
+
+                    //Play the throw sound
+                    SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack, owner.Center);
+
                     Projectile.ai[0]++;
                 }
             }
 
-            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * chargeProg);
+            //Cast light if we havent shot the bomb yet
+            if (Projectile.ai[0] == 0)
+                Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * chargeProg);
+
+            //Sound
+            if (!SoundEngine.TryGetActiveSound(soundSlot, out var _))
+            {
+                ProjectileAudioTracker tracker = new ProjectileAudioTracker(Projectile);
+                if (timer == 2)
+                    soundSlot = SoundEngine.PlaySound(chargeSound with { Volume = 0.75f, }, Projectile.position, soundInstance => SoundUtils.BasicSoundUpdateCallback(Projectile, tracker, soundInstance));
+            }
+
 
             timer++;
         }
@@ -415,11 +435,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
             float sineColor = (float)Math.Sin(Main.timeForVisualEffects * 0.08f) * 0.2f;
 
             if (myEffect == null)
-                myEffect = ModContent.Request<Effect>("VFXPlus/Effects/Radial/NewRadialScroll", AssetRequestMode.ImmediateLoad).Value;
+                myEffect = ModContent.Request<Effect>("AerovelenceMod/Effects/Radial/NewRadialScroll", AssetRequestMode.ImmediateLoad).Value;
 
-            myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("VFXPlus/Assets/Noise/WaterEnergyNoise").Value);
-            myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("VFXPlus/Assets/Gradients/SofterBlueGrad").Value);
-            myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("VFXPlus/Assets/Noise/sparkNoiseloop").Value);
+            myEffect.Parameters["causticTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/WaterEnergyNoise").Value);
+            myEffect.Parameters["gradientTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Gradients/SofterBlueGrad").Value);
+            myEffect.Parameters["distortTexture"].SetValue(ModContent.Request<Texture2D>("AerovelenceMod/Assets/Noise/sparkNoiseloop").Value);
             myEffect.Parameters["flowSpeed"].SetValue(1f);
             myEffect.Parameters["distortStrength"].SetValue(0.06f);
             myEffect.Parameters["uTime"].SetValue((float)Main.timeForVisualEffects * 0.01f);
@@ -532,7 +552,6 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
 
     }
 
-
     public class BooyahImpactVFX : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_0";
@@ -577,7 +596,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
                     Projectile.active = false;
             }
 
-            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * overallScale);
+            Lighting.AddLight(Projectile.Center, Color.DeepSkyBlue.ToVector3() * overallAlpha);
 
             timer++;
         }
@@ -620,4 +639,187 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns.BooyahBomb
         }
 
     }
+
+    //This class is for the player afterimage after tossing the bomb
+    public class BooyahBombPlayer : ModPlayer
+    {
+        const int totalAfterImageTime = 12;
+
+        public void StartAfterImage()
+        {
+            afterImageTimer = 0;
+            trailActive = true;
+        }
+
+        int afterImageTimer = 0;
+        public override void PreUpdate()
+        {
+            if (trailActive)
+            {
+                float afterImageProgress = Math.Clamp((float)afterImageTimer / (float)totalAfterImageTime, 0f, 1f);
+
+                if (afterImageProgress < 0.5) //.35
+                {
+                    //Circle Pulse
+                    if (afterImageTimer == 1 && Player.velocity.Length() > 2.5f) //Yes it is supposed to be timer == 1 and not timer == 0
+                    {
+                        Dust d2 = Dust.NewDustPerfect(Player.Center - Player.velocity * 2f, ModContent.DustType<CirclePulse>(), Player.velocity.SafeNormalize(Vector2.UnitX) * 1f, 
+                            newColor: Color.DeepSkyBlue);
+                        d2.scale = 0.1f;
+                        CirclePulseBehavior b2 = new CirclePulseBehavior(0.5f, true, 1, 0.25f, 0.5f);
+                        b2.drawLayer = RenderLayer.UnderProjectiles;
+                        d2.customData = b2;
+                    }
+
+                    AfterImageTrailCount = afterImageTimer;
+
+                    //Dust
+                    if (afterImageTimer > 0 && Player.velocity.Length() > 2.5f)
+                    {
+                        Color dustCol = Color.Lerp(Color.DeepSkyBlue, Color.DodgerBlue, 0.5f);
+
+                        Dust p = Dust.NewDustPerfect(Player.Center + Main.rand.NextVector2Circular(10f, 10f) + Player.velocity * 0.5f, ModContent.DustType<WindLine>(), 
+                            Player.velocity.SafeNormalize(Vector2.UnitX) * -6f, newColor: dustCol, Scale: 4f);
+
+                        WindLineBehavior wlb = new WindLineBehavior(VelFadePower: 0.95f, TimeToStartShrink: 0, ShrinkYScalePower: 0.7f, 0.3f, 0.55f, true); //0.7 yfade
+                        wlb.drawWhiteCore = true;
+                        p.customData = wlb;
+                    }
+
+                }
+                else if (afterImageProgress < 1f)
+                {
+                    AfterImageTrailCount = Math.Clamp(AfterImageTrailCount - 1, 0, 100);
+                }
+                else
+                {
+                    trailActive = false;
+                }
+
+                afterImageTimer++;
+            }
+
+        }
+
+
+        public int AfterImageTrailCount = 0;
+        public bool trailActive = false;
+        public override void DrawPlayer(Camera camera)
+        {
+            if (!trailActive)
+                return;
+
+            Vector2 playerPosition = Player.position + new Vector2(0f, Player.gfxOffY);
+
+            int totalShadows = Math.Min(Player.availableAdvancedShadowsCount, AfterImageTrailCount);
+
+            totalShadows = Math.Clamp(totalShadows, 0, 100);
+
+            int skip = 1;
+            for (int i = totalShadows - totalShadows % skip; i > 0; i -= skip)
+            {
+                EntityShadowInfo advancedShadow = Player.GetAdvancedShadow(i);
+                float shadow = Utils.Remap((float)i / totalShadows, 0, 1, 0.15f, 0.5f, clamped: true);
+
+                CustomShadowColor = Color.Lerp(Color.DeepSkyBlue, Color.SkyBlue, 0.75f) with { A = 0 } * 0.5f;
+
+                Main.PlayerRenderer.DrawPlayer(camera, Player, advancedShadow.Position, advancedShadow.Rotation, advancedShadow.Origin, shadow, 1f);
+            }
+            CustomShadowColor = Color.White; // Reset CustomShadowColor so it doesn't affect normal drawing or other clones.
+        }
+
+        public Color CustomShadowColor = Color.White;
+        public override void TransformDrawData(ref PlayerDrawSet drawInfo)
+        {
+            // Check to only affect specific clones
+            if (CustomShadowColor == Color.White)
+            {
+                return;
+            }
+
+            // Tint the clones with CustomShadowColor by modifying the draw color of every DrawData in drawInfo.DrawDataCache.
+            for (int i = 0; i < drawInfo.DrawDataCache.Count; i++)
+            {
+                DrawData value = drawInfo.DrawDataCache[i];
+                // Multiply the colors to tint it rather than assign it directly since DrawData.color will likely already have some non-white color.
+                value.color = value.color.MultiplyRGBA(CustomShadowColor);
+                drawInfo.DrawDataCache[i] = value;
+            }
+        }
+    }
+
+
+    public class BooyahSkillStrikeVFX : ModProjectile
+    {
+        public override string Texture => "Terraria/Images/Projectile_0";
+
+        public override void SetDefaults()
+        {
+            Projectile.hostile = false;
+            Projectile.friendly = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 22900;
+        }
+
+        public override bool? CanDamage() => false;
+
+        float overallAlpha = 1f;
+        float overallScale = 1f;
+
+        int timer = 0;
+
+        public override void AI()
+        {
+            if (timer == 0)
+                Projectile.rotation = Main.rand.NextFloat(6.28f);
+
+            timer++;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            ModContent.GetInstance<NewPixelationSystem>().QueueRenderAction(RenderLayer.UnderProjectiles, () =>
+            {
+                DrawCrack(true);
+            });
+
+            DrawCrack(false);
+
+            return false;
+        }
+
+        Effect myEffect = null;
+        public void DrawCrack(bool giveUp = false)
+        {
+            if (giveUp)
+                return;
+
+            Vector2 drawPos = Projectile.Center - Main.screenPosition;
+
+            Texture2D angle = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/AngleGlow").Value;
+            Texture2D anglow = Mod.Assets.Request<Texture2D>("Assets/MuzzleFlashes/AngleGlowBlur").Value;
+
+
+            //Main.EntitySpriteDraw(ring, drawPos, null, Color.DodgerBlue with { A = 0 } * overallAlpha * 1f, 0f, ring.Size() / 2f, 0.26f * overallScale, SpriteEffects.None);
+
+            float rot1 = (float)Main.timeForVisualEffects * 0.04f;
+            float rot2 = (float)Main.timeForVisualEffects * 0.10f;
+            float rot3 = (float)Main.timeForVisualEffects * 0.24f;
+            float rot4 = (float)Main.timeForVisualEffects * 0.06f;
+            float rot5 = (float)Main.timeForVisualEffects * 0.08f;
+
+
+            Main.EntitySpriteDraw(angle, drawPos, null, Color.Goldenrod with { A = 0 } * overallAlpha * 0.6f, rot1, new Vector2(0f, angle.Height / 2f), 1f * overallScale, SpriteEffects.None);
+            Main.EntitySpriteDraw(angle, drawPos, null, Color.Goldenrod with { A = 0 } * overallAlpha * 0.6f, rot2, new Vector2(0f, angle.Height / 2f), 1f * overallScale, SpriteEffects.None);
+            Main.EntitySpriteDraw(angle, drawPos, null, Color.Goldenrod with { A = 0 } * overallAlpha * 0.6f, rot3, new Vector2(0f, angle.Height / 2f), 1f * overallScale, SpriteEffects.None);
+            Main.EntitySpriteDraw(angle, drawPos, null, Color.Goldenrod with { A = 0 } * overallAlpha * 0.6f, rot4, new Vector2(0f, angle.Height / 2f), 1f * overallScale, SpriteEffects.None);
+            Main.EntitySpriteDraw(angle, drawPos, null, Color.Goldenrod with { A = 0 } * overallAlpha * 0.6f, rot5, new Vector2(0f, angle.Height / 2f), 1f * overallScale, SpriteEffects.None);
+
+        }
+
+    }
+
 }

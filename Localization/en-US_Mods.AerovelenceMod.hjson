@@ -106,6 +106,7 @@ NPCs: {
 	TumblerConductiveCrystal.DisplayName: Tumbler Conductive Crystal
 	TumblerCrystalBud.DisplayName: Tumbler Crystal Bud
 	TumblerCarapaceShard.DisplayName: Tumbler Carapace Crystal
+	BabyCondurtle.DisplayName: Baby Condurtle
 }
 
 Buffs: {
@@ -182,6 +183,26 @@ Buffs: {
 	NerveFlagellatorDebuff: {
 		DisplayName: Nerve Flagellator Debuff
 		Description: Mods.AerovelenceMod.Buffs.NerveFlagellatorDebuff.Description
+	}
+
+	EmbeddedCrystalSplinters: {
+		DisplayName: Embedded Crystal Splinters
+		Description: Sharp crystal splinters deal damage over time
+	}
+
+	MineralBoost: {
+		DisplayName: Mineral Boost
+		Description: 40 increased defense
+	}
+
+	MinerallBoost: {
+		DisplayName: Minerall
+		Description: 15% faster mining, 10% movement speed, and 1 extra tile of mining reach
+	}
+
+	MineralPoisoning: {
+		DisplayName: Mineral Poisoning
+		Description: Too many to list. Assume you are being poisoned by every possible mineral.
 	}
 }
 
@@ -1188,6 +1209,318 @@ Items: {
 		DisplayName: Cavern Sand Wall Item
 		Tooltip: ""
 	}
+
+	BandOfCrystallization: {
+		DisplayName: Band of Crystallization
+		Tooltip:
+			'''
+			Grows 1 defense every 10 seconds in combat, up to 10
+			Outside combat, grows 1 defense every 5 seconds, up to 20
+			Entering combat sheds defense above 10; bosses keep you in combat
+			Glowing crystals show your growing protection
+			Removing the band sheds its crystals
+			'''
+	}
+
+	PetrifiedShackles: {
+		DisplayName: Petrified Shackles
+		Tooltip:
+			'''
+			Grants 1 defense and reduces attack speed by 10%
+			Grows 1 defense every 7 seconds in combat, up to 15
+			Outside combat, grows 1 defense every 4 seconds, up to 25
+			Entering combat sheds growth above 15; bosses keep you in combat
+			Cannot be equipped with Band of Crystallization
+			'''
+	}
+
+	SpikesInABottle: {
+		DisplayName: Spikes in a Bottle
+		Tooltip:
+			'''
+			Allows a Cloud-strength double jump that scatters crystal caltrops
+			Taking at least 15% of maximum life in one hit scatters more after half a second
+			The retaliation can occur once every 6 seconds
+			Cannot be made into a balloon: it would pop
+			'''
+	}
+
+	CrystalDrillrow: {
+		DisplayName: Crystal Drillrow
+		Tooltip:
+			'''
+			Drills through one continuous section of terrain, up to 12 tiles thick
+			Emerges with an energized crystal tip that deals 15% more damage
+			The worn drill breaks against the next wall
+			'''
+	}
+
+	CrystalStoneSlug: {
+		DisplayName: Crystal Stone Slug
+		Tooltip:
+			'''
+			Embeds crystal splinters for 3 seconds on impact
+			Well-timed throws deal 2x Skill Strike damage
+			'''
+	}
+
+	StoneSlug: {
+		DisplayName: Stone Slug
+		Tooltip:
+			'''
+			A heavy sling stone with a steep, short-range arc
+			Well-timed throws deal 2.25x Skill Strike damage
+			'''
+	}
+
+	WoodSlug: {
+		DisplayName: Wood Slug
+		Tooltip:
+			'''
+			A light sling slug with a long, shallow arc
+			Well-timed throws deal 1.5x Skill Strike damage
+			'''
+	}
+
+	Minerall: {
+		DisplayName: Minerall
+		Tooltip:
+			'''
+			Increases mining speed by 15%, movement speed by 10%, and mining reach by 1
+			Lasts 5 minutes and stacks with Mining Potion
+			'''
+	}
+
+	MineralWater: {
+		DisplayName: Mineral Water
+		Tooltip:
+			'''
+			Restores 60 life with 30 seconds of potion sickness
+			Grants 40 defense for 30 seconds, but inflicts mineral poisoning for 12 seconds
+			Poisoning drains 10 life per second
+			Contains enough sediment to cause stomach or throat stones. Worse than a kidney stone.
+			'''
+	}
+
+	BabyCondurtleEgg: {
+		DisplayName: Baby Condurtle Egg
+		Tooltip:
+			'''
+			Hatches a Baby Condurtle town pet
+			Permanently welcomes it to this world; it can share a home with a townsperson
+			Occasionally laid by living Condurtles
+			'''
+	}
+
+	GlimmerwoodHamaxe: {
+		DisplayName: Glimmerwood Hamaxe
+		Tooltip: ""
+	}
+
+	CrystalTumblerBag: {
+		DisplayName: Treasure Bag (Crystal Tumbler)
+		Tooltip:
+			'''
+			Right click to open
+			Contains a Tumbler weapon and the Tumbling Harness
+			'''
+	}
+
+	ConductorWand: {
+		DisplayName: Conductor Wand
+		Tooltip:
+			'''
+			Channel a tethered electric bubble that gathers your minions
+			Three captured minions and an additional 50 mana unleash a single plasma shock
+			Drains 2 mana plus 2 per captured summon every half second
+			Release to free your summons; start a new bubble to shock again
+			Alternatively carries one sentry; falling sentries release a landing shock
+			'''
+	}
+
+	FenceSitter: {
+		DisplayName: Fence Sitter
+		Tooltip:
+			'''
+			Each swing strikes one enemy with a weighty stop
+			Land four consecutive swings to unleash four lightning fences on the fifth
+			Each fence stops at terrain and strikes each enemy twice
+			Missing or changing weapons breaks the streak
+			'''
+	}
+
+	Geomagnetic: {
+		DisplayName: Geomagnetic
+		Tooltip:
+			'''
+			Fires a crackling beam of geomagnetic lightning
+			At or below 25% mana, casts a hovering sphere that releases three bolts
+			The sphere electrifies enemies on contact
+			'''
+	}
+
+	TumblerAccelerator: {
+		DisplayName: Tumbler Accelerator
+		Tooltip:
+			'''
+			Catapults tiny tumblers without ammunition
+			Right click to suspend airborne tumblers, charge them, and launch them toward your cursor
+			Paired impacts electrify enemies
+			'''
+	}
+
+	BluntJavelin: {
+		DisplayName: Blunt Javelin
+		Tooltip: A heavy cavern-stone javelin that breaks apart on impact
+	}
+
+	CavernousRampart: {
+		DisplayName: Cavernous Rampart
+		Tooltip:
+			'''
+			Hold to guard toward the cursor; cannot be used while mounted
+			Hits against the shield receive 12 additional defense
+			A guarded hit exceeding 20% of maximum life shatters it for 6 seconds
+			Fast movement bashes enemies and grants a brief moment of invulnerability
+			'''
+	}
+
+	CavernsBrandistock: {
+		DisplayName: Cavern's Brandistock
+		Tooltip:
+			'''
+			Successful thrusts build blade stress
+			At 40% stress, three hidden crystal blades extend and Skill Strike
+			At maximum stress, the blades shatter and retract for 4 seconds
+			You can still thrust in staff mode while the mechanism recovers
+			Pause between attacks to let the stress fall
+			'''
+	}
+
+	Faultbreaker: {
+		DisplayName: Faultbreaker
+		Tooltip: A weighty sledgehammer with a crushing overhead swing
+	}
+
+	GlimmerwoodBow: {
+		DisplayName: Glimmerwood Bow
+		Tooltip:
+			'''
+			Every third shot turns its arrow into a Crystal Drillrow
+			Drillrows bore through one section of terrain
+			'''
+	}
+
+	GlimmerwoodSword: {
+		DisplayName: Glimmerwood Sword
+		Tooltip: A simple wooden blade with a glimmer in its grain
+	}
+
+	PinCushionStone: {
+		DisplayName: Pin-Cushion Stone
+		Tooltip:
+			'''
+			First throw launches a floating pin-cushion stone
+			Further throws fire darts that pierce one enemy
+			Darts lodge in the stone and nudge it, empowering its next impacts
+			Every third empowered collision rebounds much harder
+			After 10 seconds without a dart, the stone dissolves and releases its pins
+			'''
+	}
+
+	RockRumbler: {
+		DisplayName: Rock Rumbler
+		Tooltip:
+			'''
+			Shoulder-fpires rocky energy bombs that shatter in a crystal blast
+			The white-hot launch burst marks the direct-hit Skill Strike window
+			Bombs lose their thrust and drop heavily after the burst
+			Does not consume ammo
+			'''
+	}
+
+	Saphead: {
+		DisplayName: Saphead
+		Tooltip:
+			'''
+			Channel to spiral a living sapper head around you
+			Move the cursor closer to tighten its orbit and spout crystal fog faster
+			The stem glows and the flower swells before each puff
+			Consumes 5 mana per puff; the initial cast pays for the first
+			Release to coil the stem back into your hand
+			'A severed sapper stem, improbably still alive'
+			'''
+	}
+
+	SaplingCane: {
+		DisplayName: Sap-ling Cane
+		Tooltip:
+			'''
+			Plants three baby sappers using one sentry slot
+			Hold right click to guide them in short hops and designate enemies
+			They snap at nearby foes and return to their patch when left alone
+			Bites against your designated summon target deal Skill Strikes
+			'''
+	}
+
+	Shattershot: {
+		DisplayName: Shattershot
+		Tooltip:
+			'''
+			Blasts four heavy pieces of flint and gravel in a wide spread
+			Consumes one stone block or cavern stone per blast
+			Cavern stone fires glowing gravel and sometimes an extra white-hot crystal fragment
+			'''
+	}
+
+	SpeleothemConjurer: {
+		DisplayName: Speleothem Conjurer
+		Tooltip:
+			'''
+			Channel a stationary shower of ethereal stalactites at the cursor
+			Consumes 6 mana per spike; impacts leave crystal sediment
+			Release to pull the sediment together and erupt a towering stalagmite
+			Gather 12 impacts for a Skill Strike; the crystal shines white when ready
+			'''
+	}
+
+	StackerRock: {
+		DisplayName: Stacker Rock
+		Tooltip:
+			'''
+			Rocks meant for stacking
+			Thrown discs anchor to solid floors and can be stacked from above
+			Each added rock extends the tower’s lifetime
+			Hit a tower from the side to topple it early
+			'''
+	}
+
+	TheSling: {
+		DisplayName: The Sling
+		Tooltip:
+			'''
+			Hold to wind up a slug in a moth-silk sling
+			Release to throw in the direction the pouch is traveling
+			Aim beyond the orbit; the white flash and chime mark a powerful, well-aligned throw
+			Stone slugs hit hard, wood flies farther, and crystal leaves splinters
+			Uses one slug per wind-up
+			'''
+	}
+
+	TumblerCommander: {
+		DisplayName: Tumbler Commander
+		Tooltip:
+			'''
+			Channel to guide a tiny tumbler along floors and walls toward the cursor
+			More distant targets make it roll faster
+			Consumes 4 mana each half-second
+			'''
+	}
+
+	TrojanForce: {
+		DisplayName: Trojan Force
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -1658,6 +1991,58 @@ Projectiles: {
 	TumblerCascadeRail.DisplayName: Tumbler Cascade Rail
 	TumblerFloorRipple.DisplayName: Tumbler Floor Ripple
 	TumblerMagneticField.DisplayName: Tumbler Magnetic Field
+	BottleCaltrop.DisplayName: Bottle Caltrop
+	CrystalDrillrowImpact.DisplayName: Crystal Drillrow Impact
+	CrystalDrillrowShot.DisplayName: Crystal Drillrow Shot
+	CrystalStoneSlugImpact.DisplayName: Crystal Stone Slug Impact
+	CrystalStoneSlugShot.DisplayName: Crystal Stone Slug Shot
+	StoneSlugImpact.DisplayName: Stone Slug Impact
+	StoneSlugShot.DisplayName: Stone Slug Shot
+	WoodSlugImpact.DisplayName: Wood Slug Impact
+	WoodSlugShot.DisplayName: Wood Slug Shot
+	AcceleratorHeld.DisplayName: Accelerator Held
+	AcceleratorTumbler.DisplayName: Accelerator Tumbler
+	ConductorBubble.DisplayName: Conductor Bubble
+	ConductorShock.DisplayName: Conductor Shock
+	FenceSitterBeam.DisplayName: Fence Sitter Beam
+	FenceSitterSwing.DisplayName: Fence Sitter Swing
+	GeomagneticBeam.DisplayName: Geomagnetic Beam
+	GeomagneticSphere.DisplayName: Geomagnetic Sphere
+	TrojanForceBotTest.DisplayName: Trojan Force Bot Test
+	TrojanForceDagger.DisplayName: Trojan Force Dagger
+	TrojanForceEnergyBall.DisplayName: Trojan Force Energy Ball
+	TrojanForceWhipProj.DisplayName: Trojan Force Whip Proj
+	BabySapper.DisplayName: Baby Sapper
+	BluntJavelinFragment.DisplayName: Blunt Javelin Fragment
+	BluntJavelinHeld.DisplayName: Blunt Javelin Held
+	BluntJavelinImpact.DisplayName: Blunt Javelin Impact
+	BluntJavelinShot.DisplayName: Blunt Javelin Shot
+	BooyahSkillStrikeVFX.DisplayName: Booyah Skill Strike V F X
+	BrandistockThrust.DisplayName: Brandistock Thrust
+	CavernsBrandistockImpact.DisplayName: Caverns Brandistock Impact
+	CommanderTumbler.DisplayName: Commander Tumbler
+	EtherealStalactite.DisplayName: Ethereal Stalactite
+	FaultbreakerImpact.DisplayName: Faultbreaker Impact
+	FaultbreakerSwing.DisplayName: Faultbreaker Swing
+	GatheredStalagmite.DisplayName: Gathered Stalagmite
+	GlimmerwoodSwordSwing.DisplayName: Glimmerwood Sword Swing
+	PinCushionBall.DisplayName: Pin Cushion Ball
+	PinCushionDart.DisplayName: Pin Cushion Dart
+	RampartHeld.DisplayName: Rampart Held
+	RumblerBomb.DisplayName: Rumbler Bomb
+	RumblerBurst.DisplayName: Rumbler Burst
+	RumblerHeld.DisplayName: Rumbler Held
+	SapheadFlail.DisplayName: Saphead Flail
+	SapheadFog.DisplayName: Saphead Fog
+	SaplingCluster.DisplayName: Sapling Cluster
+	ShattershotHeld.DisplayName: Shattershot Held
+	ShattershotImpact.DisplayName: Shattershot Impact
+	ShattershotMuzzle.DisplayName: Shattershot Muzzle
+	ShattershotPellet.DisplayName: Shattershot Pellet
+	SlingHeld.DisplayName: Sling Held
+	SpeleothemHeld.DisplayName: Speleothem Held
+	StackerRockShot.DisplayName: Stacker Rock Shot
+	StackerRockTower.DisplayName: Stacker Rock Tower
 }
 
 Configs: {
@@ -1768,6 +2153,39 @@ ItemName: {
 	RedShade: Red Shade
 	Soulerang: Soulerang
 	Specter: Specter
+	BandOfCrystallization: Band of Crystallization
+	PetrifiedShackles: Petrified Shackles
+	SpikesInABottle: Spikes in a Bottle
+	CrystalDrillrow: Crystal Drillrow
+	CrystalStoneSlug: Crystal Stone Slug
+	StoneSlug: Stone Slug
+	WoodSlug: Wood Slug
+	TumblingHarness: Tumbling Harness
+	Minerall: Minerall
+	MineralWater: Mineral Water
+	BabyCondurtleEgg: Baby Condurtle Egg
+	GlimmerwoodHamaxe: Glimmerwood Hamaxe
+	CrystalTumblerBag: Treasure Bag (Crystal Tumbler)
+	ConductorWand: Conductor Wand
+	FenceSitter: Fence Sitter
+	Geomagnetic: Geomagnetic
+	TumblerAccelerator: Tumbler Accelerator
+	BluntJavelin: Blunt Javelin
+	CavernousRampart: Cavernous Rampart
+	CavernsBrandistock: Cavern's Brandistock
+	Faultbreaker: Faultbreaker
+	GlimmerwoodBow: Glimmerwood Bow
+	GlimmerwoodSword: Glimmerwood Sword
+	PinCushionStone: Pin-Cushion Stone
+	RockRumbler: Rock Rumbler
+	Saphead: Saphead
+	SaplingCane: Sap-ling Cane
+	Shattershot: Shattershot
+	SpeleothemConjurer: Speleothem Conjurer
+	StackerRock: Stacker Rock
+	TheSling: The Sling
+	TumblerCommander: Tumbler Commander
+	BabyCondurtle: Baby Condurtle
 }
 
 ItemTooltip: {
@@ -1953,6 +2371,197 @@ ItemTooltip: {
 		Left click to stab forward
 		Right click to slash and wound enemies for a short time
 		'''
+	BandOfCrystallization:
+		'''
+		Grows 1 defense every 10 seconds in combat, up to 10
+		Outside combat, grows 1 defense every 5 seconds, up to 20
+		Entering combat sheds defense above 10; bosses keep you in combat
+		Glowing crystals show your growing protection
+		Removing the band sheds its crystals
+		'''
+	PetrifiedShackles:
+		'''
+		Grants 1 defense and reduces attack speed by 10%
+		Grows 1 defense every 7 seconds in combat, up to 15
+		Outside combat, grows 1 defense every 4 seconds, up to 25
+		Entering combat sheds growth above 15; bosses keep you in combat
+		Cannot be equipped with Band of Crystallization
+		'''
+	SpikesInABottle:
+		'''
+		Allows a Cloud-strength double jump that scatters crystal caltrops
+		Taking at least 15% of maximum life in one hit scatters more after half a second
+		The retaliation can occur once every 6 seconds
+		Cannot be made into a balloon: it would pop
+		'''
+	CrystalDrillrow:
+		'''
+		Drills through one continuous section of terrain, up to 12 tiles thick
+		Emerges with an energized crystal tip that deals 15% more damage
+		The worn drill breaks against the next wall
+		'''
+	CrystalStoneSlug:
+		'''
+		Embeds crystal splinters for 3 seconds on impact
+		Well-timed throws deal 2x Skill Strike damage
+		'''
+	StoneSlug:
+		'''
+		A heavy sling stone with a steep, short-range arc
+		Well-timed throws deal 2.25x Skill Strike damage
+		'''
+	WoodSlug:
+		'''
+		A light sling slug with a long, shallow arc
+		Well-timed throws deal 1.5x Skill Strike damage
+		'''
+	TumblingHarness:
+		'''
+		Summons a rideable tumblerock
+		Hold Up while grounded to conjure an electric ramp; keep holding to loop
+		Release Up to leap off along the ramp's direction
+		Electrifies the ball while ramp riding and briefly after launching, dealing contact damage
+		Negates fall damage while mounted
+		'''
+	Minerall:
+		'''
+		Increases mining speed by 15%, movement speed by 10%, and mining reach by 1
+		Lasts 5 minutes and stacks with Mining Potion
+		'''
+	MineralWater:
+		'''
+		Restores 60 life with 30 seconds of potion sickness
+		Grants 40 defense for 30 seconds, but inflicts mineral poisoning for 12 seconds
+		Poisoning drains 10 life per second
+		Contains enough sediment to cause stomach or throat stones. Worse than a kidney stone.
+		'''
+	BabyCondurtleEgg:
+		'''
+		Hatches a Baby Condurtle town pet
+		Permanently welcomes it to this world; it can share a home with a townsperson
+		Occasionally laid by living Condurtles
+		'''
+	GlimmerwoodHamaxe: ""
+	CrystalTumblerBag:
+		'''
+		Right click to open
+		Contains a Tumbler weapon and the Tumbling Harness
+		'''
+	ConductorWand:
+		'''
+		Channel a tethered electric bubble that gathers your minions
+		Three captured minions and an additional 50 mana unleash a single plasma shock
+		Drains 2 mana plus 2 per captured summon every half second
+		Release to free your summons; start a new bubble to shock again
+		Alternatively carries one sentry; falling sentries release a landing shock
+		'''
+	FenceSitter:
+		'''
+		Each swing strikes one enemy with a weighty stop
+		Land four consecutive swings to unleash four lightning fences on the fifth
+		Each fence stops at terrain and strikes each enemy twice
+		Missing or changing weapons breaks the streak
+		'''
+	Geomagnetic:
+		'''
+		Fires a crackling beam of geomagnetic lightning
+		At or below 25% mana, casts a hovering sphere that releases three bolts
+		The sphere electrifies enemies on contact
+		'''
+	TumblerAccelerator:
+		'''
+		Catapults tiny tumblers without ammunition
+		Right click to suspend airborne tumblers, charge them, and launch them toward your cursor
+		Paired impacts electrify enemies
+		'''
+	BluntJavelin: A heavy cavern-stone javelin that breaks apart on impact
+	CavernousRampart:
+		'''
+		Hold to guard toward the cursor; cannot be used while mounted
+		Hits against the shield receive 12 additional defense
+		A guarded hit exceeding 20% of maximum life shatters it for 6 seconds
+		Fast movement bashes enemies and grants a brief moment of invulnerability
+		'''
+	CavernsBrandistock:
+		'''
+		Successful thrusts build blade stress
+		At 40% stress, three hidden crystal blades extend and Skill Strike
+		At maximum stress, the blades shatter and retract for 4 seconds
+		You can still thrust in staff mode while the mechanism recovers
+		Pause between attacks to let the stress fall
+		'''
+	Faultbreaker: A weighty sledgehammer with a crushing overhead swing
+	GlimmerwoodBow:
+		'''
+		Every third shot turns its arrow into a Crystal Drillrow
+		Drillrows bore through one section of terrain
+		'''
+	GlimmerwoodSword: A simple wooden blade with a glimmer in its grain
+	PinCushionStone:
+		'''
+		First throw launches a floating pin-cushion stone
+		Further throws fire darts that pierce one enemy
+		Darts lodge in the stone and nudge it, empowering its next impacts
+		Every third empowered collision rebounds much harder
+		After 10 seconds without a dart, the stone dissolves and releases its pins
+		'''
+	RockRumbler:
+		'''
+		Shoulder-fpires rocky energy bombs that shatter in a crystal blast
+		The white-hot launch burst marks the direct-hit Skill Strike window
+		Bombs lose their thrust and drop heavily after the burst
+		Does not consume ammo
+		'''
+	Saphead:
+		'''
+		Channel to spiral a living sapper head around you
+		Move the cursor closer to tighten its orbit and spout crystal fog faster
+		The stem glows and the flower swells before each puff
+		Consumes 5 mana per puff; the initial cast pays for the first
+		Release to coil the stem back into your hand
+		'A severed sapper stem, improbably still alive'
+		'''
+	SaplingCane:
+		'''
+		Plants three baby sappers using one sentry slot
+		Hold right click to guide them in short hops and designate enemies
+		They snap at nearby foes and return to their patch when left alone
+		Bites against your designated summon target deal Skill Strikes
+		'''
+	Shattershot:
+		'''
+		Blasts four heavy pieces of flint and gravel in a wide spread
+		Consumes one stone block or cavern stone per blast
+		Cavern stone fires glowing gravel and sometimes an extra white-hot crystal fragment
+		'''
+	SpeleothemConjurer:
+		'''
+		Channel a stationary shower of ethereal stalactites at the cursor
+		Consumes 6 mana per spike; impacts leave crystal sediment
+		Release to pull the sediment together and erupt a towering stalagmite
+		Gather 12 impacts for a Skill Strike; the crystal shines white when ready
+		'''
+	StackerRock:
+		'''
+		Rocks meant for stacking
+		Thrown discs anchor to solid floors and can be stacked from above
+		Each added rock extends the tower’s lifetime
+		Hit a tower from the side to topple it early
+		'''
+	TheSling:
+		'''
+		Hold to wind up a slug in a moth-silk sling
+		Release to throw in the direction the pouch is traveling
+		Aim beyond the orbit; the white flash and chime mark a powerful, well-aligned throw
+		Stone slugs hit hard, wood flies farther, and crystal leaves splinters
+		Uses one slug per wind-up
+		'''
+	TumblerCommander:
+		'''
+		Channel to guide a tiny tumbler along floors and walls toward the cursor
+		More distant targets make it roll faster
+		Consumes 4 mana each half-second
+		'''
 }
 
 NPCName: {
@@ -2003,6 +2612,7 @@ NPCName: {
 	LightOfTheAncients: Luce degli Antichi
 	707: AerovelenceMod.TumblerockSmall.DisplayName
 	706: AerovelenceMod.TumblerockMedium.DisplayName
+	BabyCondurtle: BabyCondurtle
 }
 
 Bestiary: {
@@ -2430,4 +3040,344 @@ Specter: {
 		Right click to slash and wound enemies for a short time
 		'''
 	SkillStrike: "[i:75] Stabbing wounded enemies Skill Strikes [i:75]"
+}
+
+BabyCondurtle: {
+	DisplayName: Baby Condurtle
+	BestiaryFlavor: A tiny, humming bundle of crystal and shell. Gentle petting keeps its little sparks happy.
+}
+
+BandOfCrystallization: {
+	DisplayName: Band of Crystallization
+	Tooltip:
+		'''
+		Grows 1 defense every 10 seconds in combat, up to 10
+		Outside combat, grows 1 defense every 5 seconds, up to 20
+		Entering combat sheds defense above 10; bosses keep you in combat
+		Glowing crystals show your growing protection
+		Removing the band sheds its crystals
+		'''
+}
+
+PetrifiedShackles: {
+	DisplayName: Petrified Shackles
+	Tooltip:
+		'''
+		Grants 1 defense and reduces attack speed by 10%
+		Grows 1 defense every 7 seconds in combat, up to 15
+		Outside combat, grows 1 defense every 4 seconds, up to 25
+		Entering combat sheds growth above 15; bosses keep you in combat
+		Cannot be equipped with Band of Crystallization
+		'''
+}
+
+SpikesInABottle: {
+	DisplayName: Spikes in a Bottle
+	Tooltip:
+		'''
+		Allows a Cloud-strength double jump that scatters crystal caltrops
+		Taking at least 15% of maximum life in one hit scatters more after half a second
+		The retaliation can occur once every 6 seconds
+		Cannot be made into a balloon: it would pop
+		'''
+}
+
+CrystalDrillrow: {
+	DisplayName: Crystal Drillrow
+	Tooltip:
+		'''
+		Drills through one continuous section of terrain, up to 12 tiles thick
+		Emerges with an energized crystal tip that deals 15% more damage
+		The worn drill breaks against the next wall
+		'''
+}
+
+CrystalStoneSlug: {
+	DisplayName: Crystal Stone Slug
+	Tooltip:
+		'''
+		Embeds crystal splinters for 3 seconds on impact
+		Well-timed throws deal 2x Skill Strike damage
+		'''
+}
+
+StoneSlug: {
+	DisplayName: Stone Slug
+	Tooltip:
+		'''
+		A heavy sling stone with a steep, short-range arc
+		Well-timed throws deal 2.25x Skill Strike damage
+		'''
+}
+
+WoodSlug: {
+	DisplayName: Wood Slug
+	Tooltip:
+		'''
+		A light sling slug with a long, shallow arc
+		Well-timed throws deal 1.5x Skill Strike damage
+		'''
+}
+
+TumblingHarness: {
+	DisplayName: Tumbling Harness
+	Tooltip:
+		'''
+		Summons a rideable tumblerock
+		Hold Up while grounded to conjure an electric ramp; keep holding to loop
+		Release Up to leap off along the ramp's direction
+		Electrifies the ball while ramp riding and briefly after launching, dealing contact damage
+		Negates fall damage while mounted
+		'''
+}
+
+Minerall: {
+	DisplayName: Minerall
+	Tooltip:
+		'''
+		Increases mining speed by 15%, movement speed by 10%, and mining reach by 1
+		Lasts 5 minutes and stacks with Mining Potion
+		'''
+}
+
+MineralWater: {
+	DisplayName: Mineral Water
+	Tooltip:
+		'''
+		Restores 60 life with 30 seconds of potion sickness
+		Grants 40 defense for 30 seconds, but inflicts mineral poisoning for 12 seconds
+		Poisoning drains 10 life per second
+		Contains enough sediment to cause stomach or throat stones. Worse than a kidney stone.
+		'''
+}
+
+BabyCondurtleEgg: {
+	DisplayName: Baby Condurtle Egg
+	Tooltip:
+		'''
+		Hatches a Baby Condurtle town pet
+		Permanently welcomes it to this world; it can share a home with a townsperson
+		Occasionally laid by living Condurtles
+		'''
+}
+
+GlimmerwoodHamaxe: {
+	DisplayName: Glimmerwood Hamaxe
+	Tooltip: ""
+}
+
+CrystalTumblerBag: {
+	DisplayName: Treasure Bag (Crystal Tumbler)
+	Tooltip:
+		'''
+		Right click to open
+		Contains a Tumbler weapon and the Tumbling Harness
+		'''
+}
+
+ConductorWand: {
+	DisplayName: Conductor Wand
+	Tooltip:
+		'''
+		Channel a tethered electric bubble that gathers your minions
+		Three captured minions and an additional 50 mana unleash a single plasma shock
+		Drains 2 mana plus 2 per captured summon every half second
+		Release to free your summons; start a new bubble to shock again
+		Alternatively carries one sentry; falling sentries release a landing shock
+		'''
+	SkillStrike: "[i:75] Charge the plasma globe with three minions [i:75]"
+}
+
+FenceSitter: {
+	DisplayName: Fence Sitter
+	Tooltip:
+		'''
+		Each swing strikes one enemy with a weighty stop
+		Land four consecutive swings to unleash four lightning fences on the fifth
+		Each fence stops at terrain and strikes each enemy twice
+		Missing or changing weapons breaks the streak
+		'''
+	SkillStrike: "[i:75] Hit with the fifth swing's lightning fences [i:75]"
+}
+
+Geomagnetic: {
+	DisplayName: Geomagnetic
+	Tooltip:
+		'''
+		Fires a crackling beam of geomagnetic lightning
+		At or below 25% mana, casts a hovering sphere that releases three bolts
+		The sphere electrifies enemies on contact
+		'''
+	SkillStrike: "[i:75] Strike an enemy with the low-mana sphere itself [i:75]"
+}
+
+TumblerAccelerator: {
+	DisplayName: Tumbler Accelerator
+	Tooltip:
+		'''
+		Catapults tiny tumblers without ammunition
+		Right click to suspend airborne tumblers, charge them, and launch them toward your cursor
+		Paired impacts electrify enemies
+		'''
+	SkillStrike: "[i:75] Hit the same enemy with two different tumblers within a third of a second [i:75]"
+}
+
+BluntJavelin: {
+	DisplayName: Blunt Javelin
+	Tooltip: A heavy cavern-stone javelin that breaks apart on impact
+	SkillStrike: "[i:75] Skill Strikes while falling steeply downward [i:75]"
+}
+
+CavernousRampart: {
+	DisplayName: Cavernous Rampart
+	Tooltip:
+		'''
+		Hold to guard toward the cursor; cannot be used while mounted
+		Hits against the shield receive 12 additional defense
+		A guarded hit exceeding 20% of maximum life shatters it for 6 seconds
+		Fast movement bashes enemies and grants a brief moment of invulnerability
+		'''
+}
+
+CavernsBrandistock: {
+	DisplayName: Cavern's Brandistock
+	Tooltip:
+		'''
+		Successful thrusts build blade stress
+		At 40% stress, three hidden crystal blades extend and Skill Strike
+		At maximum stress, the blades shatter and retract for 4 seconds
+		You can still thrust in staff mode while the mechanism recovers
+		Pause between attacks to let the stress fall
+		'''
+	SkillStrike: "[i:75] Hit with the crystal blades fully extended [i:75]"
+}
+
+Faultbreaker: {
+	DisplayName: Faultbreaker
+	Tooltip: A weighty sledgehammer with a crushing overhead swing
+	SkillStrike: "[i:75] Skill Strikes against Crystal Caverns enemies (this is sort of boring) [i:75]"
+}
+
+GlimmerwoodBow: {
+	DisplayName: Glimmerwood Bow
+	Tooltip:
+		'''
+		Every third shot turns its arrow into a Crystal Drillrow
+		Drillrows bore through one section of terrain
+		'''
+}
+
+GlimmerwoodSword: {
+	DisplayName: Glimmerwood Sword
+	Tooltip: A simple wooden blade with a glimmer in its grain
+}
+
+PinCushionStone: {
+	DisplayName: Pin-Cushion Stone
+	Tooltip:
+		'''
+		First throw launches a floating pin-cushion stone
+		Further throws fire darts that pierce one enemy
+		Darts lodge in the stone and nudge it, empowering its next impacts
+		Every third empowered collision rebounds much harder
+		After 10 seconds without a dart, the stone dissolves and releases its pins
+		'''
+	SkillStrike: "[i:75] Strike enemies with the stone shortly after pushing it with a dart [i:75]"
+}
+
+RockRumbler: {
+	DisplayName: Rock Rumbler
+	Tooltip:
+		'''
+		Shoulder-fpires rocky energy bombs that shatter in a crystal blast
+		The white-hot launch burst marks the direct-hit Skill Strike window
+		Bombs lose their thrust and drop heavily after the burst
+		Does not consume ammo
+		'''
+	SkillStrike: "[i:75] Direct hits during powered burst Skill Strike before gravity begins [i:75]"
+}
+
+Saphead: {
+	DisplayName: Saphead
+	Tooltip:
+		'''
+		Channel to spiral a living sapper head around you
+		Move the cursor closer to tighten its orbit and spout crystal fog faster
+		The stem glows and the flower swells before each puff
+		Consumes 5 mana per puff; the initial cast pays for the first
+		Release to coil the stem back into your hand
+		'A severed sapper stem, improbably still alive'
+		'''
+	SkillStrike: "[i:75] Enemies caught in its crystal fog [i:75]"
+}
+
+SaplingCane: {
+	DisplayName: Sap-ling Cane
+	Tooltip:
+		'''
+		Plants three baby sappers using one sentry slot
+		Hold right click to guide them in short hops and designate enemies
+		They snap at nearby foes and return to their patch when left alone
+		Bites against your designated summon target deal Skill Strikes
+		'''
+	SkillStrike: "[i:75] Bite the enemy designated as your summon target [i:75]"
+}
+
+Shattershot: {
+	DisplayName: Shattershot
+	Tooltip:
+		'''
+		Blasts four heavy pieces of flint and gravel in a wide spread
+		Consumes one stone block or cavern stone per blast
+		Cavern stone fires glowing gravel and sometimes an extra white-hot crystal fragment
+		'''
+	SkillStrike: "[i:75] The white-hot crystal Skill Strikes [i:75]"
+}
+
+SpeleothemConjurer: {
+	DisplayName: Speleothem Conjurer
+	Tooltip:
+		'''
+		Channel a stationary shower of ethereal stalactites at the cursor
+		Consumes 6 mana per spike; impacts leave crystal sediment
+		Release to pull the sediment together and erupt a towering stalagmite
+		Gather 12 impacts for a Skill Strike; the crystal shines white when ready
+		'''
+	SkillStrike: "[i:75] Erupt after gathering at least 12 spike impacts [i:75]"
+}
+
+StackerRock: {
+	DisplayName: Stacker Rock
+	Tooltip:
+		'''
+		Rocks meant for stacking
+		Thrown discs anchor to solid floors and can be stacked from above
+		Each added rock extends the tower’s lifetime
+		Hit a tower from the side to topple it early
+		'''
+	SkillStrike: "[i:75] Topple a tower of at least five rocks [i:75]"
+}
+
+TheSling: {
+	DisplayName: The Sling
+	Tooltip:
+		'''
+		Hold to wind up a slug in a moth-silk sling
+		Release to throw in the direction the pouch is traveling
+		Aim beyond the orbit; the white flash and chime mark a powerful, well-aligned throw
+		Stone slugs hit hard, wood flies farther, and crystal leaves splinters
+		Uses one slug per wind-up
+		'''
+	SkillStrike: "[i:75] Release during the white flash for a faster throw and your slug's Skill Strike bonus [i:75]"
+}
+
+TumblerCommander: {
+	DisplayName: Tumbler Commander
+	Tooltip:
+		'''
+		Channel to guide a tiny tumbler along floors and walls toward the cursor
+		More distant targets make it roll faster
+		Consumes 4 mana each half-second
+		'''
+	SkillStrike: "[i:75] Strike while rolling at high speed [i:75]"
 }
