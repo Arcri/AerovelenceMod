@@ -19,7 +19,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class Saphead : TranslatableModItem
     {
         internal const string HeadTexture = "AerovelenceMod/Content/NPCs/CrystalCaverns/Sapper";
-        private const string EnglishTooltip = "Channel to spiral a living sapper head around you\nMove the cursor closer to tighten its orbit and spout crystal fog faster\nThe stem glows and the flower swells before each puff\nConsumes 5 mana per puff; the initial cast pays for the first\nRelease to coil the stem back into your hand\n'A severed sapper stem, improbably still alive'";
+        private const string EnglishTooltip = "Guide a living sapper head toward the cursor on a flexible stem\nReaches up to 10 tiles; bring it closer to spout crystal fog faster\nThe stem glows and the flower swells before each puff\nConsumes 5 mana per puff; the initial cast pays for the first\nRelease to coil the stem back into your hand\n'A severed sapper stem, improbably still alive'";
         public override string Texture => HeadTexture;
 
         public override void SetStaticDefaults()
@@ -27,7 +27,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             this.ModifyLocalization("Saphead", EnglishTooltip)
                 .AddSkillStrike(Language.Default, "Enemies caught in its crystal fog")
                 .AddName(Language.Spanish, "Cabeza de Savia")
-                .AddTooltip(Language.Spanish, "Canaliza para hacer girar una cabeza viva de Sapper a tu alrededor\nAcerca el cursor para cerrar la órbita y expulsar niebla de cristal más rápido\nEl tallo brilla y la flor se hincha antes de cada bocanada\nConsume 5 de maná por bocanada; el lanzamiento inicial paga la primera\nSuelta para recoger el tallo en tu mano\n'Un tallo de Sapper cortado que, increíblemente, sigue vivo'")
+                .AddTooltip(Language.Spanish, "Guía una cabeza viva de Sapper hacia el cursor con un tallo flexible\nAlcanza hasta 10 bloques; acércala para expulsar niebla de cristal más rápido\nEl tallo brilla y la flor se hincha antes de cada bocanada\nConsume 5 de maná por bocanada; el lanzamiento inicial paga la primera\nSuelta para recoger el tallo en tu mano\n'Un tallo de Sapper cortado que, increíblemente, sigue vivo'")
                 .AddSkillStrike(Language.Spanish, "Enemigos atrapados en su niebla de cristal");
             base.SetStaticDefaults();
         }
@@ -83,6 +83,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         private int seenBlooms;
         private float bloomFlash;
         private float age;
+        private float targetAngle;
         private bool Returning => Projectile.ai[2] > 0f;
         private float Opacity => Math.Clamp(orbit.Radius / 22f, 0f, 1f);
         public override string Texture => Saphead.HeadTexture;
@@ -107,6 +108,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 
         public override void SendExtraAI(BinaryWriter writer)
         {
+            writer.Write(targetAngle);
             writer.Write(orbit.Radius);
             writer.Write(orbit.Charge);
             writer.Write(orbit.Blooms);
@@ -114,6 +116,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+            targetAngle = reader.ReadSingle();
             orbit.Radius = reader.ReadSingle();
             orbit.Charge = reader.ReadSingle();
             orbit.Blooms = reader.ReadInt32();
@@ -133,15 +136,19 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                 Projectile.Kill();
                 return;
             }
+            if (age == 0f) targetAngle = Projectile.ai[0];
             age++;
             if (Projectile.owner == Main.myPlayer && !Returning)
             {
                 if (!player.channel)
                     Return();
-                float desired = MathHelper.Clamp(Vector2.Distance(player.MountedCenter, Main.MouseWorld), 44f, 160f);
-                if (Math.Abs(desired - Projectile.ai[1]) > 4f)
+                Vector2 cursor = Main.MouseWorld - player.MountedCenter;
+                float desired = MathHelper.Clamp(cursor.Length(), 24f, 160f);
+                float nextAngle = cursor.SafeNormalize(Projectile.ai[0].ToRotationVector2()).ToRotation();
+                if (Math.Abs(desired - Projectile.ai[1]) > 2f || Math.Abs(MathHelper.WrapAngle(nextAngle - targetAngle)) > 0.025f)
                 {
                     Projectile.ai[1] = desired;
+                    targetAngle = nextAngle;
                     Projectile.netUpdate = true;
                 }
             }
@@ -153,8 +160,10 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             }
             Projectile.timeLeft = 60;
             float spin = Projectile.velocity.X < 0f ? -1f : 1f;
-            Projectile.ai[0] = MathHelper.WrapAngle(Projectile.ai[0] + spin * 0.043f);
+            Projectile.ai[0] = MathHelper.WrapAngle(Projectile.ai[0] + Math.Clamp(MathHelper.WrapAngle(targetAngle - Projectile.ai[0]) * 0.22f, -0.18f, 0.18f));
             Vector2 axis = Projectile.ai[0].ToRotationVector2();
+            if (Math.Abs(axis.X) > 0.05f)
+                player.ChangeDir(axis.X > 0f ? 1 : -1);
             Projectile.Center = player.MountedCenter + axis * orbit.Radius;
             Projectile.rotation = Projectile.ai[0] - MathHelper.PiOver2;
             player.heldProj = Projectile.whoAmI;
@@ -335,7 +344,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                 Charge *= 0.88f;
                 return;
             }
-            Radius += Math.Clamp((Math.Clamp(target, 44f, 160f) - Radius) * 0.065f, -4f, 4f);
+            Radius += Math.Clamp((Math.Clamp(target, 24f, 160f) - Radius) * 0.065f, -4f, 4f);
             Charge = Math.Min(1f, Charge + 1f / Interval(Radius));
         }
 

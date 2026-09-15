@@ -157,7 +157,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Assets/ImpactTextures/Burst_09";
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 144;
+            Projectile.width = Projectile.height = 192;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = false;
@@ -167,12 +167,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             Projectile.localNPCHitCooldown = -1;
         }
 
-        public override bool? CanDamage() => Projectile.timeLeft >= 24 ? null : false;
+        public override bool? CanDamage() => Projectile.timeLeft >= 20 ? null : false;
         public override bool? CanHitNPC(NPC target) => target.whoAmI == (int)Projectile.ai[0] - 1 ? false : null;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Vector2 nearest = Vector2.Clamp(Projectile.Center, targetHitbox.TopLeft(), targetHitbox.BottomRight());
-            return Vector2.DistanceSquared(nearest, Projectile.Center) <= 72f * 72f && Collision.CanHitLine(Projectile.Center, 1, 1, nearest, 1, 1);
+            return Vector2.DistanceSquared(nearest, Projectile.Center) <= 96f * 96f;
         }
 
         public override void AI() => Lighting.AddLight(Projectile.Center, RockRumblerVFX.Aqua.ToVector3() * Projectile.timeLeft / 26f);

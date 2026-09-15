@@ -23,9 +23,9 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/StackerRock/StackerRock";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Stacker Rock", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early")
+            this.ModifyLocalization("Stacker Rock", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early\nToppled rocks tumble, bounce, and roll forward")
                 .AddName(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Roca Apilable")
-                .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Rocas hechas para apilar\nLos discos se anclan en suelos sólidos y se apilan desde arriba\nCada roca añadida prolonga la duración de la torre\nGolpea una torre por el costado para derribarla antes de tiempo");
+                .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Rocas hechas para apilar\nLos discos se anclan en suelos sólidos y se apilan desde arriba\nCada roca añadida prolonga la duración de la torre\nGolpea una torre por el costado para derribarla antes\nLas rocas derribadas caen, rebotan y ruedan hacia delante");
             this.AddSkillStrike(Language.Default, "Topple a tower of at least five rocks");
             this.AddSkillStrike(Language.Spanish, "Derriba una torre de al menos cinco rocas");
             base.SetStaticDefaults();
@@ -33,7 +33,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             tooltips.RemoveAll(line => line.Mod == "Terraria" && line.Name.StartsWith("Tooltip"));
-            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early"));
+            tooltips.Add(new TooltipLine(Mod, "Tooltip0", "Rocks meant for stacking\nThrown discs anchor to solid floors and can be stacked from above\nEach added rock extends the tower’s lifetime\nHit a tower from the side to topple it early\nToppled rocks tumble, bounce, and roll forward"));
             base.ModifyTooltips(tooltips);
         }
         public override void SetDefaults()
@@ -128,9 +128,9 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class StackerRockTower : ModProjectile
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/StackerRock/StackerRockRock1";
-        private float previousAngle;
         public int Count => Math.Clamp((int)Projectile.ai[0], 1, 12);
-        public float Height => Count * 8;
+        private const float RockHeight = 14f;
+        public float Height => Count * RockHeight;
         public float Top => Projectile.Center.Y - Height;
         public override void SetDefaults()
         {
@@ -146,11 +146,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             Projectile.netImportant = true;
         }
         public override bool ShouldUpdatePosition() => false;
-        public override bool? CanDamage() => Projectile.ai[2] != 0 && Projectile.ai[1] < 48 ? null : false;
+        public override bool? CanDamage() => false;
         public void Stack()
         {
             if (Projectile.ai[2] != 0f) return;
-            if (Collision.SolidCollision(new Vector2(Projectile.Center.X - 10f, Top - 8f), 20, 8))
+            if (Collision.SolidCollision(new Vector2(Projectile.Center.X - 10f, Top - RockHeight), 20, (int)RockHeight))
             {
                 Topple(Main.player[Projectile.owner].direction);
                 return;
@@ -164,75 +164,120 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         }
         public void Topple(int direction)
         {
-            if (Projectile.ai[2] != 0) return;
+            if (Projectile.ai[2] != 0 || Projectile.owner != Main.myPlayer) return;
             Projectile.ai[2] = direction >= 0 ? 1 : -1;
-            Projectile.ai[1] = 0;
-            Projectile.netUpdate = true;
-            StackerRockVFX.Burst(Projectile.Center, Count * 2, 3);
-            SoundEngine.PlaySound(SoundID.Item37 with { Volume = .4f, Pitch = -.2f }, Projectile.Center);
+            for (int i = 0; i < Count; i++)
+            {
+                float height = i / (float)Math.Max(1, Count - 1);
+                Vector2 position = Projectile.Center - Vector2.UnitY * ((i + 0.5f) * RockHeight);
+                Vector2 velocity = new(Projectile.ai[2] * (2.8f + height * 3.2f), -0.6f - height * 0.7f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity,
+                    ModContent.ProjectileType<StackerRockSkipper>(), (int)(Projectile.damage * (0.6f + Count * 0.08f)),
+                    Projectile.knockBack, Projectile.owner, Projectile.identity + i, Count, 30f - i % 3);
+            }
+            SoundEngine.PlaySound(SoundID.Dig with { Volume = 0.45f, Pitch = -0.2f }, Projectile.Center);
+            Projectile.Kill();
         }
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
             if (!player.active || player.dead || Vector2.DistanceSquared(player.Center, Projectile.Center) > 1800 * 1800)
             {
-                Projectile.friendly = false;
-                if (Projectile.ai[2] == 0) { Projectile.ai[2] = 1; Projectile.ai[1] = 48; }
+                Projectile.ai[2] = 2f;
+                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 20);
+                return;
             }
-            if (Projectile.ai[2] == 0)
-            {
-                Projectile.timeLeft = 60;
-                Projectile.ai[1]--;
-                bool supported = Collision.SolidCollision(Projectile.Center + new Vector2(-6, 1), 12, 3);
-                if (Projectile.owner == Main.myPlayer && (Projectile.ai[1] <= 0 || !supported)) Topple(player.direction);
-            }
-            else
-            {
-                Projectile.timeLeft = 2;
-                previousAngle = Projectile.rotation;
-                Projectile.ai[1]++;
-                float progress = MathHelper.Clamp(Projectile.ai[1] / 38f, 0, 1);
-                Projectile.rotation = Projectile.ai[2] * (float)Math.Pow(progress, 1.7f) * MathHelper.PiOver2;
-                if (Projectile.ai[1] == 38)
-                {
-                    Vector2 impact = Projectile.Center + (-Vector2.UnitY * Height).RotatedBy(Projectile.rotation);
-                    StackerRockVFX.Rubble(impact, Math.Min(18, Count * 2), 3f);
-                    StackerRockVFX.Smoke(impact, new Vector2(Projectile.ai[2], -0.5f), 45f + Count * 4f, StackerRockVFX.Violet * 0.7f);
-                    SoundEngine.PlaySound(SoundID.Dig with { Volume = 0.55f, Pitch = -0.25f }, impact);
-                }
-                if (Count >= 5) SkillStrikeUtil.setSkillStrike(Projectile, 1.6f, 100, .4f, .7f);
-                if (Projectile.ai[1] >= 70) Projectile.Kill();
-            }
-            if (Count >= 5) Lighting.AddLight(Projectile.Center - Vector2.UnitY * Height * .5f, new Vector3(.12f, .23f, .3f));
-        }
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.SourceDamage *= 1 + Count * .22f;
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
-        {
-            float collision = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                float angle = MathHelper.Lerp(previousAngle, Projectile.rotation, i * .5f);
-                Vector2 tip = Projectile.Center + (-Vector2.UnitY * Height).RotatedBy(angle);
-                if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, tip, 20, ref collision)
-                    && Collision.CanHitLine(Projectile.Center - Vector2.UnitY * 4, 1, 1, targetHitbox.Center.ToVector2(), 1, 1)) return true;
-            }
-            return false;
+            if (Projectile.ai[2] != 0f) return;
+            Projectile.timeLeft = 60;
+            Projectile.ai[1]--;
+            bool supported = Collision.SolidCollision(Projectile.Center + new Vector2(-6, 1), 12, 3);
+            if (Projectile.owner == Main.myPlayer && (Projectile.ai[1] <= 0 || !supported)) Topple(player.direction);
+            if (Count >= 5) Lighting.AddLight(Projectile.Center - Vector2.UnitY * Height * 0.5f, new Vector3(0.12f, 0.23f, 0.3f));
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            float fade = Projectile.ai[2] == 0f ? 1f : MathHelper.Clamp((70f - Projectile.ai[1]) / 25f, 0f, 1f);
+            float fade = Projectile.ai[2] == 0f ? 1f : MathHelper.Clamp(Projectile.timeLeft / 20f, 0f, 1f);
             float instability = Projectile.ai[2] == 0f ? MathHelper.Clamp(1f - Projectile.ai[1] / 100f, 0f, 1f) : 0.15f;
             for (int i = 0; i < Count; i++)
             {
                 float shake = MathF.Sin(Main.GlobalTimeWrappedHourly * 24f + i * 2.3f) * instability * (1f + i * 0.2f);
-                Vector2 center = Projectile.Center + new Vector2(shake, -(i + 0.5f) * 8f).RotatedBy(Projectile.rotation);
+                Vector2 center = Projectile.Center + new Vector2(shake, -(i + 0.5f) * RockHeight).RotatedBy(Projectile.rotation);
                 float charge = Count >= 5 ? 0.6f + MathF.Sin(Main.GlobalTimeWrappedHourly * 3f + i) * 0.15f : 0f;
                 StackerRockRelicArt.Disc(Main.spriteBatch, center - Main.screenPosition, Projectile.rotation + shake * 0.02f,
-                    new Vector2(22f - i % 3, 8f), lightColor, fade, charge, Projectile.identity + i);
+                    new Vector2(30f - i % 3, RockHeight), lightColor, fade, charge, Projectile.identity + i);
             }
             return false;
         }
         public override void OnKill(int timeLeft) => StackerRockVFX.Burst(Projectile.Center, Count * 2, 2);
+    }
+
+    public class StackerRockSkipper : ModProjectile
+    {
+        public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/StackerRock/StackerRockRock1";
+        private bool grounded;
+        public override void SetDefaults()
+        {
+            Projectile.width = 24;
+            Projectile.height = 14;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 210;
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 15;
+        }
+        public override bool ShouldUpdatePosition() => false;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac) => false;
+        public override void AI()
+        {
+            Projectile.velocity.X *= grounded ? 0.982f : 0.998f;
+            Projectile.velocity.Y = Math.Min(12f, Projectile.velocity.Y + 0.3f);
+            if (grounded)
+            {
+                Vector4 downhill = Collision.WalkDownSlope(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, 0.3f);
+                Projectile.velocity = new Vector2(downhill.Z, downhill.W);
+            }
+            Vector2 oldPosition = Projectile.position;
+            Vector2 incoming = Projectile.velocity;
+            Vector2 movement = Collision.TileCollision(Projectile.position, incoming, Projectile.width, Projectile.height, false, false);
+            Projectile.position += movement;
+            Vector4 slope = Collision.SlopeCollision(Projectile.position, movement, Projectile.width, Projectile.height);
+            Projectile.position = new Vector2(slope.X, slope.Y);
+            Projectile.velocity = new Vector2(slope.Z, slope.W);
+            grounded = incoming.Y >= 0f && Projectile.velocity.Y < incoming.Y - 0.01f;
+            if (movement.X != incoming.X)
+                Projectile.velocity.X = -incoming.X * 0.45f;
+            if (grounded)
+            {
+                Projectile.velocity.Y = incoming.Y > 1.4f ? -incoming.Y * 0.42f : 0f;
+                Projectile.velocity.X *= incoming.Y > 1.4f ? 0.88f : 1f;
+                if (incoming.Y > 2f)
+                {
+                    StackerRockVFX.Burst(Projectile.Bottom, 3, 1.2f);
+                    SoundEngine.PlaySound(SoundID.Tink with { Volume = Math.Min(0.3f, incoming.Y * 0.025f), Pitch = (Projectile.ai[0] % 3) * 0.13f, MaxInstances = 3 }, Projectile.Center);
+                }
+                grounded = Projectile.velocity.Y == 0f;
+            }
+            else if (incoming.Y < 0f && movement.Y != incoming.Y)
+                Projectile.velocity.Y = -incoming.Y * 0.25f;
+            Projectile.rotation += (Projectile.position.X - oldPosition.X) / 11f;
+            if (grounded && Math.Abs(Projectile.velocity.X) < 0.16f)
+            {
+                Projectile.velocity.X = 0f;
+                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 25);
+            }
+            if (Projectile.ai[1] >= 5f) SkillStrikeUtil.setSkillStrike(Projectile, 1.6f, 100, 0.4f, 0.7f);
+        }
+        public override bool? CanDamage() => Projectile.timeLeft > 15 && Projectile.velocity.LengthSquared() > 0.16f ? null : false;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            StackerRockRelicArt.Disc(Main.spriteBatch, Projectile.Center - Main.screenPosition, Projectile.rotation,
+                new Vector2(Math.Clamp(Projectile.ai[2], 28f, 30f), 14f), lightColor, Math.Min(1f, Projectile.timeLeft / 25f),
+                Projectile.ai[1] >= 5f ? 0.7f : 0f, (int)Projectile.ai[0]);
+            return false;
+        }
+        public override void OnKill(int timeLeft) => StackerRockVFX.Burst(Projectile.Center, 3, 1.2f);
     }
 
     internal static class StackerRockRelicArt

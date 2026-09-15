@@ -1,4 +1,7 @@
 using AerovelenceMod.Content.Biomes;
+using AerovelenceMod.Common.Globals.Worlds;
+using AerovelenceMod.Content.Items.Others.Quest;
+using AerovelenceMod.Content.Tiles.CrystalCaverns.Rubble;
 using AerovelenceMod.Content.Dusts;
 using AerovelenceMod.Content.EmoteBubbles;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns;
@@ -136,9 +139,9 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                 if (NPC.IsShimmerVariant) variant += "_Shimmer";
                 if (NPC.altTexture == 1) variant += "_Party";
                 int hatGore = NPC.GetPartyHatGore();
-                int headGore = Mod.Find<ModGore>($"{Name}_Gore{variant}_Head").Type;
-                int armGore = Mod.Find<ModGore>($"{Name}_Gore{variant}_Arm").Type;
-                int legGore = Mod.Find<ModGore>($"{Name}_Gore{variant}_Leg").Type;
+                int headGore = Mod.TryFind<ModGore>($"{Name}_Gore{variant}_Head", out var headVariant) ? headVariant.Type : Mod.Find<ModGore>($"{Name}_Gore_Head").Type;
+                int armGore = Mod.TryFind<ModGore>($"{Name}_Gore{variant}_Arm", out var armVariant) ? armVariant.Type : Mod.Find<ModGore>($"{Name}_Gore_Arm").Type;
+                int legGore = Mod.TryFind<ModGore>($"{Name}_Gore{variant}_Leg", out var legVariant) ? legVariant.Type : Mod.Find<ModGore>($"{Name}_Gore_Leg").Type;
                 if (hatGore > 0)
                     Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, hatGore);
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, headGore, 1f);
@@ -155,15 +158,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                 TownNPCRespawnSystem.unlockedRockCollectorSpawn = true;
         }
 
-        public override bool CanTownNPCSpawn(int numTownNPCs)
-        {
-            if (TownNPCRespawnSystem.unlockedRockCollectorSpawn)
-                return true;
-            foreach (var player in Main.ActivePlayers)
-                if (player.inventory.Any(item => item.type == ModContent.ItemType<CavernCrystalItem>() || item.type == ModContent.ItemType<CavernStoneItem>()))
-                    return true;
-            return false;
-        }
+        public override bool CanTownNPCSpawn(int numTownNPCs) => DownedWorld.DownedCrystalTumbler;
 
         public override ITownNPCProfile TownNPCProfile() { return NPCProfile; }
 
@@ -247,93 +242,34 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
         public override void SetChatButtons(ref string button, ref string button2)
         {
             button = Language.GetTextValue("LegacyInterface.28");
-            if (Main.LocalPlayer.HasItem(ModContent.ItemType<ShotgunAxe>()) /*||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<TinCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<IronCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<LeadCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<SilverCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<TungstenCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<PlatinumCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<GoldCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<SlateCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<CobaltCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<PalladiumCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<OrichalcumCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<MythrilCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<AdamantiteSuperCluster>()) ||
-                Main.LocalPlayer.HasItem(ModContent.ItemType<TitaniumSuperCluster>()) ||
-                                Main.LocalPlayer.HasItem(ModContent.ItemType<PhanticCluster>())*/)
-                button = "Turn in ore chunks";
+            button2 = RockCollectorTrade.Text("TurnIn");
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref string shop)
         {
-            int[] itemsToReceive = [ModContent.ItemType<ShotgunAxe>()];//ReinforcedPlatinumGrapple>(), ModContent.ItemType<MiningSack>(), ModContent.ItemType<AmuletOfGlory>()];
-            int[] itemSuperAdamantite = [ModContent.ItemType<AdamantitePulsar>()];
-            int[] itemSuperTitanium = [ModContent.ItemType<TitaniumRocketLauncher>()];
-
-            int[] searchForItems = [
-                ModContent.ItemType<ShotgunAxe>()/*, ModContent.ItemType<TinCluster>(),
-                ModContent.ItemType<IronCluster>(), ModContent.ItemType<LeadCluster>(),
-                ModContent.ItemType<SilverCluster>(), ModContent.ItemType<TungstenCluster>(),
-                ModContent.ItemType<PlatinumCluster>(), ModContent.ItemType<GoldCluster>(),
-                ModContent.ItemType<PhanticCluster>(), ModContent.ItemType<SlateCluster>(),
-                ModContent.ItemType<CobaltCluster>(), ModContent.ItemType<PalladiumCluster>(),
-                ModContent.ItemType<OrichalcumCluster>(), ModContent.ItemType<MythrilCluster>(),
-                ModContent.ItemType<TitaniumCluster>(), ModContent.ItemType<AdamantiteCluster>()*/ ];
-
-            int[] searchForSuperClusters = [ModContent.ItemType<ShotgunAxe>()];//AdamantiteSuperCluster>(), ModContent.ItemType<TitaniumSuperCluster>()];
             if (firstButton)
             {
-                int selectedIndex = -1;
-                for (int i = 0; i < Main.LocalPlayer.inventory.Length; ++i)
-                {
-                    if (Main.LocalPlayer.inventory[i].IsAir)
-                        continue;
-
-                    if (searchForItems.Contains(Main.LocalPlayer.inventory[i].type) || searchForSuperClusters.Contains(Main.LocalPlayer.inventory[i].type))
-                    {
-                        selectedIndex = i;
-                        break;
-                    }
-                }
-
-                if (selectedIndex != -1)
-                {
-                    if (Main.LocalPlayer.HasItem(ModContent.ItemType<ShotgunAxe>()))//AdamantiteSuperCluster>()))
-                    {
-                        Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
-                        int itemGetSuperAdamantite = itemSuperAdamantite[Main.rand.Next(itemSuperAdamantite.Length)];
-                        SoundEngine.PlaySound(SoundID.Item37);
-                        Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperAdamantite)}";
-                        Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemGetSuperAdamantite);
-                    }
-
-                    else if (Main.LocalPlayer.HasItem(ModContent.ItemType<ShotgunAxe>()))//TitaniumSuperCluster>()))
-                    {
-                        Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
-                        int itemGetSuperTitanium = itemSuperTitanium[Main.rand.Next(itemSuperTitanium.Length)];
-                        SoundEngine.PlaySound(SoundID.Item37);
-                        Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemGetSuperTitanium)}";
-                        Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemGetSuperTitanium);
-                    }
-
-                    else
-                    {
-                        Main.LocalPlayer.inventory[selectedIndex].TurnToAir();
-                        int itemToReceive = itemsToReceive[Main.rand.Next(itemsToReceive.Length)];
-                        SoundEngine.PlaySound(SoundID.Item37);
-                        Main.npcChatText = $"I took you for granite. I'm so sorry... Here. Have a {Lang.GetItemNameValue(itemToReceive)}";
-                        Main.LocalPlayer.QuickSpawnItem(Main.LocalPlayer.GetSource_Misc("PlayerDropItemCheck"), itemToReceive);
-                    }
-                }
-                else
-                {
-                    shop = ShopName;
-                }
+                shop = ShopName;
+                return;
             }
+            Player player = Main.LocalPlayer;
+            int slot = RockCollectorTrade.FindSpecimen(player);
+            if (slot < 0)
+            {
+                Main.npcChatText = RockCollectorTrade.Text("NoOre");
+                return;
+            }
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = Mod.GetPacket();
+                packet.Write(RockCollectorTrade.RequestPacket);
+                packet.Write((short)NPC.whoAmI);
+                packet.Write((byte)slot);
+                packet.Write(player.inventory[slot].type);
+                packet.Send();
+            }
+            else
+                RockCollectorTrade.TurnIn(player.whoAmI, NPC.whoAmI, slot, player.inventory[slot].type);
         }
 
         public override void AddShops()
@@ -388,7 +324,43 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             }
         }
 
-        public override void ModifyNPCLoot(NPCLoot npcLoot) => npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ShotgunAxe>()));
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CavernStoneItem>(), 1, 8, 16));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CavernCrystalItem>(), 1, 2, 5));
+        }
+
+        public override void OnKill()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient) return;
+            Point feet = NPC.Bottom.ToTileCoordinates();
+            int type = ModContent.TileType<CavernStone1x1FloorRubbleNatural>();
+            for (int down = 0; down <= 4; down++)
+                for (int offset = 0; offset < 5; offset++)
+                {
+                    int x = feet.X + (offset % 2 == 0 ? offset / 2 : -(offset + 1) / 2);
+                    int y = feet.Y + down - 1;
+                    if (!WorldGen.InWorld(x, y, 2)) continue;
+                    Tile empty = Main.tile[x, y];
+                    Tile support = Main.tile[x, y + 1];
+                    if (empty.HasTile || empty.LiquidAmount > 0 || !support.HasUnactuatedTile || !Main.tileSolid[support.TileType] ||
+                        Main.tileSolidTop[support.TileType] || support.IsHalfBlock || support.Slope != SlopeType.Solid)
+                        continue;
+                    Rectangle space = new(x * 16, y * 16, 16, 16);
+                    bool occupied = false;
+                    foreach (Player player in Main.ActivePlayers)
+                        occupied |= !player.dead && player.Hitbox.Intersects(space);
+                    foreach (NPC other in Main.ActiveNPCs)
+                        occupied |= other.whoAmI != NPC.whoAmI && other.Hitbox.Intersects(space);
+                    if (occupied) continue;
+                    WorldGen.PlaceObject(x, y, type, mute: true, style: Main.rand.Next(12));
+                    if (Main.tile[x, y].HasTile && Main.tile[x, y].TileType == type)
+                    {
+                        if (Main.netMode == NetmodeID.Server) NetMessage.SendTileSquare(-1, x, y, 1);
+                        return;
+                    }
+                }
+        }
 
         //COMMENTING OUT CUZ ROCK COLLECTOR IS LITERALLY AGENDER
         
@@ -458,6 +430,105 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             for (int i = 0; i < 4; i++)
                 emoteList.Add(type);
             return base.PickEmote(closestPlayer, emoteList, otherAnchor);
+        }
+    }
+    public class RockCollectorTrade : ModPlayer
+    {
+        internal const byte RequestPacket = 231;
+        internal const byte ResultPacket = 232;
+        private int cooldown;
+        public override void PostUpdate() => cooldown = Math.Max(0, cooldown - 1);
+        internal static string Text(string key) => global::AerovelenceMod.Common.Systems.Language.LocalizationManager.GetTranslation("AerovelenceMod.RockCollectorTrade." + key);
+        internal static int FindSpecimen(Player player)
+        {
+            int selected = player.selectedItem;
+            if (selected >= 0 && selected < 50 && !player.inventory[selected].favorited && player.inventory[selected].ModItem is RareOreCluster && player.inventory[selected].stack > 0)
+                return selected;
+            int best = -1;
+            for (int slot = 0; slot < 50; slot++)
+            {
+                Item item = player.inventory[slot];
+                if (item.stack <= 0 || item.favorited || item.ModItem is not RareOreCluster ore) continue;
+                if (best < 0 || ore.RewardTier > ((RareOreCluster)player.inventory[best].ModItem).RewardTier)
+                    best = slot;
+            }
+            return best;
+        }
+        internal static void TurnIn(int sender, int npcIndex, int slot, int expectedType)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient || sender < 0 || sender >= Main.maxPlayers ||
+                npcIndex < 0 || npcIndex >= Main.maxNPCs || slot < 0 || slot >= 50)
+                return;
+            Player player = Main.player[sender];
+            NPC collector = Main.npc[npcIndex];
+            if (!player.active || player.dead || !collector.active || collector.type != ModContent.NPCType<RockCollector>() ||
+                Vector2.DistanceSquared(player.Center, collector.Center) > 240f * 240f)
+                return;
+            Item item = player.inventory[slot];
+            var state = player.GetModPlayer<RockCollectorTrade>();
+            if (state.cooldown > 0 || item.type != expectedType || item.stack <= 0 || item.favorited || item.ModItem is not RareOreCluster ore)
+                return;
+            int silver = ore.RewardSilver;
+            int crystals = ore.RewardCrystals;
+            state.cooldown = 20;
+            item.stack--;
+            if (item.stack == 0) item.TurnToAir();
+            if (Main.netMode == NetmodeID.Server)
+                NetMessage.SendData(MessageID.SyncEquipment, -1, -1, null, sender, slot);
+            if (silver >= 100) Reward(player, collector, ItemID.GoldCoin, silver / 100);
+            if (silver % 100 > 0) Reward(player, collector, ItemID.SilverCoin, silver % 100);
+            Reward(player, collector, ModContent.ItemType<CavernCrystalItem>(), crystals);
+            if (Main.netMode == NetmodeID.Server)
+            {
+                ModPacket packet = ModContent.GetInstance<RockCollector>().Mod.GetPacket();
+                packet.Write(ResultPacket);
+                packet.Write(silver);
+                packet.Write(crystals);
+                packet.Send(sender);
+            }
+            else ShowReward(silver, crystals);
+        }
+        private static void Reward(Player player, NPC collector, int type, int stack)
+        {
+            int index = Item.NewItem(collector.GetSource_GiftOrReward(), player.Hitbox, type, stack, noBroadcast: true);
+            if (index < 0 || index >= Main.maxItems) return;
+            Main.item[index].playerIndexTheItemIsReservedFor = player.whoAmI;
+            Main.item[index].noGrabDelay = 0;
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, index);
+                NetMessage.SendData(MessageID.ItemOwner, -1, -1, null, index);
+            }
+        }
+        internal static void ShowReward(int silver, int crystals)
+        {
+            if (Main.dedServ) return;
+            SoundEngine.PlaySound(SoundID.Item37 with { Volume = 0.5f });
+            Main.npcChatText = string.Format(Text("Thanks"), silver, crystals);
+        }
+    }
+
+    public class RockCollectorSupport : ModSystem
+    {
+        public override void Load()
+        {
+            Register("TurnIn", "Turn in rare ores", "Entregar minerales raros");
+            Register("NoOre", "Bring me a super ore specimen from your mining trips! Hold the one you want to trade, or I will take your highest-tier unfavorited specimen. Favorites stay in your collection.",
+                "¡Tráeme una muestra de supermineral de tus expediciones! Sostén la que quieras entregar, o elegiré la de mayor categoría que no sea favorita. Tus favoritas se quedan contigo.");
+            Register("Thanks", "Now that is a rock worth collecting! Here are {0} silver coins and {1} cavern crystals for your specimen.",
+                "¡Esta roca merece estar en mi colección! Aquí tienes {0} monedas de plata y {1} cristales de caverna por tu muestra.");
+        }
+        private static void Register(string key, string english, string spanish)
+        {
+            string fullKey = "AerovelenceMod.RockCollectorTrade." + key;
+            global::AerovelenceMod.Common.Systems.Language.LocalizationManager.RegisterTranslation(fullKey, english, "default");
+            global::AerovelenceMod.Common.Systems.Language.LocalizationManager.RegisterTranslation(fullKey, spanish, "es-ES");
+        }
+        public override void PostSetupContent()
+        {
+            if (ModLoader.TryGetMod("Census", out Mod census))
+                census.Call("TownNPCCondition", ModContent.NPCType<RockCollector>(),
+                    Language.GetText("Mods.AerovelenceMod.NPCs.RockCollector.Census.SpawnCondition"));
         }
     }
 }

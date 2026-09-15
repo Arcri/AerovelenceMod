@@ -56,7 +56,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             FenceSitterPlayer state = player.GetModPlayer<FenceSitterPlayer>();
             bool special = state.Hits >= 4;
             if (special) state.Hits = 0;
-            Projectile.NewProjectile(source, player.MountedCenter, velocity.SafeNormalize(Vector2.UnitX * player.direction), type, damage, knockback, player.whoAmI, special ? 1 : 0, state.Swing++ % 2 == 0 ? 1 : -1);
+            Projectile.NewProjectile(source, player.MountedCenter, velocity.SafeNormalize(Vector2.UnitX * player.direction), type, damage, knockback, player.whoAmI, special ? 1 : 0, velocity.X >= 0f ? 1 : -1);
             return false;
         }
             public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -152,9 +152,11 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
                     next = high;
                     stops++;
                     pause = 8;
-                    float angle = Projectile.velocity.ToRotation() + MathHelper.Lerp(-2.35f, 2.35f, stop) * Projectile.ai[1];
+                    Vector2 axis = Projectile.velocity.SafeNormalize(Vector2.UnitX);
+                    Vector2 fenceStart = player.MountedCenter + axis * 20f + axis.RotatedBy(MathHelper.PiOver2) * ((stops - 2.5f) * 14f);
+                    if (!Collision.CanHitLine(player.MountedCenter, 1, 1, fenceStart, 1, 1)) fenceStart = player.MountedCenter;
                     if (Projectile.owner == Main.myPlayer)
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), player.MountedCenter, angle.ToRotationVector2(), ModContent.ProjectileType<FenceSitterBeam>(), (int)(Projectile.damage * .65f), 2, Projectile.owner);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), fenceStart, axis, ModContent.ProjectileType<FenceSitterBeam>(), (int)(Projectile.damage * .65f), 2, Projectile.owner);
                     SoundEngine.PlaySound(SoundID.Item93 with { Volume = .35f, Pitch = stops * .1f }, player.Center);
                 }
                 progress = next;

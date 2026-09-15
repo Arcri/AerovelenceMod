@@ -34,8 +34,13 @@ namespace AerovelenceMod
     {
         public override void HandlePacket(System.IO.BinaryReader reader, int whoAmI)
         {
-            if (reader.ReadByte() == Content.Items.Others.Misc.BabyCondurtleEgg.HatchPacket)
+            byte packet = reader.ReadByte();
+            if (packet == Content.Items.Others.Misc.BabyCondurtleEgg.HatchPacket)
                 Content.Items.Others.Misc.BabyCondurtleEgg.ReceiveHatch(whoAmI);
+            else if (packet == Content.NPCs.TownNPC.RockCollector.RockCollectorTrade.RequestPacket)
+                Content.NPCs.TownNPC.RockCollector.RockCollectorTrade.TurnIn(whoAmI, reader.ReadInt16(), reader.ReadByte(), reader.ReadInt32());
+            else if (packet == Content.NPCs.TownNPC.RockCollector.RockCollectorTrade.ResultPacket && Main.netMode == NetmodeID.MultiplayerClient)
+                Content.NPCs.TownNPC.RockCollector.RockCollectorTrade.ShowReward(reader.ReadInt32(), reader.ReadInt32());
         }
 		public Asset<Effect> TrailShader;
 

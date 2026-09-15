@@ -372,11 +372,26 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             Lighting.AddLight(Projectile.Center, SaplingCaneVFX.Aqua.ToVector3() * 0.12f * Opacity);
         }
 
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        public override bool ShouldUpdatePosition() => false;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac) => false;
+        public override void PostAI()
         {
             Projectile parent = Parent();
-            fallThrough = parent != null && parent.ai[0] == 1f && parent.ai[2] > Projectile.Bottom.Y + 24f;
-            return true;
+            bool fall = parent != null && parent.ai[0] == 1f && parent.ai[2] > Projectile.Bottom.Y + 24f;
+            if (Projectile.velocity.Y >= 0f)
+                Collision.StepUp(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref Projectile.stepSpeed, ref Projectile.gfxOffY);
+            Vector2 oldVelocity = Projectile.velocity;
+            Vector4 downhill = Collision.WalkDownSlope(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, 0.3f);
+            Projectile.velocity = new Vector2(downhill.Z, downhill.W);
+            Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, fall, fall);
+            Projectile.position += Projectile.velocity;
+            Vector4 slope = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, 0f, fall);
+            Projectile.position = new Vector2(slope.X, slope.Y);
+            Projectile.velocity = new Vector2(slope.Z, slope.W);
+            if (Projectile.velocity != oldVelocity)
+                OnTileCollide(oldVelocity);
+            if (!fall && oldVelocity.Y >= 0f && Math.Abs(Projectile.velocity.Y) < 0.01f)
+                onGround = true;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)

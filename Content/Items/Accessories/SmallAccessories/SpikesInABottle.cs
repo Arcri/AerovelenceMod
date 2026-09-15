@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
 {
     public class SpikesInABottle : TranslatableModItem
     {
-        public override string Texture => "Terraria/Images/Item_53";
+        public override string Texture => "AerovelenceMod/Content/Items/Accessories/SmallAccessories/SpikesInABottle";
         private const string EnglishTooltip = "Allows a Cloud-strength double jump that scatters crystal caltrops\nTaking at least 15% of maximum life in one hit scatters more after half a second\nThe retaliation can occur once every 6 seconds\nCannot be made into a balloon: it would pop";
 
         public override void SetStaticDefaults()
@@ -37,7 +37,8 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.width = Item.height = 20;
+            Item.width = 20;
+            Item.height = 26;
             Item.rare = ItemRarityID.Blue;
             Item.value = Item.sellPrice(silver: 60);
             Item.accessory = true;
@@ -49,15 +50,6 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
             player.GetJumpState<SpikedBottleJump>().Enable();
         }
 
-        public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
-        {
-            Texture2D crystal = ModContent.Request<Texture2D>(SpikesInABottleVFX.CrystalTexture).Value;
-            for (int i = -1; i <= 1; i++)
-                spriteBatch.Draw(crystal, position + new Vector2(i * 4f, 4f) * scale, null, Color.White, i * 0.45f, crystal.Size() * 0.5f, scale * 0.45f, SpriteEffects.None, 0f);
-        }
-
-        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
-            => SpikesInABottleVFX.Crystal(Item.Center + new Vector2(0f, 3f), rotation, new Vector2(5f, 10f) * scale);
     }
 
     public class SpikedBottleJump : ExtraJump
@@ -76,10 +68,10 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
 
     public class BottleCaltrop : ModProjectile
     {
-        public override string Texture => SpikesInABottleVFX.CrystalTexture;
+        public override string Texture => "AerovelenceMod/Content/Items/Accessories/SmallAccessories/SpikesInABottleCaltrops";
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 12;
+            Projectile.width = Projectile.height = 14;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Generic;
             Projectile.timeLeft = 240;
@@ -122,8 +114,10 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
         {
             float opacity = Math.Min(1f, Projectile.timeLeft / 30f);
             SpikesInABottleVFX.Glow(Projectile.Center, new Vector2(26f), SpikesInABottleVFX.Aqua, opacity * 0.22f);
-            for (int i = 0; i < 3; i++)
-                SpikesInABottleVFX.Crystal(Projectile.Center, Projectile.rotation + i * MathHelper.TwoPi / 3f, new Vector2(5f, 14f), opacity, 0.25f);
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Vector2 position = Projectile.Center - Main.screenPosition;
+            Main.EntitySpriteDraw(texture, position, null, lightColor * opacity, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, position, null, SpikesInABottleVFX.Additive(Color.White, opacity * 0.2f), Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None);
             return false;
         }
 

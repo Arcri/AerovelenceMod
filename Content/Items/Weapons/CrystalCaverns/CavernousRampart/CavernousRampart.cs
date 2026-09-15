@@ -213,11 +213,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             float power = Math.Clamp((speed - 3f) / 5f, 0f, 1f);
             float flash = player.GetModPlayer<RampartPlayer>().GuardFlash;
             Vector2 center = Projectile.Center - Main.screenPosition;
+            SpriteEffects facing = MathF.Cos(Projectile.rotation) < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
             CavernousRampartVFX.Glow(Projectile.Center, new Vector2(55f), CavernousRampartVFX.Violet, (0.2f + power * 0.25f + flash * 0.3f) * fade);
-            Main.EntitySpriteDraw(shield, center, null, lightColor * fade, Projectile.rotation, shield.Size() * 0.5f, 1.7f, SpriteEffects.None);
+            Main.EntitySpriteDraw(shield, center, null, lightColor * fade, Projectile.rotation, shield.Size() * 0.5f, 1.7f, facing);
             Main.EntitySpriteDraw(glow, center, null, CavernousRampartVFX.Additive(CavernousRampartVFX.Aqua, (0.4f + power * 0.5f) * fade),
-                Projectile.rotation, glow.Size() * 0.5f, 1.7f, SpriteEffects.None);
-            Main.EntitySpriteDraw(shield, center, null, CavernousRampartVFX.Additive(Color.White, flash * fade), Projectile.rotation, shield.Size() * 0.5f, 1.7f, SpriteEffects.None);
+                Projectile.rotation, glow.Size() * 0.5f, 1.7f, facing);
+            Main.EntitySpriteDraw(shield, center, null, CavernousRampartVFX.Additive(Color.White, flash * fade), Projectile.rotation, shield.Size() * 0.5f, 1.7f, facing);
             if (flash > 0.04f)
                 CavernousRampartVFX.Ring(Projectile.Center, new Vector2(45f + (1f - flash) * 30f, 60f), CavernousRampartVFX.Aqua, flash * fade * 0.6f, Projectile.rotation);
             return false;

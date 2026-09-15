@@ -38,7 +38,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.width = Item.height = 36;
+            Item.width = Item.height = 58;
             Item.rare = ItemRarityID.Blue;
             Item.value = Item.sellPrice(silver: 60);
             Item.damage = 24;
@@ -66,23 +66,28 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     internal static class BrandistockArt
     {
         internal const string ShaftTexture = "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/CavernsBrandistock/CavernsBrandistockBase";
+        internal static float TipReach(float extension) => Math.Max(15f, 9.4f + 27.2f * MathHelper.SmoothStep(0f, 1f, extension));
         internal static void Draw(SpriteBatch spriteBatch, Vector2 socket, float angle, float scale, float extension, float flash, Color light, float opacity)
         {
             Texture2D shaft = ModContent.Request<Texture2D>(ShaftTexture).Value;
-            Vector2 origin = new(38f, 24f);
+            Vector2 origin = new(60f, 22f);
             float rotation = angle + MathHelper.PiOver4;
             float size = scale * 1.2f;
             for (int i = 0; i < 3; i++)
             {
                 Texture2D fork = ModContent.Request<Texture2D>(ShaftTexture.Replace("Base", "Fork" + (i + 1))).Value;
-                Vector2 root = i == 0 ? new Vector2(33f, 19f) : i == 1 ? new Vector2(39f, 19f) : new Vector2(41f, 26f);
+                Vector2 root = i == 0 ? new Vector2(56f, 18f) : i == 1 ? new Vector2(65f, 16f) : new Vector2(64f, 26f);
                 Vector2 point = socket + ((root - origin) * size).RotatedBy(rotation);
                 float growth = MathHelper.SmoothStep(0f, 1f, extension);
                 float fade = MathHelper.Clamp(extension * 4f, 0f, 1f) * opacity;
-                spriteBatch.Draw(fork, point, null, light * fade, rotation, root, size * growth, SpriteEffects.None, 0f);
+                spriteBatch.Draw(fork, point, null, Color.Lerp(light, Color.White, 0.8f) * fade, rotation, root, size * growth, SpriteEffects.None, 0f);
                 spriteBatch.Draw(fork, point, null, CavernsBrandistockVFX.Additive(CavernsBrandistockVFX.Aqua, fade * (0.25f + flash * 0.6f)), rotation, root, size * growth, SpriteEffects.None, 0f);
             }
             spriteBatch.Draw(shaft, socket, null, light * opacity, rotation, origin, size, SpriteEffects.None, 0f);
+            Texture2D glow = ModContent.Request<Texture2D>(ShaftTexture.Replace("Base", "Held_Glowmask")).Value;
+            float pulse = 0.6f + 0.15f * MathF.Sin(Main.GlobalTimeWrappedHourly * 4f);
+            spriteBatch.Draw(glow, socket, null, Color.White * opacity * (pulse + extension * 0.25f), rotation, origin, size, SpriteEffects.None, 0f);
+            spriteBatch.Draw(glow, socket, null, CavernsBrandistockVFX.Additive(Color.White, opacity * (extension * 0.2f + flash * 0.6f)), rotation, origin, size, SpriteEffects.None, 0f);
         }
     }
 
@@ -95,11 +100,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         internal int Mode => Cooldown > 0 ? 2 : Blades ? 1 : 0;
         internal float MeterOpacity;
         internal float MeterStress;
+        internal float MeterCrystalGrowth;
         internal float Flash;
         public override void UpdateDead()
         {
             mechanism.Reset();
-            MeterOpacity = MeterStress = Flash = 0f;
+            MeterOpacity = MeterStress = MeterCrystalGrowth = Flash = 0f;
         }
         public override void PostUpdate()
         {
@@ -109,6 +115,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                 React(change, Player.MountedCenter);
             MeterOpacity = MathHelper.Lerp(MeterOpacity, held && (Stress > 0f || Flash > 0.05f) ? 1f : 0f, 0.16f);
             MeterStress = MathHelper.Lerp(MeterStress, Stress, 0.3f);
+            MeterCrystalGrowth = Math.Clamp(MeterCrystalGrowth + (Blades ? 0.1f : -0.14f), 0f, 1f);
             Flash *= 0.88f;
         }
         internal void Strike(Vector2 point)
@@ -167,15 +174,28 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             drawInfo.DrawDataCache.Add(new DrawData(meter, center, frame, Color.White * state.MeterOpacity, 0f, origin, 1f, SpriteEffects.None));
             if (state.Cooldown == 0)
             {
-                int row = state.Stress >= 80f ? 0 : state.Blades ? 1 : 2;
-                int width = Math.Clamp((int)(frameWidth * state.MeterStress / 100f), 0, frameWidth);
+                const int fillLeft = 14;
+                const int fillWidth = 60;
+                int width = Math.Clamp((int)(fillWidth * state.MeterStress / 100f), 0, fillWidth);
                 if (width > 0)
                 {
-                    Rectangle fill = new(0, row * stride, width, frameHeight);
-                    drawInfo.DrawDataCache.Add(new DrawData(meter, center, fill, Color.White * state.MeterOpacity, 0f, origin, 1f, SpriteEffects.None));
+                    Rectangle fill = new(fillLeft, 2 * stride, width, frameHeight);
+                    Vector2 fillOrigin = origin - new Vector2(fillLeft, 0f);
+                    drawInfo.DrawDataCache.Add(new DrawData(meter, center, fill, Color.White * state.MeterOpacity, 0f, fillOrigin, 1f, SpriteEffects.None));
                     float warning = MathHelper.Clamp((state.Stress - 80f) / 20f, 0f, 1f) * (0.5f + MathF.Sin(Main.GlobalTimeWrappedHourly * 10f) * 0.5f);
-                    drawInfo.DrawDataCache.Add(new DrawData(meter, center, fill, CavernsBrandistockVFX.Additive(Color.White, state.MeterOpacity * (state.Flash * 0.35f + warning * 0.2f)), 0f, origin, 1f, SpriteEffects.None));
+                    drawInfo.DrawDataCache.Add(new DrawData(meter, center, fill, CavernsBrandistockVFX.Additive(Color.White, state.MeterOpacity * (state.Flash * 0.35f + warning * 0.2f)), 0f, fillOrigin, 1f, SpriteEffects.None));
                 }
+            }
+            if (state.MeterCrystalGrowth > 0f && state.Cooldown == 0)
+            {
+                float growth = MathHelper.SmoothStep(0f, 1f, state.MeterCrystalGrowth);
+                Rectangle crystals = new(72, 0, 22, frameHeight);
+                Vector2 root = center + new Vector2(72f - origin.X, 0f);
+                Vector2 crystalOrigin = new(0f, origin.Y);
+                Vector2 scale = new(growth, growth);
+                drawInfo.DrawDataCache.Add(new DrawData(meter, root, crystals, Color.White * state.MeterOpacity, 0f, crystalOrigin, scale, SpriteEffects.None));
+                float pulse = 0.1f + 0.06f * MathF.Sin(Main.GlobalTimeWrappedHourly * 5f);
+                drawInfo.DrawDataCache.Add(new DrawData(meter, root, crystals, CavernsBrandistockVFX.Additive(Color.Cyan, state.MeterOpacity * growth * (pulse + state.Flash * 0.3f)), 0f, crystalOrigin, scale, SpriteEffects.None));
             }
         }
     }
@@ -247,7 +267,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             if (oldProgress < 0.24f && Progress >= 0.24f)
                 SoundEngine.PlaySound(SoundID.Item1 with { Volume = 0.45f, Pitch = target > 0f ? 0.35f : -0.05f }, Projectile.Center);
             if (target > 0f && Progress is > 0.25f and < 0.65f && Projectile.ai[0] % 3f == 0f)
-                CavernsBrandistockVFX.Spark(Projectile.Center + Axis * 24f * ItemScale, -Axis * 1.4f, 0.13f);
+                CavernsBrandistockVFX.Spark(Projectile.Center + Axis * (BrandistockArt.TipReach(extension) - 2f) * ItemScale, -Axis * 1.4f, 0.13f);
             if (Progress >= 1f)
             {
                 player.itemTime = player.itemAnimation = 0;
@@ -274,17 +294,17 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             float collision = 0f;
             float scale = ItemScale;
             float reach = BrandistockMechanism.Reach(Progress) * scale;
-            float bladeLength = 38f * extension * scale;
-            Vector2 start = Hand + Axis * (Math.Min(previousReach, reach) - 10f * scale);
-            Vector2 end = Hand + Axis * (Math.Max(previousReach, reach) + Math.Max(9f * scale, bladeLength));
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, (12f + extension * 12f) * scale, ref collision);
+            float bladeLength = BrandistockArt.TipReach(extension) * scale;
+            Vector2 start = Hand + Axis * (Math.Min(previousReach, reach) - 22f * scale);
+            Vector2 end = Hand + Axis * (Math.Max(previousReach, reach) + bladeLength);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, (26f + extension * 10f) * scale, ref collision);
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             bool sharp = BrandistockMechanism.CanSkillStrike(Projectile.ai[2] == 1f, extension);
             Vector2 point = Vector2.Clamp(Projectile.Center + Axis * 15f, target.Hitbox.TopLeft(), target.Hitbox.BottomRight());
             glow = 1f;
-            if (Projectile.owner == Main.myPlayer && !target.friendly && damageDone > 0)
+            if (Projectile.owner == Main.myPlayer && !target.friendly && target.type != NPCID.TargetDummy && damageDone > 0)
             {
                 var state = Main.player[Projectile.owner].GetModPlayer<BrandistockPlayer>();
                 state.Strike(Projectile.Center);
@@ -316,7 +336,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             }
             BrandistockArt.Draw(Main.spriteBatch, Projectile.Center - Main.screenPosition, Projectile.rotation, scale, extension, Math.Max(glow, warning), lightColor, fade);
             if (extension > 0f)
-                CavernsBrandistockVFX.Flare(Projectile.Center + Axis * 36f * extension * scale, 48f * scale, (glow * 0.7f + thrust * 0.2f) * extension * fade, Projectile.rotation + MathHelper.PiOver2);
+                CavernsBrandistockVFX.Flare(Projectile.Center + Axis * BrandistockArt.TipReach(extension) * scale, 48f * scale, (glow * 0.7f + thrust * 0.2f) * extension * fade, Projectile.rotation + MathHelper.PiOver2);
             return false;
         }
     }
@@ -348,8 +368,8 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                 return Cooldown == 0 ? BrandistockChange.Ready : BrandistockChange.None;
             }
             bool extended = Blades;
-            if (++sinceHit > 90)
-                Stress = Math.Max(0f, Stress - 0.2f);
+            if (++sinceHit > 30)
+                Stress = Math.Max(0f, Stress - 0.6f);
             return extended && !Blades ? BrandistockChange.Retract : BrandistockChange.None;
         }
 

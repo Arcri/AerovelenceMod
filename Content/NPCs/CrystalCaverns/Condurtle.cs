@@ -1,69 +1,47 @@
 using AerovelenceMod.Content.Biomes;
-using AerovelenceMod.Content.Projectiles;
+using AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
-using static AerovelenceMod.Content.Projectiles.LightningUtils;
 
 namespace AerovelenceMod.Content.NPCs.CrystalCaverns
 {
     public class Condurtle : ModNPC
     {
-        private const int WALK_FRAMES = 6; //1-6
-        private const int IDLE_FRAMES = 4; //7-10
-        private const int SHELL_ENTER_FRAMES = 8; //11-18
-        private const int ATTACK_FRAMES = 2; //19-20
-        private const int SHELL_EXIT_FRAMES = 6; //21-26
-
-        private const int WALK_START = 0;
-        private const int IDLE_START = WALK_FRAMES;
-        private const int SHELL_ENTER_START = IDLE_START + IDLE_FRAMES;
-        private const int ATTACK_START = SHELL_ENTER_START + SHELL_ENTER_FRAMES;
-        private const int SHELL_EXIT_START = ATTACK_START + ATTACK_FRAMES;
-
-        private enum AIState
+        private enum State { Walking, Idle, EnteringShell, Waiting, Shaking, Discharging, ExitingShell }
+        private State Current => (State)(int)NPC.ai[0];
+        private ref float Timer => ref NPC.ai[1];
+        private ref float Duration => ref NPC.ai[2];
+        private ref float EruptionTimer => ref NPC.ai[3];
+        private int cooldown;
+        private int turnCooldown;
+        private bool linked;
+        private float receivedCharge;
+        private bool Authority => Main.netMode != NetmodeID.MultiplayerClient;
+        private int ShakeCount => Main.expertMode ? 2 : 3;
+        internal Vector2 ShellPoint => NPC.Center + new Vector2(-5f * NPC.direction, -16f);
+        private static readonly Vector2[][] Creases =
         {
-            Idle,
-            Walking,
-            EnteringShell,
-            InShell,
-            AttackingInShell,
-            ExitingShell,
-            PostAttackWalking
-        }
-
-        private AIState currentState = AIState.Walking;
-        private int frameCounter;
-        private int stateTimer;
-        private int attackCooldown;
-        private bool initialized;
-        private bool facingRight = true;
-
-        private const float DETECTION_RANGE = 250f;
-        private const int ATTACK_COOLDOWN = 60;
-        private const int POST_ATTACK_WALK_TIME = 60;
-        private const int SHELL_MAX_TIME = 300;
-        private int conductorID = -1;
-        private int pylonID = -1;
-        private bool needsNewConductor = false;
-        private Vector2 lastShellPosition;
+            new[] { new Vector2(-20, -10), new Vector2(-23, -2), new Vector2(-16, 5), new Vector2(-20, 12) },
+            new[] { new Vector2(-5, -10), new Vector2(-8, -1), new Vector2(-3, 6), new Vector2(3, 12) },
+            new[] { new Vector2(10, -10), new Vector2(17, -3), new Vector2(11, 5), new Vector2(15, 10) }
+        };
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = WALK_FRAMES + IDLE_FRAMES + SHELL_ENTER_FRAMES + ATTACK_FRAMES + SHELL_EXIT_FRAMES;
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
+            Main.npcFrameCount[Type] = 26;
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, new NPCID.Sets.NPCBestiaryDrawModifiers
             {
-                Position = new Vector2(0f, 8f),
-                PortraitPositionXOverride = 0f
-            };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
+                Position = new Vector2(0f, 8f), PortraitPositionXOverride = 0f
+            });
         }
 
         public override void SetDefaults()
@@ -78,721 +56,428 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
             NPC.value = 150f;
             NPC.knockBackResist = 0.2f;
             NPC.aiStyle = -1;
-            NPC.noGravity = false;
-            NPC.noTileCollide = false;
-            NPC.rotation = 0f;
-
-            SpawnModBiomes = new int[] { ModContent.GetInstance<CrystalCavernsBiome>().Type };
+            SpawnModBiomes = new[] { ModContent.GetInstance<CrystalCavernsBiome>().Type };
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement>
-            {
-                new FlavorTextBestiaryInfoElement("A curious turtle with conductive properties. It can generate electrical currents when threatened, using crystals to channel its energy.")
-            });
+            bestiaryEntry.Info.Add(new FlavorTextBestiaryInfoElement("An unhurried grazer that sheds crystal splinters from its shell. When startled, it rocks and crackles before discharging. Nearby Condurtles form a living electric fence."));
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<CrystalCavernsBiome>()
+            ? SpawnCondition.Underground.Chance * 0.5f + SpawnCondition.Cavern.Chance * 0.5f : 0f;
+
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot) => Current == State.Discharging && Timer < 22f;
+        public override void SendExtraAI(BinaryWriter writer) { writer.Write((short)cooldown); writer.Write(linked); }
+        public override void ReceiveExtraAI(BinaryReader reader) { cooldown = reader.ReadInt16(); linked = reader.ReadBoolean(); }
+
+        private void Change(State next, int duration = 0)
         {
-            if (spawnInfo.Player.InModBiome(ModContent.GetInstance<CrystalCavernsBiome>()))
-            {
-                return SpawnCondition.Underground.Chance * 0.5f + SpawnCondition.Cavern.Chance * 0.5f;
-            }
-            return 0f;
+            NPC.ai[0] = (float)next;
+            Timer = 0f;
+            Duration = duration;
+            NPC.netUpdate = true;
         }
 
         public override void AI()
         {
-            if (!initialized)
+            if (Duration == 0f && Current == State.Walking && Authority)
             {
-                attackCooldown = Main.rand.Next(ATTACK_COOLDOWN, ATTACK_COOLDOWN * 2);
-                facingRight = Main.rand.NextBool();
-                initialized = true;
+                NPC.direction = Main.rand.NextBool() ? 1 : -1;
+                Duration = Main.rand.Next(180, 360);
+                EruptionTimer = Main.rand.Next(180, 330);
+                NPC.netUpdate = true;
             }
-
-            NPC.velocity.Y += 0.3f;
-            if (NPC.velocity.Y > 8f)
-                NPC.velocity.Y = 8f;
-            Player target = FindTarget();
-            UpdateProjectileReferences();
-            switch (currentState)
+            NPC.spriteDirection = NPC.direction;
+            Timer++;
+            cooldown = Math.Max(0, cooldown - 1);
+            turnCooldown = Math.Max(0, turnCooldown - 1);
+            receivedCharge = Math.Max(0f, receivedCharge - 0.035f);
+            bool roaming = Current is State.Walking or State.Idle;
+            NPC.knockBackResist = roaming ? 0.2f : 0f;
+            if (roaming)
             {
-                case AIState.Walking:
-                    UpdateWalkingState(target);
-                    break;
-                case AIState.Idle:
-                    UpdateIdleState(target);
-                    break;
-                case AIState.EnteringShell:
-                    UpdateEnteringShellState();
-                    break;
-                case AIState.InShell:
-                    UpdateInShellState();
-                    break;
-                case AIState.AttackingInShell:
-                    UpdateAttackingInShellState(target);
-                    break;
-                case AIState.ExitingShell:
-                    UpdateExitingShellState();
-                    break;
-                case AIState.PostAttackWalking:
-                    UpdatePostAttackWalkingState();
-                    break;
-            }
-            if (attackCooldown > 0)
-                attackCooldown--;
-        }
-
-        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            Texture2D glowmask = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/CrystalCaverns/Condurtle_Glow").Value;
-
-            SpriteEffects effects = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-
-            Vector2 drawPos = NPC.Center - screenPos;
-            Vector2 origin = new Vector2(NPC.frame.Width / 2, NPC.frame.Height / 2);
-
-            spriteBatch.Draw(glowmask, drawPos, NPC.frame, Color.White, NPC.rotation, origin, NPC.scale, effects, 0f);
-        }
-
-
-        private void UpdateProjectileReferences()
-        {
-            if (conductorID != -1)
-            {
-                if (!Main.projectile[conductorID].active || Main.projectile[conductorID].type != ModContent.ProjectileType<CondurtleConductor>())
+                if (Current == State.Walking)
+                    Walk();
+                else
+                    NPC.velocity.X *= 0.8f;
+                if (Authority && Timer >= Duration)
                 {
-                    conductorID = -1;
-                    if (currentState == AIState.InShell && pylonID != -1 &&
-                        Main.projectile[pylonID].active && Main.projectile[pylonID].type == ModContent.ProjectileType<CondurtlePylon>())
+                    if (Current == State.Idle)
                     {
-                        needsNewConductor = true;
+                        NPC.direction *= -1;
+                        Change(State.Walking, Main.rand.Next(180, 360));
                     }
+                    else
+                        Change(State.Idle, Main.rand.Next(50, 95));
                 }
-            }
-            if (pylonID != -1)
-            {
-                if (!Main.projectile[pylonID].active || Main.projectile[pylonID].type != ModContent.ProjectileType<CondurtlePylon>())
+                if (Authority && cooldown == 0 && PlayerNearby())
                 {
-                    pylonID = -1;
-                    if (currentState == AIState.InShell || currentState == AIState.AttackingInShell)
-                    {
-                        currentState = AIState.ExitingShell;
-                        frameCounter = 0;
-                    }
+                    linked = false;
+                    Change(State.EnteringShell, 32);
                 }
-            }
-
-            if (needsNewConductor && currentState == AIState.InShell && pylonID != -1 && Main.projectile[pylonID].active && Main.projectile[pylonID].type == ModContent.ProjectileType<CondurtlePylon>())
-            {
-                ShootConductor(FindTarget());
-                needsNewConductor = false;
-                stateTimer = 0;
-            }
-        }
-
-        private Player FindTarget()
-        {
-            Player target = null;
-            float closestDistance = DETECTION_RANGE;
-
-            for (int i = 0; i < Main.maxPlayers; i++)
-            {
-                Player player = Main.player[i];
-                if (player.active && !player.dead)
+                else
                 {
-                    float distance = Vector2.Distance(player.Center, NPC.Center);
-                    if (distance < closestDistance)
+                    EruptionTimer--;
+                    if (EruptionTimer > 0f && EruptionTimer < 28f && !Main.dedServ && (int)EruptionTimer % 4 == 0)
+                        CondurtleEffects.Spark(ShellPoint, Main.rand.NextVector2Circular(0.7f, 0.7f) - Vector2.UnitY, 0.16f);
+                    if (EruptionTimer <= 0f && Authority)
                     {
-                        closestDistance = distance;
-                        target = player;
-                    }
-                }
-            }
-
-            return target;
-        }
-
-        private void StepUp()
-        {
-            if (NPC.velocity.Y >= 0f)
-                Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref NPC.stepSpeed, ref NPC.gfxOffY, 1, true, 1);
-        }
-
-
-
-        #region State Updates
-        private void UpdateWalkingState(Player target)
-        {
-            float moveSpeed = 0.6f;
-            NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
-            int direction = facingRight ? 1 : -1;
-            bool obstacleAhead = false;
-            StepUp();
-
-            if (NPC.velocity.Y == 0f)
-            {
-                Vector2 bottomCenter = NPC.Bottom - new Vector2(0, 2);
-                Vector2 checkPosition = bottomCenter + new Vector2(direction * (NPC.width / 2 + 2), 0);
-                Point tileCoords = checkPosition.ToTileCoordinates();
-
-                bool wallAtFeet = WorldGen.SolidTile(tileCoords.X, tileCoords.Y);
-                bool wallAboveFeet = WorldGen.SolidTile(tileCoords.X, tileCoords.Y - 1);
-                bool wallTwoAbove = WorldGen.SolidTile(tileCoords.X, tileCoords.Y - 2);
-                Point groundCheckPos = new Point(tileCoords.X, tileCoords.Y + 1);
-                bool groundBelowNext = WorldGen.SolidTile(groundCheckPos.X, groundCheckPos.Y);
-                /*if (Main.netMode != NetmodeID.Server && Main.GameUpdateCount % 5 == 0)
-                {
-                    Dust.NewDustPerfect(
-                        new Vector2(tileCoords.X * 16 + 8, tileCoords.Y * 16 + 8),
-                        DustID.BlueTorch, Vector2.Zero, 0, default, 0.7f);
-                    Dust.NewDustPerfect(
-                        new Vector2(tileCoords.X * 16 + 8, (tileCoords.Y - 1) * 16 + 8),
-                        DustID.RedTorch, Vector2.Zero, 0, default, 0.7f);
-                }*/
-                if (wallAtFeet && (wallAboveFeet || wallTwoAbove) || (!groundBelowNext && NPC.velocity.Y == 0))
-                {
-                    obstacleAhead = true;
-                }
-                if (obstacleAhead && Main.GameUpdateCount % 5 == 0)
-                {
-                    facingRight = !facingRight;
-                    NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
-                    NPC.netUpdate = true;
-                }
-            }
-            else
-            {
-                NPC.velocity.X *= 0.99f;
-
-                if (Main.GameUpdateCount % 5 == 0)
-                {
-                    bool collision = false;
-                    Vector2 positionAhead = NPC.Bottom + new Vector2(direction * (NPC.width / 2), -6);
-                    Point tilePos = positionAhead.ToTileCoordinates();
-
-                    if (WorldGen.SolidTile(tilePos.X, tilePos.Y - 1))
-                    {
-                        collision = true;
-                    }
-
-                    if (Main.rand.NextBool(500))
-                    {
-                        collision = true;
-                    }
-
-                    if (collision)
-                    {
-                        facingRight = !facingRight;
-                        NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
+                        Erupt();
+                        EruptionTimer = Main.rand.Next(270, 420);
                         NPC.netUpdate = true;
                     }
                 }
             }
-            if (Main.rand.NextBool(500))
-            {
-                currentState = AIState.Idle;
-                stateTimer = Main.rand.Next(60, 120);
-                NPC.velocity.X = 0;
-                frameCounter = 0;
-                NPC.frame.Y = NPC.frame.Height * IDLE_START;
-            }
-            if (target != null && attackCooldown <= 0)
-            {
-                currentState = AIState.EnteringShell;
-                frameCounter = 0;
-                stateTimer = 0;
-                NPC.velocity.X = 0;
-            }
-            if (Math.Abs(NPC.velocity.X) > 0.1f)
-            {
-                frameCounter++;
-                if (frameCounter >= 8)
-                {
-                    frameCounter = 0;
-                    NPC.frame.Y += NPC.frame.Height;
-                    if (NPC.frame.Y >= NPC.frame.Height * (WALK_START + WALK_FRAMES))
-                        NPC.frame.Y = NPC.frame.Height * WALK_START;
-                }
-            }
             else
             {
-                NPC.frame.Y = NPC.frame.Height * IDLE_START;
-            }
-        }
-
-        private void UpdateIdleState(Player target)
-        {
-            NPC.velocity.X = 0;
-            stateTimer--;
-            if (stateTimer <= 0)
-            {
-                currentState = AIState.Walking;
-                frameCounter = 0;
-                return;
-            }
-            if (target != null && attackCooldown <= 0)
-            {
-                currentState = AIState.EnteringShell;
-                frameCounter = 0;
-                stateTimer = 0;
-                return;
-            }
-            frameCounter++;
-            if (frameCounter >= 40)
-            {
-                frameCounter = 0;
-                NPC.frame.Y += NPC.frame.Height;
-                if (NPC.frame.Y >= NPC.frame.Height * (IDLE_START + IDLE_FRAMES))
-                    NPC.frame.Y = NPC.frame.Height * IDLE_START;
-            }
-        }
-
-        private void UpdateEnteringShellState()
-        {
-            NPC.velocity.X = 0;
-            frameCounter++;
-            if (frameCounter >= 6)
-            {
-                frameCounter = 0;
-                NPC.frame.Y += NPC.frame.Height;
-                if (NPC.frame.Y >= NPC.frame.Height * (SHELL_ENTER_START + SHELL_ENTER_FRAMES))
+                NPC.velocity.X *= 0.7f;
+                if (Math.Abs(NPC.velocity.X) < 0.05f) NPC.velocity.X = 0f;
+                if (Current == State.Shaking)
+                    ShakeEffects();
+                if (Current == State.Discharging && (Timer == 1f || Timer == 10f))
                 {
-                    NPC.frame.Y = NPC.frame.Height * (SHELL_ENTER_START + SHELL_ENTER_FRAMES - 1);
-                    lastShellPosition = NPC.Center;
-                    ShootPylon();
-                    currentState = AIState.AttackingInShell;
-                    stateTimer = 0;
-                    frameCounter = 0;
+                    CondurtleEffects.Burst(ShellPoint, 12, 3.5f);
+                    SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.35f, Pitch = Timer == 1f ? 0.2f : 0.45f, MaxInstances = 4 }, NPC.Center);
+                    if (Authority && !linked)
+                        for (int direction = -1; direction <= 1; direction += 2)
+                            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + new Vector2(direction * 28f, -4f), new Vector2(direction * 5.5f, 0f), ModContent.ProjectileType<CondurtleSpark>(), Math.Max(1, NPC.damage / 2), 0f, Main.myPlayer);
                 }
-            }
-        }
-
-        private void UpdateInShellState()
-        {
-            NPC.velocity.X = 0;
-            NPC.frame.Y = NPC.frame.Height * ATTACK_START;
-            stateTimer++;
-            if ((conductorID == -1 && pylonID == -1) || stateTimer >= SHELL_MAX_TIME)
-            {
-                currentState = AIState.ExitingShell;
-                frameCounter = 0;
-                return;
-            }
-        }
-
-        private void UpdateAttackingInShellState(Player target)
-        {
-            NPC.velocity.X = 0;
-            frameCounter++;
-            if (frameCounter >= 8)
-            {
-                frameCounter = 0;
-                NPC.frame.Y += NPC.frame.Height;
-                if (NPC.frame.Y > NPC.frame.Height * (ATTACK_START + ATTACK_FRAMES - 1))
-                    NPC.frame.Y = NPC.frame.Height * ATTACK_START;
-            }
-            stateTimer++;
-            if (stateTimer == 30)
-                ShootConductor(target);
-            if (stateTimer >= 60)
-            {
-                currentState = AIState.InShell;
-                stateTimer = 0;
-                frameCounter = 0;
-                attackCooldown = ATTACK_COOLDOWN;
-                NPC.frame.Y = NPC.frame.Height * ATTACK_START;
-            }
-        }
-
-        private void UpdateExitingShellState()
-        {
-            NPC.velocity.X = 0;
-            frameCounter++;
-            if (frameCounter >= 6)
-            {
-                frameCounter = 0;
-                NPC.frame.Y += NPC.frame.Height;
-                if (NPC.frame.Y >= NPC.frame.Height * (SHELL_EXIT_START + SHELL_EXIT_FRAMES))
+                if (Authority && Timer >= Duration)
                 {
-                    currentState = AIState.PostAttackWalking;
-                    stateTimer = POST_ATTACK_WALK_TIME;
-                    float moveSpeed = 1.2f;
-                    NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
-                    NPC.frame.Y = NPC.frame.Height * WALK_START;
-                }
-            }
-        }
-
-        private void UpdatePostAttackWalkingState()
-        {
-            float moveSpeed = 1.2f;
-            NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
-            bool canStepUp = false;
-
-            if (NPC.velocity.Y == 0)
-            {
-                Vector2 position = NPC.position;
-                position.X += facingRight ? NPC.width : -2;
-                Point tileCoords = position.ToTileCoordinates();
-                bool solidAhead = Main.tile[tileCoords.X, tileCoords.Y].HasTile && Main.tileSolid[Main.tile[tileCoords.X, tileCoords.Y].TileType];
-                bool emptyAbove = !Main.tile[tileCoords.X, tileCoords.Y - 1].HasTile || !Main.tileSolid[Main.tile[tileCoords.X, tileCoords.Y - 1].TileType];
-                if (solidAhead && emptyAbove)
-                    canStepUp = true;
-            }
-
-            if (canStepUp)
-            {
-
-            }
-            else
-            {
-                if (Main.GameUpdateCount % 5 == 0)
-                {
-                    bool collision = false;
-                    int direction = facingRight ? 1 : -1;
-                    Vector2 positionAhead = NPC.Bottom + new Vector2(direction * (NPC.width / 2), -6);
-                    Point tilePos = positionAhead.ToTileCoordinates();
-                    if (WorldGen.SolidTile(tilePos.X, tilePos.Y - 1))
-                        collision = true;
-                    if (NPC.velocity.Y == 0 && !canStepUp)
+                    switch (Current)
                     {
-                        Point ledgeCheckPos = (NPC.Bottom + new Vector2(direction * (NPC.width / 2 + 4), 4)).ToTileCoordinates();
-                        bool groundAhead = WorldGen.SolidTile(ledgeCheckPos.X, ledgeCheckPos.Y);
-                        if (!groundAhead)
-                            collision = true;
-                    }
-                    if (Main.rand.NextBool(300))
-                    {
-                        collision = true;
-                    }
-
-                    if (collision)
-                    {
-                        facingRight = !facingRight;
-                        NPC.velocity.X = facingRight ? moveSpeed : -moveSpeed;
-                        NPC.netUpdate = true;
+                        case State.EnteringShell: Change(State.Waiting, Main.rand.Next(45, 96)); break;
+                        case State.Waiting:
+                            int windup = (ShakeCount - 1) * 36 + 22;
+                            linked = StartLinks(windup);
+                            Change(State.Shaking, windup);
+                            break;
+                        case State.Shaking: Change(State.Discharging, 54); break;
+                        case State.Discharging: Change(State.ExitingShell, 30); break;
+                        case State.ExitingShell:
+                            cooldown = 150;
+                            Change(State.Walking, Main.rand.Next(180, 300));
+                            break;
                     }
                 }
             }
-            stateTimer--;
-            if (stateTimer <= 0)
-            {
-                currentState = AIState.Walking;
-            }
+            float charge = Charge;
+            if (charge > 0f)
+                Lighting.AddLight(NPC.Center, CondurtleEffects.Blue.ToVector3() * charge * 0.65f);
+        }
 
-            if (Math.Abs(NPC.velocity.X) > 0.1f)
+        private bool PlayerNearby()
+        {
+            foreach (Player player in Main.ActivePlayers)
+                if (!player.dead && Vector2.DistanceSquared(player.Center, NPC.Center) < 220f * 220f && Collision.CanHitLine(NPC.Center, 1, 1, player.Center, 1, 1))
+                    return true;
+            return false;
+        }
+
+        private void Walk()
+        {
+            NPC.velocity.X = MathHelper.Lerp(NPC.velocity.X, NPC.direction * 0.6f, 0.12f);
+            if (NPC.velocity.Y < 0f) return;
+            Collision.StepUp(ref NPC.position, ref NPC.velocity, NPC.width, NPC.height, ref NPC.stepSpeed, ref NPC.gfxOffY, 1, true, 1);
+            if (!Authority || turnCooldown > 0 || NPC.velocity.Y > 1f) return;
+            Vector2 ahead = NPC.Bottom + new Vector2(NPC.direction * (NPC.width * 0.5f + 5f), 3f);
+            bool ground = Collision.SolidCollision(ahead - new Vector2(3f, 0f), 6, 22);
+            Point tile = ahead.ToTileCoordinates();
+            if (WorldGen.InWorld(tile.X, tile.Y, 2))
+                ground |= Main.tile[tile.X, tile.Y].HasTile && Main.tileSolidTop[Main.tile[tile.X, tile.Y].TileType];
+            bool wall = Collision.SolidCollision(ahead - new Vector2(3f, 29f), 6, 12);
+            if (!ground || wall || NPC.collideX)
             {
-                frameCounter++;
-                if (frameCounter >= 6)
+                NPC.direction *= -1;
+                NPC.velocity.X = NPC.direction * 0.3f;
+                turnCooldown = 30;
+                NPC.netUpdate = true;
+            }
+        }
+
+        private void Erupt()
+        {
+            int count = 0;
+            foreach (Projectile projectile in Main.ActiveProjectiles)
+                if (projectile.ModProjectile is CondurtleShard) count++;
+            int amount = Math.Min(5, 60 - count);
+            for (int i = 0; i < amount; i++)
+            {
+                float angle = -MathHelper.PiOver2 + (i - 2) * 0.39f + Main.rand.NextFloat(-0.08f, 0.08f);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), ShellPoint, angle.ToRotationVector2() * Main.rand.NextFloat(6.7f, 8.7f), ModContent.ProjectileType<CondurtleShard>(), Math.Max(1, NPC.damage / 2), 0f, Main.myPlayer);
+            }
+        }
+
+        private bool StartLinks(int warning)
+        {
+            List<NPC> neighbors = new();
+            foreach (NPC other in Main.ActiveNPCs)
+                if (other.whoAmI != NPC.whoAmI && other.ModNPC is Condurtle && Vector2.DistanceSquared(other.Center, NPC.Center) <= 360f * 360f && Collision.CanHitLine(ShellPoint, 1, 1, ((Condurtle)other.ModNPC).ShellPoint, 1, 1))
+                    neighbors.Add(other);
+            neighbors.Sort((a, b) => Vector2.DistanceSquared(a.Center, NPC.Center).CompareTo(Vector2.DistanceSquared(b.Center, NPC.Center)));
+            foreach (NPC other in neighbors)
+            {
+                int total = 0, sourceLinks = 0, targetLinks = 0;
+                bool duplicate = false;
+                foreach (Projectile projectile in Main.ActiveProjectiles)
                 {
-                    frameCounter = 0;
-                    NPC.frame.Y += NPC.frame.Height;
-                    if (NPC.frame.Y >= NPC.frame.Height * (WALK_START + WALK_FRAMES))
-                        NPC.frame.Y = NPC.frame.Height * WALK_START;
+                    if (projectile.ModProjectile is not CondurtleArc) continue;
+                    total++;
+                    int a = (int)projectile.ai[0], b = (int)projectile.ai[1];
+                    if (a == NPC.whoAmI || b == NPC.whoAmI) sourceLinks++;
+                    if (a == other.whoAmI || b == other.whoAmI) targetLinks++;
+                    if ((a == NPC.whoAmI && b == other.whoAmI) || (b == NPC.whoAmI && a == other.whoAmI)) duplicate = true;
                 }
+                if (total >= 12 || sourceLinks >= 3) break;
+                if (duplicate || targetLinks >= 3) continue;
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), ShellPoint, Vector2.Zero, ModContent.ProjectileType<CondurtleArc>(), Math.Max(1, NPC.damage / 2), 0f, Main.myPlayer, NPC.whoAmI, other.whoAmI, warning);
             }
-            else
+            return neighbors.Count > 0;
+        }
+
+        private float Charge => Math.Max(receivedCharge, Current switch
+        {
+            State.Shaking => 0.2f + 0.65f * MathHelper.Clamp(Timer / Duration, 0f, 1f),
+            State.Discharging => MathHelper.Clamp((54f - Timer) / 24f, 0f, 1f),
+            _ => 0f
+        });
+
+        internal void ReceiveCharge(float intensity) => receivedCharge = Math.Max(receivedCharge, intensity);
+
+        private void ShakeEffects()
+        {
+            if (Main.dedServ) return;
+            int shake = Math.Min(ShakeCount - 1, (int)(Timer - 1f) / 36);
+            int beat = ((int)Timer - 1) % 36;
+            if (beat == 0)
             {
-                NPC.frame.Y = NPC.frame.Height * IDLE_START;
+                SoundEngine.PlaySound(SoundID.Item37 with { Volume = 0.18f + shake * 0.07f, Pitch = 0.1f + shake * 0.18f, MaxInstances = 4 }, NPC.Center);
+                CondurtleEffects.Burst(ShellPoint, 3 + shake * 4, 1.2f + shake * 0.6f);
             }
+            if (beat < 20 && beat % (5 - shake) == 0)
+                CondurtleEffects.Spark(NPC.Center + Main.rand.NextVector2Circular(25f, 10f), Main.rand.NextVector2Circular(1.5f, 1.5f), 0.16f + shake * 0.04f);
         }
-        #endregion
-
-        #region Attack Methods
-        private void ShootPylon()
-        {
-            Vector2 velocity = new(0, -3f);
-            int projType = ModContent.ProjectileType<CondurtlePylon>();
-            int damage = NPC.damage / 3;
-            Vector2 spawnPos = NPC.Center - new Vector2(0, NPC.height / 2 - 4);
-            int pylonIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, velocity, projType, damage, 1f, Main.myPlayer);
-            pylonID = pylonIndex;
-            SoundEngine.PlaySound(SoundID.Item8 with { Volume = 0.5f, Pitch = 0.2f }, NPC.Center);
-        }
-
-        private void ShootConductor(Player target)
-        {
-            if (target == null || pylonID == -1 || !Main.projectile[pylonID].active)
-                return;
-            Vector2 playerDirection = target.Center - NPC.Center;
-            playerDirection.Normalize();
-            playerDirection.Y -= 0.5f;
-            playerDirection.Normalize();
-            Vector2 velocity = playerDirection * 2f;
-
-            int projType = ModContent.ProjectileType<CondurtleConductor>();
-            int damage = NPC.damage / 2;
-            Vector2 spawnPos = NPC.Center - new Vector2(0, NPC.height / 2 - 4);
-            int conductorIndex = Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, velocity, projType, damage, 1f, Main.myPlayer);
-
-            Projectile proj = Main.projectile[conductorIndex];
-            proj.ai[0] = pylonID;
-            proj.ai[1] = NPC.whoAmI;
-            conductorID = conductorIndex;
-            SoundEngine.PlaySound(SoundID.Item93 with { Volume = 0.7f, Pitch = 0.3f }, NPC.Center);
-        }
-        #endregion
 
         public override void FindFrame(int frameHeight)
         {
-            if (NPC.frame.Y < frameHeight)
+            int frame = Current switch
             {
-                NPC.frame.Y = frameHeight * WALK_START;
-            }
+                State.Walking => (int)(Timer / 8f) % 6,
+                State.Idle => 6 + (int)(Timer / 22f) % 4,
+                State.EnteringShell => 10 + Math.Min(7, (int)(Timer / 4f)),
+                State.Waiting => 17,
+                State.Shaking => 18 + (int)(Timer / 6f) % 2,
+                State.Discharging => 18 + (int)(Timer / 3f) % 2,
+                State.ExitingShell => 20 + Math.Min(5, (int)(Timer / 5f)),
+                _ => 0
+            };
+            if (NPC.IsABestiaryIconDummy) frame = (int)(Main.GameUpdateCount / 8) % 6;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteEffects effects = facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-            spriteBatch.Draw(texture, NPC.Center - screenPos, NPC.frame, drawColor, NPC.rotation,
-                new Vector2(NPC.frame.Width / 2, NPC.frame.Height / 2), NPC.scale, effects, 0f);
-
+            Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
+            float rock = 0f;
+            if (Current == State.Shaking)
+            {
+                float beat = (Timer - 1f) % 36f;
+                float envelope = beat < 22f ? MathF.Sin(beat / 22f * MathHelper.Pi) : 0f;
+                rock = MathF.Sin(beat * 0.65f) * envelope * (0.07f + 0.07f * Timer / Duration);
+            }
+            Vector2 pivot = NPC.Bottom + new Vector2(0f, NPC.gfxOffY);
+            Vector2 origin = NPC.frame.Size() * 0.5f + new Vector2(0f, NPC.height * 0.5f);
+            SpriteEffects flip = NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(texture, pivot - screenPos, NPC.frame, drawColor, rock, origin, NPC.scale, flip, 0f);
+            spriteBatch.Draw(glow, pivot - screenPos, NPC.frame, Color.White * 0.8f, rock, origin, NPC.scale, flip, 0f);
+            float charge = Charge;
+            if (charge > 0.02f)
+            {
+                float flicker = 0.8f + 0.2f * MathF.Sin(Main.GlobalTimeWrappedHourly * 43f);
+                spriteBatch.Draw(glow, pivot - screenPos, NPC.frame, TumblerVFX.Glow(Color.Lerp(CondurtleEffects.Blue, Color.White, charge), charge * flicker), rock, origin, NPC.scale, flip, 0f);
+                foreach (Vector2[] crease in Creases)
+                {
+                    Vector2[] path = new Vector2[crease.Length];
+                    for (int i = 0; i < path.Length; i++)
+                    {
+                        Vector2 local = new(crease[i].X * NPC.direction, crease[i].Y - NPC.height * 0.5f);
+                        local.X += i > 0 && i < path.Length - 1 ? MathF.Sin((float)(Main.GameUpdateCount / 3) * 2.1f + i * 13f) * 1.5f : 0f;
+                        path[i] = pivot + local.RotatedBy(rock) * NPC.scale;
+                    }
+                    TumblerLightningSystem.DrawPath(path, CondurtleEffects.Blue, charge * flicker, 1.2f, false);
+                }
+            }
             return false;
         }
 
-        public override void HitEffect(NPC.HitInfo hit)
+        public override void HitEffect(NPC.HitInfo hit) => CondurtleEffects.Burst(NPC.Center, NPC.life <= 0 ? 18 : 4, NPC.life <= 0 ? 3.5f : 1.5f);
+    }
+
+    public class CondurtleShard : ModProjectile
+    {
+        public override string Texture => "AerovelenceMod/Content/NPCs/CrystalCaverns/CondurtleConductor";
+        public override void SetDefaults()
         {
-            if (NPC.life <= 0)
+            Projectile.width = Projectile.height = 10;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 100;
+        }
+        public override void AI()
+        {
+            if (Projectile.localAI[0]++ == 0f)
             {
-                for (int i = 0; i < 20; i++)
+                CondurtleEffects.Burst(Projectile.Center, 2, 1.3f);
+                SoundEngine.PlaySound(SoundID.Item27 with { Volume = 0.12f, Pitch = 0.6f, MaxInstances = 2 }, Projectile.Center);
+            }
+            Projectile.velocity.Y = Math.Min(12f, Projectile.velocity.Y + 0.38f);
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Lighting.AddLight(Projectile.Center, 0.12f, 0.3f, 0.4f);
+            if ((int)Projectile.localAI[0] % 7 == 0) CondurtleEffects.Spark(Projectile.Center, -Projectile.velocity * 0.08f, 0.12f);
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Vector2 position = Projectile.Center - Main.screenPosition;
+            float fade = Math.Min(1f, Projectile.timeLeft / 15f);
+            for (int i = 0; i < 4; i++)
+                Main.EntitySpriteDraw(texture, position + (i * MathHelper.PiOver2).ToRotationVector2(), null, TumblerVFX.Glow(Color.White, fade * 0.65f), Projectile.rotation, texture.Size() * 0.5f, 0.65f, SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, position, null, Color.White * fade, Projectile.rotation, texture.Size() * 0.5f, 0.65f, SpriteEffects.None);
+            return false;
+        }
+        public override void OnKill(int timeLeft) => CondurtleEffects.Burst(Projectile.Center, 4, 1.8f);
+    }
+
+    public class CondurtleSpark : ModProjectile
+    {
+        private readonly TumblerLightningVisual lightning = new();
+        public override string Texture => "AerovelenceMod/Assets/Pixel/CrispStarPMA";
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 8;
+            Projectile.hostile = true;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 42;
+        }
+        public override void AI()
+        {
+            Projectile.localAI[0]++;
+            lightning.Update(Projectile, Projectile.Center - Projectile.velocity * Math.Min(5f, Projectile.localAI[0]), Projectile.Center, 0.3f);
+            Lighting.AddLight(Projectile.Center, 0.1f, 0.3f, 0.4f);
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            float fade = Math.Min(1f, Projectile.timeLeft / 10f);
+            lightning.Draw(Main.spriteBatch, CondurtleEffects.Blue, fade, 1f);
+            Texture2D star = ModContent.Request<Texture2D>(Texture).Value;
+            Main.EntitySpriteDraw(star, Projectile.Center - Main.screenPosition, null, TumblerVFX.Glow(Color.White, fade), 0f, star.Size() * 0.5f, new Vector2(0.22f, 0.1f), SpriteEffects.None);
+            return false;
+        }
+        public override void OnKill(int timeLeft) => CondurtleEffects.Burst(Projectile.Center, 5, 1.8f);
+    }
+
+    public class CondurtleArc : ModProjectile
+    {
+        private readonly TumblerLightningVisual lightning = new();
+        private Vector2 start;
+        private Vector2 end;
+        private int age;
+        private bool retiring;
+        private int Warning => (int)Projectile.ai[2];
+        private bool Live => !retiring && age >= Warning && age < Warning + 36;
+        public override string Texture => "Terraria/Images/Projectile_0";
+        public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 480;
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 8;
+            Projectile.hostile = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 180;
+        }
+        public override bool ShouldUpdatePosition() => false;
+        public override bool? CanDamage() => Live ? null : false;
+        public override void SendExtraAI(BinaryWriter writer) { writer.Write(age); writer.Write(retiring); }
+        public override void ReceiveExtraAI(BinaryReader reader) { age = reader.ReadInt32(); retiring = reader.ReadBoolean(); }
+        private Condurtle Turtle(float index)
+        {
+            int i = (int)index;
+            return i >= 0 && i < Main.maxNPCs && Main.npc[i].active ? Main.npc[i].ModNPC as Condurtle : null;
+        }
+        public override void AI()
+        {
+            age++;
+            Projectile.timeLeft = Math.Min(Projectile.timeLeft, Math.Max(1, Warning + 54 - age));
+            Condurtle first = Turtle(Projectile.ai[0]), second = Turtle(Projectile.ai[1]);
+            if (!retiring && (first == null || second == null || Vector2.DistanceSquared(first.ShellPoint, second.ShellPoint) > 420f * 420f || !Collision.CanHitLine(first.ShellPoint, 1, 1, second.ShellPoint, 1, 1)))
+            {
+                retiring = true;
+                Projectile.timeLeft = Math.Min(Projectile.timeLeft, 18);
+                Projectile.netUpdate = true;
+            }
+            if (!retiring)
+            {
+                start = first.ShellPoint;
+                end = second.ShellPoint;
+                Projectile.Center = Vector2.Lerp(start, end, 0.5f);
+                float charge = Live ? 1f : age < Warning ? 0.2f + age / (float)Warning * 0.6f : Projectile.timeLeft / 18f;
+                first.ReceiveCharge(charge);
+                second.ReceiveCharge(charge);
+            }
+            lightning.Update(Projectile, start, end, Live ? 0.65f : 0.35f);
+            if (!retiring && (age == Warning || age == Warning + 9))
+            {
+                CondurtleEffects.Burst(start, 7, 3f);
+                CondurtleEffects.Burst(end, 7, 3f);
+            }
+        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (!Live) return false;
+            float collision = 0f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, 10f, ref collision);
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (age < Warning && !retiring)
+            {
+                float progress = age / (float)Warning;
+                TumblerLightningSystem.DrawPath(new[] { start, end }, CondurtleEffects.Blue, 0.12f + progress * 0.32f, 1f, false, bloom: 0.3f);
+                Texture2D star = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Pixel/CrispStarPMA").Value;
+                for (int i = 0; i < 3; i++)
                 {
-                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Electric,
-                        hit.HitDirection * 2f, -2f, 0, default, 1f);
+                    float along = (age / 42f + i / 3f) % 1f;
+                    Vector2 point = Vector2.Lerp(start, end, along) - Main.screenPosition;
+                    Main.EntitySpriteDraw(star, point, null, TumblerVFX.Glow(CondurtleEffects.Blue, 0.3f + progress * 0.5f), (end - start).ToRotation(), star.Size() * 0.5f, new Vector2(0.15f, 0.06f), SpriteEffects.None);
                 }
             }
             else
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Electric,
-                        hit.HitDirection, -1f, 0, default, 0.8f);
-                }
+                float fade = Math.Min(1f, Projectile.timeLeft / 18f) * (age < Warning ? 0.25f : 1f);
+                float flash = age == Warning || age == Warning + 9 ? 1f : 0f;
+                lightning.Draw(Main.spriteBatch, Color.Lerp(CondurtleEffects.Blue, Color.White, flash), fade, 1.8f + flash);
             }
-        }
-    }
-
-    public class CondurtlePylon : ModProjectile
-    {
-        public override void SetStaticDefaults()
-        {
-        }
-
-        public override void SetDefaults()
-        {
-            Projectile.width = 14;
-            Projectile.height = 20;
-            Projectile.hostile = true;
-            Projectile.friendly = false;
-            Projectile.tileCollide = true;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 600;
-            Projectile.light = 0.5f;
-            Projectile.aiStyle = -1;
-            Projectile.alpha = 0;
-        }
-
-        public override void AI()
-        {
-            if (Projectile.velocity.Y < 0)
-            {
-                Projectile.velocity.Y *= 0.98f;
-                if (Math.Abs(Projectile.velocity.Y) < 0.5f)
-                    Projectile.velocity.Y = 0;
-            }
-
-            if (Main.rand.NextBool(5))
-            {
-                Vector2 dustPos = Projectile.Center + new Vector2(Main.rand.NextFloat(-15, 15), Main.rand.NextFloat(-15, 15));
-                int dustIndex = Dust.NewDust(dustPos, 1, 1, DustID.BlueCrystalShard, 0f, 0f, 0, default, 0.5f);
-                Main.dust[dustIndex].noGravity = true;
-                Main.dust[dustIndex].velocity *= 0.3f;
-            }
-            if (Projectile.velocity.Y == 0)
-                Projectile.position.Y += (float)Math.Sin(Main.GameUpdateCount * 0.05f) * 0.3f;
-            Projectile.light = 0.5f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.2f;
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Vector2 drawPos = Projectile.Center - Main.screenPosition;
-            Vector2 origin = new(texture.Width / 2, texture.Height / 2);
-            float scale = 1f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.05f;
-            Color glowColor = new Color(100, 200, 255, 100) * 0.5f;
-            Main.spriteBatch.Draw(texture, drawPos, null, glowColor, Projectile.rotation, origin, scale * 1.2f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(texture, drawPos, null, lightColor, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
-
             return false;
         }
-
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 20; i++)
-            {
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Electric,
-                    Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f), 0, default, 1.2f);
-            }
-            SoundEngine.PlaySound(SoundID.NPCDeath3 with { Volume = 0.6f, Pitch = 0.2f }, Projectile.position);
+            for (int i = 1; i <= 5; i++) CondurtleEffects.Spark(Vector2.Lerp(start, end, i / 6f), Main.rand.NextVector2Circular(1.5f, 1.5f), 0.16f);
         }
     }
 
-    public class CondurtleConductor : ModProjectile
+    internal static class CondurtleEffects
     {
-        private LightningData shellToConduitLightning;
-        private LightningData conduitToPylonLightning;
-        private bool lightningInitialized = false;
-        private int lightningTimer = 0;
-        private const int SHELL_LIGHTNING_DURATION = 30;
-        private const int PYLON_LIGHTNING_DELAY = 60;
-        private const int PYLON_LIGHTNING_DURATION = 45;
-        private bool pylonLightningActive = false;
-
-        private int pylonID = -1;
-        private int turtleID = -1;
-        private Vector2 turtleShellPosition;
-
-        public override void SetDefaults()
+        internal static readonly Color Blue = new(65, 225, 255);
+        internal static void Spark(Vector2 position, Vector2 velocity, float scale) => TumblerVFX.SpawnSpark(position, velocity, Blue, scale);
+        internal static void Burst(Vector2 point, int count, float speed)
         {
-            Projectile.width = 16;
-            Projectile.height = 16;
-            Projectile.hostile = true;
-            Projectile.friendly = false;
-            Projectile.tileCollide = true;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 360;
-            Projectile.light = 0.5f;
-            Projectile.aiStyle = -1;
-        }
-
-        public override void AI()
-        {
-            if (pylonID == -1 && Projectile.ai[0] >= 0 && Projectile.ai[0] < Main.maxProjectiles)
-                pylonID = (int)Projectile.ai[0];
-
-            if (turtleID == -1 && Projectile.ai[1] >= 0 && Projectile.ai[1] < Main.maxNPCs)
-            {
-                turtleID = (int)Projectile.ai[1];
-                if (Main.npc[turtleID].active && Main.npc[turtleID].type == ModContent.NPCType<Condurtle>())
-                    turtleShellPosition = Main.npc[turtleID].Center + new Vector2(0, -4);
-            }
-
-            if (!lightningInitialized && turtleShellPosition != Vector2.Zero)
-            {
-                shellToConduitLightning = new LightningData(Projectile, LightningStyle.Jagged);
-                InitializeBetweenPoints(shellToConduitLightning, turtleShellPosition, Projectile.Center, LightningStyle.Jagged);
-                SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.3f });
-                lightningInitialized = true;
-            }
-
-            if (lightningTimer < SHELL_LIGHTNING_DURATION + PYLON_LIGHTNING_DELAY)
-            {
-                Projectile.velocity *= 0.97f;
-                if (Projectile.velocity.Length() < 0.5f)
-                {
-                    Projectile.velocity = Vector2.Zero;
-                }
-            }
-            else if (!pylonLightningActive && pylonID != -1 && Main.projectile[pylonID].active)
-            {
-                if (pylonID == -1 || !Main.projectile[pylonID].active)
-                    return;
-                conduitToPylonLightning = new LightningData(Projectile, LightningStyle.Default);
-               InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningStyle.Default);
-                SoundEngine.PlaySound(SoundID.NPCHit53 with { Volume = 0.5f, Pitch = 0.2f });
-                pylonLightningActive = true;
-            }
-
-            if (Main.rand.NextBool(3))
-            {
-                Vector2 dustPos = Projectile.Center + new Vector2(Main.rand.NextFloat(-15, 15), Main.rand.NextFloat(-15, 15));
-                int dustIndex = Dust.NewDust(dustPos, 1, 1, DustID.BlueCrystalShard, 0f, 0f, 0, default, 0.5f);
-                Main.dust[dustIndex].noGravity = true;
-                Main.dust[dustIndex].velocity *= 0.3f;
-            }
-
-            Projectile.rotation += 0.03f;
-            Projectile.light = 0.5f + (float)Math.Sin(Main.GameUpdateCount * 0.15f) * 0.3f;
-            UpdateLightning();
-
-            if (lightningTimer > SHELL_LIGHTNING_DURATION + PYLON_LIGHTNING_DELAY + PYLON_LIGHTNING_DURATION)
-            {
-                if (pylonID != -1 && Main.projectile[pylonID].active)
-                {
-                    Vector2 direction = Main.projectile[pylonID].Center - Projectile.Center;
-                    direction.Normalize();
-                    Projectile.velocity += direction * 0.1f;
-                    if (Projectile.velocity.Length() > 5f)
-                    {
-                        Projectile.velocity.Normalize();
-                        Projectile.velocity *= 5f;
-                    }
-                }
-                else
-                    Projectile.Kill();
-            }
-            lightningTimer++;
-        }
-
-        private void UpdateLightning()
-        {
-            if (shellToConduitLightning != null && lightningTimer < SHELL_LIGHTNING_DURATION)
-            {
-                LightningUtils.InitializeBetweenPoints(
-                    shellToConduitLightning,
-                    turtleShellPosition,
-                    Projectile.Center,
-                    LightningUtils.LightningStyle.Jagged
-                );
-
-                LightningUtils.UpdateSegments(shellToConduitLightning);
-                LightningUtils.UpdateBranches(shellToConduitLightning);
-                if (Main.rand.NextBool(3))
-                    LightningUtils.SpawnDust(shellToConduitLightning);
-                if (lightningTimer > SHELL_LIGHTNING_DURATION - 10)
-                {
-                    shellToConduitLightning.Alpha *= 0.9f;
-                }
-            }
-            if (conduitToPylonLightning != null && pylonLightningActive &&
-                pylonID != -1 && Main.projectile[pylonID].active)
-            {
-                int pylonLightningTime = lightningTimer - (SHELL_LIGHTNING_DURATION + PYLON_LIGHTNING_DELAY);
-
-                if (pylonLightningTime >= 0 && pylonLightningTime < PYLON_LIGHTNING_DURATION)
-                {
-                    LightningUtils.InitializeBetweenPoints(conduitToPylonLightning, Projectile.Center, Main.projectile[pylonID].Center, LightningUtils.LightningStyle.Default);
-                    LightningUtils.UpdateSegments(conduitToPylonLightning);
-                    LightningUtils.UpdateBranches(conduitToPylonLightning);
-                    if (Main.rand.NextBool(2))
-                        LightningUtils.SpawnDust(conduitToPylonLightning);
-                    if (pylonLightningTime > PYLON_LIGHTNING_DURATION - 10)
-                        conduitToPylonLightning.Alpha *= 0.9f;
-                }
-            }
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            if (shellToConduitLightning != null && shellToConduitLightning.Initialized && lightningTimer < SHELL_LIGHTNING_DURATION)
-                LightningUtils.DrawLightning(shellToConduitLightning, Main.spriteBatch);
-            if (conduitToPylonLightning != null && conduitToPylonLightning.Initialized && pylonLightningActive)
-            {
-                int pylonLightningTime = lightningTimer - (SHELL_LIGHTNING_DURATION + PYLON_LIGHTNING_DELAY);
-                if (pylonLightningTime >= 0 && pylonLightningTime < PYLON_LIGHTNING_DURATION)
-                    LightningUtils.DrawLightning(conduitToPylonLightning, Main.spriteBatch);
-            }
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Vector2 drawPos = Projectile.Center - Main.screenPosition;
-            Vector2 origin = new(texture.Width / 2, texture.Height / 2);
-            float scale = 1f + (float)Math.Sin(Main.GameUpdateCount * 0.1f) * 0.05f;
-            Color glowColor = new Color(50, 150, 255, 100) * 0.6f;
-            Main.spriteBatch.Draw(texture, drawPos, null, glowColor, Projectile.rotation + MathHelper.PiOver4, origin, scale * 1.3f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(texture, drawPos, null, lightColor, Projectile.rotation, origin, scale, SpriteEffects.None, 0f);
-            return false;
+            if (Main.dedServ) return;
+            for (int i = 0; i < count; i++) Spark(point, Main.rand.NextVector2Circular(speed, speed), Main.rand.NextFloat(0.14f, 0.24f));
         }
     }
 }

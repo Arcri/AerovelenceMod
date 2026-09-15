@@ -31,7 +31,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
                 .AddName(Language.Spanish, "Condurtle Bebé")
                 .AddFlavor(Language.Spanish, "Un pequeño montoncito de cristal y caparazón que tararea. Las caricias suaves alegran sus pequeñas chispas.");
             Main.npcFrameCount[Type] = 11;
-            NPCID.Sets.ExtraFramesCount[Type] = 3;
+            NPCID.Sets.ExtraFramesCount[Type] = 4;
             NPCID.Sets.AttackFrameCount[Type] = 0;
             NPCID.Sets.DangerDetectRange[Type] = 240;
             NPCID.Sets.AttackType[Type] = -1;
@@ -136,20 +136,21 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
         public override void SendExtraAI(BinaryWriter writer) { writer.Write(frightened); writer.Write((byte)shellProgress); }
         public override void ReceiveExtraAI(BinaryReader reader) { frightened = reader.ReadBoolean(); shellProgress = Math.Clamp((int)reader.ReadByte(), 0, 18); }
 
-        internal static int ShellFrame(int progress) => 10 - Math.Clamp((progress - 1) / 6, 0, 2);
+        internal static int ShellFrame(int progress, bool emerging) => emerging ? 10 : 7 + Math.Clamp((progress - 1) / 6, 0, 2);
+        private float ShellDrop => NPC.IsABestiaryIconDummy ? 0f : 2f * MathHelper.Clamp((shellProgress - 6f) / 6f, 0f, 1f);
         public override void FindFrame(int frameHeight)
         {
             NPC.spriteDirection = NPC.direction;
             int frame = 0;
             if (shellProgress > 0 && !NPC.IsABestiaryIconDummy)
             {
-                frame = ShellFrame(shellProgress);
+                frame = ShellFrame(shellProgress, !frightened);
                 walkClock = 0f;
             }
             else if (Math.Abs(NPC.velocity.X) > 0.1f)
             {
                 walkClock += Math.Clamp(Math.Abs(NPC.velocity.X), 0.35f, 1.5f);
-                frame = (int)(walkClock / 6f) % 8;
+                frame = (int)(walkClock / 6f) % 7;
             }
             else
                 walkClock = 0f;
@@ -161,7 +162,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glowmask").Value;
             Rectangle frame = new(0, Math.Clamp(NPC.frame.Y / 30, 0, 10) * 30, 42, 30);
-            Vector2 position = NPC.Bottom - screenPos + new Vector2(0f, NPC.gfxOffY + 2f);
+            Vector2 position = NPC.Bottom - screenPos + new Vector2(0f, NPC.gfxOffY + 6f + ShellDrop);
             Vector2 origin = new(21f, 30f);
             SpriteEffects flip = NPC.spriteDirection < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             spriteBatch.Draw(texture, position, frame, drawColor, NPC.rotation, origin, NPC.scale, flip, 0f);
@@ -174,7 +175,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
         public override void PartyHatPosition(ref Vector2 position, ref SpriteEffects spriteEffects)
         {
             position.X += shellProgress > 0 ? 0 : 11f * NPC.spriteDirection;
-            position.Y += 5f;
+            position.Y += 5f + ShellDrop;
         }
     }
 

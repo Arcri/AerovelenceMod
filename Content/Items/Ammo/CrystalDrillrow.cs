@@ -135,7 +135,7 @@ namespace AerovelenceMod.Content.Items.Ammo
                     entryPoint = point - axis * 3f;
                     hasEntry = true;
                     Array.Clear(Projectile.oldPos);
-                    CrystalDrillrowVFX.Rubble(entryPoint, 4, 2.5f);
+                    CrystalDrillrowVFX.Rubble(entryPoint, 1, 1.5f);
                     CrystalDrillrowVFX.Smoke(entryPoint, -axis, 40f, new Color(140, 160, 185));
                     SoundEngine.PlaySound(SoundID.Item23 with { Volume = 0.2f, Pitch = 0.3f, MaxInstances = 3 }, point);
                     Projectile.netUpdate = true;
@@ -144,7 +144,7 @@ namespace AerovelenceMod.Content.Items.Ammo
                 {
                     exitFlash = 1f;
                     Array.Clear(Projectile.oldPos);
-                    CrystalDrillrowVFX.Rubble(point, 4, 3.5f);
+                    CrystalDrillrowVFX.Rubble(point, 1, 2f);
                     CrystalDrillrowVFX.Burst(point, 7, 3f);
                     CrystalDrillrowVFX.Smoke(point, axis * 2f, 60f, CrystalDrillrowVFX.Aqua);
                     SoundEngine.PlaySound(SoundID.Item29 with { Volume = 0.25f, Pitch = 0.4f, MaxInstances = 3 }, point);
@@ -190,7 +190,7 @@ namespace AerovelenceMod.Content.Items.Ammo
             if (!broken)
                 return;
             Vector2 point = Projectile.Center + Projectile.rotation.ToRotationVector2() * 12f;
-            CrystalDrillrowVFX.Rubble(point, 4, 3f);
+            CrystalDrillrowVFX.Rubble(point, 1, 1.8f);
             CrystalDrillrowVFX.Burst(point, Projectile.ai[0] == 2f ? 7 : 3, 2.5f);
             SoundEngine.PlaySound(SoundID.Tink with { Volume = 0.25f, PitchVariance = 0.15f, MaxInstances = 3 }, point);
         }

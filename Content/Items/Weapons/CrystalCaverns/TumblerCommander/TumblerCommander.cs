@@ -70,6 +70,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         private float charge;
         private float fade = 1;
         private float rollSpeed;
+        private bool onGround;
         private bool retiring;
         public override void SetDefaults()
         {
@@ -122,9 +123,9 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             Vector2 delta = new Vector2(Projectile.ai[1], Projectile.ai[2]) - Projectile.Center;
             float desiredSpeed = MathHelper.Clamp(delta.Length() / 45, 1.5f, 8);
             int drive = Math.Abs(delta.X) < 9 ? 0 : Math.Sign(delta.X);
-            bool floor = Collision.TileCollision(Projectile.position, new Vector2(0, 3), Projectile.width, Projectile.height, false).Y < 3;
+            bool floor = onGround;
             int wall = (int)Projectile.ai[0];
-            if (wall == 0 && drive != 0 && Collision.SolidCollision(Projectile.position + new Vector2(drive * 4, 0), Projectile.width, Projectile.height))
+            if (wall == 0 && drive != 0 && HasWall(drive))
             {
                 wall = drive;
                 Projectile.ai[0] = wall;
@@ -132,7 +133,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             }
             if (wall != 0)
             {
-                bool touching = Collision.SolidCollision(Projectile.position + new Vector2(wall * 4, 0), Projectile.width, Projectile.height);
+                bool touching = HasWall(wall);
                 if (!touching || drive == -wall)
                 {
                     Projectile.ai[0] = 0;
@@ -168,11 +169,36 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             }
             Lighting.AddLight(Projectile.Center, TumblerCommanderVFX.Aqua.ToVector3() * (0.2f + charge * 0.3f));
         }
-        public override bool OnTileCollide(Vector2 oldVelocity) => false;
-        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        private bool HasWall(int direction)
         {
-            fallThrough = false;
-            return true;
+            int x = (int)((Projectile.Center.X + direction * (Projectile.width * 0.5f + 4f)) / 16f);
+            for (int y = (int)(Projectile.Top.Y + 3f) / 16; y <= (int)(Projectile.Center.Y + 3f) / 16; y++)
+            {
+                if (!WorldGen.InWorld(x, y, 2)) continue;
+                Tile tile = Main.tile[x, y];
+                if (tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && tile.Slope == SlopeType.Solid && !tile.IsHalfBlock)
+                    return true;
+            }
+            return false;
+        }
+        public override bool ShouldUpdatePosition() => false;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac) => false;
+        public override void PostAI()
+        {
+            if (Projectile.ai[0] == 0f && Projectile.velocity.Y >= 0f)
+                Collision.StepUp(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref Projectile.stepSpeed, ref Projectile.gfxOffY);
+            Vector2 oldVelocity = Projectile.velocity;
+            if (Projectile.ai[0] == 0f)
+            {
+                Vector4 downhill = Collision.WalkDownSlope(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, .35f);
+                Projectile.velocity = new Vector2(downhill.Z, downhill.W);
+            }
+            Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, false, false);
+            Projectile.position += Projectile.velocity;
+            Vector4 slope = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
+            Projectile.position = new Vector2(slope.X, slope.Y);
+            Projectile.velocity = new Vector2(slope.Z, slope.W);
+            onGround = oldVelocity.Y >= 0f && Math.Abs(Projectile.velocity.Y) < .01f;
         }
         public override void OnKill(int timeLeft) => TumblerCommanderVFX.Burst(Projectile.Center, 18, 3);
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) => TumblerCommanderVFX.Burst(Projectile.Center, 10, 3);

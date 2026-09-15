@@ -1,4 +1,4 @@
-﻿using AerovelenceMod.Common.Globals.SkillStrikes;
+using AerovelenceMod.Common.Globals.SkillStrikes;
 using AerovelenceMod.Common.Systems.Language;
 using AerovelenceMod.Common.Utilities;
 using AerovelenceMod.Content.Dusts;
@@ -336,10 +336,13 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 Utils.DrawLine(Main.spriteBatch, Projectile.Center + lineOffsetRot1, Projectile.Center + lineOffsetRot2, lineColor, lineColor, 1.3f);
             }
 
+            float arrowRotation = direction.ToRotation() + MathHelper.PiOver2;
+            if (projToShootID == ModContent.ProjectileType<global::AerovelenceMod.Content.Items.Ammo.CrystalDrillrowShot>())
+                arrowRotation = direction.ToRotation() - MathHelper.PiOver2;
             if (Player.channel)
             {
-                Main.spriteBatch.Draw(arrowTexture, position2 + chargeOffset, null, lightColor, direction.ToRotation() - MathHelper.PiOver2 + 3.14f, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
-                Main.spriteBatch.Draw(arrowTexture, position2 + chargeOffset, null, Color.Orange with { A = 0 } * percentDrawnBack * 1f, direction.ToRotation() - MathHelper.PiOver2 + 3.14f, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
+                Main.spriteBatch.Draw(arrowTexture, position2 + chargeOffset, null, lightColor, arrowRotation, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
+                Main.spriteBatch.Draw(arrowTexture, position2 + chargeOffset, null, Color.Orange with { A = 0 } * percentDrawnBack * 1f, arrowRotation, origin2, 1f, Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0.0f);
 
             }
 
@@ -598,19 +601,25 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
 
         public override void PostAI(Projectile projectile)
         {
-            if (!trailActive) return;
+            if (!trailActive || Main.dedServ) return;
+            if (projectile.ModProjectile is global::AerovelenceMod.Content.Items.Ammo.CrystalDrillrowShot && projectile.ai[0] == 1f)
+            {
+                fireTrail = new BaseTrailInfo();
+                previousPositions.Clear();
+                return;
+            }
             fireTrail.trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Assets/Trails/Extra_196_Black").Value;
             fireTrail.trailColor = new Color(255, 100, 5);
             fireTrail.trailPointLimit = (int)(120 * projectile.scale);
             fireTrail.trailWidth = (int)(20 * projectile.scale);
             fireTrail.trailMaxLength = (int)(120 * projectile.scale); //225
-            fireTrail.timesToDraw = 0;
+            fireTrail.timesToDraw = 1;
             fireTrail.pinch = true;
             fireTrail.pinchAmount = 0.4f;
             
             fireTrail.trailTime = (float)Main.timeForVisualEffects * 0.05f;
             fireTrail.trailRot = projectile.velocity.ToRotation();
-            fireTrail.trailPos = projectile.Center + projectile.velocity;
+            fireTrail.trailPos = projectile.ModProjectile is global::AerovelenceMod.Content.Items.Ammo.CrystalDrillrowShot ? projectile.Center : projectile.Center + projectile.velocity;
             fireTrail.TrailLogic();
 
             if (timer % 1 == 0)
@@ -634,9 +643,11 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
         {
             if (!trailActive) return base.PreDraw(projectile, ref lightColor);
 
-            fireTrail.TrailDrawing(Main.spriteBatch);
+            if (fireTrail.trailPositions != null && fireTrail.trailPositions.Count >= 2 &&
+                (projectile.ModProjectile is not global::AerovelenceMod.Content.Items.Ammo.CrystalDrillrowShot || projectile.ai[0] != 1f))
+                fireTrail.TrailDrawing(Main.spriteBatch);
 
-            return false;
+            return projectile.ModProjectile != null;
         }
 
         public override void PostDraw(Projectile projectile, Color lightColor)
@@ -646,6 +657,8 @@ namespace AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Bows
                 base.PostDraw(projectile, lightColor);
                 return;
             }
+            if (projectile.ModProjectile != null)
+                return;
             Vector2 scale = new Vector2(0.25f, 0.5f) * 0.5f;
 
             Texture2D arrowTex = TextureAssets.Projectile[projectile.type].Value;

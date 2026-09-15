@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 {
     public class TheSling : TranslatableModItem
     {
-        private const string EnglishTooltip = "Hold to wind up a slug in a moth-silk sling\nRelease to throw in the direction the pouch is traveling\nAim beyond the orbit; the white flash and chime mark a powerful, well-aligned throw\nStone slugs hit hard, wood flies farther, and crystal leaves splinters\nUses one slug per wind-up";
+        private const string EnglishTooltip = "Hold to wind up a slug in a moth-silk sling\nRelease to throw in the direction the pouch is traveling\nAim before winding up; the white flash and chime mark a powerful, well-aligned throw\nStone slugs hit hard, wood flies farther, and crystal leaves splinters\nUses one slug per wind-up";
         public override string Texture => SlingArt.PouchTexture;
 
         public override void SetStaticDefaults()
@@ -26,7 +26,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             this.ModifyLocalization("The Sling", EnglishTooltip)
                 .AddSkillStrike(Language.Default, "Release during the white flash for a faster throw and your slug's Skill Strike bonus")
                 .AddName(Language.Spanish, "La Honda")
-                .AddTooltip(Language.Spanish, "Mantén pulsado para hacer girar un proyectil en una honda de seda de polilla\nSuelta para lanzarlo en la dirección en que se mueve la bolsa\nApunta más allá de la órbita; el destello blanco y el tintineo indican un lanzamiento potente y bien alineado\nLa piedra golpea fuerte, la madera llega más lejos y el cristal deja astillas\nUsa un proyectil cada vez que comienzas a girar")
+                .AddTooltip(Language.Spanish, "Mantén pulsado para hacer girar un proyectil en una honda de seda de polilla\nSuelta para lanzarlo en la dirección en que se mueve la bolsa\nApunta antes de empezar a girar; el destello blanco y el tintineo indican un lanzamiento potente y bien alineado\nLa piedra golpea fuerte, la madera llega más lejos y el cristal deja astillas\nUsa un proyectil cada vez que comienzas a girar")
                 .AddSkillStrike(Language.Spanish, "Suelta durante el destello blanco para lanzar más rápido y obtener el Golpe de Habilidad de tu munición");
             base.SetStaticDefaults();
         }
@@ -60,7 +60,8 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 aim = (Main.MouseWorld - player.MountedCenter).SafeNormalize(Vector2.UnitX * player.direction);
-            float angle = aim.ToRotation() - MathHelper.PiOver2;
+            player.ChangeDir(aim.X < 0f ? -1 : 1);
+            float angle = aim.ToRotation() - (aim.X < 0f ? -1f : 1f) * MathHelper.PiOver2;
             Projectile.NewProjectile(source, player.MountedCenter + angle.ToRotationVector2() * SlingMotion.Radius(0f), new Vector2(velocity.Length() / 11f, 0f),
                 ModContent.ProjectileType<SlingHeld>(), damage, knockback, player.whoAmI, angle, 0f, type);
             return false;
@@ -95,7 +96,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class SlingHeld : ModProjectile
     {
         private float aimAngle;
-        private float sentAim = float.NaN;
+        private float spinDirection = 1f;
         private bool releaseReady;
         private bool released;
         private int releaseTicks;
@@ -115,16 +116,22 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         }
         public override bool? CanDamage() => false;
         public override bool ShouldUpdatePosition() => false;
-        public override void OnSpawn(IEntitySource source) => aimAngle = Projectile.ai[0] + MathHelper.PiOver2;
+        public override void OnSpawn(IEntitySource source)
+        {
+            spinDirection = Main.player[Projectile.owner].direction;
+            aimAngle = Projectile.ai[0] + spinDirection * MathHelper.PiOver2;
+        }
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(aimAngle);
+            writer.Write(spinDirection);
             writer.Write(released);
             writer.Write(releaseTicks);
         }
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             aimAngle = reader.ReadSingle();
+            spinDirection = reader.ReadSingle() < 0f ? -1f : 1f;
             released = reader.ReadBoolean();
             releaseTicks = reader.ReadInt32();
         }
@@ -133,7 +140,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         {
             released = true;
             Projectile.netUpdate = true;
-            Vector2 tangent = (Projectile.ai[0] + MathHelper.PiOver2).ToRotationVector2();
+            Vector2 tangent = (Projectile.ai[0] + spinDirection * MathHelper.PiOver2).ToRotationVector2();
             Vector2 muzzle = Projectile.Center;
             if (!Collision.CanHitLine(player.Center, 1, 1, muzzle, 1, 1))
                 muzzle = player.Center;
@@ -165,7 +172,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                     Projectile.Kill();
                     return;
                 }
-                Projectile.ai[0] += SlingMotion.AngularSpeed(Projectile.ai[1], Projectile.ai[0]) * (1f - releaseTicks / 14f);
+                Projectile.ai[0] += spinDirection * SlingMotion.AngularSpeed(Projectile.ai[1], Projectile.ai[0]) * (1f - releaseTicks / 14f);
                 radius *= 1f - releaseTicks / 16f;
                 releaseReady = false;
             }
@@ -173,24 +180,14 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             {
                 Projectile.ai[1]++;
                 float oldAngle = Projectile.ai[0];
-                Projectile.ai[0] = MathHelper.WrapAngle(oldAngle + SlingMotion.AngularSpeed(Projectile.ai[1], oldAngle));
+                Projectile.ai[0] = MathHelper.WrapAngle(oldAngle + spinDirection * SlingMotion.AngularSpeed(Projectile.ai[1], oldAngle));
                 radius = SlingMotion.Radius(Projectile.ai[1]);
             }
             radial = Projectile.ai[0].ToRotationVector2();
             Projectile.Center = player.MountedCenter + radial * radius;
             if (!released)
             {
-                if (Projectile.owner == Main.myPlayer)
-                {
-                    float desiredAim = (Main.MouseWorld - Projectile.Center).SafeNormalize(radial.RotatedBy(MathHelper.PiOver2)).ToRotation();
-                    if (Projectile.ai[1] % 6f == 0f && (float.IsNaN(sentAim) || Math.Abs(MathHelper.WrapAngle(desiredAim - sentAim)) > 0.06f))
-                    {
-                        sentAim = desiredAim;
-                        Projectile.netUpdate = true;
-                    }
-                    aimAngle = desiredAim;
-                }
-                bool ready = SlingMotion.Ready(Projectile.ai[1], Projectile.ai[0], aimAngle);
+                bool ready = SlingMotion.Ready(Projectile.ai[1], Projectile.ai[0], aimAngle, spinDirection);
                 if (ready && !releaseReady && chimeCooldown == 0)
                 {
                     SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.25f, Pitch = 0.55f }, Projectile.Center);
@@ -202,11 +199,12 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
                     SoundEngine.PlaySound(SoundID.Item1 with { Volume = 0.2f, Pitch = 0.3f + SlingMotion.Charge(Projectile.ai[1]) * 0.3f }, Projectile.Center);
             }
             glow = MathHelper.Lerp(glow, releaseReady ? 1f : 0f, releaseReady ? 0.65f : 0.3f);
+            player.ChangeDir((int)spinDirection);
             player.heldProj = Projectile.whoAmI;
             player.itemTime = player.itemAnimation = 2;
             player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.ai[0] - MathHelper.PiOver2);
             if (releaseReady && Projectile.ai[1] % 3f == 0f)
-                TheSlingVFX.Spark(Projectile.Center, radial.RotatedBy(MathHelper.PiOver2) * 1.5f, 0.2f, Color.White);
+                TheSlingVFX.Spark(Projectile.Center, radial.RotatedBy(spinDirection * MathHelper.PiOver2) * 1.5f, 0.2f, Color.White);
         }
 
         public override void OnKill(int timeLeft)
@@ -219,7 +217,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         {
             Player player = Main.player[Projectile.owner];
             Vector2 radial = Projectile.ai[0].ToRotationVector2();
-            Vector2 tangent = radial.RotatedBy(MathHelper.PiOver2);
+            Vector2 tangent = radial.RotatedBy(spinDirection * MathHelper.PiOver2);
             float opacity = released ? 1f - releaseTicks / 14f : 1f;
             float charge = SlingMotion.Charge(Projectile.ai[1]);
             float radius = Vector2.Distance(Projectile.Center, player.MountedCenter);
@@ -227,7 +225,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             {
                 for (int i = 5; i >= 1; i--)
                 {
-                    float angle = Projectile.ai[0] - i * SlingMotion.AngularSpeed(Projectile.ai[1], Projectile.ai[0]);
+                    float angle = Projectile.ai[0] - i * spinDirection * SlingMotion.AngularSpeed(Projectile.ai[1], Projectile.ai[0]);
                     TheSlingSlugArt.Draw(Main.spriteBatch, player.MountedCenter + angle.ToRotationVector2() * radius - Main.screenPosition, Material,
                         angle, 9f, TheSlingVFX.Additive(TheSlingSlugArt.Tint(Material), (1f - i / 6f) * charge * 0.3f), 0f);
                 }
@@ -261,9 +259,9 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     {
         internal static float Charge(float age) => Math.Clamp(age / 40f, 0f, 1f);
         internal static float Radius(float age) => 24f + 22f * Charge(age);
-        internal static float AngularSpeed(float age, float angle) => 0.062f + 0.05f * Charge(age) + 0.022f * MathF.Sin(angle);
-        internal static bool Ready(float age, float angle, float aim)
-            => age >= 28f && AngularSpeed(age, angle) >= 0.075f && MathF.Cos(angle + MathF.PI * 0.5f - aim) >= 0.9f;
+        internal static float AngularSpeed(float age, float angle) => 0.062f + 0.05f * Charge(age);
+        internal static bool Ready(float age, float angle, float aim, float spin = 1f)
+            => age >= 28f && AngularSpeed(age, angle) >= 0.075f && MathF.Cos(angle + spin * MathF.PI * 0.5f - aim) >= 0.9f;
         internal static float ReleaseSpeed(float age, float angle, bool ready)
             => (5f + AngularSpeed(age, angle) * 75f) * (0.6f + Charge(age) * 0.4f) * (ready ? 1.22f : 1f);
     }
