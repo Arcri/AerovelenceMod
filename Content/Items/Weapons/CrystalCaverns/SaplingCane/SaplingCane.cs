@@ -98,6 +98,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         {
             Player player = Main.player[Projectile.owner];
             if (!player.active || player.dead) { Projectile.Kill(); return; }
+            Projectile.timeLeft = Math.Max(2, Projectile.timeLeft);
             timer++;
             if (!spawned && Projectile.owner == Main.myPlayer)
             {

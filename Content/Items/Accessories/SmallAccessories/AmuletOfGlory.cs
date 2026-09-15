@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
     {
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("AmuletOfGlory", "Hitting enemies increases your movement and mining speed\nEnemies nearby chests will emit light")
+            this.ModifyLocalization("Amulet Of Glory", "Hitting enemies increases your movement and mining speed\nEnemies nearby chests will emit light")
             .AddName(Language.Spanish, "Amuleto de la Gloria").AddTooltip(Language.Spanish, "Golpear enemigos aumenta tu velocidad de movimiento y minería\nLos enemigos cercanos a cofres emitirán luz")
             .AddName(Language.French, "Amulette de Gloire").AddTooltip(Language.French, "Frapper des ennemis augmente votre vitesse de déplacement et d’extraction\nLes ennemis proches des coffres émettront de la lumière")
             .AddName(Language.German, "Amulett des Ruhms").AddTooltip(Language.German, "Das Treffen von Gegnern erhöht deine Bewegungs- und Bergbaugeschwindigkeit\nFeinde in der Nähe von Truhen leuchten")

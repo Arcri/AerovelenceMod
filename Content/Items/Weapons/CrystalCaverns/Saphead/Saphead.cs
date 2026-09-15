@@ -164,11 +164,16 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             Vector2 axis = Projectile.ai[0].ToRotationVector2();
             if (Math.Abs(axis.X) > 0.05f)
                 player.ChangeDir(axis.X > 0f ? 1 : -1);
-            Projectile.Center = player.MountedCenter + axis * orbit.Radius;
-            Projectile.rotation = Projectile.ai[0] - MathHelper.PiOver2;
+            float sway = MathF.Sin(age * 0.035f + Projectile.identity * 0.7f);
+            Vector2 reach = axis * orbit.Radius + Vector2.UnitY * sway * Math.Min(38f, orbit.Radius * 0.28f);
+            if (reach.LengthSquared() > orbit.Radius * orbit.Radius)
+                reach = reach.SafeNormalize(axis) * orbit.Radius;
+            Projectile.Center = player.MountedCenter + reach;
+            axis = reach.SafeNormalize(axis).RotatedBy(sway * 0.07f * Opacity);
+            Projectile.rotation = axis.ToRotation() - MathHelper.PiOver2;
             player.heldProj = Projectile.whoAmI;
             player.itemTime = player.itemAnimation = 2;
-            player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.ai[0] - MathHelper.PiOver2);
+            player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (Projectile.Center - player.MountedCenter).ToRotation() - MathHelper.PiOver2);
             Vector2 mouth = Projectile.Center + axis * 13f;
             if (!Returning && orbit.Ready && Projectile.owner == Main.myPlayer &&
                 Collision.CanHitLine(player.MountedCenter, 1, 1, mouth, 1, 1) && !Collision.SolidCollision(mouth - new Vector2(10f), 20, 20))
@@ -206,7 +211,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override bool PreDraw(ref Color lightColor)
         {
             Player player = Main.player[Projectile.owner];
-            Vector2 axis = Projectile.ai[0].ToRotationVector2();
+            Vector2 axis = (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2();
             Vector2 tangent = axis.RotatedBy(MathHelper.PiOver2) * (Projectile.velocity.X < 0f ? 1f : -1f);
             Texture2D vine = ModContent.Request<Texture2D>(Saphead.HeadTexture + "_Vines").Value;
             Texture2D vineGlow = ModContent.Request<Texture2D>(Saphead.HeadTexture + "_Vines_Glow").Value;
@@ -217,7 +222,10 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
             for (int i = 1; i <= segments; i++)
             {
                 float t = i / (float)segments;
-                Vector2 point = Vector2.Lerp(root, end, t) + tangent * MathF.Sin(t * MathHelper.Pi) * orbit.Radius * 0.14f;
+                float envelope = MathF.Sin(t * MathHelper.Pi);
+                float wave = MathF.Sin(age * 0.035f - t * MathHelper.TwoPi + Projectile.identity * 0.7f);
+                Vector2 point = Vector2.Lerp(root, end, t) + tangent * envelope * orbit.Radius * 0.1f
+                    + Vector2.UnitY * wave * envelope * Math.Min(10f, orbit.Radius * 0.09f);
                 Vector2 delta = point - previous;
                 Rectangle frame = new(0, ((Projectile.identity + i) % 3) * 34, 22, 32);
                 float pulse = MathF.Pow(Math.Max(0f, MathF.Cos(t * 9f - age * 0.16f)), 6f) * orbit.Charge;

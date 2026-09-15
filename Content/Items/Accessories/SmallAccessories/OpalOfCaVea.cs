@@ -16,7 +16,7 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
     {
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("OpalOfCaVea", "Glowing crystals grow on your back every 5 seconds, up to 3\nEnemies take damage if all 3 crystals have spawned")
+            this.ModifyLocalization("Opal Of Ca Vea", "Glowing crystals grow on your back every 5 seconds, up to 3\nEnemies take damage if all 3 crystals have spawned")
             .AddName(Language.Spanish, "Ópalo de Ca Vea").AddTooltip(Language.Spanish, "Cristales brillantes crecen en tu espalda cada 5 segundos, hasta 3\nLos enemigos reciben daño si se han generado los 3 cristales")
             .AddName(Language.French, "Opale de Ca Vea").AddTooltip(Language.French, "Des cristaux lumineux poussent sur votre dos toutes les 5 secondes, jusqu'à 3\nLes ennemis subissent des dégâts si les 3 cristaux sont apparus")
             .AddName(Language.German, "Ca Veas Opal").AddTooltip(Language.German, "Leuchtende Kristalle wachsen alle 5 Sekunden auf deinem Rücken, bis zu 3\nFeinde erleiden Schaden, wenn alle 3 Kristalle erschienen sind")

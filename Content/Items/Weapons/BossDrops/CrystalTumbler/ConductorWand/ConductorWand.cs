@@ -140,7 +140,6 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
                 Vector2 travel = player.MountedCenter + offset - Projectile.Center;
                 Projectile.velocity = travel * .12f;
                 if (Projectile.velocity.Length() > 9) Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * 9;
-                Projectile.velocity = Collision.TileCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, true, true);
                 if (timer % 6 == 0) Projectile.netUpdate = true;
                 if (timer % 30 == 0 && !player.CheckMana(player.HeldItem, 2 + 2 * (sentry ? 1 : captured.Count), true)) { Retire(); return; }
                 player.manaRegenDelay = player.maxRegenDelay;

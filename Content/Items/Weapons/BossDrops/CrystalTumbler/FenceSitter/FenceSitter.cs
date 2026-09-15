@@ -198,17 +198,19 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             Texture2D sword = ModContent.Request<Texture2D>(Texture).Value;
             Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glowmask").Value;
             Vector2 grip = new(sword.Width * 0.42f, sword.Height - 7f);
+            SpriteEffects flip = Projectile.velocity.X < 0f ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            if (flip != SpriteEffects.None) grip.X = sword.Width - grip.X;
             float scale = 68f / (grip.Y - 4f);
             float rotation = Projectile.rotation + MathHelper.PiOver2;
-            Main.EntitySpriteDraw(sword, start, null, lightColor, rotation, grip, scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(sword, start, null, lightColor, rotation, grip, scale, flip);
             int charges = Projectile.ai[0] == 1 ? 4 - stops : displayedCharges;
             int height = Math.Clamp(charges == 1 ? 12 : charges == 2 ? 24 : charges == 3 ? 36 : 50, 0, glow.Height);
             if (charges > 0)
             {
                 Rectangle lit = new(0, 0, glow.Width, height);
                 float pulse = 0.7f + 0.2f * MathF.Sin(Main.GlobalTimeWrappedHourly * 5f);
-                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(FenceSitterVFX.PhaseColor(0), pulse), rotation, grip, scale, SpriteEffects.None);
-                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(Color.White, 0.35f), rotation, grip, scale, SpriteEffects.None);
+                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(FenceSitterVFX.PhaseColor(0), pulse), rotation, grip, scale, flip);
+                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(Color.White, 0.35f), rotation, grip, scale, flip);
             }
             return false;
         }

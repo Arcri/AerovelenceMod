@@ -14,7 +14,7 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
     {
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("CrystalStompers", "Double-Tap Down to perform a crystal stomp")
+            this.ModifyLocalization("Crystal Stompers", "Double-Tap Down to perform a crystal stomp")
             .AddName(Language.Spanish, "Pisadores de Cristal").AddTooltip(Language.Spanish, "Toca dos veces abajo para realizar un pisotón de cristal")
             .AddName(Language.French, "Écraseurs de Cristal").AddTooltip(Language.French, "Appuyez deux fois sur bas pour effectuer un écrasement de cristal")
             .AddName(Language.German, "Kristallstampfer").AddTooltip(Language.German, "Doppeltippen nach unten, um einen Kristallstampfer auszuführen")
@@ -43,62 +43,11 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
             player.moveSpeed += 0.05f;
 
             CrystalStompersPlayer mp = player.GetModPlayer<CrystalStompersPlayer>();
-            if (!mp.DashActive)
-                return;
-
-            if (mp.DashTimer == CrystalStompersPlayer.MAX_DASH_TIMER)
-            {
-                player.velocity.Y = mp.DashVelocity;
-                player.immune = true;
-                player.immuneNoBlink = true;
-                player.immuneTime = 10;
-            }
-
-            Rectangle rectangle = new((int)(player.position.X + player.velocity.X * 0.5 - 4.0), (int)(player.position.Y + player.velocity.Y * 0.5 - 4.0), player.width + 8, player.height + 8);
-            for (int i = 0; i < 200; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.active && !npc.dontTakeDamage && !npc.friendly && player.eocHit != i)
-                {
-                    Rectangle npcRect = npc.getRect();
-                    if (rectangle.Intersects(npcRect) && (npc.noTileCollide || player.CanHit(npc)))
-                    {
-                        if (player.kbGlove)
-                            Item.knockBack *= 2f;
-                        if (player.kbBuff)
-                            Item.knockBack *= 1.5f;
-
-                        int direction = player.direction;
-                        if (player.whoAmI == Main.myPlayer)
-                            player.ApplyDamageToNPC(npc, Item.damage, Item.knockBack, direction, false);
-                        player.velocity.X = -direction * 2;
-                        player.velocity.Y = -8f;
-                        player.immune = true;
-                        player.immuneNoBlink = true;
-                        player.immuneTime = 20;
-                        player.eocHit = i;
-                    }
-                }
-            }
-            player.eocDash = System.Math.Max(0, mp.DashTimer);
-            player.armorEffectDrawShadowEOCShield = true;
-
-            Dust gd = Dust.NewDustDirect(
-                player.position + new Vector2(0, 32),
-                player.width,
-                player.height - 32,
-                ModContent.DustType<GlowPixelCross>(),
-                player.velocity.X * 0.2f,
-                player.velocity.Y * 0.2f,
-                100,
-                Color.DeepSkyBlue,
-                0.5f
-            );
-            gd.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5, preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
-            mp.DashTimer--;
-            mp.DashDelay--;
-            if (mp.DashDelay <= 0)
-                mp.EndStomp();
+            mp.Equipped = true;
+            mp.StompDamage = Item.damage;
+            mp.StompKnockback = Item.knockBack;
+            if (mp.DashActive)
+                player.maxFallSpeed = System.Math.Max(player.maxFallSpeed, mp.DashVelocity);
         }
 
         public override void AddRecipes()
@@ -125,43 +74,79 @@ namespace AerovelenceMod.Content.Items.Accessories.SmallAccessories
         public static readonly int MAX_DASH_DELAY = 50;
         public static readonly int MAX_DASH_TIMER = 35;
 
+        internal bool Equipped;
+        internal int StompDamage;
+        internal float StompKnockback;
+
         public override void ResetEffects()
         {
-            bool dashAccessoryEquipped = false;
-            for (int i = 3; i < 8 + Player.extraAccessorySlots; i++)
-            {
-                Item item = Player.armor[i];
+            Equipped = false;
+            DashDir = Player.whoAmI == Main.myPlayer && Player.controlDown && Player.releaseDown
+                && Player.doubleTapCardinalTimer[DashDown] > 0 && Player.doubleTapCardinalTimer[DashDown] < 15 ? DashDown : -1;
+        }
 
-                if (item.type == ModContent.ItemType<CrystalStompers>())
-                    dashAccessoryEquipped = true;
-            }
-
-            if (!dashAccessoryEquipped || Player.setSolar || Player.mount.Active || Player.dead || Player.CCed || Player.pulley)
+        public override void PreUpdateMovement()
+        {
+            if (!Equipped || Player.setSolar || Player.mount.Active || Player.dead || Player.CCed || Player.pulley)
             {
                 if (DashActive) EndStomp();
                 return;
             }
-            if (DashActive)
-                return;
-
-            if (Player.controlDown && Player.releaseDown && Player.doubleTapCardinalTimer[DashDown] < 15 && !Player.pulley)
+            if (!DashActive && DashDir == DashDown)
             {
-                DashDir = DashDown;
                 DashActive = true;
                 DashTimer = MAX_DASH_TIMER;
                 DashDelay = MAX_DASH_DELAY;
+                Player.jump = 0;
+                Player.velocity.Y = DashVelocity;
+                Player.immune = true;
+                Player.immuneNoBlink = true;
+                Player.immuneTime = System.Math.Max(Player.immuneTime, 10);
+                Player.eocHit = -1;
             }
+            if (!DashActive) return;
+            Player.maxFallSpeed = System.Math.Max(Player.maxFallSpeed, DashVelocity);
+            Rectangle hitbox = new((int)(Player.position.X + Player.velocity.X * 0.5f - 4f),
+                (int)(Player.position.Y + Player.velocity.Y * 0.5f - 4f), Player.width + 8, Player.height + 8);
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (npc.dontTakeDamage || npc.friendly || Player.eocHit == npc.whoAmI || !hitbox.Intersects(npc.getRect())
+                    || (!npc.noTileCollide && !Player.CanHit(npc))) continue;
+                float knockback = StompKnockback * (Player.kbGlove ? 2f : 1f) * (Player.kbBuff ? 1.5f : 1f);
+                int direction = Player.direction;
+                if (Player.whoAmI == Main.myPlayer)
+                    Player.ApplyDamageToNPC(npc, StompDamage, knockback, direction, false);
+                Player.velocity = new Vector2(-direction * 2f, -8f);
+                Player.immune = true;
+                Player.immuneNoBlink = true;
+                Player.immuneTime = System.Math.Max(Player.immuneTime, 20);
+                EndStomp();
+                return;
+            }
+            Player.eocDash = System.Math.Max(0, DashTimer);
+            Player.armorEffectDrawShadowEOCShield = true;
+            if (!Main.dedServ)
+            {
+                Dust dust = Dust.NewDustDirect(Player.position + new Vector2(0f, 32f), Player.width,
+                    System.Math.Max(1, Player.height - 32), ModContent.DustType<GlowPixelCross>(),
+                    Player.velocity.X * 0.2f, Player.velocity.Y * 0.2f, 100, Color.DeepSkyBlue, 0.5f);
+                dust.customData = DustBehaviorUtil.AssignBehavior_GPCBase(rotPower: 0.2f, timeBeforeSlow: 5,
+                    preSlowPower: 0.95f, postSlowPower: 0.89f, velToBeginShrink: 1f, fadePower: 0.9f, shouldFadeColor: false);
+            }
+            DashTimer = System.Math.Max(0, DashTimer - 1);
+            if (--DashDelay <= 0) EndStomp();
         }
 
-        public override void PreUpdate()
+        public override void PostUpdate()
         {
-            if (DashActive && Player.velocity.Y == 0)
+            if (DashActive && Player.velocity.Y == 0f)
                 EndStomp();
         }
 
         internal void EndStomp()
         {
             DashActive = false;
+            DashDir = -1;
             DashDelay = MAX_DASH_DELAY;
             DashTimer = MAX_DASH_TIMER;
             Player.eocDash = 0;

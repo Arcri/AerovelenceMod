@@ -25,6 +25,21 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
         private int shellProgress;
         private float walkClock;
 
+        public override void Load()
+        {
+            if (!Main.dedServ) On_Main.DrawNPCHeadFriendly += DrawMapHead;
+        }
+        public override void Unload()
+        {
+            if (!Main.dedServ) On_Main.DrawNPCHeadFriendly -= DrawMapHead;
+            profile = null;
+        }
+        private static void DrawMapHead(On_Main.orig_DrawNPCHeadFriendly orig, Entity entity, byte alpha, float scale, SpriteEffects effects, int head, float x, float y)
+        {
+            if (entity is NPC { ModNPC: BabyCondurtle }) effects ^= SpriteEffects.FlipHorizontally;
+            orig(entity, alpha, scale, effects, head, x, y);
+        }
+
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Baby Condurtle", "A tiny, humming bundle of crystal and shell. Gentle petting keeps its little sparks happy.")
@@ -150,7 +165,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.BabyCondurtleTownPet
             else if (Math.Abs(NPC.velocity.X) > 0.1f)
             {
                 walkClock += Math.Clamp(Math.Abs(NPC.velocity.X), 0.35f, 1.5f);
-                frame = (int)(walkClock / 6f) % 7;
+                frame = 1 + (int)(walkClock / 6f) % 6;
             }
             else
                 walkClock = 0f;

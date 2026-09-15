@@ -34,6 +34,7 @@ using AerovelenceMod.Content.Items.Tools.Drills;
 using AerovelenceMod.Common.Systems;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Launchers;
 using AerovelenceMod.Content.Items.Weapons.Misc.Ranged.Guns.AdamantitePulsar;
+using AerovelenceMod.Content.Items.Others.Pets;
 
 namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
 {
@@ -470,6 +471,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
                 return;
             int silver = ore.RewardSilver;
             int crystals = ore.RewardCrystals;
+            int specialReward = RollPreHardmodeSpecialReward(player, ore);
             state.cooldown = 20;
             item.stack--;
             if (item.stack == 0) item.TurnToAir();
@@ -478,6 +480,7 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             if (silver >= 100) Reward(player, collector, ItemID.GoldCoin, silver / 100);
             if (silver % 100 > 0) Reward(player, collector, ItemID.SilverCoin, silver % 100);
             Reward(player, collector, ModContent.ItemType<CavernCrystalItem>(), crystals);
+            if (specialReward > 0) Reward(player, collector, specialReward, 1);
             if (Main.netMode == NetmodeID.Server)
             {
                 ModPacket packet = ModContent.GetInstance<RockCollector>().Mod.GetPacket();
@@ -488,6 +491,43 @@ namespace AerovelenceMod.Content.NPCs.TownNPC.RockCollector
             }
             else ShowReward(silver, crystals);
         }
+        private static int RollPreHardmodeSpecialReward(Player player, RareOreCluster ore)
+        {
+            if (ore.RewardTier >= 6 || !Main.rand.NextBool(6))
+                return 0;
+
+            int winch = ModContent.ItemType<RepurposedWinch>();
+            int dynamite = ModContent.ItemType<CrystallineDynamite>();
+            int friend = ModContent.ItemType<FriendOfTheCaverns>();
+            bool hasWinch = HasReward(player, winch);
+            bool hasDynamite = HasReward(player, dynamite);
+            bool hasFriend = HasReward(player, friend);
+
+            int missing = (hasWinch ? 0 : 1) + (hasDynamite ? 0 : 1) + (hasFriend ? 0 : 1);
+            if (missing <= 0)
+                return 0;
+
+            int choice = Main.rand.Next(missing);
+            if (!hasWinch && choice-- == 0)
+                return winch;
+            if (!hasDynamite && choice-- == 0)
+                return dynamite;
+            return friend;
+        }
+
+        private static bool HasReward(Player player, int type)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+                if (player.inventory[i].type == type && player.inventory[i].stack > 0)
+                    return true;
+
+            for (int i = 0; i < player.armor.Length; i++)
+                if (player.armor[i].type == type && player.armor[i].stack > 0)
+                    return true;
+
+            return false;
+        }
+
         private static void Reward(Player player, NPC collector, int type, int stack)
         {
             int index = Item.NewItem(collector.GetSource_GiftOrReward(), player.Hitbox, type, stack, noBroadcast: true);

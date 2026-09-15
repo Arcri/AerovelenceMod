@@ -266,7 +266,7 @@ namespace AerovelenceMod.Content.NPCs.CrystalCaverns
                 State.Walking => (int)(Timer / 8f) % 6,
                 State.Idle => 6 + (int)(Timer / 22f) % 4,
                 State.EnteringShell => 10 + Math.Min(7, (int)(Timer / 4f)),
-                State.Waiting => 17,
+                State.Waiting => 18,
                 State.Shaking => 18 + (int)(Timer / 6f) % 2,
                 State.Discharging => 18 + (int)(Timer / 3f) % 2,
                 State.ExitingShell => 20 + Math.Min(5, (int)(Timer / 5f)),
