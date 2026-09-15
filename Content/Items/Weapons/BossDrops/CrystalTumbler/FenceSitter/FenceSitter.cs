@@ -22,10 +22,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
     public class FenceSitter : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/FenceSitter/FenceSitter";
-        private const string Description = "Each swing strikes one enemy with a weighty stop\nLand four consecutive swings to unleash four lightning fences on the fifth\nEach fence stops at terrain and strikes each enemy twice\nMissing or changing weapons breaks the streak";
+        private const string Description = "Land four consecutive swings to unleash lighting beams on the fifth";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Fence Sitter", Description).AddSkillStrike(Language.Default, "Hit with the fifth swing's lightning fences");
+            this.ModifyLocalization("Fence Sitter", Description).AddSkillStrike(Language.Default, "Hit with the fifth swing's lightning beams");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

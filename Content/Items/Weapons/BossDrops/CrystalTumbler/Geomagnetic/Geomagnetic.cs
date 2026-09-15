@@ -23,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
     public class Geomagnetic : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/Geomagnetic/Geomagnetic";
-        private const string Description = "Fires a traveling bolt of geomagnetic lightning\nAt or below 25% mana, casts a hovering sphere that releases three bolts\nThe sphere electrifies enemies on contact";
+        private const string Description = "Fires a bolt of magnetic lightning\nBelow 25% mana, cast a sphere that releases three bolts at once";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Geomagnetic", Description).AddSkillStrike(Language.Default, "Strike an enemy with the low-mana sphere itself");
+            this.ModifyLocalization("Geomagnetic", Description).AddSkillStrike(Language.Default, "Strike an enemy with the sphere itself");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

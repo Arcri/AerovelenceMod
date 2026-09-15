@@ -23,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
     public class TumblerAccelerator : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/TumblerAccelerator/TumblerAccelerator";
-        private const string Description = "Catapults tiny tumblers without ammunition\nRight click to suspend airborne tumblers, charge them, and launch them toward your cursor\nPaired impacts electrify enemies";
+        private const string Description = "Catapults tiny tumblers without ammunition\nRight click to launch mid-flight tumblers toward your cursor";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Tumbler Accelerator", Description).AddSkillStrike(Language.Default, "Hit the same enemy with two different tumblers within a third of a second");
+            this.ModifyLocalization("Tumbler Accelerator", Description).AddSkillStrike(Language.Default, "Hit the same enemy with two different tumblers quickly to Skill Strike");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

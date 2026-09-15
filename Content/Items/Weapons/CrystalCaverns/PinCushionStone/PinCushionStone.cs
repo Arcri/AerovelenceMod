@@ -23,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/PinCushionStone/PinCushionStone";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Pin-Cushion Stone", "First throw launches a floating pin-cushion stone\nFurther throws fire darts that pierce one enemy\nDarts lodge in the stone and nudge it, empowering its next impacts\nEvery third empowered collision rebounds much harder\nAfter 10 seconds without a dart, the stone dissolves and releases its pins")
+            this.ModifyLocalization("Pin-Cushion Stone", "First throw launches a floating stone\nFurther throws fire darts that can lodge into the stone\nThe stone can be moved by darts, and inflicts damage on hitting enemies\nAfter 10 seconds without action, the stone dissolves and releases its pins")
                 .AddName(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "Piedra Alfiletero")
                 .AddTooltip(global::AerovelenceMod.Common.Systems.Language.Language.Spanish, "El primer lanzamiento crea una piedra flotante\nLos siguientes lanzan dardos que atraviesan a un enemigo\nLos dardos se incrustan en la piedra y la empujan, potenciando sus impactos\nCada tercer impacto potenciado rebota con más fuerza\nTras 10 segundos sin recibir dardos, la piedra libera sus púas");
-            this.AddSkillStrike(Language.Default, "Strike enemies with the stone shortly after pushing it with a dart");
+            this.AddSkillStrike(Language.Default, "Strike enemies with the stone shortly after pushing it with a dart to Skill Strike");
             this.AddSkillStrike(Language.Spanish, "Golpea a los enemigos con la piedra poco después de empujarla con un dardo");
             base.SetStaticDefaults();
         }

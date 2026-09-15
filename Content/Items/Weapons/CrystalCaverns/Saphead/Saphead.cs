@@ -19,13 +19,13 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class Saphead : TranslatableModItem
     {
         internal const string HeadTexture = "AerovelenceMod/Content/NPCs/CrystalCaverns/Sapper";
-        private const string EnglishTooltip = "Guide a living sapper head toward the cursor on a flexible stem\nReaches up to 10 tiles; bring it closer to spout crystal fog faster\nThe stem glows and the flower swells before each puff\nConsumes 5 mana per puff; the initial cast pays for the first\nRelease to coil the stem back into your hand\n'A severed sapper stem, improbably still alive'";
+        private const string EnglishTooltip = "Spin a sapper head toward the cursor\nRegularly spouts crystal fog; Pace quickens the closer it is to you\nConsumes 5 mana per puff";
         public override string Texture => HeadTexture;
 
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Saphead", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Enemies caught in its crystal fog")
+                .AddSkillStrike(Language.Default, "Crystal fog skill strikes")
                 .AddName(Language.Spanish, "Cabeza de Savia")
                 .AddTooltip(Language.Spanish, "Guía una cabeza viva de Sapper hacia el cursor con un tallo flexible\nAlcanza hasta 10 bloques; acércala para expulsar niebla de cristal más rápido\nEl tallo brilla y la flor se hincha antes de cada bocanada\nConsume 5 de maná por bocanada; el lanzamiento inicial paga la primera\nSuelta para recoger el tallo en tu mano\n'Un tallo de Sapper cortado que, increíblemente, sigue vivo'")
                 .AddSkillStrike(Language.Spanish, "Enemigos atrapados en su niebla de cristal");

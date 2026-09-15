@@ -18,11 +18,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class BluntJavelin : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/BluntJavelin/BluntJavelin";
-        private const string EnglishTooltip = "A heavy cavern-stone javelin that breaks apart on impact";
+        private const string EnglishTooltip = "A heavy cavern-stone javelin that shatters on impact";
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Blunt Javelin", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Skill Strikes while falling steeply downward")
+                .AddSkillStrike(Language.Default, "Skill Strikes while falling steeply downwards")
                 .AddName(Language.Spanish, "Jabalina Roma");
             base.SetStaticDefaults();
         }

@@ -35,6 +35,8 @@ namespace AerovelenceMod.Content.Projectiles
 
             public Projectile Projectile;
             public NPC Npc;
+            public Vector2 WorldOrigin;
+            public Vector2 WorldTarget;
 
             public bool HasStaticUpdated = false;
             public int StaticTimer = 0;
@@ -110,6 +112,38 @@ namespace AerovelenceMod.Content.Projectiles
                     case LightningStyle.Static:
                         DisplacementIntensity = 1.5f;
                         NoiseFrequency = 1.0f;
+                        StaticMaxTime = 60;
+                        break;
+                    default:
+                        DisplacementIntensity = 1.0f;
+                        NoiseFrequency = 0.5f;
+                        break;
+                }
+            }
+
+            public LightningData(Vector2 worldOrigin, Vector2 worldTarget, LightningStyle style = LightningStyle.Default)
+            {
+                WorldOrigin = worldOrigin;
+                WorldTarget = worldTarget;
+                Style = style;
+
+                switch (Style)
+                {
+                    case LightningStyle.Jagged:
+                        DisplacementIntensity = 0.5f;
+                        NoiseFrequency = 10f;
+                        break;
+                    case LightningStyle.Smooth:
+                        DisplacementIntensity = 0.5f;
+                        NoiseFrequency = 0.3f;
+                        break;
+                    case LightningStyle.Chaotic:
+                        DisplacementIntensity = 3.5f;
+                        NoiseFrequency = 1.8f;
+                        break;
+                    case LightningStyle.Static:
+                        DisplacementIntensity = 8.5f;
+                        NoiseFrequency = 7.0f;
                         StaticMaxTime = 60;
                         break;
                     default:
@@ -455,7 +489,7 @@ namespace AerovelenceMod.Content.Projectiles
                 float flashIntensity = 0f;
                 int flashDuration = 50;
 
-                if (data.Style != LightningStyle.Static)
+                if (data.Style != LightningStyle.Static && data.Projectile != null)
                 {
                     float spawnProgress = 1f - (data.Projectile.timeLeft / 30f);
                     flashIntensity = (float)Math.Pow(1f - spawnProgress, 2);

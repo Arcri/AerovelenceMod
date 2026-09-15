@@ -18,11 +18,11 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class SaplingCane : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/SaplingCane/SaplingCane";
-        private const string EnglishTooltip = "Plants three baby sappers using one sentry slot\nHold right click to guide them in short hops and designate enemies\nThey snap at nearby foes and return to their patch when left alone\nBites against your designated summon target deal Skill Strikes";
+        private const string EnglishTooltip = "Plants three baby sappers at once\nHold right click to guide them to your cursor\nThe sap-lings target the nearest enemy to your cursor when guided";
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("Sap-ling Cane", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Bite the enemy designated as your summon target")
+                .AddSkillStrike(Language.Default, "Skill Strikes when hitting your targetted enemy")
                 .AddName(Language.Spanish, "Bastón de Brotes")
                 .AddTooltip(Language.Spanish, "Planta tres pequeños Sappers usando un espacio de centinela\nMantén pulsado el botón derecho para guiarlos con pequeños saltos y designar enemigos\nMuerden a los enemigos cercanos y regresan a su sitio al dejarlos solos\nLos mordiscos contra el objetivo designado para tus invocaciones causan Golpes de Habilidad")
                 .AddSkillStrike(Language.Spanish, "Muerde al enemigo designado como objetivo de tus invocaciones");

@@ -18,7 +18,7 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
     public class Shattershot : TranslatableModItem
     {
         internal const string GunTexture = "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/Shattershot/Shattershot";
-        private const string EnglishTooltip = "Blasts four heavy pieces of flint and gravel in a wide spread\nConsumes one stone block or cavern stone per blast\nCavern stone fires glowing gravel and sometimes an extra white-hot crystal fragment";
+        private const string EnglishTooltip = "Blasts pieces of flint and gravel in a wide spread\nConsumes one stone block or cavern stone per blast\nCavern stone fires glowing gravel and sometimes an extra white-hot crystal fragment";
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/CrystalCaverns/Shattershot/Shattershot";
 
         public override void SetStaticDefaults()

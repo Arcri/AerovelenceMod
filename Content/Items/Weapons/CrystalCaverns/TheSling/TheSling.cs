@@ -18,13 +18,13 @@ namespace AerovelenceMod.Content.Items.Weapons.CrystalCaverns
 {
     public class TheSling : TranslatableModItem
     {
-        private const string EnglishTooltip = "Hold to wind up a slug in a moth-silk sling\nRelease to throw in the direction the pouch is traveling\nAim before winding up; the white flash and chime mark a powerful, well-aligned throw\nStone slugs hit hard, wood flies farther, and crystal leaves splinters\nUses one slug per wind-up";
+        private const string EnglishTooltip = "Hold to wind up a slug\nRelease to throw in the direction the pouch is traveling\nStone slugs hit hard, wood flies farther, and crystal leaves splinters";
         public override string Texture => SlingArt.PouchTexture;
 
         public override void SetStaticDefaults()
         {
             this.ModifyLocalization("The Sling", EnglishTooltip)
-                .AddSkillStrike(Language.Default, "Release during the white flash for a faster throw and your slug's Skill Strike bonus")
+                .AddSkillStrike(Language.Default, "Skill Strike by releasing at the right time, indicated by a white flash")
                 .AddName(Language.Spanish, "La Honda")
                 .AddTooltip(Language.Spanish, "Mantén pulsado para hacer girar un proyectil en una honda de seda de polilla\nSuelta para lanzarlo en la dirección en que se mueve la bolsa\nApunta antes de empezar a girar; el destello blanco y el tintineo indican un lanzamiento potente y bien alineado\nLa piedra golpea fuerte, la madera llega más lejos y el cristal deja astillas\nUsa un proyectil cada vez que comienzas a girar")
                 .AddSkillStrike(Language.Spanish, "Suelta durante el destello blanco para lanzar más rápido y obtener el Golpe de Habilidad de tu munición");
