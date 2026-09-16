@@ -25,7 +25,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
         private const string Description = "Land four consecutive swings to unleash lighting beams on the fifth";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Fence Sitter", Description).AddSkillStrike(Language.Default, "Hit with the fifth swing's lightning beams");
+            this.ModifyLocalization("Fence Sitter", Description).AddSkillStrike(Language.Default, "The fifth swing's beams Skill Strike");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -51,6 +51,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             Item.value = Item.sellPrice(gold: 1);
         }
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] == 0;
+        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            Texture2D worldSprite = ModContent.Request<Texture2D>(Texture + "_Glowmask").Value;
+            spriteBatch.Draw(worldSprite, Item.Center - Main.screenPosition, null, Color.White, rotation, worldSprite.Size() * .5f, scale, SpriteEffects.None, 0f);
+            return false;
+        }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             FenceSitterPlayer state = player.GetModPlayer<FenceSitterPlayer>();
@@ -67,7 +73,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             if (charges <= 0)
                 return;
             Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glowmask").Value;
-            Rectangle lit = new(0, 0, glow.Width, Math.Min(glow.Height, charges == 1 ? 12 : charges == 2 ? 24 : charges == 3 ? 36 : 50));
+            Rectangle lit = new(0, 0, glow.Width, FenceSitterVFX.ChargeHeight(glow, charges));
             spriteBatch.Draw(glow, position, lit, FenceSitterVFX.Glow(Color.White, 0.7f), 0f, origin, scale, SpriteEffects.None, 0f);
         }
 
@@ -86,29 +92,32 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
 
     public class FenceSitterSwing : ModProjectile
     {
-        public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/FenceSitter/FenceSitter";
+        public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/FenceSitter/FenceSitterHeld";
         private float progress;
         private int pause;
-        private int stops;
+        private int fieldTimer;
         private int displayedCharges;
         private bool hit;
+        private bool fieldStarted;
         private Vector2 tip;
         private Vector2 previousTip;
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.Write(progress);
             writer.Write(pause);
-            writer.Write(stops);
+            writer.Write(fieldTimer);
             writer.Write(displayedCharges);
             writer.Write(hit);
+            writer.Write(fieldStarted);
         }
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             progress = reader.ReadSingle();
             pause = reader.ReadInt32();
-            stops = reader.ReadInt32();
+            fieldTimer = reader.ReadInt32();
             displayedCharges = reader.ReadInt32();
             hit = reader.ReadBoolean();
+            fieldStarted = reader.ReadBoolean();
         }
         private float Ease(float t) => t <= 0 ? 0 : t >= 1 ? 1 : t < .5f ? MathF.Pow(2, 16 * t - 8) / 2 : (2 - MathF.Pow(2, -16 * t + 8)) / 2;
         public override void SetDefaults()
@@ -139,37 +148,100 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
                     Projectile.netUpdate = true;
                 }
             }
-            if (progress == 0) SoundEngine.PlaySound(SoundID.Item1 with { Volume = .7f }, player.Center);
-            if (pause > 0) pause--;
+            float speed = player.GetTotalAttackSpeed(DamageClass.Melee) / 64f;
+            if (Projectile.ai[0] == 1)
+            {
+                if (!fieldStarted && Projectile.owner == Main.myPlayer)
+                {
+                    Vector2 aim = GetSpecialAim(player);
+                    if (Vector2.Dot(Projectile.velocity.SafeNormalize(aim), aim) < .999f) Projectile.netUpdate = true;
+                    Projectile.velocity = aim;
+                }
+
+                int facing = Projectile.velocity.X < 0f ? -1 : 1;
+                player.direction = facing;
+                float finalRotation = Projectile.velocity.ToRotation() - facing * MathHelper.PiOver2;
+                Vector2 finalCenter = player.MountedCenter + new Vector2(facing * 3f, -3f);
+
+                if (!fieldStarted)
+                {
+                    progress = Math.Min(1f, progress + speed * 1.35f);
+                    float pose = MathHelper.SmoothStep(0f, 1f, progress);
+                    float startRotation = finalRotation + facing * .92f;
+                    Projectile.rotation = startRotation + MathHelper.WrapAngle(finalRotation - startRotation) * pose;
+                    Projectile.Center = Vector2.Lerp(player.MountedCenter + new Vector2(-facing * 11f, 19f), finalCenter, pose);
+
+                    if (progress >= 1f)
+                    {
+                        Projectile.rotation = finalRotation;
+                        Projectile.Center = finalCenter;
+                        fieldStarted = true;
+                        fieldTimer = 76;
+                        SpawnElectricField(player);
+                        Projectile.netUpdate = true;
+                    }
+                }
+                else
+                {
+                    Projectile.rotation = finalRotation;
+                    Projectile.Center = finalCenter;
+                    if (fieldTimer > 0) fieldTimer--;
+                    else { Projectile.Kill(); return; }
+                }
+            }
             else
             {
-                float next = Math.Min(1, progress + player.GetTotalAttackSpeed(DamageClass.Melee) / 64);
-                float stop = (stops + 1) * .2f;
-                if (Projectile.ai[0] == 1 && stops < 4 && Ease(next) >= stop)
-                {
-                    float low = progress, high = next;
-                    for (int i = 0; i < 16; i++) { float mid = (low + high) / 2; if (Ease(mid) < stop) low = mid; else high = mid; }
-                    next = high;
-                    stops++;
-                    pause = 8;
-                    Vector2 axis = Projectile.velocity.SafeNormalize(Vector2.UnitX);
-                    Vector2 fenceStart = player.MountedCenter + axis * 20f + axis.RotatedBy(MathHelper.PiOver2) * ((stops - 2.5f) * 14f);
-                    if (!Collision.CanHitLine(player.MountedCenter, 1, 1, fenceStart, 1, 1)) fenceStart = player.MountedCenter;
-                    if (Projectile.owner == Main.myPlayer)
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), fenceStart, axis, ModContent.ProjectileType<FenceSitterBeam>(), (int)(Projectile.damage * .65f), 2, Projectile.owner);
-                    SoundEngine.PlaySound(SoundID.Item93 with { Volume = .35f, Pitch = stops * .1f }, player.Center);
-                }
-                progress = next;
+                if (progress == 0) SoundEngine.PlaySound(SoundID.Item1 with { Volume = .7f }, player.Center);
+                if (pause > 0) pause--;
+                else progress = Math.Min(1f, progress + speed);
+                Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Lerp(-2.35f, 2.35f, Ease(progress)) * Projectile.ai[1];
+                Projectile.Center = player.MountedCenter;
+                player.direction = Projectile.velocity.X >= 0 ? 1 : -1;
             }
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.Lerp(-2.35f, 2.35f, Ease(progress)) * Projectile.ai[1];
-            Projectile.Center = player.MountedCenter;
             previousTip = tip == Vector2.Zero ? Projectile.Center : tip;
             tip = Projectile.Center + Projectile.rotation.ToRotationVector2() * 68;
-            player.direction = Projectile.velocity.X >= 0 ? 1 : -1;
             player.heldProj = Projectile.whoAmI;
             player.itemTime = player.itemAnimation = 2;
             player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-            if (progress >= 1) Projectile.Kill();
+            if (Projectile.ai[0] == 0 && progress >= 1) Projectile.Kill();
+        }
+        private Vector2 GetSpecialAim(Player player)
+        {
+            Vector2 toMouse = Main.MouseWorld - player.MountedCenter;
+            int facing = toMouse.X < -12f ? -1 : toMouse.X > 12f ? 1 : Projectile.ai[1] < 0f ? -1 : 1;
+            float baseAngle = facing > 0 ? 0f : MathHelper.Pi;
+            float relative = MathHelper.WrapAngle(toMouse.SafeNormalize(Vector2.UnitX * facing).ToRotation() - baseAngle);
+            relative = MathHelper.Clamp(relative, -.7f, .7f);
+            Projectile.ai[1] = facing;
+            return (baseAngle + relative).ToRotationVector2();
+        }
+        private void SpawnElectricField(Player player)
+        {
+            Vector2 axis = Projectile.velocity.SafeNormalize(Vector2.UnitX * player.direction);
+            if (Projectile.owner == Main.myPlayer)
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 fenceStart = CrystalWorldPosition(i);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), fenceStart, axis, ModContent.ProjectileType<FenceSitterBeam>(), (int)(Projectile.damage * .65f), 2f, Projectile.owner);
+                    for (int k = 0; k < 4; k++) FenceSitterVFX.SpawnSpark(fenceStart, axis * Main.rand.NextFloat(.5f, 2.2f) + Main.rand.NextVector2Circular(1.2f, 1.2f), FenceSitterVFX.PhaseColor(0), .14f);
+                }
+            SoundEngine.PlaySound(SoundID.Item93 with { Volume = .5f, Pitch = .18f }, player.Center);
+        }
+        private Vector2 CrystalWorldPosition(int index)
+        {
+            Vector2 pixel = index switch
+            {
+                0 => new Vector2(31f, 6f),
+                1 => new Vector2(33f, 19f),
+                2 => new Vector2(31f, 31f),
+                _ => new Vector2(29f, 45f)
+            };
+            const float width = 34f;
+            const float height = 74f;
+            Vector2 grip = new(width * .42f, height - 7f);
+            float scale = 68f / (grip.Y - 4f);
+            Vector2 local = new((pixel.X - grip.X) * (Projectile.velocity.X < 0f ? -1f : 1f), pixel.Y - grip.Y);
+            return Projectile.Center + (local * scale).RotatedBy(Projectile.rotation + MathHelper.PiOver2);
         }
         public override bool? CanDamage() => Projectile.ai[0] == 0 && !hit && Ease(progress) > .12f && Ease(progress) < .88f ? null : false;
         public override bool? CanHitNPC(NPC target) => hit || Projectile.ai[0] == 1 ? false : null;
@@ -202,15 +274,17 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             if (flip != SpriteEffects.None) grip.X = sword.Width - grip.X;
             float scale = 68f / (grip.Y - 4f);
             float rotation = Projectile.rotation + MathHelper.PiOver2;
-            Main.EntitySpriteDraw(sword, start, null, lightColor, rotation, grip, scale, flip);
-            int charges = Projectile.ai[0] == 1 ? 4 - stops : displayedCharges;
-            int height = Math.Clamp(charges == 1 ? 12 : charges == 2 ? 24 : charges == 3 ? 36 : 50, 0, glow.Height);
+            float drawOpacity = Projectile.ai[0] == 1 && !fieldStarted ? MathHelper.SmoothStep(.25f, 1f, MathHelper.Clamp(progress * 3f, 0f, 1f)) : 1f;
+            Main.EntitySpriteDraw(sword, start, null, lightColor * drawOpacity, rotation, grip, scale, flip);
+            int charges = displayedCharges;
+            if (Projectile.ai[0] == 1) charges = !fieldStarted ? 4 : fieldTimer > 0 ? Math.Clamp((int)Math.Ceiling(fieldTimer / 19f), 1, 4) : 0;
+            int height = FenceSitterVFX.ChargeHeight(glow, charges);
             if (charges > 0)
             {
                 Rectangle lit = new(0, 0, glow.Width, height);
                 float pulse = 0.7f + 0.2f * MathF.Sin(Main.GlobalTimeWrappedHourly * 5f);
-                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(FenceSitterVFX.PhaseColor(0), pulse), rotation, grip, scale, flip);
-                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(Color.White, 0.35f), rotation, grip, scale, flip);
+                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(FenceSitterVFX.PhaseColor(0), pulse * drawOpacity), rotation, grip, scale, flip);
+                Main.EntitySpriteDraw(glow, start, lit, FenceSitterVFX.Glow(Color.White, 0.35f * drawOpacity), rotation, grip, scale, flip);
             }
             return false;
         }
@@ -255,6 +329,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             Vector2 end = Projectile.Center + Projectile.velocity * length;
             float fade = Math.Min(1, Projectile.timeLeft / 12f);
             FenceSitterVFX.DrawElectricLine(Main.spriteBatch, Projectile.Center - Main.screenPosition, end - Main.screenPosition, FenceSitterVFX.PhaseColor(0), fade, 24, Projectile.identity * 13, 2.2f);
+            FenceSitterVFX.DrawCorona(Main.spriteBatch, Projectile.Center - Main.screenPosition, 10, FenceSitterVFX.PhaseColor(0), fade * .5f, Projectile.identity);
             FenceSitterVFX.DrawCorona(Main.spriteBatch, end - Main.screenPosition, 10, FenceSitterVFX.PhaseColor(0), fade * .5f, Projectile.identity);
             return false;
         }
@@ -266,6 +341,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
 
     internal static class FenceSitterVFX
     {
+        internal static int ChargeHeight(Texture2D texture, int charges) => Math.Clamp((int)MathF.Ceiling(texture.Height * Math.Clamp(charges, 0, 4) / 4f), 0, texture.Height);
         internal static Color Glow(Color color, float opacity = 1f)
             => color with { A = 0 } * MathHelper.Clamp(opacity, 0f, 1f);
         public static void SpawnSpark(Vector2 position, Vector2 velocity, Color color, float scale = 0.2f)
