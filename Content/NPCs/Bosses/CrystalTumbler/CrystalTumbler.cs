@@ -290,8 +290,6 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
             StateTimer++;
             if (IsServer && StateTimer % 45 == 0)
                 NPC.netUpdate = true;
-            if (State is not (TumblerState.Despawn or TumblerState.Death) && Target.active && !Target.dead)
-                Target.AddBuff(ModContent.BuffType<FearsomeFoe>(), 2);
         }
 
         private void SpawnBehavior()
@@ -1227,6 +1225,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.CrystalTumbler
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+			npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Content.Tiles.Relics.CrystalTumblerRelicItem>()));
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Content.Items.TreasureBags.CrystalTumblerBag>()));
             LeadingConditionRule normal = new LeadingConditionRule(new Conditions.NotExpert());
             normal.OnSuccess(ItemDropRule.OneFromOptions(1, Content.Items.TreasureBags.CrystalTumblerBag.Weapons));

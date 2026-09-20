@@ -83,7 +83,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             //Main.spriteBatch.End();
             //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
             
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX)), null, newPink with { A = 0 } * 0.8f, Projectile.rotation, Tex.Size() / 2, vscale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX), null, newPink with { A = 0 } * 0.8f, Projectile.rotation, Tex.Size() / 2, vscale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, null, pinkToUse with { A = 0 } * 0.65f, Projectile.rotation, softGlow.Size() / 2, vscale3, SpriteEffects.None, 0f);
 
             //Set up glowy shader 
@@ -397,7 +397,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Color pinkToUse = new Color(255, 25, 155);
 
             var softGlow = Mod.Assets.Request<Texture2D>("Assets/DiamondGlow").Value;
-            var Tex = Mod.Assets.Request<Texture2D>("Content/Items/Weapons/Misc/Ranged/Guns/AdamantitePulseShot").Value;
+            var Tex = Mod.Assets.Request<Texture2D>("Assets/Flare/AdamantitePulseShot").Value;
 
             Vector2 scale1 = new Vector2(0.56f, Projectile.velocity.Length() * 0.1f) * 0.85f;
             Vector2 scale2 = new Vector2(0.3f, Projectile.velocity.Length() * 0.1f) * 0.85f;
@@ -407,7 +407,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Main.GameViewMatrix.TransformationMatrix);
-            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + (Projectile.velocity.SafeNormalize(Vector2.UnitX)), Tex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, Tex.Size() / 2, scale1, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(Tex, Projectile.Center - Main.screenPosition + Projectile.velocity.SafeNormalize(Vector2.UnitX), Tex.Frame(1, 1, 0, 0), Color.DeepPink, Projectile.rotation, Tex.Size() / 2, scale1, SpriteEffects.None, 0f);
 
             Main.spriteBatch.Draw(softGlow, Projectile.Center - Main.screenPosition, softGlow.Frame(1, 1, 0, 0), pinkToUse * 0.75f, Projectile.rotation, softGlow.Size() / 2, scale3, SpriteEffects.None, 0f);
 
@@ -584,7 +584,7 @@ namespace AerovelenceMod.Content.NPCs.Bosses.Cyvercry
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation + MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
             Main.spriteBatch.Draw(glow3, Projectile.Center - Main.screenPosition + Main.rand.NextVector2Circular(4f, 4f) + off, null, Color.White, Projectile.rotation - MathHelper.PiOver2, glow3.Size() / 2, newScale3, SpriteEffects.FlipVertically, 0f);
 
-            Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/Slash/KennySlashHalfBig").Value;
+            Texture2D slash = Mod.Assets.Request<Texture2D>("Assets/ImpactTextures/KennySlashHalfBig").Value;
             float slashOpacity = MathF.Pow(MathF.Sin(MathF.PI * progress), 2);
             Vector2 slashScale = new Vector2(1f, 2f) * 1.5f * slashOpacity * 0.75f;
             Main.spriteBatch.Draw(slash, Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * (130f * 0.75f), null, Color.Lerp(Color.DeepPink, Color.HotPink, 0.35f) * slashOpacity, Projectile.rotation, slash.Size() / 2f, slashScale, SpriteEffects.FlipHorizontally, 0f);

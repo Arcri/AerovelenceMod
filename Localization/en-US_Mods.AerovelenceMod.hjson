@@ -209,6 +209,11 @@ Buffs: {
 		DisplayName: On the Rocks
 		Description: 4% increased melee Skill Strike damage
 	}
+
+	FriendOfTheCavernsBuff: {
+		DisplayName: Friend Of The Caverns Buff
+		Description: Mods.AerovelenceMod.Buffs.FriendOfTheCavernsBuff.Description
+	}
 }
 
 Items: {
@@ -1707,6 +1712,72 @@ Items: {
 			'''
 		DisplayName: Silken Scarf
 	}
+
+	BuildersPermit: {
+		DisplayName: Builder's Permit
+		Tooltip:
+			'''
+			+50% building and placement speed
+			+1 max sentry
+			'''
+	}
+
+	PileOfContracts: {
+		DisplayName: Pile of Contracts
+		Tooltip:
+			'''
+			+4% summon damage
+			Your minions are contractually obligated to crit
+			Minion critical strikes now deal 5% more than base damage
+			'''
+	}
+
+	RepurposedWinch: {
+		DisplayName: Repurposed Winch
+		Tooltip:
+			'''
+			Whips can no longer autoswing
+			Hold use to wind up, then release to attack
+			Quick attacks have slightly reduced range
+			Charging increases whip range and damage, up to 35% range and 50% damage
+			'''
+	}
+
+	CrystallineDynamite: {
+		DisplayName: Crystalline Dynamite
+		Tooltip:
+			'''
+			A reusable stick of dynamite
+			The blast scatters crystal fragments that remagnetize toward you
+			Reforms 30 seconds after being thrown
+			'''
+	}
+
+	MimikosMirror: {
+		DisplayName: Mimiko's Mirror
+		Tooltip:
+			'''
+			Reflects magical light to banish evil
+			Hold to scatter five rays of demonite light
+			The rays periodically align, flash three times, then scatter again
+			Consumes 10 mana per second while channeling
+			'''
+	}
+
+	HellfireBullet: {
+		DisplayName: Hellfire Bullet
+		Tooltip: ""
+	}
+
+	FriendOfTheCaverns: {
+		DisplayName: Friend Of The Caverns
+		Tooltip: ""
+	}
+
+	CyvercryBag: {
+		DisplayName: Treasure Bag (Cyvercry)
+		Tooltip: Right click to open
+	}
 }
 
 Projectiles: {
@@ -2235,6 +2306,11 @@ Projectiles: {
 	CondurtleArc.DisplayName: Condurtle Arc
 	CondurtleShard.DisplayName: Condurtle Shard
 	CondurtleSpark.DisplayName: Condurtle Spark
+	HellfireBulletFlare.DisplayName: Hellfire Bullet Flare
+	HellfireBulletProjectile.DisplayName: Hellfire Bullet Projectile
+	FriendOfTheCavernsPet.DisplayName: Friend Of The Caverns Pet
+	CrystallineDynamiteShard.DisplayName: Crystalline Dynamite Shard
+	MimikosMirrorHeld.DisplayName: Mimikos Mirror Held
 }
 
 Configs: {
@@ -2396,6 +2472,13 @@ ItemName: {
 	AdamantiteSuperCluster: Giant Super Adamantite
 	AdamantiteCluster: Super Adamantite
 	SilkenScarf: Silken Scarf
+	BuildersPermit: Builder's Permit
+	PileOfContracts: Pile of Contracts
+	RepurposedWinch: Repurposed Winch
+	HellfireBullet: Hellfire Bullet
+	CrystallineDynamite: Crystalline Dynamite
+	MimikosMirror: Mimiko's Mirror
+	CyvercryBag: Treasure Bag (Cyvercry)
 }
 
 ItemTooltip: {
@@ -2881,6 +2964,43 @@ ItemTooltip: {
 		An ancient scarf of crystal moth silk, interlaced with crystal fibers
 		The moths refuse to eat it. Apart from the dust, it looks perfectly fine!
 		'''
+	BuildersPermit:
+		'''
+		+50% building and placement speed
+		+1 max sentry
+		'''
+	PileOfContracts:
+		'''
+		+4% summon damage
+		Your minions are contractually obligated to crit
+		Minion critical strikes now deal 5% more than base damage
+		'''
+	RepurposedWinch:
+		'''
+		Whips can no longer autoswing
+		Hold use to wind up, then release to attack
+		Quick attacks have slightly reduced range
+		Charging increases whip range and damage, up to 35% range and 50% damage
+		'''
+	HellfireBullet:
+		'''
+		Pierces one enemy and sets them on fire
+		Firing creates a short-lived superheated flare behind the bullet
+		'''
+	CrystallineDynamite:
+		'''
+		A reusable stick of dynamite
+		The blast scatters crystal fragments that remagnetize toward you
+		Reforms 30 seconds after being thrown
+		'''
+	MimikosMirror:
+		'''
+		Reflects magical light to banish evil
+		Hold to scatter five rays of demonite light
+		The rays periodically align, flash three times, then scatter again
+		Consumes 10 mana per second while channeling
+		'''
+	CyvercryBag: Right click to open
 }
 
 NPCName: {
@@ -3886,4 +4006,70 @@ TungstenCluster: {
 		Turn in to the Rock Collector for 65 silver coins and 5 cavern crystals
 		Hold the specimen to choose it; favorite it to keep it
 		'''
+}
+
+BuildersPermit: {
+	DisplayName: Builder's Permit
+	Tooltip:
+		'''
+		+50% building and placement speed
+		+1 max sentry
+		'''
+}
+
+PileOfContracts: {
+	DisplayName: Pile of Contracts
+	Tooltip:
+		'''
+		+4% summon damage
+		Your minions are contractually obligated to crit
+		Minion critical strikes now deal 5% more than base damage
+		'''
+}
+
+RepurposedWinch: {
+	DisplayName: Repurposed Winch
+	Tooltip:
+		'''
+		Whips can no longer autoswing
+		Hold use to wind up, then release to attack
+		Quick attacks have slightly reduced range
+		Charging increases whip range and damage, up to 35% range and 50% damage
+		'''
+}
+
+HellfireBullet: {
+	DisplayName: Hellfire Bullet
+	Tooltip:
+		'''
+		Pierces one enemy and sets them on fire
+		Firing creates a short-lived superheated flare behind the bullet
+		'''
+}
+
+CrystallineDynamite: {
+	DisplayName: Crystalline Dynamite
+	Tooltip:
+		'''
+		A reusable stick of dynamite
+		The blast scatters crystal fragments that remagnetize toward you
+		Reforms 30 seconds after being thrown
+		'''
+}
+
+MimikosMirror: {
+	DisplayName: Mimiko's Mirror
+	Tooltip:
+		'''
+		Reflects magical light to banish evil
+		Hold to scatter five rays of demonite light
+		The rays periodically align, flash three times, then scatter again
+		Consumes 10 mana per second while channeling
+		'''
+	SkillStrike: "[i:75] Strike enemies with the focused flashes [i:75]"
+}
+
+CyvercryBag: {
+	DisplayName: Treasure Bag (Cyvercry)
+	Tooltip: Right click to open
 }

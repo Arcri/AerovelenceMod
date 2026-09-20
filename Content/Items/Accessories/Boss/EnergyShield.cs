@@ -28,7 +28,7 @@ namespace AerovelenceMod.Content.Items.Accessories.Boss
             Item.value = Item.buyPrice(0, 4, 0, 0);
             Item.rare = ItemRarityID.Expert;
             Item.accessory = true;
-
+            Item.expert = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

@@ -85,7 +85,7 @@ namespace AerovelenceMod.Backgrounds.Skies
                 {
                     if (Main.npc[i].ModNPC is Cyvercry2 Cyver)
                     {
-                        whichAttack(Cyver.getAttack());
+                        whichAttack(Cyver.GetAttack());
                         bigShotTimer = Cyver.bigShotTimer;
                         bgLineBoost = Cyver.extraBoost;
                         whiteStrength = Cyver.whiteBackgroundPower;
