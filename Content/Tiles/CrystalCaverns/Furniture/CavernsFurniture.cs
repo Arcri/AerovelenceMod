@@ -455,6 +455,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
         public override void SetStaticDefaults() => CommonTileHelper.SetupChest(this, new Color(123, 123, 123), "Glimmerwood Chest", ModContent.ItemType<GlimmerwoodChestItem>(), DustID.BlueCrystalShard,false);
         public override bool RightClick(int i, int j) { return CommonTileHelper.HandleRightClick(this, i, j, Main.LocalPlayer, ItemID.GoldenKey); }
         public override void MouseOver(int i, int j) => CommonTileHelper.HandleMouseOver(this, i, j, ModContent.ItemType<GlimmerwoodChestItem>(), ItemID.GoldenKey);
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
     }
 
     public class GlimmerwoodChestItem : ModItem
@@ -468,6 +469,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
         public override void SetStaticDefaults() => CommonTileHelper.SetupChest(this, new Color(123, 123, 123), "Glimmerwood Chest", ModContent.ItemType<CavernChestItem>(), DustID.BlueCrystalShard, false);
         public override bool RightClick(int i, int j) { return CommonTileHelper.HandleRightClick(this, i, j, Main.LocalPlayer, ItemID.GoldenKey); }
         public override void MouseOver(int i, int j) => CommonTileHelper.HandleMouseOver(this, i, j, ModContent.ItemType<CavernChestItem>(), ItemID.GoldenKey);
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
     }
 
     public class CavernChestItem : ModItem
@@ -481,6 +483,7 @@ namespace AerovelenceMod.Content.Tiles.CrystalCaverns.Furniture
         public override void SetStaticDefaults() => CommonTileHelper.SetupChest(this, new Color(123, 123, 123), "Glimmerwood Chest", ModContent.ItemType<CitadelChestItem>(), DustID.BlueCrystalShard, false);
         public override bool RightClick(int i, int j) { return CommonTileHelper.HandleRightClick(this, i, j, Main.LocalPlayer, ModContent.ItemType<CitadelChestKey>()); }
         public override void MouseOver(int i, int j) => CommonTileHelper.HandleMouseOver(this, i, j, ModContent.ItemType<CitadelChestItem>(), ModContent.ItemType<CitadelChestKey>());
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
     }
 
     public class CitadelChestItem : ModItem

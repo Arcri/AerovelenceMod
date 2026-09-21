@@ -12,7 +12,7 @@ namespace AerovelenceMod.Content.Walls.CrystalCaverns.Natural
         public override void SetStaticDefaults()
         {
             this.SimpleWall(ModContent.ItemType<CavernDirtWallItem>(), SoundID.Dig,
-            DustID.Dirt, new Color(60, 60, 70), false);
+            DustID.Dirt, new Color(60, 60, 80), false);
             WallID.Sets.Conversion.Dirt[Type] = true;
         }
 

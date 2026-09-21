@@ -23,10 +23,10 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
     public class TumblerAccelerator : TranslatableModItem
     {
         public override string Texture => "AerovelenceMod/Content/Items/Weapons/BossDrops/CrystalTumbler/TumblerAccelerator/TumblerAccelerator";
-        private const string Description = "Catapults tiny tumblers without ammunition\nRight click to launch mid-flight tumblers toward your cursor";
+        private const string Description = "Catapults tiny tumblers\nRight click to launch tumblers toward your cursor";
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Tumbler Accelerator", Description).AddSkillStrike(Language.Default, "Hit the same enemy with two different tumblers quickly to Skill Strike");
+            this.ModifyLocalization("Tumbler Accelerator", Description).AddSkillStrike(Language.Default, "Hitting the same enemy with two different tumblers quickly Skill Strikes");
             base.SetStaticDefaults();
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -56,6 +56,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 aim = velocity.SafeNormalize(Vector2.UnitX * player.direction);
+            int magnetized = 0;
             if (player.altFunctionUse == 2)
             {
                 foreach (Projectile p in Main.ActiveProjectiles)
@@ -65,6 +66,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
                         p.ai[1] = Main.MouseWorld.X;
                         p.ai[2] = Main.MouseWorld.Y;
                         p.netUpdate = true;
+                        magnetized++;
                     }
                 SoundEngine.PlaySound(SoundID.Item15 with { Volume = .45f }, player.Center);
             }
@@ -73,7 +75,7 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
                 Projectile.NewProjectile(source, player.MountedCenter, aim * 7 + new Vector2(0, -3), type, damage, knockback, player.whoAmI);
                 SoundEngine.PlaySound(SoundID.Item61 with { Volume = .6f, Pitch = -.3f }, player.Center);
             }
-            Projectile.NewProjectile(source, player.MountedCenter, aim, ModContent.ProjectileType<AcceleratorHeld>(), 0, 0, player.whoAmI);
+            Projectile.NewProjectile(source, player.MountedCenter, aim, ModContent.ProjectileType<AcceleratorHeld>(), 0, 0, player.whoAmI, player.altFunctionUse == 2 ? 1 : 0, magnetized);
             return false;
         }
     }
@@ -199,6 +201,12 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             player.direction = Projectile.velocity.X >= 0 ? 1 : -1;
             player.heldProj = Projectile.whoAmI;
             player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
+            if (Projectile.ai[0] == 1 && Projectile.ai[1] > 0f)
+            {
+                float strength = MathHelper.Clamp(0.45f + Projectile.ai[1] * 0.08f, 0.45f, 1f);
+                Lighting.AddLight(Projectile.Center, new Vector3(1f, .58f, .12f) * strength * .55f);
+                if (Main.rand.NextBool(3)) TumblerAcceleratorVFX.SpawnSpark(Projectile.Center + Main.rand.NextVector2Circular(12f, 12f), Main.rand.NextVector2Circular(1.8f, 1.8f), Color.Gold, .13f + strength * .05f);
+            }
             if (player.itemTime <= 1) Projectile.Kill();
         }
         public override bool PreDraw(ref Color lightColor)
@@ -206,8 +214,24 @@ namespace AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler
             Vector2 center = Projectile.Center - Main.screenPosition;
             Vector2 axis = Projectile.rotation.ToRotationVector2();
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Texture + "_Glowmask").Value;
+            Texture2D magnetGlow = ModContent.Request<Texture2D>(Texture + "_Glowmask1").Value;
             SpriteEffects flip = axis.X < 0f ? SpriteEffects.FlipVertically : SpriteEffects.None;
-            Main.EntitySpriteDraw(texture, center, null, lightColor, Projectile.rotation, texture.Size() * 0.5f, 1f, flip);
+            Vector2 origin = texture.Size() * .5f;
+            float age = 24f - Projectile.timeLeft;
+            float shotFlash = MathF.Exp(-age * .28f);
+            Main.EntitySpriteDraw(texture, center, null, lightColor, Projectile.rotation, origin, 1f, flip);
+            Main.EntitySpriteDraw(glow, center, null, Color.White, Projectile.rotation, glow.Size() * .5f, 1f, flip);
+            Main.EntitySpriteDraw(glow, center, null, TumblerAcceleratorVFX.Glow(Color.White, shotFlash * .9f), Projectile.rotation, glow.Size() * .5f, 1f + shotFlash * .025f, flip);
+            if (Projectile.ai[0] == 1 && Projectile.ai[1] > 0f)
+            {
+                float magnetStrength = MathHelper.Clamp(.5f + Projectile.ai[1] * .08f, .5f, 1f);
+                float pulse = .72f + .28f * MathF.Sin(Main.GlobalTimeWrappedHourly * 11f + Projectile.identity);
+                Color magnetColor = Color.Lerp(new Color(255, 155, 35), Color.White, .2f + pulse * .18f);
+                Main.EntitySpriteDraw(magnetGlow, center, null, TumblerAcceleratorVFX.Glow(magnetColor, magnetStrength * (.62f + pulse * .22f)), Projectile.rotation, magnetGlow.Size() * .5f, 1f, flip);
+                Main.EntitySpriteDraw(magnetGlow, center, null, TumblerAcceleratorVFX.Glow(Color.White, magnetStrength * pulse * .42f), Projectile.rotation, magnetGlow.Size() * .5f, 1.025f + pulse * .018f, flip);
+                TumblerAcceleratorVFX.DrawCorona(Main.spriteBatch, center, 12f + pulse * 3f, Color.Gold, magnetStrength * .32f, Projectile.identity, 1.6f);
+            }
             TumblerAcceleratorVFX.DrawCorona(Main.spriteBatch, center + axis * 22f, 8f, TumblerAcceleratorVFX.PhaseColor(0), Projectile.timeLeft / 40f, Projectile.identity);
             return false;
         }
