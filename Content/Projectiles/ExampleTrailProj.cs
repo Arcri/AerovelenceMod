@@ -42,7 +42,7 @@ namespace AerovelenceMod.Content.Projectiles
 
             Projectile.velocity = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitX) * 5;
 
-            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/Cyvercry - Copy").Value;
+            trailTexture = ModContent.Request<Texture2D>("AerovelenceMod/Content/NPCs/Bosses/Cyvercry/ShadowBlade").Value;
             trailColor = Color.DeepPink;
             //trailTime = Projectile.ai[1];
 

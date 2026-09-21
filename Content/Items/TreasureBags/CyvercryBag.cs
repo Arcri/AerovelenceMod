@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using AerovelenceMod.Common.Systems.Language;
-using AerovelenceMod.Content.Items.Mounts;
-using AerovelenceMod.Content.Items.Weapons.BossDrops.CrystalTumbler;
+using AerovelenceMod.Content.Items.Accessories.Boss;
+using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.CyverCannon;
+using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.Oblivion;
+using AerovelenceMod.Content.Items.Weapons.BossDrops.Cyvercry.TrojanForce;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -9,13 +11,13 @@ using Terraria.ModLoader;
 
 namespace AerovelenceMod.Content.Items.TreasureBags
 {
-    public class CrystalTumblerBag : TranslatableModItem
+    public class CyvercryBag : TranslatableModItem
     {
         private const string Description = "Right click to open";
-        public static int[] Weapons => new[] { ModContent.ItemType<Geomagnetic>(), ModContent.ItemType<FenceSitter>(), ModContent.ItemType<TumblerAccelerator>(), ModContent.ItemType<ConductorWand>(), ModContent.ItemType<DarkCrystalStaff>() };
+        public static int[] Weapons => new[] { ModContent.ItemType<Oblivion>(), ModContent.ItemType<CyverCannon>(), ModContent.ItemType<TrojanForce>() };
         public override void SetStaticDefaults()
         {
-            this.ModifyLocalization("Treasure Bag (Crystal Tumbler)", Description);
+            this.ModifyLocalization("Treasure Bag (Cyvercry)", Description);
             base.SetStaticDefaults();
             ItemID.Sets.BossBag[Type] = true;
             ItemID.Sets.PreHardmodeLikeBossBag[Type] = true;
@@ -39,9 +41,9 @@ namespace AerovelenceMod.Content.Items.TreasureBags
         public override bool CanRightClick() => true;
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<TumblingHarness>()));
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<EnergyShield>()));
             itemLoot.Add(ItemDropRule.OneFromOptions(1, Weapons));
-            itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<Content.NPCs.Bosses.CrystalTumbler.CrystalTumbler>()));
+            itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<Content.NPCs.Bosses.Cyvercry.Cyvercry2>()));
         }
     }
 }
